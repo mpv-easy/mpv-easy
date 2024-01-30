@@ -1,0 +1,14 @@
+{
+  "extends": "../tsconfig.base.json",
+  "compilerOptions": {
+    "outDir": "./dist/",
+    // "jsx": "preserve"
+    // "jsxFactory": "h",
+    // "jsxFragmentFactory": "Fragment"
+
+    "jsx": "react"
+  },
+  "include": [
+    "src",
+  ]
+}

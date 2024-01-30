@@ -1,0 +1,31 @@
+name: Releases
+
+on:
+  push:
+    tags:
+      - "v*"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v3
+      - name: "build"
+        run: |
+          npm i pnpm -g
+          pnpm i
+          pnpm run build
+          mkdir ./dist
+          mkdir ./dist/scripts/mpv-easy-config -p
+          cp ./mpv-easy/es5/index.js ./dist/scripts/mpv-easy.js
+          cp -r ./mpv-easy/fonts ./dist
+          cp -r ./mpv-anime4k/shaders ./dist
+          cd ./dist
+          zip -r -q ./mpv-easy.zip .
+          cd ..
+
+      - uses: ncipollo/release-action@v1
+        with:
+          artifacts: "./dist/mpv-easy.zip"

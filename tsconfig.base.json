@@ -1,0 +1,38 @@
+{
+  "compilerOptions": {
+    "target": "ESNext",
+    "useDefineForClassFields": true,
+    "lib": ["ESNext", "ES2022", "es2021"],
+    "allowJs": true,
+    "esModuleInterop": false,
+    "allowSyntheticDefaultImports": true,
+    "strict": true,
+    "forceConsistentCasingInFileNames": true,
+    "module": "ESNext",
+    "skipDefaultLibCheck": true,
+    "skipLibCheck": true,
+    "noEmit": false,
+    "noEmitOnError": false,
+    "moduleResolution": "Node",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "declaration": true,
+    "jsx": "react",
+    "declarationMap": false,
+    "paths": {
+      "@mpv-easy/tool": ["./mpv-tool/src"],
+      "@mpv-easy/clip-play": ["./mpv-clip-play/src"],
+      "@mpv-easy/console": ["./mpv-console/src"],
+      "@mpv-easy/hook": ["./mpv-hook/src"],
+      "@mpv-easy/autoload": ["./mpv-autoload/src"],
+      "@mpv-easy/assdraw": ["./mpv-assdraw/src"],
+      "@mpv-easy/mock": ["./mpv-mock/src"],
+      "@mpv-easy/ui": ["./mpv-ui/src"],
+      "@mpv-easy/plugin": ["./mpv-plugin/src"],
+      "@mpv-easy/anime4k": ["./mpv-anime4k/src"],
+      "@mpv-easy/i18n": ["./mpv-i18n/src"],
+      "@mpv-easy/copy-time": ["./mpv-copy-time/src"],
+      "@mpv-easy/thumbfast": ["./mpv-thumbfast/src"]
+    }
+  }
+}

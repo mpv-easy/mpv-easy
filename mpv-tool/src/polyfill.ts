@@ -1,0 +1,103 @@
+import "core-js/stable/array/every"
+import "core-js/stable/array/fill"
+import "core-js/stable/array/find-index"
+import "core-js/stable/array/find-last"
+import "core-js/stable/array/for-each"
+import "core-js/stable/array/from"
+import "core-js/stable/array/some"
+import "core-js/stable/array/includes"
+import "core-js/stable/array/at"
+// @ts-ignore
+import Map from "core-js/stable/map"
+import "core-js/stable/object/assign"
+import "core-js/stable/object/entries"
+import "core-js/stable/object/entries"
+import "core-js/stable/object/is"
+import "core-js/stable/object/values"
+// @ts-ignore
+import Promise from "core-js/stable/promise"
+// @ts-ignore
+import Set from "core-js/stable/set"
+import "core-js/stable/string/pad-end"
+import "core-js/stable/string/pad-start"
+import "core-js/stable/string/at"
+import "core-js/stable/string"
+
+// @ts-ignore
+import Symbol from "es-symbol"
+import { getGlobal } from "./global"
+
+getGlobal().Map = Map
+getGlobal().WeakMap = Map
+getGlobal().Set = Set
+getGlobal().WeakSet = Set
+getGlobal().Symbol = Symbol
+getGlobal().Promise = Promise
+
+if (!Array.prototype.fill) {
+  Array.prototype.fill = function (value, start, end) {
+    // 处理参数缺失的情况
+    if (start === undefined) start = 0
+    if (end === undefined) end = this.length
+
+    // 处理负数索引的情况
+    start = start >= 0 ? start : Math.max(0, this.length + start)
+    end = end >= 0 ? end : Math.max(0, this.length + end)
+
+    // 开始填充数组
+    for (let i = start; i < end; i++) {
+      this[i] = value
+    }
+    return this
+  }
+}
+// if (!String.prototype.find) {
+//   String.prototype.find = function (searchString, position) {
+//     if (this == null) {
+//       throw new TypeError('String.prototype.find called on null or undefined');
+//     }
+//     let str = String(this);
+//     let len = str.length;
+//     let start = position ? Number(position) || 0 : 0;
+
+//     // Loop through the string to find the searchString
+//     for (let i = start; i < len; i++) {
+//       if (str.charAt(i) === searchString.charAt(0)) {
+//         let substr = str.substr(i, searchString.length);
+//         if (substr === searchString) {
+//           return i;
+//         }
+//       }
+//     }
+
+//     return -1; // Return -1 if searchString is not found
+//   };
+// }
+
+// Polyfill for Array.prototype.find()
+if (!Array.prototype.find) {
+  Object.defineProperty(Array.prototype, "find", {
+    value: function (predicate: any) {
+      if (this == null) {
+        throw new TypeError("Array.prototype.find called on null or undefined")
+      }
+      if (typeof predicate !== "function") {
+        throw new TypeError("predicate must be a function")
+      }
+      const list = Object(this)
+      const length = list.length >>> 0
+      const thisArg = arguments[1]
+
+      for (let i = 0; i < length; i++) {
+        if (i in list) {
+          const value = list[i]
+          if (predicate.call(thisArg, value, i, list)) {
+            return value
+          }
+        }
+      }
+      return undefined
+    },
+  })
+}
+export { Map, Set, Symbol }

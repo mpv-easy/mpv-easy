@@ -1,0 +1,24 @@
+{
+  "name": "@mpv-easy/assdraw",
+  "version": "0.1.4",
+  "files": [
+    "dist",
+    "readme.md",
+    "package.json"
+  ],
+  "description": "",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "es5": "babel --presets  @babel/preset-env ./dist -d ./es5",
+    "build": "tsc -p ./tsconfig.build.json",
+    "dev": "tsc -p ./tsconfig.build.json -w",
+    "test": "vitest"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "e-color": "^0.1.2"
+  }
+}

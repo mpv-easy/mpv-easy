@@ -1,0 +1,33 @@
+export default {
+  uosc: "uosc",
+  osc: "osc",
+  darkName: "深色模式",
+  lightName: "浅色模式",
+  languageChinese: "中文",
+  languageEnglish: "英文",
+
+  next: "下一个",
+  previous: "上一个",
+  stop: "停止",
+  pause: "暂停",
+  play: "播放",
+  playlist: "播放列表",
+  screenshot: "截图",
+  randomPlay: "随机播放",
+  listPlay: "列表播放",
+  maximize: "最大化",
+  fullscreen: "全屏",
+  minimize: "最小化",
+  restore: "恢复",
+  close: "关闭",
+
+  nextVideo: "下一集",
+  previousVideo: "上一集",
+  nextAudio: "下一首",
+  previousAudio: "上一首",
+  nextImage: "下一张",
+  previousImage: "上一张",
+
+  mute: "静音",
+  unmute: "取消静音",
+}

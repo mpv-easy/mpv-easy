@@ -1,0 +1,25 @@
+{
+  "name": "@mpv-easy/thumbfast",
+  "version": "0.1.3",
+  "files": [
+    "dist",
+    "readme.md",
+    "package.json"
+  ],
+  "description": "",
+  "main": "dist/index.js",
+  "types": "./dist/index.d.ts",
+  "scripts": {
+    "es5": "babel ./dist -d es5",
+    "build": "tsc -p ./tsconfig.build.json",
+    "dev": "tsc -p ./tsconfig.build.json -w",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@mpv-easy/tool": "workspace:*",
+    "@mpv-easy/plugin": "workspace:*"
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "extends": "../tsconfig.base.json",
+  "compilerOptions": {
+    "skipLibCheck": true,
+    "target": "ES5",
+    "outDir": "./ts-es5/"
+  },
+  "include": ["dist/index.ts"]
+}
