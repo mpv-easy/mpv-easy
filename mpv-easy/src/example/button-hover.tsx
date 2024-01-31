@@ -15,9 +15,13 @@ function ButtonHover() {
       font="FiraCode Nerd Font Mono Reg"
       backgroundColor="000000"
       backgroundColorHover="00FF00"
-      fontSize={64}
+      fontSize={128}
       width={500}
       height={500}
+      display="flex"
+      justifyContent="center"
+      alignItems="center"
+      color="FFFFFF"
     >
       <Button
         enableMouseStyle={true}
@@ -25,7 +29,6 @@ function ButtonHover() {
         id="2"
         onMouseDown={() => {
           console.log("minus: ", count)
-
           setMouseStyle("Arrow")
           setCount((c) => --c)
         }}
@@ -46,6 +49,7 @@ function ButtonHover() {
         backgroundColor="000000"
         backgroundColorHover="FFFFFF"
         colorHover="00FFFF"
+        color="FFFFFF"
         onMouseDown={() => {
           setMouseStyle("Hand")
           console.log("plus: ", count)

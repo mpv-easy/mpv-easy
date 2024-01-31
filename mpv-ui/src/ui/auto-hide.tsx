@@ -27,12 +27,14 @@ export function AutoHide(props: Partial<PanelProps>) {
       hide={hide}
       onMouseEnter={(e) => {
         props.onMouseEnter?.(e)
-        setTimeout(() => {
+        clearTimeout(hideHandle.current)
+        hideHandle.current = +setTimeout(() => {
           setHide(false)
         }, props.showDelay ?? 0)
       }}
       onMouseLeave={(e) => {
-        setTimeout(() => {
+        clearTimeout(hideHandle.current)
+        hideHandle.current = +setTimeout(() => {
           setHide(true)
         }, props.hideDelay ?? 0)
         props.onMouseLeave?.(e)

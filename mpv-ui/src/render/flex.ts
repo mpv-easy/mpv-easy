@@ -7,6 +7,7 @@ import {
   KeyEvent,
   Rect,
   isPercentage,
+  print,
 } from "@mpv-easy/tool"
 import { Len } from "../type"
 import { DOMElement, MouseEvent, createNode } from "./dom"
@@ -81,22 +82,34 @@ function computeNodeSizeAxis(
   throw new Error("computeNodeSize error, not support length: " + v)
 }
 
-function computeNodeSize(node: DOMElement, currentRenderCount: number) {
+function computeNodeSize(
+  node: DOMElement,
+  currentRenderCount: number,
+  deep: number,
+) {
   const { attributes, layoutNode } = node
+  const isX = node.attributes.flexDirection !== "row"
 
   if (node.layoutNode.computedSizeCount === currentRenderCount) {
     return
   }
   node.layoutNode.computedSizeCount = currentRenderCount
 
+  const { zIndex = deep } = attributes
+  const {
+    overlay: [textOverlay, bgOverlay, borderOverlay],
+  } = node
+  textOverlay.z = zIndex + 3
+  bgOverlay.z = zIndex + 2
+  borderOverlay.z = zIndex + 1
+
   if (attributes.id === RootId) {
     for (const c of node.childNodes) {
-      computeNodeSize(c, currentRenderCount)
+      computeNodeSize(c, currentRenderCount, deep + 1)
     }
     return
   }
 
-  const isX = node.attributes.flexDirection !== "row"
   const paddingSize = lenToNumber(node, attributes.padding, isX)
   layoutNode.padding = paddingSize
   const borderSize = lenToNumber(node, attributes.borderSize, isX)
@@ -108,7 +121,7 @@ function computeNodeSize(node: DOMElement, currentRenderCount: number) {
   const xIsAuto = xAttr === undefined || xAttr === "auto"
   const yIsAuto = yAttr === undefined || yAttr === "auto"
 
-  if (typeof attributes.text === "string" && attributes.text.length) {
+  if (typeof attributes.text === "string") {
     const { width, height } = measureText(node)
     layoutNode.textRect.width = width
     layoutNode.textRect.height = height
@@ -125,9 +138,10 @@ function computeNodeSize(node: DOMElement, currentRenderCount: number) {
       layoutNode.height = extraSize + lenToNumber(node, yAttr, false)
     }
 
-    // computedNodeTLBR(node)
-    if (node.childNodes.length) {
-      throw new Error("text node can not have child node")
+    // The size of the text node is not affected by its child nodes
+    // making it convenient for calculating offsets in child nodes.
+    for (const c of node.childNodes) {
+      computeNodeSize(c, currentRenderCount, deep + 1)
     }
     return
   }
@@ -146,7 +160,7 @@ function computeNodeSize(node: DOMElement, currentRenderCount: number) {
     }
 
     for (const c of node.childNodes) {
-      computeNodeSize(c, currentRenderCount)
+      computeNodeSize(c, currentRenderCount, deep + 1)
 
       if (c.attributes.position === "absolute") {
         continue
@@ -164,21 +178,56 @@ function computeNodeSize(node: DOMElement, currentRenderCount: number) {
       if (isX) {
         setAxisSize(node, sumXAxisLen + extraSize, true)
       } else {
-        setAxisSize(node, sumXAxisLen + extraSize, false)
+        setAxisSize(node, maxYAxisLen + extraSize, true)
       }
     }
     if (yIsAuto) {
       if (isX) {
         setAxisSize(node, maxYAxisLen + extraSize, false)
       } else {
-        setAxisSize(node, sumYAxisLen + extraSize, false)
+        setAxisSize(node, sumXAxisLen + extraSize, false)
+      }
+    }
+
+    if (node.attributes.alignContent === "stretch") {
+      for (const c of node.childNodes) {
+        if (isX) {
+          if (typeof c.attributes.height === "undefined") {
+            c.layoutNode.height = node.layoutNode.height
+          }
+        } else {
+          if (typeof c.attributes.width === "undefined") {
+            c.layoutNode.width = node.layoutNode.width
+          }
+        }
       }
     }
   } else {
     computeNodeSizeAxis(node, xAttr, isX, extraSize)
     computeNodeSizeAxis(node, yAttr, !isX, extraSize)
+    let maxXAxisLen = 0
+    let maxYAxisLen = 0
+
     for (const c of node.childNodes) {
-      computeNodeSize(c, currentRenderCount)
+      computeNodeSize(c, currentRenderCount, deep + 1)
+      const childXSize = getAxisSize(c, isX)
+      const childYSize = getAxisSize(c, !isX)
+      maxXAxisLen = Math.max(maxXAxisLen, childXSize)
+      maxYAxisLen = Math.max(maxYAxisLen, childYSize)
+    }
+
+    if (node.attributes.alignContent === "stretch") {
+      for (const c of node.childNodes) {
+        if (isX) {
+          if (typeof c.attributes.height === "undefined") {
+            c.layoutNode.height = node.layoutNode.height
+          }
+        } else {
+          if (typeof c.attributes.width === "undefined") {
+            c.layoutNode.width = node.layoutNode.width
+          }
+        }
+      }
     }
   }
 }
@@ -334,6 +383,7 @@ function setAxisSize(n: DOMElement, x: number, isX: boolean) {
   }
 }
 
+// TODO: maybe there is a more easy way
 function computedNodeAlign(node: DOMElement) {
   const { attributes } = node
   const isX = attributes.flexDirection !== "row"
@@ -365,6 +415,7 @@ function computedNodeAlign(node: DOMElement) {
   switch (justifyContent) {
     case "start": {
       switch (alignItems) {
+        case "space-between":
         case "start": {
           xAxisStart = nodeXPos
           yAxisStart = nodeYPos
@@ -430,8 +481,8 @@ function computedNodeAlign(node: DOMElement) {
             const childXPos = getAxisPosition(c, isX)
             const childYPos = getAxisPosition(c, !isX)
 
-            const newStart = xAxisStart + childXSize
-            if (newStart > nodeEndSize) {
+            const nextStart = xAxisStart + childXSize
+            if (nextStart > nodeEndSize) {
               yAxisStart += maxYAxisSize
               setAxisPosition(c, nodeXPos, isX)
               setAxisPosition(c, yAxisStart, !isX)
@@ -452,6 +503,7 @@ function computedNodeAlign(node: DOMElement) {
     }
     case "end": {
       switch (alignItems) {
+        case "space-between":
         case "start": {
           xAxisStart = nodeXEnd
           yAxisStart = nodeYPos
@@ -516,11 +568,11 @@ function computedNodeAlign(node: DOMElement) {
             const childXPos = getAxisPosition(c, isX)
             const childYPos = getAxisPosition(c, !isX)
 
-            const newStart = xAxisStart - childXSize
-            if (newStart < nodeXPos) {
-              throw new Error("not support flex wrap")
+            const nextStart = xAxisStart - childXSize
+            if (nextStart < nodeXPos) {
+              print("warn: not support flex wrap")
             } else {
-              setAxisPosition(c, newStart, isX)
+              setAxisPosition(c, nextStart, isX)
 
               setAxisPosition(
                 c,
@@ -536,6 +588,7 @@ function computedNodeAlign(node: DOMElement) {
     }
     case "center": {
       switch (alignItems) {
+        case "space-between":
         case "start": {
           yAxisStart = nodeYPos
           for (const c of flexNodes) {
@@ -552,9 +605,9 @@ function computedNodeAlign(node: DOMElement) {
             const childXPos = getAxisPosition(c, isX)
             const childYPos = getAxisPosition(c, !isX)
 
-            const newStart = xAxisStart + childXSize
-            if (newStart > nodeXEnd) {
-              throw new Error("not support flex wrap")
+            const nextStart = xAxisStart + childXSize
+            if (nextStart > nodeXEnd) {
+              print("warn: not support flex wrap")
             } else {
               setAxisPosition(c, xAxisStart, isX)
               setAxisPosition(c, yAxisStart, !isX)
@@ -579,9 +632,9 @@ function computedNodeAlign(node: DOMElement) {
             const childXPos = getAxisPosition(c, isX)
             const childYPos = getAxisPosition(c, !isX)
 
-            const newStart = xAxisStart + childXSize
-            if (newStart > nodeXEnd) {
-              throw new Error("not support flex wrap")
+            const nextStart = xAxisStart + childXSize
+            if (nextStart > nodeXEnd) {
+              print("warn: not support flex wrap")
             } else {
               setAxisPosition(c, xAxisStart, isX)
               setAxisPosition(c, yAxisStart - childYSize, !isX)
@@ -606,9 +659,9 @@ function computedNodeAlign(node: DOMElement) {
             const childXPos = getAxisPosition(c, isX)
             const childYPos = getAxisPosition(c, !isX)
 
-            const newStart = xAxisStart + childXSize
-            if (newStart > nodeXEnd) {
-              throw new Error("not support flex wrap")
+            const nextStart = xAxisStart + childXSize
+            if (nextStart > nodeXEnd) {
+              print("warn: not support flex wrap")
             } else {
               setAxisPosition(c, xAxisStart, isX)
 
@@ -618,6 +671,106 @@ function computedNodeAlign(node: DOMElement) {
                 !isX,
               )
               xAxisStart += childXSize
+            }
+          }
+          return
+        }
+      }
+    }
+    case "space-between": {
+      switch (alignItems) {
+        case "space-between":
+        case "start": {
+          yAxisStart = nodeYPos
+          for (const c of flexNodes) {
+            const childXSize = getAxisSize(c, isX)
+            const childYSize = getAxisSize(c, !isX)
+            maxYAxisSize = Math.max(maxYAxisSize, childYSize)
+            maxXAxisSize = Math.max(maxXAxisSize, childXSize)
+            sumXAxisSize += childXSize
+          }
+
+          xAxisStart = nodeXPos
+          const xGap = (nodeXSize - sumXAxisSize) / (flexNodes.length - 1)
+
+          for (let i = 0; i < flexNodes.length; i++) {
+            const c = flexNodes[i]
+            const childXSize = getAxisSize(c, isX)
+            const childYSize = getAxisSize(c, !isX)
+            const childXPos = getAxisPosition(c, isX)
+            const childYPos = getAxisPosition(c, !isX)
+
+            const nextStart = xAxisStart + childXSize
+            if (nextStart > nodeXEnd) {
+              print("warn: not support flex wrap")
+            } else {
+              setAxisPosition(c, xAxisStart, isX)
+              setAxisPosition(c, yAxisStart, !isX)
+              xAxisStart += childXSize + xGap
+            }
+          }
+          return
+        }
+        case "end": {
+          yAxisStart = nodeYEnd
+          for (const c of flexNodes) {
+            const childXSize = getAxisSize(c, isX)
+            const childYSize = getAxisSize(c, !isX)
+            maxYAxisSize = Math.max(maxYAxisSize, childYSize)
+            maxXAxisSize = Math.max(maxXAxisSize, childXSize)
+            sumXAxisSize += childXSize
+          }
+          xAxisStart = nodeXPos
+          const xGap = (nodeXSize - sumXAxisSize) / (flexNodes.length - 1)
+
+          for (let i = 0; i < flexNodes.length; i++) {
+            const c = flexNodes[i]
+            const childXSize = getAxisSize(c, isX)
+            const childYSize = getAxisSize(c, !isX)
+            const childXPos = getAxisPosition(c, isX)
+            const childYPos = getAxisPosition(c, !isX)
+
+            const nextStart = xAxisStart + childXSize
+            if (nextStart > nodeXEnd) {
+              print("warn: not support flex wrap")
+            } else {
+              setAxisPosition(c, xAxisStart, isX)
+              setAxisPosition(c, yAxisStart - childYSize, !isX)
+              xAxisStart += childXSize + xGap
+            }
+          }
+          return
+        }
+        case "center": {
+          yAxisStart = nodeYPos
+          for (const c of flexNodes) {
+            const childXSize = getAxisSize(c, isX)
+            const childYSize = getAxisSize(c, !isX)
+            maxYAxisSize = Math.max(maxYAxisSize, childYSize)
+            maxXAxisSize = Math.max(maxXAxisSize, childXSize)
+            sumXAxisSize += childXSize
+          }
+          xAxisStart = nodeXPos
+          const xGap = (nodeXSize - sumXAxisSize) / (flexNodes.length - 1)
+          for (let i = 0; i < flexNodes.length; i++) {
+            const c = flexNodes[i]
+            const childXSize = getAxisSize(c, isX)
+            const childYSize = getAxisSize(c, !isX)
+            const childXPos = getAxisPosition(c, isX)
+            const childYPos = getAxisPosition(c, !isX)
+
+            const nextStart = xAxisStart + childXSize
+            if (nextStart > nodeXEnd) {
+              print("warn: not support flex wrap")
+            } else {
+              setAxisPosition(c, xAxisStart, isX)
+
+              setAxisPosition(
+                c,
+                yAxisStart + (nodeYSize - childYSize) / 2,
+                !isX,
+              )
+              xAxisStart += childXSize + xGap
             }
           }
           return
@@ -680,14 +833,14 @@ function computeNodeLayout(node: DOMElement, currentRenderCount: number) {
 }
 
 function computedLayout(node: DOMElement, currentRenderCount: number) {
-  computeNodeSize(node, currentRenderCount)
+  computeNodeSize(node, currentRenderCount, 0)
   computeNodeLayout(node, currentRenderCount)
 }
 
 export function renderNode(
   node: DOMElement,
-  deep: number,
   currentRenderCount: number,
+  deep: number,
 ) {
   computedLayout(RootNode, currentRenderCount)
 
@@ -714,12 +867,7 @@ export function renderNode(
       alignItems = "start",
       borderRadius = 0,
       flexDirection = "column",
-      zIndex = deep,
     } = attributes
-
-    textOverlay.z = zIndex + 2
-    bgOverlay.z = zIndex + 1
-    borderOverlay.z = zIndex + 0
 
     const paddingSize =
       typeof padding === "string"
@@ -860,9 +1008,9 @@ export function renderNode(
         default: {
           throw new Error(
             "text layout not support: justifyContent " +
-            justifyContent +
-            " alignItems " +
-            alignItems,
+              justifyContent +
+              " alignItems " +
+              alignItems,
           )
         }
       }
@@ -898,9 +1046,8 @@ export function renderNode(
     textOverlay.update()
   }
   for (const i of node.childNodes) {
-    renderNode(i, deep + 1, currentRenderCount)
+    renderNode(i, currentRenderCount, deep + 1)
   }
-  currentRenderCount++
 }
 
 export function dispatchEventForNode(
@@ -909,9 +1056,9 @@ export function dispatchEventForNode(
   event: KeyEvent,
 ) {
   const { attributes, layoutNode } = node
-  // console.log("----dispatchEventForNode", attributes.id, layoutNode.x, layoutNode.y, layoutNode.width, layoutNode.height)
+  // print("----dispatchEventForNode", attributes.id, layoutNode.x, layoutNode.y, layoutNode.width, layoutNode.height)
 
-  if (node.nodeName === "@mpv-easy/box" && node.attributes?.id !== RootId) {
+  if (node.nodeName === "@mpv-easy/box") {
     const mouseEvent = new MouseEvent(node, pos.x, pos.y)
     if (node.layoutNode.hasPoint(pos.x, pos.y)) {
       if (pos.hover) {
@@ -925,11 +1072,26 @@ export function dispatchEventForNode(
             attributes.onMouseMove?.(mouseEvent)
           }
         } else if (!layoutNode._mouseDown && event.event === "down") {
-          attributes.onMouseDown?.(mouseEvent)
-          layoutNode._mouseDown = true
+          if (!layoutNode._mouseDown) {
+            attributes.onMouseDown?.(mouseEvent)
+            attributes.onClick?.(mouseEvent)
+            layoutNode._mouseDown = true
+            layoutNode._mouseUp = false
+            if (!layoutNode._focus) {
+              layoutNode._focus = true
+              attributes.onFocus?.(mouseEvent)
+            }
+          }
         } else if (event.event === "up") {
-          attributes.onMouseUp?.(mouseEvent)
-          layoutNode._mouseDown = false
+          if (!layoutNode._mouseUp) {
+            attributes.onMouseUp?.(mouseEvent)
+            layoutNode._mouseDown = false
+            layoutNode._mouseUp = true
+            if (!layoutNode._focus) {
+              attributes.onFocus?.(mouseEvent)
+              layoutNode._focus = true
+            }
+          }
         }
       } else if (layoutNode._mouseIn) {
         attributes.onMouseLeave?.(mouseEvent)
@@ -939,6 +1101,17 @@ export function dispatchEventForNode(
       if (layoutNode._mouseIn) {
         attributes.onMouseLeave?.(mouseEvent)
         layoutNode._mouseIn = false
+        // layoutNode._mouseUp = false
+      }
+
+      if (
+        layoutNode._focus &&
+        (event.event === "down" || event.event === "up")
+      ) {
+        attributes.onBlur?.(mouseEvent)
+        layoutNode._focus = false
+        // layoutNode._mouseIn = false
+        // layoutNode._mouseUp = false
       }
     }
   }

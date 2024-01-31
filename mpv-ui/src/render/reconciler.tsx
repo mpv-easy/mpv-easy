@@ -31,7 +31,7 @@ export const reconciler = createReconciler({
   insertInContainerBefore: insertBeforeNode,
   commitUpdate(node: DOMElement, props) {
     applyProps(node, props)
-    renderNode(node, 0, currentRenderCount++)
+    renderNode(node, currentRenderCount++, 0)
   },
   commitTextUpdate(node, _oldText, newText) {
     throw new Error("not support Text Component update")
@@ -147,7 +147,9 @@ export const reconciler = createReconciler({
       ovl.remove()
     }
   },
-  removeChild(parentInstance: DOMElement, child: DOMElement) {},
+  removeChild(parentInstance: DOMElement, child: DOMElement) {
+    removeChildNode(parentInstance, child)
+  },
   supportsHydration: false,
 })
 
@@ -222,7 +224,7 @@ export function render(
     layoutNode.border = 0
 
     reconciler.updateContainer(reactNode, container, null, null)
-    renderNode(RootNode, 0, currentRenderCount++)
+    renderNode(RootNode, currentRenderCount++, 0)
   }
   new PropertyNative<MpvPropertyTypeMap["osd-dimensions"]>(
     "osd-dimensions",

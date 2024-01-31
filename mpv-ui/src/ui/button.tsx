@@ -1,7 +1,8 @@
 import { clone, setMouseStyle } from "@mpv-easy/tool"
-import React from "react"
+import React, { useState } from "react"
 import { BaseElementProps, Len } from "../type"
 import { Box } from "./box"
+import { DOMElement } from "../render"
 
 export type ButtonCustomProp =
   | "color"
@@ -30,86 +31,57 @@ export type ButtonProps = {
 
   tooltip: string
   tooltipDelay: number
-  tooltipPosition:
-    | "top"
-    | "bottom"
-    | "left"
-    | "right"
-    | "topLeft"
-    | "topRight"
-    | "leftTop"
-    | "rightTop"
-    | "leftBottom"
-    | "rightBottom"
-    | "bottomLeft"
-    | "bottomRight"
-
   enableMouseStyle: boolean
 } & BaseElementProps
 
 export const ButtonState = ["hover", "active", "disable"] as const
-function mergeProp(boxProp: any, buttonProp: any) {
-  const newProps = { ...boxProp }
-  for (const i in buttonProp) {
-    const v = buttonProp[i]
-    if (i.endsWith("Hover")) {
-      const name = i.slice(0, -5)
-      newProps[name] = buttonProp[name]
+
+function isHoverName(s: string) {
+  return s.endsWith("Hover")
+}
+
+function getHoverName(s: string) {
+  return s.slice(0, -5)
+}
+
+function getHoverProps(props: any) {
+  const newProps: any = {}
+  for (const i in props) {
+    const name = getHoverName(i)
+    const v = props[i]
+    if (isHoverName(i)) {
+      newProps[name] = v
     }
   }
-
   return newProps
 }
-export function Button(props: Partial<ButtonProps>) {
-  const update = React.useReducer((c) => ++c, 0)[1]
-  const rawProps = React.useRef({ ...props })
-  const buttonProps = React.useRef({ ...props })
-  return (
-    <Box
-      {...mergeProp(props, buttonProps.current)}
-      onMouseEnter={(e) => {
-        let needRender = false
-        for (const i in rawProps.current) {
-          if (i.endsWith("Hover")) {
-            const name = i.slice(0, -5)
-            const oldValue = (buttonProps.current as any)[name]
-            const hoverValue = (rawProps.current as any)[i] as any
-            if (oldValue !== hoverValue) {
-              needRender = true
-              ;(buttonProps.current as any)[name] = hoverValue
-            }
-          }
-        }
-        if (needRender) {
-          update()
-        }
 
-        if (props.enableMouseStyle) {
-          setMouseStyle("Hand")
-        }
-        props.onMouseEnter?.(e)
-      }}
-      onMouseLeave={(e) => {
-        let needRender = false
-        for (const i in rawProps.current) {
-          if (i.endsWith("Hover")) {
-            const name = i.slice(0, -5)
-            const oldValue = (rawProps.current as any)[name]
-            const hoverValue = (rawProps.current as any)[i]
-            if (oldValue !== hoverValue) {
-              needRender = true
-              ;(buttonProps.current as any)[name] = oldValue
-            }
+export const Button = React.forwardRef<DOMElement, Partial<ButtonProps>>(
+  (props, ref) => {
+    const hoverProps = getHoverProps(props)
+    const [hover, setHover] = useState(false)
+    return (
+      <Box
+        {...props}
+        {...(hover ? hoverProps : {})}
+        ref={ref}
+        onMouseEnter={(e) => {
+          setHover(true)
+          console.log("enter: ", hover, props.color, hoverProps.color)
+          if (props.enableMouseStyle) {
+            setMouseStyle("Hand")
           }
-        }
-        if (needRender) {
-          update()
-        }
-        if (props.enableMouseStyle) {
-          setMouseStyle("Arrow")
-        }
-        props.onMouseLeave?.(e)
-      }}
-    />
-  )
-}
+          props.onMouseEnter?.(e)
+        }}
+        onMouseLeave={(e) => {
+          setHover(false)
+          console.log("leave: ", hover, props.color, hoverProps.color)
+          if (props.enableMouseStyle) {
+            setMouseStyle("Arrow")
+          }
+          props.onMouseLeave?.(e)
+        }}
+      />
+    )
+  },
+)

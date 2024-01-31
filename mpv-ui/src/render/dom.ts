@@ -57,7 +57,9 @@ export class LayoutNode extends Rect {
     public computedSizeCount = 0,
     public computedLayoutCount = 0,
     public _mouseDown = false,
+    public _mouseUp = false,
     public _mouseIn = false,
+    public _focus = false,
   ) {
     super(x, y, width, height)
   }

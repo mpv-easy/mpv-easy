@@ -1,4 +1,4 @@
-import { Bgr, COLORS } from "e-color"
+import { Bgr, COLORS, Rgb } from "e-color"
 import type { ColorName } from "e-color"
 
 const c = 0.551915024494 // 圆形近似值
@@ -328,17 +328,29 @@ export interface AssDraw extends ExtType {}
 
 for (const i in COLORS) {
   const name = i.charAt(0).toLowerCase() + i.slice(1)
-  const c = Bgr.fromName(i as ColorName).toHex()
+
+  const rgb = new Rgb(COLORS[i as ColorName])
+
+  // TODO: maybe transform to es5 cause this problem, prototype break
+  // @ts-ignore
+  if (typeof rgb.color === "undefined") {
+    // @ts-ignore
+    rgb.color = COLORS[i]
+  }
+
+  // const hex = Bgr.fromName(i as ColorName).toHex()
+  const hex = rgb.toHex()
+
   // @ts-ignore
   AssDraw.prototype[name] = function () {
     // @ts-ignore
-    return this.color(c)
+    return this.color(hex)
   }
 
   // @ts-ignore
   AssDraw.prototype[`${name}Text`] = function (text: string) {
     // @ts-ignore
-    return this.colorText(c, text)
+    return this.colorText(hex, text)
   }
 }
 

@@ -1,41 +1,60 @@
 import { BaseElementProps, Box, Button } from "@mpv-easy/ui"
 import React from "react"
 import * as ICON from "../../icon"
-import { StoreProps } from "../../state-store"
 import { pluginName } from "../../main"
 import { command } from "@mpv-easy/tool"
 import { pluginName as i18nName } from "@mpv-easy/i18n"
+import { useSelector, useDispatch } from "react-redux"
+import { RootStore, Dispatch } from "../../store"
+import { throttle } from "lodash-es"
 
-export function Info({
-  store,
-  dispatch,
-  height,
-}: StoreProps & Partial<BaseElementProps>) {
-  const { mode, style } = store[pluginName]
-
-  const button = style[mode].button.default
-  const control = style[mode].control
-
-  const language = store[i18nName].default
-  const uiName = store[pluginName].name
-
-  const i18n = store[i18nName].lang[language]
-  const fileName = store[pluginName].player.path.split("/").at(-1)
-
-  const isPause = store[pluginName].player.pause
+export const Info = React.memo(({ height }: Partial<BaseElementProps>) => {
+  const mode = useSelector((store: RootStore) => store.context[pluginName].mode)
+  const button = useSelector(
+    (store: RootStore) => store.context[pluginName].style[mode].button.default,
+  )
+  const control = useSelector(
+    (store: RootStore) => store.context[pluginName].style[mode].control,
+  )
+  const language = useSelector(
+    (store: RootStore) => store.context[i18nName].default,
+  )
+  const uiName = useSelector(
+    (store: RootStore) => store.context[pluginName].name,
+  )
+  const i18n = useSelector(
+    (store: RootStore) => store.context[i18nName].lang[language],
+  )
+  const pause = useSelector(
+    (store: RootStore) => store.context[pluginName].player.pause,
+  )
+  const fileName = useSelector((store: RootStore) =>
+    store.context[pluginName].player.path.split("/").at(-1),
+  )
+  const mouseHoverStyle = useSelector(
+    (store: RootStore) => store.context.experimental.mouseHoverStyle,
+  )
+  const dispatch = useDispatch<Dispatch>()
+  const mousePosThrottle = useSelector(
+    (store: RootStore) => store.context[pluginName].state.mousePosThrottle,
+  )
+  const setTooltip = throttle(dispatch.context.setTooltip, mousePosThrottle, {
+    leading: false,
+    trailing: true,
+  })
   return (
     <Box
       id="osc-info"
       display="flex"
       font={button.font}
       fontSize={button.fontSize}
-      backgroundColor={control.backgroundColor}
       color={button.color}
       height={height}
       width={"100%"}
       flexDirection="column"
       justifyContent="start"
-      alignItems="end"
+      alignItems="center"
+      backgroundColor={control.backgroundColor}
     >
       <Button
         width={button.width}
@@ -43,22 +62,26 @@ export function Info({
         display="flex"
         justifyContent="center"
         alignItems="center"
-        enableMouseStyle={store.experimental.mouseHoverStyle}
+        enableMouseStyle={mouseHoverStyle}
         colorHover={button.colorHover}
         backgroundColorHover={button.backgroundColorHover}
         text={ICON.ChevronLeft}
         padding={button.padding}
+        backgroundColor={button.backgroundColor}
+        font={button.font}
+        fontSize={button.fontSize}
+        color={button.color}
         onMouseDown={() => {
           command("playlist-prev")
         }}
         onMouseEnter={() => {
-          dispatch.setTooltip(false, i18n.previous)
+          setTooltip(false, i18n.previous)
         }}
         onMouseMove={() => {
-          dispatch.setTooltip(false, i18n.previous)
+          setTooltip(false, i18n.previous)
         }}
         onMouseLeave={() => {
-          dispatch.setTooltip(true, "")
+          setTooltip(true, "")
         }}
       />
       <Button
@@ -67,22 +90,26 @@ export function Info({
         display="flex"
         justifyContent="center"
         alignItems="center"
-        enableMouseStyle={store.experimental.mouseHoverStyle}
+        enableMouseStyle={mouseHoverStyle}
         colorHover={button.colorHover}
         backgroundColorHover={button.backgroundColorHover}
         text={ICON.ChevronRight}
         padding={button.padding}
+        backgroundColor={button.backgroundColor}
+        font={button.font}
+        fontSize={button.fontSize}
+        color={button.color}
         onMouseDown={() => {
           command("playlist-next")
         }}
         onMouseEnter={() => {
-          dispatch.setTooltip(false, i18n.next)
+          setTooltip(false, i18n.next)
         }}
         onMouseMove={() => {
-          dispatch.setTooltip(false, i18n.next)
+          setTooltip(false, i18n.next)
         }}
         onMouseLeave={() => {
-          dispatch.setTooltip(true, "")
+          setTooltip(true, "")
         }}
       />
 
@@ -93,7 +120,11 @@ export function Info({
         alignItems="center"
         text={fileName}
         padding={button.padding}
+        backgroundColor={button.backgroundColor}
+        font={button.font}
+        fontSize={button.fontSize}
+        color={button.color}
       />
     </Box>
   )
-}
+})
