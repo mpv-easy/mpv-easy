@@ -37,5 +37,5 @@ export default definePlugin((context, api) => ({
   create() {
     throw new Error("TODO")
   },
-  destroy() { },
+  destroy() {},
 }))

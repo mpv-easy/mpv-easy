@@ -10,8 +10,8 @@
   "source": "./src/index.ts",
   "main": "./dist/index.js",
   "scripts": {
-    "bundle": "esbuild ./src/index.ts --bundle --outdir=dist --charset=utf8 --sourcemap",
-    "es5": "babel --presets  @babel/preset-env ./dist -d es5  --source-maps --plugins ./src/babel/hack.js",
+    "bundle": "esbuild ./src/index.ts --bundle --outdir=dist --charset=utf8 --minify --drop:console",
+    "es5": "babel --presets  @babel/preset-env ./dist -d es5 --plugins ./src/babel/hack.js",
     "dev": "chokidar \"../mpv-*/src/**/*.(ts|tsx|json)\" -c \"pnpm run build && pnpm run copy\" -t 3000  --initial",
     "echo": "chokidar \"./\" -c \"echo hello\" -d 0 -t 0 --initial",
     "build": "pnpm run bundle && pnpm run es5",
@@ -37,10 +37,9 @@
     "@mpv-easy/tool": "workspace:*",
     "@mpv-easy/ui": "workspace:*",
     "@react-spring/rafz": "^9.7.3",
+    "@reduxjs/toolkit": "^2.1.0",
     "@rematch/core": "^2.2.0",
     "@rematch/select": "^3.1.2",
-    "@types/lodash-es": "^4.17.12",
-    "@types/react-redux": "^7.1.33",
     "chalk": "^5.3.0",
     "e-color": "^0.1.2",
     "firacode-icon": "^0.1.0",
@@ -51,6 +50,8 @@
     "redux": "^5.0.0"
   },
   "devDependencies": {
+    "@types/lodash-es": "^4.17.12",
+    "@types/react-redux": "^7.1.33",
     "@types/react": "^18.2.45",
     "@types/react-reconciler": "^0.28.8",
     "typescript": "^5.3.3"

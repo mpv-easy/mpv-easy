@@ -1,7 +1,7 @@
 import { AssDraw } from "@mpv-easy/assdraw"
 import { usePropertyBool } from "@mpv-easy/hook"
 import { PropertyBool, command, observeProperty } from "@mpv-easy/tool"
-import { Box, render } from "@mpv-easy/ui"
+import { Box, Button, render } from "@mpv-easy/ui"
 import React, { useEffect, useState } from "react"
 
 function Flex() {
@@ -22,7 +22,7 @@ function Flex() {
         height={"50%"}
         backgroundColor="0000FF"
         display="flex"
-        flexDirection="column"
+        flexDirection="row"
         justifyContent="space-between"
         alignItems="center"
         alignContent="stretch"
@@ -41,13 +41,22 @@ function Flex() {
           backgroundColor="FFFFFF"
           display="flex"
         ></Box>
-
         <Box
           id="flex-4"
-          width={"20%"}
+          // width={100}
+          // height={100}
+
+          text="aaa"
           backgroundColor="000000"
           display="flex"
         ></Box>
+
+        <Button
+          id="flex-5"
+          text="bbb"
+          backgroundColor="000000"
+          display="flex"
+        />
       </Box>
     </Box>
   )

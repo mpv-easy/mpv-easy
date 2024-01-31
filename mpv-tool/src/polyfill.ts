@@ -9,11 +9,14 @@ import "core-js/stable/array/includes"
 import "core-js/stable/array/at"
 // @ts-ignore
 import Map from "core-js/stable/map"
+// import "core-js/stable/object"
 import "core-js/stable/object/assign"
 import "core-js/stable/object/entries"
 import "core-js/stable/object/entries"
 import "core-js/stable/object/is"
 import "core-js/stable/object/values"
+// import "core-js/stable/object/set-prototype-of"
+
 // @ts-ignore
 import Promise from "core-js/stable/promise"
 // @ts-ignore
@@ -100,4 +103,21 @@ if (!Array.prototype.find) {
     },
   })
 }
+
+function setProtoOf(obj: any, proto: any) {
+  obj.__proto__ = proto
+  return obj
+}
+
+function mixinProperties(obj: any, proto: any) {
+  for (var prop in proto) {
+    if (!Object.prototype.hasOwnProperty.call(obj, prop)) {
+      obj[prop] = proto[prop]
+    }
+  }
+  return obj
+}
+Object.setPrototypeOf =
+  { __proto__: [] } instanceof Array ? setProtoOf : mixinProperties
+
 export { Map, Set, Symbol }

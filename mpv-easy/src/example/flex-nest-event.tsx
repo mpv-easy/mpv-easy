@@ -7,23 +7,29 @@ import React, { useEffect, useState } from "react"
 function createHandler(id: string | number) {
   return {
     onMouseDown: () => {
-      console.log('down: ', id)
+      console.log("down: ", id)
     },
     onMouseEnter: () => {
-      console.log('enter: ', id)
+      console.log("enter: ", id)
     },
     onMouseLeave: () => {
-      console.log('leave: ', id)
+      console.log("leave: ", id)
     },
     onMouseMove: () => {
-      console.log('move: ', id)
+      console.log("move: ", id)
     },
     onMousePress: () => {
-      console.log('press: ', id)
+      console.log("press: ", id)
     },
     onMouseUp: () => {
-      console.log('up: ', id)
-    }
+      console.log("up: ", id)
+    },
+    onFocus: () => {
+      console.log("focus: ", id)
+    },
+    onBlur: () => {
+      console.log("blur: ", id)
+    },
   }
 }
 function Flex() {
@@ -37,7 +43,6 @@ function Flex() {
       flexDirection="column"
       justifyContent="center"
       alignItems="center"
-
       {...createHandler(1)}
     >
       <Box

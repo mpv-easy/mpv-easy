@@ -13,12 +13,12 @@ export type TextAlign = "center" | "left" | "right"
 export type FlexDirection = "row" | "column"
 
 export type Position = "relative" | "absolute"
-export type AlignType = "center" | "start" | "end"
+export type AlignType = "center" | "start" | "end" | "space-between"
 // | "flex-start"
 // | "flex-end"
 // | "space-around"
-// | "space-between"
 
+export type AlignContent = "stretch"
 export type FlexWrap = "wrap" | "nowrap"
 
 export type BaseElementProps = {
@@ -55,8 +55,11 @@ export type BaseElementProps = {
   onMousePress: MouseCb
   onMouseEnter: MouseCb
   onMouseLeave: MouseCb
+  onBlur: MouseCb
+  onFocus: MouseCb
   color: string
   zIndex: number
   hide: boolean
   display: "flex"
+  alignContent: AlignContent
 }

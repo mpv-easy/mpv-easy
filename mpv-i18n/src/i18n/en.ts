@@ -29,4 +29,8 @@ export default {
   previousImage: "previous image",
   mute: "mute",
   unmute: "unmute",
+  theme: "theme",
+  ui: "UI",
+  language: "language",
+  skin: "skin",
 }

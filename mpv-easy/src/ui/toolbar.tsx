@@ -1,207 +1,308 @@
-import { BaseElementProps, Box, Button, DOMElement } from "@mpv-easy/ui"
+import {
+  BaseElementProps,
+  Box,
+  Button,
+  DOMElement,
+  Dropdown,
+} from "@mpv-easy/ui"
 import React, { forwardRef, useState } from "react"
 import * as ICON from "../icon"
-import { StoreProps } from "../state-store"
 import { pluginName } from "../main"
 import { pluginName as i18nName } from "@mpv-easy/i18n"
 import { command } from "@mpv-easy/tool"
+import { useDispatch, useSelector } from "react-redux"
+import { RootStore, Dispatch } from "../store"
+import { throttle } from "lodash-es"
 
-export const Toolbar = forwardRef<
-  DOMElement,
-  StoreProps & Partial<BaseElementProps>
->(({ store, dispatch, hide }, ref) => {
-  const config = store[pluginName]
-  const { mode, style } = config
-  const button = style[mode].button.default
-  const toolbar = style[mode].toolbar
-  const language = store[i18nName].default
-  const uiName = store[pluginName].name
+export const Toolbar = React.memo(
+  forwardRef<DOMElement, Partial<BaseElementProps>>(({ hide }, ref) => {
+    const fullscreen = useSelector(
+      (store: RootStore) => store.context[pluginName].player.fullscreen,
+    )
+    const mode = useSelector(
+      (store: RootStore) => store.context[pluginName].mode,
+    )
+    const language = useSelector(
+      (store: RootStore) => store.context[i18nName].default,
+    )
+    const i18n = useSelector(
+      (store: RootStore) => store.context[i18nName].lang[language],
+    )
+    const button = useSelector(
+      (store: RootStore) =>
+        store.context[pluginName].style[mode].button.default,
+    )
 
-  const i18n = store[i18nName].lang[language]
-  return (
-    <Box
-      id="toolbar"
-      ref={ref}
-      display="flex"
-      top={0}
-      font={button.font}
-      fontSize={button.fontSize}
-      color={button.color}
-      backgroundColor={toolbar.backgroundColor}
-      width={"100%"}
-      hide={hide}
-    >
-      <Box width={"50%"} display="flex">
-        <Button
-          text={mode === "dark" ? ICON.Sun : ICON.Moon}
-          width={button.width}
-          height={button.height}
-          display="flex"
-          justifyContent="center"
-          alignItems="center"
-          onMouseDown={() => {
-            dispatch.setMode(mode === "dark" ? "light" : "dark")
-          }}
-          enableMouseStyle={store.experimental.mouseHoverStyle}
-          padding={button.padding}
-          colorHover={button.colorHover}
-          backgroundColorHover={button.backgroundColorHover}
-          onMouseEnter={() => {
-            dispatch.setTooltip(
-              false,
-              mode === "dark" ? i18n.lightName : i18n.darkName,
-            )
-          }}
-          onMouseMove={() => {
-            dispatch.setTooltip(
-              false,
-              mode === "dark" ? i18n.lightName : i18n.darkName,
-            )
-          }}
-          onMouseLeave={() => {
-            dispatch.setTooltip(true, "")
-          }}
-        />
-        <Button
-          text={language === "cn" ? "en" : "cn"}
-          width={button.width * 1.5}
-          height={button.height}
-          display="flex"
-          justifyContent="center"
-          alignItems="center"
-          enableMouseStyle={store.experimental.mouseHoverStyle}
-          padding={button.padding}
-          colorHover={button.colorHover}
-          backgroundColorHover={button.backgroundColorHover}
-          onMouseDown={() => {
-            dispatch.setLanguage(language === "cn" ? "en" : "cn")
-          }}
-          onMouseEnter={() => {
-            dispatch.setTooltip(
-              false,
-              language === "cn" ? i18n.languageEnglish : i18n.languageChinese,
-            )
-          }}
-          onMouseMove={() => {
-            dispatch.setTooltip(
-              false,
-              language === "cn" ? i18n.languageEnglish : i18n.languageChinese,
-            )
-          }}
-          onMouseLeave={() => {
-            dispatch.setTooltip(true, "")
-          }}
-        />
+    const dropdown = useSelector(
+      (store: RootStore) => store.context[pluginName].style[mode].dropdown,
+    )
 
-        <Button
-          text={uiName === "osc" ? "uosc" : "osc"}
-          width={button.width * (uiName === "osc" ? 2.5 : 2)}
-          height={button.height}
-          display="flex"
-          justifyContent="center"
-          alignItems="center"
-          enableMouseStyle={store.experimental.mouseHoverStyle}
-          padding={button.padding}
-          colorHover={button.colorHover}
-          backgroundColorHover={button.backgroundColorHover}
-          onMouseDown={() => {
-            dispatch.setUI(uiName === "osc" ? "uosc" : "osc")
-          }}
-          onMouseEnter={() => {
-            dispatch.setTooltip(false, uiName === "osc" ? i18n.osc : i18n.uosc)
-          }}
-          onMouseMove={() => {
-            dispatch.setTooltip(false, uiName === "osc" ? i18n.osc : i18n.uosc)
-          }}
-          onMouseLeave={() => {
-            dispatch.setTooltip(true, "")
-          }}
-        />
-      </Box>
+    const toolbar = useSelector(
+      (store: RootStore) => store.context[pluginName].style[mode].toolbar,
+    )
+    const dispatch = useDispatch<Dispatch>()
+    const mouseHoverStyle = useSelector(
+      (store: RootStore) => store.context.experimental.mouseHoverStyle,
+    )
+    const mousePosThrottle = useSelector(
+      (store: RootStore) => store.context[pluginName].state.mousePosThrottle,
+    )
+    const setTooltip = throttle(dispatch.context.setTooltip, mousePosThrottle, {
+      leading: false,
+      trailing: true,
+    })
 
-      {store[pluginName].player.fullscreen ? (
+    return (
+      <Box
+        id="toolbar"
+        ref={ref}
+        display="flex"
+        justifyContent="space-between"
+        alignItems="center"
+        top={0}
+        font={button.font}
+        fontSize={button.fontSize}
+        color={button.color}
+        width={"100%"}
+        hide={hide}
+      >
         <Box
           display="flex"
-          font={button.font}
-          width={"50%"}
-          justifyContent="end"
+          justifyContent="start"
+          alignItems="center"
+          backgroundColor={toolbar.backgroundColor}
+          color={button.color}
+          id="toolbar-left"
         >
-          <Button
+          <Dropdown
+            id="toolbar-theme"
+            text={ICON.ThemeLightDark}
+            items={[
+              {
+                key: "light",
+                label: i18n.lightName,
+                onSelect: () => {
+                  dispatch.context.setMode("light")
+                },
+              },
+              {
+                key: "dark",
+                label: i18n.darkName,
+                onSelect: () => {
+                  dispatch.context.setMode("dark")
+                },
+              },
+            ]}
+            dropdownStyle={dropdown}
+            direction="bottom"
             width={button.width}
             height={button.height}
             display="flex"
             justifyContent="center"
             alignItems="center"
-            enableMouseStyle={store.experimental.mouseHoverStyle}
+            enableMouseStyle={mouseHoverStyle}
             padding={button.padding}
             colorHover={button.colorHover}
             backgroundColorHover={button.backgroundColorHover}
-            text={ICON.ChromeMinimize}
-            onMouseDown={() => {
-              dispatch.setWindowMinimized(true)
-            }}
+            backgroundColor={button.backgroundColor}
+            font={button.font}
+            fontSize={button.fontSize}
+            color={button.color}
             onMouseEnter={() => {
-              dispatch.setTooltip(false, i18n.minimize)
+              setTooltip(false, i18n.theme)
             }}
             onMouseMove={() => {
-              dispatch.setTooltip(false, i18n.minimize)
+              setTooltip(false, i18n.theme)
             }}
             onMouseLeave={() => {
-              dispatch.setTooltip(true, "")
+              setTooltip(true, "")
             }}
           />
-          <Button
-            width={button.width}
+          <Dropdown
+            // TODO: language switch icon
+            text={"A/中"}
+            direction="bottom"
+            items={[
+              {
+                key: "Chinese",
+                label: i18n.languageChinese,
+                onSelect: () => {
+                  dispatch.context.setLanguage("cn")
+                },
+              },
+              {
+                key: "English",
+                label: i18n.languageEnglish,
+                onSelect: () => {
+                  dispatch.context.setLanguage("en")
+                },
+              },
+            ]}
             height={button.height}
             display="flex"
             justifyContent="center"
             alignItems="center"
-            enableMouseStyle={store.experimental.mouseHoverStyle}
+            dropdownStyle={dropdown}
+            enableMouseStyle={mouseHoverStyle}
             padding={button.padding}
             colorHover={button.colorHover}
             backgroundColorHover={button.backgroundColorHover}
-            text={ICON.ChromeRestore}
-            onMouseDown={() => {
-              dispatch.setFullscreen(false)
-            }}
+            backgroundColor={button.backgroundColor}
+            font={button.font}
+            fontSize={button.fontSize}
+            color={button.color}
             onMouseEnter={() => {
-              dispatch.setTooltip(false, i18n.restore)
+              setTooltip(false, i18n.language)
             }}
             onMouseMove={() => {
-              dispatch.setTooltip(false, i18n.restore)
+              setTooltip(false, i18n.language)
             }}
             onMouseLeave={() => {
-              dispatch.setTooltip(true, "")
+              setTooltip(true, "")
             }}
           />
-          <Button
-            width={button.width}
+
+          <Dropdown
+            direction="bottom"
+            items={[
+              {
+                key: "osc",
+                label: i18n.osc,
+                onSelect: () => {
+                  dispatch.context.setUI("osc")
+                },
+              },
+              {
+                key: "uosc",
+                label: i18n.uosc,
+                onSelect: () => {
+                  dispatch.context.setUI("uosc")
+                },
+              },
+            ]}
+            dropdownStyle={dropdown}
+            text={i18n.skin}
             height={button.height}
             display="flex"
             justifyContent="center"
             alignItems="center"
-            enableMouseStyle={store.experimental.mouseHoverStyle}
+            enableMouseStyle={mouseHoverStyle}
             padding={button.padding}
             colorHover={button.colorHover}
             backgroundColorHover={button.backgroundColorHover}
-            text={ICON.ChromeClose}
-            onMouseDown={() => {
-              command("quit")
-            }}
+            backgroundColor={button.backgroundColor}
+            font={button.font}
+            fontSize={button.fontSize}
+            color={button.color}
             onMouseEnter={() => {
-              dispatch.setTooltip(false, i18n.close)
+              setTooltip(false, i18n.ui)
             }}
             onMouseMove={() => {
-              dispatch.setTooltip(false, i18n.close)
+              setTooltip(false, i18n.ui)
             }}
             onMouseLeave={() => {
-              dispatch.setTooltip(true, "")
+              setTooltip(true, "")
             }}
           />
         </Box>
-      ) : (
-        <></>
-      )}
-    </Box>
-  )
-})
+
+        {fullscreen ? (
+          <Box
+            display="flex"
+            font={button.font}
+            justifyContent="end"
+            alignItems="center"
+            backgroundColor={toolbar.backgroundColor}
+          >
+            <Button
+              width={button.width}
+              height={button.height}
+              display="flex"
+              justifyContent="center"
+              alignItems="center"
+              enableMouseStyle={mouseHoverStyle}
+              padding={button.padding}
+              colorHover={button.colorHover}
+              backgroundColorHover={button.backgroundColorHover}
+              text={ICON.ChromeMinimize}
+              backgroundColor={button.backgroundColor}
+              font={button.font}
+              fontSize={button.fontSize}
+              color={button.color}
+              onMouseDown={() => {
+                dispatch.context.setWindowMinimized(true)
+              }}
+              onMouseEnter={() => {
+                setTooltip(false, i18n.minimize)
+              }}
+              onMouseMove={() => {
+                setTooltip(false, i18n.minimize)
+              }}
+              onMouseLeave={() => {
+                setTooltip(true, "")
+              }}
+            />
+            <Button
+              width={button.width}
+              height={button.height}
+              display="flex"
+              justifyContent="center"
+              alignItems="center"
+              enableMouseStyle={mouseHoverStyle}
+              padding={button.padding}
+              colorHover={button.colorHover}
+              backgroundColorHover={button.backgroundColorHover}
+              text={ICON.ChromeRestore}
+              backgroundColor={button.backgroundColor}
+              font={button.font}
+              fontSize={button.fontSize}
+              color={button.color}
+              onMouseDown={() => {
+                dispatch.context.setFullscreen(false)
+              }}
+              onMouseEnter={() => {
+                setTooltip(false, i18n.restore)
+              }}
+              onMouseMove={() => {
+                setTooltip(false, i18n.restore)
+              }}
+              onMouseLeave={() => {
+                setTooltip(true, "")
+              }}
+            />
+            <Button
+              width={button.width}
+              height={button.height}
+              display="flex"
+              justifyContent="center"
+              alignItems="center"
+              enableMouseStyle={mouseHoverStyle}
+              padding={button.padding}
+              colorHover={button.colorHover}
+              backgroundColorHover={button.backgroundColorHover}
+              text={ICON.ChromeClose}
+              backgroundColor={button.backgroundColor}
+              font={button.font}
+              fontSize={button.fontSize}
+              color={button.color}
+              onMouseDown={() => {
+                command("quit")
+              }}
+              onMouseEnter={() => {
+                setTooltip(false, i18n.close)
+              }}
+              onMouseMove={() => {
+                setTooltip(false, i18n.close)
+              }}
+              onMouseLeave={() => {
+                setTooltip(true, "")
+              }}
+            />
+          </Box>
+        ) : (
+          <></>
+        )}
+      </Box>
+    )
+  }),
+)

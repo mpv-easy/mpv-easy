@@ -1,40 +1,61 @@
 import { BaseElementProps, Box, Button } from "@mpv-easy/ui"
 import React from "react"
 import * as ICON from "../../icon"
-import { StoreProps } from "../../state-store"
 import { pluginName } from "../../main"
 import { command } from "@mpv-easy/tool"
 import { pluginName as i18nName } from "@mpv-easy/i18n"
+import { useSelector, useDispatch } from "react-redux"
+import { store } from "../../example/redux-toolkit/store"
+import { RootStore, Dispatch } from "../../store"
+import { throttle } from "lodash-es"
 
-export function Control({
-  store,
-  dispatch,
-}: StoreProps & Partial<BaseElementProps>) {
-  const { mode, style } = store[pluginName]
+export const Control = React.memo((props: Partial<BaseElementProps>) => {
+  const mode = useSelector((store: RootStore) => store.context[pluginName].mode)
+  const button = useSelector(
+    (store: RootStore) => store.context[pluginName].style[mode].button.default,
+  )
+  const control = useSelector(
+    (store: RootStore) => store.context[pluginName].style[mode].control,
+  )
+  const language = useSelector(
+    (store: RootStore) => store.context[i18nName].default,
+  )
+  const uiName = useSelector(
+    (store: RootStore) => store.context[pluginName].name,
+  )
+  const i18n = useSelector(
+    (store: RootStore) => store.context[i18nName].lang[language],
+  )
+  const pause = useSelector(
+    (store: RootStore) => store.context[pluginName].player.pause,
+  )
+  const mouseHoverStyle = useSelector(
+    (store: RootStore) => store.context.experimental.mouseHoverStyle,
+  )
 
-  const button = style[mode].button.default
-  const control = style[mode].control
-
-  const language = store[i18nName].default
-  const uiName = store[pluginName].name
-
-  const i18n = store[i18nName].lang[language]
-
-  const isPause = store[pluginName].player.pause
+  const dispatch = useDispatch<Dispatch>()
+  const mousePosThrottle = useSelector(
+    (store: RootStore) => store.context[pluginName].state.mousePosThrottle,
+  )
+  const setTooltip = throttle(dispatch.context.setTooltip, mousePosThrottle, {
+    leading: false,
+    trailing: true,
+  })
   return (
     <Box
       id="uosc-control"
       display="flex"
       font={button.font}
       fontSize={button.fontSize}
-      backgroundColor={control.backgroundColor}
       color={button.color}
       width={"100%"}
+      justifyContent="space-between"
+      alignItems="center"
     >
       <Box
         display="flex"
-        width={"50%"}
         justifyContent="start"
+        alignItems="center"
         backgroundColor={control.backgroundColor}
       >
         <Button
@@ -43,22 +64,26 @@ export function Control({
           display="flex"
           justifyContent="center"
           alignItems="center"
-          enableMouseStyle={store.experimental.mouseHoverStyle}
-          text={isPause ? ICON.Play : ICON.Pause}
+          enableMouseStyle={mouseHoverStyle}
+          text={pause ? ICON.Play : ICON.Pause}
           padding={button.padding}
+          backgroundColor={button.backgroundColor}
+          font={button.font}
+          fontSize={button.fontSize}
+          color={button.color}
           onMouseDown={() => {
-            dispatch.setPause(!store[pluginName].player.pause)
+            dispatch.context.setPause(!pause)
           }}
           colorHover={button.colorHover}
           backgroundColorHover={button.backgroundColorHover}
           onMouseEnter={() => {
-            dispatch.setTooltip(false, isPause ? i18n.play : i18n.pause)
+            setTooltip(false, pause ? i18n.play : i18n.pause)
           }}
           onMouseMove={() => {
-            dispatch.setTooltip(false, isPause ? i18n.play : i18n.pause)
+            setTooltip(false, pause ? i18n.play : i18n.pause)
           }}
           onMouseLeave={() => {
-            dispatch.setTooltip(true, "")
+            setTooltip(true, "")
           }}
         />
 
@@ -69,22 +94,26 @@ export function Control({
           justifyContent="center"
           alignItems="center"
           text={ICON.Stop}
-          enableMouseStyle={store.experimental.mouseHoverStyle}
+          enableMouseStyle={mouseHoverStyle}
           padding={button.padding}
           colorHover={button.colorHover}
           backgroundColorHover={button.backgroundColorHover}
+          backgroundColor={button.backgroundColor}
+          font={button.font}
+          fontSize={button.fontSize}
+          color={button.color}
           onMouseDown={() => {
-            dispatch.setPause(true)
-            dispatch.setTimePos(0)
+            dispatch.context.setPause(true)
+            dispatch.context.setTimePos(0)
           }}
           onMouseEnter={() => {
-            dispatch.setTooltip(false, i18n.stop)
+            setTooltip(false, i18n.stop)
           }}
           onMouseMove={() => {
-            dispatch.setTooltip(false, i18n.stop)
+            setTooltip(false, i18n.stop)
           }}
           onMouseLeave={() => {
-            dispatch.setTooltip(true, "")
+            setTooltip(true, "")
           }}
         ></Button>
 
@@ -94,30 +123,34 @@ export function Control({
           display="flex"
           justifyContent="center"
           alignItems="center"
-          enableMouseStyle={store.experimental.mouseHoverStyle}
+          enableMouseStyle={mouseHoverStyle}
           text={ICON.Camera}
           colorHover={button.colorHover}
           backgroundColorHover={button.backgroundColorHover}
           padding={button.padding}
+          backgroundColor={button.backgroundColor}
+          font={button.font}
+          fontSize={button.fontSize}
+          color={button.color}
           onMouseDown={() => {
-            dispatch.screenshot()
+            dispatch.context.screenshot()
           }}
           onMouseEnter={() => {
-            dispatch.setTooltip(false, i18n.screenshot)
+            setTooltip(false, i18n.screenshot)
           }}
           onMouseMove={() => {
-            dispatch.setTooltip(false, i18n.screenshot)
+            setTooltip(false, i18n.screenshot)
           }}
           onMouseLeave={() => {
-            dispatch.setTooltip(true, "")
+            setTooltip(true, "")
           }}
         />
       </Box>
 
       <Box
         display="flex"
-        width={"50%"}
         justifyContent="end"
+        alignItems="center"
         backgroundColor={control.backgroundColor}
       >
         <Button
@@ -126,19 +159,23 @@ export function Control({
           display="flex"
           justifyContent="center"
           alignItems="center"
-          enableMouseStyle={store.experimental.mouseHoverStyle}
+          enableMouseStyle={mouseHoverStyle}
           colorHover={button.colorHover}
           backgroundColorHover={button.backgroundColorHover}
           text={ICON.Random}
           padding={button.padding}
+          backgroundColor={button.backgroundColor}
+          font={button.font}
+          fontSize={button.fontSize}
+          color={button.color}
           onMouseEnter={() => {
-            dispatch.setTooltip(false, i18n.randomPlay)
+            setTooltip(false, i18n.randomPlay)
           }}
           onMouseMove={() => {
-            dispatch.setTooltip(false, i18n.randomPlay)
+            setTooltip(false, i18n.randomPlay)
           }}
           onMouseLeave={() => {
-            dispatch.setTooltip(true, "")
+            setTooltip(true, "")
           }}
         />
 
@@ -148,53 +185,84 @@ export function Control({
           display="flex"
           justifyContent="center"
           alignItems="center"
-          enableMouseStyle={store.experimental.mouseHoverStyle}
+          enableMouseStyle={mouseHoverStyle}
           colorHover={button.colorHover}
           backgroundColorHover={button.backgroundColorHover}
           text={ICON.ChevronLeft}
           padding={button.padding}
+          backgroundColor={button.backgroundColor}
+          font={button.font}
+          fontSize={button.fontSize}
+          color={button.color}
           onMouseDown={() => {
             command("playlist-prev")
           }}
           onMouseEnter={() => {
-            dispatch.setTooltip(false, i18n.previous)
+            setTooltip(false, i18n.previous)
           }}
           onMouseMove={() => {
-            dispatch.setTooltip(false, i18n.previous)
+            setTooltip(false, i18n.previous)
           }}
           onMouseLeave={() => {
-            dispatch.setTooltip(true, "")
+            setTooltip(true, "")
           }}
         />
-        {/* <Button
-          enableMouseStyle={store.experimental.mouseHoverStyle}
+        <Button
+          // TODO: libass update https://github.com/libass/libass/pull/729
+          // text={ICON.PlaylistPlay}
+          text={ICON.Checklist}
+          width={button.width}
+          height={button.height}
+          display="flex"
+          justifyContent="center"
+          alignItems="center"
+          enableMouseStyle={mouseHoverStyle}
           colorHover={button.colorHover}
           backgroundColorHover={button.backgroundColorHover}
-          text={ICON.PlaylistPlay}
           padding={button.padding}
-        /> */}
+          backgroundColor={button.backgroundColor}
+          font={button.font}
+          fontSize={button.fontSize}
+          color={button.color}
+          onMouseDown={() => {
+            // command("playlist-next")
+          }}
+          onMouseEnter={() => {
+            setTooltip(false, i18n.playlist)
+          }}
+          onMouseMove={() => {
+            setTooltip(false, i18n.playlist)
+          }}
+          onMouseLeave={() => {
+            setTooltip(true, "")
+          }}
+        />
         <Button
           width={button.width}
           height={button.height}
           display="flex"
           justifyContent="center"
           alignItems="center"
-          enableMouseStyle={store.experimental.mouseHoverStyle}
+          enableMouseStyle={mouseHoverStyle}
           colorHover={button.colorHover}
           backgroundColorHover={button.backgroundColorHover}
           text={ICON.ChevronRight}
           padding={button.padding}
+          backgroundColor={button.backgroundColor}
+          font={button.font}
+          fontSize={button.fontSize}
+          color={button.color}
           onMouseDown={() => {
             command("playlist-next")
           }}
           onMouseEnter={() => {
-            dispatch.setTooltip(false, i18n.next)
+            setTooltip(false, i18n.next)
           }}
           onMouseMove={() => {
-            dispatch.setTooltip(false, i18n.next)
+            setTooltip(false, i18n.next)
           }}
           onMouseLeave={() => {
-            dispatch.setTooltip(true, "")
+            setTooltip(true, "")
           }}
         />
         <Button
@@ -203,25 +271,29 @@ export function Control({
           display="flex"
           justifyContent="center"
           alignItems="center"
-          enableMouseStyle={store.experimental.mouseHoverStyle}
+          enableMouseStyle={mouseHoverStyle}
           colorHover={button.colorHover}
           backgroundColorHover={button.backgroundColorHover}
           text={ICON.ChromeMaximize}
           padding={button.padding}
+          backgroundColor={button.backgroundColor}
+          font={button.font}
+          fontSize={button.fontSize}
+          color={button.color}
           onMouseDown={() => {
-            dispatch.setFullscreen(true)
+            dispatch.context.setFullscreen(true)
           }}
           onMouseEnter={() => {
-            dispatch.setTooltip(false, i18n.fullscreen)
+            setTooltip(false, i18n.fullscreen)
           }}
           onMouseMove={() => {
-            dispatch.setTooltip(false, i18n.fullscreen)
+            setTooltip(false, i18n.fullscreen)
           }}
           onMouseLeave={() => {
-            dispatch.setTooltip(true, "")
+            setTooltip(true, "")
           }}
         />
       </Box>
     </Box>
   )
-}
+})

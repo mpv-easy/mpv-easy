@@ -30,4 +30,8 @@ export default {
 
   mute: "静音",
   unmute: "取消静音",
+  theme: "主题",
+  ui: "UI",
+  language: "语言",
+  skin: "皮肤",
 }
