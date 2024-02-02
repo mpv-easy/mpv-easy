@@ -13,12 +13,12 @@ import {
   setPropertyBool,
   setPropertyNumber,
   setPropertyString,
+  MpvPropertyTypeMap,
 } from "@mpv-easy/tool"
 import { Language } from "@mpv-easy/i18n"
-import { api } from "../context"
-import { store } from "../example/redux-toolkit/store"
-import { ThemeMode, ThemeName } from "../mpv-easy-theme"
-import i18nPlugin, { pluginName as i18nName } from "@mpv-easy/i18n"
+import { ThemeMode, UIName } from "../mpv-easy-theme"
+import { pluginName as i18nName } from "@mpv-easy/i18n"
+import { playlistSelector } from "../store"
 
 const windowMaximizedProp = new PropertyBool("window-maximized")
 const fullscreenProp = new PropertyBool("fullscreen")
@@ -28,6 +28,10 @@ const pauseProp = new PropertyBool("pause")
 const pathProp = new PropertyString("path")
 const mousePosProp = new PropertyNative<MousePos>("mouse-pos")
 const muteProp = new PropertyBool("mute")
+const osdDimensionsProp = new PropertyNative<{
+  w: number
+  h: number
+}>("osd-dimensions")
 
 export const context = createModel<RootModel>()({
   state: {} as PluginContext,
@@ -36,9 +40,12 @@ export const context = createModel<RootModel>()({
       state[pluginName].mode = mode
       return { ...state }
     },
-
-    setTheme(state, name: ThemeName) {
-      state[pluginName].name = name
+    setOsdDimensions(state, dim) {
+      state[pluginName].player.osdDimensions = dim
+      return { ...state }
+    },
+    setTheme(state, name: UIName) {
+      state[pluginName].uiName = name
       return { ...state }
     },
 
@@ -47,7 +54,7 @@ export const context = createModel<RootModel>()({
       return { ...state }
     },
     setUI(state, name: "osc" | "uosc") {
-      state[pluginName].name = name
+      state[pluginName].uiName = name
       return { ...state }
     },
     setPause(state, pause: boolean) {
@@ -92,8 +99,9 @@ export const context = createModel<RootModel>()({
       return { ...state }
     },
 
-    screenshot() {
+    screenshot(state) {
       command("screenshot window")
+      return state
     },
     setMousePos(state, pos: MousePos) {
       state[pluginName].player.mousePos = pos
@@ -106,13 +114,40 @@ export const context = createModel<RootModel>()({
       }
       return { ...state }
     },
-    setTooltip(state, hide: boolean, text: string) {
-      state[pluginName].player.mousePos = mousePosProp.value
-      state[pluginName].state = {
-        ...state[pluginName].state,
-        tooltipHide: hide,
-        tooltipText: text,
-      }
+    // setTooltip(state, hide: boolean, text: string) {
+    //   state[pluginName].player.mousePos = mousePosProp.value
+    //   return { ...state }
+    // },
+    setPlaylistHide(state, hide: boolean) {
+      state[pluginName].state.playlistHide = hide
+      return { ...state }
+    },
+    setPlaylist(state, list: string[]) {
+      state[pluginName].player.playlist = list
+      return { ...state }
+    },
+    exit(state) {
+      command("quit")
+      return { ...state }
+    },
+    next(state) {
+      command("playlist-next")
+      const list = state[pluginName].player.playlist
+      const len = list.length
+      const pos = state[pluginName].player.playlistPos
+      const newPos = (pos + len - 1) % len
+      state[pluginName].player.playlistPos = newPos
+      state[pluginName].player.path = list[newPos]
+      return { ...state }
+    },
+    previous(state) {
+      command("playlist-next")
+      const list = state[pluginName].player.playlist
+      const len = list.length
+      const pos = state[pluginName].player.playlistPos
+      const newPos = (pos + 1) % len
+      state[pluginName].player.playlistPos = newPos
+      state[pluginName].player.path = list[newPos]
       return { ...state }
     },
   },

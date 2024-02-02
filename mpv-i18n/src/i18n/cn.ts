@@ -20,6 +20,7 @@ export default {
   minimize: "最小化",
   restore: "恢复",
   close: "关闭",
+  exit: "退出",
 
   nextVideo: "下一集",
   previousVideo: "上一集",
@@ -34,4 +35,7 @@ export default {
   ui: "UI",
   language: "语言",
   skin: "皮肤",
+  subtitle: "字幕",
+  AudioTrack: "音频轨",
+  SubtitleTrack: "字幕轨",
 }

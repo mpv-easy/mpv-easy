@@ -1,34 +1,34 @@
 import { AssDraw } from "@mpv-easy/assdraw"
 import { usePropertyBool } from "@mpv-easy/hook"
 import { PropertyBool, command, observeProperty } from "@mpv-easy/tool"
-import { Box, render } from "@mpv-easy/ui"
+import { Box, render, MouseEvent } from "@mpv-easy/ui"
 import React, { useEffect, useState } from "react"
 
 function createHandler(id: string | number) {
   return {
-    onMouseDown: () => {
-      console.log("down: ", id)
+    onMouseDown: (e: MouseEvent) => {
+      console.log("down: ", id, e.target.attributes.id)
     },
-    onMouseEnter: () => {
-      console.log("enter: ", id)
+    onMouseEnter: (e: MouseEvent) => {
+      console.log("enter: ", id, e.target.attributes.id)
     },
-    onMouseLeave: () => {
-      console.log("leave: ", id)
+    onMouseLeave: (e: MouseEvent) => {
+      console.log("leave: ", id, e.target.attributes.id)
     },
-    onMouseMove: () => {
-      console.log("move: ", id)
+    // onMouseMove: () => {
+    //   console.log("move: ", id)
+    // },
+    onMousePress: (e: MouseEvent) => {
+      console.log("press: ", id, e.target.attributes.id)
     },
-    onMousePress: () => {
-      console.log("press: ", id)
+    onMouseUp: (e: MouseEvent) => {
+      console.log("up: ", id, e.target.attributes.id)
     },
-    onMouseUp: () => {
-      console.log("up: ", id)
+    onFocus: (e: MouseEvent) => {
+      console.log("focus: ", id, e.target.attributes.id)
     },
-    onFocus: () => {
-      console.log("focus: ", id)
-    },
-    onBlur: () => {
-      console.log("blur: ", id)
+    onBlur: (e: MouseEvent) => {
+      console.log("blur: ", id, e.target.attributes.id)
     },
   }
 }
@@ -63,6 +63,10 @@ function Flex() {
           backgroundColor="00FFFF"
           display="flex"
           {...createHandler(3)}
+          onMouseUp={(e) => {
+            console.log("stop up 3")
+            e.stopPropagation()
+          }}
         ></Box>
       </Box>
     </Box>

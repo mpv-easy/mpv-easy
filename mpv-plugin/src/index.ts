@@ -11,8 +11,8 @@ export type Plugin = {
   destroy: () => void
 }>
 
-export function definePlugin(
-  plugin: (context: PluginContext, system: SystemApi) => Plugin,
+export function definePlugin<T = undefined>(
+  plugin: (context: PluginContext, system: SystemApi, store?: T) => Plugin,
 ) {
   return plugin
 }

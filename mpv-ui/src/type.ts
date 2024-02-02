@@ -60,6 +60,8 @@ export type BaseElementProps = {
   color: string
   zIndex: number
   hide: boolean
-  display: "flex"
+  display: "flex" | "none"
   alignContent: AlignContent
+  title: string
+  pointerEvents: "none"
 }

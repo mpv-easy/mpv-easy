@@ -32,6 +32,9 @@ export type ButtonProps = {
   tooltip: string
   tooltipDelay: number
   enableMouseStyle: boolean
+
+  prefix: string
+  postfix: string
 } & BaseElementProps
 
 export const ButtonState = ["hover", "active", "disable"] as const
@@ -57,17 +60,24 @@ function getHoverProps(props: any) {
 }
 
 export const Button = React.forwardRef<DOMElement, Partial<ButtonProps>>(
-  (props, ref) => {
+  ({ prefix, postfix, text, ...props } = {}, ref) => {
     const hoverProps = getHoverProps(props)
     const [hover, setHover] = useState(false)
+
+    // console.log('button: ', props.id, text)
     return (
       <Box
+        display="flex"
         {...props}
         {...(hover ? hoverProps : {})}
         ref={ref}
+        onMouseDown={(e) => {
+          // console.log("====", props.id, text)
+          props.onMouseDown?.(e)
+        }}
         onMouseEnter={(e) => {
           setHover(true)
-          console.log("enter: ", hover, props.color, hoverProps.color)
+          // console.log("enter: ", hover, props.color, hoverProps.color)
           if (props.enableMouseStyle) {
             setMouseStyle("Hand")
           }
@@ -75,13 +85,42 @@ export const Button = React.forwardRef<DOMElement, Partial<ButtonProps>>(
         }}
         onMouseLeave={(e) => {
           setHover(false)
-          console.log("leave: ", hover, props.color, hoverProps.color)
+          // console.log("leave: ", hover, props.color, hoverProps.color)
           if (props.enableMouseStyle) {
             setMouseStyle("Arrow")
           }
           props.onMouseLeave?.(e)
         }}
-      />
+      >
+        {prefix ? (
+          <Box
+            id={"button-prefix-" + props.id}
+            pointerEvents="none"
+            text={prefix}
+          />
+        ) : (
+          <></>
+        )}
+        {text ? (
+          <Box
+            id={"button-text-" + props.id}
+            pointerEvents="none"
+            text={text}
+          />
+        ) : (
+          <></>
+        )}
+        {postfix ? (
+          <Box
+            id={"button-postfix-" + props.id}
+            pointerEvents="none"
+            text={postfix}
+          />
+        ) : (
+          <></>
+        )}
+        {props.children}
+      </Box>
     )
   },
 )

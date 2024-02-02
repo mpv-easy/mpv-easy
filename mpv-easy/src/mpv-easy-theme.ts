@@ -12,7 +12,7 @@ const AlphaLow = "40"
 const AlphaShow = "00"
 
 export type ThemeMode = "dark" | "light"
-export type ThemeName = "osc" | "uosc"
+export type UIName = "osc" | "uosc"
 
 export type ButtonStyle = {
   padding: number
@@ -48,14 +48,19 @@ export type ThemeStyle = {
   }
 
   control: {
+    height: number
     backgroundColor: string
   }
   toolbar: {
-    zIndex: number
     backgroundColor: string
     autoHideDelay: number
   }
+  playlist: {
+    backgroundColor: string
+    zIndex: number
+  }
   tooltip: {
+    enable: boolean
     zIndex: number
     font: string
     fontSize: number
@@ -74,11 +79,16 @@ export type ThemeStyle = {
     backgroundColor: string
     colorHover: string
     backgroundColorHover: string
+    button: Omit<ButtonStyle, "width" | "height">
+  }
+  clickMenu: {
+    zIndex: number
+    backgroundColor: string
   }
 }
-export type easyConfig = {
+export type EasyConfig = {
   mode: ThemeMode
-  name: ThemeName
+  uiName: UIName
   style: {
     [x in ThemeMode]: ThemeStyle
   }
@@ -89,6 +99,7 @@ export type easyConfig = {
   player: {
     pause: boolean
     timePos: number
+    playlistPos: number
     duration: number
     windowMaximized: boolean
     fullscreen: boolean
@@ -96,20 +107,30 @@ export type easyConfig = {
     path: string
     mousePos: MousePos
     mute: boolean
+    osdDimensions: {
+      w: number
+      h: number
+    }
+    playlist: string[]
   }
   state: {
-    tooltipHide: boolean
-    tooltipText: string
     hide: boolean
     timePosThrottle: number
     mousePosThrottle: number
     saveConfigThrottle: number
+    playlistHide: boolean
+  }
+  render: {
+    rerenderThrottle: number
+    enableMouseMoveEvent: boolean
   }
 }
 export const defaultTooltipZIndex = 128
 export const defaultDropdownZIndex = 512
 export const defaultToolbarZIndex = 256
 export const defaultPreviewZIndex = 256
+export const defaultClickMenuZIndex = 256
+export const defaultPlaylistZIndex = 512
 export const defaultFont = "FiraCode Nerd Font Mono Reg"
 export const defaultFontSize = 80
 export const defaultProgressFontSize = 60
@@ -121,9 +142,39 @@ export const defaultTimePosThrottle = 1000
 export const defaultMousePosThrottle = 300
 export const defaultHideDelay = 5000
 export const defaultSaveConfigThrottle = 2000
-export const defaultConfig: easyConfig = {
+
+export const defaultState: EasyConfig["state"] = {
+  hide: false,
+  timePosThrottle: defaultTimePosThrottle,
+  mousePosThrottle: defaultMousePosThrottle,
+  saveConfigThrottle: defaultSaveConfigThrottle,
+  playlistHide: true,
+}
+
+export const defaultPlayer: EasyConfig["player"] = {
+  pause: false,
+  timePos: 0,
+  duration: 0,
+  windowMaximized: false,
+  fullscreen: false,
+  windowMinimized: false,
+  path: "",
+  mute: false,
+  playlistPos: 0,
+  mousePos: {
+    x: 0,
+    y: 0,
+    hover: false,
+  },
+  osdDimensions: {
+    w: 0,
+    h: 0,
+  },
+  playlist: [],
+}
+export const defaultConfig: EasyConfig = {
   mode: "dark",
-  name: defaultName,
+  uiName: defaultName,
   style: {
     dark: {
       button: {
@@ -177,13 +228,18 @@ export const defaultConfig: easyConfig = {
       },
       control: {
         backgroundColor: Black + AlphaLow,
+        height: defaultButtonSize,
       },
       toolbar: {
         backgroundColor: Black + AlphaLow,
         autoHideDelay: defaultHideDelay,
-        zIndex: defaultToolbarZIndex,
+      },
+      playlist: {
+        backgroundColor: Black + AlphaLow,
+        zIndex: defaultPlaylistZIndex,
       },
       tooltip: {
+        enable: true,
         zIndex: defaultTooltipZIndex,
         padding: defaultPadding,
         color: White + AlphaShow,
@@ -202,6 +258,21 @@ export const defaultConfig: easyConfig = {
         backgroundColorHover: White + AlphaMedium,
         fontSize: defaultFontSize,
         font: defaultFont,
+        button: {
+          padding: defaultPadding,
+          color: White + AlphaShow,
+          backgroundColor: Black + AlphaHide,
+          colorHover: Yellow + AlphaShow,
+          backgroundColorHover: White + AlphaMedium,
+          fontSize: defaultFontSize,
+          font: defaultFont,
+          // width: defaultButtonSize,
+          // height: defaultButtonSize,
+        },
+      },
+      clickMenu: {
+        backgroundColor: Black + AlphaLow,
+        zIndex: defaultClickMenuZIndex,
       },
     },
     light: {
@@ -256,13 +327,18 @@ export const defaultConfig: easyConfig = {
       },
       control: {
         backgroundColor: White + AlphaLow,
+        height: defaultButtonSize,
       },
       toolbar: {
-        zIndex: defaultToolbarZIndex,
         backgroundColor: White + AlphaLow,
         autoHideDelay: defaultHideDelay,
       },
+      playlist: {
+        backgroundColor: White + AlphaLow,
+        zIndex: defaultPlaylistZIndex,
+      },
       tooltip: {
+        enable: true,
         zIndex: defaultTooltipZIndex,
         padding: defaultPadding,
         color: Black + AlphaShow,
@@ -273,7 +349,6 @@ export const defaultConfig: easyConfig = {
         font: defaultFont,
       },
       dropdown: {
-        zIndex: defaultDropdownZIndex,
         padding: defaultPadding,
         color: Black + AlphaShow,
         backgroundColor: White + AlphaLow,
@@ -281,6 +356,22 @@ export const defaultConfig: easyConfig = {
         backgroundColorHover: Black + AlphaMedium,
         fontSize: defaultFontSize,
         font: defaultFont,
+        zIndex: defaultDropdownZIndex,
+        button: {
+          padding: defaultPadding,
+          color: Black + AlphaShow,
+          backgroundColor: White + AlphaHide,
+          colorHover: Yellow + AlphaShow,
+          backgroundColorHover: Black + AlphaMedium,
+          fontSize: defaultFontSize,
+          font: defaultFont,
+          // width: defaultButtonSize,
+          // height: defaultButtonSize,
+        },
+      },
+      clickMenu: {
+        backgroundColor: White + AlphaLow,
+        zIndex: defaultClickMenuZIndex,
       },
     },
   },
@@ -288,27 +379,10 @@ export const defaultConfig: easyConfig = {
     save: true,
     time: 0,
   },
-  player: {
-    pause: false,
-    timePos: 0,
-    duration: 0,
-    windowMaximized: false,
-    fullscreen: false,
-    windowMinimized: false,
-    path: "",
-    mute: false,
-    mousePos: {
-      x: 0,
-      y: 0,
-      hover: false,
-    },
-  },
-  state: {
-    tooltipHide: true,
-    tooltipText: "",
-    hide: false,
-    timePosThrottle: defaultTimePosThrottle,
-    mousePosThrottle: defaultMousePosThrottle,
-    saveConfigThrottle: defaultSaveConfigThrottle,
+  player: defaultPlayer,
+  state: defaultState,
+  render: {
+    rerenderThrottle: 100,
+    enableMouseMoveEvent: true,
   },
 }

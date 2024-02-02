@@ -53,7 +53,12 @@ export function lenToNumber(
 }
 
 function skipFlexLayout(node: DOMElement): boolean {
-  return node.attributes.position === "absolute" || hasTLBR(node)
+  return (
+    node.attributes.position === "absolute" ||
+    hasTLBR(node) ||
+    typeof node.attributes.x !== "undefined" ||
+    typeof node.attributes.y !== "undefined"
+  )
 }
 
 function computeNodeSizeAxis(
@@ -82,6 +87,27 @@ function computeNodeSizeAxis(
   throw new Error("computeNodeSize error, not support length: " + v)
 }
 
+function computeZIndex(node: DOMElement) {
+  const { attributes } = node
+
+  if (typeof attributes.zIndex === "number") {
+    return attributes.zIndex
+  }
+  let parent = node.parentNode
+
+  let deep = 1
+  if (parent && typeof parent.attributes.zIndex === "undefined") {
+    parent = parent.parentNode
+    deep++
+  }
+
+  if (parent && typeof parent.attributes.zIndex === "number") {
+    return parent.attributes.zIndex + deep
+  }
+
+  return deep
+}
+
 function computeNodeSize(
   node: DOMElement,
   currentRenderCount: number,
@@ -95,10 +121,10 @@ function computeNodeSize(
   }
   node.layoutNode.computedSizeCount = currentRenderCount
 
-  const { zIndex = deep } = attributes
   const {
     overlay: [textOverlay, bgOverlay, borderOverlay],
   } = node
+  const zIndex = computeZIndex(node)
   textOverlay.z = zIndex + 3
   bgOverlay.z = zIndex + 2
   borderOverlay.z = zIndex + 1
@@ -143,6 +169,7 @@ function computeNodeSize(
     for (const c of node.childNodes) {
       computeNodeSize(c, currentRenderCount, deep + 1)
     }
+    // console.log('======btn: ', layoutNode.width, layoutNode.height)
     return
   }
 
@@ -786,7 +813,9 @@ function computedNodeAlign(node: DOMElement) {
 function computeNodeLayout(node: DOMElement, currentRenderCount: number) {
   // if (!node.layoutNode._tlbr) {
   // node.layoutNode._tlbr = false
+
   const { layoutNode, attributes } = node
+  // console.log('computeNodeLayout: ', attributes.id)
 
   if (layoutNode.computedLayoutCount === currentRenderCount) {
     return
@@ -796,31 +825,25 @@ function computeNodeLayout(node: DOMElement, currentRenderCount: number) {
   if (hasTLBR(node)) {
     computedNodeTLBR(node)
   }
-
+  if (typeof attributes.x === "number") {
+    layoutNode.x = attributes.x
+  }
+  if (typeof attributes.y === "number") {
+    layoutNode.y = attributes.y
+  }
   switch (attributes.position) {
     case "relative": {
     }
     case undefined: {
-      const isX = attributes.flexDirection !== "row"
-
       if (node.childNodes.length && node.attributes.display === "flex") {
         computedNodeAlign(node)
       }
-
       break
     }
 
     case "absolute": {
-      if (typeof attributes.x === "number") {
-        layoutNode.x = attributes.x
-      }
-      if (typeof attributes.y === "number") {
-        layoutNode.y = attributes.y
-      }
-
       break
     }
-
     default: {
       throw new Error(`error position: ${attributes.position}`)
     }
@@ -1054,65 +1077,75 @@ export function dispatchEventForNode(
   node: DOMElement,
   pos: MousePos,
   event: KeyEvent,
+  mouseEvent: MouseEvent,
 ) {
+  // console.log('dispatchEventForNode1: ', node.attributes.id)
+  if (!mouseEvent.bubbles) {
+    return
+  }
+  if (node.attributes.pointerEvents === "none") {
+    return
+  }
+  if (node.attributes.hide) {
+    return
+  }
+  // console.log('dispatchEventForNode2: ', node.attributes.id)
   const { attributes, layoutNode } = node
   // print("----dispatchEventForNode", attributes.id, layoutNode.x, layoutNode.y, layoutNode.width, layoutNode.height)
+  if (node.layoutNode.hasPoint(pos.x, pos.y)) {
+    if (typeof mouseEvent.target === "undefined") {
+      mouseEvent.target = node
+    }
 
-  if (node.nodeName === "@mpv-easy/box") {
-    const mouseEvent = new MouseEvent(node, pos.x, pos.y)
-    if (node.layoutNode.hasPoint(pos.x, pos.y)) {
-      if (pos.hover) {
-        if (event.event === "press") {
-          if (layoutNode._mouseDown) {
-            attributes.onMousePress?.(mouseEvent)
-          } else if (!layoutNode._mouseIn) {
-            attributes.onMouseEnter?.(mouseEvent)
-            layoutNode._mouseIn = true
-          } else {
-            attributes.onMouseMove?.(mouseEvent)
-          }
-        } else if (!layoutNode._mouseDown && event.event === "down") {
-          if (!layoutNode._mouseDown) {
-            attributes.onMouseDown?.(mouseEvent)
-            attributes.onClick?.(mouseEvent)
-            layoutNode._mouseDown = true
-            layoutNode._mouseUp = false
-            if (!layoutNode._focus) {
-              layoutNode._focus = true
-              attributes.onFocus?.(mouseEvent)
-            }
-          }
-        } else if (event.event === "up") {
-          if (!layoutNode._mouseUp) {
-            attributes.onMouseUp?.(mouseEvent)
-            layoutNode._mouseDown = false
-            layoutNode._mouseUp = true
-            if (!layoutNode._focus) {
-              attributes.onFocus?.(mouseEvent)
-              layoutNode._focus = true
-            }
+    if (pos.hover) {
+      if (event.event === "press") {
+        if (layoutNode._mouseDown) {
+          attributes.onMousePress?.(mouseEvent)
+        } else if (!layoutNode._mouseIn) {
+          attributes.onMouseEnter?.(mouseEvent)
+          layoutNode._mouseIn = true
+        } else {
+          attributes.onMouseMove?.(mouseEvent)
+        }
+      } else if (!layoutNode._mouseDown && event.event === "down") {
+        if (!layoutNode._mouseDown) {
+          attributes.onMouseDown?.(mouseEvent)
+          attributes.onClick?.(mouseEvent)
+          layoutNode._mouseDown = true
+          layoutNode._mouseUp = false
+          if (!layoutNode._focus) {
+            layoutNode._focus = true
+            attributes.onFocus?.(mouseEvent)
           }
         }
-      } else if (layoutNode._mouseIn) {
-        attributes.onMouseLeave?.(mouseEvent)
-        layoutNode._mouseIn = false
+      } else if (event.event === "up") {
+        if (!layoutNode._mouseUp) {
+          attributes.onMouseUp?.(mouseEvent)
+          layoutNode._mouseDown = false
+          layoutNode._mouseUp = true
+          if (!layoutNode._focus) {
+            attributes.onFocus?.(mouseEvent)
+            layoutNode._focus = true
+          }
+        }
       }
-    } else {
-      if (layoutNode._mouseIn) {
-        attributes.onMouseLeave?.(mouseEvent)
-        layoutNode._mouseIn = false
-        // layoutNode._mouseUp = false
-      }
+    } else if (layoutNode._mouseIn) {
+      attributes.onMouseLeave?.(mouseEvent)
+      layoutNode._mouseIn = false
+    }
+  } else {
+    const mouseEvent = new MouseEvent(node, pos.x, pos.y)
+    if (layoutNode._mouseIn) {
+      attributes.onMouseLeave?.(mouseEvent)
+      layoutNode._mouseIn = false
+      // layoutNode._mouseUp = false
+    }
 
-      if (
-        layoutNode._focus &&
-        (event.event === "down" || event.event === "up")
-      ) {
-        attributes.onBlur?.(mouseEvent)
-        layoutNode._focus = false
-        // layoutNode._mouseIn = false
-        // layoutNode._mouseUp = false
-      }
+    if (layoutNode._focus && (event.event === "down" || event.event === "up")) {
+      attributes.onBlur?.(mouseEvent)
+      layoutNode._focus = false
+      // layoutNode._mouseIn = false
+      // layoutNode._mouseUp = false
     }
   }
 }
@@ -1121,13 +1154,17 @@ export function dispatchEvent(
   node: DOMElement,
   pos: MousePos,
   event: KeyEvent,
+  mouseEvent = new MouseEvent(undefined, pos.x, pos.y),
 ) {
-  if (node.attributes.hide) {
+  if (node.attributes.hide || node.attributes.pointerEvents === "none") {
     return
   }
   for (const c of node.childNodes) {
-    dispatchEventForNode(c, pos, event)
-    dispatchEvent(c, pos, event)
+    if (c.attributes.pointerEvents !== "none" || c.attributes.hide !== true) {
+      dispatchEvent(c, pos, event, mouseEvent)
+      dispatchEventForNode(c, pos, event, mouseEvent)
+    }
   }
-  dispatchEventForNode(node, pos, event)
+  mouseEvent.target = node
+  dispatchEventForNode(node, pos, event, mouseEvent)
 }

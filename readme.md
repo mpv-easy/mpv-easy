@@ -1,6 +1,7 @@
 ## mpv-easy
 TS and React toolkit for mpv script
 ![mpv-easy](./assets/img/mpv-easy.gif)
+![click-menu](./assets/img/click-menu.gif)
 
 
 ## install

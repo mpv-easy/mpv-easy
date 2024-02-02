@@ -17,6 +17,7 @@ export type DropdownProps = {
   items: DropdownItem[]
   direction: DropdownDirection
   dropdownStyle: Partial<ButtonProps>
+  dropdownWrapStyle: Partial<ButtonProps>
 }
 
 function getProps(props: any) {
@@ -24,9 +25,17 @@ function getProps(props: any) {
   for (const i in props) {
     if (
       isEvent(i) ||
-      ["width", "height", "x", "y", "left", "right", "top", "bottom"].includes(
-        i,
-      )
+      [
+        "width",
+        "height",
+        "x",
+        "y",
+        "left",
+        "right",
+        "top",
+        "bottom",
+        "title",
+      ].includes(i)
     ) {
       continue
     }
@@ -45,10 +54,13 @@ export const Dropdown = React.forwardRef<
   const newProps = getProps(props)
   const { dropdownStyle = {} } = props
   const offsetProps = direction === "top" ? { bottom: "100%" } : { top: "100%" }
+
+  // console.log('offsetProps: ', JSON.stringify(offsetProps))
   return (
     <>
       <Button
         {...props}
+        {...dropdownStyle}
         ref={buttonRef}
         onMouseDown={(e) => {
           setShow((c) => !c)
@@ -71,10 +83,16 @@ export const Dropdown = React.forwardRef<
             alignItems="start"
             {...offsetProps}
             alignContent="stretch"
+            color={props.color}
+            backgroundColor={props.backgroundColor}
+            // {...dropdownStyle}
           >
             {items.map((i) => {
               return (
                 <Button
+                  // display="flex"
+                  position="relative"
+                  // position="absolute"
                   {...newProps}
                   {...dropdownStyle}
                   width={undefined}
@@ -85,6 +103,10 @@ export const Dropdown = React.forwardRef<
                     i.onSelect?.(i)
                     setShow(false)
                   }}
+                  // width={200}
+                  // height={200}
+                  // backgroundColor="0000FFA0"
+                  // color="00FFFF"
                 ></Button>
               )
             })}

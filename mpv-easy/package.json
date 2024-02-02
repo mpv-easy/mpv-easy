@@ -10,7 +10,7 @@
   "source": "./src/index.ts",
   "main": "./dist/index.js",
   "scripts": {
-    "bundle": "esbuild ./src/index.ts --bundle --outdir=dist --charset=utf8 --minify --drop:console",
+    "bundle": "esbuild ./src/index.ts --bundle --outdir=dist --charset=utf8",
     "es5": "babel --presets  @babel/preset-env ./dist -d es5 --plugins ./src/babel/hack.js",
     "dev": "chokidar \"../mpv-*/src/**/*.(ts|tsx|json)\" -c \"pnpm run build && pnpm run copy\" -t 3000  --initial",
     "echo": "chokidar \"./\" -c \"echo hello\" -d 0 -t 0 --initial",

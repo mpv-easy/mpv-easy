@@ -11,37 +11,33 @@ import { Control } from "./control"
 import { pluginName } from "../../main"
 import { Info } from "./info"
 import { useSelector } from "react-redux"
-import { RootStore } from "../../store"
+import {
+  RootState,
+  buttonStyleSelector,
+  progressStyleSelector,
+} from "../../store"
 
 export const Osc = React.memo(
   forwardRef<DOMElement, Partial<BaseElementProps>>((props, ref) => {
-    const mode = useSelector(
-      (store: RootStore) => store.context[pluginName].mode,
-    )
-    const height = useSelector(
-      (store: RootStore) =>
-        store.context[pluginName].style[mode].progress.height,
-    )
-    const padding = useSelector(
-      (store: RootStore) =>
-        store.context[pluginName].style[mode].button.default.padding,
-    )
+    const progressHeight = useSelector(progressStyleSelector).height
+
+    const padding = useSelector(buttonStyleSelector).padding
 
     return (
       <Box
         width={"100%"}
-        height={height * 2 + padding * 2}
+        height={progressHeight * 2 + padding * 4}
         display="flex"
         flexDirection="row"
-        bottom={0}
         hide={props.hide}
         ref={ref}
         justifyContent="end"
         alignItems="end"
         id="osc"
+        onMouseDown={(e) => e.stopPropagation}
       >
-        <Info {...props} width={"100%"} height={height} bottom={height} />
-        <Control {...props} width={"100%"} height={height} />
+        <Info {...props} width={"100%"} height={progressHeight} />
+        <Control {...props} width={"100%"} height={progressHeight} />
       </Box>
     )
   }),

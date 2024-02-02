@@ -47,7 +47,7 @@ function Counter() {
           },
           {
             key: "B",
-            label: "B",
+            label: "B".repeat(20),
             selected: true,
             onSelect: () => {
               console.log("B")

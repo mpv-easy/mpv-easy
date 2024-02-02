@@ -13,6 +13,7 @@ import {
   getOptions,
   getProperty,
   getPropertyNumber,
+  osdMessage,
   print,
 } from "./mpv"
 
@@ -317,4 +318,8 @@ export function choice<T>(array: T[]): T | undefined {
   }
   const randomIndex = Math.floor(Math.random() * array.length)
   return array[randomIndex]
+}
+
+export function todo() {
+  osdMessage("TODO: not yet implemented~")
 }

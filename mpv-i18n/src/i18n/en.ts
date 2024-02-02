@@ -20,6 +20,7 @@ export default {
   minimize: "minimize",
   restore: "restore",
   close: "close",
+  exit: "exit",
 
   nextVideo: "next video",
   previousVideo: "previous video",
@@ -33,4 +34,7 @@ export default {
   ui: "UI",
   language: "language",
   skin: "skin",
+  subtitle: "subtitle",
+  AudioTrack: "audio Track",
+  SubtitleTrack: "subtitle track",
 }

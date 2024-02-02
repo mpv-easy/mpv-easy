@@ -1,10 +1,18 @@
 import { BaseElementProps, Box, DOMElement } from "../index"
-import React, { useRef } from "react"
-import { getOsdSize } from "@mpv-easy/tool"
+import React, { useEffect, useRef, useState } from "react"
+import {
+  MousePos,
+  PropertyNative,
+  addForcedKeyBinding,
+  addKeyBinding,
+  getOsdSize,
+  print,
+} from "@mpv-easy/tool"
+import { isEqual, throttle } from "lodash-es"
+import { RootNode, dispatchEvent } from "../render/flex"
 
 export type TooltipProps = {
-  mouseX: number
-  mouseY: number
+  tooltipThrottle: number
 }
 
 export type TooltipDirection =
@@ -12,7 +20,7 @@ export type TooltipDirection =
   | "left-bottom"
   | "right-top"
   | "right-bottom"
-function getDirection(
+export function getDirection(
   x: number,
   y: number,
   width: number,
@@ -35,7 +43,7 @@ function getDirection(
   }
 }
 
-function computeTooltipPosition(
+export function computeTooltipPosition(
   node: DOMElement | null,
   mouseX: number,
   mouseY: number,
@@ -71,33 +79,109 @@ function computeTooltipPosition(
 
   return pos
 }
-export function Tooltip({
-  mouseX,
-  mouseY,
+
+function getTooltipElement(
+  node: DOMElement,
+  x: number,
+  y: number,
+): DOMElement | undefined {
+  for (const c of node.childNodes) {
+    const el = getTooltipElement(c, x, y)
+    if (el) {
+      return el
+    }
+  }
+
+  if (node.layoutNode.hasPoint(x, y)) {
+    if (node.attributes.title?.length) {
+      return node
+    }
+  }
+}
+const mousePosProp = new PropertyNative<MousePos>("mouse-pos")
+
+export const Tooltip = ({
+  tooltipThrottle = 100,
   ...boxProps
-}: Partial<BaseElementProps> & TooltipProps) {
-  const osdSize = getOsdSize()
-  const direction = getDirection(
-    mouseX,
-    mouseY,
-    osdSize?.width || 0,
-    osdSize?.height || 0,
+}: Partial<TooltipProps & BaseElementProps>) => {
+  const [show, setShow] = useState(true)
+  const [text, setText] = useState("")
+  const mousePos = mousePosProp.value
+  const [tooltipPos, setTooltipPos] = useState<{ x: number; y: number }>(
+    mousePos,
   )
-  const nodeRef = useRef<DOMElement>(null)
-  const tipPos = computeTooltipPosition(
-    nodeRef.current,
-    mouseX,
-    mouseY,
-    direction,
-  )
+  const tooltipRef = useRef<DOMElement>(null)
+
+  useEffect(() => {
+    let lastPos = mousePos
+    const update = throttle(
+      (pos) => {
+        lastPos = pos
+        const { x, y, hover } = pos
+        if (!hover) {
+          setShow(false)
+          return
+        }
+
+        const target = getTooltipElement(RootNode, x, y)
+
+        if (!target) {
+          setShow(false)
+          return
+        }
+
+        const title = target?.attributes.title
+        if (title?.length) {
+          const direction = getDirection(
+            x,
+            y,
+            RootNode.layoutNode.width,
+            RootNode.layoutNode.height,
+          )
+          const pos = computeTooltipPosition(
+            tooltipRef.current,
+            x,
+            y,
+            direction,
+          )
+          setTooltipPos(pos)
+          setShow(true)
+          setText(title)
+        }
+      },
+      tooltipThrottle,
+      {
+        trailing: true,
+        leading: true,
+      },
+    )
+    mousePosProp.observe(update, isEqual)
+
+    // addKeyBinding(
+    //   "MOUSE_BTN0",
+    //   "__MOUSE_BTN0__TOOLTIP",
+    //   () => {
+    //     console.log("======:")
+    //     update(lastPos)
+    //   },
+    //   {
+    //     forced: false,
+    //     repeatable: false,
+    //     complex: false,
+    //   },
+    // )
+  }, [])
+
   return (
     <Box
-      id="tooltip-box"
+      id="tooltip"
       {...boxProps}
-      ref={nodeRef}
+      hide={!tooltipRef.current || boxProps.hide || !show}
+      ref={tooltipRef}
+      x={tooltipPos.x}
+      y={tooltipPos.y}
+      text={text}
       position="absolute"
-      x={tipPos.x}
-      y={tipPos.y}
     />
   )
 }

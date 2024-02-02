@@ -4,15 +4,25 @@ import { Rect } from "@mpv-easy/tool"
 export class MouseEvent {
   private _x: number
   private _y: number
-  private _node: DOMElement
-  constructor(node: DOMElement, x: number, y: number) {
-    this._node = node
+  private _target: DOMElement | undefined
+  bubbles = true
+  defaultPrevented = false
+  constructor(node: DOMElement | undefined, x: number, y: number) {
+    this._target = node
     this._x = x
     this._y = y
   }
 
-  get target() {
-    return this._node
+  preventDefault() {
+    // console.log("preventDefault", this.target?.attributes?.id)
+    this.defaultPrevented = true
+  }
+
+  get target(): DOMElement {
+    return this._target!
+  }
+  set target(node: DOMElement) {
+    this._target = node
   }
 
   get x() {
@@ -32,11 +42,15 @@ export class MouseEvent {
   }
 
   get offsetX() {
-    return this.x - this._node.layoutNode.x
+    return this.x - this.target.layoutNode.x
   }
 
   get offsetY() {
-    return this.y - this._node.layoutNode.y
+    return this.y - this.target.layoutNode.y
+  }
+
+  stopPropagation() {
+    this.bubbles = false
   }
 }
 

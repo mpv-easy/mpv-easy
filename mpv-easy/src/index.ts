@@ -4,4 +4,4 @@ import "./mpv-easy"
 
 // command("set osc no")
 // command("set window-dragging no")
-// import "./example/button-hover"
+// import "./example/dropdown"

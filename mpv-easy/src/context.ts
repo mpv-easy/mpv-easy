@@ -1,4 +1,4 @@
-import { version } from "react"
+import { version } from "../../package.json"
 // const version = (+Date.now()).toString()
 
 import "@mpv-easy/tool"
@@ -48,6 +48,7 @@ import {
   readFile,
   writeFile,
 } from "@mpv-easy/tool"
+import { Store } from "./store"
 
 export type Experimental = {
   mouseHoverStyle: boolean
@@ -60,7 +61,7 @@ export const plugins = [
   copyTimePlugin,
   i18nPlugin,
   easyPlugin,
-  autoloadPlugin,
+  // autoloadPlugin,
   thumbfastPlugin,
 ]
 
@@ -70,7 +71,7 @@ export interface EnablePlugin {
   [copyTimeName]: boolean
   [i18nName]: boolean
   [easyName]: boolean
-  [autoloadName]: boolean
+  // [autoloadName]: boolean
   [thumbfastName]: boolean
 }
 
@@ -109,14 +110,14 @@ export const defaultContext: PluginContext = {
     [copyTimeName]: false,
     [i18nName]: true,
     [easyName]: true,
-    [autoloadName]: true,
+    // [autoloadName]: false,
     [thumbfastName]: false,
   },
   version,
   experimental,
 }
 
-function saveConfig(c: PluginContext) {
+export function saveConfig(c: PluginContext) {
   if (!existsSync(configDir)) {
     try {
       mkdir(configDir)
@@ -130,10 +131,6 @@ function saveConfig(c: PluginContext) {
   } catch {
     print("write config file error: " + configPath)
   }
-}
-
-export const api: SystemApi = {
-  saveConfig,
 }
 
 function readConfig(): PluginContext {

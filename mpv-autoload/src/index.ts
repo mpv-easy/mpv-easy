@@ -39,6 +39,10 @@ declare module "@mpv-easy/plugin" {
   interface PluginContext {
     [pluginName]: AutoloadConfig
   }
+
+  interface SystemApi {
+    updatePlaylist: (list: string[]) => void
+  }
 }
 
 export const defaultConfig: AutoloadConfig = {
@@ -46,17 +50,19 @@ export const defaultConfig: AutoloadConfig = {
   // images: true,
   // videos: true,
 }
-
-export function autoload() {
+function getList() {
   const path = getProperty("path") || ""
-
   const dir = path?.replace("\\", "/").split("/").slice(0, -1).join("/")
   const list = readdir(dir) || []
-  const videoList = alphaNumSort(
-    list
-      .filter((i) => isVideo(i) || isAudio(i) || isImage(i))
-      .map((i) => joinPath(dir, i)),
-  )
+  const videoList = list
+    .filter((i) => isVideo(i) || isAudio(i) || isImage(i))
+    .map((i) => joinPath(dir, i))
+    .sort((a, b) => a.localeCompare(b))
+  return videoList
+}
+
+export function autoload(videoList: string[]) {
+  const path = getProperty("path") || ""
   const oldCount = getPropertyNumber("playlist-count", 1) || 1
   const playlistPos = getPropertyNumber("playlist-pos", 0) || 0
   const currentPos = videoList.indexOf(path)
@@ -83,9 +89,15 @@ export default definePlugin((context, api) => ({
   name: pluginName,
   create() {
     const config = context[pluginName]
-    registerEvent("start-file", autoload)
+    registerEvent("start-file", () => {
+      const videoList = getList()
+      console.log("======videoList111:", videoList, api.updatePlaylist)
+      api.updatePlaylist(videoList)
+      console.log("======videoList222:", videoList)
+      autoload(videoList)
+    })
   },
   destroy() {
-    unregisterEvent(autoload)
+    // unregisterEvent(autoload)
   },
 }))

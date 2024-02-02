@@ -1,85 +1,42 @@
-import {
-  PropertyBool,
-  PropertyNumber,
-  command,
-  getPropertyNumber,
-  observeProperty,
-  setPropertyNumber,
-  formatTime,
-  getTimeFormat,
-} from "@mpv-easy/tool"
-import { Box, Button, DOMElement } from "@mpv-easy/ui"
+import { formatTime, getTimeFormat } from "@mpv-easy/tool"
+import { Box, DOMElement } from "@mpv-easy/ui"
 import React, { useRef, useState } from "react"
 import { MouseEvent } from "@mpv-easy/ui"
-import { pluginName } from "../../main"
 import { Len } from "@mpv-easy/ui"
-import { store } from "../../example/redux-toolkit/store"
 import { useSelector, useDispatch } from "react-redux"
-import { RootStore, Dispatch } from "../../store"
-import { pluginName as i18nName } from "@mpv-easy/i18n"
+import {
+  RootState,
+  Dispatch,
+  progressStyleSelector,
+  durationSelector,
+  timePosSelector,
+} from "../store"
 
 export type ProgressProps = {
   width: Len
   height: Len
-  // bottom: Len
-  // left: Len
 }
 
 export const Progress = React.memo(({ width, height }: ProgressProps) => {
   const [leftPreview, setLeftPreview] = useState(0)
   const [previewCursorHide, setPreviewCursorHide] = useState(true)
-
-  const mode = useSelector((store: RootStore) => store.context[pluginName].mode)
-  const button = useSelector(
-    (store: RootStore) => store.context[pluginName].style[mode].button.default,
-  )
-  const control = useSelector(
-    (store: RootStore) => store.context[pluginName].style[mode].control,
-  )
-  const language = useSelector(
-    (store: RootStore) => store.context[i18nName].default,
-  )
-  const uiName = useSelector(
-    (store: RootStore) => store.context[pluginName].name,
-  )
-  const i18n = useSelector(
-    (store: RootStore) => store.context[i18nName].lang[language],
-  )
-  const progress = useSelector(
-    (store: RootStore) => store.context[pluginName].style[mode].progress,
-  )
-  const player = useSelector(
-    (store: RootStore) => store.context[pluginName].player,
-  )
-
-  const timePos = useSelector(
-    (store: RootStore) => store.context[pluginName].player.timePos,
-  )
-  const duration = useSelector(
-    (store: RootStore) => store.context[pluginName].player.duration,
-  )
-
-  const mouseHoverStyle = useSelector(
-    (store: RootStore) => store.context.experimental.mouseHoverStyle,
-  )
-
+  const progress = useSelector(progressStyleSelector)
+  const timePos = useSelector(timePosSelector)
+  const duration = useSelector(durationSelector)
   const dispatch = useDispatch<Dispatch>()
-
   const cursorLeft = timePos / duration
-
   const format = getTimeFormat(duration)
-
   const updatePreviewCursor = (e: MouseEvent) => {
     const w = e.target.layoutNode.width
     const per = (e.offsetX - progress.cursorWidth / 2) / w
     setLeftPreview(per)
     return per
   }
-
   const cursorTextStartRef = useRef<DOMElement>(null)
 
   const previewTimeTextOffsetX =
     (cursorTextStartRef.current?.layoutNode?.width ?? 0) / 2
+
   return (
     <Box
       display="flex"
@@ -96,15 +53,29 @@ export const Progress = React.memo(({ width, height }: ProgressProps) => {
         const per = (e.offsetX - progress.cursorWidth / 2) / w
         const timePos = per * duration
         dispatch.context.setTimePos(timePos)
+        e.preventDefault()
+        // console.log(
+        //   "----mousedown: ",
+        //   w,
+        //   per,
+        //   timePos,
+        //   e.target.layoutNode.width,
+        // )
       }}
-      onMouseMove={updatePreviewCursor}
+      onMouseMove={(e) => {
+        // console.log("move: ", e.target.attributes.id)
+        updatePreviewCursor(e)
+        e.stopPropagation()
+      }}
       onMouseEnter={(e) => {
         updatePreviewCursor(e)
         setPreviewCursorHide(false)
+        e.stopPropagation()
       }}
       onMouseLeave={(e) => {
         updatePreviewCursor(e)
         setPreviewCursorHide(true)
+        e.stopPropagation()
       }}
     >
       <Box
@@ -118,6 +89,7 @@ export const Progress = React.memo(({ width, height }: ProgressProps) => {
         backgroundColor={progress.timeTextBackgroundColor}
         color={progress.timeTextColor}
         text={formatTime(timePos, format)}
+        pointerEvents="none"
       />
       <Box
         id="progress-text-end"
@@ -129,6 +101,7 @@ export const Progress = React.memo(({ width, height }: ProgressProps) => {
         backgroundColor={progress.timeTextBackgroundColor}
         color={progress.timeTextColor}
         text={formatTime(duration, format)}
+        pointerEvents="none"
       />
       <Box
         id="cursor"
@@ -138,6 +111,7 @@ export const Progress = React.memo(({ width, height }: ProgressProps) => {
         height={"100%"}
         backgroundColor={progress.cursorColor}
         color={progress.cursorColor}
+        pointerEvents="none"
       />
       <Box
         id="preview-cursor"
@@ -148,6 +122,7 @@ export const Progress = React.memo(({ width, height }: ProgressProps) => {
         height={"100%"}
         backgroundColor={progress.previewCursorColor}
         color={progress.previewCursorColor}
+        pointerEvents="none"
       >
         <Box
           id="preview-cursor-time"
@@ -162,6 +137,7 @@ export const Progress = React.memo(({ width, height }: ProgressProps) => {
           alignItems="center"
           text={formatTime(leftPreview * duration, format)}
           zIndex={progress.previewZIndex}
+          pointerEvents="none"
         ></Box>
       </Box>
     </Box>

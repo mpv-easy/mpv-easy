@@ -1,5 +1,5 @@
 import React, { forwardRef } from "react"
-import { Progress } from "./progress"
+import { Progress } from "../progress"
 import {
   Box,
   AutoHide,
@@ -10,42 +10,36 @@ import {
 import { Control } from "./control"
 import { pluginName } from "../../main"
 import { useSelector } from "react-redux"
-import { RootStore } from "../../store"
+import { RootState, progressStyleSelector } from "../../store"
+import { Playlist } from "../playlist"
 
 export const Uosc = React.memo(
   forwardRef<DOMElement, Partial<BaseElementProps>>((props, ref) => {
     const mode = useSelector(
-      (store: RootStore) => store.context[pluginName].mode,
+      (store: RootState) => store.context[pluginName].mode,
     )
-    const height = useSelector(
-      (store: RootStore) =>
-        store.context[pluginName].style[mode].progress.height,
-    )
+    const progressHeight = useSelector(progressStyleSelector).height
+
     const padding = useSelector(
-      (store: RootStore) =>
+      (store: RootState) =>
         store.context[pluginName].style[mode].button.default.padding,
     )
 
     return (
       <Box
         width={"100%"}
-        height={height * 2 + padding * 4}
+        height={progressHeight * 2 + padding * 4}
         display="flex"
         flexDirection="row"
-        bottom={0}
         hide={props.hide}
         ref={ref}
         id="uosc"
         justifyContent="end"
+        // onMouseDown={(e) => e.stopPropagation()}
+        // backgroundColor="00FF00A0"
       >
-        <Control
-          {...props}
-          width={"100%"}
-          height={height + padding * 2}
-          bottom={height}
-          left={0}
-        />
-        <Progress {...props} width={"100%"} height={height} />
+        <Control {...props} width={"100%"} />
+        <Progress {...props} width={"100%"} height={progressHeight} />
       </Box>
     )
   }),
