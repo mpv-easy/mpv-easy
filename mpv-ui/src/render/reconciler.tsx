@@ -191,7 +191,7 @@ export function createRender({
       // const st = +Date.now()
       renderNode(RootNode, ++currentRenderCount, 0)
       // const ed = +Date.now()
-      // console.log("time: ", st, ed, ed - st)
+      // console.log("render time: ", currentRenderCount, st, ed, ed - st)
     },
     rerenderThrottle,
     {
@@ -199,6 +199,12 @@ export function createRender({
       leading: true,
     },
   ),
+  // customRender = () => {
+  //   const st = +Date.now()
+  //   renderNode(RootNode, ++currentRenderCount, 0)
+  //   const ed = +Date.now()
+  //   console.log("render time: ", currentRenderCount, st, ed, ed - st)
+  // },
 }: Partial<RenderConfig> = {}) {
   const reconciler = createCustomReconciler(customRender)
   return (reactNode: React.ReactNode) => {

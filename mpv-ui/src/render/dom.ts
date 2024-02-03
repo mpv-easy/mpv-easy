@@ -115,7 +115,11 @@ export const createNode = (nodeName: ElementNames): DOMElement => {
     childNodes: [],
     parentNode: undefined,
     layoutNode: new LayoutNode(),
-    overlay: [new Overlay(), new Overlay(), new Overlay()],
+    overlay: [
+      new Overlay({ cache: true }),
+      new Overlay({ cache: true }),
+      new Overlay({ cache: true }),
+    ],
   }
   return node
 }

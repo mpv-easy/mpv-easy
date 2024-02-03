@@ -2,6 +2,7 @@ import { Button, Dropdown } from "@mpv-easy/ui"
 import React from "react"
 import { useDispatch, useSelector } from "react-redux"
 import * as ICON from "../../icon"
+import { todo } from "@mpv-easy/tool"
 import {
   buttonStyleSelector,
   pauseSelector,
@@ -23,18 +24,19 @@ export const SubtitleTrack = () => {
       id="mpv-easy-button-subtitle-track"
       direction="top"
       title={i18n.SubtitleTrack}
-      items={[
-        {
-          label: "en",
-          key: "en",
-          onSelect: () => {},
-        },
-        {
-          label: "cn",
-          key: "cn",
-          onSelect: () => {},
-        },
-      ]}
+      // items={[
+      //   {
+      //     label: "en",
+      //     key: "en",
+      //     onSelect: () => {},
+      //   },
+      //   {
+      //     label: "cn",
+      //     key: "cn",
+      //     onSelect: () => {},
+      //   },
+      // ]}
+
       text={ICON.Subtitles}
       dropdownStyle={dropdown.button}
       width={button.width}
@@ -52,6 +54,7 @@ export const SubtitleTrack = () => {
       color={dropdown.color}
       onMouseDown={(e) => {
         // e.stopPropagation()
+        todo()
       }}
     />
   )

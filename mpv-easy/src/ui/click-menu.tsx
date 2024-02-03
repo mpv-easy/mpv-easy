@@ -6,6 +6,7 @@ import {
   addKeyBinding,
   command,
   getOsdSize,
+  osdMessage,
   todo,
 } from "@mpv-easy/tool"
 import {
@@ -16,7 +17,7 @@ import {
   getDirection,
   Button,
 } from "@mpv-easy/ui"
-import { RootNode } from "@mpv-easy/ui/src/render/flex"
+import { RootNode } from "@mpv-easy/ui"
 import React, { useEffect, useRef, useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import {
@@ -27,7 +28,11 @@ import {
   i18nSelector,
   pauseSelector,
   anime4kSelector,
+  languageSelector,
+  modeSelector,
+  uiNameSelector,
 } from "../store"
+import * as ICON from "../icon"
 
 export interface MenuItem {
   key: string
@@ -54,6 +59,20 @@ export const ClickMenu = React.forwardRef<
   const pause = useSelector(pauseSelector)
   const i18n = useSelector(i18nSelector)
   const anime4k = useSelector(anime4kSelector)
+
+  const language = useSelector(languageSelector)
+  const cnPrefix = language === "cn" ? ICON.Ok : ICON.CheckboxBlankCircleOutline
+  const enPrefix = language === "en" ? ICON.Ok : ICON.CheckboxBlankCircleOutline
+  const mode = useSelector(modeSelector)
+  const darkPrefix = mode === "dark" ? ICON.Ok : ICON.CheckboxBlankCircleOutline
+  const lightPrefix =
+    mode === "light" ? ICON.Ok : ICON.CheckboxBlankCircleOutline
+
+  const uiName = useSelector(uiNameSelector)
+  const oscPrefix = uiName === "osc" ? ICON.Ok : ICON.CheckboxBlankCircleOutline
+  const uoscPrefix =
+    uiName === "uosc" ? ICON.Ok : ICON.CheckboxBlankCircleOutline
+
   function getClickMenuItems(): MenuItem[] {
     return [
       {
@@ -78,46 +97,62 @@ export const ClickMenu = React.forwardRef<
           dispatch.context.setPlaylistHide(false)
         },
       },
+
       {
-        key: "anime4k",
-        label: "anime4k",
-        children: anime4k.shaders.map((i) => {
-          return {
-            key: i.key,
-            label: i.title,
+        key: i18n.theme,
+        label: i18n.theme,
+        children: [
+          {
+            key: i18n.lightName,
+            label: lightPrefix + " " + i18n.lightName,
             onSelect: () => {
-              const { value, title } = i
-              if (value.length) {
-                command(
-                  `${
-                    anime4k.noOsd ? "no-osd" : ""
-                  } change-list glsl-shaders set "${value}"; show-text "${title}"`,
-                )
-              } else {
-                command(
-                  `${
-                    anime4k.noOsd ? "no-osd" : ""
-                  }  change-list glsl-shaders clr ""; show-text "${title}"`,
-                )
-              }
+              dispatch.context.setMode("light")
             },
-          }
-        }),
+          },
+          {
+            key: i18n.darkName,
+            label: darkPrefix + "  " + i18n.darkName,
+            onSelect: () => {
+              dispatch.context.setMode("dark")
+            },
+          },
+        ],
       },
+      {
+        key: i18n.language,
+        label: i18n.language,
+        children: [
+          {
+            key: i18n.languageChinese,
+            label: cnPrefix + " " + i18n.languageChinese,
+            onSelect: () => {
+              dispatch.context.setLanguage("cn")
+            },
+          },
+          {
+            key: i18n.languageEnglish,
+            label: enPrefix + " " + i18n.languageEnglish,
+            onSelect: () => {
+              dispatch.context.setLanguage("en")
+            },
+          },
+        ],
+      },
+
       {
         key: i18n.skin,
         label: i18n.skin,
         children: [
           {
             key: i18n.osc,
-            label: i18n.osc,
+            label: oscPrefix + "  " + i18n.osc,
             onSelect: () => {
               dispatch.context.setUI("osc")
             },
           },
           {
             key: i18n.uosc,
-            label: i18n.uosc,
+            label: uoscPrefix + " " + i18n.uosc,
             onSelect: () => {
               dispatch.context.setUI("uosc")
             },
@@ -125,24 +160,32 @@ export const ClickMenu = React.forwardRef<
         ],
       },
       {
-        key: i18n.theme,
-        label: i18n.theme,
-        children: [
-          {
-            key: i18n.lightName,
-            label: i18n.lightName,
+        key: "anime4k",
+        label: "anime4k",
+        children: anime4k.shaders.map((i, k) => {
+          const prefix =
+            k === anime4k.current ? ICON.Ok : ICON.CheckboxBlankCircleOutline
+          return {
+            key: i.key,
+            label: prefix + " " + i.title,
             onSelect: () => {
-              dispatch.context.setMode("light")
+              const { value, title } = i
+              if (value.length) {
+                command(`no-osd change-list glsl-shaders set "${value}";`)
+                if (!anime4k.noOsd) {
+                  osdMessage(title, 5)
+                }
+              } else {
+                command(`no-osd change-list glsl-shaders clr "";`)
+                if (!anime4k.noOsd) {
+                  osdMessage(title, 5)
+                }
+              }
+              anime4k.current = k
+              dispatch.context.setAnime4k(anime4k)
             },
-          },
-          {
-            key: i18n.darkName,
-            label: i18n.darkName,
-            onSelect: () => {
-              dispatch.context.setMode("dark")
-            },
-          },
-        ],
+          }
+        }),
       },
       {
         key: i18n.exit,
@@ -251,8 +294,8 @@ export const ClickMenu = React.forwardRef<
               color={button.color}
               onMouseDown={(e) => {
                 e.stopPropagation()
-                console.log("menu click", i.key)
-                console.log("child-menu click", i.key, e.target.attributes.id)
+                // console.log("menu click", i.key)
+                // console.log("child-menu click", i.key, e.target.attributes.id)
                 i.onSelect?.(i)
                 setChildMenuHide(false)
 
@@ -286,19 +329,17 @@ export const ClickMenu = React.forwardRef<
           position="relative"
           x={childMenuPos.x}
           y={childMenuPos.y}
-          // onBlur={() => {
-          //   setTimeout(() => {
-          //     setHide(true)
-          //     setChildMenuHide(true)
-          //   }, 16)
-          // }}
+          padding={button.padding}
+          font={button.font}
+          fontSize={button.fontSize}
+          color={button.color}
           display="flex"
           flexDirection="row"
           alignContent="stretch"
           justifyContent="start"
           alignItems="start"
           backgroundColor={clickMenu.backgroundColor}
-          zIndex={clickMenu.zIndex + 100}
+          zIndex={clickMenu.zIndex}
           onMouseDown={(e) => {
             console.log("======click-menu-main", e.target.attributes.id)
             e.stopPropagation()
@@ -307,7 +348,6 @@ export const ClickMenu = React.forwardRef<
           {(selectedMenu?.children ?? []).map((i) => {
             return (
               <Button
-                zIndex={clickMenu.zIndex + 200}
                 id={"click-child-menu-" + i.key}
                 key={i.key}
                 text={i.label}
@@ -321,7 +361,7 @@ export const ClickMenu = React.forwardRef<
                 color={button.color}
                 onMouseDown={(e) => {
                   e.stopPropagation()
-                  console.log("child-menu click", i.key, e.target.attributes.id)
+                  // console.log("child-menu click", i.key, e.target.attributes.id)
                   i.onSelect?.(i)
                   setChildMenuHide(true)
                   setHide(true)

@@ -14,11 +14,13 @@ import {
   setPropertyNumber,
   setPropertyString,
   MpvPropertyTypeMap,
+  getPropertyNative,
+  setPropertyNative,
 } from "@mpv-easy/tool"
 import { Language } from "@mpv-easy/i18n"
 import { ThemeMode, UIName } from "../mpv-easy-theme"
 import { pluginName as i18nName } from "@mpv-easy/i18n"
-import { playlistSelector } from "../store"
+import { pluginName as anime4kName, Anime4kConfig } from "@mpv-easy/anime4k"
 
 const windowMaximizedProp = new PropertyBool("window-maximized")
 const fullscreenProp = new PropertyBool("fullscreen")
@@ -69,7 +71,6 @@ export const context = createModel<RootModel>()({
     },
     setTimePos(state, pos: number) {
       state[pluginName].player.timePos = pos
-      setPropertyNumber("time-pos", pos)
       return { ...state }
     },
     setWindowMaximized(state, value: boolean) {
@@ -95,7 +96,9 @@ export const context = createModel<RootModel>()({
     },
     setPath(state, value: string) {
       state[pluginName].player.path = value
-      setPropertyString("path", value)
+      if (value !== getPropertyNative("path")) {
+        setPropertyString("path", value)
+      }
       return { ...state }
     },
 
@@ -131,23 +134,30 @@ export const context = createModel<RootModel>()({
       return { ...state }
     },
     next(state) {
-      command("playlist-next")
       const list = state[pluginName].player.playlist
+      const path = state[pluginName].player.path
       const len = list.length
-      const pos = state[pluginName].player.playlistPos
-      const newPos = (pos + len - 1) % len
-      state[pluginName].player.playlistPos = newPos
-      state[pluginName].player.path = list[newPos]
-      return { ...state }
-    },
-    previous(state) {
-      command("playlist-next")
-      const list = state[pluginName].player.playlist
-      const len = list.length
-      const pos = state[pluginName].player.playlistPos
+      const pos = list.indexOf(path)
       const newPos = (pos + 1) % len
       state[pluginName].player.playlistPos = newPos
       state[pluginName].player.path = list[newPos]
+      pathProp.value = list[newPos]
+      command(`playlist-play-index ${newPos}`)
+      return { ...state }
+    },
+    previous(state) {
+      const list = state[pluginName].player.playlist
+      const path = state[pluginName].player.path
+      const len = list.length
+      const pos = list.indexOf(path)
+      const newPos = (pos + len - 1) % len
+      state[pluginName].player.playlistPos = newPos
+      state[pluginName].player.path = list[newPos]
+      command(`playlist-play-index ${newPos}`)
+      return { ...state }
+    },
+    setAnime4k(state, config: Anime4kConfig) {
+      state[anime4kName] = { ...config }
       return { ...state }
     },
   },

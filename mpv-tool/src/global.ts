@@ -11,10 +11,12 @@ g.Uint8Array = Array
 g.self = g
 // g.__global__ = undefined
 
+const oldLog = g.console?.log
+
 g.console = {
-  log: g.print,
-  error: g.print,
-  info: g.print,
-  debug: g.print,
-  warn: g.print,
+  log: oldLog ?? g.print,
+  error: oldLog ?? g.print,
+  info: oldLog ?? g.print,
+  debug: oldLog ?? g.print,
+  warn: oldLog ?? g.print,
 }

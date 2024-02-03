@@ -57,7 +57,6 @@ export const Toolbar = React.memo(
           <Theme />
           <Language />
           <UI />
-          <Theme />
         </Box>
 
         {fullscreen ? (

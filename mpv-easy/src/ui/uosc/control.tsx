@@ -6,7 +6,7 @@ import { command } from "@mpv-easy/tool"
 import { pluginName as i18nName } from "@mpv-easy/i18n"
 import { useSelector, useDispatch } from "react-redux"
 import { store } from "../../example/redux-toolkit/store"
-import { RootState, Dispatch } from "../../store"
+import { RootState, Dispatch, fullscreenSelector } from "../../store"
 import { throttle } from "lodash-es"
 import { Play } from "../components/play"
 import { Stop } from "../components/stop"
@@ -18,6 +18,8 @@ import { RandomPlay } from "../components/random-play"
 import { Playlist } from "../components/playlist"
 import { SubtitleTrack } from "../components/subtitle-track"
 import { AudioTrack } from "../components/audio-track"
+import { Restore } from "../components/restore"
+import { Filename } from "../components/filename"
 
 export const Control = React.memo((props: Partial<BaseElementProps>) => {
   const { width, height } = props
@@ -28,6 +30,8 @@ export const Control = React.memo((props: Partial<BaseElementProps>) => {
   const control = useSelector(
     (store: RootState) => store.context[pluginName].style[mode].control,
   )
+
+  const fullscreen = useSelector(fullscreenSelector)
   return (
     <Box
       id="uosc-control"
@@ -51,6 +55,7 @@ export const Control = React.memo((props: Partial<BaseElementProps>) => {
         <SubtitleTrack />
         <AudioTrack />
         <Screenshot />
+        <Filename />
       </Box>
 
       <Box
@@ -63,7 +68,7 @@ export const Control = React.memo((props: Partial<BaseElementProps>) => {
         <Previous />
         <Playlist />
         <Next />
-        <Fullscreen />
+        {fullscreen ? <Restore /> : <Fullscreen />}
       </Box>
     </Box>
   )

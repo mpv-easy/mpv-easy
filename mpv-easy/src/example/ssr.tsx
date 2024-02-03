@@ -1,0 +1,49 @@
+import "@mpv-easy/tool"
+import React from "react"
+import { getConfig } from "../context"
+import { createStore } from "../store"
+import { Easy } from "../ui"
+
+interface RecursiveDivProps {
+  deep: number
+  count: number
+}
+
+const RecursiveDiv: React.FC<RecursiveDivProps> = ({ deep, count }) => {
+  if (deep === 0) {
+    return null
+  }
+  const children = Array.from({ length: count }, (_, index) => (
+    <RecursiveDiv key={index} deep={deep - 1} count={count} />
+  ))
+  // @ts-ignore
+  return (
+    <div
+      id={deep + "-" + count}
+      key={deep + "-" + count}
+      // @ts-ignore
+      width={deep + "-" + count}
+      // @ts-ignore
+      height={deep + "-" + count}
+    >
+      {children}
+    </div>
+  )
+}
+
+import("react-dom/server").then((v) => {
+  const store = createStore()
+  const customConfig = getConfig()
+  store.getState().context = customConfig
+  const { renderToString } = v
+  const st = +Date.now()
+  // const s = renderToString(<Provider store={store}>
+  //   <Easy />
+  // </Provider>)
+
+  const s = renderToString(<RecursiveDiv count={5} deep={4} />)
+
+  const ed = +Date.now()
+  console.log("ssr time: ", s)
+  console.log("ssr text: ", ed - st)
+})

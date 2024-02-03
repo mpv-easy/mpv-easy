@@ -9,6 +9,7 @@ import {
   i18nSelector,
   mouseHoverStyleSelector,
   dropdownStyleSelector,
+  modeSelector,
 } from "../../store"
 
 export const Theme = () => {
@@ -18,22 +19,29 @@ export const Theme = () => {
   const mouseHoverStyle = useSelector(mouseHoverStyleSelector)
 
   const dropdown = useSelector(dropdownStyleSelector)
+
+  const mode = useSelector(modeSelector)
+  const darkPrefix = mode === "dark" ? ICON.Ok : ICON.CheckboxBlankCircleOutline
+  const lightPrefix =
+    mode === "light" ? ICON.Ok : ICON.CheckboxBlankCircleOutline
+
   return (
     <Dropdown
       id="mpv-easy-button-theme"
+      // text={mode === 'dark' ? ICON.Sun : ICON.Moon}
       text={ICON.ThemeLightDark}
       title={i18n.theme}
       items={[
         {
           key: "light",
-          label: i18n.lightName,
+          label: lightPrefix + " " + i18n.lightName,
           onSelect: () => {
             dispatch.context.setMode("light")
           },
         },
         {
           key: "dark",
-          label: i18n.darkName,
+          label: darkPrefix + "  " + i18n.darkName,
           onSelect: () => {
             dispatch.context.setMode("dark")
           },

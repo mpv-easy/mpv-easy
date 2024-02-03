@@ -50,23 +50,28 @@ export const defaultConfig: AutoloadConfig = {
   // images: true,
   // videos: true,
 }
-function getList() {
-  const path = getProperty("path") || ""
-  const dir = path?.replace("\\", "/").split("/").slice(0, -1).join("/")
+
+export function getPlayableList(path = getProperty("path") || "") {
+  const dir = path.includes("\\")
+    ? path?.split("\\").slice(0, -1).join("\\")
+    : path?.split("/").slice(0, -1).join("/")
+
   const list = readdir(dir) || []
   const videoList = list
     .filter((i) => isVideo(i) || isAudio(i) || isImage(i))
-    .map((i) => joinPath(dir, i))
+    .map((i) => joinPath(dir, i).replaceAll("\\", "/"))
     .sort((a, b) => a.localeCompare(b))
   return videoList
 }
 
-export function autoload(videoList: string[]) {
+export function autoload() {
+  const videoList = getPlayableList()
   const path = getProperty("path") || ""
   const oldCount = getPropertyNumber("playlist-count", 1) || 1
   const playlistPos = getPropertyNumber("playlist-pos", 0) || 0
   const currentPos = videoList.indexOf(path)
 
+  // console.log("autoload: ", currentPos, videoList.join(", "))
   for (let i = oldCount - 1; i >= 0; i--) {
     if (i === playlistPos) {
       continue
@@ -88,16 +93,10 @@ export function autoload(videoList: string[]) {
 export default definePlugin((context, api) => ({
   name: pluginName,
   create() {
-    const config = context[pluginName]
-    registerEvent("start-file", () => {
-      const videoList = getList()
-      console.log("======videoList111:", videoList, api.updatePlaylist)
-      api.updatePlaylist(videoList)
-      console.log("======videoList222:", videoList)
-      autoload(videoList)
-    })
+    // const config = context[pluginName]
+    registerEvent("start-file", autoload)
   },
   destroy() {
-    // unregisterEvent(autoload)
+    unregisterEvent(autoload)
   },
 }))

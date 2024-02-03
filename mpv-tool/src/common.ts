@@ -321,5 +321,5 @@ export function choice<T>(array: T[]): T | undefined {
 }
 
 export function todo() {
-  osdMessage("TODO: not yet implemented~")
+  osdMessage("TODO: not yet implemented~", 5)
 }

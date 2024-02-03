@@ -1,12 +1,5 @@
 import React, { forwardRef } from "react"
-import { Progress } from "../uosc/progress"
-import {
-  Box,
-  AutoHide,
-  render,
-  DOMElement,
-  BaseElementProps,
-} from "@mpv-easy/ui"
+import { Box, DOMElement, BaseElementProps } from "@mpv-easy/ui"
 import { Control } from "./control"
 import { pluginName } from "../../main"
 import { Info } from "./info"

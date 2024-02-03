@@ -93,7 +93,7 @@ export type MPV = {
   get_property_number(name: string, def: number): number
   get_property_number(name: string, def?: number): number | undefined
 
-  get_property_native(name: string, def?: unknown): unknown
+  get_property_native<T = unknown, Def = unknown>(name: string, def?: Def): T
   get_property_string(name: string, def?: unknown): string | undefined
 
   set_property(name: string, value: string): true | undefined

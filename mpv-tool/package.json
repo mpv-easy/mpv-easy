@@ -22,6 +22,7 @@
     "typescript": "^5.3.3"
   },
   "dependencies": {
+    "@polkadot/x-textencoder": "^12.6.2",
     "core-js": "^3.34.0",
     "es-map": "^1.0.5",
     "es-set": "^1.1.1",

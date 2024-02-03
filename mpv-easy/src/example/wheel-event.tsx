@@ -4,7 +4,7 @@ import React from "react"
 const padding = 16
 const borderSize = 16
 const fontSize = 32
-function Flex() {
+function FlexWheel() {
   return (
     <Box
       id="flex-main"
@@ -114,4 +114,4 @@ function Flex() {
   )
 }
 
-render(<Flex />)
+render(<FlexWheel />)

@@ -9,6 +9,7 @@ import {
   i18nSelector,
   mouseHoverStyleSelector,
   dropdownStyleSelector,
+  languageSelector,
 } from "../../store"
 
 export const Language = () => {
@@ -18,6 +19,10 @@ export const Language = () => {
   const mouseHoverStyle = useSelector(mouseHoverStyleSelector)
 
   const dropdown = useSelector(dropdownStyleSelector)
+  const language = useSelector(languageSelector)
+  const cnPrefix = language === "cn" ? ICON.Ok : ICON.CheckboxBlankCircleOutline
+  const enPrefix = language === "en" ? ICON.Ok : ICON.CheckboxBlankCircleOutline
+
   return (
     <Dropdown
       // TODO: language switch icon
@@ -28,14 +33,14 @@ export const Language = () => {
       items={[
         {
           key: "Chinese",
-          label: i18n.languageChinese,
+          label: cnPrefix + " " + i18n.languageChinese,
           onSelect: () => {
             dispatch.context.setLanguage("cn")
           },
         },
         {
           key: "English",
-          label: i18n.languageEnglish,
+          label: enPrefix + " " + i18n.languageEnglish,
           onSelect: () => {
             dispatch.context.setLanguage("en")
           },

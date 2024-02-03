@@ -119,7 +119,7 @@ function computeNodeSize(
   if (node.layoutNode.computedSizeCount === currentRenderCount) {
     return
   }
-  node.layoutNode.computedSizeCount = currentRenderCount
+  layoutNode.computedSizeCount = currentRenderCount
 
   const {
     overlay: [textOverlay, bgOverlay, borderOverlay],
@@ -149,9 +149,12 @@ function computeNodeSize(
 
   if (typeof attributes.text === "string") {
     const { width, height } = measureText(node)
-    layoutNode.textRect.width = width
-    layoutNode.textRect.height = height
-
+    layoutNode.textRect = new Rect(
+      layoutNode.textRect.x,
+      layoutNode.textRect.y,
+      width,
+      height,
+    )
     if (xIsAuto) {
       layoutNode.width = extraSize + width
     } else {
@@ -220,11 +223,11 @@ function computeNodeSize(
       for (const c of node.childNodes) {
         if (isX) {
           if (typeof c.attributes.height === "undefined") {
-            c.layoutNode.height = node.layoutNode.height
+            c.layoutNode.height = node.layoutNode.height - extraSize
           }
         } else {
           if (typeof c.attributes.width === "undefined") {
-            c.layoutNode.width = node.layoutNode.width
+            c.layoutNode.width = node.layoutNode.width - extraSize
           }
         }
       }
@@ -247,11 +250,11 @@ function computeNodeSize(
       for (const c of node.childNodes) {
         if (isX) {
           if (typeof c.attributes.height === "undefined") {
-            c.layoutNode.height = node.layoutNode.height
+            c.layoutNode.height = node.layoutNode.height - extraSize
           }
         } else {
           if (typeof c.attributes.width === "undefined") {
-            c.layoutNode.width = node.layoutNode.width
+            c.layoutNode.width = node.layoutNode.width - extraSize
           }
         }
       }
@@ -856,8 +859,15 @@ function computeNodeLayout(node: DOMElement, currentRenderCount: number) {
 }
 
 function computedLayout(node: DOMElement, currentRenderCount: number) {
+  if (node.layoutNode.computedLayoutCount === currentRenderCount) {
+    return
+  }
+  // const st1 = +Date.now()
   computeNodeSize(node, currentRenderCount, 0)
+  // const st2 = +Date.now()
   computeNodeLayout(node, currentRenderCount)
+  // const st3 = +Date.now()
+  // console.log("layout time: ", st2 - st1, st3 - st2)
 }
 
 export function renderNode(
@@ -882,8 +892,8 @@ export function renderNode(
   } else if (node.nodeName === "@mpv-easy/box") {
     const assScale = getAssScale()
     let {
-      backgroundColor = "FFFFFFFF",
-      borderSize = 0,
+      backgroundColor,
+      borderSize,
       borderColor = "FFFFFFFF",
       padding = 0,
       justifyContent = "start",
@@ -902,9 +912,6 @@ export function renderNode(
         ? parsePercentage(borderRadius) * layoutNode.width
         : borderRadius
 
-    if (backgroundColor.length === 6) {
-      backgroundColor += "00"
-    }
     if (borderColor.length === 6) {
       borderColor += "00"
     }
@@ -915,7 +922,9 @@ export function renderNode(
 
     const { x, y, width, height } = layoutNode
 
-    if (borderSize) {
+    // border ovl
+
+    if (typeof borderSize !== "undefined") {
       borderOverlay.data = drawBorder({
         x: (x + paddingSize) * assScale,
         y: (y + paddingSize) * assScale,
@@ -926,9 +935,39 @@ export function renderNode(
       })
       borderOverlay.hidden = false
       borderOverlay.computeBounds = false
+      borderOverlay.hidden = false
+      borderOverlay.update()
     }
 
-    if (attributes.text?.length) {
+    borderSize = borderSize || 0
+
+    // bg ovl
+
+    if (typeof backgroundColor !== "undefined") {
+      if (backgroundColor.length === 6) {
+        backgroundColor += "00"
+      }
+      const rect = new Rect(
+        x + borderSize + paddingSize,
+        y + borderSize + paddingSize,
+        width - 2 * borderSize - 2 * paddingSize,
+        height - 2 * borderSize - 2 * paddingSize,
+      )
+
+      const bgData = drawRect({
+        ...rect.scale(assScale),
+        color: backgroundColor,
+        borderRadius: borderRadiusSize * assScale,
+      })
+
+      bgOverlay.data = bgData
+      bgOverlay.hidden = false
+      bgOverlay.update()
+    }
+
+    // text ovl
+
+    if (typeof attributes.text !== "undefined") {
       let textX = 0 + paddingSize + layoutNode.x + borderSize
       let textY = 0 + paddingSize + layoutNode.y + borderSize
 
@@ -1039,34 +1078,9 @@ export function renderNode(
       }
 
       textOverlay.data = getAssText(node, textX * assScale, textY * assScale)
-
       textOverlay.hidden = false
+      textOverlay.update()
     }
-    let bgData = ""
-    if (width && height) {
-      const rect = new Rect(
-        x + borderSize + paddingSize,
-        y + borderSize + paddingSize,
-        width - 2 * borderSize - 2 * paddingSize,
-        height - 2 * borderSize - 2 * paddingSize,
-      )
-
-      bgData = drawRect({
-        ...rect.scale(assScale),
-        color: backgroundColor,
-        borderRadius: borderRadiusSize * assScale,
-      })
-    }
-
-    borderOverlay.hidden = false
-    borderOverlay.update()
-
-    bgOverlay.data = bgData
-    bgOverlay.hidden = false
-    bgOverlay.update()
-
-    textOverlay.hidden = false
-    textOverlay.update()
   }
   for (const i of node.childNodes) {
     renderNode(i, currentRenderCount, deep + 1)

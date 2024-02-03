@@ -61,7 +61,7 @@ export const plugins = [
   copyTimePlugin,
   i18nPlugin,
   easyPlugin,
-  // autoloadPlugin,
+  autoloadPlugin,
   thumbfastPlugin,
 ]
 
@@ -71,7 +71,7 @@ export interface EnablePlugin {
   [copyTimeName]: boolean
   [i18nName]: boolean
   [easyName]: boolean
-  // [autoloadName]: boolean
+  [autoloadName]: boolean
   [thumbfastName]: boolean
 }
 
@@ -110,7 +110,7 @@ export const defaultContext: PluginContext = {
     [copyTimeName]: false,
     [i18nName]: true,
     [easyName]: true,
-    // [autoloadName]: false,
+    [autoloadName]: true,
     [thumbfastName]: false,
   },
   version,

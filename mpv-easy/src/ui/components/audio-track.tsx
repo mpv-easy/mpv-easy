@@ -1,20 +1,18 @@
-import { Button, Dropdown } from "@mpv-easy/ui"
+import { Dropdown } from "@mpv-easy/ui"
 import React from "react"
-import { useDispatch, useSelector } from "react-redux"
+import { useSelector } from "react-redux"
 import * as ICON from "../../icon"
 import {
   buttonStyleSelector,
-  pauseSelector,
-  Dispatch,
   i18nSelector,
   mouseHoverStyleSelector,
   dropdownStyleSelector,
 } from "../../store"
+import { todo } from "@mpv-easy/tool"
 
 export const AudioTrack = () => {
   const button = useSelector(buttonStyleSelector)
   const i18n = useSelector(i18nSelector)
-  const dispatch = useDispatch<Dispatch>()
   const mouseHoverStyle = useSelector(mouseHoverStyleSelector)
 
   const dropdown = useSelector(dropdownStyleSelector)
@@ -26,18 +24,18 @@ export const AudioTrack = () => {
       width={button.width}
       height={button.height}
       direction="top"
-      items={[
-        {
-          label: "cn",
-          key: "cn",
-          onSelect: () => {},
-        },
-        {
-          label: "en",
-          key: "en",
-          onSelect: () => {},
-        },
-      ]}
+      // items={[
+      //   {
+      //     label: "cn",
+      //     key: "cn",
+      //     onSelect: () => { },
+      //   },
+      //   {
+      //     label: "en",
+      //     key: "en",
+      //     onSelect: () => { },
+      //   },
+      // ]}
       dropdownStyle={dropdown.button}
       display="flex"
       justifyContent="center"
@@ -53,6 +51,7 @@ export const AudioTrack = () => {
       onMouseDown={(e) => {
         // dispatch.context.screenshot()
         // e.stopPropagation()
+        todo()
       }}
     />
   )

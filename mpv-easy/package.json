@@ -10,12 +10,12 @@
   "source": "./src/index.ts",
   "main": "./dist/index.js",
   "scripts": {
-    "bundle": "esbuild ./src/index.ts --bundle --outdir=dist --charset=utf8",
+    "bundle": "esbuild ./src/index.tsx --bundle --outdir=dist --charset=utf8",
     "es5": "babel --presets  @babel/preset-env ./dist -d es5 --plugins ./src/babel/hack.js",
     "dev": "chokidar \"../mpv-*/src/**/*.(ts|tsx|json)\" -c \"pnpm run build && pnpm run copy\" -t 3000  --initial",
     "echo": "chokidar \"./\" -c \"echo hello\" -d 0 -t 0 --initial",
     "build": "pnpm run bundle && pnpm run es5",
-    "copy": "cp -r ./es5/* $MPV_SCRIPT_DIR",
+    "copy": "cp -r ./es5/index.js $MPV_SCRIPT_DIR/mpv-easy.js",
     "test": "echo \"Error: no test specified\" && exit 1",
     "babel": "minify ./dist/index.js --out-file ./dist/input.min.js",
     "webpack": "webpack --entry ./src/index.ts -o dist --mode=production"
@@ -36,24 +36,27 @@
     "@mpv-easy/thumbfast": "workspace:*",
     "@mpv-easy/tool": "workspace:*",
     "@mpv-easy/ui": "workspace:*",
+    "@polkadot/x-textencoder": "^12.6.2",
     "@react-spring/rafz": "^9.7.3",
     "@reduxjs/toolkit": "^2.1.0",
     "@rematch/core": "^2.2.0",
     "@rematch/select": "^3.1.2",
+    "@types/react-dom": "^18.2.18",
     "chalk": "^5.3.0",
     "e-color": "^0.1.2",
     "firacode-icon": "^0.1.0",
     "lodash-es": "^4.17.21",
     "react": "^18.2.0",
+    "react-dom": "^18.2.0",
     "react-reconciler": "^0.29.0",
     "react-redux": "^9.0.4",
     "redux": "^5.0.0"
   },
   "devDependencies": {
     "@types/lodash-es": "^4.17.12",
-    "@types/react-redux": "^7.1.33",
     "@types/react": "^18.2.45",
     "@types/react-reconciler": "^0.28.8",
+    "@types/react-redux": "^7.1.33",
     "typescript": "^5.3.3"
   },
   "browserslist": [

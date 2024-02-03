@@ -1,6 +1,5 @@
-import { CoordRect, Rect, getAssScale } from "./common"
+import { CoordRect, Rect } from "./common"
 import { getGlobal } from "./global"
-import { JSONStringify } from "./json"
 import {
   AddKeyBindingFlags,
   FileInfo,
@@ -59,7 +58,7 @@ export function getPropertyString(
   name: string,
   def?: string,
 ): string | undefined {
-  return getMPV().get_property_string(name, def)
+  return getMPV().get_property_native<string>(name, def)
 }
 
 export function getPropertyNumber(
@@ -70,7 +69,7 @@ export function getPropertyNumber(
 }
 
 export function getPropertyNative<T>(name: string, def?: unknown): T {
-  return getMPV().get_property_native(name, def) as T
+  return getMPV().get_property_native<T>(name, def)
 }
 
 export function setProperty(name: string, value: string): true | undefined {
@@ -209,9 +208,13 @@ export type OverlayConfig = {
   resY: number
   z: number
   data: string
+
+  cache: boolean
 }
+
 export class Overlay {
   private overlay: OSDOverlay
+  private cache: boolean
   constructor(option: Partial<OverlayConfig> = {}) {
     const {
       hidden = false,
@@ -220,6 +223,7 @@ export class Overlay {
       z = 0,
       computeBounds = true,
       data = "",
+      cache = false,
     } = option
 
     const overlay = createOsdOverlay()
@@ -229,6 +233,7 @@ export class Overlay {
     overlay.compute_bounds = computeBounds
     overlay.data = data
     overlay.z = z
+    this.cache = cache
     this.overlay = overlay
   }
 
@@ -274,9 +279,38 @@ export class Overlay {
     this.overlay.remove()
   }
 
+  private _lastResY: number | undefined = undefined
+  private _lastResX: number | undefined = undefined
+  private _lastHidden: boolean | undefined = undefined
+  private _lastComputeBounds: boolean | undefined = undefined
+  private _lastData: string | undefined = undefined
+  private _lastZ: number | undefined = undefined
+  private _lastRect: Rect | undefined = undefined
   update(scale = 1): Rect {
-    const coord = this.overlay.update() as CoordRect
-    return Rect.fromCoord(coord).scale(scale)
+    if (this.cache) {
+      if (
+        this._lastResX === this.resX &&
+        this._lastResY === this.resY &&
+        this._lastHidden === this.hidden &&
+        this._lastComputeBounds === this.computeBounds &&
+        this._lastData === this.data &&
+        this._lastZ === this.z
+      ) {
+        return this._lastRect!
+      }
+      this._lastResY = this.resY
+      this._lastResX = this.resX
+      this._lastHidden = this.hidden
+      this._lastComputeBounds = this.computeBounds
+      this._lastData = this.data
+      this._lastZ = this.z
+      const coord = this.overlay.update() as CoordRect
+      this._lastRect = Rect.fromCoord(coord).scale(scale)
+      return this._lastRect
+    } else {
+      const coord = this.overlay.update() as CoordRect
+      return Rect.fromCoord(coord).scale(scale)
+    }
   }
 }
 

@@ -17,8 +17,9 @@ export const Filename = () => {
     <Box
       height={button.height}
       display="flex"
+      flexDirection="column"
       justifyContent="start"
-      alignItems="center"
+      alignItems="end"
       text={fileName}
       padding={button.padding}
       backgroundColor={button.backgroundColor}

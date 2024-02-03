@@ -29,7 +29,9 @@ import "core-js/stable/string"
 // @ts-ignore
 import Symbol from "es-symbol"
 import { getGlobal } from "./global"
+import { TextEncoder } from "@polkadot/x-textencoder"
 
+globalThis.TextEncoder = TextEncoder
 getGlobal().Map = Map
 getGlobal().WeakMap = Map
 getGlobal().Set = Set

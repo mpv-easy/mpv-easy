@@ -9,6 +9,7 @@ import {
   i18nSelector,
   mouseHoverStyleSelector,
 } from "../../store"
+import { todo } from "@mpv-easy/tool"
 
 export const RandomPlay = () => {
   const button = useSelector(buttonStyleSelector)
@@ -34,6 +35,7 @@ export const RandomPlay = () => {
       color={button.color}
       onMouseDown={(e) => {
         // e.stopPropagation()
+        todo()
       }}
     />
   )

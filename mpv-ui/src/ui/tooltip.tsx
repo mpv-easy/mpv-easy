@@ -152,7 +152,7 @@ export const Tooltip = ({
       tooltipThrottle,
       {
         trailing: true,
-        leading: true,
+        leading: false,
       },
     )
     mousePosProp.observe(update, isEqual)

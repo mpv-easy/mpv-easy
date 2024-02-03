@@ -1,4 +1,4 @@
-import { formatTime, getTimeFormat } from "@mpv-easy/tool"
+import { formatTime, getTimeFormat, setPropertyNumber } from "@mpv-easy/tool"
 import { Box, DOMElement } from "@mpv-easy/ui"
 import React, { useRef, useState } from "react"
 import { MouseEvent } from "@mpv-easy/ui"
@@ -53,6 +53,7 @@ export const Progress = React.memo(({ width, height }: ProgressProps) => {
         const per = (e.offsetX - progress.cursorWidth / 2) / w
         const timePos = per * duration
         dispatch.context.setTimePos(timePos)
+        setPropertyNumber("time-pos", timePos)
         e.preventDefault()
         // console.log(
         //   "----mousedown: ",

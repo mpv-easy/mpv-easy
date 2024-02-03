@@ -53,9 +53,10 @@ export function measureText(node: DOMElement): Rect {
   const offsetY = 0 * assScale
   const textCache = getAssText(node, offsetX, offsetY)
 
-  // if (_measureCache[textCache]) {
-  //   return _measureCache[textCache]
-  // }
+  // TODO:
+  if (_measureCache[textCache]) {
+    return _measureCache[textCache]
+  }
 
   if (!_measureOverlay) {
     _measureOverlay = new Overlay({
@@ -72,9 +73,9 @@ export function measureText(node: DOMElement): Rect {
   const rect = new Rect(offsetX, offsetY, width + dx, height + dy)
   layoutNode.textRect.width = rect.width
   layoutNode.textRect.height = rect.height
-  // _measureCache[textCache] = layoutNode.textRect
-  // return _measureCache[textCache]
-  return layoutNode.textRect
+  _measureCache[textCache] = layoutNode.textRect
+  return _measureCache[textCache]
+  // return layoutNode.textRect
 }
 
 export function isEvent(name: string) {

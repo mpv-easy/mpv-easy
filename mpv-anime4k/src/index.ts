@@ -1,5 +1,10 @@
 import { definePlugin } from "@mpv-easy/plugin"
-import { addKeyBinding, command, removeKeyBinding } from "@mpv-easy/tool"
+import {
+  addKeyBinding,
+  command,
+  osdMessage,
+  removeKeyBinding,
+} from "@mpv-easy/tool"
 
 export const pluginName = "@mpv-easy/anime4k"
 
@@ -23,12 +28,12 @@ declare module "@mpv-easy/plugin" {
 
 export const defaultConfig: Anime4kConfig = {
   current: 0,
-  noOsd: true,
+  noOsd: false,
   shaders: [
     {
       key: "CTRL+0",
       value: "",
-      title: "clear",
+      title: "Anime4K: Clear",
     },
     {
       key: "CTRL+1",
@@ -74,32 +79,31 @@ export default definePlugin((context, api) => ({
   name: pluginName,
   create() {
     const config = context[pluginName]
+    const { value, title } = config.shaders[config.current]
     if (!config.current) {
-      command(
-        `${config.noOsd ? "no-osd" : ""} change-list glsl-shaders set "${
-          config.shaders[config.current].value
-        }";`,
-      )
+      command(`no-osd change-list glsl-shaders set "${value}";`)
+      // if (!config.noOsd) {
+      //   osdMessage(title, 5)
+      // }
     } else {
-      command(
-        `${config.noOsd ? "no-osd" : ""}  change-list glsl-shaders clr "";`,
-      )
+      command(`no-osd change-list glsl-shaders clr "";`)
+      // if (!config.noOsd) {
+      //   osdMessage(title, 5)
+      // }
     }
     for (let i = 0; i < config.shaders.length; i++) {
       const { key, value, title } = config.shaders[i]
       addKeyBinding(key, `${pluginName}/${key}`, () => {
         if (value.length) {
-          command(
-            `${
-              config.noOsd ? "no-osd" : ""
-            } change-list glsl-shaders set "${value}"; show-text "${title}"`,
-          )
+          command(`no-osd change-list glsl-shaders set "${value}";`)
+          if (!config.noOsd) {
+            osdMessage(title, 5)
+          }
         } else {
-          command(
-            `${
-              config.noOsd ? "no-osd" : ""
-            }  change-list glsl-shaders clr ""; show-text "${title}"`,
-          )
+          command(`no-osd change-list glsl-shaders clr "";`)
+          if (!config.noOsd) {
+            osdMessage(title, 5)
+          }
         }
 
         config.current = i

@@ -9,6 +9,7 @@ import {
   i18nSelector,
   mouseHoverStyleSelector,
 } from "../../store"
+import { setPropertyNumber } from "../../../../mpv-tool/src/mpv"
 
 export const Stop = () => {
   const button = useSelector(buttonStyleSelector)
@@ -36,6 +37,7 @@ export const Stop = () => {
       onMouseDown={(e) => {
         dispatch.context.setPause(true)
         dispatch.context.setTimePos(0)
+        setPropertyNumber("time-pos", 0)
         // e.stopPropagation()
       }}
     ></Button>
