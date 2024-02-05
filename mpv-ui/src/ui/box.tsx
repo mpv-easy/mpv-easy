@@ -9,5 +9,5 @@ export const Box = forwardRef<
   Partial<BaseElementProps & { children?: React.ReactNode }>
 >((props, ref) => {
   // @ts-ignore
-  return props.display !== "none" ? <mpv-box ref={ref} {...props} /> : <></>
+  return props.display !== "none" && <mpv-box ref={ref} {...props} />
 })

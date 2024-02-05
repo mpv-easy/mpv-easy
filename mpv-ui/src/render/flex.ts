@@ -8,6 +8,8 @@ import {
   Rect,
   isPercentage,
   print,
+  fileInfo,
+  Overlay,
 } from "@mpv-easy/tool"
 import { Len } from "../type"
 import { DOMElement, MouseEvent, createNode } from "./dom"
@@ -122,7 +124,7 @@ function computeNodeSize(
   layoutNode.computedSizeCount = currentRenderCount
 
   const {
-    overlay: [textOverlay, bgOverlay, borderOverlay],
+    osdOverlays: [textOverlay, bgOverlay, borderOverlay],
   } = node
   const zIndex = computeZIndex(node)
   textOverlay.z = zIndex + 3
@@ -879,17 +881,26 @@ export function renderNode(
 
   const hide = readAttr(node, "hide") ?? false
   const {
-    overlay: [textOverlay, bgOverlay, borderOverlay],
+    osdOverlays: [textOverlay, bgOverlay, borderOverlay],
     layoutNode,
     attributes,
   } = node
 
   if (hide) {
-    for (const ovl of node.overlay) {
+    if (layoutNode._hideCache) {
+      return
+    }
+    layoutNode._hideCache = true
+    for (const ovl of node.osdOverlays) {
       ovl.hidden = true
+      ovl.computeBounds = false
       ovl.update()
     }
+    if (typeof attributes.backgroundImage === "string" && node.imageOverlay) {
+      node.imageOverlay.remove()
+    }
   } else if (node.nodeName === "@mpv-easy/box") {
+    layoutNode._hideCache = false
     const assScale = getAssScale()
     let {
       backgroundColor,
@@ -900,6 +911,8 @@ export function renderNode(
       alignItems = "start",
       borderRadius = 0,
       flexDirection = "column",
+      backgroundImage,
+      backgroundImageFormat = "bgra",
     } = attributes
 
     const paddingSize =
@@ -1081,6 +1094,49 @@ export function renderNode(
       textOverlay.hidden = false
       textOverlay.update()
     }
+
+    // image
+    if (typeof backgroundImage === "string") {
+      const h = attributes.height
+      const w = attributes.width
+      const id = attributes.id
+
+      if (typeof id !== "number" || id < 0 || id > 63) {
+        throw new Error("backgroundImage'id must be a number in [0, 63]")
+      }
+      if (typeof w !== "number" || typeof h !== "number") {
+        throw new Error("backgroundImage's width and height must be number")
+      }
+
+      if (!node.imageOverlay) {
+        node.imageOverlay = new Overlay(id)
+      }
+      const overlay = node.imageOverlay
+
+      backgroundImage = backgroundImage.split("?")[0]
+      const info = fileInfo(backgroundImage)
+      if (!info) {
+        // throw new Error("backgroundImage file not found")
+        print("backgroundImage file not found: " + backgroundImage)
+      } else {
+        const { size } = info
+        const pixels = w * h * 4
+        if (pixels !== size) {
+          // throw new Error("backgroundImage size error: " + w + '-' + h + "-" + size)
+          print("backgroundImage size error: " + w + "-" + h + "-" + size)
+        } else {
+          overlay.x = x | 0
+          overlay.y = y | 0
+          overlay.file = backgroundImage
+          overlay.fmt = backgroundImageFormat
+          overlay.w = w | 0
+          overlay.h = h | 0
+          overlay.offset = 0
+          overlay.stride = (w | 0) << 2
+          overlay.update()
+        }
+      }
+    }
   }
   for (const i of node.childNodes) {
     renderNode(i, currentRenderCount, deep + 1)
@@ -1093,7 +1149,6 @@ export function dispatchEventForNode(
   event: KeyEvent,
   mouseEvent: MouseEvent,
 ) {
-  // console.log('dispatchEventForNode1: ', node.attributes.id)
   if (!mouseEvent.bubbles) {
     return
   }
@@ -1103,15 +1158,22 @@ export function dispatchEventForNode(
   if (node.attributes.hide) {
     return
   }
-  // console.log('dispatchEventForNode2: ', node.attributes.id)
   const { attributes, layoutNode } = node
-  // print("----dispatchEventForNode", attributes.id, layoutNode.x, layoutNode.y, layoutNode.width, layoutNode.height)
   if (node.layoutNode.hasPoint(pos.x, pos.y)) {
     if (typeof mouseEvent.target === "undefined") {
       mouseEvent.target = node
     }
 
     if (pos.hover) {
+      if (event.key_name === "WHEEL_DOWN") {
+        attributes.onWheelDown?.(mouseEvent)
+        return
+      }
+      if (event.key_name === "WHEEL_UP") {
+        attributes.onWheelUp?.(mouseEvent)
+        return
+      }
+
       if (event.event === "press") {
         if (layoutNode._mouseDown) {
           attributes.onMousePress?.(mouseEvent)
@@ -1149,6 +1211,7 @@ export function dispatchEventForNode(
     }
   } else {
     const mouseEvent = new MouseEvent(node, pos.x, pos.y)
+    // mouseEvent.target = undefined
     if (layoutNode._mouseIn) {
       attributes.onMouseLeave?.(mouseEvent)
       layoutNode._mouseIn = false
@@ -1174,11 +1237,7 @@ export function dispatchEvent(
     return
   }
   for (const c of node.childNodes) {
-    if (c.attributes.pointerEvents !== "none" || c.attributes.hide !== true) {
-      dispatchEvent(c, pos, event, mouseEvent)
-      dispatchEventForNode(c, pos, event, mouseEvent)
-    }
+    dispatchEvent(c, pos, event, mouseEvent)
   }
-  mouseEvent.target = node
   dispatchEventForNode(node, pos, event, mouseEvent)
 }

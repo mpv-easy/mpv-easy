@@ -35,6 +35,13 @@ export default {
   language: "language",
   skin: "skin",
   subtitle: "subtitle",
-  AudioTrack: "audio Track",
-  SubtitleTrack: "subtitle track",
+  audioTrack: "audio Track",
+  subtitleTrack: "subtitle track",
+
+  builtinTrack: "builtin",
+  externalTrack: "external",
+
+  playMode: "play mode",
+  loopFile: "loop file",
+  loopPlaylist: "loop playlist",
 }

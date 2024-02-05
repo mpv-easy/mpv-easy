@@ -2,18 +2,15 @@ import React, { useEffect, useRef, useState } from "react"
 import { Uosc } from "./uosc"
 import { Osc } from "./osc"
 import { Toolbar } from "./toolbar"
-import { pluginName } from "../main"
 import { Box, DOMElement, Tooltip } from "@mpv-easy/ui"
 import { useSelector, useDispatch } from "react-redux"
 import {
   Dispatch,
-  RootState,
+  fpsSelector,
   modeSelector,
   mousePosSelector,
-  mousePosThrottleSelector,
   pathSelector,
   styleSelector,
-  timePosThrottleSelector,
   toolbarStyleSelector,
   uiNameSelector,
 } from "../store"
@@ -24,23 +21,13 @@ import {
   PropertyNative,
   MousePos,
   MpvPropertyTypeMap,
-  getProperty,
-  isAudio,
-  isImage,
-  isVideo,
-  joinPath,
-  readdir,
-  command,
-  commandNative,
-  getPropertyNumber,
-  registerEvent,
-  getPropertyNative,
-  getOs,
+  VideoParams,
 } from "@mpv-easy/tool"
 import { throttle, isEqual } from "lodash-es"
 import { ClickMenu } from "./click-menu"
 import { Playlist } from "./playlist"
 import { getPlayableList } from "@mpv-easy/autoload"
+import { VoiceControl } from "./voice-control"
 
 const windowMaximizedProp = new PropertyBool("window-maximized")
 const fullscreenProp = new PropertyBool("fullscreen")
@@ -49,7 +36,16 @@ const durationProp = new PropertyNumber("duration")
 const pauseProp = new PropertyBool("pause")
 const pathProp = new PropertyString("path")
 const mousePosProp = new PropertyNative<MousePos>("mouse-pos")
+const videoParamsProp = new PropertyNative<VideoParams>("video-params")
 const muteProp = new PropertyBool("mute")
+
+const timePosFullProp = new PropertyNumber("time-pos/full")
+const aidProp = new PropertyNumber("aid")
+const vidProp = new PropertyNumber("vid")
+const sidProp = new PropertyNumber("sid")
+const volumeProp = new PropertyNumber("volume")
+const volumeMaxProp = new PropertyNumber("volume-max")
+
 const osdDimensionsProp = new PropertyNative<
   MpvPropertyTypeMap["osd-dimensions"]
 >("osd-dimensions")
@@ -76,10 +72,28 @@ export function hasPoint(
 
 export function Easy() {
   const dispatch = useDispatch<Dispatch>()
-  const timePosThrottle = useSelector(timePosThrottleSelector)
-  const mousePosThrottle = useSelector(mousePosThrottleSelector)
+  const fps = useSelector(fpsSelector)
   const path = useSelector(pathSelector)
   useEffect(() => {
+    aidProp.observe((v) => {
+      dispatch.context.setAid(v)
+    })
+    vidProp.observe((v) => {
+      dispatch.context.setVid(v)
+    })
+    sidProp.observe((v) => {
+      dispatch.context.setSid(v)
+    })
+
+    volumeProp.observe((v) => {
+      dispatch.context.setVolume(v)
+    })
+    volumeMaxProp.observe((v) => {
+      dispatch.context.setVolumeMax(v)
+    })
+    videoParamsProp.observe((v) => {
+      dispatch.context.setVideoParams(v ?? {})
+    })
     windowMaximizedProp.observe((v) => {
       dispatch.context.setWindowMaximized(v)
     })
@@ -88,28 +102,28 @@ export function Easy() {
       dispatch.context.setFullscreen(v)
     })
 
-    timePosProp.observe(
-      throttle(
-        (v) => {
-          dispatch.context.setTimePos(v || 0)
-        },
-        timePosThrottle,
-        { leading: false, trailing: true },
-      ),
+    const updateTimePos = throttle(
+      (v: number) => {
+        dispatch.context.setTimePos(v ?? 0)
+      },
+      1000 / fps,
+      { leading: false, trailing: true },
     )
+    // timePosProp.observe(
+    //   updateTimePos
+    // )
+
+    timePosFullProp.observe(throttle(updateTimePos))
 
     durationProp.observe((v) => {
       dispatch.context.setDuration(v || 0)
     })
 
     pathProp.observe((v) => {
-      // const oldPath = getProperty("path")
-      // console.log("pathProp: ", v, path, getProperty("path"))
       if (v !== path) {
         dispatch.context.setPath(v)
         if (v?.length) {
           const list = getPlayableList(v)
-          // console.log("new list: ", list.join(", "))
           dispatch.context.setPlaylist(list)
         }
       }
@@ -119,7 +133,7 @@ export function Easy() {
       (v) => {
         dispatch.context.setMousePos(v)
       },
-      mousePosThrottle,
+      1000 / fps,
       { leading: false, trailing: true },
     )
 
@@ -138,7 +152,7 @@ export function Easy() {
         (v) => {
           dispatch.context.setOsdDimensions(v)
         },
-        mousePosThrottle,
+        1000 / fps,
         { leading: false, trailing: true },
       ),
       isEqual,
@@ -162,14 +176,17 @@ export function Easy() {
   const toolbarRef = useRef<DOMElement>(null)
   const elementRef = useRef<DOMElement>(null)
   const menuRef = useRef<{ setHide: (v: boolean) => void }>(null)
-
+  const volumeRef = useRef<DOMElement>(null)
   const [menuHide, setMenuHide] = useState(true)
 
   const { x, y } = mousePos
   const [hide, setHide] = useState(false)
   const hideHandle = useRef(-1)
-  const mouseInUI =
-    hasPoint(toolbarRef.current, x, y) || hasPoint(elementRef.current, x, y)
+  const mouseInUI = [
+    toolbarRef.current,
+    elementRef.current,
+    volumeRef.current,
+  ].some((i) => hasPoint(i, x, y))
 
   if (mouseInUI) {
     clearTimeout(hideHandle.current)
@@ -184,21 +201,17 @@ export function Easy() {
 
   return (
     <>
-      {tooltip.enable ? (
-        <Tooltip
-          backgroundColor={tooltip.backgroundColor}
-          font={tooltip.font}
-          fontSize={tooltip.fontSize}
-          color={tooltip.color}
-          padding={tooltip.padding}
-          display="flex"
-          justifyContent="center"
-          alignItems="center"
-          zIndex={style[mode].tooltip.zIndex}
-        />
-      ) : (
-        <></>
-      )}
+      <Tooltip
+        backgroundColor={tooltip.backgroundColor}
+        font={tooltip.font}
+        fontSize={tooltip.fontSize}
+        color={tooltip.color}
+        padding={tooltip.padding}
+        display="flex"
+        justifyContent="center"
+        alignItems="center"
+        zIndex={style[mode].tooltip.zIndex}
+      />
 
       <Box
         id="mpv-easy-main"
@@ -210,8 +223,6 @@ export function Easy() {
         alignItems="start"
         position="relative"
         onClick={(e) => {
-          // e.stopPropagation()
-          // console.log("mpv-easy-main click: ", e.target.attributes.id, e.target.attributes.text, e.target.attributes.title)
           const isEmptyClick =
             e.target.attributes.id === "mpv-easy-main" ||
             e.target.attributes.id === undefined
@@ -227,6 +238,7 @@ export function Easy() {
       >
         <Toolbar ref={toolbarRef} hide={hide} />
         <Element ref={elementRef} hide={hide} />
+        <VoiceControl ref={volumeRef} hide={hide} />
         <ClickMenu ref={menuRef} hide={menuHide} />
         <Playlist />
       </Box>

@@ -1,4 +1,4 @@
-import { BaseElementProps, Box, Button } from "@mpv-easy/ui"
+import { BaseElementProps, Box } from "@mpv-easy/ui"
 import React from "react"
 import { Progress } from "../progress"
 import { useSelector } from "react-redux"
@@ -10,12 +10,12 @@ import {
 import { Play } from "../components/play"
 import { Stop } from "../components/stop"
 import { Screenshot } from "../components/screenshot"
-import { Mute } from "../components/mute"
 import { Fullscreen } from "../components/fullscreen"
 import { Playlist } from "../components/playlist"
 import { Restore } from "../components/restore"
 import { AudioTrack } from "../components/audio-track"
 import { SubtitleTrack } from "../components/subtitle-track"
+import { PlayMode } from "../components/play-mode"
 export const Control = React.memo(
   ({ height, width }: Partial<BaseElementProps>) => {
     const button = useSelector(buttonStyleSelector)
@@ -45,6 +45,7 @@ export const Control = React.memo(
           <Play />
           <Stop />
           <Screenshot />
+          <PlayMode />
         </Box>
         <Progress width={"60%"} height={height || 0} />
         <Box
@@ -56,7 +57,6 @@ export const Control = React.memo(
         >
           <AudioTrack />
           <SubtitleTrack />
-          <Mute />
           <Playlist />
           {fullscreen ? <Restore /> : <Fullscreen />}
         </Box>

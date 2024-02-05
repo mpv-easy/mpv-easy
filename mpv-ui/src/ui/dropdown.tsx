@@ -3,12 +3,14 @@ import { Button, ButtonProps } from "./button"
 import { Box } from "./box"
 import { DOMElement } from "../render"
 import { isEvent } from "../common"
+import { BaseElementProps } from "../type"
 
 export type DropdownItem = {
   key: string | number
   label: string
   selected?: boolean
   onSelect?: (item: DropdownItem) => void
+  style?: Partial<ButtonProps>
 }
 
 export type DropdownDirection = "top" | "bottom"
@@ -55,7 +57,6 @@ export const Dropdown = React.forwardRef<
   const { dropdownStyle = {} } = props
   const offsetProps = direction === "top" ? { bottom: "100%" } : { top: "100%" }
 
-  // console.log('offsetProps: ', JSON.stringify(offsetProps))
   return (
     <>
       <Button
@@ -74,7 +75,7 @@ export const Dropdown = React.forwardRef<
           }, 16)
         }}
       >
-        {show ? (
+        {show && (
           <Box
             id="dropdown-list"
             display="flex"
@@ -103,6 +104,7 @@ export const Dropdown = React.forwardRef<
                     i.onSelect?.(i)
                     setShow(false)
                   }}
+                  {...(i.style ?? {})}
                   // width={200}
                   // height={200}
                   // backgroundColor="0000FFA0"
@@ -111,8 +113,6 @@ export const Dropdown = React.forwardRef<
               )
             })}
           </Box>
-        ) : (
-          <></>
         )}
       </Button>
     </>

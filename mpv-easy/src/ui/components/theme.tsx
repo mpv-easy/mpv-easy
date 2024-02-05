@@ -38,12 +38,18 @@ export const Theme = () => {
           onSelect: () => {
             dispatch.context.setMode("light")
           },
+          style: {
+            justifyContent: "start",
+          },
         },
         {
           key: "dark",
           label: darkPrefix + "  " + i18n.darkName,
           onSelect: () => {
             dispatch.context.setMode("dark")
+          },
+          style: {
+            justifyContent: "start",
           },
         },
       ]}
@@ -62,9 +68,6 @@ export const Theme = () => {
       font={dropdown.font}
       fontSize={dropdown.fontSize}
       color={dropdown.color}
-      onMouseDown={(e) => {
-        // e.stopPropagation()
-      }}
     />
   )
 }

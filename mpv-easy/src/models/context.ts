@@ -16,6 +16,7 @@ import {
   MpvPropertyTypeMap,
   getPropertyNative,
   setPropertyNative,
+  VideoParams,
 } from "@mpv-easy/tool"
 import { Language } from "@mpv-easy/i18n"
 import { ThemeMode, UIName } from "../mpv-easy-theme"
@@ -103,7 +104,7 @@ export const context = createModel<RootModel>()({
     },
 
     screenshot(state) {
-      command("screenshot window")
+      command("screenshot video")
       return state
     },
     setMousePos(state, pos: MousePos) {
@@ -156,9 +157,33 @@ export const context = createModel<RootModel>()({
       command(`playlist-play-index ${newPos}`)
       return { ...state }
     },
+    setVid(state, vid: number) {
+      state[pluginName].player = { ...state[pluginName].player, vid }
+      return state
+    },
+    setAid(state, aid: number) {
+      state[pluginName].player = { ...state[pluginName].player, aid }
+      return state
+    },
+    setSid(state, sid: number) {
+      state[pluginName].player = { ...state[pluginName].player, sid }
+      return state
+    },
     setAnime4k(state, config: Anime4kConfig) {
       state[anime4kName] = { ...config }
       return { ...state }
+    },
+    setVideoParams(state, videoParams: VideoParams) {
+      state[pluginName].player = { ...state[pluginName].player, videoParams }
+      return state
+    },
+    setVolume(state, volume: number) {
+      state[pluginName].player = { ...state[pluginName].player, volume }
+      return state
+    },
+    setVolumeMax(state, volumeMax: number) {
+      state[pluginName].player = { ...state[pluginName].player, volumeMax }
+      return state
     },
   },
 

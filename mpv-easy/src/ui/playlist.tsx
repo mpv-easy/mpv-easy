@@ -1,22 +1,11 @@
-import {
-  getProperty,
-  readdir,
-  alphaNumSort,
-  isVideo,
-  isAudio,
-  isImage,
-  joinPath,
-  command,
-} from "@mpv-easy/tool"
+import { command } from "@mpv-easy/tool"
 import { Box, Button, DOMElement } from "@mpv-easy/ui"
-import React, { useEffect, useRef, useState } from "react"
+import React, { useRef } from "react"
 import { useSelector, useDispatch } from "react-redux"
 import * as ICON from "../icon"
 import {
   buttonStyleSelector,
-  i18nSelector,
   mouseHoverStyleSelector,
-  dropdownStyleSelector,
   Dispatch,
   playlistStyleSelector,
   playlistSelector,
@@ -51,7 +40,6 @@ export const Playlist = React.memo((props: Partial<PlaylistProps>) => {
 
   const path = useSelector(pathSelector)
 
-  // console.log("Playlist path: ", path)
   return (
     <Box
       id={"playlist-main"}
@@ -84,7 +72,6 @@ export const Playlist = React.memo((props: Partial<PlaylistProps>) => {
             color={button.color}
             text={text}
             onClick={(e) => {
-              // console.log("playlist click: ", i, playlist.indexOf(i))
               const index = playlist.indexOf(i)
               if (index >= 0) {
                 command(`playlist-play-index ${index}`)

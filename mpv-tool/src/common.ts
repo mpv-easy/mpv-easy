@@ -141,7 +141,11 @@ export const Windows = "windows"
 export const Linux = "linux"
 export const Darwin = "darwin"
 
+let osCache: OsType
 export function getOs(): OsType {
+  if (osCache) {
+    return osCache
+  }
   function getPlatform() {
     return getProperty("platform")
   }
@@ -164,7 +168,8 @@ export function getOs(): OsType {
     }
     return _osName
   }
-  return (getPlatform() || getUname()) as OsType
+  osCache = (getPlatform() || getUname()) as OsType
+  return osCache
 }
 
 export function replacePlaylist(videoList: string[], play?: number) {

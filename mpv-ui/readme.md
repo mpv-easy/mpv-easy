@@ -1,4 +1,5 @@
 ## todo
+- [ ] Badge
 - [ ] input
 - [ ] border
 - [ ] margin

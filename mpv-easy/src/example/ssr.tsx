@@ -44,6 +44,6 @@ import("react-dom/server").then((v) => {
   const s = renderToString(<RecursiveDiv count={5} deep={4} />)
 
   const ed = +Date.now()
-  console.log("ssr time: ", s)
-  console.log("ssr text: ", ed - st)
+  // console.log("ssr text: ", s)
+  console.log("ssr time: ", ed - st)
 })

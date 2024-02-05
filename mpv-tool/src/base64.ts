@@ -1,7 +1,7 @@
 import { command, commandNative, lastError, print, writeFile } from "./mpv"
 
 export function writeStringFile(path: string, content: string) {
-  return writeFile(path, content)
+  return writeFile(path, content, "file://")
 }
 
 export function writeBinaryFile(path: string, base64: string) {

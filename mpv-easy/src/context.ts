@@ -1,5 +1,5 @@
-import { version } from "../../package.json"
-// const version = (+Date.now()).toString()
+// import { version } from "../../package.json"
+const version = (+Date.now()).toString()
 
 import "@mpv-easy/tool"
 import clipPlayPlugin, {

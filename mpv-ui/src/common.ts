@@ -1,5 +1,5 @@
 import { AssDraw } from "@mpv-easy/assdraw"
-import { Overlay, Rect, getAssScale, isPercentage } from "@mpv-easy/tool"
+import { OsdOverlay, Rect, getAssScale, isPercentage } from "@mpv-easy/tool"
 import { DOMElement, setAttribute } from "./render/dom"
 import { Len } from "./type"
 import { lenToNumber } from "./render/flex"
@@ -44,7 +44,7 @@ export function getAssText(node: DOMElement, x: number, y: number) {
     .toString()
 }
 
-let _measureOverlay: Overlay
+let _measureOverlay: OsdOverlay
 const _measureCache: Record<string, Rect> = {}
 export function measureText(node: DOMElement): Rect {
   const { layoutNode } = node
@@ -59,7 +59,7 @@ export function measureText(node: DOMElement): Rect {
   }
 
   if (!_measureOverlay) {
-    _measureOverlay = new Overlay({
+    _measureOverlay = new OsdOverlay({
       computeBounds: true,
       hidden: true,
     })

@@ -1,25 +1,19 @@
-import { BaseElementProps, Box, Button, Dropdown } from "@mpv-easy/ui"
+import { BaseElementProps, Box } from "@mpv-easy/ui"
 import React from "react"
-import * as ICON from "../../icon"
 import { pluginName } from "../../main"
-import { command } from "@mpv-easy/tool"
-import { pluginName as i18nName } from "@mpv-easy/i18n"
-import { useSelector, useDispatch } from "react-redux"
-import { store } from "../../example/redux-toolkit/store"
-import { RootState, Dispatch, fullscreenSelector } from "../../store"
-import { throttle } from "lodash-es"
+import { useSelector } from "react-redux"
+import { RootState, fullscreenSelector } from "../../store"
 import { Play } from "../components/play"
 import { Stop } from "../components/stop"
 import { Screenshot } from "../components/screenshot"
 import { Fullscreen } from "../components/fullscreen"
 import { Next } from "../components/next"
 import { Previous } from "../components/previous"
-import { RandomPlay } from "../components/random-play"
 import { Playlist } from "../components/playlist"
 import { SubtitleTrack } from "../components/subtitle-track"
 import { AudioTrack } from "../components/audio-track"
 import { Restore } from "../components/restore"
-import { Filename } from "../components/filename"
+import { PlayMode } from "../components/play-mode"
 
 export const Control = React.memo((props: Partial<BaseElementProps>) => {
   const { width, height } = props
@@ -55,7 +49,6 @@ export const Control = React.memo((props: Partial<BaseElementProps>) => {
         <SubtitleTrack />
         <AudioTrack />
         <Screenshot />
-        <Filename />
       </Box>
 
       <Box
@@ -64,7 +57,7 @@ export const Control = React.memo((props: Partial<BaseElementProps>) => {
         alignItems="center"
         backgroundColor={control.backgroundColor}
       >
-        <RandomPlay />
+        <PlayMode />
         <Previous />
         <Playlist />
         <Next />

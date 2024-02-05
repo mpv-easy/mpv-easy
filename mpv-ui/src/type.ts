@@ -55,6 +55,8 @@ export type BaseElementProps = {
   onMousePress: MouseCb
   onMouseEnter: MouseCb
   onMouseLeave: MouseCb
+  onWheelDown: MouseCb
+  onWheelUp: MouseCb
   onBlur: MouseCb
   onFocus: MouseCb
   color: string
@@ -64,4 +66,6 @@ export type BaseElementProps = {
   alignContent: AlignContent
   title: string
   pointerEvents: "none"
+  backgroundImage: string
+  backgroundImageFormat: "rgba" | "bgra"
 }

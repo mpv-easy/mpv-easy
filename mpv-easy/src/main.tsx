@@ -1,5 +1,4 @@
-import { command } from "@mpv-easy/tool"
-import { createRender } from "@mpv-easy/ui"
+import { createRender, defaultFPS } from "@mpv-easy/ui"
 import React from "react"
 import { definePlugin } from "@mpv-easy/plugin"
 import { Easy } from "./ui"
@@ -9,7 +8,7 @@ import {
   defaultState,
   EasyConfig,
 } from "./mpv-easy-theme"
-import { createStore, Store } from "./store"
+import { Store } from "./store"
 import { throttle } from "lodash-es"
 
 declare module "@mpv-easy/plugin" {
@@ -24,8 +23,8 @@ declare module "@mpv-easy/plugin" {
 export { defaultConfig } from "./mpv-easy-theme"
 
 export const pluginName = "@mpv-easy/mpv-easy-ui"
-command("set osc no")
-command("set window-dragging no")
+// command("set osc no")
+// command("set window-dragging no")
 export default definePlugin((context, api) => ({
   name: pluginName,
   create() {
@@ -47,10 +46,11 @@ export default definePlugin((context, api) => ({
         },
       ),
     )
+    const fps = context[pluginName].config.fps || defaultFPS
     const render = createRender({
-      rerenderThrottle: context[pluginName].render.rerenderThrottle ?? 100,
+      fps,
       enableMouseMoveEvent:
-        context[pluginName].render.enableMouseMoveEvent ?? true,
+        context[pluginName].config.enableMouseMoveEvent ?? true,
     })
     render(
       <Provider store={store}>

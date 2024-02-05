@@ -36,6 +36,12 @@ export default {
   language: "语言",
   skin: "皮肤",
   subtitle: "字幕",
-  AudioTrack: "音频轨",
-  SubtitleTrack: "字幕轨",
+  audioTrack: "音频轨",
+  subtitleTrack: "字幕轨",
+  builtinTrack: "内置",
+  externalTrack: "外挂",
+
+  playMode: "播放模式",
+  loopFile: "单集循环",
+  loopPlaylist: "列表循环",
 }

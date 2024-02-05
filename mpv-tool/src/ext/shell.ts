@@ -16,9 +16,10 @@ export function pwshExecCode(
   scriptPath: string,
   code: string,
   outputPath?: string,
+  shell = "powershell",
 ): string {
   writeFile(scriptPath, code)
-  let s = execSync(["powershell", scriptPath])
+  let s = execSync([shell, scriptPath])
   if (outputPath) {
     s = readFile(outputPath)
   }

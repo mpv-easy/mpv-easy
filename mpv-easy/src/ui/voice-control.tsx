@@ -1,70 +1,102 @@
-import { dispatchEvent, RootNode } from "@mpv-easy/ui/src/render/flex"
-import { addForcedKeyBinding } from "../../../mpv-tool/src/mpv"
+import { setPropertyNumber } from "../../../mpv-tool/src/mpv"
 import { PropertyNative } from "../../../mpv-tool/src/property"
 import { MousePos } from "../../../mpv-tool/src/type"
-import { Box, render } from "@mpv-easy/ui"
-import React, { useEffect } from "react"
+import { BaseElementProps, Box, DOMElement } from "@mpv-easy/ui"
+import React from "react"
+import { useDispatch, useSelector } from "react-redux"
+import {
+  volumeMaxSelector,
+  volumeSelector,
+  Dispatch,
+  buttonStyleSelector,
+  volumeStyleSelector,
+  osdDimensionsSelector,
+} from "../store"
+import { clamp } from "@mpv-easy/tool"
+import { Mute } from "./components/mute"
 
-const mousePosProp = new PropertyNative<MousePos>("mouse-pos")
+export const VoiceControl = React.memo(
+  React.forwardRef<DOMElement, Partial<BaseElementProps>>((props = {}, ref) => {
+    const volume = useSelector(volumeSelector)
+    const volumeMax = useSelector(volumeMaxSelector)
+    const dispatch = useDispatch<Dispatch>()
+    const button = useSelector(buttonStyleSelector)
+    const volumeStyle = useSelector(volumeStyleSelector)
+    const volumeHeight = (volume / volumeMax) * 100 + "%"
 
-export const VoiceControl = () => {
-  console.log("----------video")
-  useEffect(() => {
-    addForcedKeyBinding(
-      "MOUSE_BTN3",
-      "__MOUSE_BTN3__RENDER__",
-      (event) => {
-        // down
-        dispatchEvent(RootNode, mousePosProp.value, event)
-        // console.log("up", JSON.stringify(event))
-      },
-      {
-        complex: true,
-        repeatable: true,
-        forced: true,
-      },
-    )
+    const h = useSelector(osdDimensionsSelector).h
 
-    addForcedKeyBinding(
-      "MOUSE_BTN4",
-      "__MOUSE_BTN3__RENDER__",
-      (event) => {
-        // console.log("down", JSON.stringify(event))
-        dispatchEvent(RootNode, mousePosProp.value, event)
-      },
-      {
-        complex: true,
-        repeatable: true,
-        forced: true,
-      },
-    )
-  }, [])
-  console.log("==========:")
-  return (
-    <Box
-      x={0}
-      y={0}
-      // position='relative'
-      // display="flex"
-      // flexDirection="row"
-      // justifyContent="start"
-      // alignItems="start"
-      width={500}
-      height={500}
-      backgroundColor="00FF00A0"
-    >
-      {Array(10)
-        .fill(0)
-        .map(() => (
+    const boxHeight = button.height * 6
+    const wrapHeight = boxHeight + button.height * 2 + button.padding * 8
+    const wrapTop = (h - wrapHeight) / 2
+    return (
+      <Box
+        top={wrapTop}
+        right={0}
+        width={button.width + 6 * button.padding}
+        height={wrapHeight}
+        onWheelDown={() => {
+          const v = clamp(volume - volumeStyle.step, 0, volumeMax)
+          dispatch.context.setVolume(v)
+          setPropertyNumber("volume", v)
+        }}
+        onWheelUp={() => {
+          const v = clamp(volume + volumeStyle.step, 0, volumeMax)
+          dispatch.context.setVolume(v)
+          setPropertyNumber("volume", v)
+        }}
+        position="relative"
+        display="flex"
+        flexDirection="row"
+        alignItems="center"
+        justifyContent="center"
+        padding={button.padding}
+        backgroundColor={volumeStyle.backgroundColor}
+        {...props}
+        ref={ref}
+        hide={h <= button.height * 6 || props.hide}
+      >
+        <Box
+          text={volume.toFixed(0).toString()}
+          width={button.width}
+          height={button.height}
+          color={button.color}
+          padding={button.padding}
+          fontSize={volumeStyle.fontSize}
+          display="flex"
+          justifyContent="center"
+          alignItems="center"
+        ></Box>
+        <Box
+          height={boxHeight}
+          width={button.width}
+          padding={button.padding}
+          display="flex"
+          position="relative"
+          flexDirection="row"
+          justifyContent="center"
+          alignItems="center"
+          onMouseDown={(e) => {
+            const v =
+              ((1 - e.offsetY / e.target.layoutNode.height) * volumeMax) | 0
+            const newVolume = clamp(v, 0, volumeMax)
+            dispatch.context.setVolume(newVolume)
+            setPropertyNumber("volume", newVolume)
+          }}
+        >
           <Box
-            width={100}
-            height={100}
-            color="FFFFFF"
-            backgroundColor="000000"
-          />
-        ))}
-    </Box>
-  )
-}
-
-render(<VoiceControl />)
+            pointerEvents="none"
+            height={volumeHeight}
+            bottom={0}
+            left={0}
+            width={button.width}
+            padding={button.padding}
+            backgroundColor={button.color}
+            zIndex={volumeStyle.zIndex}
+          ></Box>
+        </Box>
+        <Mute />
+      </Box>
+    )
+  }),
+)

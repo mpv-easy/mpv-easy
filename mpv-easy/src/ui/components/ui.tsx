@@ -32,10 +32,12 @@ export const UI = () => {
       items={[
         {
           key: "osc",
-          // TODO: add dropdown align items prop
-          label: oscPrefix + "  " + i18n.osc,
+          label: oscPrefix + " " + i18n.osc,
           onSelect: () => {
             dispatch.context.setUI("osc")
+          },
+          style: {
+            justifyContent: "start",
           },
         },
         {
@@ -43,6 +45,9 @@ export const UI = () => {
           label: uoscPrefix + " " + i18n.uosc,
           onSelect: () => {
             dispatch.context.setUI("uosc")
+          },
+          style: {
+            justifyContent: "start",
           },
         },
       ]}

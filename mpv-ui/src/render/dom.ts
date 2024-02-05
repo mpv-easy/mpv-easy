@@ -1,4 +1,4 @@
-import { Overlay } from "@mpv-easy/tool"
+import { OsdOverlay, Overlay } from "@mpv-easy/tool"
 import { BaseElementProps } from "../type"
 import { Rect } from "@mpv-easy/tool"
 export class MouseEvent {
@@ -21,7 +21,7 @@ export class MouseEvent {
   get target(): DOMElement {
     return this._target!
   }
-  set target(node: DOMElement) {
+  set target(node: DOMElement | undefined) {
     this._target = node
   }
 
@@ -70,6 +70,8 @@ export class LayoutNode extends Rect {
     public textRect = new Rect(0, 0, 0, 0),
     public computedSizeCount = 0,
     public computedLayoutCount = 0,
+    public _hideCache = false,
+    public _renderCache = false,
     public _mouseDown = false,
     public _mouseUp = false,
     public _mouseIn = false,
@@ -82,7 +84,8 @@ export class LayoutNode extends Rect {
 type MpvNode = {
   parentNode: DOMElement | undefined
   layoutNode: LayoutNode
-  overlay: Overlay[]
+  osdOverlays: OsdOverlay[]
+  imageOverlay?: Overlay
 }
 
 export type TextName = "#text"
@@ -115,10 +118,10 @@ export const createNode = (nodeName: ElementNames): DOMElement => {
     childNodes: [],
     parentNode: undefined,
     layoutNode: new LayoutNode(),
-    overlay: [
-      new Overlay({ cache: true }),
-      new Overlay({ cache: true }),
-      new Overlay({ cache: true }),
+    osdOverlays: [
+      new OsdOverlay({ cache: true }),
+      new OsdOverlay({ cache: true }),
+      new OsdOverlay({ cache: true }),
     ],
   }
   return node

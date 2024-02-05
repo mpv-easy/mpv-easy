@@ -1,37 +1,26 @@
+import { BaseElementProps, Box, DOMElement } from "@mpv-easy/ui"
+import React, { forwardRef } from "react"
+import { useSelector } from "react-redux"
 import {
-  BaseElementProps,
-  Box,
-  Button,
-  DOMElement,
-  Dropdown,
-} from "@mpv-easy/ui"
-import React, { forwardRef, useState } from "react"
-import * as ICON from "../icon"
-import { pluginName } from "../main"
-import { pluginName as i18nName } from "@mpv-easy/i18n"
-import { command } from "@mpv-easy/tool"
-import { useDispatch, useSelector } from "react-redux"
-import {
-  RootState,
-  Dispatch,
   buttonStyleSelector,
   toolbarStyleSelector,
-  modeSelector,
   fullscreenSelector,
+  uiNameSelector,
 } from "../store"
-import { throttle } from "lodash-es"
 import { Language } from "./components/language"
 import { Theme } from "./components/theme"
 import { UI } from "./components/ui"
 import { Restore } from "./components/restore"
 import { Close } from "./components/close"
 import { Minimize } from "./components/minimize"
+import { Filename } from "./components/filename"
 
 export const Toolbar = React.memo(
   forwardRef<DOMElement, Partial<BaseElementProps>>(({ hide }, ref) => {
     const fullscreen = useSelector(fullscreenSelector)
     const button = useSelector(buttonStyleSelector)
     const toolbar = useSelector(toolbarStyleSelector)
+    const uiName = useSelector(uiNameSelector)
     return (
       <Box
         id="toolbar"
@@ -57,9 +46,10 @@ export const Toolbar = React.memo(
           <Theme />
           <Language />
           <UI />
+          {uiName === "uosc" && <Filename />}
         </Box>
 
-        {fullscreen ? (
+        {fullscreen && (
           <Box
             display="flex"
             font={button.font}
@@ -71,8 +61,6 @@ export const Toolbar = React.memo(
             <Restore />
             <Close />
           </Box>
-        ) : (
-          <></>
         )}
       </Box>
     )

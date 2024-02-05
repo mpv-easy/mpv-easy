@@ -35,7 +35,7 @@ export interface AddKeyBindingFlags {
   forced?: boolean
 }
 
-export interface OSDOverlay {
+export interface MpvOsdOverlay {
   data: string
   res_x: number
   res_y: number
@@ -177,7 +177,7 @@ export type MPV = {
 
   unregister_script_message(name: string): void
 
-  create_osd_overlay(format: "ass-events"): OSDOverlay
+  create_osd_overlay(format: "ass-events"): MpvOsdOverlay
 
   get_osd_size(): OSDSize | undefined
 

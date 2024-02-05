@@ -16,3 +16,4 @@ set -x MPV_SCRIPT_DIR /your_mpv_dir/portable_config/scripts ; pnpm run dev
 - [ ] router
 - [ ] setting page
 - [ ] dynamic enabling and disabling plugins
+- [ ] vertical mode

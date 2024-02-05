@@ -1,11 +1,11 @@
 import { AssDraw } from "@mpv-easy/assdraw"
-import { Overlay, PropertyBool, command } from "@mpv-easy/tool"
+import { OsdOverlay, PropertyBool, command } from "@mpv-easy/tool"
 import * as ICON from "../icon"
 
 command("set osc no")
 command("set window-dragging no")
 
-const overlay = new Overlay()
+const overlay = new OsdOverlay()
 new PropertyBool("pause").observe((v) => {
   console.log("pause: ", v)
   overlay.data = new AssDraw()

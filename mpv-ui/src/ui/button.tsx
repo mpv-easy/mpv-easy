@@ -72,12 +72,10 @@ export const Button = React.forwardRef<DOMElement, Partial<ButtonProps>>(
         {...(hover ? hoverProps : {})}
         ref={ref}
         onMouseDown={(e) => {
-          // console.log("====", props.id, text)
           props.onMouseDown?.(e)
         }}
         onMouseEnter={(e) => {
           setHover(true)
-          // console.log("enter: ", hover, props.color, hoverProps.color)
           if (props.enableMouseStyle) {
             setMouseStyle("Hand")
           }
@@ -85,39 +83,32 @@ export const Button = React.forwardRef<DOMElement, Partial<ButtonProps>>(
         }}
         onMouseLeave={(e) => {
           setHover(false)
-          // console.log("leave: ", hover, props.color, hoverProps.color)
           if (props.enableMouseStyle) {
             setMouseStyle("Arrow")
           }
           props.onMouseLeave?.(e)
         }}
       >
-        {prefix ? (
+        {prefix && (
           <Box
             id={"button-prefix-" + props.id}
             pointerEvents="none"
             text={prefix}
           />
-        ) : (
-          <></>
         )}
-        {text ? (
+        {text && (
           <Box
             id={"button-text-" + props.id}
             pointerEvents="none"
             text={text}
           />
-        ) : (
-          <></>
         )}
-        {postfix ? (
+        {postfix && (
           <Box
             id={"button-postfix-" + props.id}
             pointerEvents="none"
             text={postfix}
           />
-        ) : (
-          <></>
         )}
         {props.children}
       </Box>

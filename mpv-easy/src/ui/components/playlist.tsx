@@ -39,8 +39,6 @@ export const Playlist = () => {
       fontSize={button.fontSize}
       color={button.color}
       onMouseDown={(e) => {
-        // console.log("playlistHide: ", playlistHide)
-
         dispatch.context.setPlaylistHide(!playlistHide)
         // TODO: use same way to hide playlist
         e.stopPropagation()

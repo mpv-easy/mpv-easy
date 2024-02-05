@@ -1,8 +1,11 @@
 import {
+  KeyEvent,
   MpvPropertyTypeMap,
   PropertyNative,
   addForcedKeyBinding,
   addKeyBinding,
+  command,
+  commandNativeAsync,
   observeProperty,
 } from "@mpv-easy/tool"
 import { MousePos } from "@mpv-easy/tool"
@@ -16,6 +19,7 @@ import {
   createNode,
   insertBeforeNode,
   removeChildNode,
+  MouseEvent,
 } from "./dom"
 import { RootId, RootNode, dispatchEvent, renderNode } from "./flex"
 import { applyProps } from "../common"
@@ -161,12 +165,19 @@ export function createCustomReconciler(
       return null
     },
     detachDeletedInstance: (node: DOMElement): void => {
-      for (const ovl of node.overlay) {
+      for (const ovl of node.osdOverlays) {
         ovl.data = ""
         ovl.computeBounds = false
         ovl.hidden = true
         // ovl.update()
         ovl.remove()
+      }
+      const { backgroundImage, id } = node.attributes
+      if (typeof backgroundImage === "string") {
+        commandNativeAsync({
+          name: "overlay-remove",
+          id: id,
+        })
       }
     },
     removeChild(parentInstance: DOMElement, child: DOMElement) {
@@ -179,13 +190,22 @@ export function createCustomReconciler(
 
 export type RenderConfig = {
   enableMouseMoveEvent: boolean
-  rerenderThrottle: number
+  fps: number
   customRender: (node: DOMElement) => void
+  customDispatch: (
+    node: DOMElement,
+    pos: MousePos,
+    event: KeyEvent,
+    mouseEvent?: MouseEvent,
+  ) => void
 }
-const defaultRenderThrottle = 100
+
+// TODO: 30 fps
+export const defaultFPS = 10
+
 export function createRender({
   enableMouseMoveEvent = true,
-  rerenderThrottle = defaultRenderThrottle,
+  fps = defaultFPS,
   customRender = throttle(
     () => {
       // const st = +Date.now()
@@ -193,18 +213,22 @@ export function createRender({
       // const ed = +Date.now()
       // console.log("render time: ", currentRenderCount, st, ed, ed - st)
     },
-    rerenderThrottle,
+    1000 / fps,
     {
       trailing: true,
       leading: true,
     },
   ),
-  // customRender = () => {
-  //   const st = +Date.now()
-  //   renderNode(RootNode, ++currentRenderCount, 0)
-  //   const ed = +Date.now()
-  //   console.log("render time: ", currentRenderCount, st, ed, ed - st)
-  // },
+  customDispatch = throttle<typeof dispatchEvent>(
+    (node, pos, event, mouseEvent) => {
+      dispatchEvent(node, pos, event, mouseEvent)
+    },
+    0,
+    {
+      trailing: true,
+      leading: true,
+    },
+  ),
 }: Partial<RenderConfig> = {}) {
   const reconciler = createCustomReconciler(customRender)
   return (reactNode: React.ReactNode) => {
@@ -225,7 +249,7 @@ export function createRender({
     observeProperty("mouse-pos", "native", (_, value: MousePos) => {
       lastMousePos = value
       if (enableMouseMoveEvent) {
-        dispatchEvent(RootNode, lastMousePos, {
+        customDispatch(RootNode, lastMousePos, {
           event: "press",
           is_mouse: true,
         })
@@ -234,10 +258,35 @@ export function createRender({
 
     addKeyBinding(
       "MOUSE_BTN0",
-      "__MOUSE_BTN0__RENDER__",
-      // undefined,
+      "MPV_EASY_MOUSE_BTN0",
       (event) => {
-        dispatchEvent(RootNode, lastMousePos, event)
+        customDispatch(RootNode, lastMousePos, event)
+      },
+      {
+        complex: true,
+        repeatable: true,
+        forced: false,
+      },
+    )
+
+    addKeyBinding(
+      "MOUSE_BTN3",
+      "MPV_EASY_MOUSE_BTN3",
+      (event) => {
+        customDispatch(RootNode, lastMousePos, event)
+      },
+      {
+        complex: true,
+        repeatable: true,
+        forced: false,
+      },
+    )
+
+    addKeyBinding(
+      "MOUSE_BTN4",
+      "MPV_EASY_MOUSE_BTN4",
+      (event) => {
+        customDispatch(RootNode, lastMousePos, event)
       },
       {
         complex: true,

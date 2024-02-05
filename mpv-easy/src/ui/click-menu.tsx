@@ -2,10 +2,8 @@ import {
   MousePos,
   PropertyBool,
   PropertyNative,
-  addForcedKeyBinding,
   addKeyBinding,
   command,
-  getOsdSize,
   osdMessage,
   todo,
 } from "@mpv-easy/tool"
@@ -91,8 +89,8 @@ export const ClickMenu = React.forwardRef<
         },
       },
       {
-        key: "playlist",
-        label: "playlist",
+        key: i18n.playlist,
+        label: i18n.playlist,
         onSelect: () => {
           dispatch.context.setPlaylistHide(false)
         },
@@ -240,7 +238,6 @@ export const ClickMenu = React.forwardRef<
           mousePos.y,
           direction,
         )
-        // console.log(direction)
         setMenuPos(pos)
         setHide(false)
         setChildMenuHide(true)
@@ -259,12 +256,6 @@ export const ClickMenu = React.forwardRef<
         position="relative"
         x={menuPos.x}
         y={menuPos.y}
-        // onBlur={() => {
-        //   setTimeout(() => {
-        //     setHide(true)
-        //     setChildMenuHide(true)
-        //   }, 16)
-        // }}
         display="flex"
         flexDirection="row"
         alignContent="stretch"
@@ -272,10 +263,6 @@ export const ClickMenu = React.forwardRef<
         alignItems="start"
         backgroundColor={clickMenu.backgroundColor}
         zIndex={clickMenu.zIndex}
-        // onMouseDown={(e) => {
-        //   console.log("======click-menu-main", e.target.attributes.id)
-        //   e.stopPropagation()
-        // }}
       >
         {items.map((i, k) => {
           return (
@@ -294,15 +281,12 @@ export const ClickMenu = React.forwardRef<
               color={button.color}
               onMouseDown={(e) => {
                 e.stopPropagation()
-                // console.log("menu click", i.key)
-                // console.log("child-menu click", i.key, e.target.attributes.id)
                 i.onSelect?.(i)
                 setChildMenuHide(false)
 
                 if (i.children?.length) {
                   setSelectedMenu(i)
                   const { x, y, width, height } = e.target.layoutNode
-                  // console.log('menu item: ', x, y, width,)
                   setChildMenuPos({ x: x + width, y: y })
                 } else {
                   setTimeout(() => {
@@ -321,7 +305,7 @@ export const ClickMenu = React.forwardRef<
           )
         })}
       </Box>
-      {!childMenuHide ? (
+      {!childMenuHide && (
         <Box
           id="click-child-menu-main"
           hide={hide}
@@ -341,7 +325,6 @@ export const ClickMenu = React.forwardRef<
           backgroundColor={clickMenu.backgroundColor}
           zIndex={clickMenu.zIndex}
           onMouseDown={(e) => {
-            console.log("======click-menu-main", e.target.attributes.id)
             e.stopPropagation()
           }}
         >
@@ -361,7 +344,6 @@ export const ClickMenu = React.forwardRef<
                 color={button.color}
                 onMouseDown={(e) => {
                   e.stopPropagation()
-                  // console.log("child-menu click", i.key, e.target.attributes.id)
                   i.onSelect?.(i)
                   setChildMenuHide(true)
                   setHide(true)
@@ -375,8 +357,6 @@ export const ClickMenu = React.forwardRef<
             )
           })}
         </Box>
-      ) : (
-        <></>
       )}
     </>
   )

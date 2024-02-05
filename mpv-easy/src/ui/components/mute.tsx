@@ -1,4 +1,4 @@
-import { Button } from "@mpv-easy/ui"
+import { Button, ButtonProps } from "@mpv-easy/ui"
 import React from "react"
 import { useDispatch, useSelector } from "react-redux"
 import * as ICON from "../../icon"
@@ -11,7 +11,7 @@ import {
   muteSelector,
 } from "../../store"
 
-export const Mute = () => {
+export const Mute = React.memo((props: Partial<ButtonProps> = {}) => {
   const button = useSelector(buttonStyleSelector)
   const mute = useSelector(muteSelector)
   const dispatch = useDispatch<Dispatch>()
@@ -39,6 +39,7 @@ export const Mute = () => {
         dispatch.context.setMute(!mute)
         // e.stopPropagation()
       }}
+      {...props}
     />
   )
-}
+})

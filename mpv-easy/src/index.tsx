@@ -4,4 +4,4 @@ import "./mpv-easy"
 
 // command("set osc no")
 // command("set window-dragging no")
-// import "./example/voice-control"
+// import "./example/wheel"

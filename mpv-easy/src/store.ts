@@ -53,6 +53,24 @@ export const durationSelector = (state: RootState) =>
 export const timePosSelector = (state: RootState) =>
   state.context[pluginName].player.timePos
 
+export const aidSelector = (state: RootState) =>
+  state.context[pluginName].player.aid
+
+export const vidSelector = (state: RootState) =>
+  state.context[pluginName].player.vid
+
+export const sidSelector = (state: RootState) =>
+  state.context[pluginName].player.sid
+
+export const volumeSelector = (state: RootState) =>
+  state.context[pluginName].player.volume
+
+export const volumeMaxSelector = (state: RootState) =>
+  state.context[pluginName].player.volumeMax
+
+export const videoParamsSelector = (state: RootState) =>
+  state.context[pluginName].player.videoParams
+
 export const filenameSelector = (state: RootState) => {
   const path = pathSelector(state)
   if (path?.includes("\\")) {
@@ -61,14 +79,13 @@ export const filenameSelector = (state: RootState) => {
   return path.split("/").at(-1)
 }
 
-export const timePosThrottleSelector = (state: RootState) =>
-  state.context[pluginName].state.timePosThrottle
-
-export const mousePosThrottleSelector = (state: RootState) =>
-  state.context[pluginName].state.mousePosThrottle
+export const fpsSelector = (state: RootState) =>
+  state.context[pluginName].config.fps
 
 export const buttonStyleSelector = (state: RootState) =>
   styleSelector(state)[modeSelector(state)].button.default
+export const volumeStyleSelector = (state: RootState) =>
+  styleSelector(state)[modeSelector(state)].volume
 
 export const dropdownStyleSelector = (state: RootState) =>
   styleSelector(state)[modeSelector(state)].dropdown
@@ -90,6 +107,8 @@ export const playlistStyleSelector = (state: RootState) =>
 
 export const playlistSelector = (state: RootState) =>
   state.context[pluginName].player.playlist
+export const osdDimensionsSelector = (state: RootState) =>
+  state.context[pluginName].player.osdDimensions
 
 export const playlistHideSelector = (state: RootState) =>
   state.context[pluginName].state.playlistHide

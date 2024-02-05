@@ -8,7 +8,7 @@ import {
   MousePos,
   MpvType,
   OSDMargins,
-  OSDOverlay,
+  MpvOsdOverlay,
   OSDSize,
   StrToType,
 } from "./type"
@@ -48,11 +48,8 @@ export function getPropertyOsd(name: string, def?: string): string {
   return getMPV().get_property_osd(name, def)
 }
 
-export function getPropertyBool(
-  name: string,
-  def?: boolean,
-): boolean | undefined {
-  return getMPV().get_property_bool(name, def)
+export function getPropertyBool(name: string, def?: boolean): boolean {
+  return !!getMPV().get_property_bool(name, def)
 }
 export function getPropertyString(
   name: string,
@@ -110,7 +107,12 @@ export function getTime(): number {
 export type KeyEvent = {
   event: "up" | "down" | "press"
   is_mouse: boolean
-  key_name?: string
+  key_name?:
+    | "WHEEL_DOWN"
+    | "WHEEL_UP"
+    | "MBTN_LEFT"
+    | "MBTN_RIGHT"
+    | (string & {})
 }
 
 export function addKeyBinding(
@@ -153,6 +155,14 @@ export function observeProperty<T extends keyof MpvType, P = StrToType<T>>(
 ) {
   return getMPV().observe_property(name, type as any, fn as any)
 }
+
+export function observePropertyNumber(
+  name: string,
+  fn: (value: number) => void,
+) {
+  return observeProperty(name, "number", (name: string, v: number) => fn(v))
+}
+
 export function unobserveProperty(fn: (...args: unknown[]) => void) {
   return getMPV().unobserve_property(fn)
 }
@@ -192,131 +202,36 @@ export function unregisterScriptMessage(name: string) {
   return getMPV().unregister_script_message(name)
 }
 
-//   data: string
-// res_x: number
-// res_y: number
-// z: number
-// hidden: boolean
-// compute_bounds: boolean
-// update(): { } | { x0: number; y0: number; x1: number; y1: number }
-// remove(): void
-
-export type OverlayConfig = {
-  hidden: boolean
-  computeBounds: boolean
-  resX: number
-  resY: number
-  z: number
-  data: string
-
-  cache: boolean
-}
-
-export class Overlay {
-  private overlay: OSDOverlay
-  private cache: boolean
-  constructor(option: Partial<OverlayConfig> = {}) {
-    const {
-      hidden = false,
-      resX = 0,
-      resY = 720,
-      z = 0,
-      computeBounds = true,
-      data = "",
-      cache = false,
-    } = option
-
-    const overlay = createOsdOverlay()
-    overlay.res_x = resX
-    overlay.res_y = resY
-    overlay.hidden = hidden
-    overlay.compute_bounds = computeBounds
-    overlay.data = data
-    overlay.z = z
-    this.cache = cache
-    this.overlay = overlay
-  }
-
-  set hidden(hidden: boolean) {
-    this.overlay.hidden = hidden
-  }
-  get hidden() {
-    return this.overlay.hidden
-  }
-
-  set computeBounds(computeBounds: boolean) {
-    this.overlay.compute_bounds = computeBounds
-  }
-  get computeBounds() {
-    return this.overlay.compute_bounds
-  }
-  set z(z: number) {
-    this.overlay.z = z
-  }
-  get z() {
-    return this.overlay.z
-  }
-  set data(data: string) {
-    this.overlay.data = data
-  }
-  get data() {
-    return this.overlay.data
-  }
-  set resX(resX: number) {
-    this.overlay.res_x = resX
-  }
-  get resX() {
-    return this.overlay.res_x
-  }
-  set resY(resY: number) {
-    this.overlay.res_y = resY
-  }
-  get resY() {
-    return this.overlay.res_y
-  }
-
-  remove() {
-    this.overlay.remove()
-  }
-
-  private _lastResY: number | undefined = undefined
-  private _lastResX: number | undefined = undefined
-  private _lastHidden: boolean | undefined = undefined
-  private _lastComputeBounds: boolean | undefined = undefined
-  private _lastData: string | undefined = undefined
-  private _lastZ: number | undefined = undefined
-  private _lastRect: Rect | undefined = undefined
-  update(scale = 1): Rect {
-    if (this.cache) {
-      if (
-        this._lastResX === this.resX &&
-        this._lastResY === this.resY &&
-        this._lastHidden === this.hidden &&
-        this._lastComputeBounds === this.computeBounds &&
-        this._lastData === this.data &&
-        this._lastZ === this.z
-      ) {
-        return this._lastRect!
-      }
-      this._lastResY = this.resY
-      this._lastResX = this.resX
-      this._lastHidden = this.hidden
-      this._lastComputeBounds = this.computeBounds
-      this._lastData = this.data
-      this._lastZ = this.z
-      const coord = this.overlay.update() as CoordRect
-      this._lastRect = Rect.fromCoord(coord).scale(scale)
-      return this._lastRect
-    } else {
-      const coord = this.overlay.update() as CoordRect
-      return Rect.fromCoord(coord).scale(scale)
-    }
-  }
+export type VideoParams = {
+  aspect: number
+  "aspect-name": string
+  "average-bpp": number
+  "chroma-location": string
+  colorlevels: string
+  colormatrix: string
+  "crop-h": number
+  "crop-w": number
+  "crop-x": number
+  "crop-y": number
+  dh: number
+  dw: number
+  gamma: string
+  h: number
+  light: string
+  par: number
+  pixelformat: string
+  primaries: string
+  rotate: number
+  sar: number
+  "sar-name": string
+  "sig-peak": number
+  "stereo-in": string
+  w: number
 }
 
 export function createOsdOverlay(
   format: "ass-events" = "ass-events",
-): OSDOverlay {
+): MpvOsdOverlay {
   return getMPV().create_osd_overlay(format)
 }
 

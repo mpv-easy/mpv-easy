@@ -1,13 +1,6 @@
 import { BaseElementProps, Box, DOMElement } from "../index"
 import React, { useEffect, useRef, useState } from "react"
-import {
-  MousePos,
-  PropertyNative,
-  addForcedKeyBinding,
-  addKeyBinding,
-  getOsdSize,
-  print,
-} from "@mpv-easy/tool"
+import { MousePos, PropertyNative } from "@mpv-easy/tool"
 import { isEqual, throttle } from "lodash-es"
 import { RootNode, dispatchEvent } from "../render/flex"
 
@@ -156,20 +149,6 @@ export const Tooltip = ({
       },
     )
     mousePosProp.observe(update, isEqual)
-
-    // addKeyBinding(
-    //   "MOUSE_BTN0",
-    //   "__MOUSE_BTN0__TOOLTIP",
-    //   () => {
-    //     console.log("======:")
-    //     update(lastPos)
-    //   },
-    //   {
-    //     forced: false,
-    //     repeatable: false,
-    //     complex: false,
-    //   },
-    // )
   }, [])
 
   return (

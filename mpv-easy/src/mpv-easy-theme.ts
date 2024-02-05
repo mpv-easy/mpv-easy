@@ -1,4 +1,5 @@
-import { MousePos } from "@mpv-easy/tool"
+import { MousePos, VideoParams } from "@mpv-easy/tool"
+import { defaultFPS } from "@mpv-easy/ui"
 
 const White = "FFFFFF"
 const Black = "000000"
@@ -54,6 +55,13 @@ export type ThemeStyle = {
   toolbar: {
     backgroundColor: string
     autoHideDelay: number
+  }
+  volume: {
+    backgroundColor: string
+    autoHideDelay: number
+    fontSize: number
+    zIndex: number
+    step: number
   }
   playlist: {
     backgroundColor: string
@@ -112,17 +120,21 @@ export type EasyConfig = {
       h: number
     }
     playlist: string[]
+    aid: number
+    vid: number
+    sid: number
+    videoParams: VideoParams
+    volume: number
+    volumeMax: number
   }
   state: {
     hide: boolean
-    timePosThrottle: number
-    mousePosThrottle: number
-    saveConfigThrottle: number
     playlistHide: boolean
   }
-  render: {
-    rerenderThrottle: number
+  config: {
+    fps: number
     enableMouseMoveEvent: boolean
+    saveConfigThrottle: number
   }
 }
 export const defaultTooltipZIndex = 128
@@ -130,6 +142,7 @@ export const defaultDropdownZIndex = 512
 export const defaultToolbarZIndex = 256
 export const defaultPreviewZIndex = 256
 export const defaultClickMenuZIndex = 256
+export const defaultVolumeZIndex = 256
 export const defaultPlaylistZIndex = 512
 export const defaultFont = "FiraCode Nerd Font Mono Reg"
 export const defaultFontSize = 80
@@ -137,17 +150,15 @@ export const defaultProgressFontSize = 60
 export const defaultName = "uosc"
 export const defaultPadding = 5
 export const defaultButtonSize = 100
-export const defaultCursorWidth = 10
-export const defaultTimePosThrottle = 1000
-export const defaultMousePosThrottle = 300
-export const defaultHideDelay = 5000
+export const defaultCursorWidth = 4
+export const defaultVolumeStep = 10
+
+export const defaultHideUIDelay = 5000
 export const defaultSaveConfigThrottle = 2000
+// export const defaultRerenderThrottle = defaultRenderThrottle
 
 export const defaultState: EasyConfig["state"] = {
   hide: false,
-  timePosThrottle: defaultTimePosThrottle,
-  mousePosThrottle: defaultMousePosThrottle,
-  saveConfigThrottle: defaultSaveConfigThrottle,
   playlistHide: true,
 }
 
@@ -170,7 +181,13 @@ export const defaultPlayer: EasyConfig["player"] = {
     w: 0,
     h: 0,
   },
+  aid: 0,
+  vid: 0,
+  sid: 0,
   playlist: [],
+  videoParams: {} as any,
+  volume: 100,
+  volumeMax: 130,
 }
 export const defaultConfig: EasyConfig = {
   mode: "dark",
@@ -232,7 +249,14 @@ export const defaultConfig: EasyConfig = {
       },
       toolbar: {
         backgroundColor: Black + AlphaLow,
-        autoHideDelay: defaultHideDelay,
+        autoHideDelay: defaultHideUIDelay,
+      },
+      volume: {
+        backgroundColor: Black + AlphaLow,
+        autoHideDelay: defaultHideUIDelay,
+        fontSize: defaultFontSize * 0.75,
+        zIndex: defaultVolumeZIndex,
+        step: defaultVolumeStep,
       },
       playlist: {
         backgroundColor: Black + AlphaLow,
@@ -331,7 +355,14 @@ export const defaultConfig: EasyConfig = {
       },
       toolbar: {
         backgroundColor: White + AlphaLow,
-        autoHideDelay: defaultHideDelay,
+        autoHideDelay: defaultHideUIDelay,
+      },
+      volume: {
+        backgroundColor: White + AlphaLow,
+        fontSize: defaultFontSize * 0.75,
+        autoHideDelay: defaultHideUIDelay,
+        step: defaultVolumeStep,
+        zIndex: defaultVolumeZIndex,
       },
       playlist: {
         backgroundColor: White + AlphaLow,
@@ -381,8 +412,9 @@ export const defaultConfig: EasyConfig = {
   },
   player: defaultPlayer,
   state: defaultState,
-  render: {
-    rerenderThrottle: 100,
+  config: {
+    fps: defaultFPS,
     enableMouseMoveEvent: true,
+    saveConfigThrottle: defaultSaveConfigThrottle,
   },
 }

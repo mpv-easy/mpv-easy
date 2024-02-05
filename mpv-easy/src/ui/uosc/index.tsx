@@ -1,17 +1,10 @@
 import React, { forwardRef } from "react"
 import { Progress } from "../progress"
-import {
-  Box,
-  AutoHide,
-  render,
-  DOMElement,
-  BaseElementProps,
-} from "@mpv-easy/ui"
+import { Box, DOMElement, BaseElementProps } from "@mpv-easy/ui"
 import { Control } from "./control"
 import { pluginName } from "../../main"
 import { useSelector } from "react-redux"
 import { RootState, progressStyleSelector } from "../../store"
-import { Playlist } from "../playlist"
 
 export const Uosc = React.memo(
   forwardRef<DOMElement, Partial<BaseElementProps>>((props, ref) => {
