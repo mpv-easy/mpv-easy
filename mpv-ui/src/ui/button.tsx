@@ -64,7 +64,6 @@ export const Button = React.forwardRef<DOMElement, Partial<ButtonProps>>(
     const hoverProps = getHoverProps(props)
     const [hover, setHover] = useState(false)
 
-    // console.log('button: ', props.id, text)
     return (
       <Box
         display="flex"

@@ -1,15 +1,4 @@
-//   data: string
-// res_x: number
-// res_y: number
-// z: number
-// hidden: boolean
-// compute_bounds: boolean
-// update(): { } | { x0: number; y0: number; x1: number; y1: number }
-// remove(): void
-
 import { command, commandNativeAsync } from "./mpv"
-
-// ``overlay-add <id> <x> <y> <file> <offset> <fmt> <w> <h> <stride>``
 
 const maxId = 64
 const overlayIdUsed = Array(maxId).fill(false)
@@ -25,8 +14,11 @@ export class Overlay {
   public stride = 0
 
   constructor(public id: number) {
-    if (overlayIdUsed[id] !== false || id < 0 || id >= maxId) {
-      throw new Error("overlay id error: " + id)
+    if (overlayIdUsed[id] !== false) {
+      throw new Error("overlay's id has already been used." + id)
+    }
+    if (id < 0 || id >= maxId) {
+      throw new Error("overlay's id must be in the range [0, 63]" + id)
     }
     overlayIdUsed[id] = true
   }
@@ -41,5 +33,9 @@ export class Overlay {
       name: "overlay-remove",
       id: this.id,
     })
+  }
+
+  destroy() {
+    overlayIdUsed[this.id] = false
   }
 }

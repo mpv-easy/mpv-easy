@@ -29,9 +29,13 @@ import {
   languageSelector,
   modeSelector,
   uiNameSelector,
+  enablePluginsStyleSelector,
 } from "../store"
 import * as ICON from "../icon"
+import { PluginContext } from "@mpv-easy/plugin"
 
+import { pluginName as anime4kName } from "@mpv-easy/anime4k"
+import { context } from "../models/context"
 export interface MenuItem {
   key: string
   label: string
@@ -71,16 +75,17 @@ export const ClickMenu = React.forwardRef<
   const uoscPrefix =
     uiName === "uosc" ? ICON.Ok : ICON.CheckboxBlankCircleOutline
 
+  const enablePlugins = useSelector(enablePluginsStyleSelector)
   function getClickMenuItems(): MenuItem[] {
     return [
-      {
-        key: "open",
-        label: "open",
-        onSelect: () => {
-          todo()
-        },
-      },
-
+      // TODO: open folder and select file
+      // {
+      //   key: i18n.open,
+      //   label: i18n.open,
+      //   onSelect: () => {
+      //     todo()
+      //   },
+      // },
       {
         key: pause ? i18n.play : i18n.pause,
         label: pause ? i18n.play : i18n.pause,
@@ -157,7 +162,7 @@ export const ClickMenu = React.forwardRef<
           },
         ],
       },
-      {
+      enablePlugins[anime4kName] && {
         key: "anime4k",
         label: "anime4k",
         children: anime4k.shaders.map((i, k) => {
@@ -186,13 +191,40 @@ export const ClickMenu = React.forwardRef<
         }),
       },
       {
+        key: i18n.more,
+        label: i18n.more,
+        children: [
+          {
+            key: i18n.stats,
+            label: i18n.stats,
+            onSelect() {
+              console.log("click stats")
+            },
+          },
+          {
+            key: i18n.console,
+            label: i18n.console,
+            onSelect() {
+              command("script-message-to console type")
+            },
+          },
+          {
+            key: i18n.reset,
+            label: i18n.reset,
+            onSelect() {
+              dispatch.context.resetConfig()
+            },
+          },
+        ],
+      },
+      {
         key: i18n.exit,
         label: i18n.exit,
         onSelect: () => {
           dispatch.context.exit()
         },
       },
-    ]
+    ].filter((i) => !!i) as MenuItem[]
   }
 
   const items = getClickMenuItems()
@@ -267,7 +299,6 @@ export const ClickMenu = React.forwardRef<
         {items.map((i, k) => {
           return (
             <Button
-              zIndex={clickMenu.zIndex + 2}
               id={"click-menu-" + i.key}
               key={i.key}
               text={i.label}
@@ -323,7 +354,7 @@ export const ClickMenu = React.forwardRef<
           justifyContent="start"
           alignItems="start"
           backgroundColor={clickMenu.backgroundColor}
-          zIndex={clickMenu.zIndex}
+          // zIndex={clickMenu.zIndex}
           onMouseDown={(e) => {
             e.stopPropagation()
           }}

@@ -1,35 +1,65 @@
 import {
   addKeyBinding,
+  command,
+  detectCmd,
+  dir,
   getClipboard,
+  isDir,
   isHttp,
   isVideo,
-  readdir,
-  removeKeyBinding,
-  replacePlaylist,
+  osdMessage,
   webdavList,
 } from "@mpv-easy/tool"
 
-import { definePlugin } from "@mpv-easy/plugin"
+import { SystemApi, definePlugin } from "@mpv-easy/plugin"
+import { PluginContext } from "@mpv-easy/plugin"
+import { pluginName as autoloadName, getPlayableList } from "@mpv-easy/autoload"
+import { normalize } from "@mpv-easy/tool"
 
-function fn() {
-  const s = getClipboard().trim().replace(/\\/g, "/")
-  let v: undefined | string[]
-  if (s?.length > 0) {
-    if (isVideo(s)) {
-      v = [s]
-    } else if (isHttp(s)) {
-      v = webdavList(s)
-        .map((i) => s + i.href)
-        .filter((p) => isVideo(p))
-    } else {
-      const list = readdir(s)
-      if (list?.length) {
-        v = list.map((i) => `${s}\\${i}`.replace(/\\/g, "/"))
-      }
-    }
+function getList(s: string | undefined, context: PluginContext): string[] {
+  let v: string[] = []
+  if (!s?.length) {
+    return v
   }
+
+  if (isHttp(s)) {
+    if (isVideo(s)) {
+      return [normalize(s)]
+    }
+    return webdavList(s)
+      .map((i) => normalize(s + i.href))
+      .filter((p) => isVideo(p))
+  }
+
+  if (isVideo(s)) {
+    const c = context[autoloadName]
+    const d = dir(s)
+    if (!d) {
+      return []
+    }
+    return getPlayableList(c, d)
+  }
+  if (isDir(s)) {
+    const c = context[autoloadName]
+
+    return getPlayableList(c, s)
+  }
+  return []
+}
+
+function fn(context: PluginContext, api: SystemApi) {
+  const s = getClipboard().trim().replace(/\\/g, "/")
+  let v = getList(s, context)
+
   if (v?.length) {
-    replacePlaylist(v, 0)
+    const index = v.indexOf(s)
+    if (index !== -1) {
+      api.updatePlaylist(v, index)
+      // command(`playlist-play-index ${index}`)
+    } else {
+      api.updatePlaylist(v, 0)
+      // command(`playlist-play-index ${0}`)
+    }
   }
 }
 
@@ -49,14 +79,24 @@ declare module "@mpv-easy/plugin" {
   }
 }
 
-export default definePlugin((context) => ({
+export default definePlugin((context, api) => ({
   name: pluginName,
   defaultConfig: defaultConfig,
   create: () => {
+    if (!detectCmd("curl")) {
+      osdMessage(`${pluginName} need curl`, 10)
+      return
+    }
+    if (!detectCmd("pwsh")) {
+      osdMessage(`${pluginName} need pwsh`, 10)
+      return
+    }
     const key = context[pluginName].key
-    addKeyBinding(key, pluginName, fn)
+    addKeyBinding(key, pluginName, () => {
+      fn(context, api)
+    })
   },
   destroy: () => {
-    removeKeyBinding(pluginName)
+    // removeKeyBinding(pluginName)
   },
 }))

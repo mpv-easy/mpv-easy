@@ -44,4 +44,12 @@ export default {
   playMode: "播放模式",
   loopFile: "单集循环",
   loopPlaylist: "列表循环",
+  nextFrame: "下一帧",
+  previousFrame: "上一帧",
+  moreInfo: "更多信息",
+  more: "更多",
+  console: "控制台",
+  stats: "统计信息",
+  reset: "重置",
+  open: "打开",
 }

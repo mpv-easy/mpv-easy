@@ -20,6 +20,7 @@
   "license": "ISC",
   "dependencies": {
     "@mpv-easy/tool": "workspace:*",
+    "@mpv-easy/autoload": "workspace:*",
     "@mpv-easy/plugin": "workspace:*"
   },
   "devDependencies": {

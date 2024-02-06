@@ -1,5 +1,7 @@
-// import { version } from "../../package.json"
-const version = (+Date.now()).toString()
+import { version } from "../../package.json"
+
+// ONLY DEV
+// const version = (+Date.now()).toString()
 
 import "@mpv-easy/tool"
 import clipPlayPlugin, {
@@ -21,6 +23,10 @@ import copyTimePlugin, {
   defaultConfig as copyTimeConfig,
   pluginName as copyTimeName,
 } from "@mpv-easy/copy-time"
+import copyScreenPlugin, {
+  defaultConfig as copyScreenConfig,
+  pluginName as copyScreenName,
+} from "@mpv-easy/copy-screen"
 
 import i18nPlugin, {
   defaultConfig as i18nConfig,
@@ -49,6 +55,7 @@ import {
   writeFile,
 } from "@mpv-easy/tool"
 import { Store } from "./store"
+import { cloneDeep } from "lodash-es"
 
 export type Experimental = {
   mouseHoverStyle: boolean
@@ -63,6 +70,8 @@ export const plugins = [
   easyPlugin,
   autoloadPlugin,
   thumbfastPlugin,
+  thumbfastPlugin,
+  copyScreenPlugin,
 ]
 
 export interface EnablePlugin {
@@ -73,6 +82,7 @@ export interface EnablePlugin {
   [easyName]: boolean
   [autoloadName]: boolean
   [thumbfastName]: boolean
+  [copyScreenName]: boolean
 }
 
 declare module "@mpv-easy/plugin" {
@@ -96,26 +106,32 @@ const experimental: Experimental = {
   toolbar: true,
 }
 
-export const defaultContext: PluginContext = {
-  [clipPlayName]: clipPlayConfig,
-  [anime4kName]: anime4kConfig,
-  [copyTimeName]: copyTimeConfig,
-  [i18nName]: i18nConfig,
-  [easyName]: easyConfig,
-  [autoloadName]: autoloadConfig,
-  [thumbfastName]: thumbfastConfig,
-  enablePlugins: {
-    [clipPlayName]: false,
-    [anime4kName]: true,
-    [copyTimeName]: false,
-    [i18nName]: true,
-    [easyName]: true,
-    [autoloadName]: true,
-    [thumbfastName]: false,
-  },
-  version,
-  experimental,
+export function createDefaultContext() {
+  return cloneDeep({
+    [clipPlayName]: clipPlayConfig,
+    [anime4kName]: anime4kConfig,
+    [copyTimeName]: copyTimeConfig,
+    [i18nName]: i18nConfig,
+    [easyName]: easyConfig,
+    [autoloadName]: autoloadConfig,
+    [thumbfastName]: thumbfastConfig,
+    [copyScreenName]: copyScreenConfig,
+    enablePlugins: {
+      [i18nName]: true,
+      [easyName]: true,
+      [clipPlayName]: false,
+      [anime4kName]: false,
+      [copyTimeName]: false,
+      [autoloadName]: true,
+      [thumbfastName]: false,
+      [copyScreenName]: false,
+    },
+    version,
+    experimental,
+  })
 }
+
+export const defaultContext: PluginContext = createDefaultContext()
 
 export function saveConfig(c: PluginContext) {
   if (!existsSync(configDir)) {

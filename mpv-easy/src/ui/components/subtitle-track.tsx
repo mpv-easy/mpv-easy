@@ -9,6 +9,8 @@ import {
   getPropertyNumber,
   getPropertyString,
   setPropertyNative,
+  setPropertyNumber,
+  setPropertyString,
 } from "@mpv-easy/tool"
 import {
   buttonStyleSelector,
@@ -73,15 +75,20 @@ export const SubtitleTrack = () => {
   const items = tracks.map(
     ({ title, lang, external, selected, id }, k): DropdownItem => {
       const key = [title, lang, external, k].join("-")
-      const prefix =
-        selected || sid === id ? ICON.Ok : ICON.CheckboxBlankCircleOutline
+      const prefix = sid === id ? ICON.Ok : ICON.CheckboxBlankCircleOutline
       const label = prefix + " " + (title ?? lang ?? "default")
       return {
         label,
         key: key,
         onSelect: () => {
-          setPropertyNative("sid", id)
-          dispatch.context.setSid(id)
+          if (sid === id) {
+            dispatch.context.setSid(-1)
+            setPropertyNative("sid", "no")
+          } else {
+            dispatch.context.setSid(id)
+            setPropertyNative("sid", "yes")
+            setPropertyNative("sid", id)
+          }
         },
         style: {
           // postfix: ('  ' + (external ? i18n.externalTrack : i18n.builtinTrack)),

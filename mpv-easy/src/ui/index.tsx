@@ -6,6 +6,7 @@ import { Box, DOMElement, Tooltip } from "@mpv-easy/ui"
 import { useSelector, useDispatch } from "react-redux"
 import {
   Dispatch,
+  audoloadConfigSelector,
   fpsSelector,
   modeSelector,
   mousePosSelector,
@@ -22,6 +23,8 @@ import {
   MousePos,
   MpvPropertyTypeMap,
   VideoParams,
+  normalize,
+  dir,
 } from "@mpv-easy/tool"
 import { throttle, isEqual } from "lodash-es"
 import { ClickMenu } from "./click-menu"
@@ -74,6 +77,7 @@ export function Easy() {
   const dispatch = useDispatch<Dispatch>()
   const fps = useSelector(fpsSelector)
   const path = useSelector(pathSelector)
+  const autoloadConfig = useSelector(audoloadConfigSelector)
   useEffect(() => {
     aidProp.observe((v) => {
       dispatch.context.setAid(v)
@@ -109,9 +113,6 @@ export function Easy() {
       1000 / fps,
       { leading: false, trailing: true },
     )
-    // timePosProp.observe(
-    //   updateTimePos
-    // )
 
     timePosFullProp.observe(throttle(updateTimePos))
 
@@ -120,12 +121,16 @@ export function Easy() {
     })
 
     pathProp.observe((v) => {
-      if (v !== path) {
+      v = normalize(v ?? "")
+      if (v?.length && path.length && v !== path) {
         dispatch.context.setPath(v)
-        if (v?.length) {
-          const list = getPlayableList(v)
-          dispatch.context.setPlaylist(list)
+        const d = dir(v)
+        if (!d) {
+          return
         }
+        const list = getPlayableList(autoloadConfig, d)
+        const playIndex = list.indexOf(v)
+        dispatch.context.setPlaylist(list, playIndex === -1 ? 0 : playIndex)
       }
     })
 
@@ -238,8 +243,8 @@ export function Easy() {
       >
         <Toolbar ref={toolbarRef} hide={hide} />
         <Element ref={elementRef} hide={hide} />
-        <VoiceControl ref={volumeRef} hide={hide} />
         <ClickMenu ref={menuRef} hide={menuHide} />
+        <VoiceControl ref={volumeRef} hide={hide} />
         <Playlist />
       </Box>
     </>

@@ -14,7 +14,6 @@ export class MouseEvent {
   }
 
   preventDefault() {
-    // console.log("preventDefault", this.target?.attributes?.id)
     this.defaultPrevented = true
   }
 

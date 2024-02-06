@@ -44,4 +44,13 @@ export default {
   playMode: "play mode",
   loopFile: "loop file",
   loopPlaylist: "loop playlist",
+
+  nextFrame: "next frame",
+  previousFrame: "previous frame",
+  moreInfo: "more info",
+  more: "more",
+  console: "console",
+  stats: "stats",
+  reset: "reset",
+  open: "open",
 }

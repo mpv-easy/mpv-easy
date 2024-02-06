@@ -46,7 +46,7 @@ export const Toolbar = React.memo(
           <Theme />
           <Language />
           <UI />
-          {uiName === "uosc" && <Filename />}
+          <Filename />
         </Box>
 
         {fullscreen && (

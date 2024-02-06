@@ -11,7 +11,9 @@ export function webdavList(url: string, depth = 1): WebdavItem[] {
             <D:propfind xmlns:D="DAV:">
                 <D:allprop/>
             </D:propfind>
-        `.trim()
+        `
+    .trim()
+    .replaceAll("\n", " ")
 
   const xmlString = fetch(url, {
     method: "PROPFIND",
@@ -20,6 +22,7 @@ export function webdavList(url: string, depth = 1): WebdavItem[] {
     },
     body,
   })
+
   const regex =
     /<D:href>(.*?)<\/D:href>[\s\S]*?<D:getcontentlength>(.*?)<\/D:getcontentlength>[\s\S]*?<D:getlastmodified>(.*?)<\/D:getlastmodified>/g
 

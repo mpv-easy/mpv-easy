@@ -40,9 +40,8 @@ export const Progress = React.memo(({ width, height }: ProgressProps) => {
   const progressRef = useRef<DOMElement>(null)
   const videoParams = useSelector(videoParamsSelector) ?? {}
 
-  const seekable = isVideo(path)
+  const seekable = path?.length > 0 && isVideo(path)
   if (!thumbRef.current) {
-    // const
     const { w, h } = videoParams
     if (w && h) {
       thumbRef.current = new ThumbFast({
@@ -52,7 +51,6 @@ export const Progress = React.memo(({ width, height }: ProgressProps) => {
       })
     }
   }
-  // const cursorLeft = timePos / duration
   const progressW = progressRef.current?.layoutNode.width
   const cursorLeftOffset = progressW ? progress.cursorWidth / 2 / progressW : 0
   const cursorLeft = timePos / duration - cursorLeftOffset
@@ -80,9 +78,6 @@ export const Progress = React.memo(({ width, height }: ProgressProps) => {
     return per
   }
   const hoverCursorRef = useRef<DOMElement>(null)
-
-  // const previewTimeTextOffsetX = (hoverCursorRef.current?.layoutNode.x ?? 0) + (hoverCursorRef.current?.layoutNode.width ?? 0) / 2
-  // - (cursorTextStartRef.current?.layoutNode?.width ?? 0) / 2
 
   const previewTimeTextOffsetX =
     (progress.cursorWidth -
@@ -173,47 +168,51 @@ export const Progress = React.memo(({ width, height }: ProgressProps) => {
         color={progress.cursorColor}
         pointerEvents="none"
       />
-      {seekable && (
+      {seekable && !previewCursorHide && (
         <Box
           ref={hoverCursorRef}
           id="preview-cursor"
           position="relative"
           width={progress.previewCursorWidth}
-          hide={previewCursorHide}
+          // hide={previewCursorHide}
           left={`${leftPreview * 100}%`}
           height={"100%"}
           backgroundColor={progress.previewCursorColor}
           color={progress.previewCursorColor}
           pointerEvents="none"
         >
-          <Box
-            id="preview-cursor-time"
-            position="absolute"
-            hide={previewCursorHide}
-            height={"100%"}
-            top={"-100%"}
-            left={previewTimeTextOffsetX}
-            backgroundColor={progress.backgroundColor}
-            color={progress.color}
-            justifyContent="center"
-            alignItems="center"
-            text={formatTime(leftPreview * duration, format)}
-            zIndex={progress.previewZIndex}
-            pointerEvents="none"
-          ></Box>
+          {!previewCursorHide && (
+            <Box
+              id="preview-cursor-time"
+              position="absolute"
+              // hide={previewCursorHide}
+              height={"100%"}
+              top={"-100%"}
+              left={previewTimeTextOffsetX}
+              backgroundColor={progress.backgroundColor}
+              color={progress.color}
+              justifyContent="center"
+              alignItems="center"
+              text={formatTime(leftPreview * duration, format)}
+              // zIndex={progress.previewZIndex}
+              pointerEvents="none"
+            ></Box>
+          )}
 
-          <Box
-            id={42}
-            position="absolute"
-            hide={previewCursorHide}
-            x={thumbX}
-            y={thumbY}
-            width={thumbRef.current?.thumbWidth}
-            height={thumbRef.current?.thumbHeight}
-            backgroundImage={thumbRef.current?.path}
-            backgroundImageFormat={thumbRef.current?.format}
-            pointerEvents="none"
-          ></Box>
+          {thumbRef.current && !previewCursorHide && (
+            <Box
+              id={42}
+              position="absolute"
+              // hide={previewCursorHide}
+              x={thumbX}
+              y={thumbY}
+              width={thumbRef.current?.thumbWidth}
+              height={thumbRef.current?.thumbHeight}
+              backgroundImage={thumbRef.current?.path}
+              backgroundImageFormat={thumbRef.current?.format}
+              pointerEvents="none"
+            ></Box>
+          )}
         </Box>
       )}
     </Box>

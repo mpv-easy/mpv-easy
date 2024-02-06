@@ -79,3 +79,4 @@ export const SyncCircle = "󱍸"
 export const RefreshCircle = "󱍷"
 export const Sync = "" //  
 export const Refresh = "" //  
+export const Info = ""

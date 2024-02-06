@@ -14,18 +14,20 @@ export const Filename = () => {
   const fileName = useSelector(filenameSelector)
 
   return (
-    <Box
-      height={button.height}
-      display="flex"
-      flexDirection="column"
-      justifyContent="start"
-      alignItems="end"
-      text={fileName}
-      padding={button.padding}
-      backgroundColor={button.backgroundColor}
-      font={button.font}
-      fontSize={button.fontSize}
-      color={button.color}
-    />
+    (fileName?.length ?? 0) > 0 && (
+      <Box
+        height={button.height}
+        display="flex"
+        flexDirection="column"
+        justifyContent="start"
+        alignItems="end"
+        text={fileName}
+        padding={button.padding}
+        backgroundColor={button.backgroundColor}
+        font={button.font}
+        fontSize={button.fontSize}
+        color={button.color}
+      />
+    )
   )
 }

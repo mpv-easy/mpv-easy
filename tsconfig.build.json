@@ -17,8 +17,6 @@
     "noEmit": false,
     "skipDefaultLibCheck": true,
     "jsx": "react",
-    // "jsxFactory": "React.createElement",
-    // "jsxFragmentFactory": "React.Fragment",
     "noEmitOnError": false,
     "declarationMap": true,
     "sourceMap": true,

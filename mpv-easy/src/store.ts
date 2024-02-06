@@ -4,6 +4,7 @@ import { RootModel, models } from "./models"
 import { pluginName } from "./main"
 import i18nPlugin, { pluginName as i18nName } from "@mpv-easy/i18n"
 import { pluginName as anime4kName } from "@mpv-easy/anime4k"
+import { pluginName as autoloadName } from "@mpv-easy/autoload"
 import { getOs } from "@mpv-easy/tool"
 
 export function createStore() {
@@ -25,6 +26,9 @@ export const styleSelector = (state: RootState) =>
 export const uiNameSelector = (state: RootState) =>
   state.context[pluginName].uiName
 
+export const audoloadConfigSelector = (state: RootState) =>
+  state.context[autoloadName]
+
 export const languageSelector = (state: RootState) =>
   state.context[i18nName].default
 export const i18nSelector = (state: RootState) =>
@@ -43,7 +47,7 @@ export const muteSelector = (state: RootState) =>
 export const mousePosSelector = (state: RootState) =>
   state.context[pluginName].player.mousePos
 export const pathSelector = (state: RootState) =>
-  state.context[pluginName].player.path
+  state.context[pluginName].player.path ?? ""
 
 export const playlistPosSelector = (state: RootState) =>
   state.context[pluginName].player.playlistPos
@@ -76,7 +80,7 @@ export const filenameSelector = (state: RootState) => {
   if (path?.includes("\\")) {
     return path.replaceAll("\\", "/").split("/").at(-1)
   }
-  return path.split("/").at(-1)
+  return path?.split("/")?.at(-1) || ""
 }
 
 export const fpsSelector = (state: RootState) =>
@@ -115,3 +119,6 @@ export const playlistHideSelector = (state: RootState) =>
 
 export const mouseHoverStyleSelector = (state: RootState) =>
   state.context.experimental.mouseHoverStyle
+
+export const enablePluginsStyleSelector = (state: RootState) =>
+  state.context.enablePlugins

@@ -13,9 +13,13 @@ import {
   getOptions,
   getProperty,
   getPropertyNumber,
+  getPropertyString,
   osdMessage,
   print,
+  setPropertyBool,
+  setPropertyNumber,
 } from "./mpv"
+import { normalize } from "./path"
 
 export const VideoTypes =
   "3g2,3gp,asf,avi,f4v,flv,h264,h265,m2ts,m4v,mkv,mov,mp4,mp4v,mpeg,mpg,ogm,ogv,rm,rmvb,ts,vob,webm,wmv,y4m".split(
@@ -34,7 +38,10 @@ export const SubtitleTypes =
     ",",
   )
 
-export function endsWith(s: string, exts: string[]) {
+export function endsWith(s: string | undefined, exts: string[]) {
+  if (!s?.length) {
+    return false
+  }
   for (const i of exts) {
     if (s.endsWith(`.${i}`)) {
       return true
@@ -43,7 +50,10 @@ export function endsWith(s: string, exts: string[]) {
   return false
 }
 
-export function startsWith(s: string, exts: string[]) {
+export function startsWith(s: string | undefined, exts: string[]) {
+  if (!s?.length) {
+    return false
+  }
   for (const i of exts) {
     if (s.startsWith(i)) {
       return true
@@ -327,4 +337,77 @@ export function choice<T>(array: T[]): T | undefined {
 
 export function todo() {
   osdMessage("TODO: not yet implemented~", 5)
+}
+
+export function getMpvPlaylist(): string[] {
+  const list: string[] = []
+
+  const c = getPropertyNumber("playlist-count") || 0
+
+  for (let i = 0; i < c; i++) {
+    const p = normalize(getPropertyString(`playlist/${i}/filename`) ?? "")
+    if (p.length) {
+      list.push(p)
+    }
+  }
+  return list
+}
+
+export function updatePlaylist(list: string[], playIndex = 0) {
+  const oldList = getMpvPlaylist()
+  const oldCount = oldList.length
+  const path = normalize(getPropertyString("path") || "")
+
+  if (oldCount === 0) {
+    // replace all
+    for (const i of list) {
+      command(`loadfile ${i} append`)
+    }
+    command(`playlist-play-index ${playIndex}`)
+    return
+  }
+
+  const oldListIndex = oldList.indexOf(path)
+  const newListIndex = list.indexOf(path)
+  if (newListIndex === -1) {
+    // clear and replace
+    for (const i of list) {
+      command(`loadfile ${i} append`)
+    }
+    command(`playlist-play-index ${playIndex + oldList.length}`)
+    for (let i = 0; i < oldList.length; i++) {
+      command(`playlist-remove 0`)
+    }
+    return
+  }
+
+  if (JSON.stringify(oldList) === JSON.stringify(list)) {
+    const oldIndex = getPropertyNumber("playlist-pos")
+    if (oldIndex !== playIndex) {
+      command(`playlist-play-index ${playIndex}`)
+    }
+    return
+  }
+
+  for (let i = oldCount - 1; i >= 0; i--) {
+    if (i === oldListIndex) {
+      continue
+    }
+    command(`playlist-remove ${i}`)
+  }
+
+  for (const i of list) {
+    if (i === path) {
+      continue
+    }
+    command(`loadfile ${i} append`)
+  }
+
+  if (newListIndex > 0) {
+    commandNative(["playlist-move", 0, newListIndex + 1])
+  }
+
+  if (oldListIndex !== newListIndex) {
+    command(`playlist-play-index ${playIndex}`)
+  }
 }

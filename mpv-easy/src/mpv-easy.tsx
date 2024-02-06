@@ -4,13 +4,24 @@ import type { EnablePlugin } from "./context"
 import { print } from "@mpv-easy/tool"
 import { createStore } from "./store"
 import { SystemApi } from "@mpv-easy/plugin"
+import { pluginName } from "./main"
+import { createDefaultConfig } from "./mpv-easy-theme"
 
 function main() {
   const store = createStore()
   const customConfig = getConfig()
+  const { state, player } = createDefaultConfig()
+  // TODO: don't save these props
+  customConfig[pluginName].player = player
+  customConfig[pluginName].state = state
   const api: SystemApi = {
     saveConfig,
-    updatePlaylist: (list) => store.dispatch.context.setPlaylist(list),
+    updatePlaylist: (list, index) =>
+      store.dispatch.context.setPlaylist(list, index),
+    getPlaylist: () => store.getState().context[pluginName].player.playlist,
+    setPath: (path: string) => store.dispatch.context.setPath(path),
+    setPause: (pause: boolean) => store.dispatch.context.setPause(pause),
+    getPath: () => store.getState().context[pluginName].player.path,
     store,
   }
   plugins.forEach((definePlugin) => {

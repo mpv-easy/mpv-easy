@@ -14,6 +14,9 @@ import { SubtitleTrack } from "../components/subtitle-track"
 import { AudioTrack } from "../components/audio-track"
 import { Restore } from "../components/restore"
 import { PlayMode } from "../components/play-mode"
+import { PreviousFrame } from "../components/previous-frame"
+import { NextFrame } from "../components/next-frame"
+import { MoreInfo } from "../components/more-info"
 
 export const Control = React.memo((props: Partial<BaseElementProps>) => {
   const { width, height } = props
@@ -49,6 +52,7 @@ export const Control = React.memo((props: Partial<BaseElementProps>) => {
         <SubtitleTrack />
         <AudioTrack />
         <Screenshot />
+        {/* <MoreInfo /> */}
       </Box>
 
       <Box
@@ -58,9 +62,11 @@ export const Control = React.memo((props: Partial<BaseElementProps>) => {
         backgroundColor={control.backgroundColor}
       >
         <PlayMode />
+        <PreviousFrame />
         <Previous />
         <Playlist />
         <Next />
+        <NextFrame />
         {fullscreen ? <Restore /> : <Fullscreen />}
       </Box>
     </Box>

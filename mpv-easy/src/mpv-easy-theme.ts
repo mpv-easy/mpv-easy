@@ -1,5 +1,6 @@
 import { MousePos, VideoParams } from "@mpv-easy/tool"
 import { defaultFPS } from "@mpv-easy/ui"
+import { cloneDeep } from "lodash-es"
 
 const White = "FFFFFF"
 const Black = "000000"
@@ -146,17 +147,248 @@ export const defaultVolumeZIndex = 256
 export const defaultPlaylistZIndex = 512
 export const defaultFont = "FiraCode Nerd Font Mono Reg"
 export const defaultFontSize = 80
-export const defaultProgressFontSize = 60
+export const defaultProgressFontSize = defaultFontSize * 0.75
 export const defaultName = "uosc"
-export const defaultPadding = 5
-export const defaultButtonSize = 100
-export const defaultCursorWidth = 4
+export const defaultPadding = defaultFontSize * 0.1
+export const defaultButtonSize = defaultFontSize * 1.25
+export const defaultCursorWidth = defaultFontSize * 0.05
 export const defaultVolumeStep = 10
 
 export const defaultHideUIDelay = 5000
 export const defaultSaveConfigThrottle = 2000
 // export const defaultRerenderThrottle = defaultRenderThrottle
 
+export function createDefaultConfig() {
+  return cloneDeep({
+    mode: "dark",
+    uiName: defaultName,
+    style: {
+      dark: {
+        button: {
+          default: {
+            padding: defaultPadding,
+            color: White + AlphaShow,
+            backgroundColor: Black + AlphaHide,
+            colorHover: Yellow + AlphaShow,
+            backgroundColorHover: White + AlphaMedium,
+            fontSize: defaultFontSize,
+            font: defaultFont,
+            width: defaultButtonSize,
+            height: defaultButtonSize,
+          },
+          active: {
+            padding: defaultPadding,
+            color: White + AlphaShow,
+            backgroundColor: Black + AlphaLow,
+            colorHover: Yellow + AlphaShow,
+            backgroundColorHover: White + AlphaMedium,
+            fontSize: defaultFontSize,
+            font: defaultFont,
+            width: defaultButtonSize,
+            height: defaultButtonSize,
+          },
+          hover: {
+            padding: defaultPadding,
+            color: White + AlphaShow,
+            backgroundColor: Black + AlphaLow,
+            colorHover: Yellow + AlphaShow,
+            backgroundColorHover: White + AlphaMedium,
+            fontSize: defaultFontSize,
+            font: defaultFont,
+            width: defaultButtonSize,
+            height: defaultButtonSize,
+          },
+        },
+        progress: {
+          height: defaultButtonSize,
+          color: White + AlphaShow,
+          backgroundColor: Black + AlphaLow,
+          cursorColor: White + AlphaShow,
+          cursorWidth: defaultCursorWidth,
+          previewCursorWidth: defaultCursorWidth,
+          previewCursorColor: White + AlphaMedium,
+          timeTextBackgroundColor: White + AlphaHide,
+          timeTextColor: White + AlphaShow,
+          fontSize: defaultProgressFontSize,
+          font: defaultFont,
+          previewZIndex: defaultPreviewZIndex,
+        },
+        control: {
+          backgroundColor: Black + AlphaLow,
+          height: defaultButtonSize,
+        },
+        toolbar: {
+          backgroundColor: Black + AlphaLow,
+          autoHideDelay: defaultHideUIDelay,
+        },
+        volume: {
+          backgroundColor: Black + AlphaLow,
+          autoHideDelay: defaultHideUIDelay,
+          fontSize: defaultFontSize * 0.75,
+          zIndex: defaultVolumeZIndex,
+          step: defaultVolumeStep,
+        },
+        playlist: {
+          backgroundColor: Black + AlphaLow,
+          zIndex: defaultPlaylistZIndex,
+        },
+        tooltip: {
+          enable: true,
+          zIndex: defaultTooltipZIndex,
+          padding: defaultPadding,
+          color: White + AlphaShow,
+          backgroundColor: Black + AlphaLow,
+          colorHover: Yellow + AlphaShow,
+          backgroundColorHover: White + AlphaMedium,
+          fontSize: defaultFontSize,
+          font: defaultFont,
+        },
+        dropdown: {
+          zIndex: defaultDropdownZIndex,
+          padding: defaultPadding,
+          color: White + AlphaShow,
+          backgroundColor: Black + AlphaLow,
+          colorHover: Yellow + AlphaShow,
+          backgroundColorHover: White + AlphaMedium,
+          fontSize: defaultFontSize,
+          font: defaultFont,
+          button: {
+            padding: defaultPadding,
+            color: White + AlphaShow,
+            backgroundColor: Black + AlphaHide,
+            colorHover: Yellow + AlphaShow,
+            backgroundColorHover: White + AlphaMedium,
+            fontSize: defaultFontSize,
+            font: defaultFont,
+            // width: defaultButtonSize,
+            // height: defaultButtonSize,
+          },
+        },
+        clickMenu: {
+          backgroundColor: Black + AlphaLow,
+          zIndex: defaultClickMenuZIndex,
+        },
+      },
+      light: {
+        button: {
+          default: {
+            padding: defaultPadding,
+            color: Black + AlphaShow,
+            backgroundColor: White + AlphaHide,
+            colorHover: Yellow + AlphaShow,
+            backgroundColorHover: Black + AlphaMedium,
+            fontSize: defaultFontSize,
+            font: defaultFont,
+            width: defaultButtonSize,
+            height: defaultButtonSize,
+          },
+          active: {
+            padding: defaultPadding,
+            color: Black + AlphaShow,
+            backgroundColor: White + AlphaLow,
+            colorHover: Yellow + AlphaShow,
+            backgroundColorHover: Black + AlphaMedium,
+            fontSize: defaultFontSize,
+            font: defaultFont,
+            width: defaultButtonSize,
+            height: defaultButtonSize,
+          },
+          hover: {
+            padding: defaultPadding,
+            color: Black + AlphaShow,
+            backgroundColor: White + AlphaLow,
+            colorHover: Yellow + AlphaShow,
+            backgroundColorHover: Black + AlphaMedium,
+            fontSize: defaultFontSize,
+            font: defaultFont,
+            width: defaultButtonSize,
+            height: defaultButtonSize,
+          },
+        },
+        progress: {
+          height: defaultButtonSize,
+          color: Black + AlphaShow,
+          backgroundColor: White + AlphaLow,
+          cursorColor: Black + AlphaShow,
+          cursorWidth: defaultCursorWidth,
+          previewCursorWidth: defaultCursorWidth,
+          previewCursorColor: Black + AlphaMedium,
+          timeTextBackgroundColor: Black + AlphaHide,
+          timeTextColor: Black + AlphaShow,
+          fontSize: defaultProgressFontSize,
+          font: defaultFont,
+          previewZIndex: defaultPreviewZIndex,
+        },
+        control: {
+          backgroundColor: White + AlphaLow,
+          height: defaultButtonSize,
+        },
+        toolbar: {
+          backgroundColor: White + AlphaLow,
+          autoHideDelay: defaultHideUIDelay,
+        },
+        volume: {
+          backgroundColor: White + AlphaLow,
+          fontSize: defaultFontSize * 0.75,
+          autoHideDelay: defaultHideUIDelay,
+          step: defaultVolumeStep,
+          zIndex: defaultVolumeZIndex,
+        },
+        playlist: {
+          backgroundColor: White + AlphaLow,
+          zIndex: defaultPlaylistZIndex,
+        },
+        tooltip: {
+          enable: true,
+          zIndex: defaultTooltipZIndex,
+          padding: defaultPadding,
+          color: Black + AlphaShow,
+          backgroundColor: White + AlphaLow,
+          colorHover: Yellow + AlphaShow,
+          backgroundColorHover: Black + AlphaMedium,
+          fontSize: defaultFontSize,
+          font: defaultFont,
+        },
+        dropdown: {
+          padding: defaultPadding,
+          color: Black + AlphaShow,
+          backgroundColor: White + AlphaLow,
+          colorHover: Yellow + AlphaShow,
+          backgroundColorHover: Black + AlphaMedium,
+          fontSize: defaultFontSize,
+          font: defaultFont,
+          zIndex: defaultDropdownZIndex,
+          button: {
+            padding: defaultPadding,
+            color: Black + AlphaShow,
+            backgroundColor: White + AlphaHide,
+            colorHover: Yellow + AlphaShow,
+            backgroundColorHover: Black + AlphaMedium,
+            fontSize: defaultFontSize,
+            font: defaultFont,
+            // width: defaultButtonSize,
+            // height: defaultButtonSize,
+          },
+        },
+        clickMenu: {
+          backgroundColor: White + AlphaLow,
+          zIndex: defaultClickMenuZIndex,
+        },
+      },
+    },
+    progress: {
+      save: true,
+      time: 0,
+    },
+    player: defaultPlayer,
+    state: defaultState,
+    config: {
+      fps: defaultFPS,
+      enableMouseMoveEvent: true,
+      saveConfigThrottle: defaultSaveConfigThrottle,
+    },
+  } as const)
+}
 export const defaultState: EasyConfig["state"] = {
   hide: false,
   playlistHide: true,
@@ -189,232 +421,4 @@ export const defaultPlayer: EasyConfig["player"] = {
   volume: 100,
   volumeMax: 130,
 }
-export const defaultConfig: EasyConfig = {
-  mode: "dark",
-  uiName: defaultName,
-  style: {
-    dark: {
-      button: {
-        default: {
-          padding: defaultPadding,
-          color: White + AlphaShow,
-          backgroundColor: Black + AlphaHide,
-          colorHover: Yellow + AlphaShow,
-          backgroundColorHover: White + AlphaMedium,
-          fontSize: defaultFontSize,
-          font: defaultFont,
-          width: defaultButtonSize,
-          height: defaultButtonSize,
-        },
-        active: {
-          padding: defaultPadding,
-          color: White + AlphaShow,
-          backgroundColor: Black + AlphaLow,
-          colorHover: Yellow + AlphaShow,
-          backgroundColorHover: White + AlphaMedium,
-          fontSize: defaultFontSize,
-          font: defaultFont,
-          width: defaultButtonSize,
-          height: defaultButtonSize,
-        },
-        hover: {
-          padding: defaultPadding,
-          color: White + AlphaShow,
-          backgroundColor: Black + AlphaLow,
-          colorHover: Yellow + AlphaShow,
-          backgroundColorHover: White + AlphaMedium,
-          fontSize: defaultFontSize,
-          font: defaultFont,
-          width: defaultButtonSize,
-          height: defaultButtonSize,
-        },
-      },
-      progress: {
-        height: defaultButtonSize,
-        color: White + AlphaShow,
-        backgroundColor: Black + AlphaLow,
-        cursorColor: White + AlphaShow,
-        cursorWidth: defaultCursorWidth,
-        previewCursorWidth: defaultCursorWidth,
-        previewCursorColor: White + AlphaMedium,
-        timeTextBackgroundColor: White + AlphaHide,
-        timeTextColor: White + AlphaShow,
-        fontSize: defaultProgressFontSize,
-        font: defaultFont,
-        previewZIndex: defaultPreviewZIndex,
-      },
-      control: {
-        backgroundColor: Black + AlphaLow,
-        height: defaultButtonSize,
-      },
-      toolbar: {
-        backgroundColor: Black + AlphaLow,
-        autoHideDelay: defaultHideUIDelay,
-      },
-      volume: {
-        backgroundColor: Black + AlphaLow,
-        autoHideDelay: defaultHideUIDelay,
-        fontSize: defaultFontSize * 0.75,
-        zIndex: defaultVolumeZIndex,
-        step: defaultVolumeStep,
-      },
-      playlist: {
-        backgroundColor: Black + AlphaLow,
-        zIndex: defaultPlaylistZIndex,
-      },
-      tooltip: {
-        enable: true,
-        zIndex: defaultTooltipZIndex,
-        padding: defaultPadding,
-        color: White + AlphaShow,
-        backgroundColor: Black + AlphaLow,
-        colorHover: Yellow + AlphaShow,
-        backgroundColorHover: White + AlphaMedium,
-        fontSize: defaultFontSize,
-        font: defaultFont,
-      },
-      dropdown: {
-        zIndex: defaultDropdownZIndex,
-        padding: defaultPadding,
-        color: White + AlphaShow,
-        backgroundColor: Black + AlphaLow,
-        colorHover: Yellow + AlphaShow,
-        backgroundColorHover: White + AlphaMedium,
-        fontSize: defaultFontSize,
-        font: defaultFont,
-        button: {
-          padding: defaultPadding,
-          color: White + AlphaShow,
-          backgroundColor: Black + AlphaHide,
-          colorHover: Yellow + AlphaShow,
-          backgroundColorHover: White + AlphaMedium,
-          fontSize: defaultFontSize,
-          font: defaultFont,
-          // width: defaultButtonSize,
-          // height: defaultButtonSize,
-        },
-      },
-      clickMenu: {
-        backgroundColor: Black + AlphaLow,
-        zIndex: defaultClickMenuZIndex,
-      },
-    },
-    light: {
-      button: {
-        default: {
-          padding: defaultPadding,
-          color: Black + AlphaShow,
-          backgroundColor: White + AlphaHide,
-          colorHover: Yellow + AlphaShow,
-          backgroundColorHover: Black + AlphaMedium,
-          fontSize: defaultFontSize,
-          font: defaultFont,
-          width: defaultButtonSize,
-          height: defaultButtonSize,
-        },
-        active: {
-          padding: defaultPadding,
-          color: Black + AlphaShow,
-          backgroundColor: White + AlphaLow,
-          colorHover: Yellow + AlphaShow,
-          backgroundColorHover: Black + AlphaMedium,
-          fontSize: defaultFontSize,
-          font: defaultFont,
-          width: defaultButtonSize,
-          height: defaultButtonSize,
-        },
-        hover: {
-          padding: defaultPadding,
-          color: Black + AlphaShow,
-          backgroundColor: White + AlphaLow,
-          colorHover: Yellow + AlphaShow,
-          backgroundColorHover: Black + AlphaMedium,
-          fontSize: defaultFontSize,
-          font: defaultFont,
-          width: defaultButtonSize,
-          height: defaultButtonSize,
-        },
-      },
-      progress: {
-        height: defaultButtonSize,
-        color: Black + AlphaShow,
-        backgroundColor: White + AlphaLow,
-        cursorColor: Black + AlphaShow,
-        cursorWidth: defaultCursorWidth,
-        previewCursorWidth: defaultCursorWidth,
-        previewCursorColor: Black + AlphaMedium,
-        timeTextBackgroundColor: Black + AlphaHide,
-        timeTextColor: Black + AlphaShow,
-        fontSize: defaultProgressFontSize,
-        font: defaultFont,
-        previewZIndex: defaultPreviewZIndex,
-      },
-      control: {
-        backgroundColor: White + AlphaLow,
-        height: defaultButtonSize,
-      },
-      toolbar: {
-        backgroundColor: White + AlphaLow,
-        autoHideDelay: defaultHideUIDelay,
-      },
-      volume: {
-        backgroundColor: White + AlphaLow,
-        fontSize: defaultFontSize * 0.75,
-        autoHideDelay: defaultHideUIDelay,
-        step: defaultVolumeStep,
-        zIndex: defaultVolumeZIndex,
-      },
-      playlist: {
-        backgroundColor: White + AlphaLow,
-        zIndex: defaultPlaylistZIndex,
-      },
-      tooltip: {
-        enable: true,
-        zIndex: defaultTooltipZIndex,
-        padding: defaultPadding,
-        color: Black + AlphaShow,
-        backgroundColor: White + AlphaLow,
-        colorHover: Yellow + AlphaShow,
-        backgroundColorHover: Black + AlphaMedium,
-        fontSize: defaultFontSize,
-        font: defaultFont,
-      },
-      dropdown: {
-        padding: defaultPadding,
-        color: Black + AlphaShow,
-        backgroundColor: White + AlphaLow,
-        colorHover: Yellow + AlphaShow,
-        backgroundColorHover: Black + AlphaMedium,
-        fontSize: defaultFontSize,
-        font: defaultFont,
-        zIndex: defaultDropdownZIndex,
-        button: {
-          padding: defaultPadding,
-          color: Black + AlphaShow,
-          backgroundColor: White + AlphaHide,
-          colorHover: Yellow + AlphaShow,
-          backgroundColorHover: Black + AlphaMedium,
-          fontSize: defaultFontSize,
-          font: defaultFont,
-          // width: defaultButtonSize,
-          // height: defaultButtonSize,
-        },
-      },
-      clickMenu: {
-        backgroundColor: White + AlphaLow,
-        zIndex: defaultClickMenuZIndex,
-      },
-    },
-  },
-  progress: {
-    save: true,
-    time: 0,
-  },
-  player: defaultPlayer,
-  state: defaultState,
-  config: {
-    fps: defaultFPS,
-    enableMouseMoveEvent: true,
-    saveConfigThrottle: defaultSaveConfigThrottle,
-  },
-}
+export const defaultConfig: EasyConfig = createDefaultConfig()

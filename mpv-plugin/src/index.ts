@@ -2,6 +2,11 @@ export interface PluginContext {}
 
 export interface SystemApi {
   saveConfig: (config: PluginContext) => void
+  updatePlaylist: (list: string[], playIndex: number) => void
+  getPlaylist: () => string[]
+  setPause: (pause: boolean) => void
+  setPath: (path: string) => void
+  getPath: () => string
 }
 
 export type Plugin = {

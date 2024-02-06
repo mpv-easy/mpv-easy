@@ -1,7 +1,8 @@
-import "@mpv-easy/tool"
-import { command, print } from "@mpv-easy/tool"
-import "./mpv-easy"
+export * from "./ui"
 
-// command("set osc no")
-// command("set window-dragging no")
-// import "./example/wheel"
+// import "@mpv-easy/tool"
+// import { command, print } from "@mpv-easy/tool"
+
+// // command("set osc no")
+// // command("set window-dragging no")
+// // import "./example/wheel"

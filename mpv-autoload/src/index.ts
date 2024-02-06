@@ -1,32 +1,23 @@
-import { definePlugin } from "@mpv-easy/plugin"
+import { SystemApi, definePlugin } from "@mpv-easy/plugin"
+import { dir } from "@mpv-easy/tool"
+import { normalize } from "@mpv-easy/tool"
 import {
-  alphaNumSort,
-  commandNative,
+  getPropertyString,
   isAudio,
+  isHttp,
   isImage,
   isVideo,
   joinPath,
   readdir,
-  unregisterEvent,
 } from "@mpv-easy/tool"
-import {
-  addKeyBinding,
-  command,
-  getProperty,
-  getPropertyNative,
-  getPropertyNumber,
-  registerEvent,
-  removeKeyBinding,
-  replacePlaylist,
-} from "@mpv-easy/tool"
+import { getProperty, registerEvent } from "@mpv-easy/tool"
 
 export const pluginName = "@mpv-easy/autoload"
 
 export type AutoloadConfig = {
-  // disabled: boolean,
-  // images: boolean,
-  // videos: boolean,
-  // audio: boolean,
+  image: boolean
+  video: boolean
+  audio: boolean
   // additionalImageExts: string,
   // additionalVideoExts: string,
   // additionalAudioExts: string,
@@ -39,64 +30,59 @@ declare module "@mpv-easy/plugin" {
   interface PluginContext {
     [pluginName]: AutoloadConfig
   }
-
-  interface SystemApi {
-    updatePlaylist: (list: string[]) => void
-  }
 }
 
 export const defaultConfig: AutoloadConfig = {
-  // disabled: false,
-  // images: true,
-  // videos: true,
+  image: true,
+  video: true,
+  audio: true,
 }
 
-export function getPlayableList(path = getProperty("path") || "") {
-  const dir = path.includes("\\")
-    ? path?.split("\\").slice(0, -1).join("\\")
-    : path?.split("/").slice(0, -1).join("/")
-
+export function getPlayableList(config: AutoloadConfig, dir: string) {
+  if (isHttp(dir)) {
+    return []
+  }
   const list = readdir(dir) || []
   const videoList = list
-    .filter((i) => isVideo(i) || isAudio(i) || isImage(i))
-    .map((i) => joinPath(dir, i).replaceAll("\\", "/"))
+    .filter(
+      (i) =>
+        (config.video && isVideo(i)) ||
+        (config.audio && isAudio(i)) ||
+        (config.image && isImage(i)),
+    )
+    .map((i) => joinPath(dir, i))
     .sort((a, b) => a.localeCompare(b))
   return videoList
 }
 
-export function autoload() {
-  const videoList = getPlayableList()
-  const path = getProperty("path") || ""
-  const oldCount = getPropertyNumber("playlist-count", 1) || 1
-  const playlistPos = getPropertyNumber("playlist-pos", 0) || 0
+function autoload(api: SystemApi, config: AutoloadConfig) {
+  const path = normalize(getPropertyString("path") || "")
+
+  if (isHttp(path)) {
+    return
+  }
+  const d = dir(path)
+  if (!d) {
+    return
+  }
+
+  const videoList = getPlayableList(config, d)
+  if (JSON.stringify(videoList) === JSON.stringify(api.getPlaylist())) {
+    return
+  }
   const currentPos = videoList.indexOf(path)
-
-  // console.log("autoload: ", currentPos, videoList.join(", "))
-  for (let i = oldCount - 1; i >= 0; i--) {
-    if (i === playlistPos) {
-      continue
-    }
-    command(`playlist-remove ${i}`)
-  }
-
-  for (const i of videoList) {
-    if (i === path) {
-      continue
-    }
-    command(`loadfile ${i} append`)
-  }
-
-  if (currentPos > 0) {
-    commandNative(["playlist-move", 0, currentPos + 1])
-  }
+  api.updatePlaylist(videoList, currentPos === -1 ? 0 : currentPos)
 }
+
 export default definePlugin((context, api) => ({
   name: pluginName,
   create() {
-    // const config = context[pluginName]
-    registerEvent("start-file", autoload)
+    const config = context[pluginName]
+    registerEvent("start-file", () => {
+      autoload(api, config)
+    })
   },
   destroy() {
-    unregisterEvent(autoload)
+    // unregisterEvent(autoload)
   },
 }))

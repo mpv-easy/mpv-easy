@@ -32,3 +32,14 @@ export function cmdExecString(cmd: string) {
 export function shellExecString(cmd: string) {
   execSync(["bash", cmd])
 }
+
+export function detectCmd(cmdName: string): boolean {
+  const os = getOs()
+  const [sh, shArg] = os === "windows" ? ["cmd", "/c"] : ["sh", "-c"]
+  try {
+    const s = execSync([sh, shArg, `where ${cmdName}`])
+    return s.length > 0
+  } catch {
+    return false
+  }
+}

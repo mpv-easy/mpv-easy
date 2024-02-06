@@ -174,10 +174,8 @@ export function createCustomReconciler(
       }
       const { backgroundImage, id } = node.attributes
       if (typeof backgroundImage === "string") {
-        commandNativeAsync({
-          name: "overlay-remove",
-          id: id,
-        })
+        node.imageOverlay?.remove()
+        node.imageOverlay?.destroy()
       }
     },
     removeChild(parentInstance: DOMElement, child: DOMElement) {
@@ -203,6 +201,10 @@ export type RenderConfig = {
 // TODO: 30 fps
 export const defaultFPS = 10
 
+// let max = 0
+// let min = 1 << 20
+// let sum = 0
+
 export function createRender({
   enableMouseMoveEvent = true,
   fps = defaultFPS,
@@ -211,7 +213,12 @@ export function createRender({
       // const st = +Date.now()
       renderNode(RootNode, ++currentRenderCount, 0)
       // const ed = +Date.now()
-      // console.log("render time: ", currentRenderCount, st, ed, ed - st)
+      // const t = ed - st
+      // max = Math.max(max, t)
+      // min = Math.min(min, t)
+      // sum += t
+      // const every = sum / (currentRenderCount + 1)
+      // console.log("render time: ", currentRenderCount, min, max, every)
     },
     1000 / fps,
     {

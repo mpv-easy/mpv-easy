@@ -5,6 +5,8 @@ import { buttonStyleSelector, controlStyleSelector } from "../../store"
 import { Previous } from "../components/previous"
 import { Next } from "../components/next"
 import { Filename } from "../components/filename"
+import { NextFrame } from "../components/next-frame"
+import { PreviousFrame } from "../components/previous-frame"
 
 export const Info = React.memo(({ height }: Partial<BaseElementProps>) => {
   const button = useSelector(buttonStyleSelector)
@@ -23,9 +25,10 @@ export const Info = React.memo(({ height }: Partial<BaseElementProps>) => {
       alignItems="center"
       backgroundColor={control.backgroundColor}
     >
+      <PreviousFrame />
       <Previous />
       <Next />
-      <Filename />
+      <NextFrame />
     </Box>
   )
 })

@@ -89,6 +89,7 @@ function computeNodeSizeAxis(
   throw new Error("computeNodeSize error, not support length: " + v)
 }
 
+const defaultZIndexStep = 1
 function computeZIndex(node: DOMElement) {
   const { attributes } = node
 
@@ -98,15 +99,15 @@ function computeZIndex(node: DOMElement) {
   let parent = node.parentNode
 
   let deep = 1
-  if (parent && typeof parent.attributes.zIndex === "undefined") {
-    parent = parent.parentNode
-    deep++
+  while (parent) {
+    if (typeof parent.attributes.zIndex === "undefined") {
+      parent = parent.parentNode
+      deep += defaultZIndexStep
+    }
+    if (parent && typeof parent?.attributes?.zIndex === "number") {
+      return parent.attributes.zIndex + deep
+    }
   }
-
-  if (parent && typeof parent.attributes.zIndex === "number") {
-    return parent.attributes.zIndex + deep
-  }
-
   return deep
 }
 
@@ -174,7 +175,6 @@ function computeNodeSize(
     for (const c of node.childNodes) {
       computeNodeSize(c, currentRenderCount, deep + 1)
     }
-    // console.log('======btn: ', layoutNode.width, layoutNode.height)
     return
   }
 
@@ -816,11 +816,7 @@ function computedNodeAlign(node: DOMElement) {
   )
 }
 function computeNodeLayout(node: DOMElement, currentRenderCount: number) {
-  // if (!node.layoutNode._tlbr) {
-  // node.layoutNode._tlbr = false
-
   const { layoutNode, attributes } = node
-  // console.log('computeNodeLayout: ', attributes.id)
 
   if (layoutNode.computedLayoutCount === currentRenderCount) {
     return

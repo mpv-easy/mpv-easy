@@ -17,11 +17,14 @@ import {
   getPropertyNative,
   setPropertyNative,
   VideoParams,
+  updatePlaylist,
+  getPropertyNumber,
 } from "@mpv-easy/tool"
 import { Language } from "@mpv-easy/i18n"
-import { ThemeMode, UIName } from "../mpv-easy-theme"
+import { ThemeMode, UIName, createDefaultConfig } from "../mpv-easy-theme"
 import { pluginName as i18nName } from "@mpv-easy/i18n"
 import { pluginName as anime4kName, Anime4kConfig } from "@mpv-easy/anime4k"
+import { createDefaultContext } from "../context"
 
 const windowMaximizedProp = new PropertyBool("window-maximized")
 const fullscreenProp = new PropertyBool("fullscreen")
@@ -118,17 +121,19 @@ export const context = createModel<RootModel>()({
       }
       return { ...state }
     },
-    // setTooltip(state, hide: boolean, text: string) {
-    //   state[pluginName].player.mousePos = mousePosProp.value
-    //   return { ...state }
-    // },
     setPlaylistHide(state, hide: boolean) {
       state[pluginName].state.playlistHide = hide
       return { ...state }
     },
-    setPlaylist(state, list: string[]) {
-      state[pluginName].player.playlist = list
-      return { ...state }
+    setPlaylist(state, playlist: string[], playIndex: number) {
+      state[pluginName].player = {
+        ...state[pluginName].player,
+        playlist,
+        path: playlist[playIndex],
+      }
+      console.log("setPlaylist: ", playIndex, playlist.join(", "))
+      updatePlaylist(playlist, playIndex)
+      return state
     },
     exit(state) {
       command("quit")
@@ -144,6 +149,8 @@ export const context = createModel<RootModel>()({
       state[pluginName].player.path = list[newPos]
       pathProp.value = list[newPos]
       command(`playlist-play-index ${newPos}`)
+      // setPropertyNumber('playlist-pos', newPos)
+      console.log("--new pos", newPos)
       return { ...state }
     },
     previous(state) {
@@ -155,6 +162,13 @@ export const context = createModel<RootModel>()({
       state[pluginName].player.playlistPos = newPos
       state[pluginName].player.path = list[newPos]
       command(`playlist-play-index ${newPos}`)
+      // setPropertyNumber('playlist-pos', newPos)
+      console.log(
+        "--new pos",
+        newPos,
+        list.join(", "),
+        getPropertyNumber("playlist-count"),
+      )
       return { ...state }
     },
     setVid(state, vid: number) {
@@ -167,7 +181,7 @@ export const context = createModel<RootModel>()({
     },
     setSid(state, sid: number) {
       state[pluginName].player = { ...state[pluginName].player, sid }
-      return state
+      return { ...state }
     },
     setAnime4k(state, config: Anime4kConfig) {
       state[anime4kName] = { ...config }
@@ -184,6 +198,10 @@ export const context = createModel<RootModel>()({
     setVolumeMax(state, volumeMax: number) {
       state[pluginName].player = { ...state[pluginName].player, volumeMax }
       return state
+    },
+    resetConfig(state) {
+      // return createDefaultConfig()
+      return createDefaultContext()
     },
   },
 

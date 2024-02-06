@@ -16,6 +16,7 @@ import { Restore } from "../components/restore"
 import { AudioTrack } from "../components/audio-track"
 import { SubtitleTrack } from "../components/subtitle-track"
 import { PlayMode } from "../components/play-mode"
+import { MoreInfo } from "../components/more-info"
 export const Control = React.memo(
   ({ height, width }: Partial<BaseElementProps>) => {
     const button = useSelector(buttonStyleSelector)
@@ -44,6 +45,7 @@ export const Control = React.memo(
         >
           <Play />
           <Stop />
+          {/* <MoreInfo /> */}
           <Screenshot />
           <PlayMode />
         </Box>

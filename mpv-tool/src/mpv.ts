@@ -1,5 +1,7 @@
 import { CoordRect, Rect } from "./common"
+import { ConfigDir } from "./const"
 import { getGlobal } from "./global"
+import { normalize } from "./path"
 import {
   AddKeyBindingFlags,
   FileInfo,
@@ -262,10 +264,24 @@ export function getTimeMs(): number {
 export function getScriptFile(): string {
   return getMPV().get_script_file()
 }
+
+let _scriptDirCache: string
 export function getScriptDir(): string {
-  return getMPV().get_script_file().split("/").slice(0, -1).join("/")
+  if (_scriptDirCache) return _scriptDirCache
+  _scriptDirCache = normalize(
+    getMPV().get_script_file().split("/").slice(0, -1).join("/"),
+  )
+  return _scriptDirCache
 }
 
+let _scriptConfigDirCache: string
+export function getScriptConfigDir(): string {
+  if (_scriptConfigDirCache) {
+    return _scriptConfigDirCache
+  }
+  _scriptConfigDirCache = joinPath(getScriptDir(), ConfigDir)
+  return _scriptConfigDirCache
+}
 export function getModulePaths(): string[] {
   return getMPV().module_paths
 }
@@ -330,7 +346,9 @@ export function splitPath(path: string): [string, string] {
 }
 
 export function joinPath(...paths: string[]): string {
-  return paths.reduce((cur, pre) => getMPV().utils.join_path(cur, pre))
+  return normalize(
+    paths.reduce((cur, pre) => getMPV().utils.join_path(cur, pre)),
+  )
 }
 
 export function getpid(): number {

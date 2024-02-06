@@ -23,7 +23,7 @@
     "@mpv-easy/tool": "workspace:*"
   },
   "devDependencies": {
-    "@types/react": "^18.2.45"
+    "@types/react": "^18.2.55"
   },
   "peerDependencies": {
     "react": "^18.2.0"

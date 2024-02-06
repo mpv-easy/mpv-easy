@@ -1,5 +1,6 @@
 import {
   addKeyBinding,
+  detectCmd,
   getClipboard,
   getPropertyNumber,
   isHttp,
@@ -13,29 +14,6 @@ import {
 } from "@mpv-easy/tool"
 
 import { definePlugin } from "@mpv-easy/plugin"
-
-function fn() {
-  const s = getClipboard().trim().replace(/\\/g, "/")
-  let v: undefined | string[]
-  if (s?.length > 0) {
-    if (isVideo(s)) {
-      v = [s]
-    } else if (isHttp(s)) {
-      v = webdavList(s)
-        .map((i) => s + i.href)
-        .filter((p) => isVideo(p))
-    } else {
-      const list = readdir(s)
-      if (list?.length) {
-        v = list.map((i) => `${s}\\${i}`.replace(/\\/g, "/"))
-      }
-    }
-  }
-  if (v?.length) {
-    replacePlaylist(v, 0)
-  }
-}
-
 export const pluginName = "@mpv-easy/copy-time"
 
 export const defaultConfig: copyTimeConfig = {
@@ -79,6 +57,10 @@ export default definePlugin((context) => ({
   name: pluginName,
   defaultConfig: defaultConfig,
   create: () => {
+    if (!detectCmd("pwsh")) {
+      osdMessage(`${pluginName} need pwsh`, 10)
+      return
+    }
     const key = context[pluginName]?.key ?? defaultConfig.key
     addKeyBinding(key, pluginName, copyTime)
   },

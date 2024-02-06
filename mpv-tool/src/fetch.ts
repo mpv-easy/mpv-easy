@@ -1,5 +1,5 @@
 import { execSync } from "./common"
-import { print } from "./mpv"
+import decodeUriComponent from "decode-uri-component"
 
 const type = {
   GET: "GET",
@@ -87,5 +87,6 @@ const fetchToCurl = (url: string, options: FetchOption = {}): string[] => {
 
 export function fetch(url: string, options: FetchOption = {}) {
   const cmd = fetchToCurl(url, options)
-  return execSync(cmd)
+  const s = decodeUriComponent(execSync(cmd))
+  return s
 }

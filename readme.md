@@ -57,8 +57,13 @@ set-executionpolicy remotesigned
 ![mouseHoverStyle](./assets/img/mouseHoverStyle.png)
 
 
-### toolbar
-![toolbar](./assets/img/toolbar.gif)
+## plugin
+- mpv-anime4k
+- mpv-autoload
+- mpv-clip-play
+- mpv-copy-screen
+- mpv-copy-time
+- mpv-thumbfast
 
 
 ## quick start

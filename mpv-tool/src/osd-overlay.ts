@@ -17,7 +17,6 @@ function getOverlay(): MpvOsdOverlay {
   }
 
   const overlay = createOsdOverlay()
-  // const rawRemove = overlay.remove
   overlay.remove = function () {
     overlay.hidden = true
     overlay.data = ""
@@ -29,7 +28,6 @@ function getOverlay(): MpvOsdOverlay {
         item.busy = false
       }
     }
-    // rawRemove()
   }
   overlayPool.push({ overlay, busy: true })
   return overlay

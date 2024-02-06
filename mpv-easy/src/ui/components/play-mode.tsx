@@ -19,7 +19,8 @@ export const PlayMode = () => {
   const items: DropdownItem[] = [i18n.loopFile, i18n.loopPlaylist].map(
     (i): DropdownItem => {
       return {
-        label: (mode === i ? ICON.Ok : ICON.CheckboxBlankCircleOutline) + i,
+        label:
+          (mode === i ? ICON.Ok : ICON.CheckboxBlankCircleOutline) + " " + i,
         key: i,
         onSelect: () => {
           setMode(i)

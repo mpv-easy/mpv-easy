@@ -75,6 +75,9 @@ export const Playlist = React.memo((props: Partial<PlaylistProps>) => {
               const index = playlist.indexOf(i)
               if (index >= 0) {
                 command(`playlist-play-index ${index}`)
+                dispatch.context.setPath(playlist[index])
+                console.log("----click: ", index, playlist[index], playlist)
+                // dispatch.context.setPause(false)
               }
 
               dispatch.context.setPlaylistHide(true)
