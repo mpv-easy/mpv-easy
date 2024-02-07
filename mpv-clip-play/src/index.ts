@@ -27,7 +27,7 @@ function getList(s: string | undefined, context: PluginContext): string[] {
       return [normalize(s)]
     }
     return webdavList(s)
-      .map((i) => normalize(s + i.href))
+      .map((i) => normalize(s + i))
       .filter((p) => isVideo(p))
   }
 
@@ -83,14 +83,6 @@ export default definePlugin((context, api) => ({
   name: pluginName,
   defaultConfig: defaultConfig,
   create: () => {
-    if (!detectCmd("curl")) {
-      osdMessage(`${pluginName} need curl`, 10)
-      return
-    }
-    if (!detectCmd("pwsh")) {
-      osdMessage(`${pluginName} need pwsh`, 10)
-      return
-    }
     const key = context[pluginName].key
     addKeyBinding(key, pluginName, () => {
       fn(context, api)

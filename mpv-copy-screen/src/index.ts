@@ -19,16 +19,16 @@ export type copyTimeConfig = {
 
 export const defaultConfig: copyTimeConfig = {
   key: "ctrl+c",
-  path: joinPath(getScriptConfigDir(), "./copy_screen.tmp"),
+  path: joinPath(getScriptConfigDir(), "copy_screen.tmp"),
 }
 
 function copyScreen(path: string) {
   command(`no-osd screenshot-to-file ${path}`)
   const result = setClipboardImage(path)
   if (result) {
-    osdMessage(`Copied to Clipboard`)
+    osdMessage(`Copied to Clipboard`, 5)
   } else {
-    osdMessage("Failed to copy screen to clipboard")
+    osdMessage("Failed to copy screen to clipboard", 5)
   }
 }
 

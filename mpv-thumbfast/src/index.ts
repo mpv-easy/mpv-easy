@@ -2,8 +2,15 @@ import { definePlugin } from "@mpv-easy/plugin"
 import {
   commandNative,
   commandNativeAsync,
+  dir,
+  execSync,
+  existsSync,
   getOs,
   getPropertyString,
+  getScriptConfigDir,
+  joinPath,
+  mkdir,
+  normalize,
 } from "@mpv-easy/tool"
 export const pluginName = "@mpv-easy/thumbfast"
 
@@ -25,7 +32,11 @@ declare module "@mpv-easy/plugin" {
 export const defaultThumbMaxWidth = 360
 export const defaultThumbMaxHeight = 360
 export const defaultThumbFormat = "bgra"
-export const defaultThumbPath = "./mpv-easy-thumbfast.tmp"
+export const defaultThumbPath = joinPath(
+  getScriptConfigDir(),
+  "mpv-easy-thumbfast.tmp",
+)
+console.log("defaultThumbPath: ", defaultThumbPath)
 export const defaultThumbIpcId = "mpv-easy-thumbfast"
 export const defaultThumbStartTime = 0
 export const defaultConfig: ThumbFastConfig = {
@@ -132,7 +143,10 @@ export class ThumbFast {
 export default definePlugin((context, api) => ({
   name: pluginName,
   create() {
-    // throw new Error("TODO")
+    const d = dir(context[pluginName].path)
+    if (d && !existsSync(d)) {
+      mkdir(d)
+    }
   },
   destroy() {},
 }))

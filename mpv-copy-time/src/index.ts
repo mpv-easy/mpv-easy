@@ -57,10 +57,6 @@ export default definePlugin((context) => ({
   name: pluginName,
   defaultConfig: defaultConfig,
   create: () => {
-    if (!detectCmd("pwsh")) {
-      osdMessage(`${pluginName} need pwsh`, 10)
-      return
-    }
     const key = context[pluginName]?.key ?? defaultConfig.key
     addKeyBinding(key, pluginName, copyTime)
   },

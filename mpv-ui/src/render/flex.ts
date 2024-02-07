@@ -602,7 +602,7 @@ function computedNodeAlign(node: DOMElement) {
 
             const nextStart = xAxisStart - childXSize
             if (nextStart < nodeXPos) {
-              print("warn: not support flex wrap")
+              print("warn: not support flex wrap", c.attributes.id)
             } else {
               setAxisPosition(c, nextStart, isX)
 
@@ -639,7 +639,7 @@ function computedNodeAlign(node: DOMElement) {
 
             const nextStart = xAxisStart + childXSize
             if (nextStart > nodeXEnd) {
-              print("warn: not support flex wrap")
+              print("warn: not support flex wrap", c.attributes.id)
             } else {
               setAxisPosition(c, xAxisStart, isX)
               setAxisPosition(c, yAxisStart, !isX)
@@ -666,7 +666,7 @@ function computedNodeAlign(node: DOMElement) {
 
             const nextStart = xAxisStart + childXSize
             if (nextStart > nodeXEnd) {
-              print("warn: not support flex wrap")
+              print("warn: not support flex wrap", c.attributes.id)
             } else {
               setAxisPosition(c, xAxisStart, isX)
               setAxisPosition(c, yAxisStart - childYSize, !isX)
@@ -693,7 +693,7 @@ function computedNodeAlign(node: DOMElement) {
 
             const nextStart = xAxisStart + childXSize
             if (nextStart > nodeXEnd) {
-              print("warn: not support flex wrap")
+              print("warn: not support flex wrap", c.attributes.id)
             } else {
               setAxisPosition(c, xAxisStart, isX)
 
@@ -734,7 +734,7 @@ function computedNodeAlign(node: DOMElement) {
 
             const nextStart = xAxisStart + childXSize
             if (nextStart > nodeXEnd) {
-              print("warn: not support flex wrap")
+              print("warn: not support flex wrap", c.attributes.id)
             } else {
               setAxisPosition(c, xAxisStart, isX)
               setAxisPosition(c, yAxisStart, !isX)
@@ -764,7 +764,7 @@ function computedNodeAlign(node: DOMElement) {
 
             const nextStart = xAxisStart + childXSize
             if (nextStart > nodeXEnd) {
-              print("warn: not support flex wrap")
+              print("warn: not support flex wrap", c.attributes.id)
             } else {
               setAxisPosition(c, xAxisStart, isX)
               setAxisPosition(c, yAxisStart - childYSize, !isX)
@@ -793,7 +793,7 @@ function computedNodeAlign(node: DOMElement) {
 
             const nextStart = xAxisStart + childXSize
             if (nextStart > nodeXEnd) {
-              print("warn: not support flex wrap")
+              print("warn: not support flex wrap", c.attributes.id)
             } else {
               setAxisPosition(c, xAxisStart, isX)
 

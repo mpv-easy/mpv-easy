@@ -14,6 +14,7 @@ import {
   computeTooltipPosition,
   getDirection,
   Button,
+  ButtonProps,
 } from "@mpv-easy/ui"
 import { RootNode } from "@mpv-easy/ui"
 import React, { useEffect, useRef, useState } from "react"
@@ -41,6 +42,7 @@ export interface MenuItem {
   label: string
   children?: MenuItem[]
   onSelect?: (item: MenuItem) => void
+  style?: Partial<ButtonProps>
 }
 
 export type ClickMenuProps = {}
@@ -107,16 +109,26 @@ export const ClickMenu = React.forwardRef<
         children: [
           {
             key: i18n.lightName,
-            label: lightPrefix + " " + i18n.lightName,
+            label: i18n.lightName,
             onSelect: () => {
               dispatch.context.setMode("light")
+            },
+            style: {
+              justifyContent: "space-between",
+              alignItems: "center",
+              prefix: lightPrefix,
             },
           },
           {
             key: i18n.darkName,
-            label: darkPrefix + "  " + i18n.darkName,
+            label: i18n.darkName,
             onSelect: () => {
               dispatch.context.setMode("dark")
+            },
+            style: {
+              justifyContent: "space-between",
+              alignItems: "center",
+              prefix: darkPrefix,
             },
           },
         ],
@@ -194,13 +206,13 @@ export const ClickMenu = React.forwardRef<
         key: i18n.more,
         label: i18n.more,
         children: [
-          {
-            key: i18n.stats,
-            label: i18n.stats,
-            onSelect() {
-              console.log("click stats")
-            },
-          },
+          // {
+          //   key: i18n.stats,
+          //   label: i18n.stats,
+          //   onSelect() {
+          //     // console.log("click stats")
+          //   },
+          // },
           {
             key: i18n.console,
             label: i18n.console,
@@ -384,6 +396,7 @@ export const ClickMenu = React.forwardRef<
                 justifyContent="space-between"
                 alignContent="stretch"
                 alignItems="start"
+                {...i.style}
               />
             )
           })}

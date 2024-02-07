@@ -10,6 +10,7 @@ import {
   mouseHoverStyleSelector,
   dropdownStyleSelector,
   modeSelector,
+  languageSelector,
 } from "../../store"
 
 export const Theme = () => {
@@ -19,6 +20,8 @@ export const Theme = () => {
   const mouseHoverStyle = useSelector(mouseHoverStyleSelector)
 
   const dropdown = useSelector(dropdownStyleSelector)
+
+  const language = useSelector(languageSelector)
 
   const mode = useSelector(modeSelector)
   const darkPrefix = mode === "dark" ? ICON.Ok : ICON.CheckboxBlankCircleOutline
@@ -33,23 +36,27 @@ export const Theme = () => {
       title={i18n.theme}
       items={[
         {
-          key: "light",
-          label: lightPrefix + " " + i18n.lightName,
+          key: i18n.lightName,
+          label: i18n.lightName,
           onSelect: () => {
             dispatch.context.setMode("light")
           },
           style: {
-            justifyContent: "start",
+            justifyContent: "space-between",
+            alignItems: "center",
+            prefix: lightPrefix,
           },
         },
         {
-          key: "dark",
-          label: darkPrefix + "  " + i18n.darkName,
+          key: i18n.darkName,
+          label: i18n.darkName,
           onSelect: () => {
             dispatch.context.setMode("dark")
           },
           style: {
-            justifyContent: "start",
+            justifyContent: "space-between",
+            alignItems: "center",
+            prefix: darkPrefix,
           },
         },
       ]}

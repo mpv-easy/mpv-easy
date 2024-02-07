@@ -6,26 +6,75 @@ on:
       - "v*"
 
 jobs:
-  build:
+  build-ext:
+    strategy:
+      matrix:
+        runs-on: [ubuntu-latest, macos-latest, windows-latest]
+    runs-on: ${{ matrix.runs-on }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install latest nightly
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: nightly
+          override: true
+      - name: build ${{ matrix.runs-on }}
+        run: |
+          cd ./mpv-rs-ext
+          cargo build --release
+      - name: windows build
+        if: startsWith(matrix.runs-on, 'windows')
+        run: mv ./mpv-rs-ext/target/release/rs-ext.exe ./rs-ext-${{ matrix.runs-on }}
+      - name: macos build
+        if: startsWith(matrix.runs-on, 'macos')
+        run: mv ./mpv-rs-ext/target/release/rs-ext ./rs-ext-${{ matrix.runs-on }}
+      - name: ubuntu build
+        if: startsWith(matrix.runs-on, 'ubuntu')
+        run: mv ./mpv-rs-ext/target/release/rs-ext ./rs-ext-${{ matrix.runs-on }}
+
+      - name: Upload ${{ matrix.runs-on }} Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: rs-ext-${{ matrix.runs-on }}
+          path: ./rs-ext-${{ matrix.runs-on }}
+
+  release:
+    needs: [build-ext]
+    name: release
     runs-on: ubuntu-latest
     permissions:
       contents: write
     steps:
-      - uses: actions/checkout@v3
-      - name: "build"
+      - uses: actions/checkout@v4
+
+      - uses: actions/download-artifact@v4
+        with:
+          path: bin
+          pattern: rs-ext-*
+          merge-multiple: true
+
+      - name: "build ts"
         run: |
           npm i pnpm -g
           pnpm i
           pnpm run build
-          mkdir ./dist
-          mkdir ./dist/scripts/mpv-easy-config -p
+
+      - name: "create dist"
+        run: |
+          mkdir ./dist/scripts/mpv-easy-config/bin -p
+
           cp ./mpv-easy/es5/mpv-easy.js ./dist/scripts/mpv-easy.js
           cp -r ./mpv-easy/fonts ./dist
           cp -r ./mpv-anime4k/shaders ./dist
           cp ./mpv-easy/mpv-conf/mpv.conf ./dist/mpv.conf
+
+          chmod 777 ./bin/*
+          cp ./bin/rs-ext-macos-latest ./dist/scripts/mpv-easy-config/bin/rs-ext-macos
+          cp ./bin/rs-ext-ubuntu-latest ./dist/scripts/mpv-easy-config/bin/rs-ext-ubuntu
+          cp ./bin/rs-ext-windows-latest ./dist/scripts/mpv-easy-config/bin/rs-ext-windows
+
           cd ./dist
           zip -r -q ./mpv-easy.zip .
-          cd ..
 
       - uses: ncipollo/release-action@v1
         with:

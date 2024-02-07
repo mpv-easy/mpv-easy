@@ -131,7 +131,6 @@ export const context = createModel<RootModel>()({
         playlist,
         path: playlist[playIndex],
       }
-      console.log("setPlaylist: ", playIndex, playlist.join(", "))
       updatePlaylist(playlist, playIndex)
       return state
     },

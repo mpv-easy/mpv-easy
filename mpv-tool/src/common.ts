@@ -127,7 +127,6 @@ export function execSync(
     stderr: string
     stdout: string
   }
-
   if (r.status < 0) {
     throw new Error(`subprocess error status:${r.status} stderr:${r.stderr}`)
   }

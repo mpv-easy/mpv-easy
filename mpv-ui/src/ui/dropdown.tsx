@@ -7,7 +7,7 @@ import { BaseElementProps } from "../type"
 
 export type DropdownItem = {
   key: string | number
-  label: string
+  label?: string
   selected?: boolean
   onSelect?: (item: DropdownItem) => void
   style?: Partial<ButtonProps>

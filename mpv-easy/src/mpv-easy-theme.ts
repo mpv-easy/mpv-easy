@@ -149,7 +149,7 @@ export const defaultFont = "FiraCode Nerd Font Mono Reg"
 export const defaultFontSize = 80
 export const defaultProgressFontSize = defaultFontSize * 0.75
 export const defaultName = "uosc"
-export const defaultPadding = defaultFontSize * 0.1
+export const defaultPadding = defaultFontSize * 0.05
 export const defaultButtonSize = defaultFontSize * 1.25
 export const defaultCursorWidth = defaultFontSize * 0.05
 export const defaultVolumeStep = 10
@@ -240,7 +240,7 @@ export function createDefaultConfig() {
           backgroundColor: Black + AlphaLow,
           colorHover: Yellow + AlphaShow,
           backgroundColorHover: White + AlphaMedium,
-          fontSize: defaultFontSize,
+          fontSize: defaultFontSize * 0.75,
           font: defaultFont,
         },
         dropdown: {
@@ -250,7 +250,7 @@ export function createDefaultConfig() {
           backgroundColor: Black + AlphaLow,
           colorHover: Yellow + AlphaShow,
           backgroundColorHover: White + AlphaMedium,
-          fontSize: defaultFontSize,
+          fontSize: defaultFontSize * 0.75,
           font: defaultFont,
           button: {
             padding: defaultPadding,
@@ -258,7 +258,7 @@ export function createDefaultConfig() {
             backgroundColor: Black + AlphaHide,
             colorHover: Yellow + AlphaShow,
             backgroundColorHover: White + AlphaMedium,
-            fontSize: defaultFontSize,
+            fontSize: defaultFontSize * 0.75,
             font: defaultFont,
             // width: defaultButtonSize,
             // height: defaultButtonSize,
@@ -346,7 +346,7 @@ export function createDefaultConfig() {
           backgroundColor: White + AlphaLow,
           colorHover: Yellow + AlphaShow,
           backgroundColorHover: Black + AlphaMedium,
-          fontSize: defaultFontSize,
+          fontSize: defaultFontSize * 0.75,
           font: defaultFont,
         },
         dropdown: {
@@ -355,7 +355,7 @@ export function createDefaultConfig() {
           backgroundColor: White + AlphaLow,
           colorHover: Yellow + AlphaShow,
           backgroundColorHover: Black + AlphaMedium,
-          fontSize: defaultFontSize,
+          fontSize: defaultFontSize * 0.75,
           font: defaultFont,
           zIndex: defaultDropdownZIndex,
           button: {
@@ -364,7 +364,7 @@ export function createDefaultConfig() {
             backgroundColor: White + AlphaHide,
             colorHover: Yellow + AlphaShow,
             backgroundColorHover: Black + AlphaMedium,
-            fontSize: defaultFontSize,
+            fontSize: defaultFontSize * 0.75,
             font: defaultFont,
             // width: defaultButtonSize,
             // height: defaultButtonSize,

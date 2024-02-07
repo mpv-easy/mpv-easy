@@ -26,7 +26,7 @@ export const Language = () => {
   return (
     <Dropdown
       // TODO: language switch icon
-      text={"A/中"}
+      text={language === "cn" ? "中" : "A"}
       id="mpv-easy-button-language"
       title={i18n.language}
       direction="bottom"
@@ -48,8 +48,10 @@ export const Language = () => {
       ]}
       height={button.height}
       // TODO: dropdown should auto fit width
-      width={button.width * 2}
+      // width={button.width * 2}
+      width={button.width}
       display="flex"
+      flexDirection="column"
       justifyContent="center"
       alignItems="center"
       dropdownStyle={dropdown.button}
