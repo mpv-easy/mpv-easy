@@ -36,7 +36,6 @@ export const defaultThumbPath = joinPath(
   getScriptConfigDir(),
   "mpv-easy-thumbfast.tmp",
 )
-console.log("defaultThumbPath: ", defaultThumbPath)
 export const defaultThumbIpcId = "mpv-easy-thumbfast"
 export const defaultThumbStartTime = 0
 export const defaultConfig: ThumbFastConfig = {
@@ -93,16 +92,63 @@ export class ThumbFast {
     this.maxHeight = maxHeight
     this.ipcId = ipcId
     this.startTime = startTime
-    const videoPath = getPropertyString("path")
+    const videoPath = normalize(getPropertyString("path") || "")
     const w = videoWidth
     const h = videoHeight
     const [thumbWidth, thumbHeight] = scaleToFit(w, h, maxWidth, maxHeight)
     this.thumbWidth = thumbWidth
     this.thumbHeight = thumbHeight
-    const cmd = `mpv --config=no --terminal=no --msg-level=all=no --idle=yes --keep-open=always --pause=yes --ao=null --vo=null --load-auto-profiles=no --load-osd-console=no --load-stats-overlay=no --osc=no --vd-lavc-skiploopfilter=all --vd-lavc-skipidct=all --vd-lavc-software-fallback=1 --vd-lavc-fast --vd-lavc-threads=2 --hwdec=auto --edition=auto --vid=1 --sub=no --audio=no --sub-auto=no --audio-file-auto=no --start=0 --ytdl-format=worst --demuxer-readahead-secs=0 --demuxer-max-bytes=512KiB --gpu-dumb-mode=yes --tone-mapping=clip --hdr-compute-peak=no --sws-allow-zimg=no --sws-fast=yes --sws-scaler=fast-bilinear --audio-pitch-correction=no --vf=scale=w=${this.thumbWidth}:h=${this.thumbHeight}:flags=fast_bilinear,format=fmt=${this.format} --ovc=rawvideo --of=image2 --ofopts=update=1 --ocopy-metadata=no --o=${this.path} --input-ipc-server=${this.ipcId} ${videoPath}`
+    const args = [
+      "mpv",
+      "--config=no",
+      "--terminal=no",
+      "--msg-level=all=no",
+      "--idle=yes",
+      "--keep-open=always",
+      "--pause=yes",
+      "--ao=null",
+      "--vo=null",
+      "--load-auto-profiles=no",
+      "--load-osd-console=no",
+      "--load-stats-overlay=no",
+      "--osc=no",
+      "--vd-lavc-skiploopfilter=all",
+      "--vd-lavc-skipidct=all",
+      "--vd-lavc-software-fallback=1",
+      "--vd-lavc-fast",
+      "--vd-lavc-threads=2",
+      "--hwdec=auto",
+      "--edition=auto",
+      "--vid=1",
+      "--sub=no",
+      "--audio=no",
+      "--sub-auto=no",
+      "--audio-file-auto=no",
+      "--start=0",
+      "--ytdl-format=worst",
+      "--demuxer-readahead-secs=0",
+      "--gpu-dumb-mode=yes",
+      "--tone-mapping=clip",
+      "--hdr-compute-peak=no",
+      "--sws-allow-zimg=no",
+      "--sws-fast=yes",
+      "--sws-scaler=fast-bilinear",
+      "--audio-pitch-correction=no",
+      "--ovc=rawvideo",
+      "--of=image2",
+      "--ofopts=update=1",
+      "--ocopy-metadata=no",
+      "--demuxer-max-bytes=512KiB",
+      `--vf=scale=w=${this.thumbWidth}:h=${this.thumbHeight}:flags=fast_bilinear,format=fmt=${this.format}`,
+      `--o=${this.path}`,
+      `--input-ipc-server=${this.ipcId}`,
+      videoPath,
+    ]
+
+    // console.log("ThumbFast: ", args.join(' '))
     commandNativeAsync({
       name: "subprocess",
-      args: cmd.split(" "),
+      args,
       playback_only: true,
       capture_stdout: true,
       capture_stderr: true,

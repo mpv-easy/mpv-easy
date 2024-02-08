@@ -108,7 +108,7 @@ export const context = createModel<RootModel>()({
 
     screenshot(state) {
       command("screenshot video")
-      return state
+      return { ...state }
     },
     setMousePos(state, pos: MousePos) {
       state[pluginName].player.mousePos = pos
@@ -125,6 +125,10 @@ export const context = createModel<RootModel>()({
       state[pluginName].state.playlistHide = hide
       return { ...state }
     },
+    setSpeed(state, speed: number) {
+      state[pluginName].player.speed = speed
+      return { ...state }
+    },
     setPlaylist(state, playlist: string[], playIndex: number) {
       state[pluginName].player = {
         ...state[pluginName].player,
@@ -132,7 +136,7 @@ export const context = createModel<RootModel>()({
         path: playlist[playIndex],
       }
       updatePlaylist(playlist, playIndex)
-      return state
+      return { ...state }
     },
     exit(state) {
       command("quit")
@@ -148,8 +152,6 @@ export const context = createModel<RootModel>()({
       state[pluginName].player.path = list[newPos]
       pathProp.value = list[newPos]
       command(`playlist-play-index ${newPos}`)
-      // setPropertyNumber('playlist-pos', newPos)
-      console.log("--new pos", newPos)
       return { ...state }
     },
     previous(state) {
@@ -161,22 +163,15 @@ export const context = createModel<RootModel>()({
       state[pluginName].player.playlistPos = newPos
       state[pluginName].player.path = list[newPos]
       command(`playlist-play-index ${newPos}`)
-      // setPropertyNumber('playlist-pos', newPos)
-      console.log(
-        "--new pos",
-        newPos,
-        list.join(", "),
-        getPropertyNumber("playlist-count"),
-      )
       return { ...state }
     },
     setVid(state, vid: number) {
       state[pluginName].player = { ...state[pluginName].player, vid }
-      return state
+      return { ...state }
     },
     setAid(state, aid: number) {
       state[pluginName].player = { ...state[pluginName].player, aid }
-      return state
+      return { ...state }
     },
     setSid(state, sid: number) {
       state[pluginName].player = { ...state[pluginName].player, sid }
@@ -188,15 +183,15 @@ export const context = createModel<RootModel>()({
     },
     setVideoParams(state, videoParams: VideoParams) {
       state[pluginName].player = { ...state[pluginName].player, videoParams }
-      return state
+      return { ...state }
     },
     setVolume(state, volume: number) {
       state[pluginName].player = { ...state[pluginName].player, volume }
-      return state
+      return { ...state }
     },
     setVolumeMax(state, volumeMax: number) {
       state[pluginName].player = { ...state[pluginName].player, volumeMax }
-      return state
+      return { ...state }
     },
     resetConfig(state) {
       // return createDefaultConfig()

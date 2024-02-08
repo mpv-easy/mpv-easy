@@ -18,8 +18,8 @@
     "skipDefaultLibCheck": true,
     "jsx": "react",
     "noEmitOnError": false,
-    "declarationMap": true,
-    "sourceMap": true,
+    "declarationMap": false,
+    "sourceMap": false,
     "declaration": true
   },
   "include": ["./src"]

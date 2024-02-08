@@ -1,6 +1,4 @@
-import { CoordRect, Rect } from "./common"
 import { ConfigDir } from "./const"
-import { getGlobal } from "./global"
 import { normalize } from "./path"
 import {
   AddKeyBindingFlags,
@@ -16,7 +14,7 @@ import {
 } from "./type"
 
 export function getMPV(): MPV {
-  return getGlobal().mp
+  return globalThis.mp
 }
 
 export function command(command: string): true | undefined {
@@ -380,32 +378,34 @@ export function compileJs(
   return getMPV().utils.compile_js(fname, content_str)
 }
 
-export function print(...msg: unknown[]) {
-  return getGlobal().print(...msg)
+export function print(...msg: any[]) {
+  // TODO: error TS2556
+  // return globalThis.print(...msg)
+  return globalThis.print(msg)
 }
 
 export function dump(...msg: unknown[]) {
-  return getGlobal().dump(...msg)
+  return globalThis.dump(...msg)
 }
 
 export function exit() {
-  return getGlobal().exit()
+  return globalThis.exit()
 }
 
 export function setTimeout(fn: () => void, dur = 1000): number {
-  return getGlobal().setTimeout(fn, dur)
+  return +globalThis.setTimeout(fn, dur)
 }
 
 export function setInterval(fn: () => void, dur = 1000): number {
-  return getGlobal().setInterval(fn, dur)
+  return +globalThis.setInterval(fn, dur)
 }
 
 export function clearInterval(id: number) {
-  return getGlobal().clearInterval(id)
+  return globalThis.clearInterval(id)
 }
 
 export function clearTimeout(id: number) {
-  return getGlobal().clearTimeout(id)
+  return globalThis.clearTimeout(id)
 }
 
 // export function JsonStringify(obj: any) {

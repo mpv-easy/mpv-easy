@@ -3,7 +3,6 @@ import { Button, ButtonProps } from "./button"
 import { Box } from "./box"
 import { DOMElement } from "../render"
 import { isEvent } from "../common"
-import { BaseElementProps } from "../type"
 
 export type DropdownItem = {
   key: string | number
@@ -46,10 +45,7 @@ function getProps(props: any) {
   return newProps
 }
 
-export const Dropdown = React.forwardRef<
-  DOMElement,
-  Partial<ButtonProps & DropdownProps>
->((props) => {
+export const Dropdown = (props: Partial<ButtonProps & DropdownProps>) => {
   const buttonRef = useRef<DOMElement>(null)
   const [show, setShow] = useState(false)
   const { items = [], direction = "bottom" } = props
@@ -86,14 +82,11 @@ export const Dropdown = React.forwardRef<
             alignContent="stretch"
             color={props.color}
             backgroundColor={props.backgroundColor}
-            // {...dropdownStyle}
           >
             {items.map((i) => {
               return (
                 <Button
-                  // display="flex"
                   position="relative"
-                  // position="absolute"
                   {...newProps}
                   {...dropdownStyle}
                   width={undefined}
@@ -105,10 +98,6 @@ export const Dropdown = React.forwardRef<
                     setShow(false)
                   }}
                   {...(i.style ?? {})}
-                  // width={200}
-                  // height={200}
-                  // backgroundColor="0000FFA0"
-                  // color="00FFFF"
                 ></Button>
               )
             })}
@@ -117,4 +106,4 @@ export const Dropdown = React.forwardRef<
       </Button>
     </>
   )
-})
+}

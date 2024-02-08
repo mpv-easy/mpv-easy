@@ -31,7 +31,7 @@ function main() {
       plugin.create
     ) {
       plugin.create()
-      print("add plugin ", plugin.name)
+      print("add plugin " + plugin.name)
     }
   })
 }

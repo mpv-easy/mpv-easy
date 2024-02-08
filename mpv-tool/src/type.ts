@@ -1,5 +1,12 @@
 import { KeyEvent } from "./mpv"
 
+declare global {
+  var mp: MPV
+  function print(...args: any[]): void
+  function dump(...args: any[]): void
+  function exit(): void
+}
+
 export type LogLevel =
   | "fatal"
   | "error"

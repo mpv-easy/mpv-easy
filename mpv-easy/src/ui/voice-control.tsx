@@ -1,6 +1,6 @@
 import { setPropertyNumber } from "../../../mpv-tool/src/mpv"
 import { BaseElementProps, Box, DOMElement } from "@mpv-easy/ui"
-import React from "react"
+import React, { useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import {
   volumeMaxSelector,
@@ -20,13 +20,17 @@ export const VoiceControl = React.memo(
     const dispatch = useDispatch<Dispatch>()
     const button = useSelector(buttonStyleSelector)
     const volumeStyle = useSelector(volumeStyleSelector)
-    const volumeHeight = (volume / volumeMax) * 100 + "%"
+    const volumeHeight = volume / volumeMax
 
     const h = useSelector(osdDimensionsSelector).h
 
     const boxHeight = button.height * 5
     const wrapHeight = boxHeight + button.height * 2 + button.padding * 8
     const wrapTop = (h - wrapHeight) / 2
+
+    const [previewHide, setPreviewHide] = useState(true)
+
+    const [previewBottom, setPreviewBottom] = useState(0)
     return (
       h > wrapHeight && (
         <Box
@@ -54,7 +58,6 @@ export const VoiceControl = React.memo(
           {...props}
           ref={ref}
           hide={props.hide}
-          // zIndex={volumeStyle.zIndex}
         >
           <Box
             text={volume.toFixed(0).toString()}
@@ -78,22 +81,61 @@ export const VoiceControl = React.memo(
             borderSize={button.padding}
             borderColor={button.color}
             onMouseDown={(e) => {
+              setPreviewHide(false)
+
               const v =
                 ((1 - e.offsetY / e.target.layoutNode.height) * volumeMax) | 0
               const newVolume = clamp(v, 0, volumeMax)
               dispatch.context.setVolume(newVolume)
               setPropertyNumber("volume", newVolume)
             }}
+            onMouseEnter={() => {
+              setPreviewHide(false)
+            }}
+            onMouseMove={(e) => {
+              const { height } = e.target.layoutNode
+              const v = ((1 - e.offsetY / height) * volumeMax) | 0
+              const newVolume = clamp(v, 0, volumeMax)
+              setPreviewHide(false)
+              setPreviewBottom(
+                newVolume / volumeMax -
+                  volumeStyle.previewCursorSize / 2 / height,
+              )
+            }}
+            onMouseLeave={(e) => {
+              setPreviewHide(true)
+            }}
           >
             <Box
               pointerEvents="none"
-              height={volumeHeight}
+              height={volumeHeight * 100 + "%"}
               bottom={0}
               left={0}
               width={button.width}
               padding={button.padding}
               backgroundColor={button.color}
+              position="absolute"
             ></Box>
+
+            {previewHide || (
+              <Box
+                pointerEvents="none"
+                id="voice-hover"
+                height={volumeStyle.previewCursorSize}
+                left={0}
+                bottom={previewBottom * 100 + "%"}
+                width={button.width}
+                padding={button.padding}
+                position="absolute"
+                backgroundColor={
+                  previewBottom +
+                    volumeStyle.previewCursorSize / 2 / boxHeight >
+                  volumeHeight
+                    ? button.color
+                    : volumeStyle.backgroundColor
+                }
+              />
+            )}
           </Box>
           <Mute />
         </Box>

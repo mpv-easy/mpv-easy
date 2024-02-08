@@ -16,7 +16,7 @@ import React, { useEffect, useState, useRef, useLayoutEffect } from "react"
 command("set osc no")
 command("set window-dragging no")
 
-const cursorWidth = 100
+const cursorSize = 100
 const cursorHoverWidth = 100
 const serverId = "mpv_easy_test_001"
 const thumbFormat = "bgra"
@@ -54,7 +54,7 @@ export function Progress() {
       onMouseDown={(e) => {
         const w = e.target.layoutNode.width
         const per = e.offsetX / w
-        const left = (e.offsetX - cursorWidth / 2) / w
+        const left = (e.offsetX - cursorSize / 2) / w
         setLeft(left)
         const duration = getPropertyNumber("duration")!
         const time = duration * per
@@ -86,7 +86,7 @@ export function Progress() {
       <Box
         id="cursor"
         position="relative"
-        width={cursorWidth}
+        width={cursorSize}
         left={`${left * 100}%`}
         height={100}
         backgroundColor="00FF00"

@@ -1,6 +1,6 @@
 {
   "name": "mpv-easy",
-  "version": "0.1.5.alpha.7",
+  "version": "0.1.5.alpha.8",
   "files": [
     "dist",
     "readme.md",
@@ -20,7 +20,12 @@
     "clear-dist": "rm -rf dist es5 && pnpm -r exec rm -rf dist es5",
     "release": "pnpm publish -r --access public"
   },
-  "keywords": ["TS","React","mpv","mpv script"],
+  "keywords": [
+    "TS",
+    "React",
+    "mpv",
+    "mpv script"
+  ],
   "author": "ahaoboy",
   "license": "MIT",
   "devDependencies": {
@@ -29,7 +34,7 @@
     "@babel/preset-env": "^7.23.9",
     "@babel/preset-typescript": "^7.23.3",
     "@biomejs/biome": "^1.5.3",
-    "@types/node": "^20.11.16",
+    "@types/node": "^20.11.17",
     "babel-minify": "^0.5.2",
     "case-police": "^0.6.1",
     "chokidar-cli": "^3.0.0",

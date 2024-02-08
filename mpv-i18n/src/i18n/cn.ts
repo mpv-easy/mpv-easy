@@ -51,5 +51,8 @@ export default {
   console: "控制台",
   stats: "统计信息",
   reset: "重置",
+  resetConfig: "重置设置",
   open: "打开",
+  videoSpeed: "播放速度",
+  copyPath: "复制路径",
 }

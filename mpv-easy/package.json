@@ -50,6 +50,7 @@
     "react-dom": "^18.2.0",
     "react-reconciler": "^0.29.0",
     "react-redux": "^9.1.0",
+    "react-use": "^17.5.0",
     "redux": "^5.0.1"
   },
   "devDependencies": {

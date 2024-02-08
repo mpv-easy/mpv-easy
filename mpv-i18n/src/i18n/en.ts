@@ -52,5 +52,9 @@ export default {
   console: "console",
   stats: "stats",
   reset: "reset",
+  resetConfig: "reset config",
   open: "open",
+
+  videoSpeed: "speed",
+  copyPath: "copy path",
 }

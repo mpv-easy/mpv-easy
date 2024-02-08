@@ -8,9 +8,6 @@ export function existsSync(path: string): boolean {
 export function isDir(path: string): boolean {
   return !!fileInfo(path)?.is_dir
 }
-export function getFileName(path: string) {
-  return normalize(path).split("/").at(-1)!
-}
 
 export function dir(path: string | undefined): string | undefined {
   if (!path?.length) {

@@ -22,7 +22,7 @@ import {
 import { normalize } from "./path"
 
 export const VideoTypes =
-  "3g2,3gp,asf,avi,f4v,flv,h264,h265,m2ts,m4v,mkv,mov,mp4,mp4v,mpeg,mpg,ogm,ogv,rm,rmvb,ts,vob,webm,wmv,y4m".split(
+  "3g2,3gp,asf,avi,f4v,flv,h264,h265,m2ts,m4v,mkv,mov,mp4,mp4v,mpeg,mpg,ogm,ogv,rm,rmvb,ts,vob,webm,wmv,y4m,m4s".split(
     ",",
   )
 export const AudioTypes =
@@ -360,7 +360,7 @@ export function updatePlaylist(list: string[], playIndex = 0) {
   if (oldCount === 0) {
     // replace all
     for (const i of list) {
-      command(`loadfile ${i} append`)
+      command(`loadfile "${i}" append`)
     }
     command(`playlist-play-index ${playIndex}`)
     return
@@ -371,7 +371,7 @@ export function updatePlaylist(list: string[], playIndex = 0) {
   if (newListIndex === -1) {
     // clear and replace
     for (const i of list) {
-      command(`loadfile ${i} append`)
+      command(`loadfile "${i}" append`)
     }
     command(`playlist-play-index ${playIndex + oldList.length}`)
     for (let i = 0; i < oldList.length; i++) {
@@ -379,7 +379,6 @@ export function updatePlaylist(list: string[], playIndex = 0) {
     }
     return
   }
-
   if (JSON.stringify(oldList) === JSON.stringify(list)) {
     const oldIndex = getPropertyNumber("playlist-pos")
     if (oldIndex !== playIndex) {
@@ -387,26 +386,11 @@ export function updatePlaylist(list: string[], playIndex = 0) {
     }
     return
   }
-
-  for (let i = oldCount - 1; i >= 0; i--) {
-    if (i === oldListIndex) {
-      continue
-    }
-    command(`playlist-remove ${i}`)
-  }
-
   for (const i of list) {
-    if (i === path) {
-      continue
-    }
-    command(`loadfile ${i} append`)
+    command(`loadfile "${i}" append`)
   }
-
-  if (newListIndex > 0) {
-    commandNative(["playlist-move", 0, newListIndex + 1])
-  }
-
-  if (oldListIndex !== newListIndex) {
-    command(`playlist-play-index ${playIndex}`)
+  command(`playlist-play-index ${playIndex + oldCount}`)
+  for (let i = 0; i < oldList.length; i++) {
+    command(`playlist-remove 0`)
   }
 }

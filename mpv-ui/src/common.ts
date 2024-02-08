@@ -75,7 +75,6 @@ export function measureText(node: DOMElement): Rect {
   layoutNode.textRect.height = rect.height
   _measureCache[textCache] = layoutNode.textRect
   return _measureCache[textCache]
-  // return layoutNode.textRect
 }
 
 export function isEvent(name: string) {

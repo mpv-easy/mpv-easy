@@ -1,5 +1,5 @@
 import { SystemApi, definePlugin } from "@mpv-easy/plugin"
-import { dir } from "@mpv-easy/tool"
+import { dir, getMpvPlaylist } from "@mpv-easy/tool"
 import { normalize } from "@mpv-easy/tool"
 import {
   getPropertyString,
@@ -59,8 +59,13 @@ function autoload(api: SystemApi, config: AutoloadConfig) {
   const path = normalize(getPropertyString("path") || "")
 
   if (isHttp(path)) {
+    const list = getMpvPlaylist()
+    if (!list.includes(path)) {
+      api.updatePlaylist([path], 0)
+    }
     return
   }
+
   const d = dir(path)
   if (!d) {
     return

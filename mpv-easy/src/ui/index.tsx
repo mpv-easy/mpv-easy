@@ -25,13 +25,14 @@ import {
   VideoParams,
   normalize,
   dir,
+  getMpvPlaylist,
 } from "@mpv-easy/tool"
 import { throttle, isEqual } from "lodash-es"
 import { ClickMenu } from "./click-menu"
 import { Playlist } from "./playlist"
 import { getPlayableList } from "@mpv-easy/autoload"
 import { VoiceControl } from "./voice-control"
-
+import { useFirstMountState, useRendersCount } from "react-use"
 const windowMaximizedProp = new PropertyBool("window-maximized")
 const fullscreenProp = new PropertyBool("fullscreen")
 const timePosProp = new PropertyNumber("time-pos")
@@ -48,7 +49,8 @@ const vidProp = new PropertyNumber("vid")
 const sidProp = new PropertyNumber("sid")
 const volumeProp = new PropertyNumber("volume")
 const volumeMaxProp = new PropertyNumber("volume-max")
-
+const speedProp = new PropertyNumber("speed")
+const playlistCount = new PropertyNumber("playlist/count")
 const osdDimensionsProp = new PropertyNative<
   MpvPropertyTypeMap["osd-dimensions"]
 >("osd-dimensions")
@@ -79,6 +81,15 @@ export function Easy() {
   const path = useSelector(pathSelector)
   const autoloadConfig = useSelector(audoloadConfigSelector)
   useEffect(() => {
+    playlistCount.observe((v) => {
+      const p = pathProp.value
+      if (path !== p) {
+        const list = getMpvPlaylist()
+        const i = list.indexOf(p)
+        dispatch.context.setPlaylist(list, i === -1 ? 0 : i)
+      }
+    })
+
     aidProp.observe((v) => {
       dispatch.context.setAid(v)
     })
@@ -88,7 +99,9 @@ export function Easy() {
     sidProp.observe((v) => {
       dispatch.context.setSid(v)
     })
-
+    speedProp.observe((v) => {
+      dispatch.context.setSpeed(v)
+    })
     volumeProp.observe((v) => {
       dispatch.context.setVolume(v)
     })
@@ -111,7 +124,7 @@ export function Easy() {
         dispatch.context.setTimePos(v ?? 0)
       },
       1000 / fps,
-      { leading: false, trailing: true },
+      { leading: true, trailing: true },
     )
 
     timePosFullProp.observe(throttle(updateTimePos))
@@ -139,7 +152,7 @@ export function Easy() {
         dispatch.context.setMousePos(v)
       },
       1000 / fps,
-      { leading: false, trailing: true },
+      { leading: true, trailing: true },
     )
 
     muteProp.observe((v) => {
@@ -158,7 +171,7 @@ export function Easy() {
           dispatch.context.setOsdDimensions(v)
         },
         1000 / fps,
-        { leading: false, trailing: true },
+        { leading: true, trailing: true },
       ),
       isEqual,
     )
@@ -204,6 +217,7 @@ export function Easy() {
     }, toolbar.autoHideDelay ?? 1000)
   }
 
+  const isFirstMount = useFirstMountState()
   return (
     <>
       <Tooltip
@@ -241,10 +255,10 @@ export function Easy() {
           }
         }}
       >
-        <Toolbar ref={toolbarRef} hide={hide} />
-        <Element ref={elementRef} hide={hide} />
+        <Toolbar ref={toolbarRef} hide={hide || isFirstMount} />
+        <Element ref={elementRef} hide={hide || isFirstMount} />
+        <VoiceControl ref={volumeRef} hide={hide || isFirstMount} />
         <ClickMenu ref={menuRef} hide={menuHide} />
-        <VoiceControl ref={volumeRef} hide={hide} />
         <Playlist />
       </Box>
     </>

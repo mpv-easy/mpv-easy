@@ -1,13 +1,17 @@
 import {
+  PropertyNative,
+  PropertyString,
+  VideoParams,
   command,
   formatTime,
+  getPropertyBool,
   getTimeFormat,
   isVideo,
   randomId,
   setPropertyNumber,
 } from "@mpv-easy/tool"
 import { Box, DOMElement } from "@mpv-easy/ui"
-import React, { useRef, useState, useLayoutEffect } from "react"
+import React, { useRef, useState, useLayoutEffect, useEffect } from "react"
 import { MouseEvent } from "@mpv-easy/ui"
 import { Len } from "@mpv-easy/ui"
 import { useSelector, useDispatch } from "react-redux"
@@ -18,6 +22,7 @@ import {
   timePosSelector,
   pathSelector,
   videoParamsSelector,
+  filenameSelector,
 } from "../store"
 import { ThumbFast } from "@mpv-easy/thumbfast"
 
@@ -34,44 +39,40 @@ export const Progress = React.memo(({ width, height }: ProgressProps) => {
   const duration = useSelector(durationSelector)
   const dispatch = useDispatch<Dispatch>()
   const format = getTimeFormat(duration)
+  const filename = useSelector(filenameSelector)
   const path = useSelector(pathSelector)
   const thumbRef = useRef<ThumbFast>()
   const cursorTextStartRef = useRef<DOMElement>(null)
   const progressRef = useRef<DOMElement>(null)
   const videoParams = useSelector(videoParamsSelector) ?? {}
 
-  const seekable = path?.length > 0 && isVideo(path)
-  if (!thumbRef.current) {
-    const { w, h } = videoParams
-    if (w && h) {
-      thumbRef.current = new ThumbFast({
-        ipcId: randomId(),
-        videoWidth: w,
-        videoHeight: h,
-      })
-    }
-  }
   const progressW = progressRef.current?.layoutNode.width
-  const cursorLeftOffset = progressW ? progress.cursorWidth / 2 / progressW : 0
+  const cursorLeftOffset = progressW ? progress.cursorSize / 2 / progressW : 0
   const cursorLeft = timePos / duration - cursorLeftOffset
 
-  useLayoutEffect(() => {
-    if (thumbRef.current) {
-      thumbRef.current.exit()
-    }
-    const { w, h } = videoParams
-    if (w && h) {
+  useEffect(() => {
+    new PropertyNative<VideoParams>("video-params").observe((v) => {
+      if (!v) {
+        return
+      }
+      const { w = 0, h = 0 } = v
+      if (!w || !h) {
+        return
+      }
+      if (thumbRef.current) {
+        thumbRef.current.exit()
+      }
+      const ipcId = "ipc_" + randomId()
       thumbRef.current = new ThumbFast({
-        ipcId: randomId(),
+        ipcId,
         videoWidth: w,
         videoHeight: h,
       })
-    }
-  }, [path])
-
+    })
+  }, [])
   const updatePreviewCursor = (e: MouseEvent) => {
     const w = e.target.layoutNode.width
-    const per = (e.offsetX - progress.cursorWidth / 2) / w
+    const per = (e.offsetX - progress.cursorSize / 2) / w
     setLeftPreview(per)
     const time = duration * (e.offsetX / w)
     thumbRef.current?.seek(time)
@@ -80,7 +81,7 @@ export const Progress = React.memo(({ width, height }: ProgressProps) => {
   const hoverCursorRef = useRef<DOMElement>(null)
 
   const previewTimeTextOffsetX =
-    (progress.cursorWidth -
+    (progress.cursorSize -
       (cursorTextStartRef.current?.layoutNode?.width ?? 0)) /
     2
   let thumbX = 0
@@ -161,19 +162,19 @@ export const Progress = React.memo(({ width, height }: ProgressProps) => {
       <Box
         id="cursor"
         position="relative"
-        width={progress.cursorWidth}
+        width={progress.cursorSize}
         left={`${cursorLeft * 100}%`}
         height={"100%"}
         backgroundColor={progress.cursorColor}
         color={progress.cursorColor}
         pointerEvents="none"
       />
-      {seekable && !previewCursorHide && (
+      {!previewCursorHide && (
         <Box
           ref={hoverCursorRef}
           id="preview-cursor"
           position="relative"
-          width={progress.previewCursorWidth}
+          width={progress.previewCursorSize}
           // hide={previewCursorHide}
           left={`${leftPreview * 100}%`}
           height={"100%"}

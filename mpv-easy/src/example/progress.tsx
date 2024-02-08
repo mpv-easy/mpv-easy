@@ -13,7 +13,7 @@ import React, { useEffect, useState } from "react"
 command("set osc no")
 command("set window-dragging no")
 
-const cursorWidth = 100
+const cursorSize = 100
 const cursorHoverWidth = 100
 export function Progress() {
   const [left, setLeft] = useState(0)
@@ -29,7 +29,7 @@ export function Progress() {
       backgroundColor="FF0000"
       onMouseDown={(e) => {
         const w = e.target.layoutNode.width
-        const per = (e.offsetX - cursorWidth / 2) / w
+        const per = (e.offsetX - cursorSize / 2) / w
         setLeft(per)
         const duration = getPropertyNumber("duration")!
         const time = duration * per
@@ -51,7 +51,7 @@ export function Progress() {
       <Box
         id="cursor"
         position="relative"
-        width={cursorWidth}
+        width={cursorSize}
         left={`${left * 100}%`}
         height={100}
         backgroundColor="00FF00"

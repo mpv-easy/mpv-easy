@@ -70,7 +70,6 @@ export const plugins = [
   easyPlugin,
   autoloadPlugin,
   thumbfastPlugin,
-  thumbfastPlugin,
   copyScreenPlugin,
 ]
 
@@ -123,7 +122,7 @@ export function createDefaultContext() {
       [anime4kName]: false,
       [copyTimeName]: false,
       [autoloadName]: true,
-      [thumbfastName]: false,
+      [thumbfastName]: true,
       [copyScreenName]: false,
     },
     version,

@@ -1,6 +1,7 @@
 import { execSync, getOs } from "../common"
 import { joinPath, getScriptConfigDir } from "../mpv"
 import decodeUriComponent from "decode-uri-component"
+import { getFileName } from "../path"
 
 export const defaultBinDirName = "bin"
 export const defaultBinDirPath = joinPath(
@@ -75,6 +76,6 @@ export function webdavList(url: string, exe = getRsExtExePath()) {
   const response = status.response as { href: string }[]
   const list = response
     .map((i) => decodeUriComponent(i.href))
-    .filter((i) => i !== "/")
+    .filter((i) => !!getFileName(i)?.length)
   return list
 }

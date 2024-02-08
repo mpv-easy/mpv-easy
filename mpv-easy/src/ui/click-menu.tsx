@@ -4,7 +4,11 @@ import {
   PropertyNative,
   addKeyBinding,
   command,
+  getPropertyNumber,
+  getPropertyString,
   osdMessage,
+  setClipboard,
+  setPropertyNumber,
   todo,
 } from "@mpv-easy/tool"
 import {
@@ -31,6 +35,8 @@ import {
   modeSelector,
   uiNameSelector,
   enablePluginsStyleSelector,
+  speedSelector,
+  speedListSelector,
 } from "../store"
 import * as ICON from "../icon"
 import { PluginContext } from "@mpv-easy/plugin"
@@ -63,6 +69,8 @@ export const ClickMenu = React.forwardRef<
   const pause = useSelector(pauseSelector)
   const i18n = useSelector(i18nSelector)
   const anime4k = useSelector(anime4kSelector)
+  const speed = useSelector(speedSelector)
+  const speedList = useSelector(speedListSelector)
 
   const language = useSelector(languageSelector)
   const cnPrefix = language === "cn" ? ICON.Ok : ICON.CheckboxBlankCircleOutline
@@ -78,6 +86,7 @@ export const ClickMenu = React.forwardRef<
     uiName === "uosc" ? ICON.Ok : ICON.CheckboxBlankCircleOutline
 
   const enablePlugins = useSelector(enablePluginsStyleSelector)
+
   function getClickMenuItems(): MenuItem[] {
     return [
       // TODO: open folder and select file
@@ -102,7 +111,23 @@ export const ClickMenu = React.forwardRef<
           dispatch.context.setPlaylistHide(false)
         },
       },
-
+      {
+        key: i18n.videoSpeed,
+        label: i18n.videoSpeed,
+        children: speedList.map((i) => {
+          const prefix = i === speed ? ICON.Ok : ICON.CheckboxBlankCircleOutline
+          return {
+            key: i18n.videoSpeed + "-" + i,
+            label: prefix + " " + i.toString(),
+            onSelect: () => {
+              if (speed !== i) {
+                dispatch.context.setSpeed(i)
+                setPropertyNumber("speed", i)
+              }
+            },
+          }
+        }),
+      },
       {
         key: i18n.theme,
         label: i18n.theme,
@@ -221,8 +246,18 @@ export const ClickMenu = React.forwardRef<
             },
           },
           {
-            key: i18n.reset,
-            label: i18n.reset,
+            key: i18n.copyPath,
+            label: i18n.copyPath,
+            onSelect() {
+              const path = getPropertyString("path")
+              if (path && setClipboard(path)) {
+                osdMessage("copy path to clipboard", 5)
+              }
+            },
+          },
+          {
+            key: i18n.resetConfig,
+            label: i18n.resetConfig,
             onSelect() {
               dispatch.context.resetConfig()
             },

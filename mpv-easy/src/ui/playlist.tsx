@@ -1,4 +1,4 @@
-import { command } from "@mpv-easy/tool"
+import { command, getFileName } from "@mpv-easy/tool"
 import { Box, Button, DOMElement } from "@mpv-easy/ui"
 import React, { useRef } from "react"
 import { useSelector, useDispatch } from "react-redux"
@@ -11,19 +11,19 @@ import {
   playlistSelector,
   playlistHideSelector,
   pathSelector,
+  osdDimensionsSelector,
 } from "../store"
 import { RootNode } from "@mpv-easy/ui"
+import { ScrollList } from "./components/scroll-list"
 
 export type PlaylistProps = {
   list: string[]
   current: number
 }
 
-export const Playlist = React.memo((props: Partial<PlaylistProps>) => {
-  const button = useSelector(buttonStyleSelector)
+export const Playlist = React.memo(() => {
   const playlistStyle = useSelector(playlistStyleSelector)
   const dispatch = useDispatch<Dispatch>()
-  const mouseHoverStyle = useSelector(mouseHoverStyleSelector)
   const playlist = useSelector(playlistSelector)
   const playlistRef = useRef<DOMElement>(null)
   const playlistHide = useSelector(playlistHideSelector)
@@ -46,6 +46,7 @@ export const Playlist = React.memo((props: Partial<PlaylistProps>) => {
       ref={playlistRef}
       x={x}
       y={y}
+      hide={playlistHide}
       display="flex"
       position="relative"
       flexDirection="row"
@@ -53,39 +54,26 @@ export const Playlist = React.memo((props: Partial<PlaylistProps>) => {
       alignContent="stretch"
       alignItems="start"
       backgroundColor={playlistStyle.backgroundColor}
-      hide={playlistHide}
     >
-      {playlist.map((i) => {
-        const prefix = i === path ? ICON.Ok : ICON.CheckboxBlankCircleOutline
-        const text = prefix + " " + i.split("/").at(-1)
-        return (
-          <Button
-            id={"playlist-item-" + i}
-            key={i}
-            enableMouseStyle={mouseHoverStyle}
-            padding={button.padding}
-            colorHover={button.colorHover}
-            backgroundColorHover={button.backgroundColorHover}
-            backgroundColor={button.backgroundColor}
-            font={button.font}
-            fontSize={button.fontSize}
-            color={button.color}
-            text={text}
-            onClick={(e) => {
+      <ScrollList
+        items={playlist.map((i) => {
+          const prefix = i === path ? ICON.Ok : ICON.CheckboxBlankCircleOutline
+          const label = prefix + " " + getFileName(i)
+          return {
+            key: i,
+            label,
+            onClick: (e) => {
               const index = playlist.indexOf(i)
               if (index >= 0) {
                 command(`playlist-play-index ${index}`)
                 dispatch.context.setPath(playlist[index])
-                console.log("----click: ", index, playlist[index], playlist)
-                // dispatch.context.setPause(false)
               }
-
               dispatch.context.setPlaylistHide(true)
               e.stopPropagation()
-            }}
-          ></Button>
-        )
-      })}
+            },
+          }
+        })}
+      />
     </Box>
   )
 })

@@ -18,7 +18,8 @@
     "isolatedModules": true,
     "declaration": true,
     "jsx": "react",
-    "declarationMap": true,
+    "declarationMap": false,
+    "sourceMap": false,
     "paths": {
       "@mpv-easy/tool": ["./mpv-tool/src"],
       "@mpv-easy/clip-play": ["./mpv-clip-play/src"],
@@ -32,6 +33,7 @@
       "@mpv-easy/i18n": ["./mpv-i18n/src"],
       "@mpv-easy/copy-time": ["./mpv-copy-time/src"],
       "@mpv-easy/copy-screen": ["./mpv-copy-screen/src"],
+      "@mpv-easy/polyfill": ["./mpv-polyfill/src"],
       "@mpv-easy/thumbfast": ["./mpv-thumbfast/src"]
     }
   }

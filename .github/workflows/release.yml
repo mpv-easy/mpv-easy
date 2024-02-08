@@ -69,13 +69,24 @@ jobs:
           cp ./mpv-easy/mpv-conf/mpv.conf ./dist/mpv.conf
 
           chmod 777 ./bin/*
-          cp ./bin/rs-ext-macos-latest ./dist/scripts/mpv-easy-config/bin/rs-ext-macos
-          cp ./bin/rs-ext-ubuntu-latest ./dist/scripts/mpv-easy-config/bin/rs-ext-ubuntu
-          cp ./bin/rs-ext-windows-latest ./dist/scripts/mpv-easy-config/bin/rs-ext-windows
 
-          cd ./dist
-          zip -r -q ./mpv-easy.zip .
+          cp -r ./dist ./mpy-easy-macos
+          cp -r ./dist ./mpy-easy-linux
+          cp -r ./dist ./mpy-easy-windows
+
+          cp ./bin/rs-ext-macos-latest ./mpy-easy-macos/scripts/mpv-easy-config/bin/rs-ext-macos
+          cp ./bin/rs-ext-ubuntu-latest ./mpy-easy-linux/scripts/mpv-easy-config/bin/rs-ext-linux
+          cp ./bin/rs-ext-windows-latest ./mpy-easy-windows/scripts/mpv-easy-config/bin/rs-ext-windows
+
+          cd ./mpy-easy-macos
+          zip -r -q ./mpy-easy-macos.zip .
+
+          cd ./mpy-easy-linux
+          zip -r -q ./mpy-easy-linux.zip .
+
+          cd ./mpy-easy-windows
+          zip -r -q ./mpy-easy-windows.zip .
 
       - uses: ncipollo/release-action@v1
         with:
-          artifacts: "./dist/mpv-easy.zip"
+          artifacts: "./mpy-easy-windows/mpy-easy-windows.zip,./mpy-easy-linux/mpy-easy-linux.zip,./mpy-easy-macos/mpy-easy-macos.zip"

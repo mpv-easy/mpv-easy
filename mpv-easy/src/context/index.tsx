@@ -1,4 +1,3 @@
-// CounterContext.tsx
 import React, { createContext, useContext, useReducer, Dispatch } from "react"
 
 export type StoreState = {

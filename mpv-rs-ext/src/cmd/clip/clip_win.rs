@@ -12,21 +12,17 @@ pub fn set_text(text: &str) {
 }
 
 pub fn get_text() -> String {
-    let s: String = get_clipboard(formats::Unicode).expect("To set clipboard");
-    s
+    get_clipboard(formats::Unicode).expect("To set clipboard")
 }
 
 pub fn set_image(path: &str) {
     let file_buf = std::fs::read(path).expect("read image file error");
     let fmt = guess_format(&file_buf).expect("image format error");
     let img = image::load_from_memory_with_format(&file_buf, fmt).expect("image load error");
-    let v: Vec<u8> = vec![];
-    let mut cursor = Cursor::new(v);
+    let mut cursor = Cursor::new(Vec::new());
     img.write_to(&mut cursor, ImageFormat::Bmp)
         .expect("image to bmp error");
-
     cursor.seek(SeekFrom::Start(0)).unwrap();
-
     let mut buffer = Vec::new();
     cursor.read_to_end(&mut buffer).unwrap();
     set_clipboard(formats::Bitmap, buffer).expect("copy to clipboard error");

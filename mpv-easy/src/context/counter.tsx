@@ -1,11 +1,11 @@
 import React from "react"
-import { CounterProvider } from "./"
+import { StoreProvider } from "./"
 
-import { useCounter } from "./"
+import { useStore } from "./"
 import { Box, render } from "@mpv-easy/ui"
 
 const CounterComponent: React.FC = () => {
-  const { state, dispatch } = useCounter()
+  const { state, dispatch } = useStore()
 
   return (
     <Box fontSize={64}>
@@ -17,7 +17,7 @@ const CounterComponent: React.FC = () => {
 }
 
 render(
-  <CounterProvider>
+  <StoreProvider>
     <CounterComponent />
-  </CounterProvider>,
+  </StoreProvider>,
 )

@@ -39,8 +39,8 @@ export type ThemeStyle = {
     color: string
     backgroundColor: string
     cursorColor: string
-    cursorWidth: number
-    previewCursorWidth: number
+    cursorSize: number
+    previewCursorSize: number
     previewCursorColor: string
     timeTextBackgroundColor: string
     timeTextColor: string
@@ -57,7 +57,11 @@ export type ThemeStyle = {
     backgroundColor: string
     autoHideDelay: number
   }
+  scrollList: {
+    maxItemCount: number
+  }
   volume: {
+    previewCursorSize: number
     backgroundColor: string
     autoHideDelay: number
     fontSize: number
@@ -127,6 +131,8 @@ export type EasyConfig = {
     videoParams: VideoParams
     volume: number
     volumeMax: number
+    speed: number
+    speedList: number[]
   }
   state: {
     hide: boolean
@@ -151,14 +157,14 @@ export const defaultProgressFontSize = defaultFontSize * 0.75
 export const defaultName = "uosc"
 export const defaultPadding = defaultFontSize * 0.05
 export const defaultButtonSize = defaultFontSize * 1.25
-export const defaultCursorWidth = defaultFontSize * 0.05
+export const defaultCursorSize = defaultFontSize * 0.05
+export const defaultMaxItemCount = 8
 export const defaultVolumeStep = 10
 
 export const defaultHideUIDelay = 5000
 export const defaultSaveConfigThrottle = 2000
-// export const defaultRerenderThrottle = defaultRenderThrottle
 
-export function createDefaultConfig() {
+export function createDefaultConfig(): EasyConfig {
   return cloneDeep({
     mode: "dark",
     uiName: defaultName,
@@ -204,8 +210,8 @@ export function createDefaultConfig() {
           color: White + AlphaShow,
           backgroundColor: Black + AlphaLow,
           cursorColor: White + AlphaShow,
-          cursorWidth: defaultCursorWidth,
-          previewCursorWidth: defaultCursorWidth,
+          cursorSize: defaultCursorSize,
+          previewCursorSize: defaultCursorSize,
           previewCursorColor: White + AlphaMedium,
           timeTextBackgroundColor: White + AlphaHide,
           timeTextColor: White + AlphaShow,
@@ -217,6 +223,9 @@ export function createDefaultConfig() {
           backgroundColor: Black + AlphaLow,
           height: defaultButtonSize,
         },
+        scrollList: {
+          maxItemCount: defaultMaxItemCount,
+        },
         toolbar: {
           backgroundColor: Black + AlphaLow,
           autoHideDelay: defaultHideUIDelay,
@@ -227,6 +236,8 @@ export function createDefaultConfig() {
           fontSize: defaultFontSize * 0.75,
           zIndex: defaultVolumeZIndex,
           step: defaultVolumeStep,
+          previewCursorSize: defaultCursorSize,
+          previewCursorColor: White + AlphaMedium,
         },
         playlist: {
           backgroundColor: Black + AlphaLow,
@@ -310,8 +321,8 @@ export function createDefaultConfig() {
           color: Black + AlphaShow,
           backgroundColor: White + AlphaLow,
           cursorColor: Black + AlphaShow,
-          cursorWidth: defaultCursorWidth,
-          previewCursorWidth: defaultCursorWidth,
+          cursorSize: defaultCursorSize,
+          previewCursorSize: defaultCursorSize,
           previewCursorColor: Black + AlphaMedium,
           timeTextBackgroundColor: Black + AlphaHide,
           timeTextColor: Black + AlphaShow,
@@ -327,12 +338,17 @@ export function createDefaultConfig() {
           backgroundColor: White + AlphaLow,
           autoHideDelay: defaultHideUIDelay,
         },
+        scrollList: {
+          maxItemCount: defaultMaxItemCount,
+        },
         volume: {
           backgroundColor: White + AlphaLow,
           fontSize: defaultFontSize * 0.75,
           autoHideDelay: defaultHideUIDelay,
           step: defaultVolumeStep,
           zIndex: defaultVolumeZIndex,
+          previewCursorSize: defaultCursorSize,
+          previewCursorColor: Black + AlphaMedium,
         },
         playlist: {
           backgroundColor: White + AlphaLow,
@@ -420,5 +436,7 @@ export const defaultPlayer: EasyConfig["player"] = {
   videoParams: {} as any,
   volume: 100,
   volumeMax: 130,
+  speed: 1,
+  speedList: [0.25, 0.5, 0.75, 1, 1.25, 1.5, 2, 4],
 }
-export const defaultConfig: EasyConfig = createDefaultConfig()
+export const defaultConfig = createDefaultConfig()

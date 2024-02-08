@@ -5,7 +5,13 @@ import { pluginName } from "./main"
 import i18nPlugin, { pluginName as i18nName } from "@mpv-easy/i18n"
 import { pluginName as anime4kName } from "@mpv-easy/anime4k"
 import { pluginName as autoloadName } from "@mpv-easy/autoload"
-import { getOs } from "@mpv-easy/tool"
+import {
+  getFileName,
+  getOs,
+  getProperty,
+  getPropertyString,
+  normalize,
+} from "@mpv-easy/tool"
 
 export function createStore() {
   return init<RootModel>({
@@ -47,7 +53,7 @@ export const muteSelector = (state: RootState) =>
 export const mousePosSelector = (state: RootState) =>
   state.context[pluginName].player.mousePos
 export const pathSelector = (state: RootState) =>
-  state.context[pluginName].player.path ?? ""
+  normalize(state.context[pluginName].player.path ?? "")
 
 export const playlistPosSelector = (state: RootState) =>
   state.context[pluginName].player.playlistPos
@@ -77,10 +83,8 @@ export const videoParamsSelector = (state: RootState) =>
 
 export const filenameSelector = (state: RootState) => {
   const path = pathSelector(state)
-  if (path?.includes("\\")) {
-    return path.replaceAll("\\", "/").split("/").at(-1)
-  }
-  return path?.split("/")?.at(-1) || ""
+  const name = getFileName(path) ?? ""
+  return name
 }
 
 export const fpsSelector = (state: RootState) =>
@@ -88,6 +92,9 @@ export const fpsSelector = (state: RootState) =>
 
 export const buttonStyleSelector = (state: RootState) =>
   styleSelector(state)[modeSelector(state)].button.default
+export const scrollListStyleSelector = (state: RootState) =>
+  styleSelector(state)[modeSelector(state)].scrollList
+
 export const volumeStyleSelector = (state: RootState) =>
   styleSelector(state)[modeSelector(state)].volume
 
@@ -113,7 +120,10 @@ export const playlistSelector = (state: RootState) =>
   state.context[pluginName].player.playlist
 export const osdDimensionsSelector = (state: RootState) =>
   state.context[pluginName].player.osdDimensions
-
+export const speedSelector = (state: RootState) =>
+  state.context[pluginName].player.speed
+export const speedListSelector = (state: RootState) =>
+  state.context[pluginName].player.speedList
 export const playlistHideSelector = (state: RootState) =>
   state.context[pluginName].state.playlistHide
 

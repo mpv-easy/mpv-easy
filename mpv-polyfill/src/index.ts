@@ -1,6 +1,7 @@
 import "core-js/stable/array/every"
 import "core-js/stable/array/fill"
 import "core-js/stable/array/find-index"
+import "core-js/stable/array/find"
 import "core-js/stable/array/find-last"
 import "core-js/stable/array/for-each"
 import "core-js/stable/array/from"
@@ -31,13 +32,14 @@ import Symbol from "es-symbol"
 import { getGlobal } from "./global"
 import { TextEncoder } from "@polkadot/x-textencoder"
 
-globalThis.TextEncoder = TextEncoder
-getGlobal().Map = Map
-getGlobal().WeakMap = Map
-getGlobal().Set = Set
-getGlobal().WeakSet = Set
-getGlobal().Symbol = Symbol
-getGlobal().Promise = Promise
+const g = getGlobal()
+g.TextEncoder = TextEncoder
+g.Map = Map
+g.WeakMap = Map
+g.Set = Set
+g.WeakSet = Set
+g.Symbol = Symbol
+g.Promise = Promise
 
 if (!Array.prototype.fill) {
   Array.prototype.fill = function (value, start, end) {
