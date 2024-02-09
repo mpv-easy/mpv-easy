@@ -200,7 +200,7 @@ export const Progress = React.memo(({ width, height }: ProgressProps) => {
             ></Box>
           )}
 
-          {thumbRef.current && !previewCursorHide && (
+          {thumbRef.current && !previewCursorHide && !!thumbX && !!thumbY && (
             <Box
               id={42}
               position="absolute"

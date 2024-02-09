@@ -80,12 +80,15 @@ jobs:
 
           cd ./mpy-easy-macos
           zip -r -q ./mpy-easy-macos.zip .
+          cd ..
 
           cd ./mpy-easy-linux
           zip -r -q ./mpy-easy-linux.zip .
+          cd ..
 
           cd ./mpy-easy-windows
           zip -r -q ./mpy-easy-windows.zip .
+          cd ..
 
       - uses: ncipollo/release-action@v1
         with:
