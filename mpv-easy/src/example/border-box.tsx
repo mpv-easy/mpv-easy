@@ -11,8 +11,9 @@ function BorderBox() {
       width={size}
       height={size}
       backgroundColor="00FFFF"
-      borderColor="FF0000"
+      borderColor="00FF00A0"
       borderSize={size}
+      fontBorderColor="00FF00A0"
       padding={size}
     ></Box>
   )

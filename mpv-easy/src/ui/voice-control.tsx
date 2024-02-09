@@ -58,6 +58,7 @@ export const VoiceControl = React.memo(
           {...props}
           ref={ref}
           hide={props.hide}
+          zIndex={volumeStyle.zIndex}
         >
           <Box
             text={volume.toFixed(0).toString()}

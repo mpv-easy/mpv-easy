@@ -27,6 +27,7 @@ export const Playlist = React.memo(() => {
   const playlist = useSelector(playlistSelector)
   const playlistRef = useRef<DOMElement>(null)
   const playlistHide = useSelector(playlistHideSelector)
+  const button = useSelector(buttonStyleSelector)
   let x = 0
   let y = 0
   if (playlistRef.current) {
@@ -56,6 +57,7 @@ export const Playlist = React.memo(() => {
       backgroundColor={playlistStyle.backgroundColor}
     >
       <ScrollList
+        zIndex={playlistStyle.zIndex}
         items={playlist.map((i) => {
           const prefix = i === path ? ICON.Ok : ICON.CheckboxBlankCircleOutline
           const label = prefix + " " + getFileName(i)

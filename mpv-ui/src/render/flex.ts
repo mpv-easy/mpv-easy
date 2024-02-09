@@ -142,7 +142,7 @@ function computeNodeSize(
   const paddingSize = lenToNumber(node, attributes.padding, isX)
   layoutNode.padding = paddingSize
   const borderSize = lenToNumber(node, attributes.borderSize, isX)
-  layoutNode.padding = borderSize
+  layoutNode.border = borderSize
   const extraSize = paddingSize * 2 + borderSize * 2
 
   const xAttr = getAxisAttrSize(node, isX)
@@ -428,10 +428,11 @@ function computedNodeAlign(node: DOMElement) {
     flexNodes.reverse()
   }
 
-  const nodeXSize = getAxisSize(node, isX)
-  const nodeXPos = getAxisPosition(node, isX)
-  const nodeYPos = getAxisPosition(node, !isX)
-  const nodeYSize = getAxisSize(node, !isX)
+  const nodeExtraSize = node.layoutNode.padding + node.layoutNode.border
+  const nodeXPos = getAxisPosition(node, isX) + nodeExtraSize
+  const nodeYPos = getAxisPosition(node, !isX) + nodeExtraSize
+  const nodeXSize = getAxisSize(node, isX) - nodeExtraSize * 2
+  const nodeYSize = getAxisSize(node, !isX) - nodeExtraSize * 2
   const nodeEndSize = nodeXPos + nodeXSize
   const nodeXEnd = nodeXPos + nodeXSize
   const nodeYEnd = nodeYPos + nodeYSize
@@ -523,7 +524,7 @@ function computedNodeAlign(node: DOMElement) {
               setAxisPosition(c, xAxisStart, isX)
               setAxisPosition(
                 c,
-                yAxisStart + (maxYAxisSize - childYSize) / 2,
+                yAxisStart + (nodeYSize - childYSize) / 2,
                 !isX,
               )
               xAxisStart += childXSize
@@ -935,10 +936,10 @@ export function renderNode(
 
     if (typeof borderSize !== "undefined") {
       borderOverlay.data = drawBorder({
-        x: (x + paddingSize) * assScale,
-        y: (y + paddingSize) * assScale,
-        width: (width - paddingSize * 2) * assScale,
-        height: (height - paddingSize * 2) * assScale,
+        x: x * assScale,
+        y: y * assScale,
+        width: width * assScale,
+        height: height * assScale,
         borderColor,
         borderSize: borderSize * assScale,
       })
