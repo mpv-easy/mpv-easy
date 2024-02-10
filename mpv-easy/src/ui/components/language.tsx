@@ -10,6 +10,7 @@ import {
   mouseHoverStyleSelector,
   dropdownStyleSelector,
   languageSelector,
+  smallFontSizeSelector,
 } from "../../store"
 
 export const Language = () => {
@@ -22,7 +23,7 @@ export const Language = () => {
   const language = useSelector(languageSelector)
   const cnPrefix = language === "cn" ? ICON.Ok : ICON.CheckboxBlankCircleOutline
   const enPrefix = language === "en" ? ICON.Ok : ICON.CheckboxBlankCircleOutline
-
+  const fontSize = useSelector(smallFontSizeSelector)
   return (
     <Dropdown
       // TODO: language switch icon
@@ -47,8 +48,6 @@ export const Language = () => {
         },
       ]}
       height={button.height}
-      // TODO: dropdown should auto fit width
-      // width={button.width * 2}
       width={button.width}
       display="flex"
       flexDirection="column"
@@ -61,11 +60,8 @@ export const Language = () => {
       backgroundColorHover={dropdown.backgroundColorHover}
       backgroundColor={dropdown.backgroundColor}
       font={dropdown.font}
-      fontSize={dropdown.fontSize}
+      fontSize={fontSize}
       color={dropdown.color}
-      onMouseDown={(e) => {
-        // e.stopPropagation()
-      }}
     />
   )
 }

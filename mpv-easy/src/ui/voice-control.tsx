@@ -9,6 +9,7 @@ import {
   buttonStyleSelector,
   volumeStyleSelector,
   osdDimensionsSelector,
+  smallFontSizeSelector,
 } from "../store"
 import { clamp } from "@mpv-easy/tool"
 import { Mute } from "./components/mute"
@@ -21,22 +22,23 @@ export const VoiceControl = React.memo(
     const button = useSelector(buttonStyleSelector)
     const volumeStyle = useSelector(volumeStyleSelector)
     const volumeHeight = volume / volumeMax
-
     const h = useSelector(osdDimensionsSelector).h
-
-    const boxHeight = button.height * 5
-    const wrapHeight = boxHeight + button.height * 2 + button.padding * 8
+    const boxCount = 5
+    const boxHeight = button.height * boxCount
+    const wrapHeight =
+      boxHeight +
+      (button.height + button.padding) * 2 +
+      2 * button.padding * boxCount
     const wrapTop = (h - wrapHeight) / 2
-
     const [previewHide, setPreviewHide] = useState(true)
-
     const [previewBottom, setPreviewBottom] = useState(0)
+    const fontSize = useSelector(smallFontSizeSelector)
     return (
       h > wrapHeight && (
         <Box
           top={wrapTop}
           right={0}
-          width={button.width + 6 * button.padding}
+          width={button.width + 4 * button.padding}
           height={wrapHeight}
           onWheelDown={() => {
             const v = clamp(volume - volumeStyle.step, 0, volumeMax)
@@ -66,7 +68,7 @@ export const VoiceControl = React.memo(
             height={button.height}
             color={button.color}
             padding={button.padding}
-            fontSize={volumeStyle.fontSize}
+            fontSize={fontSize}
             display="flex"
             justifyContent="center"
             alignItems="center"
@@ -74,6 +76,7 @@ export const VoiceControl = React.memo(
           <Box
             height={boxHeight}
             width={button.width}
+            // padding={button.padding}
             display="flex"
             position="relative"
             flexDirection="row"
@@ -83,7 +86,6 @@ export const VoiceControl = React.memo(
             borderColor={button.color}
             onMouseDown={(e) => {
               setPreviewHide(false)
-
               const v =
                 ((1 - e.offsetY / e.target.layoutNode.height) * volumeMax) | 0
               const newVolume = clamp(v, 0, volumeMax)
@@ -112,8 +114,9 @@ export const VoiceControl = React.memo(
               height={volumeHeight * 100 + "%"}
               bottom={0}
               left={0}
-              width={button.width}
-              padding={button.padding}
+              // width={button.width}
+              width={button.width + button.padding * 2}
+              // padding={button.padding}
               backgroundColor={button.color}
               position="absolute"
             ></Box>
@@ -125,8 +128,8 @@ export const VoiceControl = React.memo(
                 height={volumeStyle.previewCursorSize}
                 left={0}
                 bottom={previewBottom * 100 + "%"}
-                width={button.width}
-                padding={button.padding}
+                width={button.width + button.padding * 2}
+                // padding={button.padding}
                 position="absolute"
                 backgroundColor={
                   previewBottom +

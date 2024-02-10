@@ -9,7 +9,6 @@ import {
   i18nSelector,
   mouseHoverStyleSelector,
 } from "../../store"
-import { command } from "@mpv-easy/tool"
 
 export const Next = () => {
   const button = useSelector(buttonStyleSelector)
@@ -37,7 +36,6 @@ export const Next = () => {
       color={button.color}
       onMouseDown={(e) => {
         dispatch.context.next()
-        // e.stopPropagation()
       }}
     />
   )

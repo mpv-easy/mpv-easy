@@ -194,8 +194,16 @@ export const context = createModel<RootModel>()({
       return { ...state }
     },
     resetConfig(state) {
-      // return createDefaultConfig()
       return createDefaultContext()
+    },
+    setFontSize(state, fontSize: number) {
+      const size = fontSize + 18
+      const mode = state[pluginName].mode
+      state[pluginName].style[mode].button.default.fontSize = fontSize
+      state[pluginName].style[mode].button.default.width = size
+      state[pluginName].style[mode].button.default.height = size
+      state[pluginName].style[mode].button.default.padding = fontSize / 6
+      return { ...state }
     },
   },
 

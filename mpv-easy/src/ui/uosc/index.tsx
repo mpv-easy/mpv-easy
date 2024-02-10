@@ -4,35 +4,32 @@ import { Box, DOMElement, BaseElementProps } from "@mpv-easy/ui"
 import { Control } from "./control"
 import { pluginName } from "../../main"
 import { useSelector } from "react-redux"
-import { RootState, progressStyleSelector } from "../../store"
+import {
+  RootState,
+  buttonStyleSelector,
+  fontSizeSelector,
+  progressStyleSelector,
+} from "../../store"
 
 export const Uosc = React.memo(
   forwardRef<DOMElement, Partial<BaseElementProps>>((props, ref) => {
-    const mode = useSelector(
-      (store: RootState) => store.context[pluginName].mode,
-    )
-    const progressHeight = useSelector(progressStyleSelector).height
-
-    const padding = useSelector(
-      (store: RootState) =>
-        store.context[pluginName].style[mode].button.default.padding,
-    )
+    const button = useSelector(buttonStyleSelector)
+    const padding = button.padding
+    const h = button.height + padding * 2
 
     return (
       <Box
         width={"100%"}
-        height={progressHeight * 2 + padding * 4}
+        height={h * 2 + padding * 4}
         display="flex"
         flexDirection="row"
         hide={props.hide}
         ref={ref}
         id="uosc"
         justifyContent="end"
-        // onMouseDown={(e) => e.stopPropagation()}
-        // backgroundColor="00FF00A0"
       >
-        <Control {...props} width={"100%"} />
-        <Progress {...props} width={"100%"} height={progressHeight} />
+        <Control {...props} width={"100%"} height={h} />
+        <Progress {...props} width={"100%"} height={h} />
       </Box>
     )
   }),

@@ -7,6 +7,7 @@ import {
   dropdownStyleSelector,
   i18nSelector,
   mouseHoverStyleSelector,
+  smallFontSizeSelector,
 } from "../../store"
 import { getPropertyNative, setPropertyNative } from "@mpv-easy/tool"
 
@@ -39,6 +40,7 @@ export const PlayMode = () => {
     },
   )
   const dropdown = useSelector(dropdownStyleSelector)
+  const fontSize = useSelector(smallFontSizeSelector)
   return (
     <Dropdown
       id="mpv-easy-button-play-mode"
@@ -56,7 +58,7 @@ export const PlayMode = () => {
       padding={dropdown.padding}
       backgroundColor={dropdown.backgroundColor}
       font={dropdown.font}
-      fontSize={dropdown.fontSize}
+      fontSize={fontSize}
       color={dropdown.color}
       enableMouseStyle={mouseHoverStyle}
       text={mode === i18n.loopPlaylist ? ICON.Refresh : ICON.Sync}

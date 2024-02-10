@@ -55,4 +55,7 @@ export default {
   open: "打开",
   videoSpeed: "播放速度",
   copyPath: "复制路径",
+  style: "样式",
+  enlargeFontSize: "+字体",
+  reduceFontSize: "-字体",
 }

@@ -1,6 +1,6 @@
 {
   "name": "@mpv-easy/mock",
-  "version": "0.1.3",
+  "version": "0.1.5",
   "files": [
     "dist",
     "readme.md",

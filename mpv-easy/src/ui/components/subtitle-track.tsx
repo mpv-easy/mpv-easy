@@ -19,6 +19,7 @@ import {
   mouseHoverStyleSelector,
   dropdownStyleSelector,
   sidSelector,
+  smallFontSizeSelector,
 } from "../../store"
 
 function getExtraSub(path: string) {
@@ -97,6 +98,7 @@ export const SubtitleTrack = () => {
       }
     },
   )
+  const fontSize = useSelector(smallFontSizeSelector)
   return (
     <Dropdown
       id="mpv-easy-button-subtitle-track"
@@ -116,7 +118,7 @@ export const SubtitleTrack = () => {
       padding={dropdown.padding}
       backgroundColor={dropdown.backgroundColor}
       font={dropdown.font}
-      fontSize={dropdown.fontSize}
+      fontSize={fontSize}
       color={dropdown.color}
       onMouseDown={(e) => {
         // e.stopPropagation()

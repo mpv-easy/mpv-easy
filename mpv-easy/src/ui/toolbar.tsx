@@ -6,6 +6,7 @@ import {
   toolbarStyleSelector,
   fullscreenSelector,
   uiNameSelector,
+  fontSizeSelector,
 } from "../store"
 import { Language } from "./components/language"
 import { Theme } from "./components/theme"
@@ -20,7 +21,7 @@ export const Toolbar = React.memo(
     const fullscreen = useSelector(fullscreenSelector)
     const button = useSelector(buttonStyleSelector)
     const toolbar = useSelector(toolbarStyleSelector)
-    const uiName = useSelector(uiNameSelector)
+    const fontSize = useSelector(fontSizeSelector)
     return (
       <Box
         id="toolbar"
@@ -29,7 +30,7 @@ export const Toolbar = React.memo(
         justifyContent="space-between"
         alignItems="center"
         font={button.font}
-        fontSize={button.fontSize}
+        fontSize={fontSize}
         color={button.color}
         width={"100%"}
         hide={hide}

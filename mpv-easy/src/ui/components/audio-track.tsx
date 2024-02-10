@@ -9,6 +9,7 @@ import {
   dropdownStyleSelector,
   aidSelector,
   Dispatch,
+  smallFontSizeSelector,
 } from "../../store"
 import {
   getPropertyBool,
@@ -77,6 +78,7 @@ export const AudioTrack = () => {
       }
     },
   )
+  const fontSize = useSelector(smallFontSizeSelector)
   const dropdown = useSelector(dropdownStyleSelector)
   return (
     <Dropdown
@@ -97,13 +99,8 @@ export const AudioTrack = () => {
       padding={dropdown.padding}
       backgroundColor={dropdown.backgroundColor}
       font={dropdown.font}
-      fontSize={dropdown.fontSize}
+      fontSize={fontSize}
       color={dropdown.color}
-      // onMouseDown={(e) => {
-      //   // dispatch.context.screenshot()
-      //   // e.stopPropagation()
-      //   // todo()
-      // }}
     />
   )
 }

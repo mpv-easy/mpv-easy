@@ -57,4 +57,7 @@ export default {
 
   videoSpeed: "speed",
   copyPath: "copy path",
+  style: "style",
+  enlargeFontSize: "+font",
+  reduceFontSize: "-font",
 }

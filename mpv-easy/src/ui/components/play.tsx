@@ -34,7 +34,6 @@ export const Play = () => {
       color={button.color}
       onMouseDown={(e) => {
         dispatch.context.setPause(!pause)
-        // e.stopPropagation()
       }}
       colorHover={button.colorHover}
       backgroundColorHover={button.backgroundColorHover}

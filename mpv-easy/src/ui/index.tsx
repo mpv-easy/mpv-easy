@@ -11,6 +11,7 @@ import {
   modeSelector,
   mousePosSelector,
   pathSelector,
+  smallFontSizeSelector,
   styleSelector,
   toolbarStyleSelector,
   uiNameSelector,
@@ -218,12 +219,14 @@ export function Easy() {
   }
 
   const isFirstMount = useFirstMountState()
+
+  const fontSize = useSelector(smallFontSizeSelector)
   return (
     <>
       <Tooltip
         backgroundColor={tooltip.backgroundColor}
         font={tooltip.font}
-        fontSize={tooltip.fontSize}
+        fontSize={fontSize}
         color={tooltip.color}
         padding={tooltip.padding}
         display="flex"

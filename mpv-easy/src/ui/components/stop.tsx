@@ -38,7 +38,6 @@ export const Stop = () => {
         dispatch.context.setPause(true)
         dispatch.context.setTimePos(0)
         setPropertyNumber("time-pos", 0)
-        // e.stopPropagation()
       }}
     ></Button>
   )

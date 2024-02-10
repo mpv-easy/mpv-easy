@@ -23,6 +23,7 @@ import {
   pathSelector,
   videoParamsSelector,
   filenameSelector,
+  smallFontSizeSelector,
 } from "../store"
 import { ThumbFast } from "@mpv-easy/thumbfast"
 
@@ -93,6 +94,8 @@ export const Progress = React.memo(({ width, height }: ProgressProps) => {
     thumbY = y - (thumbRef.current?.thumbHeight ?? 0) - height
   }
 
+  const fontSize = useSelector(smallFontSizeSelector)
+
   return (
     <Box
       ref={progressRef}
@@ -102,7 +105,7 @@ export const Progress = React.memo(({ width, height }: ProgressProps) => {
       width={width}
       height={height}
       color={progress.backgroundColor}
-      fontSize={progress.fontSize}
+      fontSize={fontSize}
       font={progress.font}
       backgroundColor={progress.backgroundColor}
       onMouseDown={(e) => {
@@ -175,7 +178,6 @@ export const Progress = React.memo(({ width, height }: ProgressProps) => {
           id="preview-cursor"
           position="relative"
           width={progress.previewCursorSize}
-          // hide={previewCursorHide}
           left={`${leftPreview * 100}%`}
           height={"100%"}
           backgroundColor={progress.previewCursorColor}
@@ -186,7 +188,6 @@ export const Progress = React.memo(({ width, height }: ProgressProps) => {
             <Box
               id="preview-cursor-time"
               position="absolute"
-              // hide={previewCursorHide}
               height={"100%"}
               top={"-100%"}
               left={previewTimeTextOffsetX}
@@ -195,7 +196,6 @@ export const Progress = React.memo(({ width, height }: ProgressProps) => {
               justifyContent="center"
               alignItems="center"
               text={formatTime(leftPreview * duration, format)}
-              // zIndex={progress.previewZIndex}
               pointerEvents="none"
             ></Box>
           )}
@@ -204,7 +204,6 @@ export const Progress = React.memo(({ width, height }: ProgressProps) => {
             <Box
               id={42}
               position="absolute"
-              // hide={previewCursorHide}
               x={thumbX}
               y={thumbY}
               width={thumbRef.current?.thumbWidth}

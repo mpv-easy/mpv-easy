@@ -13,7 +13,6 @@ import { command } from "@mpv-easy/tool"
 
 export const Restore = () => {
   const button = useSelector(buttonStyleSelector)
-  const pause = useSelector(pauseSelector)
   const i18n = useSelector(i18nSelector)
   const dispatch = useDispatch<Dispatch>()
   const mouseHoverStyle = useSelector(mouseHoverStyleSelector)
@@ -37,7 +36,6 @@ export const Restore = () => {
       color={button.color}
       onMouseDown={(e) => {
         dispatch.context.setFullscreen(false)
-        // e.stopPropagation()
       }}
     />
   )

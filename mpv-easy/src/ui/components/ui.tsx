@@ -10,6 +10,7 @@ import {
   mouseHoverStyleSelector,
   dropdownStyleSelector,
   uiNameSelector,
+  smallFontSizeSelector,
 } from "../../store"
 
 export const UI = () => {
@@ -24,6 +25,7 @@ export const UI = () => {
   const oscPrefix = uiName === "osc" ? ICON.Ok : ICON.CheckboxBlankCircleOutline
   const uoscPrefix =
     uiName === "uosc" ? ICON.Ok : ICON.CheckboxBlankCircleOutline
+  const fontSize = useSelector(smallFontSizeSelector)
   return (
     <Dropdown
       id="mpv-easy-button-ui"
@@ -65,7 +67,7 @@ export const UI = () => {
       backgroundColorHover={dropdown.backgroundColorHover}
       backgroundColor={dropdown.backgroundColor}
       font={dropdown.font}
-      fontSize={dropdown.fontSize}
+      fontSize={fontSize}
       color={dropdown.color}
       onMouseDown={(e) => {
         // e.stopPropagation()

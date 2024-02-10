@@ -36,7 +36,6 @@ export const Fullscreen = () => {
       color={button.color}
       onMouseDown={(e) => {
         dispatch.context.setFullscreen(true)
-        // e.stopPropagation()
       }}
     />
   )
