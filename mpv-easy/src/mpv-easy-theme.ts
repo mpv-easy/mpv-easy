@@ -45,7 +45,6 @@ export type ThemeStyle = {
     timeTextBackgroundColor: string
     timeTextColor: string
     font: string
-    fontSize: number
     previewZIndex: number
   }
 
@@ -64,7 +63,6 @@ export type ThemeStyle = {
     previewCursorSize: number
     backgroundColor: string
     autoHideDelay: number
-    fontSize: number
     zIndex: number
     step: number
   }
@@ -76,7 +74,6 @@ export type ThemeStyle = {
     enable: boolean
     zIndex: number
     font: string
-    fontSize: number
     padding: number
     color: string
     backgroundColor: string
@@ -86,7 +83,6 @@ export type ThemeStyle = {
   dropdown: {
     zIndex: number
     font: string
-    fontSize: number
     padding: number
     color: string
     backgroundColor: string
@@ -152,12 +148,11 @@ export const defaultClickMenuZIndex = 256
 export const defaultVolumeZIndex = 256
 export const defaultPlaylistZIndex = 512
 export const defaultFont = "FiraCode Nerd Font Mono Reg"
-export const defaultFontSize = 80
-export const defaultProgressFontSize = defaultFontSize * 0.75
+export const defaultFontSize = 60
 export const defaultName = "uosc"
-export const defaultPadding = defaultFontSize * 0.05
+export const defaultPadding = 10
 export const defaultButtonSize = defaultFontSize * 1.25
-export const defaultCursorSize = defaultFontSize * 0.05
+export const defaultCursorSize = 4
 export const defaultMaxItemCount = 8
 export const defaultVolumeStep = 10
 
@@ -215,7 +210,6 @@ export function createDefaultConfig(): EasyConfig {
           previewCursorColor: White + AlphaMedium,
           timeTextBackgroundColor: White + AlphaHide,
           timeTextColor: White + AlphaShow,
-          fontSize: defaultProgressFontSize,
           font: defaultFont,
           previewZIndex: defaultPreviewZIndex,
         },
@@ -326,7 +320,6 @@ export function createDefaultConfig(): EasyConfig {
           previewCursorColor: Black + AlphaMedium,
           timeTextBackgroundColor: Black + AlphaHide,
           timeTextColor: Black + AlphaShow,
-          fontSize: defaultProgressFontSize,
           font: defaultFont,
           previewZIndex: defaultPreviewZIndex,
         },

@@ -92,6 +92,16 @@ export const fpsSelector = (state: RootState) =>
 
 export const buttonStyleSelector = (state: RootState) =>
   styleSelector(state)[modeSelector(state)].button.default
+
+export const fontSizeSelector = (state: RootState) =>
+  styleSelector(state)[modeSelector(state)].button.default.fontSize
+
+export const smallFontSizeSelector = (state: RootState) =>
+  styleSelector(state)[modeSelector(state)].button.default.fontSize * 0.75
+
+export const largeFontSizeSelector = (state: RootState) =>
+  styleSelector(state)[modeSelector(state)].button.default.fontSize * 1.25
+
 export const scrollListStyleSelector = (state: RootState) =>
   styleSelector(state)[modeSelector(state)].scrollList
 

@@ -3,6 +3,7 @@ import {
   PropertyBool,
   PropertyNative,
   addKeyBinding,
+  clamp,
   command,
   getPropertyNumber,
   getPropertyString,
@@ -37,6 +38,7 @@ import {
   enablePluginsStyleSelector,
   speedSelector,
   speedListSelector,
+  fontSizeSelector,
 } from "../store"
 import * as ICON from "../icon"
 import { PluginContext } from "@mpv-easy/plugin"
@@ -86,6 +88,11 @@ export const ClickMenu = React.forwardRef<
     uiName === "uosc" ? ICON.Ok : ICON.CheckboxBlankCircleOutline
 
   const enablePlugins = useSelector(enablePluginsStyleSelector)
+
+  const minFontSize = 12
+  const maxFontSize = 120
+  const fontStep = 12
+  const fontSize = useSelector(fontSizeSelector)
 
   function getClickMenuItems(): MenuItem[] {
     return [
@@ -228,16 +235,31 @@ export const ClickMenu = React.forwardRef<
         }),
       },
       {
+        key: i18n.style,
+        label: i18n.style,
+        children: [
+          {
+            key: i18n.enlargeFontSize,
+            label: i18n.enlargeFontSize,
+            onSelect() {
+              const s = clamp(fontSize + fontStep, minFontSize, maxFontSize)
+              dispatch.context.setFontSize(s)
+            },
+          },
+          {
+            key: i18n.reduceFontSize,
+            label: i18n.reduceFontSize,
+            onSelect() {
+              const s = clamp(fontSize - fontStep, minFontSize, maxFontSize)
+              dispatch.context.setFontSize(s)
+            },
+          },
+        ],
+      },
+      {
         key: i18n.more,
         label: i18n.more,
         children: [
-          // {
-          //   key: i18n.stats,
-          //   label: i18n.stats,
-          //   onSelect() {
-          //     // console.log("click stats")
-          //   },
-          // },
           {
             key: i18n.console,
             label: i18n.console,
@@ -391,7 +413,7 @@ export const ClickMenu = React.forwardRef<
           position="relative"
           x={childMenuPos.x}
           y={childMenuPos.y}
-          padding={button.padding}
+          // padding={button.padding}
           font={button.font}
           fontSize={button.fontSize}
           color={button.color}
@@ -401,7 +423,6 @@ export const ClickMenu = React.forwardRef<
           justifyContent="start"
           alignItems="start"
           backgroundColor={clickMenu.backgroundColor}
-          // zIndex={clickMenu.zIndex}
           onMouseDown={(e) => {
             e.stopPropagation()
           }}

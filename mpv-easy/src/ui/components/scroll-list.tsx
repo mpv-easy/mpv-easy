@@ -13,9 +13,11 @@ import React, { useRef, useState } from "react"
 import { useSelector } from "react-redux"
 import {
   buttonStyleSelector,
+  fontSizeSelector,
   mouseHoverStyleSelector,
   osdDimensionsSelector,
   scrollListStyleSelector,
+  smallFontSizeSelector,
 } from "../../store"
 import { measureText } from "@mpv-easy/ui/src/common"
 
@@ -47,7 +49,7 @@ export const ScrollList = React.memo(
     const mouseHoverStyle = useSelector(mouseHoverStyleSelector)
     const showScrollBar = maxItemCount < items.length
     const scrollListHeight =
-      maxItemCount * (button.height + button.padding * 2) + button.padding * 4
+      maxItemCount * (button.height + button.padding * 2) + button.padding * 6
     const scrollBarHeight = showScrollBar
       ? (maxItemCount / items.length) * scrollListHeight
       : 0
@@ -60,6 +62,8 @@ export const ScrollList = React.memo(
       items.map((i) => i.label),
       button,
     )
+
+    const fontSize = useSelector(fontSizeSelector)
     return (
       <Box
         id="scroll-list"
@@ -68,9 +72,8 @@ export const ScrollList = React.memo(
         position="relative"
         flexDirection="row"
         alignItems="start"
-        alignContent="stretch"
-        padding={button.padding * 2}
-        borderSize={button.padding * 2}
+        padding={button.padding}
+        borderSize={button.padding}
         borderColor={button.backgroundColorHover}
         onWheelDown={(e) => {
           if (startIndex + maxItemCount < items.length) {
@@ -89,8 +92,8 @@ export const ScrollList = React.memo(
             position="absolute"
             id={"scroll-bar"}
             top={scrollBarTop}
-            right={button.padding * 2}
-            width={button.padding * 2}
+            right={button.padding}
+            width={button.padding}
             height={scrollBarHeight}
             backgroundColor={button.color}
           />
@@ -101,7 +104,7 @@ export const ScrollList = React.memo(
               id={"scroll-list-" + key}
               key={key}
               text={label}
-              width={max + button.padding * 4}
+              width={max + button.padding * 2}
               height={button.height}
               enableMouseStyle={mouseHoverStyle}
               padding={button.padding}
@@ -109,7 +112,7 @@ export const ScrollList = React.memo(
               backgroundColorHover={button.backgroundColorHover}
               backgroundColor={button.backgroundColor}
               font={button.font}
-              fontSize={button.fontSize}
+              fontSize={fontSize}
               color={button.color}
               onClick={onClick}
             ></Button>

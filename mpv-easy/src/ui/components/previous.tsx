@@ -37,8 +37,6 @@ export const Previous = () => {
       color={button.color}
       onMouseDown={(e) => {
         dispatch.context.previous()
-        // command("playlist-prev")
-        // e.stopPropagation()
       }}
     />
   )

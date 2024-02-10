@@ -4,7 +4,6 @@ import { useDispatch, useSelector } from "react-redux"
 import * as ICON from "../../icon"
 import {
   buttonStyleSelector,
-  pauseSelector,
   Dispatch,
   i18nSelector,
   mouseHoverStyleSelector,
@@ -37,7 +36,6 @@ export const Mute = React.memo((props: Partial<ButtonProps> = {}) => {
       color={button.color}
       onMouseDown={(e) => {
         dispatch.context.setMute(!mute)
-        // e.stopPropagation()
       }}
       {...props}
     />

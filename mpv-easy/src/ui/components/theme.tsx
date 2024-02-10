@@ -11,6 +11,7 @@ import {
   dropdownStyleSelector,
   modeSelector,
   languageSelector,
+  smallFontSizeSelector,
 } from "../../store"
 
 export const Theme = () => {
@@ -27,6 +28,7 @@ export const Theme = () => {
   const darkPrefix = mode === "dark" ? ICON.Ok : ICON.CheckboxBlankCircleOutline
   const lightPrefix =
     mode === "light" ? ICON.Ok : ICON.CheckboxBlankCircleOutline
+  const fontSize = useSelector(smallFontSizeSelector)
 
   return (
     <Dropdown
@@ -73,7 +75,7 @@ export const Theme = () => {
       backgroundColorHover={dropdown.backgroundColorHover}
       backgroundColor={dropdown.backgroundColor}
       font={dropdown.font}
-      fontSize={dropdown.fontSize}
+      fontSize={fontSize}
       color={dropdown.color}
     />
   )

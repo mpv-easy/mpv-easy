@@ -35,7 +35,6 @@ export const Screenshot = () => {
       color={button.color}
       onMouseDown={(e) => {
         dispatch.context.screenshot()
-        // e.stopPropagation()
       }}
     />
   )
