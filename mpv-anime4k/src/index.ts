@@ -51,7 +51,7 @@ export const defaultConfig: Anime4kConfig = {
     {
       key: "CTRL+3",
       value:
-        '"~~/shaders/Anime4K_Clamp_Highlights.glsl;~~/shaders/Anime4K_Upscale_Denoise_CNN_x2_VL.glsl;~~/shaders/Anime4K_AutoDownscalePre_x2.glsl;~~/shaders/Anime4K_AutoDownscalePre_x4.glsl;~~/shaders/Anime4K_Upscale_CNN_x2_M.glsl"',
+        "~~/shaders/Anime4K_Clamp_Highlights.glsl;~~/shaders/Anime4K_Upscale_Denoise_CNN_x2_VL.glsl;~~/shaders/Anime4K_AutoDownscalePre_x2.glsl;~~/shaders/Anime4K_AutoDownscalePre_x4.glsl;~~/shaders/Anime4K_Upscale_CNN_x2_M.glsl",
       title: "Anime4K: Mode C (HQ)",
     },
     {
@@ -81,7 +81,7 @@ export default definePlugin((context, api) => ({
     const config = context[pluginName]
     const { value, title } = config.shaders[config.current]
     if (!config.current) {
-      command(`no-osd change-list glsl-shaders set "${value}";`)
+      command(`no-osd change-list glsl-shaders toggle "${value}";`)
       // if (!config.noOsd) {
       //   osdMessage(title, 5)
       // }
@@ -95,7 +95,7 @@ export default definePlugin((context, api) => ({
       const { key, value, title } = config.shaders[i]
       addKeyBinding(key, `${pluginName}/${key}`, () => {
         if (value.length) {
-          command(`no-osd change-list glsl-shaders set "${value}";`)
+          command(`no-osd change-list glsl-shaders toggle "${value}";`)
           if (!config.noOsd) {
             osdMessage(title, 5)
           }

@@ -33,9 +33,17 @@ export const VoiceControl = React.memo(
     const [previewHide, setPreviewHide] = useState(true)
     const [previewBottom, setPreviewBottom] = useState(0)
     const fontSize = useSelector(smallFontSizeSelector)
+
+    const previewColor = previewBottom +
+      volumeStyle.previewCursorSize / 2 / boxHeight >
+      volumeHeight
+      ? button.color
+      : volumeStyle.backgroundColor
+
     return (
       h > wrapHeight && (
         <Box
+          id='voice-control'
           top={wrapTop}
           right={0}
           width={button.width + 4 * button.padding}
@@ -63,17 +71,19 @@ export const VoiceControl = React.memo(
           zIndex={volumeStyle.zIndex}
         >
           <Box
+            id='voice-control-volume'
+            fontSize={fontSize}
             text={volume.toFixed(0).toString()}
             width={button.width}
             height={button.height}
             color={button.color}
             padding={button.padding}
-            fontSize={fontSize}
             display="flex"
             justifyContent="center"
             alignItems="center"
           ></Box>
           <Box
+            id='voice-control-box'
             height={boxHeight}
             width={button.width}
             // padding={button.padding}
@@ -102,7 +112,7 @@ export const VoiceControl = React.memo(
               setPreviewHide(false)
               setPreviewBottom(
                 newVolume / volumeMax -
-                  volumeStyle.previewCursorSize / 2 / height,
+                volumeStyle.previewCursorSize / 2 / height,
               )
             }}
             onMouseLeave={(e) => {
@@ -110,6 +120,7 @@ export const VoiceControl = React.memo(
             }}
           >
             <Box
+              id='voice-control-box-inner'
               pointerEvents="none"
               height={volumeHeight * 100 + "%"}
               bottom={0}
@@ -123,20 +134,17 @@ export const VoiceControl = React.memo(
 
             {previewHide || (
               <Box
+                id='voice-control-cursor'
                 pointerEvents="none"
-                id="voice-hover"
                 height={volumeStyle.previewCursorSize}
                 left={0}
                 bottom={previewBottom * 100 + "%"}
                 width={button.width + button.padding * 2}
                 // padding={button.padding}
                 position="absolute"
+                zIndex={volumeStyle.zIndex + 16}
                 backgroundColor={
-                  previewBottom +
-                    volumeStyle.previewCursorSize / 2 / boxHeight >
-                  volumeHeight
-                    ? button.color
-                    : volumeStyle.backgroundColor
+                  previewColor
                 }
               />
             )}
