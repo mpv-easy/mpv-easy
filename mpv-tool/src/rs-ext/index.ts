@@ -4,10 +4,11 @@ import decodeUriComponent from "decode-uri-component"
 import { getFileName } from "../path"
 
 export const defaultBinDirName = "bin"
-export const defaultBinDirPath = joinPath(
+export const getDefaultBinDirPath = () => joinPath(
   getScriptConfigDir(),
   defaultBinDirName,
 )
+
 export const defaultMacExeName = "rs-ext-macos"
 export const defaultWinExeName = "rs-ext-windows"
 export const defaultLinuxExeName = "rs-ext-linux"
@@ -16,13 +17,13 @@ export function getRsExtExePath() {
   const os = getOs()
   switch (os) {
     case "darwin": {
-      return joinPath(defaultBinDirPath, defaultMacExeName)
+      return joinPath(getDefaultBinDirPath(), defaultMacExeName)
     }
     case "linux": {
-      return joinPath(defaultBinDirPath, defaultLinuxExeName)
+      return joinPath(getDefaultBinDirPath(), defaultLinuxExeName)
     }
     case "windows": {
-      return joinPath(defaultBinDirPath, defaultWinExeName)
+      return joinPath(getDefaultBinDirPath(), defaultWinExeName)
     }
     default: {
       throw new Error("rs-ext not support os: " + os)

@@ -34,7 +34,8 @@
       "@mpv-easy/copy-time": ["./mpv-copy-time/src"],
       "@mpv-easy/copy-screen": ["./mpv-copy-screen/src"],
       "@mpv-easy/polyfill": ["./mpv-polyfill/src"],
-      "@mpv-easy/thumbfast": ["./mpv-thumbfast/src"]
+      "@mpv-easy/thumbfast": ["./mpv-thumbfast/src"],
+      "@mpv-easy/canvas": ["./mpv-canvas/src"]
     }
   }
 }
