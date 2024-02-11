@@ -183,6 +183,7 @@ export const Progress = React.memo(({ width, height }: ProgressProps) => {
           backgroundColor={progress.previewCursorColor}
           color={progress.previewCursorColor}
           pointerEvents="none"
+          zIndex={progress.previewZIndex}
         >
           {!previewCursorHide && (
             <Box
