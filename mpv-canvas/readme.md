@@ -1,4 +1,5 @@
 
 mpv-canvas render mpv ui to canvas
 ## todo
-- [ ] event
+- [x] mouse and keyboard event
+- [ ] video element

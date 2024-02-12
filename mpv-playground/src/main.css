@@ -1,0 +1,26 @@
+body,
+html {
+  padding: 0;
+  margin: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100vw;
+  height: 100vh;
+}
+
+canvas {
+  display: flex;
+  border: 2px solid blue;
+  box-sizing: content-box;
+}
+
+@font-face {
+  font-family: 'FiraCode Nerd Font Mono Reg';
+  src: url('../../mpv-easy/fonts/FiraCodeNerdFontMono-Regular.ttf');
+}
+
+body,
+canvas {
+  font-family: 'FiraCode Nerd Font Mono Reg';
+}

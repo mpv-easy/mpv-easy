@@ -110,18 +110,21 @@ export type TextNode = {
 
 export type DOMNodeAttribute = boolean | string | number
 
-export const createNode = (nodeName: ElementNames): DOMElement => {
+export const createNode = (
+  nodeName: ElementNames,
+  osdOverlays = [
+    new OsdOverlay({ cache: true }),
+    new OsdOverlay({ cache: true }),
+    new OsdOverlay({ cache: true }),
+  ],
+): DOMElement => {
   const node: DOMElement = {
     nodeName,
     attributes: {},
     childNodes: [],
     parentNode: undefined,
     layoutNode: new LayoutNode(),
-    osdOverlays: [
-      new OsdOverlay({ cache: true }),
-      new OsdOverlay({ cache: true }),
-      new OsdOverlay({ cache: true }),
-    ],
+    osdOverlays,
   }
   return node
 }

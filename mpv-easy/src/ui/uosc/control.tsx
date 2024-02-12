@@ -18,7 +18,7 @@ import { PreviousFrame } from "../components/previous-frame"
 import { NextFrame } from "../components/next-frame"
 import { MoreInfo } from "../components/more-info"
 
-export const Control = React.memo((props: Partial<BaseElementProps>) => {
+export const UoscControl = React.memo((props: Partial<BaseElementProps>) => {
   const { width, height } = props
   const mode = useSelector((store: RootState) => store.context[pluginName].mode)
   const button = useSelector(

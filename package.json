@@ -1,6 +1,6 @@
 {
   "name": "mpv-easy",
-  "version": "0.1.6.alpha.0",
+  "version": "0.1.6-alpha.2",
   "files": [
     "dist",
     "readme.md",
@@ -18,7 +18,8 @@
     "test": "pnpm run --parallel test",
     "clear": "rm -rf node_modules && pnpm -r exec rm -rf node_modules dist es5",
     "clear-dist": "rm -rf dist es5 && pnpm -r exec rm -rf dist es5",
-    "release": "pnpm publish -r --access public"
+    "release": "pnpm publish -r --access public",
+    "release-alpha": "pnpm publish -r --access public --tag alpha"
   },
   "keywords": [
     "TS",

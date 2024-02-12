@@ -21,7 +21,7 @@ import {
   getPropertyNumber,
 } from "@mpv-easy/tool"
 import { Language } from "@mpv-easy/i18n"
-import { ThemeMode, UIName, createDefaultConfig } from "../mpv-easy-theme"
+import { ThemeMode, UIName, createDefaultThemeConfig } from "../mpv-easy-theme"
 import { pluginName as i18nName } from "@mpv-easy/i18n"
 import { pluginName as anime4kName, Anime4kConfig } from "@mpv-easy/anime4k"
 import { createDefaultContext } from "../context"
@@ -198,11 +198,17 @@ export const context = createModel<RootModel>()({
     },
     setFontSize(state, fontSize: number) {
       const size = fontSize + 18
-      const mode = state[pluginName].mode
-      state[pluginName].style[mode].button.default.fontSize = fontSize
-      state[pluginName].style[mode].button.default.width = size
-      state[pluginName].style[mode].button.default.height = size
-      state[pluginName].style[mode].button.default.padding = fontSize / 6
+      // TODO: color config vs size config
+      state[pluginName].style["dark"].button.default.fontSize = fontSize
+      state[pluginName].style["dark"].button.default.width = size
+      state[pluginName].style["dark"].button.default.height = size
+      state[pluginName].style["dark"].button.default.padding = fontSize / 6
+
+      state[pluginName].style["light"].button.default.fontSize = fontSize
+      state[pluginName].style["light"].button.default.width = size
+      state[pluginName].style["light"].button.default.height = size
+      state[pluginName].style["light"].button.default.padding = fontSize / 6
+
       return { ...state }
     },
   },

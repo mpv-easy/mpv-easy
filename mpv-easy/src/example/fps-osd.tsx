@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react"
-import { Box, RootNode, createRender, renderNode } from "@mpv-easy/ui"
 import {
   OsdOverlay,
   addKeyBinding,

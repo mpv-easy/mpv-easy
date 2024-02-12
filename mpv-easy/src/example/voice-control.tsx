@@ -1,4 +1,4 @@
-import { dispatchEvent, RootNode } from "@mpv-easy/ui"
+import { dispatchEvent, getRootNode } from "@mpv-easy/ui"
 import { Box } from "@mpv-easy/ui"
 import React, { useEffect } from "react"
 import { PropertyNative, MousePos, addForcedKeyBinding } from "@mpv-easy/tool"
@@ -11,7 +11,7 @@ export function VoiceControl() {
       "MOUSE_BTN3",
       "__MOUSE_BTN3__RENDER__",
       (event) => {
-        dispatchEvent(RootNode, mousePosProp.value, event)
+        dispatchEvent(getRootNode(), mousePosProp.value, event)
         // console.log("up", JSON.stringify(event))
       },
       {
@@ -26,7 +26,7 @@ export function VoiceControl() {
       "__MOUSE_BTN3__RENDER__",
       (event) => {
         // console.log("down", JSON.stringify(event))
-        dispatchEvent(RootNode, mousePosProp.value, event)
+        dispatchEvent(getRootNode(), mousePosProp.value, event)
       },
       {
         complex: true,

@@ -14,6 +14,8 @@ import {
   getProperty,
   getPropertyNumber,
   getPropertyString,
+  observeProperty,
+  observePropertyNumber,
   osdMessage,
   print,
   setPropertyBool,
@@ -314,12 +316,22 @@ export function clone<T>(v: T): T {
   return JSON.parse(JSON.stringify(v))
 }
 
-export function getAssScale(): number {
-  const osdHeight = getPropertyNumber("osd-height")
-
-  assert(osdHeight, "osd-height error: " + getPropertyNumber("osd-height"))
-
-  return DEFAULT_ASS_HEIGHT / osdHeight
+let _scaleInit = false
+let _lastH = -1
+let _lastScale = 0
+export function getAssScale(assHeight = DEFAULT_ASS_HEIGHT): number {
+  if (!_scaleInit) {
+    _scaleInit = true
+    _lastH = getPropertyNumber("osd-height") || 0
+    _lastScale = assHeight / _lastH
+    observePropertyNumber("osd-height", (v) => {
+      if (_lastH !== v && v) {
+        _lastH = v
+        _lastScale = assHeight / _lastH
+      }
+    })
+  }
+  return _lastScale
 }
 
 export function sleep(ms = 1000) {

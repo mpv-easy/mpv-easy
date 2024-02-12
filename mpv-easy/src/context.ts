@@ -1,7 +1,8 @@
-import { version } from "../../package.json"
+declare module globalThis {
+  var version: string
+}
 
-// ONLY DEV
-// const version = (+Date.now()).toString()
+const version = globalThis.version ?? (+Date.now()).toString()
 
 import "@mpv-easy/tool"
 import clipPlayPlugin, {

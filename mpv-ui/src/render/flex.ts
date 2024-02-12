@@ -15,7 +15,13 @@ import { Len } from "../type"
 import { DOMElement, MouseEvent, createNode } from "./dom"
 import { getAssText, measureText, readAttr } from "../common"
 
-export const RootNode = createNode("@mpv-easy/box")
+let _RootNode: DOMElement
+
+export const getRootNode = () => {
+  if (_RootNode) return _RootNode
+  _RootNode = createNode("@mpv-easy/box")
+  return _RootNode
+}
 export const RootId = `__flex_root_${Math.random().toString(16)}`
 
 function hasTLBR(node: DOMElement): boolean {
@@ -603,7 +609,7 @@ function computedNodeAlign(node: DOMElement) {
 
             const nextStart = xAxisStart - childXSize
             if (nextStart < nodeXPos) {
-              print("warn: not support flex wrap", c.attributes.id)
+              // print("warn: not support flex wrap", c.attributes.id)
             } else {
               setAxisPosition(c, nextStart, isX)
 
@@ -640,7 +646,7 @@ function computedNodeAlign(node: DOMElement) {
 
             const nextStart = xAxisStart + childXSize
             if (nextStart > nodeXEnd) {
-              print("warn: not support flex wrap", c.attributes.id)
+              // print("warn: not support flex wrap", c.attributes.id)
             } else {
               setAxisPosition(c, xAxisStart, isX)
               setAxisPosition(c, yAxisStart, !isX)
@@ -667,7 +673,7 @@ function computedNodeAlign(node: DOMElement) {
 
             const nextStart = xAxisStart + childXSize
             if (nextStart > nodeXEnd) {
-              print("warn: not support flex wrap", c.attributes.id)
+              // print("warn: not support flex wrap", c.attributes.id)
             } else {
               setAxisPosition(c, xAxisStart, isX)
               setAxisPosition(c, yAxisStart - childYSize, !isX)
@@ -694,7 +700,7 @@ function computedNodeAlign(node: DOMElement) {
 
             const nextStart = xAxisStart + childXSize
             if (nextStart > nodeXEnd) {
-              print("warn: not support flex wrap", c.attributes.id)
+              // print("warn: not support flex wrap", c.attributes.id)
             } else {
               setAxisPosition(c, xAxisStart, isX)
 
@@ -735,7 +741,7 @@ function computedNodeAlign(node: DOMElement) {
 
             const nextStart = xAxisStart + childXSize
             if (nextStart > nodeXEnd) {
-              print("warn: not support flex wrap", c.attributes.id)
+              // print("warn: not support flex wrap", c.attributes.id)
             } else {
               setAxisPosition(c, xAxisStart, isX)
               setAxisPosition(c, yAxisStart, !isX)
@@ -765,7 +771,7 @@ function computedNodeAlign(node: DOMElement) {
 
             const nextStart = xAxisStart + childXSize
             if (nextStart > nodeXEnd) {
-              print("warn: not support flex wrap", c.attributes.id)
+              // print("warn: not support flex wrap", c.attributes.id)
             } else {
               setAxisPosition(c, xAxisStart, isX)
               setAxisPosition(c, yAxisStart - childYSize, !isX)
@@ -794,7 +800,7 @@ function computedNodeAlign(node: DOMElement) {
 
             const nextStart = xAxisStart + childXSize
             if (nextStart > nodeXEnd) {
-              print("warn: not support flex wrap", c.attributes.id)
+              // print("warn: not support flex wrap", c.attributes.id)
             } else {
               setAxisPosition(c, xAxisStart, isX)
 
@@ -874,7 +880,7 @@ export function renderNode(
   currentRenderCount: number,
   deep: number,
 ) {
-  computedLayout(RootNode, currentRenderCount)
+  computedLayout(getRootNode(), currentRenderCount)
 
   const hide = readAttr(node, "hide") ?? false
   const {
@@ -1114,13 +1120,13 @@ export function renderNode(
       const info = fileInfo(backgroundImage)
       if (!info) {
         // throw new Error("backgroundImage file not found")
-        print("backgroundImage file not found: " + backgroundImage)
+        // print("backgroundImage file not found: " + backgroundImage)
       } else {
         const { size } = info
         const pixels = w * h * 4
         if (pixels !== size) {
           // throw new Error("backgroundImage size error: " + w + '-' + h + "-" + size)
-          print("backgroundImage size error: " + w + "-" + h + "-" + size)
+          // print("backgroundImage size error: " + w + "-" + h + "-" + size)
         } else {
           overlay.x = x | 0
           overlay.y = y | 0

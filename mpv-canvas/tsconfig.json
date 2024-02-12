@@ -1,9 +1,10 @@
 {
   "extends": "../tsconfig.base.json",
   "compilerOptions": {
+    "lib": ["dom","ESNext"],
     "outDir": "./dist/",
-    "target": "ES2015",
-    "lib": ["DOM.Iterable", "DOM"]
   },
-  "include": ["src"]
+  "include": [
+    "src",
+  ]
 }

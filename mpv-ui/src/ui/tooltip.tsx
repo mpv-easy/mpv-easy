@@ -2,7 +2,7 @@ import { BaseElementProps, Box, DOMElement } from "../index"
 import React, { useEffect, useRef, useState } from "react"
 import { MousePos, PropertyNative } from "@mpv-easy/tool"
 import { isEqual, throttle } from "lodash-es"
-import { RootNode, dispatchEvent } from "../render/flex"
+import { getRootNode, dispatchEvent } from "../render/flex"
 
 export type TooltipProps = {
   tooltipThrottle: number
@@ -116,7 +116,7 @@ export const Tooltip = ({
           return
         }
 
-        const target = getTooltipElement(RootNode, x, y)
+        const target = getTooltipElement(getRootNode(), x, y)
 
         if (!target) {
           setShow(false)
@@ -128,8 +128,8 @@ export const Tooltip = ({
           const direction = getDirection(
             x,
             y,
-            RootNode.layoutNode.width,
-            RootNode.layoutNode.height,
+            getRootNode().layoutNode.width,
+            getRootNode().layoutNode.height,
           )
           const pos = computeTooltipPosition(
             tooltipRef.current,

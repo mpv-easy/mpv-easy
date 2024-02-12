@@ -29,10 +29,18 @@ export function getAssText(node: DOMElement, x: number, y: number) {
   const { text = "" } = node.attributes
   const assScale = getAssScale()
   const font = readAttr(node, "font") ?? ""
-  const color = readAttr(node, "color") ?? "FFFFFF"
+  let color = readAttr(node, "color") ?? "FFFFFFFF"
   const fontSize = readAttr(node, "fontSize") ?? "5%"
   const fontBorderSize = readAttr(node, "fontBorderSize") ?? 0
   const fontBorderColor = readAttr(node, "fontBorderColor") ?? "000000"
+  let alpha = "FF"
+  if (color.length === 6) {
+    alpha = "00"
+  }
+  if (color.length === 8) {
+    alpha = color.slice(6, 8)
+    color = color.slice(0, 6)
+  }
   return new AssDraw()
     .pos(x, y)
     .font(font)
@@ -40,6 +48,7 @@ export function getAssText(node: DOMElement, x: number, y: number) {
     .fontBorderColor(fontBorderColor)
     .fontBorderSize(lenToNumber(node, fontBorderSize, false, 0) * assScale)
     .color(color)
+    .alpha(alpha)
     .append(text)
     .toString()
 }

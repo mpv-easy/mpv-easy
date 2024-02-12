@@ -34,6 +34,15 @@ import { Playlist } from "./playlist"
 import { getPlayableList } from "@mpv-easy/autoload"
 import { VoiceControl } from "./voice-control"
 import { useFirstMountState, useRendersCount } from "react-use"
+
+export * from "./progress"
+export * from "./toolbar"
+export * from "./voice-control"
+export * from "./playlist"
+export * from "./click-menu"
+export * from "./osc"
+export * from "./uosc"
+
 const windowMaximizedProp = new PropertyBool("window-maximized")
 const fullscreenProp = new PropertyBool("fullscreen")
 const timePosProp = new PropertyNumber("time-pos")
@@ -76,12 +85,21 @@ export function hasPoint(
   return false
 }
 
-export function Easy() {
+export type EasyProps = {
+  initHide: boolean
+  skipFirstRender: boolean
+  fontSize: number
+}
+export function Easy(props: Partial<EasyProps>) {
   const dispatch = useDispatch<Dispatch>()
   const fps = useSelector(fpsSelector)
   const path = useSelector(pathSelector)
   const autoloadConfig = useSelector(audoloadConfigSelector)
   useEffect(() => {
+    if (props.fontSize) {
+      dispatch.context.setFontSize(props.fontSize)
+    }
+
     playlistCount.observe((v) => {
       const p = pathProp.value
       if (path !== p) {
@@ -128,7 +146,7 @@ export function Easy() {
       { leading: true, trailing: true },
     )
 
-    timePosFullProp.observe(throttle(updateTimePos))
+    timePosProp.observe(throttle(updateTimePos))
 
     durationProp.observe((v) => {
       dispatch.context.setDuration(v || 0)
@@ -199,7 +217,7 @@ export function Easy() {
   const [menuHide, setMenuHide] = useState(true)
 
   const { x, y } = mousePos
-  const [hide, setHide] = useState(false)
+  const [hide, setHide] = useState(!!props.initHide)
   const hideHandle = useRef(-1)
   const mouseInUI = [
     toolbarRef.current,
@@ -215,12 +233,13 @@ export function Easy() {
   } else {
     hideHandle.current = +setTimeout(() => {
       setHide(true)
-    }, toolbar.autoHideDelay ?? 1000)
+    }, toolbar.autoHideDelay ?? 5000)
   }
 
-  const isFirstMount = useFirstMountState()
+  const isFirstMount = useFirstMountState() && props.skipFirstRender
 
   const fontSize = useSelector(smallFontSizeSelector)
+
   return (
     <>
       <Tooltip

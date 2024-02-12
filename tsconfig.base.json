@@ -35,8 +35,9 @@
       "@mpv-easy/copy-screen": ["./mpv-copy-screen/src"],
       "@mpv-easy/polyfill": ["./mpv-polyfill/src"],
       "@mpv-easy/thumbfast": ["./mpv-thumbfast/src"],
-      "@mpv-easy/mpv-easy": ["./mpv-mpv-easy/src"],
-      "@mpv-easy/canvas": ["./mpv-canvas/src"]
+      "@mpv-easy/mpv-easy": ["./mpv-easy/src"],
+      "@mpv-easy/canvas": ["./mpv-canvas/src"],
+      "@mpv-easy/playground": ["./mpv-playground/src"]
     }
   }
 }

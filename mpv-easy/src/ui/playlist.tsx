@@ -13,7 +13,7 @@ import {
   pathSelector,
   osdDimensionsSelector,
 } from "../store"
-import { RootNode } from "@mpv-easy/ui"
+import { getRootNode } from "@mpv-easy/ui"
 import { ScrollList } from "./components/scroll-list"
 
 export type PlaylistProps = {
@@ -31,8 +31,8 @@ export const Playlist = React.memo(() => {
   let x = 0
   let y = 0
   if (playlistRef.current) {
-    const rootW = RootNode.layoutNode.width
-    const rootH = RootNode.layoutNode.height
+    const rootW = getRootNode().layoutNode.width
+    const rootH = getRootNode().layoutNode.height
     const w = playlistRef.current.layoutNode.width
     const h = playlistRef.current.layoutNode.height
     x = (rootW - w) / 2

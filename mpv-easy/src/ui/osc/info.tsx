@@ -8,7 +8,7 @@ import { Filename } from "../components/filename"
 import { NextFrame } from "../components/next-frame"
 import { PreviousFrame } from "../components/previous-frame"
 
-export const Info = React.memo(({ height }: Partial<BaseElementProps>) => {
+export const OscInfo = React.memo(({ height }: Partial<BaseElementProps>) => {
   const button = useSelector(buttonStyleSelector)
   const control = useSelector(controlStyleSelector)
   return (

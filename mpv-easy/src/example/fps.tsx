@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react"
-import { Box, RootNode, createRender, renderNode } from "@mpv-easy/ui"
+import { Box } from "@mpv-easy/ui"
 import { addKeyBinding, getOsdSize, setPropertyBool } from "@mpv-easy/tool"
 
 const low = 10

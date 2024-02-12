@@ -1,7 +1,7 @@
 import React, { forwardRef } from "react"
 import { Progress } from "../progress"
 import { Box, DOMElement, BaseElementProps } from "@mpv-easy/ui"
-import { Control } from "./control"
+import { UoscControl } from "./control"
 import { pluginName } from "../../main"
 import { useSelector } from "react-redux"
 import {
@@ -10,6 +10,7 @@ import {
   fontSizeSelector,
   progressStyleSelector,
 } from "../../store"
+export * from "./control"
 
 export const Uosc = React.memo(
   forwardRef<DOMElement, Partial<BaseElementProps>>((props, ref) => {
@@ -28,7 +29,7 @@ export const Uosc = React.memo(
         id="uosc"
         justifyContent="end"
       >
-        <Control {...props} width={"100%"} height={h} />
+        <UoscControl {...props} width={"100%"} height={h} />
         <Progress {...props} width={"100%"} height={h} />
       </Box>
     )

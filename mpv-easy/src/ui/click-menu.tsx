@@ -21,7 +21,7 @@ import {
   Button,
   ButtonProps,
 } from "@mpv-easy/ui"
-import { RootNode } from "@mpv-easy/ui"
+import { getRootNode } from "@mpv-easy/ui"
 import React, { useEffect, useRef, useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import {
@@ -330,8 +330,8 @@ export const ClickMenu = React.forwardRef<
         const direction = getDirection(
           mousePos.x,
           mousePos.y,
-          RootNode.layoutNode.width,
-          RootNode.layoutNode.height,
+          getRootNode().layoutNode.width,
+          getRootNode().layoutNode.height,
         )
         const pos = computeTooltipPosition(
           menuRef.current,

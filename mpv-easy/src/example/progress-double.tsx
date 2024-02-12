@@ -15,7 +15,7 @@ command("set window-dragging no")
 
 const cursorSize = 100
 const cursorHoverWidth = 100
-export function Progress({
+function Progress({
   id,
   width,
   height,
@@ -82,30 +82,32 @@ export function Progress({
     </Box>
   )
 }
-render(
-  <Box
-    id="main"
-    position="relative"
-    width={"100%"}
-    height={"20%"}
-    bottom={0}
-    display="flex"
-    flexDirection="row"
-    justifyContent="end"
-    alignItems="center"
-    backgroundColor="0000FFA0"
-  >
-    <Progress
-      id="progress1"
-      width="100%"
-      height={"45%"}
-      backgroundColor="0FFFFF"
-    />
-    <Progress
-      id="progress2"
-      width="100%"
-      height={"45%"}
-      backgroundColor="0FFFFF"
-    />
-  </Box>,
-)
+export function ProgressDouble() {
+  return (
+    <Box
+      id="main"
+      position="relative"
+      width={"100%"}
+      height={"20%"}
+      bottom={0}
+      display="flex"
+      flexDirection="row"
+      justifyContent="end"
+      alignItems="center"
+      backgroundColor="0000FFA0"
+    >
+      <Progress
+        id="progress1"
+        width="100%"
+        height={"45%"}
+        backgroundColor="0FFFFF"
+      />
+      <Progress
+        id="progress2"
+        width="100%"
+        height={"45%"}
+        backgroundColor="0FFFFF"
+      />
+    </Box>
+  )
+}

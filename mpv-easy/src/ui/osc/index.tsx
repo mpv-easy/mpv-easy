@@ -1,8 +1,8 @@
 import React, { forwardRef } from "react"
 import { Box, DOMElement, BaseElementProps } from "@mpv-easy/ui"
-import { Control } from "./control"
+import { OscControl } from "./control"
 import { pluginName } from "../../main"
-import { Info } from "./info"
+import { OscInfo } from "./info"
 import { useSelector } from "react-redux"
 import {
   RootState,
@@ -10,6 +10,8 @@ import {
   fontSizeSelector,
   progressStyleSelector,
 } from "../../store"
+export * from "./control"
+export * from "./info"
 
 export const Osc = React.memo(
   forwardRef<DOMElement, Partial<BaseElementProps>>((props, ref) => {
@@ -30,8 +32,8 @@ export const Osc = React.memo(
         id="osc"
         onMouseDown={(e) => e.stopPropagation}
       >
-        <Info {...props} width={"100%"} height={h} />
-        <Control {...props} width={"100%"} height={h} />
+        <OscInfo {...props} width={"100%"} height={h} />
+        <OscControl {...props} width={"100%"} height={h} />
       </Box>
     )
   }),

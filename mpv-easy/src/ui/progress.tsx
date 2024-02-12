@@ -40,13 +40,9 @@ export const Progress = React.memo(({ width, height }: ProgressProps) => {
   const duration = useSelector(durationSelector)
   const dispatch = useDispatch<Dispatch>()
   const format = getTimeFormat(duration)
-  const filename = useSelector(filenameSelector)
-  const path = useSelector(pathSelector)
   const thumbRef = useRef<ThumbFast>()
   const cursorTextStartRef = useRef<DOMElement>(null)
   const progressRef = useRef<DOMElement>(null)
-  const videoParams = useSelector(videoParamsSelector) ?? {}
-
   const progressW = progressRef.current?.layoutNode.width
   const cursorLeftOffset = progressW ? progress.cursorSize / 2 / progressW : 0
   const cursorLeft = timePos / duration - cursorLeftOffset

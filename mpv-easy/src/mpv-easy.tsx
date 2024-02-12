@@ -5,12 +5,12 @@ import { print } from "@mpv-easy/tool"
 import { createStore } from "./store"
 import { SystemApi } from "@mpv-easy/plugin"
 import { pluginName } from "./main"
-import { createDefaultConfig } from "./mpv-easy-theme"
+import { createDefaultThemeConfig } from "./mpv-easy-theme"
 
 function main() {
   const store = createStore()
   const customConfig = getConfig()
-  const { state, player } = createDefaultConfig()
+  const { state, player } = createDefaultThemeConfig()
   // TODO: don't save these props
   customConfig[pluginName].player = player
   customConfig[pluginName].state = state

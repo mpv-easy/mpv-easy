@@ -24,7 +24,7 @@ const thumbId = 42
 const thumbPath = `./thumb?.${thumbFormat}`
 
 let thumb: ThumbFast
-export function Progress() {
+export function ProgressPreview() {
   const [left, setLeft] = useState(0)
   const [leftHover, setLeftHover] = useState(0)
   const [hoverHide, setHoverHide] = useState(true)

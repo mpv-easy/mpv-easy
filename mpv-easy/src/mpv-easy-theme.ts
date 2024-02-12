@@ -155,11 +155,10 @@ export const defaultButtonSize = defaultFontSize * 1.25
 export const defaultCursorSize = 4
 export const defaultMaxItemCount = 8
 export const defaultVolumeStep = 10
-
 export const defaultHideUIDelay = 5000
 export const defaultSaveConfigThrottle = 2000
 
-export function createDefaultConfig(): EasyConfig {
+export function createDefaultThemeConfig(): EasyConfig {
   return cloneDeep({
     mode: "dark",
     uiName: defaultName,
@@ -432,4 +431,4 @@ export const defaultPlayer: EasyConfig["player"] = {
   speed: 1,
   speedList: [0.25, 0.5, 0.75, 1, 1.25, 1.5, 2, 4],
 }
-export const defaultConfig = createDefaultConfig()
+export const defaultConfig = createDefaultThemeConfig()
