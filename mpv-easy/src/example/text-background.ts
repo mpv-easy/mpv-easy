@@ -1,6 +1,6 @@
 import { drawRect } from "@mpv-easy/assdraw"
 import { OsdOverlay } from "@mpv-easy/tool"
-import { defaultName } from "../main"
+import { defaultName } from "../mpv-easy-theme"
 
 const ovl = new OsdOverlay({
   data: `{\\pos(100,100)}{\\fn${defaultName}}{\\fs64}{\\3c000000&}{\\bord0}{\\c&FFFFFF&}EFG`,

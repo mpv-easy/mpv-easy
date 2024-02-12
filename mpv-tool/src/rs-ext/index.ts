@@ -4,10 +4,8 @@ import decodeUriComponent from "decode-uri-component"
 import { getFileName } from "../path"
 
 export const defaultBinDirName = "bin"
-export const getDefaultBinDirPath = () => joinPath(
-  getScriptConfigDir(),
-  defaultBinDirName,
-)
+export const getDefaultBinDirPath = () =>
+  joinPath(getScriptConfigDir(), defaultBinDirName)
 
 export const defaultMacExeName = "rs-ext-macos"
 export const defaultWinExeName = "rs-ext-windows"

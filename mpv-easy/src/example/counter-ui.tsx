@@ -12,7 +12,8 @@ const Yellow = "00FFFF"
 
 const boxSize = 200
 const padding = 10
-function Counter() {
+
+export function CounterUI() {
   const [count, setCount] = useState(0)
 
   console.log("============count: ", count)
@@ -74,5 +75,3 @@ function Counter() {
     </Box>
   )
 }
-
-render(<Counter />)

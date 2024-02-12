@@ -12,7 +12,7 @@ const button = {
   fontSize: 64,
 }
 
-function ButtonPrefix() {
+export function ButtonPrefix() {
   return (
     <Box
       id="flex-main"
@@ -59,5 +59,3 @@ function ButtonPrefix() {
     </Box>
   )
 }
-
-render(<ButtonPrefix />)

@@ -3,7 +3,7 @@ import React from "react"
 import { Box, AutoHide, render } from "@mpv-easy/ui"
 import { Progress } from "./progress"
 
-function AutoHideBox() {
+export function AutoHideBox() {
   return (
     <Box
       height={"50%"}
@@ -28,5 +28,3 @@ function AutoHideBox() {
     </Box>
   )
 }
-
-render(<AutoHideBox />)

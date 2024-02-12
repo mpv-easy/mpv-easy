@@ -2,7 +2,8 @@ import { Box, render } from "@mpv-easy/ui"
 import React, { useRef, useState } from "react"
 
 const size = 200
-function DragBall() {
+
+export function DragBall() {
   const [pos, setPos] = useState({ x: 0, y: 0 })
   const [move, setMove] = useState(false)
 
@@ -49,5 +50,3 @@ function DragBall() {
     </Box>
   )
 }
-
-render(<DragBall />)

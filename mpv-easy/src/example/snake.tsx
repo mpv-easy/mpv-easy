@@ -99,7 +99,7 @@ class Snake {
 
 const snake = new Snake()
 
-function SnakeGame() {
+export function SnakeGame() {
   const { w, h } = useOsdDimensions()
   const [body, setBody] = useState(snake.body)
 
@@ -211,5 +211,3 @@ function SnakeGame() {
     </Box>
   )
 }
-
-render(<SnakeGame />)

@@ -3,12 +3,13 @@ import { usePropertyBool } from "@mpv-easy/hook"
 import { PropertyBool, command, observeProperty } from "@mpv-easy/tool"
 import { Box, Button, render } from "@mpv-easy/ui"
 import React, { useEffect, useState } from "react"
-import { defaultFont } from "../main"
+import { defaultFont } from "../mpv-easy-theme"
 
 const padding = 32
 const borderSize = 32
 const fontSize = 64
-function Flex() {
+
+export function FlexBoxText() {
   return (
     <Box
       id="flex-main"
@@ -56,4 +57,3 @@ function Flex() {
     </Box>
   )
 }
-render(<Flex />)

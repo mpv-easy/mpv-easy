@@ -8,5 +8,3 @@ export function FragmentBox() {
     </>
   )
 }
-
-render(<FragmentBox></FragmentBox>)

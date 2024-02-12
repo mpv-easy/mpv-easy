@@ -13,7 +13,7 @@ const colorList = Object.entries(COLORS).map(
   ([name, value]) => [name, value.toString(16).padStart(6, "0")] as const,
 )
 
-function ColorBox() {
+export function ColorText() {
   return new Array(N).fill(0).map((_, k) => {
     return (
       <Box
@@ -28,5 +28,3 @@ function ColorBox() {
     )
   })
 }
-
-render(<ColorBox />)

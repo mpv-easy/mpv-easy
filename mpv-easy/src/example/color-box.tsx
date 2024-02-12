@@ -9,7 +9,8 @@ import { COLORS } from "e-color"
 const colorList = Object.values(COLORS).map((i) =>
   i.toString(16).padStart(6, "0"),
 )
-function ColorBox() {
+
+export function ColorBox() {
   const { width, height } = getOsdSize()!
 
   const boxW = width / col
@@ -28,5 +29,3 @@ function ColorBox() {
     )
   })
 }
-
-render(<ColorBox />)

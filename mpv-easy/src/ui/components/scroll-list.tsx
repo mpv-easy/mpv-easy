@@ -3,11 +3,12 @@ import {
   Box,
   Button,
   MouseEvent,
-  DOMElement,
+  // DOMElement,
   ButtonProps,
   createNode,
   BaseElementProps,
   lenToNumber,
+  DOMElement,
 } from "@mpv-easy/ui"
 import React, { useRef, useState } from "react"
 import { useSelector } from "react-redux"
@@ -19,7 +20,7 @@ import {
   scrollListStyleSelector,
   smallFontSizeSelector,
 } from "../../store"
-import { measureText } from "@mpv-easy/ui/src/common"
+import { measureText } from "@mpv-easy/ui"
 
 export type ScrollListProps = {
   items: {

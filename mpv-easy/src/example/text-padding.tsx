@@ -1,10 +1,7 @@
-import { AssDraw } from "@mpv-easy/assdraw"
-import { usePropertyBool } from "@mpv-easy/hook"
-import { PropertyBool, command, observeProperty } from "@mpv-easy/tool"
-import { Box, render } from "@mpv-easy/ui"
-import React, { useEffect, useState } from "react"
+import { Box } from "@mpv-easy/ui"
+import React from "react"
 
-function TextAlign() {
+export function TextPadding() {
   return (
     <Box
       backgroundColor="FF0000"
@@ -39,5 +36,3 @@ function TextAlign() {
     </Box>
   )
 }
-
-render(<TextAlign />)

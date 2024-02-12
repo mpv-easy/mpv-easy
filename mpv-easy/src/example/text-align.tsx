@@ -1,10 +1,7 @@
-import { AssDraw } from "@mpv-easy/assdraw"
-import { usePropertyBool } from "@mpv-easy/hook"
-import { PropertyBool, command, observeProperty } from "@mpv-easy/tool"
 import { Box, render } from "@mpv-easy/ui"
 import React, { useEffect, useState } from "react"
 
-function TextAlign() {
+export function TextAlign() {
   return (
     <Box
       position="absolute"
@@ -21,5 +18,3 @@ function TextAlign() {
     ></Box>
   )
 }
-
-render(<TextAlign />)

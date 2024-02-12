@@ -99,7 +99,8 @@ const TEXT = [
   "`",
   "~",
 ]
-function Text() {
+
+export function TextBox() {
   return (
     <>
       {/* <Box
@@ -177,5 +178,3 @@ function Text() {
     </>
   )
 }
-
-render(<Text />)

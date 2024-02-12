@@ -9,7 +9,7 @@ import {
   i18nSelector,
   mouseHoverStyleSelector,
 } from "../../store"
-import { setPropertyNumber } from "../../../../mpv-tool/src/mpv"
+import { setPropertyNumber } from "@mpv-easy/tool"
 
 export const Stop = () => {
   const button = useSelector(buttonStyleSelector)

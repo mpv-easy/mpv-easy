@@ -1,7 +1,7 @@
 import React from "react"
 import { Box, render } from "@mpv-easy/ui"
 
-function Padding() {
+export function BoxPadding() {
   return (
     <Box fontSize={32}>
       <Box text="A" backgroundColor="FF0000" />
@@ -9,5 +9,3 @@ function Padding() {
     </Box>
   )
 }
-
-render(<Padding />)

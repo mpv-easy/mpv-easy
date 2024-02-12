@@ -2,7 +2,7 @@ import { Box, render } from "@mpv-easy/ui"
 import React from "react"
 
 const size = 200
-function BorderBox() {
+export function BorderBox() {
   return (
     <Box
       position="absolute"
@@ -18,5 +18,3 @@ function BorderBox() {
     ></Box>
   )
 }
-
-render(<BorderBox />)

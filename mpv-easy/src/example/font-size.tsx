@@ -14,5 +14,3 @@ export function FontSize() {
     </>
   )
 }
-
-render(<FontSize />)

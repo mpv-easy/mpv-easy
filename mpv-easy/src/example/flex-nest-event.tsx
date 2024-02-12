@@ -32,7 +32,7 @@ function createHandler(id: string | number) {
     },
   }
 }
-function Flex() {
+export function FlexNestEvent() {
   return (
     <Box
       id="flex-main"
@@ -72,5 +72,3 @@ function Flex() {
     </Box>
   )
 }
-
-render(<Flex />)

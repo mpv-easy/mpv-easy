@@ -1,9 +1,9 @@
-import { Box, Tooltip, render, MouseEvent, DOMElement } from "@mpv-easy/ui"
-import React, { useRef, useState } from "react"
+import { Box, Tooltip } from "@mpv-easy/ui"
+import React from "react"
 
 const size = 400
 const dark = "000000A0"
-function TooltipBox() {
+export function TooltipBox() {
   return (
     <Box id="tooltip-main" title="tooltip-main" width={"100%"} height={"100%"}>
       <Box
@@ -47,5 +47,3 @@ function TooltipBox() {
     </Box>
   )
 }
-
-render(<TooltipBox />)

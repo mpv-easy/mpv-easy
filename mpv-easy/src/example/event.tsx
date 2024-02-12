@@ -1,7 +1,7 @@
 import { Box, render } from "@mpv-easy/ui"
 import React from "react"
 
-function Counter() {
+export function BoxEvent() {
   return (
     <Box
       width={"50%"}
@@ -25,5 +25,3 @@ function Counter() {
     </Box>
   )
 }
-
-render(<Counter />)

@@ -3,7 +3,7 @@ import React, { useEffect, useRef } from "react"
 import { useUpdate } from "react-use"
 
 const size = 100
-function BorderBox() {
+export function BorderBoxList() {
   const ref = useRef<DOMElement>(null)
 
   console.log(
@@ -52,5 +52,3 @@ function BorderBox() {
     </Box>
   )
 }
-
-render(<BorderBox />)

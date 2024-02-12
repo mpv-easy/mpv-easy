@@ -4,7 +4,7 @@ import { PropertyBool, command, observeProperty } from "@mpv-easy/tool"
 import { Box, render } from "@mpv-easy/ui"
 import React, { useEffect, useState } from "react"
 
-function Size() {
+export function BoxHide() {
   const [hide, setHide] = useState(false)
   return (
     <Box id="b1" width={"50%"} height={"50%"} backgroundColor="FF0000">
@@ -29,5 +29,3 @@ function Size() {
     </Box>
   )
 }
-
-render(<Size />)

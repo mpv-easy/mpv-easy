@@ -11,7 +11,7 @@ const store = configureStore({
   reducer: {
     [counterSlice.name]: counterSlice.reducer,
   },
-})
+}) as any
 
 export { store }
 
@@ -27,5 +27,6 @@ export type AppStartListening = TypedStartListening<RootState, AppDispatch>
 export type AppAddListener = TypedAddListener<RootState, AppDispatch>
 
 // Use throughout your app instead of plain `useDispatch` and `useSelector`
-export const useAppDispatch = () => useDispatch<AppDispatch>()
+// @ts-ignore
+export const useAppDispatch = () => useDispatch<AppDispatch>() as any
 export const useAppSelector: TypedUseSelectorHook<RootState> = useSelector

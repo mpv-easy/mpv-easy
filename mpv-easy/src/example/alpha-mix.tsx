@@ -3,7 +3,7 @@ import React from "react"
 
 const size = 400
 const color = "000000A0"
-function AlphaMix() {
+export function AlphaMix() {
   return (
     <>
       <Box
@@ -25,5 +25,3 @@ function AlphaMix() {
     </>
   )
 }
-
-render(<AlphaMix />)

@@ -4,7 +4,7 @@ import { PropertyBool, command, observeProperty } from "@mpv-easy/tool"
 import { Box, Button, render } from "@mpv-easy/ui"
 import React, { useEffect, useState } from "react"
 
-function Flex() {
+export function FlexAlignContent() {
   return (
     <Box
       id="flex-main"
@@ -61,5 +61,3 @@ function Flex() {
     </Box>
   )
 }
-
-render(<Flex />)

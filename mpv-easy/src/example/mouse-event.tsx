@@ -4,7 +4,7 @@ import { PropertyBool, command, observeProperty } from "@mpv-easy/tool"
 import { Box, render } from "@mpv-easy/ui"
 import React, { useEffect, useState } from "react"
 
-function MouseEvent() {
+export function MouseEvent() {
   const [pos, setPos] = useState({ x: 0, y: 0 })
   const [hoverPos, setHoverPos] = useState({ x: 0, y: 0 })
   const [hoverHide, setHoverHide] = useState(true)
@@ -55,5 +55,3 @@ function MouseEvent() {
     </Box>
   )
 }
-
-render(<MouseEvent />)

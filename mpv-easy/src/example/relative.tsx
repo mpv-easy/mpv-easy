@@ -4,7 +4,7 @@ import { PropertyBool, command, observeProperty } from "@mpv-easy/tool"
 import { Box, render } from "@mpv-easy/ui"
 import React, { useEffect, useState } from "react"
 
-function Relative() {
+export function Relative() {
   return (
     <Box width={"100%"} height={"100%"}>
       <Box
@@ -39,5 +39,3 @@ function Relative() {
     </Box>
   )
 }
-
-render(<Relative />)

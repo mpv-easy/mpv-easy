@@ -57,5 +57,3 @@ export const Wheel = () => {
     </Box>
   )
 }
-
-render(<Wheel />)

@@ -1,7 +1,7 @@
 import { Box, render } from "@mpv-easy/ui"
 import React from "react"
 
-export function BoxTest() {
+export function SimpleBox() {
   return (
     <>
       <Box
@@ -24,5 +24,3 @@ export function BoxTest() {
     </>
   )
 }
-
-render(<BoxTest />)

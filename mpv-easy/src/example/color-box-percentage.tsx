@@ -12,7 +12,8 @@ const boxH = `${(1 / row) * 100}%`
 const colorList = Object.values(COLORS).map((i) =>
   i.toString(16).padStart(6, "0"),
 )
-function ColorBox() {
+
+export function ColorBoxPercentage() {
   console.log(boxW, boxH, N, colorList.length, colorList.join(","))
   return new Array(N).fill(0).map((_, k) => {
     return (
@@ -26,5 +27,3 @@ function ColorBox() {
     )
   })
 }
-
-render(<ColorBox />)

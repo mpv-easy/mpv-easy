@@ -75,4 +75,3 @@ export function Progress() {
     </Box>
   )
 }
-render(<Progress />)

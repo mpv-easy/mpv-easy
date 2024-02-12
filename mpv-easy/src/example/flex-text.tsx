@@ -4,7 +4,7 @@ import React from "react"
 const padding = 16
 const borderSize = 16
 const fontSize = 32
-function Flex() {
+export function FlexText() {
   return (
     <Box
       id="flex-main"
@@ -113,5 +113,3 @@ function Flex() {
     </Box>
   )
 }
-
-render(<Flex />)

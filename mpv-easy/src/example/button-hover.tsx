@@ -6,7 +6,7 @@ import React, { useState } from "react"
 command("set osc no")
 command("set window-dragging no")
 
-function ButtonHover() {
+export function ButtonHover() {
   const [count, setCount] = useState(0)
   console.log("============count: ", count)
   return (
@@ -60,5 +60,3 @@ function ButtonHover() {
     </Button>
   )
 }
-
-render(<ButtonHover />)

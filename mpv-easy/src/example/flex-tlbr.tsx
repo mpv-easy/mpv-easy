@@ -4,7 +4,7 @@ import { PropertyBool, command, observeProperty } from "@mpv-easy/tool"
 import { Box, render } from "@mpv-easy/ui"
 import React, { useEffect, useState } from "react"
 
-function Flex() {
+export function FlexTLBR() {
   return (
     <Box
       id="flexMain"
@@ -37,5 +37,3 @@ function Flex() {
     </Box>
   )
 }
-
-render(<Flex />)

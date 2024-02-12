@@ -1,14 +1,13 @@
-
-import React, { useEffect, useState } from 'react'
-import { Box, RootNode, createRender, renderNode } from "@mpv-easy/ui";
-import { addKeyBinding, getOsdSize, setPropertyBool } from '@mpv-easy/tool';
+import React, { useEffect, useState } from "react"
+import { Box, RootNode, createRender, renderNode } from "@mpv-easy/ui"
+import { addKeyBinding, getOsdSize, setPropertyBool } from "@mpv-easy/tool"
 
 const low = 10
 const high = 60
 const step = 5
 const count = (high - low) / step + 1
 
-const bg = '000000'
+const bg = "000000"
 const color = "FFFFFF"
 const cursorSize = 16
 export function Fps() {
@@ -17,13 +16,13 @@ export function Fps() {
   useEffect(() => {
     setPropertyBool("pause", true)
     addKeyBinding("space", "space", () => {
-      console.log('space')
+      console.log("space")
 
       for (let i = 0; i < count; i++) {
         const inv = i * step + low
-        console.log('inv: ', inv)
+        console.log("inv: ", inv)
         setInterval(() => {
-          setOffset(list => {
+          setOffset((list) => {
             const v = list[i]
             const newList = [...list]
             newList[i] = v + 10
@@ -42,30 +41,25 @@ export function Fps() {
 
     const offsetX = v - cursorSize / 2
     const offsetY = y
-    return <Box
-      position='absolute'
-      key={k}
-      x={x}
-      y={y}
-      width={width}
-      height={height}
-      backgroundColor={bg}
-    >
+    return (
       <Box
-        position='absolute'
-        x={offsetX}
-        y={offsetY}
-        width={cursorSize}
+        position="absolute"
+        key={k}
+        x={x}
+        y={y}
+        width={width}
         height={height}
-        backgroundColor={color}
-      />
-    </Box>
+        backgroundColor={bg}
+      >
+        <Box
+          position="absolute"
+          x={offsetX}
+          y={offsetY}
+          width={cursorSize}
+          height={height}
+          backgroundColor={color}
+        />
+      </Box>
+    )
   })
 }
-
-let currentRenderCount = -1;
-const render = createRender({
-  // fps: 1000,
-  // customRender: (node) => renderNode(node, ++currentRenderCount, 0)
-})
-render(<Fps />)

@@ -1,10 +1,9 @@
-import { Box, Button, render } from "@mpv-easy/ui"
+import { Box, Button } from "@mpv-easy/ui"
 import React from "react"
 
 const padding = 16
 const borderSize = 16
-const fontSize = 32
-function FlexWheel() {
+export function WheelEvent() {
   return (
     <Box
       id="flex-main"
@@ -113,5 +112,3 @@ function FlexWheel() {
     </Box>
   )
 }
-
-render(<FlexWheel />)

@@ -9,7 +9,7 @@ command("set osc no")
 command("set window-dragging no")
 
 const pauseProp = new PropertyBool("pause")
-function Play() {
+export function SimplePlay() {
   const pauseIcon = ICON.Pause
   const playIcon = ICON.Play
   const [pause, setPause] = usePropertyBool("pause", pauseProp.value)
@@ -41,5 +41,3 @@ function Play() {
     />
   )
 }
-
-render(<Play />)
