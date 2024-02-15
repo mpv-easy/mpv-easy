@@ -333,9 +333,11 @@ export function createRender({
       reconciler.updateContainer(reactNode, container, null, null)
       customRender(getRootNode())
     }
-    new PropertyNative<MpvPropertyTypeMap["osd-dimensions"]>(
+    const dim = new PropertyNative<MpvPropertyTypeMap["osd-dimensions"]>(
       "osd-dimensions",
-    ).observe((value) => {
+    )
+    renderRootNode(dim.value)
+    dim.observe((value) => {
       renderRootNode(value)
     })
   }

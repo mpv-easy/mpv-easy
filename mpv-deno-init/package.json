@@ -1,0 +1,35 @@
+{
+  "name": "@mpv-easy/deno-init",
+  "version": "0.1.6-alpha.3",
+  "private": true,
+  "description": "",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.js",
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "scripts": {
+    "build": "esbuild ./src/*.(ts|tsx) --bundle --outdir=../mpv-deno/dist --charset=utf8 --format=iife",
+    "copy-js": "cp -r ./dist/*.js $MPV_SCRIPT_DENO_DIR/",
+    "copy-dll": "cp ./dist/*.dll $MPV_SCRIPT_DENO_DIR/../scripts",
+    "copy": "npm run copy-js && npm run copy-dll"
+  },
+  "devDependencies": {},
+  "dependencies": {
+    "@mpv-easy/assdraw": "workspace:*",
+    "@mpv-easy/mpv-easy": "workspace:*",
+    "@mpv-easy/polyfill": "workspace:*",
+    "@mpv-easy/tool": "workspace:*",
+    "@mpv-easy/ui": "workspace:*",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-reconciler": "^0.29.0",
+    "@types/lodash-es": "^4.17.12",
+    "@types/react": "^18.2.55",
+    "@types/react-reconciler": "^0.28.8",
+    "@types/react-redux": "^7.1.33",
+    "typescript": "^5.3.3",
+    "@rematch/core": "^2.2.0",
+    "@rematch/select": "^3.1.2"
+  }
+}

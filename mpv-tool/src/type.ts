@@ -43,6 +43,7 @@ export interface AddKeyBindingFlags {
 }
 
 export interface MpvOsdOverlay {
+  id?: number,
   data: string
   res_x: number
   res_y: number
@@ -78,7 +79,7 @@ export interface FileInfo {
 export type MPV = {
   command(command: string): true | undefined
 
-  commandv(...args: readonly string[]): true | undefined
+  commandv(...args: string[]): true | undefined
 
   command_native(table: unknown, def?: unknown): unknown
 
@@ -87,7 +88,7 @@ export type MPV = {
     fn?: (success: boolean, result: unknown, error: string | undefined) => void,
   ): unknown
 
-  abort_async_command(t: unknown): void
+  abort_async_command(t: number): void
 
   get_property(name: string, def: string): string
   get_property(name: string, def?: string): string | undefined
@@ -110,7 +111,7 @@ export type MPV = {
   set_property_number(name: string, value: number): true | undefined
 
   set_property_native(name: string, value: unknown): true | undefined
-  set_property_string(name: string, value: unknown): true | undefined
+  set_property_string(name: string, value: string): true | undefined
 
   get_time(): number
   set_osd_ass(res_x: number, res_y: number, data: string): unknown
@@ -168,7 +169,7 @@ export type MPV = {
 
   unobserve_property(fn: (...args: unknown[]) => void): void
 
-  get_opt(key: string): string
+  get_opt(key: string, def?: string): string
 
   get_script_name(): string
 

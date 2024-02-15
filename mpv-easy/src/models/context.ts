@@ -89,7 +89,7 @@ export const context = createModel<RootModel>()({
     },
     setDuration(state, value: number) {
       state[pluginName].player.duration = value
-      setPropertyNumber("duration", value)
+      // setPropertyNumber("duration", value)
       return { ...state }
     },
 

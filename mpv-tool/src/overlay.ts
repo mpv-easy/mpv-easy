@@ -29,10 +29,7 @@ export class Overlay {
   }
 
   remove() {
-    commandNativeAsync({
-      name: "overlay-remove",
-      id: this.id,
-    })
+    command(`overlay-remove ${this.id}`);
   }
 
   destroy() {

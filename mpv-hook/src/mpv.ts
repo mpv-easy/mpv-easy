@@ -1,5 +1,5 @@
 import {
-  ColorFormat,
+  // ColorFormat,
   getPropertyBool,
   getPropertyNumber,
   observeProperty,
@@ -27,7 +27,7 @@ export function useTimePos() {
   return [timePos, setTimePos]
 }
 
-export function useColorFormat() {
-  const [prop, setProp] = useState(ColorFormat.Bgra)
-  return [[prop, setProp]]
-}
+// export function useColorFormat() {
+//   const [prop, setProp] = useState(ColorFormat.Bgra)
+//   return [[prop, setProp]]
+// }

@@ -1,0 +1,14 @@
+{
+  "name": "@mpv-easy/deno",
+  "version": "0.1.6-alpha.3",
+  "private": true,
+  "description": "",
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "scripts": {
+  },
+  "devDependencies": {},
+  "dependencies": {
+  }
+}

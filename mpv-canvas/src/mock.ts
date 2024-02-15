@@ -585,7 +585,7 @@ export function createMpvMock(
       // console.log("command_native_async: ")
       return true
     },
-    abort_async_command: function (t: unknown): void {
+    abort_async_command: function (t: number): void {
       // console.log("Function not implemented.")
     },
     get_property: function (name: string, def: string): string {

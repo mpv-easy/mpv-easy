@@ -21,7 +21,7 @@ export function command(command: string): true | undefined {
   return getMPV().command(command)
 }
 
-export function commandv(...args: readonly string[]): true | undefined {
+export function commandv(...args: string[]): true | undefined {
   return getMPV().commandv(...args)
 }
 
@@ -36,7 +36,7 @@ export function commandNativeAsync(
   return getMPV().command_native_async(table, fn)
 }
 
-export function abortAsyncCommand(t: unknown) {
+export function abortAsyncCommand(t: number) {
   return getMPV().abort_async_command(t)
 }
 
@@ -108,11 +108,11 @@ export type KeyEvent = {
   event: "up" | "down" | "press"
   is_mouse: boolean
   key_name?:
-    | "WHEEL_DOWN"
-    | "WHEEL_UP"
-    | "MBTN_LEFT"
-    | "MBTN_RIGHT"
-    | (string & {})
+  | "WHEEL_DOWN"
+  | "WHEEL_UP"
+  | "MBTN_LEFT"
+  | "MBTN_RIGHT"
+  | (string & {})
 }
 
 export function addKeyBinding(
