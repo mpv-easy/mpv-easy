@@ -108,7 +108,7 @@ jobs:
           cp ./bin/rs-ext-windows-latest ./mpy-easy-windows/scripts/mpv-easy-config/bin/rs-ext-windows
 
           cp ./bin/rs-ext-windows-latest ./mpy-easy-deno-windows/scripts/mpv-easy-config/bin/rs-ext-windows
-          cp ./dll/mpv-deno-windows.dll ./mpy-easy-deno-windows/scripts/mpv-deno-windows.dll
+          cp ./dll/mpv-deno-windows-latest.dll ./mpy-easy-deno-windows/scripts/mpv-deno-windows.dll
           rm ./mpy-easy-deno-windows/scripts/mpv-easy.js
           mkdir ./mpy-easy-deno-windows/scripts-deno
           cp ./mpv-easy/bundle/mpv-easy.js ./mpy-easy-deno-windows/scripts-deno/mpv-easy.js
