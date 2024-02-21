@@ -112,6 +112,7 @@ jobs:
           rm ./mpy-easy-deno-windows/scripts/mpv-easy.js
           mkdir ./mpy-easy-deno-windows/scripts-deno
           cp ./mpv-easy/bundle/mpv-easy.js ./mpy-easy-deno-windows/scripts-deno/mpv-easy.js
+          mv ./mpy-easy-deno-windows/scripts/mpv-easy-config ./mpy-easy-deno-windows/scripts-deno/mpv-easy-config
 
           cd ./mpy-easy-macos
           zip -r -q ./mpy-easy-macos.zip .
