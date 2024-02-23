@@ -1,4 +1,4 @@
-import type { MPV } from '@mpv-easy/tool'
+import type { MPV } from "@mpv-easy/tool"
 
 export type MpvWaitEvent = {
   event: string
@@ -16,10 +16,13 @@ export type MpvC = {
   __set_property_number: (name: string, v: number) => void
   __set_property_bool: (name: string, v: boolean) => void
 
-  __file_size: (path: string) => number,
-  __file_exists: (path: string) => boolean,
-  __is_file: (path: string) => boolean,
-  __read_dir: (path: string) => string[],
+  __command_string: (cmd: string) => void
+  __commandv: (args: (string | number)[]) => void
+  __command_json: (args: string[]) => string
+  __file_size: (path: string) => number
+  __file_exists: (path: string) => boolean
+  __is_file: (path: string) => boolean
+  __read_dir: (path: string) => string[]
 
   __request_event: (name: string, flag: boolean) => any
   __observe_property: (id: number, name: string, format?: string) => any
@@ -29,18 +32,13 @@ export type MpvC = {
   __set_last_error: (s: string) => void
   __wait_event: (wait: number) => MpvWaitEvent
 
-  __command_string: (cmd: string) => void
-  __commandv: (args: (string | number)[]) => void
-
-
-  __read_file: (name: string,) => string
+  __read_file: (name: string) => string
   __write_file: (name: string, text: string) => void
 }
 
 export type InnerMpvC = {
   _legacy_overlay: MpvOsdOverlay
   _keep_running: boolean
-
 }
 
 declare global {
@@ -58,9 +56,9 @@ declare global {
   var clearInterval: (id: number) => void
   var clearTimeout: (id: number) => void
 
-  var print: (...args: any[]) => void;
-  function dump(...args: any[]): void;
-  function exit(): void;
+  var print: (...args: any[]) => void
+  function dump(...args: any[]): void
+  function exit(): void
 }
 
-export { }
+export {}

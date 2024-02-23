@@ -38,7 +38,7 @@
       "@mpv-easy/mpv-easy": ["./mpv-easy/src"],
       "@mpv-easy/canvas": ["./mpv-canvas/src"],
       "@mpv-easy/playground": ["./mpv-playground/src"],
-      "@mpv-easy/deno-init": ["./mpv-deno-init/src"]
+      "@mpv-easy/js-plugin-init": ["./mpv-js-plugin-init/src"]
     }
   }
 }

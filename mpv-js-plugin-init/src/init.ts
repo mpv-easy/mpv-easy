@@ -1,11 +1,10 @@
+import type { MPV } from "@mpv-easy/tool"
 
-import { MPV, readdir } from "@mpv-easy/tool"
-
-const log = globalThis.print;
+const log = globalThis.print
 
 const mp = globalThis.mp || {}
 globalThis.mp = mp
-mp.msg = { log: log } as MPV["msg"]
+mp.msg = { log } as MPV["msg"]
 mp.msg.verbose = log.bind(null, "v")
 
 const levels = ["fatal", "error", "warn", "info", "debug", "trace"] as const
@@ -25,7 +24,10 @@ mp.get_osd_margins = function get_osd_margins() {
 }
 
 mp.command_native = (table) => {
-  // log("command_native: " + JSON.stringify(table))
+  if (Array.isArray(table)) {
+    let rt = __mp.__command_json(table)
+    return rt
+  }
   return __mp.__command_native(table)
 }
 mp.command = (cmd: string) => {
@@ -40,7 +42,7 @@ mp.commandv = (...args: string[]) => {
   return undefined
 }
 
-let command_native_async_id = 1;
+let command_native_async_id = 1
 mp.command_native_async = (table, fn) => {
   // log("command_native_async: ")
   // const s = mp.command_native_async(table)
@@ -83,12 +85,10 @@ mp.get_property_native = <T>(name: string): T => {
   try {
     const v = JSON.parse(s)
     return v
-  }
-  catch (e) {
+  } catch (e) {
     return s as T
   }
 }
-
 
 mp.get_property_number = (name) => {
   // log('get_property_number: ' + name.toString())
@@ -221,8 +221,8 @@ function runObserve() {
 
 mp.get_opt = (key, def) => {
   // log("get_opt: " + key + def)
-  var v = mp.get_property_native<any>("options/script-opts")?.[key];
-  return (typeof v != "undefined") ? v : def;
+  var v = mp.get_property_native<any>("options/script-opts")?.[key]
+  return typeof v != "undefined" ? v : def
 }
 
 mp.get_script_name = (...args) => {
@@ -271,18 +271,17 @@ mp.create_osd_overlay = () => {
         this.z,
         this.hidden ? "yes" : "no",
         this.compute_bounds ? "yes" : "no",
-      ]
-      __mp.__commandv(cmd)
-      return {
-        x0: 0,
-        y0: 0,
-        x1: 0,
-        y1: 0,
-      }
+      ].map((i) => i.toString())
+      const box = __mp.__command_json(cmd)
+      const obj = JSON.parse(box)
+      return obj
     },
 
     remove() {
       // log('ovl remove: ' + this.id)
+      if (this.id) {
+        __mp.__commandv(["remove", this.id.toString(), "none", ""])
+      }
     },
   }
   // // log('create_osd_overlay: ', args.join(', '))
@@ -363,7 +362,7 @@ mp.utils = {
       ctime: 0,
       size,
       is_dir: !is_file,
-      is_file
+      is_file,
     }
   },
   split_path(path) {
@@ -396,38 +395,37 @@ mp.utils = {
     __mp.__write_file(path, text)
   },
   compile_js(...args) {
-    log("compile_js: " + args.join(", "))
-    return () => { }
+    // log("compile_js: " + args.join(", "))
+    return () => {}
   },
 }
 
 let timeoutQueue: {
-  id: number,
-  delay: number,
-  createTime: number,
-  fn: () => void;
+  id: number
+  delay: number
+  createTime: number
+  fn: () => void
   execTime: number
 }[] = []
 
-
-let timeoutId = 1;
+let timeoutId = 1
 function setTimeout(fn: () => void, delay = 1000) {
-  const id = timeoutId++;
+  const id = timeoutId++
   const createTime = Date.now()
   timeoutQueue.push({
     id,
     fn,
     delay,
     createTime: Date.now(),
-    execTime: createTime + delay
+    execTime: createTime + delay,
   })
   return id
 }
 
-let intervalId = 1;
+let intervalId = 1
 let intervalIdMap: Record<number, number> = {}
 function setInterval(fn: () => void, delay = 1000) {
-  const id = intervalId++;
+  const id = intervalId++
   // log('setInterval: ' + fn + delay)
   function execute() {
     fn()
@@ -467,7 +465,7 @@ globalThis.clearInterval = (id: number) => {
 }
 globalThis.clearTimeout = (id: number) => {
   // log('clearTimeout: ' + id)
-  const index = timeoutQueue.findIndex(i => i.id === id)
+  const index = timeoutQueue.findIndex((i) => i.id === id)
   if (index >= 0) {
     timeoutQueue.splice(index, 1)
   }
@@ -484,4 +482,3 @@ globalThis.__mp_tick = () => {
 globalThis.__mp_main = () => {
   // log("__mp_main")
 }
-

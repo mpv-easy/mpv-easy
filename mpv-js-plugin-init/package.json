@@ -1,5 +1,5 @@
 {
-  "name": "@mpv-easy/deno-init",
+  "name": "@mpv-easy/js-plugin-init",
   "version": "0.1.6-alpha.3",
   "private": true,
   "description": "",
@@ -9,7 +9,8 @@
   "author": "",
   "license": "ISC",
   "scripts": {
-    "build": "esbuild ./src/*.(ts|tsx) --bundle --outdir=../mpv-deno/dist --charset=utf8 --format=iife",
+    "build": "esbuild ./src/*.(ts|tsx) --bundle --outdir=./dist --charset=utf8 --format=iife",
+    "build-minify": "esbuild ./src/*.(ts|tsx) --bundle --outdir=./dist --charset=utf8 --format=iife --minify",
     "copy-js": "cp -r ./dist/*.js $MPV_SCRIPT_DENO_DIR/",
     "copy-dll": "cp ./dist/*.dll $MPV_SCRIPT_DENO_DIR/../scripts",
     "copy": "npm run copy-js && npm run copy-dll"

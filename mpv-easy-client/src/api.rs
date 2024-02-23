@@ -26,6 +26,13 @@ pub fn command_string<S: AsRef<str>>(cmd: S) {
     }
 }
 
+pub fn command_json<I: IntoIterator<Item = S>, S: AsRef<str>>(cmd: I) -> serde_json::Value {
+    unsafe {
+        let h = GLOBAL_MP_HANDLE.as_deref_mut().unwrap();
+        return h.command_json(cmd).unwrap();
+    }
+}
+
 pub fn wait_event(timeout: f64) -> Event {
     unsafe {
         let e = GLOBAL_MP_HANDLE.as_deref_mut().unwrap().wait_event(timeout);

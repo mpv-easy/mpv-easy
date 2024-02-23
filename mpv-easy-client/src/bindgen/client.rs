@@ -22,3 +22,49 @@ pub const mpv_format_MPV_FORMAT_NODE_MAP: mpv_format = 8;
 pub const mpv_format_MPV_FORMAT_BYTE_ARRAY: mpv_format = 9;
 #[doc = " Data format for options and properties. The API functions to get/set\n properties and options support multiple formats, and this enum describes\n them."]
 pub type mpv_format = ::std::os::raw::c_uint;
+
+#[doc = " Generic data storage.\n\n If mpv writes this struct (e.g. via mpv_get_property()), you must not change\n the data. In some cases (mpv_get_property()), you have to free it with\n mpv_free_node_contents(). If you fill this struct yourself, you're also\n responsible for freeing it, and you must not call mpv_free_node_contents()."]
+#[repr(C)]
+#[derive(Copy, Clone )]
+pub struct mpv_node {
+    pub u: mpv_node__bindgen_ty_1,
+    #[doc = " Type of the data stored in this struct. This value rules what members in\n the given union can be accessed. The following formats are currently\n defined to be allowed in mpv_node:\n\n  MPV_FORMAT_STRING       (u.string)\n  MPV_FORMAT_FLAG         (u.flag)\n  MPV_FORMAT_INT64        (u.int64)\n  MPV_FORMAT_DOUBLE       (u.double_)\n  MPV_FORMAT_NODE_ARRAY   (u.list)\n  MPV_FORMAT_NODE_MAP     (u.list)\n  MPV_FORMAT_BYTE_ARRAY   (u.ba)\n  MPV_FORMAT_NONE         (no member)\n\n If you encounter a value you don't know, you must not make any\n assumptions about the contents of union u."]
+    pub format: mpv_format,
+}
+
+#[repr(C)]
+#[derive(Copy, Clone )]
+pub union mpv_node__bindgen_ty_1 {
+    pub string: *mut ::std::os::raw::c_char,
+    #[doc = " valid if format==MPV_FORMAT_STRING"]
+    pub flag: ::std::os::raw::c_int,
+    #[doc = " valid if format==MPV_FORMAT_FLAG"]
+    pub int64: i64,
+    #[doc = " valid if format==MPV_FORMAT_INT64"]
+    pub double_: f64,
+    #[doc = " valid if format==MPV_FORMAT_DOUBLE */\n/**\n valid if format==MPV_FORMAT_NODE_ARRAY\n    or if format==MPV_FORMAT_NODE_MAP"]
+    pub list: *mut mpv_node_list,
+    #[doc = " valid if format==MPV_FORMAT_BYTE_ARRAY"]
+    pub ba: *mut mpv_byte_array,
+}
+#[doc = " (see mpv_node)"]
+#[repr(C)]
+#[derive(Debug, Copy, Clone)]
+pub struct mpv_node_list {
+    #[doc = " Number of entries. Negative values are not allowed."]
+    pub num: ::std::os::raw::c_int,
+    #[doc = " MPV_FORMAT_NODE_ARRAY:\n  values[N] refers to value of the Nth item\n\n MPV_FORMAT_NODE_MAP:\n  values[N] refers to value of the Nth key/value pair\n\n If num > 0, values[0] to values[num-1] (inclusive) are valid.\n Otherwise, this can be NULL."]
+    pub values: *mut mpv_node,
+    #[doc = " MPV_FORMAT_NODE_ARRAY:\n  unused (typically NULL), access is not allowed\n\n MPV_FORMAT_NODE_MAP:\n  keys[N] refers to key of the Nth key/value pair. If num > 0, keys[0] to\n  keys[num-1] (inclusive) are valid. Otherwise, this can be NULL.\n  The keys are in random order. The only guarantee is that keys[N] belongs\n  to the value values[N]. NULL keys are not allowed."]
+    pub keys: *mut *mut ::std::os::raw::c_char,
+}
+
+#[doc = " (see mpv_node)"]
+#[repr(C)]
+#[derive(Debug, Copy, Clone)]
+pub struct mpv_byte_array {
+    #[doc = " Pointer to the data. In what format the data is stored is up to whatever\n uses MPV_FORMAT_BYTE_ARRAY."]
+    pub data: *mut ::std::os::raw::c_void,
+    #[doc = " Size of the data pointed to by ptr."]
+    pub size: usize,
+}

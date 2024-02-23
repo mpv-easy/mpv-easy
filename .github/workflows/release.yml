@@ -6,11 +6,8 @@ on:
       - "v*"
 
 jobs:
-  build-ext:
-    strategy:
-      matrix:
-        runs-on: [ubuntu-latest, macos-latest, windows-latest]
-    runs-on: ${{ matrix.runs-on }}
+  build-ext-windows:
+    runs-on: windows-latest
     steps:
       - uses: actions/checkout@v4
       - name: Install latest nightly
@@ -18,50 +15,111 @@ jobs:
         with:
           toolchain: nightly
           override: true
-      - name: build ${{ matrix.runs-on }}
+
+      - name: build windows-latest
         run: |
-          cd ./mpv-rs-ext
-          cargo build --release
+          node --version
+          npm --version
+
+          npm install -g pnpm
+          pnpm setup
+          pnpm i
+          pnpm --version
+
+          cd ./mpv-js-plugin-init
+          npm i esbuild -g
+          esbuild --version
+
+          esbuild ./src/init.ts --bundle --outdir=./dist --charset=utf8 --format=iife
+          esbuild ./src/polyfill.ts --bundle --outdir=./dist --charset=utf8 --format=iife
+
+          cp -r ./dist ../mpv-deno
+          cp -r ./dist ../mpv-qjs
           cd ..
 
-          npm i pnpm -g
-          pnpm i
-          cd ./mpv-deno-init
-          pnpm run build
+          cd ./mpv-rs-ext
+          cargo build --release --out-dir=./output -Z unstable-options
           cd ..
 
           cd ./mpv-deno
-          cargo build --release
+          cargo build --release --out-dir=./output -Z unstable-options
           cd ..
 
-      - name: windows build
-        if: startsWith(matrix.runs-on, 'windows')
+          cd ./mpv-qjs
+          cargo build --release --out-dir=./output -Z unstable-options
+          cd ..
+
+          mv ./mpv-rs-ext/output/rs-ext.exe ./rs-ext-windows
+          mv ./mpv-deno/output/mpv_deno.dll ./mpv-deno-windows.dll
+          mv ./mpv-qjs/output/mpv_qjs.dll ./mpv-qjs-windows.dll
+
+      - name: Upload windows Artifact ext
+        uses: actions/upload-artifact@v4
+        with:
+          name: rs-ext-windows
+          path: ./rs-ext-windows
+
+      - name: Upload windows Artifact deno
+        uses: actions/upload-artifact@v4
+        with:
+          name: mpv-deno-windows
+          path: ./mpv-deno-windows.dll
+
+      - name: Upload windows Artifact qjs
+        uses: actions/upload-artifact@v4
+        with:
+          name: mpv-qjs-windows
+          path: ./mpv-qjs-windows.dll
+
+  build-ext-macos:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install latest nightly
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: nightly
+          override: true
+
+      - name: build macos-latest
         run: |
-          mv ./mpv-rs-ext/target/release/rs-ext.exe ./rs-ext-${{ matrix.runs-on }}
-          mv ./mpv-deno/target/release/mpv_deno.dll ./mpv-deno-${{ matrix.runs-on }}.dll
+          cd ./mpv-rs-ext
+          cargo build --release --out-dir=./output -Z unstable-options
+          cd ..
 
-      - name: macos build
-        if: startsWith(matrix.runs-on, 'macos')
-        run: mv ./mpv-rs-ext/target/release/rs-ext ./rs-ext-${{ matrix.runs-on }}
-      - name: ubuntu build
-        if: startsWith(matrix.runs-on, 'ubuntu')
-        run: mv ./mpv-rs-ext/target/release/rs-ext ./rs-ext-${{ matrix.runs-on }}
+          mv ./mpv-rs-ext/output/rs-ext ./rs-ext-macos
 
-      - name: Upload ext ${{ matrix.runs-on }} Artifact
+      - name: Upload macos Artifact ext
         uses: actions/upload-artifact@v4
         with:
-          name: rs-ext-${{ matrix.runs-on }}
-          path: ./rs-ext-${{ matrix.runs-on }}
+          name: rs-ext-macos
+          path: ./rs-ext-macos
 
-      - name: Upload dll ${{ matrix.runs-on }} Artifact
-        if: startsWith(matrix.runs-on, 'windows')
+  build-ext-ubuntu:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install latest nightly
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: nightly
+          override: true
+
+      - name: build ubuntu-latest
+        run: |
+          cd ./mpv-rs-ext
+          cargo build --release --out-dir=./output -Z unstable-options
+          cd ..
+
+          mv ./mpv-rs-ext/output/rs-ext ./rs-ext-ubuntu
+      - name: Upload ubuntu Artifact ext
         uses: actions/upload-artifact@v4
         with:
-          name: mpv-deno-${{ matrix.runs-on }}
-          path: ./mpv-deno-${{ matrix.runs-on }}.dll
+          name: rs-ext-ubuntu
+          path: ./rs-ext-ubuntu
 
   release:
-    needs: [build-ext]
+    needs: [build-ext-windows, build-ext-macos, build-ext-ubuntu]
     name: release
     runs-on: ubuntu-latest
     permissions:
@@ -71,14 +129,20 @@ jobs:
 
       - uses: actions/download-artifact@v4
         with:
-          path: bin
+          path: rs-ext
           pattern: rs-ext-*
           merge-multiple: true
 
       - uses: actions/download-artifact@v4
         with:
-          path: dll
+          path: deno-dll
           pattern: mpv-deno-*
+          merge-multiple: true
+
+      - uses: actions/download-artifact@v4
+        with:
+          path: qjs-dll
+          pattern: mpv-qjs-*
           merge-multiple: true
 
       - name: "build ts"
@@ -89,30 +153,40 @@ jobs:
 
       - name: "create dist"
         run: |
-          mkdir ./dist/scripts/mpv-easy-config/bin -p
+          mkdir ./dist/scripts/mpv-easy-config/rs-ext -p
 
           cp ./mpv-easy/es5/mpv-easy.js ./dist/scripts/mpv-easy.js
           cp -r ./mpv-easy/fonts ./dist
           cp -r ./mpv-anime4k/shaders ./dist
           cp ./mpv-easy/mpv-conf/mpv.conf ./dist/mpv.conf
 
-          chmod 777 ./bin/*
+          chmod 777 ./rs-ext/*
 
           cp -r ./dist ./mpy-easy-macos
           cp -r ./dist ./mpy-easy-linux
           cp -r ./dist ./mpy-easy-windows
           cp -r ./dist ./mpy-easy-deno-windows
+          cp -r ./dist ./mpy-easy-qjs-windows
 
-          cp ./bin/rs-ext-macos-latest ./mpy-easy-macos/scripts/mpv-easy-config/bin/rs-ext-macos
-          cp ./bin/rs-ext-ubuntu-latest ./mpy-easy-linux/scripts/mpv-easy-config/bin/rs-ext-linux
-          cp ./bin/rs-ext-windows-latest ./mpy-easy-windows/scripts/mpv-easy-config/bin/rs-ext-windows
+          cp ./rs-ext/rs-ext-macos ./mpy-easy-macos/scripts/mpv-easy-config/rs-ext/rs-ext-macos
+          cp ./rs-ext/rs-ext-ubuntu ./mpy-easy-linux/scripts/mpv-easy-config/rs-ext/rs-ext-linux
+          cp ./rs-ext/rs-ext-windows ./mpy-easy-windows/scripts/mpv-easy-config/rs-ext/rs-ext-windows
+          cp ./rs-ext/rs-ext-windows ./mpy-easy-deno-windows/scripts/mpv-easy-config/rs-ext/rs-ext-windows
+          cp ./rs-ext/rs-ext-windows ./mpy-easy-qjs-windows/scripts/mpv-easy-config/rs-ext/rs-ext-windows
 
-          cp ./bin/rs-ext-windows-latest ./mpy-easy-deno-windows/scripts/mpv-easy-config/bin/rs-ext-windows
-          cp ./dll/mpv-deno-windows-latest.dll ./mpy-easy-deno-windows/scripts/mpv-deno-windows.dll
+          cp ./deno-dll/mpv-deno-windows.dll ./mpy-easy-deno-windows/scripts/mpv-deno-windows.dll
           rm ./mpy-easy-deno-windows/scripts/mpv-easy.js
           mkdir ./mpy-easy-deno-windows/scripts-deno
           cp ./mpv-easy/bundle/mpv-easy.js ./mpy-easy-deno-windows/scripts-deno/mpv-easy.js
           mv ./mpy-easy-deno-windows/scripts/mpv-easy-config ./mpy-easy-deno-windows/scripts-deno/mpv-easy-config
+
+
+          cp ./qjs-dll/mpv-qjs-windows.dll ./mpy-easy-qjs-windows/scripts/mpv-qjs-windows.dll
+          rm ./mpy-easy-qjs-windows/scripts/mpv-easy.js
+          mkdir ./mpy-easy-qjs-windows/scripts-qjs
+          cp ./mpv-easy/bundle/mpv-easy.js ./mpy-easy-qjs-windows/scripts-qjs/mpv-easy.js
+          mv ./mpy-easy-qjs-windows/scripts/mpv-easy-config ./mpy-easy-qjs-windows/scripts-qjs/mpv-easy-config
+
 
           cd ./mpy-easy-macos
           zip -r -q ./mpy-easy-macos.zip .
@@ -129,6 +203,10 @@ jobs:
           cd ./mpy-easy-deno-windows
           zip -r -q ./mpy-easy-deno-windows.zip .
           cd ..
+
+          cd ./mpy-easy-qjs-windows
+          zip -r -q ./mpy-easy-qjs-windows.zip .
+          cd ..
       - uses: ncipollo/release-action@v1
         with:
-          artifacts: "./mpy-easy-deno-windows/mpy-easy-deno-windows.zip,./mpy-easy-windows/mpy-easy-windows.zip,./mpy-easy-linux/mpy-easy-linux.zip,./mpy-easy-macos/mpy-easy-macos.zip"
+          artifacts: "./mpy-easy-qjs-windows/mpy-easy-qjs-windows.zip,./mpy-easy-deno-windows/mpy-easy-deno-windows.zip,./mpy-easy-windows/mpy-easy-windows.zip,./mpy-easy-linux/mpy-easy-linux.zip,./mpy-easy-macos/mpy-easy-macos.zip"

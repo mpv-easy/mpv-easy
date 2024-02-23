@@ -7,23 +7,23 @@ function Counter() {
 
   useEffect(() => {
     setInterval(() => {
-      setX(x => x + 10)
+      setX((x) => x + 10)
     }, 1000)
   }, [])
 
-  return <Box
-    id='qjs-box'
-    position='absolute'
-    x={x}
-    y={200}
-    width={100}
-    height={200}
-    backgroundColor='00FF00'
-    zIndex={100}
-  />
+  return (
+    <Box
+      id="qjs-box"
+      position="absolute"
+      x={x}
+      y={200}
+      width={100}
+      height={200}
+      backgroundColor="00FF00"
+      zIndex={100}
+    />
+  )
 }
 export const renderCounter = () => {
-  render(
-    <Counter />
-  )
+  render(<Counter />)
 }
