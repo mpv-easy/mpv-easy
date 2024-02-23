@@ -1,5 +1,6 @@
-use crate::api::{
-    self, get_property_string, set_property_bool, set_property_number, set_property_string,
+use mpv_easy_client::api::{
+    self, command_json, get_property_string, set_property_bool, set_property_number,
+    set_property_string,
 };
 use api::{commandv, get_property};
 use deno_core::*;
@@ -20,7 +21,7 @@ fn op_get_property_string(#[string] name: String) -> Result<String, deno_core::e
 
 #[op2(fast)]
 fn op_command_string(#[string] cmd: String) -> Result<(), deno_core::error::AnyError> {
-    commandv(cmd.split(" "));
+    commandv(cmd.split(' '));
     Ok(())
 }
 
@@ -115,9 +116,9 @@ fn exec_command(name: String, args: Vec<String>) -> String {
         (&name, args.as_slice())
     };
     let output = Command::new(cmd_name).args(cmd_args).output().unwrap();
-    let stdout = String::from_utf8(output.stdout).unwrap();
+    
 
-    stdout
+    String::from_utf8(output.stdout).unwrap()
 }
 #[op2]
 #[string]
@@ -127,6 +128,14 @@ fn op_command_native(
 ) -> Result<String, deno_core::error::AnyError> {
     let stdout = exec_command(name, args);
     Ok(stdout)
+}
+
+#[op2]
+#[string]
+fn op_command_json(#[serde] args: Vec<String>) -> Result<String, deno_core::error::AnyError> {
+    let js = command_json(args);
+    let s = js.to_string();
+    Ok(s)
 }
 
 #[op2]
@@ -159,14 +168,15 @@ pub fn new_runtime() -> JsRuntime {
             op_read_dir::DECL,
             op_command_native::DECL,
             op_command_native_async::DECL,
+            op_command_json::DECL,
         ]),
         ..Default::default()
     };
 
     // Initialize a runtime instance
-    let runtime = JsRuntime::new(RuntimeOptions {
+    
+    JsRuntime::new(RuntimeOptions {
         extensions: vec![ext],
         ..Default::default()
-    });
-    runtime
+    })
 }

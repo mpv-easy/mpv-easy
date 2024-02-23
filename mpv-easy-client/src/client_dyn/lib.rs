@@ -4,6 +4,11 @@ use std::ops::{Deref, DerefMut};
 use std::os::raw::c_int;
 use std::ptr::slice_from_raw_parts_mut;
 
+use crate::bindgen::client::{
+    mpv_format_MPV_FORMAT_INT64, mpv_format_MPV_FORMAT_NODE_ARRAY, mpv_format_MPV_FORMAT_STRING,
+    mpv_node, mpv_node__bindgen_ty_1, mpv_node_list,
+};
+use crate::client_dyn::common::mpv_node_to_json;
 // use crate::bindgen::client::{mpv_client_id, mpv_client_name, mpv_create_client, mpv_create_weak_client, mpv_event_log_message, mpv_event_name, mpv_event_property, mpv_event_start_file, mpv_wait_event};
 use crate::client_dyn::ffi::{
     mpv_command, mpv_command_async, mpv_command_string, mpv_event_client_message,
@@ -114,9 +119,9 @@ pub struct ClientMessage(*const mpv_event_client_message);
 /// Data associated with `Event::Hook`.
 pub struct Hook(*const mpv_event_hook);
 use super::ffi::{
-    mpv_client_id, mpv_client_name, mpv_create, mpv_create_client, mpv_create_weak_client,
-    mpv_destroy, mpv_error, mpv_error_string, mpv_event, mpv_event_id, mpv_event_name, mpv_handle,
-    mpv_wait_event,
+    mpv_client_id, mpv_client_name, mpv_command_node, mpv_create, mpv_create_client,
+    mpv_create_weak_client, mpv_destroy, mpv_error, mpv_error_string, mpv_event, mpv_event_id,
+    mpv_event_name, mpv_handle, mpv_wait_event,
 };
 use super::format::Format;
 
@@ -272,6 +277,72 @@ impl Handle {
         unsafe { result!(mpv_command_string(self.as_mut_ptr(), ptr)) }
     }
 
+    pub fn command_json<I, S>(&mut self, args: I) -> Result<serde_json::Value>
+    where
+        I: IntoIterator<Item = S>,
+        S: AsRef<str>,
+    {
+        let args: Vec<String> = args.into_iter().map(|i| i.as_ref().to_string()).collect();
+
+        let cargs: Vec<_> = args
+            .iter()
+            .map(|i| CString::new(i.as_str()).unwrap().clone())
+            .collect();
+
+        let mut args_list_node = vec![];
+        // for (i, p) in args.into_iter().zip(cargs.into_iter()) {
+        for p in cargs.iter() {
+            let node = mpv_node {
+                u: mpv_node__bindgen_ty_1 {
+                    string: p.as_ptr() as *mut i8,
+                },
+                format: mpv_format_MPV_FORMAT_STRING,
+            };
+            args_list_node.push(node);
+        }
+        let args_list_node_ptr = args_list_node.as_ptr() as *mut mpv_node;
+
+        let mut args_list = mpv_node_list {
+            num: args_list_node.len() as i32,
+            values: args_list_node_ptr,
+            keys: 0 as *mut *mut i8,
+        };
+
+        let mut args_node = mpv_node {
+            u: mpv_node__bindgen_ty_1 {
+                // string: CString::new("").unwrap().as_ptr() as *mut i8, // string::a,
+                list: &args_list as *const _ as *mut mpv_node_list,
+            },
+            format: mpv_format_MPV_FORMAT_NODE_ARRAY,
+        };
+
+        let mut rt_node = mpv_node {
+            u: mpv_node__bindgen_ty_1 {
+                int64: 0, // string::a,
+            },
+            format: mpv_format_MPV_FORMAT_INT64,
+        };
+
+        let arg_ptr = &mut args_node as *mut mpv_node;
+        let rt_ptr = &mut rt_node as *mut mpv_node;
+
+        unsafe {
+            let e = mpv_command_node(self.as_mut_ptr(), arg_ptr, rt_ptr);
+
+            match e {
+                mpv_error::SUCCESS => {
+                    let js = mpv_node_to_json(&mut rt_node);
+                    return Ok(js);
+                }
+                _ => {
+                    println!("command_json error: {:?}", e);
+                }
+            }
+        }
+
+        return Ok(serde_json::Value::Null);
+    }
+
     /// Same as `Handle::command`, but run the command asynchronously.
     ///
     /// Commands are executed asynchronously. You will receive a
@@ -316,7 +387,13 @@ impl Handle {
     pub fn request_event(&mut self, mpv_event_id: u32, enable: bool) -> Result<()> {
         let handle = unsafe { self.as_mut_ptr() };
         // data.to_mpv(|data|
-        unsafe { result!(mpv_request_event(handle, mpv_event_id as c_int, enable.into())) }
+        unsafe {
+            result!(mpv_request_event(
+                handle,
+                mpv_event_id as c_int,
+                enable.into()
+            ))
+        }
         // })
     }
     /// Read the value of the given property.

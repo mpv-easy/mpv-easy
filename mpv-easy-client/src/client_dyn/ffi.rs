@@ -5,6 +5,8 @@ use std::ffi::{c_char, c_double, c_int, c_longlong, c_ulonglong, c_void};
 use libloading::{Library, Symbol};
 use once_cell::sync::Lazy;
 
+use crate::bindgen::client::mpv_node;
+
 type LazySymbol<T> = Lazy<Symbol<'static, T>>;
 
 pub static MPV_LIB: Lazy<Library> = Lazy::new(|| unsafe { Library::new("mpv.exe").unwrap() });
@@ -41,6 +43,10 @@ pub static mpv_create_weak_client: LazySymbol<
 pub static mpv_command: LazySymbol<
     unsafe extern "C" fn(*mut mpv_handle, *const *const c_char) -> mpv_error,
 > = Lazy::new(|| unsafe { MPV_LIB.get(b"mpv_command").unwrap() });
+
+pub static mpv_command_node: LazySymbol<
+    unsafe extern "C" fn(*mut mpv_handle, *const mpv_node, *const mpv_node) -> mpv_error,
+> = Lazy::new(|| unsafe { MPV_LIB.get(b"mpv_command_node").unwrap() });
 
 pub static mpv_command_string: LazySymbol<
     unsafe extern "C" fn(*mut mpv_handle, *const c_char) -> mpv_error,
@@ -81,12 +87,9 @@ pub static mpv_hook_continue: LazySymbol<
     unsafe extern "C" fn(*mut mpv_handle, c_ulonglong) -> mpv_error,
 > = Lazy::new(|| unsafe { MPV_LIB.get(b"mpv_hook_continue").unwrap() });
 
-
-
 pub static mpv_request_event: LazySymbol<
-    unsafe extern "C" fn(*mut mpv_handle,  c_int, c_int) -> mpv_error,
+    unsafe extern "C" fn(*mut mpv_handle, c_int, c_int) -> mpv_error,
 > = Lazy::new(|| unsafe { MPV_LIB.get(b"mpv_request_event").unwrap() });
-
 
 #[repr(i32)]
 #[allow(dead_code)]

@@ -27,6 +27,6 @@ export function MousePosBox() {
         height={size}
         backgroundColor={"00FFFF"}
       ></Box>
-    </Box >
+    </Box>
   )
 }

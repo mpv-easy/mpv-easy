@@ -29,7 +29,7 @@ export class Overlay {
   }
 
   remove() {
-    command(`overlay-remove ${this.id}`);
+    command(`overlay-remove ${this.id}`)
   }
 
   destroy() {
