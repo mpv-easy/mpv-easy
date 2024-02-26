@@ -30,24 +30,21 @@ jobs:
           cp -r ./dist ../mpv-qjs
           cd ..
 
-      - name: Install latest nightly
-        uses: actions-rs/toolchain@v1
-        with:
-            toolchain: nightly
-            override: true
+      - uses: actions-rust-lang/setup-rust-toolchain@v1
 
       - uses: msys2/setup-msys2@v2
       - shell: msys2 {0}
         run: |
-            pacman -S mingw-w64-x86_64-cmake --noconfirm
             pacman -S mingw-w64-x86_64-gcc --noconfirm
-            pacman -S mingw-w64-x86_64-mpv --noconfirm
             pacman -S mingw-w64-x86_64-clang --noconfirm
 
+      - name: build
+        run: |
             rustup target add x86_64-pc-windows-gnu
             rustup toolchain install nightly-x86_64-pc-windows-gnu
-            rustup toolchain default nightly-x86_64-pc-windows-gnu
             rustup default nightly-x86_64-pc-windows-gnu
+            rustup set default-host x86_64-pc-windows-gnu
+            rustup override set nightly-x86_64-pc-windows-gnu
 
             rustc --version
 
