@@ -31,6 +31,8 @@ jobs:
           cd ..
 
       - uses: actions-rust-lang/setup-rust-toolchain@v1
+        with:
+            rustflags: "-A warnings"
 
       - uses: msys2/setup-msys2@v2
       - shell: msys2 {0}
