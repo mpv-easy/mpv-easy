@@ -18,9 +18,9 @@ deno_core = "0.264.0"
 serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0"
 
-[profile.release]
-debug = false
-lto = true
-strip = true
-opt-level = "s"
-codegen-units = 1
+# [profile.release]
+# debug = false
+# lto = true
+# strip = true
+# opt-level = "s"
+# codegen-units = 1

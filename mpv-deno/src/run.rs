@@ -76,7 +76,6 @@ pub unsafe fn run_mp_scripts() {
 
     for (path, rt) in GLOBAL_INSTANCE.as_mut().unwrap() {
         let script_code = std::fs::read_to_string(path).unwrap();
-        println!("script_code: {}", script_code);
         let script_code = ModuleCodeString::from(script_code);
         let polyfill_code = ModuleCodeString::from(polyfill_code.to_string());
 
@@ -98,7 +97,6 @@ pub unsafe fn run_mp_scripts() {
                 return;
             }
             _ => {
-                println!("========");
                 for (_, rt) in GLOBAL_INSTANCE.as_mut().unwrap() {
                     rt.execute_script_static("<loop>", "globalThis.__mp_tick?.()")
                         .unwrap();

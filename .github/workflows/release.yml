@@ -30,13 +30,6 @@ jobs:
           rustflags: "-A warnings"
           toolchain: "nightly"
 
-      - name: build deno
-        run: |
-          cd ./mpv-deno
-          cargo build --release --out-dir=./output -Z unstable-options
-          cd ..
-          mv ./mpv-deno/output/mpv_deno.dll ./mpv-deno-windows.dll
-
       - name: build ext
         run: |
           cd ./mpv-rs-ext
@@ -44,6 +37,22 @@ jobs:
           cd ..
           mv ./mpv-rs-ext/output/rs-ext.exe ./rs-ext-windows
 
+
+      - name: build deno
+        run: |
+
+          rustup target add nightly-x86_64-pc-windows-msvc
+          rustup toolchain install nightly-x86_64-pc-windows-msvc
+          rustup default nightly-x86_64-pc-windows-msvc
+          rustup set default-host nightly-x86_64-pc-windows-msvc
+          rustup override set nightly-x86_64-pc-windows-msvc
+
+          rustc --version
+
+          cd ./mpv-deno
+          cargo build --release --out-dir=./output -Z unstable-options
+          cd ..
+          mv ./mpv-deno/output/mpv_deno.dll ./mpv-deno-windows.dll
       - uses: msys2/setup-msys2@v2
       - shell: msys2 {0}
         run: |
@@ -56,6 +65,7 @@ jobs:
           rustup default nightly-x86_64-pc-windows-gnu
           rustup set default-host x86_64-pc-windows-gnu
           rustup override set nightly-x86_64-pc-windows-gnu
+          rustc --version
 
           cd ./mpv-qjs
           cargo build --release --out-dir=./output -Z unstable-options
