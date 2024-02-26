@@ -10,10 +10,6 @@ jobs:
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: msys2/setup-msys2@v2
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 18
       - name: Install latest nightly
         uses: actions-rs/toolchain@v1
         with:
@@ -30,6 +26,7 @@ jobs:
 
           cd ./mpv-js-plugin-init
           pnpm run build
+          tree
           cp -r ./dist ../mpv-deno/dist
           cp -r ./dist ../mpv-qjs/dist
           cd ..
