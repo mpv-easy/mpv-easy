@@ -170,12 +170,9 @@ pub fn new_context() -> Context {
 
           core.ops = ops;
           Deno.core = core;
-
-          Deno.print = globalThis.op_print;
-
+          core.print = globalThis.op_print
 
           globalThis.Deno = Deno;
-          globalThis.print = op_print;
         }"#).unwrap();
     ctx
 }

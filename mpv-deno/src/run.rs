@@ -1,6 +1,9 @@
 use crate::ops::new_runtime;
 use deno_core::*;
-use mpv_easy_client::{api::{get_property, wait_event}, client_dyn::lib::Event};
+use mpv_easy_client::{
+    api::{get_property, wait_event},
+    client_dyn::lib::Event,
+};
 use std::collections::HashMap;
 
 static mut GLOBAL_INSTANCE: Option<HashMap<String, JsRuntime>> = None;
@@ -58,7 +61,7 @@ pub unsafe fn run_mp_scripts() {
 
         let mut runtime = new_runtime();
         let code = format!(
-            "globalThis.__script_name = `{}`;\n globalThis.__script_path = `{}`",
+            "globalThis.__script_name = `{}`;\n globalThis.__script_path = `{}`;",
             name, p
         );
         let script_code = ModuleCodeString::from(code);
@@ -73,6 +76,7 @@ pub unsafe fn run_mp_scripts() {
 
     for (path, rt) in GLOBAL_INSTANCE.as_mut().unwrap() {
         let script_code = std::fs::read_to_string(path).unwrap();
+        println!("script_code: {}", script_code);
         let script_code = ModuleCodeString::from(script_code);
         let polyfill_code = ModuleCodeString::from(polyfill_code.to_string());
 
@@ -94,6 +98,7 @@ pub unsafe fn run_mp_scripts() {
                 return;
             }
             _ => {
+                println!("========");
                 for (_, rt) in GLOBAL_INSTANCE.as_mut().unwrap() {
                     rt.execute_script_static("<loop>", "globalThis.__mp_tick?.()")
                         .unwrap();

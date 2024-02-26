@@ -1,2 +1,3 @@
 [workspace]
 members = ["mpv-deno", "mpv-qjs", "mpv-easy-client", "mpv-rs-ext"]
+resolver = "2"

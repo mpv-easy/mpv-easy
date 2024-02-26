@@ -3,12 +3,12 @@ import { MpvC, MpvWaitEvent } from "./type"
 const core = globalThis.Deno.core
 const ops = core.ops
 
-globalThis.print = (...args) => globalThis.Deno.print(args.join(" ") + "\n")
+globalThis.print = (...args) => globalThis.Deno.core.print(args.join(" ") + "\n")
 
 declare global {
   var Deno: {
-    print: (s: string) => void
     core: {
+      print: (s: string) => void
       ops: {
         op_commandv: (args: string[]) => void
         op_command_string: (cmd: string) => void
