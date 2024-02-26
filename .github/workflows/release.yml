@@ -32,39 +32,40 @@ jobs:
 
       - uses: actions-rust-lang/setup-rust-toolchain@v1
         with:
-            rustflags: "-A warnings"
+          rustflags: "-A warnings"
+
+      - name: build deno
+        run: |
+          cd ./mpv-deno
+          cargo build --release --out-dir=./output -Z unstable-options
+          cd ..
+          mv ./mpv-deno/output/mpv_deno.dll ./mpv-deno-windows.dll
+
+      - name: build ext
+        run: |
+          cd ./mpv-rs-ext
+          cargo build --release --out-dir=./output -Z unstable-options
+          cd ..
+          mv ./mpv-rs-ext/output/rs-ext.exe ./rs-ext-windows
 
       - uses: msys2/setup-msys2@v2
       - shell: msys2 {0}
         run: |
-            pacman -S mingw-w64-x86_64-gcc --noconfirm
-            pacman -S mingw-w64-x86_64-clang --noconfirm
+          pacman -S mingw-w64-x86_64-gcc --noconfirm
 
-      - name: build
+      - name: build qjs
         run: |
-            rustup target add x86_64-pc-windows-gnu
-            rustup toolchain install nightly-x86_64-pc-windows-gnu
-            rustup default nightly-x86_64-pc-windows-gnu
-            rustup set default-host x86_64-pc-windows-gnu
-            rustup override set nightly-x86_64-pc-windows-gnu
+          rustup target add x86_64-pc-windows-gnu
+          rustup toolchain install nightly-x86_64-pc-windows-gnu
+          rustup default nightly-x86_64-pc-windows-gnu
+          rustup set default-host x86_64-pc-windows-gnu
+          rustup override set nightly-x86_64-pc-windows-gnu
+          rustc --version
 
-            rustc --version
-
-            cd ./mpv-rs-ext
-            cargo build --release --out-dir=./output -Z unstable-options
-            cd ..
-
-            cd ./mpv-deno
-            cargo build --release --out-dir=./output -Z unstable-options
-            cd ..
-
-            cd ./mpv-qjs
-            cargo build --release --out-dir=./output -Z unstable-options
-            cd ..
-
-            mv ./mpv-rs-ext/output/rs-ext.exe ./rs-ext-windows
-            mv ./mpv-deno/output/mpv_deno.dll ./mpv-deno-windows.dll
-            mv ./mpv-qjs/output/mpv_qjs.dll ./mpv-qjs-windows.dll
+          cd ./mpv-qjs
+          cargo build --release --out-dir=./output -Z unstable-options
+          cd ..
+          mv ./mpv-qjs/output/mpv_qjs.dll ./mpv-qjs-windows.dll
 
       - name: Upload windows Artifact ext
         uses: actions/upload-artifact@v4
