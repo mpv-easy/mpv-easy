@@ -22,11 +22,12 @@ jobs:
           npm --version
 
           npm install -g pnpm
+          pnpm setup
           pnpm i
           pnpm --version
 
           cd ./mpv-js-plugin-init
-          pnpm i esbuild -g
+          npm i esbuild -g
           esbuild --version
 
           esbuild ./src/init.ts --bundle --outdir=./dist --charset=utf8 --format=iife
