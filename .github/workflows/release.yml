@@ -10,24 +10,17 @@ jobs:
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Install latest nightly
-        uses: actions-rs/toolchain@v1
-        with:
-          toolchain: nightly
-          override: true
-
-      - name: build windows-latest
+      - name: build js
         run: |
           node --version
           npm --version
 
-          npm install -g pnpm
+          npm install -g pnpm esbuild
           pnpm setup
           pnpm i
           pnpm --version
 
           cd ./mpv-js-plugin-init
-          npm i esbuild -g
           esbuild --version
 
           esbuild ./src/init.ts --bundle --outdir=./dist --charset=utf8 --format=iife
@@ -37,21 +30,42 @@ jobs:
           cp -r ./dist ../mpv-qjs
           cd ..
 
-          cd ./mpv-rs-ext
-          cargo build --release --out-dir=./output -Z unstable-options
-          cd ..
+      - name: Install latest nightly
+        uses: actions-rs/toolchain@v1
+        with:
+            toolchain: nightly
+            override: true
 
-          cd ./mpv-deno
-          cargo build --release --out-dir=./output -Z unstable-options
-          cd ..
+      - uses: msys2/setup-msys2@v2
+      - shell: msys2 {0}
+        run: |
+            pacman -S mingw-w64-x86_64-cmake --noconfirm
+            pacman -S mingw-w64-x86_64-gcc --noconfirm
+            pacman -S mingw-w64-x86_64-mpv --noconfirm
+            pacman -S mingw-w64-x86_64-clang --noconfirm
 
-          cd ./mpv-qjs
-          cargo build --release --out-dir=./output -Z unstable-options
-          cd ..
+            rustup target add x86_64-pc-windows-gnu
+            rustup toolchain install nightly-x86_64-pc-windows-gnu
+            rustup toolchain default nightly-x86_64-pc-windows-gnu
+            rustup default nightly-x86_64-pc-windows-gnu
 
-          mv ./mpv-rs-ext/output/rs-ext.exe ./rs-ext-windows
-          mv ./mpv-deno/output/mpv_deno.dll ./mpv-deno-windows.dll
-          mv ./mpv-qjs/output/mpv_qjs.dll ./mpv-qjs-windows.dll
+            rustc --version
+
+            cd ./mpv-rs-ext
+            cargo build --release --out-dir=./output -Z unstable-options
+            cd ..
+
+            cd ./mpv-deno
+            cargo build --release --out-dir=./output -Z unstable-options
+            cd ..
+
+            cd ./mpv-qjs
+            cargo build --release --out-dir=./output -Z unstable-options
+            cd ..
+
+            mv ./mpv-rs-ext/output/rs-ext.exe ./rs-ext-windows
+            mv ./mpv-deno/output/mpv_deno.dll ./mpv-deno-windows.dll
+            mv ./mpv-qjs/output/mpv_qjs.dll ./mpv-qjs-windows.dll
 
       - name: Upload windows Artifact ext
         uses: actions/upload-artifact@v4
