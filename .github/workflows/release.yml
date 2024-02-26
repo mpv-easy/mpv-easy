@@ -14,7 +14,9 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: msys2/setup-msys2@v2
-
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 18
       - name: Install latest nightly
         uses: actions-rs/toolchain@v1
         with:
@@ -33,20 +35,20 @@ jobs:
           cd ..
 
           cd ./mpv-rs-ext
-          cargo build --release
+          cargo build --release --out-dir=./output -Z unstable-options
           cd ..
 
           cd ./mpv-deno
-          cargo build --release
+          cargo build --release --out-dir=./output -Z unstable-options
           cd ..
 
           cd ./mpv-qjs
-          cargo build --release
+          cargo build --release --out-dir=./output -Z unstable-options
           cd ..
 
-          mv ./mpv-rs-ext/target/release/rs-ext.exe ./rs-ext-windows
-          mv ./mpv-deno/target/release/mpv_deno.dll ./mpv-deno-windows.dll
-          mv ./mpv-qjs/target/release/mpv_qjs.dll ./mpv-qjs-windows.dll
+          mv ./mpv-rs-ext/output/rs-ext.exe ./rs-ext-windows
+          mv ./mpv-deno/output/mpv_deno.dll ./mpv-deno-windows.dll
+          mv ./mpv-qjs/output/mpv_qjs.dll ./mpv-qjs-windows.dll
 
       - name: Upload windows Artifact ext
         uses: actions/upload-artifact@v4
@@ -79,10 +81,10 @@ jobs:
       - name: build macos-latest
         run: |
           cd ./mpv-rs-ext
-          cargo build --release
+          cargo build --release --out-dir=./output -Z unstable-options
           cd ..
 
-          mv ./mpv-rs-ext/target/release/rs-ext ./rs-ext-macos
+          mv ./mpv-rs-ext/output/rs-ext ./rs-ext-macos
 
       - name: Upload macos Artifact ext
         uses: actions/upload-artifact@v4
@@ -92,9 +94,6 @@ jobs:
 
   build-ext-ubuntu:
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        shell: msys2 {0}
     steps:
       - uses: actions/checkout@v4
       - name: Install latest nightly
@@ -106,10 +105,10 @@ jobs:
       - name: build ubuntu-latest
         run: |
           cd ./mpv-rs-ext
-          cargo build --release
+          cargo build --release --out-dir=./output -Z unstable-options
           cd ..
 
-          mv ./mpv-rs-ext/target/release/rs-ext ./rs-ext-ubuntu
+          mv ./mpv-rs-ext/output/rs-ext ./rs-ext-ubuntu
       - name: Upload ubuntu Artifact ext
         uses: actions/upload-artifact@v4
         with:
