@@ -25,6 +25,10 @@ jobs:
 
       - name: build windows-latest
         run: |
+          pacman -S mingw-w64-x86_64-nodejs --noconfirm
+          node --version
+          npm --version
+
           npm i pnpm -g
           pnpm i
 
