@@ -8,9 +8,6 @@ on:
 jobs:
   build-ext-windows:
     runs-on: windows-latest
-    defaults:
-      run:
-        shell: msys2 {0}
     steps:
       - uses: actions/checkout@v4
       - uses: msys2/setup-msys2@v2
@@ -25,11 +22,10 @@ jobs:
 
       - name: build windows-latest
         run: |
-          pacman -S mingw-w64-x86_64-nodejs --noconfirm
           node --version
           npm --version
 
-          npm i pnpm -g
+          npm install -g @pnpm/exe
           pnpm i
 
           cd ./mpv-js-plugin-init
