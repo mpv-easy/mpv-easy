@@ -3,9 +3,7 @@ use mpv_easy_client::{
     api::{get_property, wait_event},
     client_dyn::lib::Event,
 };
-// use rquickjs::Context;
-
-use quickjs_rs::Context;
+use rquickjs::{Context, Value};
 
 use std::collections::HashMap;
 
@@ -68,7 +66,9 @@ pub unsafe fn run_mp_scripts() {
             name, p
         );
 
-        ctx.eval(&code).unwrap();
+        ctx.with(|ctx| {
+            let _v:Value  = ctx.eval(code).unwrap();
+        });
 
         runtime_map.insert(p, ctx);
     }
@@ -80,9 +80,11 @@ pub unsafe fn run_mp_scripts() {
         let polyfill_code = polyfill_code.to_string();
         let init_code = init_code.clone();
 
-        ctx.eval(&polyfill_code).unwrap();
-        ctx.eval(&init_code).unwrap();
-        ctx.eval(&script_code).unwrap();
+        ctx.with(|ctx| {
+            let _v:Value  = ctx.eval(polyfill_code).unwrap();
+            let _v:Value  = ctx.eval(init_code).unwrap();
+            let  _v:Value = ctx.eval(script_code).unwrap();
+        });
     }
 
     loop {
@@ -93,22 +95,19 @@ pub unsafe fn run_mp_scripts() {
             }
             _ => {
                 for (_, ctx) in GLOBAL_INSTANCE.as_mut().unwrap() {
-                    let e = ctx.eval(
-                        r#"
+                    ctx.with(|ctx| {
+                        let _s: () = ctx
+                            .eval(
+                                r#"
                         try{
                           globalThis.__mp_tick?.()
                         }catch(e){
                           globalThis.print(e)
                         }
-
                         "#,
-                    );
-                    match e {
-                        Err(e) => {
-                            println!("error: {}", e);
-                        }
-                        _ => {}
-                    }
+                            )
+                            .unwrap();
+                    })
                 }
             }
         }

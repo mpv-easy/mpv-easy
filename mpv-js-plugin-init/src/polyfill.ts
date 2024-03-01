@@ -71,8 +71,7 @@ const __mp: MpvC = {
     }
   },
   __command_native_async: function (id, table: any) {
-    const name = table.name
-    const args = table.args
+    const { name, args = [] } = table
     ops.op_command_native_async(name, args)
   },
   __get_property_native: function (name: string) {
