@@ -44,6 +44,7 @@ export const UoscControl = React.memo((props: Partial<BaseElementProps>) => {
       <Box
         display="flex"
         justifyContent="start"
+        height={height}
         alignItems="center"
         backgroundColor={control.backgroundColor}
       >
@@ -57,6 +58,7 @@ export const UoscControl = React.memo((props: Partial<BaseElementProps>) => {
 
       <Box
         display="flex"
+        height={height}
         justifyContent="end"
         alignItems="center"
         backgroundColor={control.backgroundColor}

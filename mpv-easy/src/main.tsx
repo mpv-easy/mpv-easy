@@ -11,6 +11,7 @@ import {
 } from "./mpv-easy-theme"
 import { Store } from "./store"
 import { throttle } from "lodash-es"
+import { command } from "@mpv-easy/tool"
 
 declare module "@mpv-easy/plugin" {
   interface PluginContext {
@@ -24,11 +25,10 @@ declare module "@mpv-easy/plugin" {
 export { defaultConfig } from "./mpv-easy-theme"
 
 export const pluginName = "@mpv-easy/mpv-easy-ui"
-// command("set osc no")
-// command("set window-dragging no")
 export default definePlugin((context, api) => ({
   name: pluginName,
   create() {
+    command("set osc no")
     const store = api.store
     store.getState().context = context
 

@@ -49,8 +49,7 @@ export const ScrollList = React.memo(
     const [startIndex, setStartIndex] = useState(0)
     const mouseHoverStyle = useSelector(mouseHoverStyleSelector)
     const showScrollBar = maxItemCount < items.length
-    const scrollListHeight =
-      maxItemCount * (button.height + button.padding * 2) + button.padding * 6
+    const scrollListHeight = maxItemCount * (button.height + button.padding * 2)
     const scrollBarHeight = showScrollBar
       ? (maxItemCount / items.length) * scrollListHeight
       : 0
@@ -93,7 +92,7 @@ export const ScrollList = React.memo(
             position="absolute"
             id={"scroll-bar"}
             top={scrollBarTop}
-            right={button.padding}
+            right={0}
             width={button.padding}
             height={scrollBarHeight}
             backgroundColor={button.color}

@@ -10,7 +10,7 @@ import {
   muteSelector,
 } from "../../store"
 
-export const Mute = React.memo((props: Partial<ButtonProps> = {}) => {
+export const Mute = (props: Partial<ButtonProps> = {}) => {
   const button = useSelector(buttonStyleSelector)
   const mute = useSelector(muteSelector)
   const dispatch = useDispatch<Dispatch>()
@@ -40,4 +40,4 @@ export const Mute = React.memo((props: Partial<ButtonProps> = {}) => {
       {...props}
     />
   )
-})
+}

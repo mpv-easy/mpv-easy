@@ -118,23 +118,7 @@ export const ClickMenu = React.forwardRef<
           dispatch.context.setPlaylistHide(false)
         },
       },
-      {
-        key: i18n.videoSpeed,
-        label: i18n.videoSpeed,
-        children: speedList.map((i) => {
-          const prefix = i === speed ? ICON.Ok : ICON.CheckboxBlankCircleOutline
-          return {
-            key: i18n.videoSpeed + "-" + i,
-            label: prefix + " " + i.toString(),
-            onSelect: () => {
-              if (speed !== i) {
-                dispatch.context.setSpeed(i)
-                setPropertyNumber("speed", i)
-              }
-            },
-          }
-        }),
-      },
+
       {
         key: i18n.theme,
         label: i18n.theme,
@@ -166,27 +150,6 @@ export const ClickMenu = React.forwardRef<
         ],
       },
       {
-        key: i18n.language,
-        label: i18n.language,
-        children: [
-          {
-            key: i18n.languageChinese,
-            label: cnPrefix + " " + i18n.languageChinese,
-            onSelect: () => {
-              dispatch.context.setLanguage("cn")
-            },
-          },
-          {
-            key: i18n.languageEnglish,
-            label: enPrefix + " " + i18n.languageEnglish,
-            onSelect: () => {
-              dispatch.context.setLanguage("en")
-            },
-          },
-        ],
-      },
-
-      {
         key: i18n.skin,
         label: i18n.skin,
         children: [
@@ -205,6 +168,23 @@ export const ClickMenu = React.forwardRef<
             },
           },
         ],
+      },
+      {
+        key: i18n.videoSpeed,
+        label: i18n.videoSpeed,
+        children: speedList.map((i) => {
+          const prefix = i === speed ? ICON.Ok : ICON.CheckboxBlankCircleOutline
+          return {
+            key: i18n.videoSpeed + "-" + i,
+            label: prefix + " " + i.toString(),
+            onSelect: () => {
+              if (speed !== i) {
+                dispatch.context.setSpeed(i)
+                setPropertyNumber("speed", i)
+              }
+            },
+          }
+        }),
       },
       enablePlugins[anime4kName] && {
         key: "anime4k",
@@ -252,6 +232,26 @@ export const ClickMenu = React.forwardRef<
             onSelect() {
               const s = clamp(fontSize - fontStep, minFontSize, maxFontSize)
               dispatch.context.setFontSize(s)
+            },
+          },
+        ],
+      },
+      {
+        key: i18n.language,
+        label: i18n.language,
+        children: [
+          {
+            key: i18n.languageChinese,
+            label: cnPrefix + " " + i18n.languageChinese,
+            onSelect: () => {
+              dispatch.context.setLanguage("cn")
+            },
+          },
+          {
+            key: i18n.languageEnglish,
+            label: enPrefix + " " + i18n.languageEnglish,
+            onSelect: () => {
+              dispatch.context.setLanguage("en")
             },
           },
         ],
@@ -405,10 +405,10 @@ export const ClickMenu = React.forwardRef<
           )
         })}
       </Box>
-      {!childMenuHide && (
+      {
         <Box
           id="click-child-menu-main"
-          hide={hide}
+          hide={hide || childMenuHide}
           ref={childMenuRef}
           position="relative"
           x={childMenuPos.x}
@@ -457,7 +457,7 @@ export const ClickMenu = React.forwardRef<
             )
           })}
         </Box>
-      )}
+      }
     </>
   )
 })

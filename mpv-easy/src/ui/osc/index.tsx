@@ -5,6 +5,7 @@ import { pluginName } from "../../main"
 import { OscInfo } from "./info"
 import { useSelector } from "react-redux"
 import {
+  IconButtonSizeSelector,
   RootState,
   buttonStyleSelector,
   fontSizeSelector,
@@ -15,14 +16,12 @@ export * from "./info"
 
 export const Osc = React.memo(
   forwardRef<DOMElement, Partial<BaseElementProps>>((props, ref) => {
-    const button = useSelector(buttonStyleSelector)
-    const padding = button.padding
-    const h = button.height + 2 * padding
+    const h = useSelector(IconButtonSizeSelector)
 
     return (
       <Box
         width={"100%"}
-        height={h * 2 + padding * 4}
+        height={h * 2}
         display="flex"
         flexDirection="row"
         hide={props.hide}

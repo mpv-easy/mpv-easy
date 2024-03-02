@@ -24,6 +24,7 @@ import {
   videoParamsSelector,
   filenameSelector,
   smallFontSizeSelector,
+  buttonStyleSelector,
 } from "../store"
 import { ThumbFast } from "@mpv-easy/thumbfast"
 
@@ -36,6 +37,7 @@ export const Progress = React.memo(({ width, height }: ProgressProps) => {
   const [leftPreview, setLeftPreview] = useState(0)
   const [previewCursorHide, setPreviewCursorHide] = useState(true)
   const progress = useSelector(progressStyleSelector)
+  const button = useSelector(buttonStyleSelector)
   const timePos = useSelector(timePosSelector)
   const duration = useSelector(durationSelector)
   const dispatch = useDispatch<Dispatch>()
@@ -144,6 +146,7 @@ export const Progress = React.memo(({ width, height }: ProgressProps) => {
         backgroundColor={progress.timeTextBackgroundColor}
         color={progress.timeTextColor}
         text={formatTime(timePos, format)}
+        padding={button.padding}
         pointerEvents="none"
       />
       <Box
@@ -156,6 +159,7 @@ export const Progress = React.memo(({ width, height }: ProgressProps) => {
         backgroundColor={progress.timeTextBackgroundColor}
         color={progress.timeTextColor}
         text={formatTime(duration, format)}
+        padding={button.padding}
         pointerEvents="none"
       />
       <Box

@@ -197,17 +197,18 @@ export const context = createModel<RootModel>()({
       return createDefaultContext()
     },
     setFontSize(state, fontSize: number) {
-      const size = fontSize + 18
+      const size = fontSize + 16
+      const padding = fontSize / 8
       // TODO: color config vs size config
       state[pluginName].style["dark"].button.default.fontSize = fontSize
       state[pluginName].style["dark"].button.default.width = size
       state[pluginName].style["dark"].button.default.height = size
-      state[pluginName].style["dark"].button.default.padding = fontSize / 6
+      state[pluginName].style["dark"].button.default.padding = padding
 
       state[pluginName].style["light"].button.default.fontSize = fontSize
       state[pluginName].style["light"].button.default.width = size
       state[pluginName].style["light"].button.default.height = size
-      state[pluginName].style["light"].button.default.padding = fontSize / 6
+      state[pluginName].style["light"].button.default.padding = padding
 
       return { ...state }
     },

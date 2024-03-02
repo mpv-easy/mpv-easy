@@ -93,6 +93,11 @@ export const fpsSelector = (state: RootState) =>
 export const buttonStyleSelector = (state: RootState) =>
   styleSelector(state)[modeSelector(state)].button.default
 
+export const IconButtonSizeSelector = (state: RootState) => {
+  const button = styleSelector(state)[modeSelector(state)].button.default
+  return button.width + button.padding * 2
+}
+
 export const fontSizeSelector = (state: RootState) =>
   styleSelector(state)[modeSelector(state)].button.default.fontSize
 

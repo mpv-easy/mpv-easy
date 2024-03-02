@@ -9,6 +9,7 @@ import {
   volumeStyleSelector,
   osdDimensionsSelector,
   smallFontSizeSelector,
+  IconButtonSizeSelector,
 } from "../store"
 import { clamp, setPropertyNumber } from "@mpv-easy/tool"
 import { Mute } from "./components/mute"
@@ -21,14 +22,14 @@ export const VoiceControl = React.memo(
     const button = useSelector(buttonStyleSelector)
     const volumeStyle = useSelector(volumeStyleSelector)
     const volumeHeight = volume / volumeMax
-    const h = useSelector(osdDimensionsSelector).h
+    const osdH = useSelector(osdDimensionsSelector).h
+    const iconSize = useSelector(IconButtonSizeSelector)
     const boxCount = 5
     const boxHeight = button.height * boxCount
-    const wrapHeight =
-      boxHeight +
-      (button.height + button.padding) * 2 +
-      2 * button.padding * boxCount
-    const wrapTop = (h - wrapHeight) / 2
+
+    const wrapHeight = boxHeight + 2 * iconSize + 2 * button.padding
+
+    const wrapTop = (osdH - wrapHeight) / 2
     const [previewHide, setPreviewHide] = useState(true)
     const [previewBottom, setPreviewBottom] = useState(0)
     const fontSize = useSelector(smallFontSizeSelector)
@@ -40,12 +41,12 @@ export const VoiceControl = React.memo(
         : volumeStyle.backgroundColor
 
     return (
-      h > wrapHeight && (
+      osdH > wrapHeight && (
         <Box
           id="voice-control"
           top={wrapTop}
           right={0}
-          width={button.width + 4 * button.padding}
+          width={iconSize + 2 * button.padding}
           height={wrapHeight}
           onWheelDown={() => {
             const v = clamp(volume - volumeStyle.step, 0, volumeMax)
@@ -84,8 +85,7 @@ export const VoiceControl = React.memo(
           <Box
             id="voice-control-box"
             height={boxHeight}
-            width={button.width}
-            // padding={button.padding}
+            width={button.width - 2 * button.padding}
             display="flex"
             position="relative"
             flexDirection="row"
@@ -124,9 +124,7 @@ export const VoiceControl = React.memo(
               height={volumeHeight * 100 + "%"}
               bottom={0}
               left={0}
-              // width={button.width}
-              width={button.width + button.padding * 2}
-              // padding={button.padding}
+              width={button.width}
               backgroundColor={button.color}
               position="absolute"
             ></Box>
@@ -138,11 +136,10 @@ export const VoiceControl = React.memo(
                 height={volumeStyle.previewCursorSize}
                 left={0}
                 bottom={previewBottom * 100 + "%"}
-                width={button.width + button.padding * 2}
-                // padding={button.padding}
+                width={button.width}
                 position="absolute"
-                zIndex={volumeStyle.zIndex + 16}
                 backgroundColor={previewColor}
+                zIndex={volumeStyle.zIndex + 16}
               />
             )}
           </Box>

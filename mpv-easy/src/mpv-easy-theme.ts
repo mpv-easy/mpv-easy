@@ -140,17 +140,17 @@ export type EasyConfig = {
     saveConfigThrottle: number
   }
 }
-export const defaultTooltipZIndex = 128
-export const defaultDropdownZIndex = 512
+export const defaultTooltipZIndex = 512
+export const defaultDropdownZIndex = 256
 export const defaultToolbarZIndex = 256
 export const defaultPreviewZIndex = 256
 export const defaultClickMenuZIndex = 256
-export const defaultVolumeZIndex = 256
+export const defaultVolumeZIndex = 128
 export const defaultPlaylistZIndex = 512
 export const defaultFont = "FiraCode Nerd Font Mono Reg"
-export const defaultFontSize = 60
+export const defaultFontSize = 64
 export const defaultName = "uosc"
-export const defaultPadding = 10
+export const defaultPadding = 8
 export const defaultButtonSize = defaultFontSize * 1.25
 export const defaultCursorSize = 4
 export const defaultMaxItemCount = 8

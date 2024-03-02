@@ -198,8 +198,7 @@ export type RenderConfig = {
   ) => void
 }
 
-// TODO: 30 fps
-export const defaultFPS = 10
+export const defaultFPS = 30
 
 // let max = 0
 // let min = 1 << 20
