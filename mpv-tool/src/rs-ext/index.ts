@@ -3,7 +3,7 @@ import { joinPath, getScriptConfigDir } from "../mpv"
 import decodeUriComponent from "decode-uri-component"
 import { getFileName } from "../path"
 
-export const defaultBinDirName = "bin"
+export const defaultBinDirName = "rs-ext"
 export const getDefaultBinDirPath = () =>
   joinPath(getScriptConfigDir(), defaultBinDirName)
 

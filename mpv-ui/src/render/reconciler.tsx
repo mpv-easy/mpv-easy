@@ -7,6 +7,7 @@ import {
   command,
   commandNativeAsync,
   observeProperty,
+  print,
 } from "@mpv-easy/tool"
 import { MousePos } from "@mpv-easy/tool"
 import React from "react"
@@ -217,7 +218,7 @@ export function createRender({
       // min = Math.min(min, t)
       // sum += t
       // const every = sum / (currentRenderCount + 1)
-      // console.log("render time: ", currentRenderCount, min, max, every)
+      // print("render time:", currentRenderCount, t, min, max, every)
     },
     1000 / fps,
     {

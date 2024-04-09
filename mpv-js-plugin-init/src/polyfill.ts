@@ -1,5 +1,15 @@
 import { MpvC, MpvWaitEvent } from "./type"
 
+if (!Array.prototype.at) {
+  Array.prototype.at = function (index) {
+    if (index >= 0) {
+      return this[index]
+    } else {
+      return this[this.length + index]
+    }
+  }
+}
+
 const core = globalThis.Deno.core
 const ops = core.ops
 

@@ -72,6 +72,20 @@ jobs:
           cd ..
           mv ./mpv-qjs/output/mpv_qjs.dll ./mpv-qjs-windows.dll
 
+      - name: build boa
+        run: |
+          rustup target add x86_64-pc-windows-gnu
+          rustup toolchain install nightly-x86_64-pc-windows-gnu
+          rustup default nightly-x86_64-pc-windows-gnu
+          rustup set default-host x86_64-pc-windows-gnu
+          rustup override set nightly-x86_64-pc-windows-gnu
+          rustc --version
+
+          cd ./mpv-boa
+          cargo build --release --out-dir=./output -Z unstable-options
+          cd ..
+          mv ./mpv-qjs/output/mpv_boa.dll ./mpv-boa-windows.dll
+
       - name: Upload windows Artifact ext
         uses: actions/upload-artifact@v4
         with:
@@ -89,6 +103,11 @@ jobs:
         with:
           name: mpv-qjs-windows
           path: ./mpv-qjs-windows.dll
+      - name: Upload windows Artifact qjs
+        uses: actions/upload-artifact@v4
+        with:
+          name: mpv-boa-windows
+          path: ./mpv-boa-windows.dll
 
   build-ext-macos:
     runs-on: macos-latest
@@ -164,6 +183,12 @@ jobs:
           pattern: mpv-qjs-*
           merge-multiple: true
 
+      - uses: actions/download-artifact@v4
+        with:
+          path: boa-dll
+          pattern: mpv-boa-*
+          merge-multiple: true
+
       - name: "build ts"
         run: |
           npm i pnpm -g
@@ -174,7 +199,7 @@ jobs:
         run: |
           mkdir ./dist/scripts/mpv-easy-config/rs-ext -p
 
-          cp ./mpv-easy/es5/mpv-easy.js ./dist/scripts/mpv-easy.js
+          cp ./mpv-easy/es5/mpv-easy-es5.js ./dist/scripts/mpv-easy-es5.js
           cp -r ./mpv-easy/fonts ./dist
           cp -r ./mpv-anime4k/shaders ./dist
           cp ./mpv-easy/mpv-conf/mpv.conf ./dist/mpv.conf
@@ -186,26 +211,33 @@ jobs:
           cp -r ./dist ./mpy-easy-windows
           cp -r ./dist ./mpy-easy-deno-windows
           cp -r ./dist ./mpy-easy-qjs-windows
+          cp -r ./dist ./mpy-easy-boa-windows
 
           cp ./rs-ext/rs-ext-macos ./mpy-easy-macos/scripts/mpv-easy-config/rs-ext/rs-ext-macos
           cp ./rs-ext/rs-ext-ubuntu ./mpy-easy-linux/scripts/mpv-easy-config/rs-ext/rs-ext-linux
           cp ./rs-ext/rs-ext-windows ./mpy-easy-windows/scripts/mpv-easy-config/rs-ext/rs-ext-windows
           cp ./rs-ext/rs-ext-windows ./mpy-easy-deno-windows/scripts/mpv-easy-config/rs-ext/rs-ext-windows
           cp ./rs-ext/rs-ext-windows ./mpy-easy-qjs-windows/scripts/mpv-easy-config/rs-ext/rs-ext-windows
+          cp ./rs-ext/rs-ext-windows ./mpy-easy-boa-windows/scripts/mpv-easy-config/rs-ext/rs-ext-windows
 
           cp ./deno-dll/mpv-deno-windows.dll ./mpy-easy-deno-windows/scripts/mpv-deno-windows.dll
-          rm ./mpy-easy-deno-windows/scripts/mpv-easy.js
+          rm ./mpy-easy-deno-windows/scripts/mpv-easy-es5.js
           mkdir ./mpy-easy-deno-windows/scripts-deno
-          cp ./mpv-easy/bundle/mpv-easy.js ./mpy-easy-deno-windows/scripts-deno/mpv-easy.js
+          cp ./mpv-easy/bundle/mpv-easy-es6.js ./mpy-easy-deno-windows/scripts-deno/mpv-easy-es6.js
           mv ./mpy-easy-deno-windows/scripts/mpv-easy-config ./mpy-easy-deno-windows/scripts-deno/mpv-easy-config
 
 
           cp ./qjs-dll/mpv-qjs-windows.dll ./mpy-easy-qjs-windows/scripts/mpv-qjs-windows.dll
-          rm ./mpy-easy-qjs-windows/scripts/mpv-easy.js
+          rm ./mpy-easy-qjs-windows/scripts/mpv-easy-es5.js
           mkdir ./mpy-easy-qjs-windows/scripts-qjs
-          cp ./mpv-easy/bundle/mpv-easy.js ./mpy-easy-qjs-windows/scripts-qjs/mpv-easy.js
+          cp ./mpv-easy/bundle/mpv-easy-es6.js ./mpy-easy-qjs-windows/scripts-qjs/mpv-easy-es6.js
           mv ./mpy-easy-qjs-windows/scripts/mpv-easy-config ./mpy-easy-qjs-windows/scripts-qjs/mpv-easy-config
 
+          cp ./boa-dll/mpv-boa-windows.dll ./mpy-easy-boa-windows/scripts/mpv-boa-windows.dll
+          rm ./mpy-easy-boa-windows/scripts/mpv-easy-es5.js
+          mkdir ./mpy-easy-boa-windows/scripts-boa
+          cp ./mpv-easy/bundle/mpv-easy-es6.js ./mpy-easy-boa-windows/scripts-boa/mpv-easy-es6.js
+          mv ./mpy-easy-boa-windows/scripts/mpv-easy-config ./mpy-easy-boa-windows/scripts-boa/mpv-easy-config
 
           cd ./mpy-easy-macos
           zip -r -q ./mpy-easy-macos.zip .
@@ -226,6 +258,10 @@ jobs:
           cd ./mpy-easy-qjs-windows
           zip -r -q ./mpy-easy-qjs-windows.zip .
           cd ..
+
+          cd ./mpy-easy-boa-windows
+          zip -r -q ./mpy-easy-boa-windows.zip .
+          cd ..
       - uses: ncipollo/release-action@v1
         with:
-          artifacts: "./mpy-easy-qjs-windows/mpy-easy-qjs-windows.zip,./mpy-easy-deno-windows/mpy-easy-deno-windows.zip,./mpy-easy-windows/mpy-easy-windows.zip,./mpy-easy-linux/mpy-easy-linux.zip,./mpy-easy-macos/mpy-easy-macos.zip"
+          artifacts: "./mpy-easy-*/*.zip"

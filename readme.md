@@ -1,8 +1,10 @@
 ## mpv-easy
+
 TS and React toolkit for mpv script
 ![mpv-easy](./assets/img/mpv-easy.gif)
 
 ## install
+
 Download latest release zip file and extract all to the mpv scripts directory, for example:
 
 ```txt
@@ -15,46 +17,52 @@ portable_config
     ├── *.glsl
 ```
 
-
-
-
 ## dev
+
 bash
+
 ```bash
 export MPV_SCRIPT_DIR=/your_mpv_dir/portable_config/scripts && pnpm run dev
 ```
 
 fish
+
 ```fish
 set -x MPV_SCRIPT_DIR /your_mpv_dir/portable_config/scripts ; pnpm run dev
 ```
 
 ## example
+
 ### drag-ball
+
 ![drag-ball](./assets/img/drag-ball.gif)
 
 ### snake
+
 ![snake](./assets/img/snake.gif)
 
-
 ### i18n
+
 ![i18n](./assets/img/i18n.gif)
 
-
 ### counter-ui
+
 ![counter-ui](./assets/img/counter-ui.gif)
 
 ## config
 
 ### mouseHoverStyle
+
 Only supports Windows, requires installation of PowerShell to enable script execution permissions
+
 ```powershell
 set-executionpolicy remotesigned
 ```
+
 ![mouseHoverStyle](./assets/img/mouseHoverStyle.png)
 
-
 ## plugin
+
 - [mpv-anime4k](./mpv-anime4k/readme.md)
 - [mpv-autoload](./mpv-autoload/readme.md)
 - [mpv-clip-play](./mpv-clip-play/readme.md)
@@ -62,23 +70,39 @@ set-executionpolicy remotesigned
 - [mpv-copy-time](./mpv-copy-time/readme.md)
 - [mpv-thumbfast](./mpv-thumbfast/readme.md)
 
-
 ## quick start
+
 [mpv-easy-demo](https://github.com/ahaoboy/mpv-easy-demo)
 
 [more example](./mpv-easy/src/example/)
 
 ## Q&A
+
 ### mujs stack overflow
+
 If your code throw a stack overflow error with mujs, you need to use the babel plugin [hack.js](./mpv-easy/src//babel//hack.js)
 . It adds a function variable at the beginning of all functions to expand the stack size. Alternatively, you can use a custom compiled version of mujs and mpv, change mujs JS_STACKSIZE
+
 ```diff
 - #define JS_STACKSIZE 256	/* value stack size */
 
 + #define JS_STACKSIZE 1024	/* value stack size */
 ```
 
+## perf
+Maybe should use GitHub action to automatically update this
+
+| js engine   | first render | average | js file size |
+| ----------- | :----------: | ------: | -----------: |
+| qjs         |    358ms     |  3.58ms |         1.4M |
+| qjs+minify  |    334ms     |  3.42ms |         300K |
+| mujs+es5    |    402 ms    | 14.05ms |         1.1M |
+| deno        |    291 ms    |  0.23ms |         1.4M |
+| deno+minify |    464 ms    |  0.23ms |         306K |
+| boa+es6     |    400 ms    | 21.88ms |         1.2M |
+
 ## todo
+
 - [ ] flex (30%)
 - [ ] grid
 - [ ] logo

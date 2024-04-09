@@ -1,13 +1,14 @@
-use crate::ops::new_runtime;
-use deno_core::*;
+use crate::ops::new_context;
+use boa_engine::{Context, Source};
 use mpv_easy_client::{
     api::{get_property, wait_event},
     client_dyn::lib::Event,
 };
+
 use std::collections::HashMap;
 
-static mut GLOBAL_INSTANCE: Option<HashMap<String, JsRuntime>> = None;
-pub fn init_deno_runtime(handle: HashMap<String, JsRuntime>) {
+static mut GLOBAL_INSTANCE: Option<HashMap<String, Context>> = None;
+pub fn init_deno_runtime(handle: HashMap<String, Context>) {
     unsafe { GLOBAL_INSTANCE = Some(handle) };
 }
 
@@ -20,7 +21,7 @@ pub unsafe fn run_mp_scripts() {
     }
 
     let config_dir = dir.join("portable_config");
-    let script_dir = config_dir.join("scripts-deno");
+    let script_dir = config_dir.join("scripts-boa");
 
     if !script_dir.exists() {
         return;
@@ -28,7 +29,7 @@ pub unsafe fn run_mp_scripts() {
 
     let file_list = script_dir.read_dir().unwrap();
 
-    let mut runtime_map: HashMap<String, JsRuntime> = HashMap::new();
+    let mut runtime_map: HashMap<String, Context> = HashMap::new();
 
     let init_path = script_dir.join("init.js");
     let polyfill_path = script_dir.join("polyfill.js");
@@ -59,47 +60,50 @@ pub unsafe fn run_mp_scripts() {
             continue;
         }
 
-        let mut runtime = new_runtime();
+        let mut ctx = new_context();
         let code = format!(
-            "globalThis.__script_name = `{}`;\n globalThis.__script_path = `{}`;",
+            "globalThis.__script_name = `{}`;\n globalThis.__script_path = `{}`",
             name, p
         );
-        let script_code = ModuleCodeString::from(code);
-        runtime
-            .execute_script("<inject-script-env>", script_code)
-            .unwrap();
 
-        runtime_map.insert(p, runtime);
+        ctx.eval(Source::from_bytes(&code.into_bytes())).unwrap();
+
+        runtime_map.insert(p, ctx);
     }
 
     init_deno_runtime(runtime_map);
 
-    for (path, rt) in GLOBAL_INSTANCE.as_mut().unwrap() {
+    for (path, ctx) in GLOBAL_INSTANCE.as_mut().unwrap() {
         let script_code = std::fs::read_to_string(path).unwrap();
-        let script_code = ModuleCodeString::from(script_code);
-        let polyfill_code = ModuleCodeString::from(polyfill_code.to_string());
+        let polyfill_code = polyfill_code.to_string();
+        let init_code = init_code.clone();
 
-        rt.execute_script("<polyfill.js>", polyfill_code)
-            .expect("polyfill js error");
-
-        let init_code = ModuleCodeString::from(init_code.clone());
-        rt.execute_script("<init.js>", init_code)
-            .expect("init js error");
-        rt.execute_script(path, script_code)
-            .expect("script js error");
+        ctx.eval(Source::from_bytes(&polyfill_code.into_bytes()))
+            .unwrap();
+        ctx.eval(Source::from_bytes(&init_code.into_bytes()))
+            .unwrap();
+        ctx.eval(Source::from_bytes(&script_code.into_bytes()))
+            .unwrap();
     }
 
     loop {
-        let event = wait_event(0.01);
-
+        let event = wait_event(0.1);
         match event {
             Event::Shutdown => {
                 return;
             }
             _ => {
-                for (_, rt) in GLOBAL_INSTANCE.as_mut().unwrap() {
-                    rt.execute_script("<loop>", "globalThis.__mp_tick?.()")
-                        .unwrap();
+                let code = r#"
+                        try{
+                          globalThis.__mp_tick?.()
+                        }catch(e){
+                          globalThis.print(e)
+                        }
+                        "#;
+
+                {}
+                for (_, ctx) in GLOBAL_INSTANCE.as_mut().unwrap() {
+                    ctx.eval(Source::from_bytes(code)).unwrap();
                 }
             }
         }

@@ -1,4 +1,4 @@
 [workspace]
-members = ["mpv-deno", "mpv-qjs", "mpv-easy-client", "mpv-rs-ext"]
+members = ["mpv-deno", "mpv-qjs", "mpv-easy-client", "mpv-rs-ext", "mpv-boa"]
 resolver = "1"
 # resolver = "2"

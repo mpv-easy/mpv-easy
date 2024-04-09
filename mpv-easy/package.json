@@ -10,12 +10,13 @@
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "scripts": {
-    "bundle": "esbuild ./src/mpv-easy.tsx --bundle --outdir=bundle --charset=utf8 --define:globalThis.version='\"0.1.6-alpha.3\"'",
+    "bundle": "esbuild ./src/mpv-easy-*.tsx --bundle --outdir=bundle --charset=utf8 --define:globalThis.version='\"0.1.6-alpha.3\"'",
     "es5": "babel --presets  @babel/preset-env ./bundle -d es5 --plugins ./src/babel/hack.js",
     "dev": "chokidar \"../mpv-*/src/**/*.(ts|tsx|json)\" -c \"pnpm run build && pnpm run copy\" -t 3000  --initial",
     "dev-ts": "tsc -p ./tsconfig.build.json -w",
     "echo": "chokidar \"./\" -c \"echo hello\" -d 0 -t 0 --initial",
     "build": "tsc -p ./tsconfig.build.json && pnpm run bundle && pnpm run es5",
+    "build-es6": "esbuild ./src/mpv-easy-es6.tsx --bundle --outdir=bundle --charset=utf8 --define:globalThis.version='\"0.1.6-alpha.3\"'",
     "copy": "cp -r ./es5/mpv-easy.js $MPV_SCRIPT_DIR/mpv-easy.js",
     "test": "echo \"Error: no test specified\" && exit 1",
     "babel": "minify ./dist/mpv-easy.js --out-file ./dist/input.min.js"
@@ -24,6 +25,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@mpv-easy/polyfill": "workspace:*",
     "@mpv-easy/anime4k": "workspace:*",
     "@mpv-easy/assdraw": "workspace:*",
     "@mpv-easy/autoload": "workspace:*",

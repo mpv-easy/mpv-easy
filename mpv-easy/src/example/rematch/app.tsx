@@ -1,16 +1,17 @@
-import React, {} from "react"
+import React from "react"
 import { Provider, useDispatch, useSelector } from "react-redux"
 import { store } from "./store"
 import { Box, render } from "@mpv-easy/ui"
 import { RootState, Dispatch } from "./store"
+import { print } from "@mpv-easy/tool"
 
 function CounterText({ c }: { c: number }) {
-  console.log("CounterText")
+  print("CounterText")
   return <Box text={c.toString()}></Box>
 }
 
 function CounterA() {
-  console.log("CounterA")
+  print("CounterA")
   const counterA = useSelector(
     (state: RootState) => state.counter["@countA/counter"],
   )
@@ -26,7 +27,7 @@ function CounterA() {
         <Box
           text="-"
           onClick={() => {
-            console.log("-")
+            print("-")
             dispatch.counter.changeA(-1)
           }}
         ></Box>
@@ -34,7 +35,7 @@ function CounterA() {
         <Box
           text="+"
           onClick={() => {
-            console.log("+")
+            print("+")
             dispatch.counter.changeA(1)
           }}
         ></Box>
@@ -46,7 +47,7 @@ function CounterA() {
 function CounterB() {
   const counterB = useSelector((state: RootState) => state.counter.countB)
   const dispatch = useDispatch<Dispatch>()
-  console.log("CounterB")
+  print("CounterB")
   return (
     <>
       <Box
@@ -58,7 +59,7 @@ function CounterB() {
         <Box
           text="-"
           onClick={() => {
-            console.log("-")
+            print("-")
             dispatch.counter.changeB(-1)
           }}
         ></Box>
@@ -67,7 +68,7 @@ function CounterB() {
         <Box
           text="+"
           onClick={() => {
-            console.log("+")
+            print("+")
             dispatch.counter.changeB(1)
           }}
         ></Box>

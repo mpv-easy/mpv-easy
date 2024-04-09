@@ -381,7 +381,7 @@ export function compileJs(
 export function print(...msg: any[]) {
   // TODO: error TS2556
   // return globalThis.print(...msg)
-  return globalThis.print(msg)
+  return globalThis.print(...msg)
 }
 
 export function dump(...msg: unknown[]) {

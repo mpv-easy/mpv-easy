@@ -28,7 +28,6 @@ export const pluginName = "@mpv-easy/mpv-easy-ui"
 export default definePlugin((context, api) => ({
   name: pluginName,
   create() {
-    command("set osc no")
     const store = api.store
     store.getState().context = context
 

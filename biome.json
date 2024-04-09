@@ -16,6 +16,8 @@
   "files": {
     "ignore": [
       "*.sh",
+      "target",
+      "output",
       "*.stackdump",
       "*.ps1",
       "*.yaml",

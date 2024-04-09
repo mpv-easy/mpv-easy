@@ -1,4 +1,3 @@
-import "@mpv-easy/polyfill"
 export * from "./mpv"
 export * from "./common"
 export * from "./base64"

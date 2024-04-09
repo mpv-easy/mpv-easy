@@ -1,4 +1,4 @@
-import type { MPV } from "@mpv-easy/tool"
+import { type MPV } from "@mpv-easy/tool"
 
 const log = globalThis.print
 
@@ -6,6 +6,16 @@ const mp = globalThis.mp || {}
 globalThis.mp = mp
 mp.msg = { log } as MPV["msg"]
 mp.msg.verbose = log.bind(null, "v")
+
+if (!globalThis.console) {
+  globalThis.console = {
+    log: log,
+    error: log,
+    info: log,
+    debug: log,
+    warn: log,
+  } as any
+}
 
 const levels = ["fatal", "error", "warn", "info", "debug", "trace"] as const
 
