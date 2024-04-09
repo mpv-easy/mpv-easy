@@ -85,7 +85,7 @@ jobs:
           cd ./mpv-boa
           cargo build --release --out-dir=./output -Z unstable-options
           cd ..
-          mv ./mpv-qjs/output/mpv_boa.dll ./mpv-boa-windows.dll
+          mv ./mpv-boa/output/mpv_boa.dll ./mpv-boa-windows.dll
 
       - name: Upload windows Artifact ext
         uses: actions/upload-artifact@v4
