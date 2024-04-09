@@ -23,6 +23,7 @@ jobs:
 
           cp -r ./dist ../mpv-deno
           cp -r ./dist ../mpv-qjs
+          cp -r ./dist ../mpv-boa
           cd ..
 
       - uses: actions-rust-lang/setup-rust-toolchain@v1
