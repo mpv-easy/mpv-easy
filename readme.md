@@ -90,6 +90,7 @@ If your code throw a stack overflow error with mujs, you need to use the babel p
 ```
 
 ## perf
+
 Maybe should use GitHub action to automatically update this
 
 | js engine   | first render | average | js file size |
@@ -121,3 +122,5 @@ Maybe should use GitHub action to automatically update this
 - [ ] es/cjs plugin module
 - [ ] real-time subtitle translation
 - [ ] sourcemap
+
+![star-history](https://api.star-history.com/svg?repos=mpv-easy/mpv-easy&type=Date)
