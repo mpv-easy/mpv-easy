@@ -6,6 +6,9 @@ use crate::cmd::clip::clip_win::{get_image, get_text, set_image, set_text};
 #[cfg(target_os = "linux")]
 use crate::cmd::clip::clip_linux::{get_image, get_text, set_image, set_text};
 
+#[cfg(target_os = "android")]
+use crate::cmd::clip::clip_android::{get_image, get_text, set_image, set_text};
+
 use super::cli::Cmd;
 
 #[derive(clap::Parser, Debug)]

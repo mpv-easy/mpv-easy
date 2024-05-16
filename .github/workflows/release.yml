@@ -157,8 +157,34 @@ jobs:
           name: rs-ext-ubuntu
           path: ./rs-ext-ubuntu
 
+  build-ext-android:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install latest nightly
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: nightly
+          override: true
+
+      - name: build ubuntu-latest
+        run: |
+
+          cd ./mpv-rs-ext
+
+          cargo install cross --git https://github.com/cross-rs/cross
+          cross build --release --target aarch64-linux-android --out-dir=./output -Z unstable-options
+          cd ..
+
+          mv ./mpv-rs-ext/output/rs-ext ./rs-ext-android
+      - name: Upload android Artifact ext
+        uses: actions/upload-artifact@v4
+        with:
+          name: rs-ext-android
+          path: ./rs-ext-android
+
   release:
-    needs: [build-ext-windows, build-ext-macos, build-ext-ubuntu]
+    needs: [build-ext-windows, build-ext-macos, build-ext-ubuntu, build-ext-android]
     name: release
     runs-on: ubuntu-latest
     permissions:
@@ -209,6 +235,7 @@ jobs:
 
           cp -r ./dist ./mpy-easy-macos
           cp -r ./dist ./mpy-easy-linux
+          cp -r ./dist ./mpy-easy-android
           cp -r ./dist ./mpy-easy-windows
           cp -r ./dist ./mpy-easy-deno-windows
           cp -r ./dist ./mpy-easy-qjs-windows
@@ -216,6 +243,7 @@ jobs:
 
           cp ./rs-ext/rs-ext-macos ./mpy-easy-macos/scripts/mpv-easy-config/rs-ext/rs-ext-macos
           cp ./rs-ext/rs-ext-ubuntu ./mpy-easy-linux/scripts/mpv-easy-config/rs-ext/rs-ext-linux
+          cp ./rs-ext/rs-ext-android ./mpy-easy-android/scripts/mpv-easy-config/rs-ext/rs-ext-android
           cp ./rs-ext/rs-ext-windows ./mpy-easy-windows/scripts/mpv-easy-config/rs-ext/rs-ext-windows
           cp ./rs-ext/rs-ext-windows ./mpy-easy-deno-windows/scripts/mpv-easy-config/rs-ext/rs-ext-windows
           cp ./rs-ext/rs-ext-windows ./mpy-easy-qjs-windows/scripts/mpv-easy-config/rs-ext/rs-ext-windows
@@ -246,6 +274,10 @@ jobs:
 
           cd ./mpy-easy-linux
           zip -r -q ./mpy-easy-linux.zip .
+          cd ..
+
+          cd ./mpy-easy-android
+          zip -r -q ./mpy-easy-android.zip .
           cd ..
 
           cd ./mpy-easy-windows

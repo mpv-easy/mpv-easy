@@ -6,3 +6,7 @@ pub mod clip_win;
 #[cfg(target_os = "linux")]
 pub mod clip_linux;
 
+
+#[cfg(target_os = "android")]
+pub mod clip_android;
+

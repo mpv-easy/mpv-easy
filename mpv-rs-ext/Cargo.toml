@@ -10,6 +10,7 @@ name="rs-ext"
 path="./src/main.rs"
 
 [dependencies]
+openssl = { version = "0.10", features = ["vendored"] }
 clap = { version = "4", features = ["wrap_help", "derive"] }
 clap_complete = "4"
 anyhow = "1.0.79"
