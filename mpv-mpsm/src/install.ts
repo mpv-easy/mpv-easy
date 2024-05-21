@@ -1,22 +1,23 @@
 import { join } from "path"
 import { getMpsmDir } from "./config"
 import { outputFileSync } from "fs-extra"
-import { getMeta } from "./meta"
-import { downloadJson, downloadText } from "./share"
+import { Meta, getMeta } from "./meta"
+import { downloadJson, downloadText, getFileNameFromUrl } from "./share"
 
 const ScriptRemoteUrl =
   "https://raw.githubusercontent.com/mpv-easy/mpsm-scripts/main/scripts.json"
 
-export async function installFromUrl(url: string) {
+export async function installFromUrl(url: string): Promise<Meta> {
   const dir = getMpsmDir()
   const text = await downloadText(url)
   const meta = getMeta(text)
   if (!meta) {
     throw new Error("script must have meta info!")
   }
-  const name = url.split("/").at(-1)!
+  const name = getFileNameFromUrl(url)
   const p = join(dir, name)
   outputFileSync(p, text)
+  return getMeta(text)!
 }
 
 export async function installFromMpsm(name: string) {

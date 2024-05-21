@@ -3,6 +3,7 @@ export type Meta = {
   version: string
   description: string
   author: string
+  downloadURL: string
   [k: string]: string
 }
 

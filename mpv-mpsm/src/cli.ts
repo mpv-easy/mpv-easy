@@ -3,6 +3,7 @@ import { install } from "./install"
 import { uninstall } from "./uninstall"
 import { configDetect, getScriptDir, setScriptDir } from "./config"
 import { list } from "./list"
+import { update, updateAll } from "./update"
 
 const cli = Cac("mpsm")
 
@@ -15,21 +16,29 @@ cli
     setScriptDir(dir)
   })
 
-cli
-  .command(
-    "get-script-dir",
-    "get mpv script dir",
-  )
-  .action(() => {
-    configDetect()
-    const dir = getScriptDir()
-    console.log(dir)
-  })
+cli.command("get-script-dir", "get mpv script dir").action(() => {
+  configDetect()
+  const dir = getScriptDir()
+  console.log(dir)
+})
 
 cli.command("install [...files]", "install script").action((files) => {
   configDetect()
   install(files)
 })
+
+cli
+  .command("update [...files]", "install script")
+  .option("--all", "update all script")
+  .action((files, option) => {
+    configDetect()
+    console.log(files, option)
+    if (option.all) {
+      updateAll()
+    } else {
+      update(files)
+    }
+  })
 
 cli.command("uninstall [...files]", "uninstall script").action((files) => {
   configDetect()

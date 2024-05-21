@@ -19,8 +19,10 @@ mpsm install "<your-script-url>"
 
 # list installed scripts
 mpsm list
+
+# update a installed script
+mpsm update speed
+
+# update all installed scripts
+mpsm update --all
 ```
-
-
-## todo
-- [ ] update

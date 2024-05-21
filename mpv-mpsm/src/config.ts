@@ -1,5 +1,13 @@
 import { join } from "path"
-import { outputJsonSync, readJsonSync, existsSync } from "fs-extra"
+import {
+  outputJsonSync,
+  readJsonSync,
+  existsSync,
+  readdirSync,
+  readFileSync,
+  statSync,
+} from "fs-extra"
+import { Meta, getMeta } from "./meta"
 
 export const ConfigFileName = "mpsm-config.json"
 export const ConfigPath = join(__dirname, ConfigFileName)
@@ -10,7 +18,7 @@ export type Config = {
 
 export function setScriptDir(scriptDir: string) {
   outputJsonSync(ConfigPath, {
-    scriptDir: scriptDir.replaceAll('\\', '/'),
+    scriptDir: scriptDir.replaceAll("\\", "/"),
   })
 }
 
@@ -23,9 +31,32 @@ export function getMpsmDir(): string {
   return getScriptDir()
 }
 
-
 export function configDetect() {
   if (!existsSync(ConfigPath)) {
-    throw new Error("You must first execute \"mpsm set-script-dir '<your-mpv-dir>/portable_config/scripts'\" and make sure the directory is correct")
+    throw new Error(
+      "You must first execute \"mpsm set-script-dir '<your-mpv-dir>/portable_config/scripts'\" and make sure the directory is correct",
+    )
   }
+}
+
+export function getAllScript(): (Meta & { filePath: string })[] {
+  const dir = getMpsmDir()
+  const metaList: (Meta & { filePath: string })[] = []
+
+  if (!existsSync(dir)) {
+    return metaList
+  }
+
+  for (const name of readdirSync(dir)) {
+    const jsPath = join(dir, name)
+    if (!existsSync(jsPath) || !statSync(jsPath).isFile()) {
+      continue
+    }
+    const text = readFileSync(jsPath, "utf8")
+    const meta = getMeta(text)
+    if (meta) {
+      metaList.push({ ...meta, filePath: jsPath })
+    }
+  }
+  return metaList
 }

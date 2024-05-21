@@ -58,7 +58,7 @@ export function getPlayableList(config: AutoloadConfig, dir: string) {
 export function autoload(
   updatePlaylist: (list: string[], playIndex: number) => void,
   getPlaylist: () => string[],
-  config: AutoloadConfig
+  config: AutoloadConfig,
 ) {
   const path = normalize(getPropertyString("path") || "")
 
@@ -91,5 +91,5 @@ export default definePlugin((context, api) => ({
       autoload(api.updatePlaylist, api.getPlaylist, config)
     })
   },
-  destroy() { },
+  destroy() {},
 }))
