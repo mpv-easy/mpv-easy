@@ -1,6 +1,6 @@
 {
   "name": "@mpv-easy/autoload",
-  "version": "0.1.6-alpha.3",
+  "version": "0.1.6-alpha.7",
   "files": [
     "dist",
     "readme.md",

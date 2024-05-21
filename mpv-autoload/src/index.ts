@@ -1,5 +1,5 @@
 import { SystemApi, definePlugin } from "@mpv-easy/plugin"
-import { dir, getMpvPlaylist } from "@mpv-easy/tool"
+import { dir, getMpvPlaylist, updatePlaylist } from "@mpv-easy/tool"
 import { normalize } from "@mpv-easy/tool"
 import {
   getPropertyString,
@@ -55,13 +55,17 @@ export function getPlayableList(config: AutoloadConfig, dir: string) {
   return videoList
 }
 
-function autoload(api: SystemApi, config: AutoloadConfig) {
+export function autoload(
+  updatePlaylist: (list: string[], playIndex: number) => void,
+  getPlaylist: () => string[],
+  config: AutoloadConfig
+) {
   const path = normalize(getPropertyString("path") || "")
 
   if (isHttp(path)) {
     const list = getMpvPlaylist()
     if (!list.includes(path)) {
-      api.updatePlaylist([path], 0)
+      updatePlaylist([path], 0)
     }
     return
   }
@@ -72,11 +76,11 @@ function autoload(api: SystemApi, config: AutoloadConfig) {
   }
 
   const videoList = getPlayableList(config, d)
-  if (JSON.stringify(videoList) === JSON.stringify(api.getPlaylist())) {
+  if (JSON.stringify(videoList) === JSON.stringify(getPlaylist())) {
     return
   }
   const currentPos = videoList.indexOf(path)
-  api.updatePlaylist(videoList, currentPos === -1 ? 0 : currentPos)
+  updatePlaylist(videoList, currentPos === -1 ? 0 : currentPos)
 }
 
 export default definePlugin((context, api) => ({
@@ -84,10 +88,8 @@ export default definePlugin((context, api) => ({
   create() {
     const config = context[pluginName]
     registerEvent("start-file", () => {
-      autoload(api, config)
+      autoload(api.updatePlaylist, api.getPlaylist, config)
     })
   },
-  destroy() {
-    // unregisterEvent(autoload)
-  },
+  destroy() { },
 }))

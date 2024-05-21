@@ -38,7 +38,8 @@
       "@mpv-easy/mpv-easy": ["./mpv-easy/src"],
       "@mpv-easy/canvas": ["./mpv-canvas/src"],
       "@mpv-easy/playground": ["./mpv-playground/src"],
-      "@mpv-easy/js-plugin-init": ["./mpv-js-plugin-init/src"]
+      "@mpv-easy/js-plugin-init": ["./mpv-js-plugin-init/src"],
+      "@mpv-easy/mpv-mpsm": ["./mpv-mpsm/src"]
     }
   }
 }
