@@ -15,9 +15,11 @@ export async function updateByName(name: string, metaList = getAllScript()) {
 
   if (newMeta.version !== meta.version) {
     console.log(
-      `update script ${chalk.green(meta.name)} from ${meta.version} to ${
-        newMeta.version
-      }`,
+      `update ${chalk.green(meta.name)} from ${meta.version} to ${newMeta.version}`,
+    )
+  } else {
+    console.log(
+      `${chalk.green(meta.name)}(${meta.version}) is already the latest version`,
     )
   }
 }
