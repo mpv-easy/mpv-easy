@@ -8,6 +8,7 @@ import {
   statSync,
 } from "fs-extra"
 import { Meta, getMeta } from "./meta"
+import chalk from "chalk"
 
 export const ConfigFileName = "mpsm-config.json"
 export const ConfigPath = join(__dirname, ConfigFileName)
@@ -33,9 +34,12 @@ export function getMpsmDir(): string {
 
 export function configDetect() {
   if (!existsSync(ConfigPath)) {
-    throw new Error(
-      "You must first execute \"mpsm set-script-dir '<your-mpv-dir>/portable_config/scripts'\" and make sure the directory is correct",
+    console.log(
+      `You must first execute "${chalk.green(
+        "mpsm set-script-dir '<your-mpv-dir>/portable_config/scripts",
+      )}" and make sure the directory is correct`,
     )
+    process.exit()
   }
 }
 

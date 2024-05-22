@@ -22,27 +22,26 @@ cli.command("get-script-dir", "get mpv script dir").action(() => {
   console.log(dir)
 })
 
-cli.command("install [...files]", "install script").action((files) => {
+cli.command("install [...scripts]", "install script").action((scripts) => {
   configDetect()
-  install(files)
+  install(scripts)
 })
 
 cli
-  .command("update [...files]", "install script")
+  .command("update [...scripts]", "install script")
   .option("--all", "update all script")
-  .action((files, option) => {
+  .action((scripts, option) => {
     configDetect()
-    console.log(files, option)
     if (option.all) {
       updateAll()
     } else {
-      update(files)
+      update(scripts)
     }
   })
 
-cli.command("uninstall [...files]", "uninstall script").action((files) => {
+cli.command("uninstall [...scripts]", "uninstall script").action((scripts) => {
   configDetect()
-  uninstall(files)
+  uninstall(scripts)
 })
 
 cli.command("list", "list installed scripts").action(() => {

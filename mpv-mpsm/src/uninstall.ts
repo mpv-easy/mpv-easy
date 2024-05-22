@@ -1,24 +1,22 @@
 import { join } from "path"
-import { getMpsmDir } from "./config"
+import { getAllScript, getMpsmDir } from "./config"
 import { removeSync, existsSync, readFileSync } from "fs-extra"
 import { getMeta } from "./meta"
+import chalk from "chalk"
 
-export function uninstall(scripts: string[]) {
+export async function uninstall(scripts: string[]) {
   const dir = getMpsmDir()
-  for (const i of scripts) {
-    const p = join(dir, `${i}.js`)
 
-    if (!existsSync(p)) {
-      return
-    }
-
-    const text = readFileSync(p, "utf8")
-    const meta = getMeta(text)
+  const metaList = await getAllScript()
+  for (const name of scripts) {
+    const meta = metaList.find((i) => i.name === name)
 
     if (!meta) {
-      return
+      console.log(`not found script: ${chalk.green(name)}`)
+      process.exit()
     }
 
-    removeSync(p)
+    removeSync(meta.filePath)
+    console.log(`${chalk.green(meta.name)} Successfully uninstalled`)
   }
 }

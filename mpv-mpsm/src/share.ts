@@ -9,3 +9,7 @@ export async function downloadJson<T>(url: string): Promise<T> {
 export function getFileNameFromUrl(url: string): string {
   return url.split("/").at(-1)!
 }
+
+export function isRemote(s: string) {
+  return s.startsWith("http:") || s.startsWith("https:")
+}

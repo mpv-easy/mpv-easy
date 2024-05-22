@@ -1,3 +1,4 @@
+import chalk from "chalk"
 import { getAllScript } from "./config"
 import { installFromUrl } from "./install"
 
@@ -5,13 +6,16 @@ export async function updateByName(name: string, metaList = getAllScript()) {
   const meta = metaList.find((i) => i.name === name)
 
   if (!meta) {
-    throw new Error(`not found script: ${name}`)
+    console.log(`not found script: ${chalk.green(name)}`)
+    process.exit()
   }
 
   const url = meta.downloadURL
   const newMeta = await installFromUrl(url)
   console.log(
-    `update script "${meta.name}" from ${meta.version} to ${newMeta.version}`,
+    `update script ${chalk.green(meta.name)} from ${meta.version} to ${
+      newMeta.version
+    }`,
   )
 }
 
