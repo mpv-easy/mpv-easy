@@ -12,11 +12,14 @@ export async function updateByName(name: string, metaList = getAllScript()) {
 
   const url = meta.downloadURL
   const newMeta = await installFromUrl(url)
-  console.log(
-    `update script ${chalk.green(meta.name)} from ${meta.version} to ${
-      newMeta.version
-    }`,
-  )
+
+  if (newMeta.version !== meta.version) {
+    console.log(
+      `update script ${chalk.green(meta.name)} from ${meta.version} to ${
+        newMeta.version
+      }`,
+    )
+  }
 }
 
 export async function update(list: string[], metaList = getAllScript()) {

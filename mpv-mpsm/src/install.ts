@@ -9,6 +9,7 @@ import {
   isRemote,
 } from "./share"
 import chalk from "chalk"
+import { existsSync, readFileSync } from "fs-extra"
 const ScriptRemoteUrl =
   "https://raw.githubusercontent.com/mpv-easy/mpsm-scripts/main/scripts.json"
 
@@ -16,14 +17,20 @@ export async function installFromUrl(url: string): Promise<Meta> {
   const dir = getMpsmDir()
   const text = await downloadText(url)
   const meta = getMeta(text)
+  const name = getFileNameFromUrl(url)
   if (!meta) {
     console.log(`script ${url} don't have meta info`)
     process.exit()
   }
-  const name = getFileNameFromUrl(url)
-  const p = join(dir, name)
-  outputFileSync(p, text)
 
+  const p = join(dir, name)
+
+  if (
+    existsSync(p) &&
+    getMeta(readFileSync(p, "utf8"))?.version !== meta.version
+  ) {
+    outputFileSync(p, text)
+  }
   return meta
 }
 
