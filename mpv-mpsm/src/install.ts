@@ -26,7 +26,7 @@ export async function installFromUrl(url: string): Promise<Meta> {
   const p = join(dir, name)
 
   if (
-    existsSync(p) &&
+    !existsSync(p) ||
     getMeta(readFileSync(p, "utf8"))?.version !== meta.version
   ) {
     outputFileSync(p, text)
@@ -48,6 +48,6 @@ export async function install(scripts: string[]) {
     const meta = await (isRemote(name)
       ? installFromUrl(name)
       : installFromMpsm(name))
-    console.log(`${chalk.green(meta.nam)} Successfully installed `)
+    console.log(`${chalk.green(meta.name)}(${meta.version}) Successfully installed `)
   }
 }

@@ -17,6 +17,6 @@ export async function uninstall(scripts: string[]) {
     }
 
     removeSync(meta.filePath)
-    console.log(`${chalk.green(meta.name)} Successfully uninstalled`)
+    console.log(`${chalk.green(meta.name)}(${meta.version}) Successfully uninstalled`)
   }
 }
