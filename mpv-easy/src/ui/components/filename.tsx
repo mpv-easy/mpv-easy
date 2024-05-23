@@ -21,7 +21,7 @@ export const Filename = () => {
   let text = fileName
   if (w && text.length * button.fontSize > space) {
     const len = Math.floor(space / button.fontSize)
-    text = text.slice(0, len) + "..."
+    text = `${text.slice(0, len)}...`
   }
   return (
     (fileName?.length ?? 0) > 0 && (

@@ -4,25 +4,24 @@ import { useDispatch, useSelector } from "react-redux"
 import * as ICON from "../../icon"
 import {
   buttonStyleSelector,
-  pauseSelector,
   Dispatch,
+  historyHideSelector,
   i18nSelector,
   mouseHoverStyleSelector,
   playlistHideSelector,
 } from "../../store"
 
-export const Playlist = () => {
+export const History = () => {
   const button = useSelector(buttonStyleSelector)
-  const pause = useSelector(pauseSelector)
   const i18n = useSelector(i18nSelector)
   const dispatch = useDispatch<Dispatch>()
   const mouseHoverStyle = useSelector(mouseHoverStyleSelector)
-  const playlistHide = useSelector(playlistHideSelector)
+  const historyHide = useSelector(historyHideSelector)
   return (
     <Button
-      text={ICON.PlaylistPlay}
-      id="mpv-easy-button-playlist"
-      title={i18n.playlist}
+      text={ICON.History}
+      id="mpv-easy-button-history"
+      title={i18n.history}
       width={button.width}
       height={button.height}
       display="flex"
@@ -37,8 +36,8 @@ export const Playlist = () => {
       fontSize={button.fontSize}
       color={button.color}
       onMouseDown={(e) => {
-        dispatch.context.setHistoryHide(true)
-        dispatch.context.setPlaylistHide(!playlistHide)
+        dispatch.context.setPlaylistHide(true)
+        dispatch.context.setHistoryHide(!historyHide)
         e.stopPropagation()
       }}
     />

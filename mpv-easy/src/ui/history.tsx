@@ -1,6 +1,6 @@
 import { command, getFileName } from "@mpv-easy/tool"
 import { Box, Button, DOMElement } from "@mpv-easy/ui"
-import React, { useRef } from "react"
+import React, { useEffect, useRef } from "react"
 import { useSelector, useDispatch } from "react-redux"
 import * as ICON from "../icon"
 import {
@@ -12,6 +12,9 @@ import {
   playlistHideSelector,
   pathSelector,
   osdDimensionsSelector,
+  historyHideSelector,
+  historySelector,
+  historyStyleSelector,
 } from "../store"
 import { getRootNode } from "@mpv-easy/ui"
 import { ScrollList } from "./components/scroll-list"
@@ -21,20 +24,20 @@ export type PlaylistProps = {
   current: number
 }
 
-export const Playlist = React.memo(() => {
-  const playlistStyle = useSelector(playlistStyleSelector)
+export const History = React.memo(() => {
+  const historyStyle = useSelector(historyStyleSelector)
   const dispatch = useDispatch<Dispatch>()
-  const playlist = useSelector(playlistSelector)
-  const playlistRef = useRef<DOMElement>(null)
-  const playlistHide = useSelector(playlistHideSelector)
+  const history = useSelector(historySelector)
+  const historyRef = useRef<DOMElement>(null)
+  const historyHide = useSelector(historyHideSelector)
   const button = useSelector(buttonStyleSelector)
   let x = 0
   let y = 0
-  if (playlistRef.current) {
+  if (historyRef.current) {
     const rootW = getRootNode().layoutNode.width
     const rootH = getRootNode().layoutNode.height
-    const w = playlistRef.current.layoutNode.width
-    const h = playlistRef.current.layoutNode.height
+    const w = historyRef.current.layoutNode.width
+    const h = historyRef.current.layoutNode.height
     x = (rootW - w) / 2
     y = (rootH - h) / 2
   }
@@ -43,40 +46,40 @@ export const Playlist = React.memo(() => {
 
   return (
     <Box
-      id={"playlist-main"}
-      ref={playlistRef}
+      id={"history-main"}
+      ref={historyRef}
       x={x}
       y={y}
-      hide={playlistHide}
+      hide={historyHide}
       display="flex"
       position="relative"
       flexDirection="row"
       justifyContent="start"
       alignContent="stretch"
       alignItems="start"
-      backgroundColor={playlistStyle.backgroundColor}
+      backgroundColor={historyStyle.backgroundColor}
     >
-      {!!playlist.length && (
+      {!!history.length && (
         <ScrollList
-          zIndex={playlistStyle.zIndex}
-          items={playlist.map((i) => {
+          zIndex={historyStyle.zIndex}
+          items={history.map((i) => {
             const prefix =
               i === path ? ICON.Ok : ICON.CheckboxBlankCircleOutline
             let name = getFileName(i) || ""
-            if (name?.length >= playlistStyle.maxLength) {
-              name = `${name?.slice(0, playlistStyle.maxLength - 3)}...`
+            if (name?.length >= historyStyle.maxLength) {
+              name = `${name?.slice(0, historyStyle.maxLength - 3)}...`
             }
             const label = `${prefix} ${name}`
             return {
               key: i,
               label,
               onClick: (e) => {
-                const index = playlist.indexOf(i)
+                const index = history.indexOf(i)
                 if (index >= 0) {
-                  command(`playlist-play-index ${index}`)
-                  dispatch.context.setPath(playlist[index])
+                  dispatch.context.setPath(history[index])
+                  command(`loadfile "${history[index]}"`)
                 }
-                dispatch.context.setPlaylistHide(true)
+                dispatch.context.setHistoryHide(true)
                 e.stopPropagation()
               },
             }

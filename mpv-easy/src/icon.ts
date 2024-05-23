@@ -80,3 +80,4 @@ export const RefreshCircle = "󱍷"
 export const Sync = "" //  
 export const Refresh = "" //  
 export const Info = ""
+export const History = "󰋚"

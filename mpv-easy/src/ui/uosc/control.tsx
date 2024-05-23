@@ -17,6 +17,7 @@ import { PlayMode } from "../components/play-mode"
 import { PreviousFrame } from "../components/previous-frame"
 import { NextFrame } from "../components/next-frame"
 import { MoreInfo } from "../components/more-info"
+import { History } from "../components/history"
 
 export const UoscControl = React.memo((props: Partial<BaseElementProps>) => {
   const { width, height } = props
@@ -53,6 +54,7 @@ export const UoscControl = React.memo((props: Partial<BaseElementProps>) => {
         <SubtitleTrack />
         <AudioTrack />
         <Screenshot />
+        <History />
         {/* <MoreInfo /> */}
       </Box>
 

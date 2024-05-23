@@ -34,6 +34,7 @@ import { Playlist } from "./playlist"
 import { getPlayableList } from "@mpv-easy/autoload"
 import { VoiceControl } from "./voice-control"
 import { useFirstMountState, useRendersCount } from "react-use"
+import { History } from "./history"
 
 export * from "./progress"
 export * from "./toolbar"
@@ -100,6 +101,8 @@ export function Easy(props: Partial<EasyProps>) {
       dispatch.context.setFontSize(props.fontSize)
     }
 
+    dispatch.context.addHistory(path)
+
     playlistCount.observe((v) => {
       const p = pathProp.value
       if (path !== p) {
@@ -155,6 +158,7 @@ export function Easy(props: Partial<EasyProps>) {
     pathProp.observe((v) => {
       v = normalize(v ?? "")
       if (v?.length && path.length && v !== path) {
+        dispatch.context.addHistory(v)
         dispatch.context.setPath(v)
         const d = dir(v)
         if (!d) {
@@ -272,6 +276,7 @@ export function Easy(props: Partial<EasyProps>) {
           }, 16)
 
           dispatch.context.setPlaylistHide(true)
+          dispatch.context.setHistoryHide(true)
           if (isEmptyClick) {
             // console.log("click empty")
           }
@@ -282,6 +287,7 @@ export function Easy(props: Partial<EasyProps>) {
         <VoiceControl ref={volumeRef} hide={hide || isFirstMount} />
         <ClickMenu ref={menuRef} hide={menuHide} />
         <Playlist />
+        <History />
       </Box>
     </>
   )

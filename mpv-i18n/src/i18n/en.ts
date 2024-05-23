@@ -60,4 +60,5 @@ export default {
   style: "style",
   enlargeFontSize: "+font",
   reduceFontSize: "-font",
+  history: "history",
 }

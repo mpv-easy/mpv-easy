@@ -69,6 +69,12 @@ export type ThemeStyle = {
   playlist: {
     backgroundColor: string
     zIndex: number
+    maxLength: number
+  }
+  history: {
+    backgroundColor: string
+    zIndex: number
+    maxLength: number
   }
   tooltip: {
     enable: boolean
@@ -105,6 +111,7 @@ export type EasyConfig = {
     save: boolean
     time: number
   }
+  history: string[]
   player: {
     pause: boolean
     timePos: number
@@ -133,6 +140,7 @@ export type EasyConfig = {
   state: {
     hide: boolean
     playlistHide: boolean
+    historyHide: boolean
   }
   config: {
     fps: number
@@ -162,6 +170,7 @@ export function createDefaultThemeConfig(): EasyConfig {
   return cloneDeep({
     mode: "dark",
     uiName: defaultName,
+    history: [],
     style: {
       dark: {
         button: {
@@ -235,6 +244,12 @@ export function createDefaultThemeConfig(): EasyConfig {
         playlist: {
           backgroundColor: Black + AlphaLow,
           zIndex: defaultPlaylistZIndex,
+          maxLength: 20,
+        },
+        history: {
+          backgroundColor: Black + AlphaLow,
+          zIndex: defaultPlaylistZIndex,
+          maxLength: 20,
         },
         tooltip: {
           enable: true,
@@ -345,6 +360,12 @@ export function createDefaultThemeConfig(): EasyConfig {
         playlist: {
           backgroundColor: White + AlphaLow,
           zIndex: defaultPlaylistZIndex,
+          maxLength: 20,
+        },
+        history: {
+          backgroundColor: White + AlphaLow,
+          zIndex: defaultPlaylistZIndex,
+          maxLength: 20,
         },
         tooltip: {
           enable: true,
@@ -400,6 +421,7 @@ export function createDefaultThemeConfig(): EasyConfig {
 export const defaultState: EasyConfig["state"] = {
   hide: false,
   playlistHide: true,
+  historyHide: true,
 }
 
 export const defaultPlayer: EasyConfig["player"] = {

@@ -19,12 +19,14 @@ import {
   VideoParams,
   updatePlaylist,
   getPropertyNumber,
+  getPropertyString,
 } from "@mpv-easy/tool"
 import { Language } from "@mpv-easy/i18n"
 import { ThemeMode, UIName, createDefaultThemeConfig } from "../mpv-easy-theme"
 import { pluginName as i18nName } from "@mpv-easy/i18n"
 import { pluginName as anime4kName, Anime4kConfig } from "@mpv-easy/anime4k"
 import { createDefaultContext } from "../context"
+import { historySelector } from "../store"
 
 const windowMaximizedProp = new PropertyBool("window-maximized")
 const fullscreenProp = new PropertyBool("fullscreen")
@@ -100,7 +102,7 @@ export const context = createModel<RootModel>()({
     },
     setPath(state, value: string) {
       state[pluginName].player.path = value
-      if (value !== getPropertyNative("path")) {
+      if (value !== getPropertyString("path")) {
         setPropertyString("path", value)
       }
       return { ...state }
@@ -125,6 +127,10 @@ export const context = createModel<RootModel>()({
       state[pluginName].state.playlistHide = hide
       return { ...state }
     },
+    setHistoryHide(state, hide: boolean) {
+      state[pluginName].state.historyHide = hide
+      return { ...state }
+    },
     setSpeed(state, speed: number) {
       state[pluginName].player.speed = speed
       return { ...state }
@@ -136,6 +142,18 @@ export const context = createModel<RootModel>()({
         path: playlist[playIndex],
       }
       updatePlaylist(playlist, playIndex)
+      return { ...state }
+    },
+    addHistory(state, path: string) {
+      const history = state[pluginName].history || []
+      const index = history.findIndex((i) => i === path)
+
+      const newHistory = [...history]
+      if (index >= 0) {
+        newHistory.splice(index, 1)
+      }
+      newHistory.unshift(path)
+      state[pluginName].history = newHistory
       return { ...state }
     },
     exit(state) {

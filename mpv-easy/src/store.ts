@@ -130,6 +130,8 @@ export const tooltipStyleSelector = (state: RootState) =>
 
 export const playlistStyleSelector = (state: RootState) =>
   styleSelector(state)[modeSelector(state)].playlist
+export const historyStyleSelector = (state: RootState) =>
+  styleSelector(state)[modeSelector(state)].history
 
 export const playlistSelector = (state: RootState) =>
   state.context[pluginName].player.playlist
@@ -139,8 +141,14 @@ export const speedSelector = (state: RootState) =>
   state.context[pluginName].player.speed
 export const speedListSelector = (state: RootState) =>
   state.context[pluginName].player.speedList
+export const historySelector = (state: RootState) =>
+  state.context[pluginName].history
+
 export const playlistHideSelector = (state: RootState) =>
   state.context[pluginName].state.playlistHide
+
+export const historyHideSelector = (state: RootState) =>
+  state.context[pluginName].state.historyHide
 
 export const mouseHoverStyleSelector = (state: RootState) =>
   state.context.experimental.mouseHoverStyle

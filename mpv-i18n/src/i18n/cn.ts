@@ -58,4 +58,5 @@ export default {
   style: "样式",
   enlargeFontSize: "+字体",
   reduceFontSize: "-字体",
+  history: "历史",
 }

@@ -17,6 +17,7 @@ import { AudioTrack } from "../components/audio-track"
 import { SubtitleTrack } from "../components/subtitle-track"
 import { PlayMode } from "../components/play-mode"
 import { MoreInfo } from "../components/more-info"
+import { History } from "../components/history"
 export const OscControl = React.memo(
   ({ height, width }: Partial<BaseElementProps>) => {
     const button = useSelector(buttonStyleSelector)
@@ -46,6 +47,7 @@ export const OscControl = React.memo(
           <Play />
           <Stop />
           {/* <MoreInfo /> */}
+          <History />
           <Screenshot />
           <PlayMode />
         </Box>

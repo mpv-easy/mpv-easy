@@ -1,4 +1,4 @@
-import { getGeometry, setGeometry, addKeyBinding, } from "@mpv-easy/tool"
+import { getGeometry, setGeometry, addKeyBinding } from "@mpv-easy/tool"
 
 let size = 500
 let x = 500
