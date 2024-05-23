@@ -15,7 +15,7 @@ import { clamp, setPropertyNumber } from "@mpv-easy/tool"
 import { Mute } from "./components/mute"
 
 export const VoiceControl = React.memo(
-  React.forwardRef<DOMElement, Partial<BaseElementProps>>((props = {}, ref) => {
+  React.forwardRef<DOMElement, Partial<BaseElementProps>>((props, ref) => {
     const volume = useSelector(volumeSelector)
     const volumeMax = useSelector(volumeMaxSelector)
     const dispatch = useDispatch<Dispatch>()
@@ -81,7 +81,7 @@ export const VoiceControl = React.memo(
             display="flex"
             justifyContent="center"
             alignItems="center"
-          ></Box>
+          />
           <Box
             id="voice-control-box"
             height={boxHeight}
@@ -93,6 +93,7 @@ export const VoiceControl = React.memo(
             alignItems="center"
             borderSize={button.padding}
             borderColor={button.color}
+            zIndex={volumeStyle.zIndex + 2}
             onMouseDown={(e) => {
               setPreviewHide(false)
               const v =
@@ -121,13 +122,14 @@ export const VoiceControl = React.memo(
             <Box
               id="voice-control-box-inner"
               pointerEvents="none"
-              height={volumeHeight * 100 + "%"}
+              height={`${volumeHeight * 100}%`}
               bottom={0}
               left={0}
               width={button.width}
               backgroundColor={button.color}
               position="absolute"
-            ></Box>
+              zIndex={volumeStyle.zIndex + 1}
+            />
 
             {previewHide || (
               <Box
@@ -135,7 +137,7 @@ export const VoiceControl = React.memo(
                 pointerEvents="none"
                 height={volumeStyle.previewCursorSize}
                 left={0}
-                bottom={previewBottom * 100 + "%"}
+                bottom={`${previewBottom * 100}%`}
                 width={button.width}
                 position="absolute"
                 backgroundColor={previewColor}
