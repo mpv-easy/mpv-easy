@@ -19,7 +19,7 @@ export async function installFromUrl(url: string): Promise<Meta> {
   const meta = getMeta(text)
   const name = getFileNameFromUrl(url)
   if (!meta) {
-    console.log(`script ${url} don't have meta info`)
+    console.log(`script ${url} don't have meta info. see: https://github.com/mpv-easy/mpsm-scripts?tab=readme-ov-file#meta-info`)
     process.exit()
   }
 

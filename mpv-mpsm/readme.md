@@ -10,7 +10,7 @@ mpsm set-script-dir '<your-mpv-dir>/portable_config/scripts'
 mpsm get-script-dir
 
 
-# install script from @mpv-easy/mpsm github repo
+# install script from https://github.com/mpv-easy/mpsm-scripts
 mpsm install speed
 mpsm uninstall speed
 
