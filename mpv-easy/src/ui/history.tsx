@@ -66,8 +66,8 @@ export const History = React.memo(() => {
             const prefix =
               i === path ? ICON.Ok : ICON.CheckboxBlankCircleOutline
             let name = getFileName(i) || ""
-            if (name?.length >= historyStyle.maxLength) {
-              name = `${name?.slice(0, historyStyle.maxLength - 3)}...`
+            if (name?.length >= historyStyle.maxTitleLength) {
+              name = `${name?.slice(0, historyStyle.maxTitleLength - 3)}...`
             }
             const label = `${prefix} ${name}`
             return {

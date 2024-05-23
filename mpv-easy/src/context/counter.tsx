@@ -9,7 +9,7 @@ const CounterComponent: React.FC = () => {
 
   return (
     <Box fontSize={64}>
-      <Box text={state.count.toString()}></Box>
+      <Box text={state.count.toString()} />
       <Box text="-" onMouseDown={() => dispatch({ type: "DECREMENT" })} />
       <Box text="+" onMouseDown={() => dispatch({ type: "INCREMENT" })} />
     </Box>

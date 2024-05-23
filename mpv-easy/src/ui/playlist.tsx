@@ -63,8 +63,8 @@ export const Playlist = React.memo(() => {
             const prefix =
               i === path ? ICON.Ok : ICON.CheckboxBlankCircleOutline
             let name = getFileName(i) || ""
-            if (name?.length >= playlistStyle.maxLength) {
-              name = `${name?.slice(0, playlistStyle.maxLength - 3)}...`
+            if (name?.length >= playlistStyle.maxTitleLength) {
+              name = `${name?.slice(0, playlistStyle.maxTitleLength - 3)}...`
             }
             const label = `${prefix} ${name}`
             return {

@@ -69,12 +69,13 @@ export type ThemeStyle = {
   playlist: {
     backgroundColor: string
     zIndex: number
-    maxLength: number
+    maxTitleLength: number
   }
   history: {
     backgroundColor: string
     zIndex: number
-    maxLength: number
+    maxTitleLength: number
+    stackSize: number
   }
   tooltip: {
     enable: boolean
@@ -244,12 +245,13 @@ export function createDefaultThemeConfig(): EasyConfig {
         playlist: {
           backgroundColor: Black + AlphaLow,
           zIndex: defaultPlaylistZIndex,
-          maxLength: 20,
+          maxTitleLength: 32,
         },
         history: {
           backgroundColor: Black + AlphaLow,
           zIndex: defaultPlaylistZIndex,
-          maxLength: 20,
+          maxTitleLength: 32,
+          stackSize: 32,
         },
         tooltip: {
           enable: true,
@@ -360,12 +362,13 @@ export function createDefaultThemeConfig(): EasyConfig {
         playlist: {
           backgroundColor: White + AlphaLow,
           zIndex: defaultPlaylistZIndex,
-          maxLength: 20,
+          maxTitleLength: 32,
         },
         history: {
           backgroundColor: White + AlphaLow,
           zIndex: defaultPlaylistZIndex,
-          maxLength: 20,
+          maxTitleLength: 32,
+          stackSize: 32,
         },
         tooltip: {
           enable: true,

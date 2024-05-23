@@ -137,14 +137,14 @@ export function saveConfig(c: PluginContext) {
     try {
       mkdir(configDir)
     } catch {
-      print("mkdir config dir error: " + configDir)
+      print(`mkdir config dir error: ${configDir}`)
     }
   }
 
   try {
     writeFile(configPath, JSON.stringify(c, null, 2))
   } catch {
-    print("write config file error: " + configPath)
+    print(`write config file error: ${configPath}`)
   }
 }
 
@@ -152,7 +152,7 @@ function readConfig(): PluginContext {
   try {
     return JSON.parse(readFile(configPath))
   } catch {
-    print("parse or read config file error: " + configPath)
+    print(`parse or read config file error: ${configPath}`)
   }
   return defaultContext
 }

@@ -26,7 +26,7 @@ import { ThemeMode, UIName, createDefaultThemeConfig } from "../mpv-easy-theme"
 import { pluginName as i18nName } from "@mpv-easy/i18n"
 import { pluginName as anime4kName, Anime4kConfig } from "@mpv-easy/anime4k"
 import { createDefaultContext } from "../context"
-import { historySelector } from "../store"
+import { historySelector, historyStyleSelector } from "../store"
 
 const windowMaximizedProp = new PropertyBool("window-maximized")
 const fullscreenProp = new PropertyBool("fullscreen")
@@ -153,6 +153,12 @@ export const context = createModel<RootModel>()({
         newHistory.splice(index, 1)
       }
       newHistory.unshift(path)
+
+      const mode = state[pluginName].mode
+      const stackSize = state[pluginName].style[mode].history.stackSize
+      while (newHistory.length > stackSize) {
+        newHistory.pop()
+      }
       state[pluginName].history = newHistory
       return { ...state }
     },

@@ -24,15 +24,15 @@ function main() {
     getPath: () => store.getState().context[pluginName].player.path,
     store,
   }
-  plugins.forEach((definePlugin) => {
+  for (const definePlugin of plugins) {
     const plugin = definePlugin(customConfig, api)
     if (
       customConfig.enablePlugins[plugin.name as keyof EnablePlugin] &&
       plugin.create
     ) {
       plugin.create()
-      print("add plugin " + plugin.name)
+      print(`add plugin ${plugin.name}`)
     }
-  })
+  }
 }
 main()
