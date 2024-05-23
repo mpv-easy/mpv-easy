@@ -19,7 +19,9 @@ export async function installFromUrl(url: string): Promise<Meta> {
   const meta = getMeta(text)
   const name = getFileNameFromUrl(url)
   if (!meta) {
-    console.log(`script ${url} don't have meta info. see: https://github.com/mpv-easy/mpsm-scripts?tab=readme-ov-file#meta-info`)
+    console.log(
+      `script ${url} don't have meta info. see: https://github.com/mpv-easy/mpsm-scripts?tab=readme-ov-file#meta-info`,
+    )
     process.exit()
   }
 
@@ -48,6 +50,8 @@ export async function install(scripts: string[]) {
     const meta = await (isRemote(name)
       ? installFromUrl(name)
       : installFromMpsm(name))
-    console.log(`${chalk.green(meta.name)}(${meta.version}) Successfully installed `)
+    console.log(
+      `${chalk.green(meta.name)}(${meta.version}) Successfully installed `,
+    )
   }
 }

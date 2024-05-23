@@ -12,6 +12,7 @@ import {
   smallFontSizeSelector,
 } from "../../store"
 import {
+  TrackItem,
   getPropertyBool,
   getPropertyNative,
   getPropertyNumber,
@@ -22,34 +23,9 @@ import {
   todo,
 } from "@mpv-easy/tool"
 
-type AudioTrack = {
-  title?: string
-  lang?: string
-  external: boolean
-  selected: boolean
-  id: number
-}
 function getAudioTracks() {
-  const tracks: AudioTrack[] = []
-  const trackCount = getPropertyNumber("track-list/count") || 0
-  for (let i = 0; i < trackCount; i++) {
-    const type = getPropertyString(`track-list/${i}/type`)
-    if (type === "audio") {
-      const title = getPropertyString(`track-list/${i}/title`)
-      const lang = getPropertyString(`track-list/${i}/lang`)
-      const selected = getPropertyBool(`track-list/${i}/selected`)
-      const external = getPropertyBool(`track-list/${i}/external`)
-      const id = getPropertyNumber(`track-list/${i}/id`) || 0
-      tracks.push({
-        title,
-        lang,
-        external,
-        selected,
-        id,
-      })
-    }
-  }
-  return tracks
+  const trackList = getPropertyNative<TrackItem[]>("track-list") || []
+  return trackList.filter((i) => i.type === "audio")
 }
 // ./mpv.com D:/迅雷下载/拾荒者统治(2023)/Scavengers.Reign.S01E06.1080p.WEB.h264.mkv   --log - file=./log.txt
 export const AudioTrack = () => {
@@ -64,7 +40,7 @@ export const AudioTrack = () => {
       const key = [title, lang, external, k].join("-")
       const prefix =
         selected || aid === id ? ICON.Ok : ICON.CheckboxBlankCircleOutline
-      const label = prefix + " " + (title ?? lang ?? "default")
+      const label = `${prefix} ${title ?? lang ?? "default"}`
       return {
         label,
         key: key,

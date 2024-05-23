@@ -266,3 +266,35 @@ export type OsdDimensions = {
   par: number
   w: number
 }
+
+export type TrackItem = {
+  title?: string
+  lang?: string
+  albumart: boolean
+  codec: "h264" | (string & {})
+  "decoder-desc": string
+  default: boolean
+  "demux-fps": number
+  "demux-h": number
+  "demux-par": number
+  "demux-w": number
+  dependent: boolean
+  external: boolean
+  "ff-index": number
+  forced: boolean
+  "hearing-impaired": boolean
+  id: number
+  image: boolean
+  "main-selection": number
+  selected: boolean
+  "src-id": number
+  type: "video" | "audio" | "image" | (string & {})
+  "visual-impaired": boolean
+}
+
+export type Geometry = {
+  w: number
+  h: number
+  x: number
+  y: number
+}

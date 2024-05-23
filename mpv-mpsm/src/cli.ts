@@ -4,7 +4,7 @@ import { uninstall } from "./uninstall"
 import { configDetect, getScriptDir, setScriptDir } from "./config"
 import { list } from "./list"
 import { update, updateAll } from "./update"
-import { version } from '../package.json'
+import { version } from "../package.json"
 
 const cli = Cac("mpsm")
 

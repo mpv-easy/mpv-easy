@@ -423,3 +423,15 @@ export function getOptions() {
 export function getMousePos(): MousePos {
   return getMPV().get_mouse_pos()
 }
+
+export function getGeometry() {
+  const s = getPropertyString("geometry")!
+  const regex = /\d+/g
+  const [w, h, x, y] = [...(s.match(regex) || [])].map((i) => +i)
+  return { w: w, h: h, x: x, y: y }
+}
+
+export function setGeometry(w: number, h: number, x: number, y: number) {
+  const s = [w, "x", h, "+", x, "+", y].join("")
+  setPropertyString("geometry", s)
+}
