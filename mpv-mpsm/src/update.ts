@@ -10,7 +10,7 @@ export async function updateByName(name: string, metaList = getAllScript()) {
     process.exit()
   }
 
-  const url = meta.downloadURL
+  const url = meta.updateURL || meta.downloadURL
   const newMeta = await installFromUrl(url)
 
   if (newMeta.version !== meta.version) {

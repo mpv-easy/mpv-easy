@@ -13,3 +13,11 @@ export function getFileNameFromUrl(url: string): string {
 export function isRemote(s: string) {
   return s.startsWith("http:") || s.startsWith("https:")
 }
+
+export function isMeta(url: string) {
+  return url.endsWith(".meta.js") || url.endsWith(".meta.lua")
+}
+
+export function getLang(url: string) {
+  return url.split(".").at(-1)
+}

@@ -5,8 +5,6 @@ import { getMeta } from "./meta"
 import chalk from "chalk"
 
 export async function uninstall(scripts: string[]) {
-  const dir = getMpsmDir()
-
   const metaList = await getAllScript()
   for (const name of scripts) {
     const meta = metaList.find((i) => i.name === name)

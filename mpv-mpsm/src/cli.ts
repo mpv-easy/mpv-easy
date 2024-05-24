@@ -5,6 +5,7 @@ import { configDetect, getScriptDir, setScriptDir } from "./config"
 import { list } from "./list"
 import { update, updateAll } from "./update"
 import { version } from "../package.json"
+import chalk from "chalk"
 
 const cli = Cac("mpsm")
 
@@ -33,6 +34,15 @@ cli
   .option("--all", "update all script")
   .action((scripts, option) => {
     configDetect()
+    if (!scripts?.length && !option.all) {
+      console.log(
+        `run ${chalk.green("mpsm update <script>")} or ${chalk.green(
+          "mpsm update --all",
+        )}`,
+      )
+      process.exit()
+    }
+
     if (option.all) {
       updateAll()
     } else {

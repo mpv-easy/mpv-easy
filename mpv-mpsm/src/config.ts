@@ -52,14 +52,14 @@ export function getAllScript(): (Meta & { filePath: string })[] {
   }
 
   for (const name of readdirSync(dir)) {
-    const jsPath = join(dir, name)
-    if (!existsSync(jsPath) || !statSync(jsPath).isFile()) {
+    const scriptPath = join(dir, name)
+    if (!existsSync(scriptPath) || !statSync(scriptPath).isFile()) {
       continue
     }
-    const text = readFileSync(jsPath, "utf8")
+    const text = readFileSync(scriptPath, "utf8")
     const meta = getMeta(text)
     if (meta) {
-      metaList.push({ ...meta, filePath: jsPath })
+      metaList.push({ ...meta, filePath: scriptPath })
     }
   }
   return metaList
