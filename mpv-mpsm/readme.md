@@ -25,4 +25,10 @@ mpsm update speed
 
 # update all installed scripts
 mpsm update --all
+
+# backup all installed scripts to json file
+mpsm backup ./backup.json
+
+# restore all scripts from json file
+mpsm restore ./backup.json
 ```

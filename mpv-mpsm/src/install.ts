@@ -77,7 +77,7 @@ export async function install(scripts: string[]) {
       : installFromMpsm(name))
 
     console.log(
-      `${chalk.green(meta.name)}(${meta.version}) Successfully installed `,
+      `${chalk.green(meta.name)}(${meta.version}) Successfully installed`,
     )
   }
 }

@@ -6,12 +6,14 @@ import { list } from "./list"
 import { update, updateAll } from "./update"
 import { version } from "../package.json"
 import chalk from "chalk"
+import { backup } from "./backup"
+import { restore } from "./restore"
 
 const cli = Cac("mpsm")
 
 cli
   .command(
-    "set-script-dir [dir]",
+    "set-script-dir <dir>",
     "set mpv script dir eg: <mpv-dir>/portable_config/scripts",
   )
   .action((dir) => {
@@ -24,7 +26,7 @@ cli.command("get-script-dir", "get mpv script dir").action(() => {
   console.log(dir)
 })
 
-cli.command("install [...scripts]", "install script").action((scripts) => {
+cli.command("install <...scripts>", "install script").action((scripts) => {
   configDetect()
   install(scripts)
 })
@@ -50,7 +52,7 @@ cli
     }
   })
 
-cli.command("uninstall [...scripts]", "uninstall script").action((scripts) => {
+cli.command("uninstall <...scripts>", "uninstall script").action((scripts) => {
   configDetect()
   uninstall(scripts)
 })
@@ -59,6 +61,20 @@ cli.command("list", "list installed scripts").action(() => {
   configDetect()
   list()
 })
+
+cli
+  .command("backup <file>", "backup all installed scripts to json file")
+  .action((file) => {
+    configDetect()
+    backup(file)
+  })
+
+cli
+  .command("restore <file>", "restore scripts from json file")
+  .action((file) => {
+    configDetect()
+    restore(file)
+  })
 
 cli.version(version)
 
