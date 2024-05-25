@@ -29,8 +29,8 @@ import "core-js/stable/string"
 
 // import "core-js/stable/atob"
 // import "core-js/stable/btoa"
-// import "core-js/stable/typed-array"
-// import "core-js/stable/array-buffer"
+import "core-js/stable/typed-array"
+import "core-js/stable/array-buffer"
 
 // @ts-ignore
 import Symbol from "es-symbol"

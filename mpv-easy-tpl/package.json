@@ -1,6 +1,6 @@
 {
   "name": "@mpv-easy/mpv-easy-tpl",
-  "version": "0.1.6-alpha.3",
+  "version": "0.1.9-alpha.0",
   "files": [
     "dist",
     "readme.md",

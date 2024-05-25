@@ -1,6 +1,6 @@
 {
   "name": "@mpv-easy/copy-time",
-  "version": "0.1.6-alpha.3",
+  "version": "0.1.9-alpha.0",
   "files": [
     "dist",
     "readme.md",

@@ -1,5 +1,5 @@
 import { execSync, getOs } from "../common"
-import { joinPath, getScriptConfigDir } from "../mpv"
+import { joinPath, getScriptConfigDir, error } from "../mpv"
 import decodeUriComponent from "decode-uri-component"
 import { getFileName } from "../path"
 import { Buffer } from 'buffer'
@@ -45,7 +45,8 @@ export function setClipboard(text: string, exe = getRsExtExePath()) {
     const base64 = Buffer.from(text).toString('base64')
     execSync([exe, "clipboard", "set", JSON.stringify(base64)])
     return true
-  } catch {
+  } catch (e) {
+    error(e)
     return false
   }
 }
@@ -57,7 +58,8 @@ export function setClipboardImage(
   try {
     execSync([exe, "clipboard", "set-image", JSON.stringify(path)])
     return true
-  } catch {
+  } catch (e) {
+    error(e)
     return false
   }
 }
