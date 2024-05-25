@@ -40,7 +40,6 @@ import { TextEncoder } from "@polkadot/x-textencoder"
 // TODO: add global Buffer
 // import { Buffer } from 'buffer'
 
-
 const g = getGlobal()
 // g.Buffer = Buffer
 g.TextEncoder = TextEncoder

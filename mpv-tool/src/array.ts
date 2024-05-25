@@ -25,11 +25,11 @@ function compare(opts: AlphaNumSortOption, a: string, b: string) {
   let za: number
   let zb: number // leading zero count
   let na: number
-  let nb: number// number length
+  let nb: number // number length
   let sa: boolean
   let sb: boolean // number sign
   let ta: number
-  let tb: number// temporary
+  let tb: number // temporary
   let bias: number
 
   while (ia < ma && ib < mb) {

@@ -2,7 +2,7 @@ import { execSync, getOs } from "../common"
 import { joinPath, getScriptConfigDir, error } from "../mpv"
 import decodeUriComponent from "decode-uri-component"
 import { getFileName } from "../path"
-import { Buffer } from 'buffer'
+import { Buffer } from "buffer"
 
 export const defaultBinDirName = "rs-ext"
 export const getDefaultBinDirPath = () =>
@@ -42,7 +42,7 @@ export function getClipboard(exe = getRsExtExePath()): string {
 
 export function setClipboard(text: string, exe = getRsExtExePath()) {
   try {
-    const base64 = Buffer.from(text).toString('base64')
+    const base64 = Buffer.from(text).toString("base64")
     execSync([exe, "clipboard", "set", JSON.stringify(base64)])
     return true
   } catch (e) {

@@ -11,6 +11,7 @@ name = "mpv_boa"
 crate-type = ["cdylib"]
 
 [dependencies]
+time = "0.3.36"
 boa_engine = "0.18.0"
 boa_parser = "0.18.0"
 once_cell = "1.3.1"
