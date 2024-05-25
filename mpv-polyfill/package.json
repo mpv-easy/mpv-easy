@@ -23,6 +23,7 @@
   },
   "dependencies": {
     "@polkadot/x-textencoder": "^12.6.2",
+    "buffer": "^6.0.3",
     "core-js": "^3.35.1",
     "decode-uri-component": "^0.4.1",
     "es-map": "^1.0.5",

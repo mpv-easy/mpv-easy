@@ -6,10 +6,11 @@ edition = "2021"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [[bin]]
-name="rs-ext"
-path="./src/main.rs"
+name = "rs-ext"
+path = "./src/main.rs"
 
 [dependencies]
+base64 = "0.22"
 openssl = { version = "0.10", features = ["vendored"] }
 clap = { version = "4", features = ["wrap_help", "derive"] }
 clap_complete = "4"
@@ -18,7 +19,7 @@ serde_yaml = "0.9"
 serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0"
 color-eyre = "0.6.2"
-petgraph = { version = "*", features = ["serde","serde-1"] }
+petgraph = { version = "*", features = ["serde", "serde-1"] }
 crossbeam = "0.8.4"
 tokio = { version = "1.36.0", features = ["full"] }
 colored = "2.1.0"

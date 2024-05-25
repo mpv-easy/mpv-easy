@@ -20,17 +20,17 @@ function compare(opts: AlphaNumSortOption, a: string, b: string) {
   let ib = 0
   const ma = a.length
   const mb = b.length
-  let ca
-  let cb // character code
-  let za
-  let zb // leading zero count
-  let na
-  let nb // number length
-  let sa
-  let sb // number sign
-  let ta
-  let tb // temporary
-  let bias
+  let ca: number
+  let cb: number // character code
+  let za: number
+  let zb: number // leading zero count
+  let na: number
+  let nb: number// number length
+  let sa: boolean
+  let sb: boolean // number sign
+  let ta: number
+  let tb: number// temporary
+  let bias: number
 
   while (ia < ma && ib < mb) {
     ca = a.charCodeAt(ia)

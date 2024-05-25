@@ -2,6 +2,7 @@ import { execSync, getOs } from "../common"
 import { joinPath, getScriptConfigDir } from "../mpv"
 import decodeUriComponent from "decode-uri-component"
 import { getFileName } from "../path"
+import { Buffer } from 'buffer'
 
 export const defaultBinDirName = "rs-ext"
 export const getDefaultBinDirPath = () =>
@@ -24,7 +25,7 @@ export function getRsExtExePath() {
       return joinPath(getDefaultBinDirPath(), defaultWinExeName)
     }
     default: {
-      throw new Error("rs-ext not support os: " + os)
+      throw new Error(`rs-ext not support os: ${os}`)
     }
   }
 }
@@ -41,7 +42,8 @@ export function getClipboard(exe = getRsExtExePath()): string {
 
 export function setClipboard(text: string, exe = getRsExtExePath()) {
   try {
-    execSync([exe, "clipboard", "set", JSON.stringify(text)])
+    const base64 = Buffer.from(text).toString('base64')
+    execSync([exe, "clipboard", "set", JSON.stringify(base64)])
     return true
   } catch {
     return false

@@ -27,7 +27,6 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@mpv-easy/polyfill": "workspace:*",
     "@mpv-easy/anime4k": "workspace:*",
     "@mpv-easy/assdraw": "workspace:*",
     "@mpv-easy/autoload": "workspace:*",
@@ -38,6 +37,7 @@
     "@mpv-easy/i18n": "workspace:*",
     "@mpv-easy/mock": "workspace:*",
     "@mpv-easy/plugin": "workspace:*",
+    "@mpv-easy/polyfill": "workspace:*",
     "@mpv-easy/thumbfast": "workspace:*",
     "@mpv-easy/tool": "workspace:*",
     "@mpv-easy/ui": "workspace:*",

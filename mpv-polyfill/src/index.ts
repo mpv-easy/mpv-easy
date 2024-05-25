@@ -27,12 +27,22 @@ import "core-js/stable/string/pad-start"
 import "core-js/stable/string/at"
 import "core-js/stable/string"
 
+// import "core-js/stable/atob"
+// import "core-js/stable/btoa"
+// import "core-js/stable/typed-array"
+// import "core-js/stable/array-buffer"
+
 // @ts-ignore
 import Symbol from "es-symbol"
 import { getGlobal } from "./global"
 import { TextEncoder } from "@polkadot/x-textencoder"
 
+// TODO: add global Buffer
+// import { Buffer } from 'buffer'
+
+
 const g = getGlobal()
+// g.Buffer = Buffer
 g.TextEncoder = TextEncoder
 g.Map = Map
 g.WeakMap = Map

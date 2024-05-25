@@ -22,15 +22,18 @@ pub struct Clipboard {
 
 impl Cmd for Clipboard {
     fn call(&self) {
+        use base64::prelude::*;
+
         let cmd = self.cmd.as_str();
 
         // println!("{:?} {:?}", cmd, text);
 
         match cmd {
             "set" => {
-                let text = serde_json::from_str(self.text.as_str()).unwrap();
-
-                set_text(text)
+                let b64: String = serde_json::from_str(self.text.as_str()).unwrap();
+                let bin = BASE64_STANDARD.decode(b64).unwrap();
+                let text = String::from_utf8_lossy(&bin);
+                set_text(&text)
             }
             "get" => {
                 let s = get_text();
