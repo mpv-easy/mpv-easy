@@ -1,6 +1,6 @@
 {
   "name": "@mpv-easy/tool",
-  "version": "0.1.6-alpha.4",
+  "version": "0.1.6-alpha.5",
   "files": [
     "dist",
     "readme.md",
