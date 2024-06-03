@@ -11,6 +11,7 @@ import {
   osdDimensionsSelector,
   toolbarStyleSelector,
 } from "../../store"
+import { textEllipsis } from "../../common"
 
 export const Filename = () => {
   const button = useSelector(buttonStyleSelector)
@@ -18,7 +19,7 @@ export const Filename = () => {
 
   // TODO: text-overflow: ellipsis;
   const maxLen = useSelector(toolbarStyleSelector).maxTitleLength
-  const text = fileName.slice(0, maxLen)
+  const text = textEllipsis(fileName, maxLen)
 
   return (
     (fileName?.length ?? 0) > 0 && (

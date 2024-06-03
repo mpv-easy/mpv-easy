@@ -15,6 +15,7 @@ import {
 } from "../store"
 import { getRootNode } from "@mpv-easy/ui"
 import { ScrollList } from "./components/scroll-list"
+import { textEllipsis } from "../common"
 
 export type PlaylistProps = {
   list: string[]
@@ -62,10 +63,10 @@ export const Playlist = React.memo(() => {
           items={playlist.map((i) => {
             const prefix =
               i === path ? ICON.Ok : ICON.CheckboxBlankCircleOutline
-            let name = getFileName(i) || ""
-            if (name?.length >= playlistStyle.maxTitleLength) {
-              name = `${name?.slice(0, playlistStyle.maxTitleLength - 3)}...`
-            }
+            const name = textEllipsis(
+              getFileName(i) || "",
+              playlistStyle.maxTitleLength,
+            )
             const label = `${prefix} ${name}`
             return {
               key: i,
