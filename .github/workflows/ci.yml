@@ -1,0 +1,24 @@
+name: Releases
+
+on: [push]
+
+jobs:
+  release:
+    name: release
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: "build mpv-easy"
+        run: |
+          npm i pnpm -g
+          pnpm i
+          pnpm run build
+
+      - name: Upload
+        uses: actions/upload-artifact@v4
+        with:
+          name: mpv-easy.js
+          path: ./mpv-easy/es5/mpv-easy-es5.js
