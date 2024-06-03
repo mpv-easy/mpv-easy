@@ -20,6 +20,8 @@ import {
   updatePlaylist,
   getPropertyNumber,
   getPropertyString,
+  isHttp,
+  existsSync,
 } from "@mpv-easy/tool"
 import { Language } from "@mpv-easy/i18n"
 import { ThemeMode, UIName, createDefaultThemeConfig } from "../mpv-easy-theme"
@@ -145,6 +147,9 @@ export const context = createModel<RootModel>()({
       return { ...state }
     },
     addHistory(state, path: string) {
+      if (!isHttp(path) && !existsSync(path)) {
+        return state
+      }
       const history = state[pluginName].history || []
       const index = history.findIndex((i) => i === path)
 
