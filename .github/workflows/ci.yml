@@ -17,8 +17,12 @@ jobs:
           pnpm i
           pnpm run build
 
+          mkdir ./dist -p
+          cp ./mpv-easy/es5/mpv-easy-es5.js ./dist/mpv-easy-es5.js
+          cp ./mpv-easy/bundle/mpv-easy-es6.js ./dist/mpv-easy-es6.js
+
       - name: Upload
         uses: actions/upload-artifact@v4
         with:
-          name: mpv-easy.js
-          path: ./mpv-easy/es5/mpv-easy-es5.js
+          name: mpv-easy
+          path: ./dist/*.js
