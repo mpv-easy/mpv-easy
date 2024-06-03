@@ -9,20 +9,17 @@ import {
   filenameSelector,
   fullscreenSelector,
   osdDimensionsSelector,
+  toolbarStyleSelector,
 } from "../../store"
 
 export const Filename = () => {
   const button = useSelector(buttonStyleSelector)
   const fileName = useSelector(filenameSelector)
-  const w = useSelector(osdDimensionsSelector).w
-  const fullscreen = useSelector(fullscreenSelector)
-  const buttonCount = fullscreen ? 6 : 3
-  const space = w - buttonCount * button.width
-  let text = fileName
-  if (w && text.length * button.fontSize > space) {
-    const len = Math.floor(space / button.fontSize)
-    text = `${text.slice(0, len)}...`
-  }
+
+  // TODO: text-overflow: ellipsis;
+  const maxLen = useSelector(toolbarStyleSelector).maxTitleLength
+  const text = fileName.slice(0, maxLen)
+
   return (
     (fileName?.length ?? 0) > 0 && (
       <Box

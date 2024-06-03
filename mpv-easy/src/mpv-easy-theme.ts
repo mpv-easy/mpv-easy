@@ -55,6 +55,7 @@ export type ThemeStyle = {
   toolbar: {
     backgroundColor: string
     autoHideDelay: number
+    maxTitleLength: number
   }
   scrollList: {
     maxItemCount: number
@@ -232,6 +233,7 @@ export function createDefaultThemeConfig(): EasyConfig {
         toolbar: {
           backgroundColor: Black + AlphaLow,
           autoHideDelay: defaultHideUIDelay,
+          maxTitleLength: 32,
         },
         volume: {
           backgroundColor: Black + AlphaLow,
@@ -346,6 +348,7 @@ export function createDefaultThemeConfig(): EasyConfig {
         toolbar: {
           backgroundColor: White + AlphaLow,
           autoHideDelay: defaultHideUIDelay,
+          maxTitleLength: 32,
         },
         scrollList: {
           maxItemCount: defaultMaxItemCount,
