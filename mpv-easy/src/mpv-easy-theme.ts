@@ -257,7 +257,7 @@ export function createDefaultThemeConfig(): EasyConfig {
           showText: true,
           steps: [
             {
-              delay: 300,
+              delay: 500,
               speed: 2,
             },
             {
@@ -389,7 +389,7 @@ export function createDefaultThemeConfig(): EasyConfig {
           showText: true,
           steps: [
             {
-              delay: 300,
+              delay: 500,
               speed: 2,
             },
             {
