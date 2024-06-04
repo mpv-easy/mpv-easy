@@ -42,7 +42,7 @@ type SnakeBody = { x: number; y: number; type: "head" | "body" }[]
 class Snake {
   body: SnakeBody = []
   // 0 top, 1 left, 2 down, 3 right
-  direction: number = 0
+  direction = 0
   grow = 0
 
   addHead(x: number, y: number) {

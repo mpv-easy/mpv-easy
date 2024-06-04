@@ -9,6 +9,7 @@ import "core-js/stable/array/some"
 import "core-js/stable/array/includes"
 import "core-js/stable/array/at"
 // @ts-ignore
+// biome-ignore lint/suspicious/noShadowRestrictedNames: <explanation>
 import Map from "core-js/stable/map"
 // import "core-js/stable/object"
 import "core-js/stable/object/assign"
@@ -19,8 +20,10 @@ import "core-js/stable/object/values"
 // import "core-js/stable/object/set-prototype-of"
 
 // @ts-ignore
+// biome-ignore lint/suspicious/noShadowRestrictedNames: <explanation>
 import Promise from "core-js/stable/promise"
 // @ts-ignore
+// biome-ignore lint/suspicious/noShadowRestrictedNames: <explanation>
 import Set from "core-js/stable/set"
 import "core-js/stable/string/pad-end"
 import "core-js/stable/string/pad-start"
@@ -33,6 +36,7 @@ import "core-js/stable/typed-array"
 import "core-js/stable/array-buffer"
 
 // @ts-ignore
+// biome-ignore lint/suspicious/noShadowRestrictedNames: <explanation>
 import Symbol from "es-symbol"
 import { getGlobal } from "./global"
 import { TextEncoder } from "@polkadot/x-textencoder"
@@ -102,6 +106,7 @@ if (!Array.prototype.find) {
       }
       const list = Object(this)
       const length = list.length >>> 0
+      // biome-ignore lint/style/noArguments: <explanation>
       const thisArg = arguments[1]
 
       for (let i = 0; i < length; i++) {
@@ -123,7 +128,7 @@ function setProtoOf(obj: any, proto: any) {
 }
 
 function mixinProperties(obj: any, proto: any) {
-  for (var prop in proto) {
+  for (const prop in proto) {
     if (!Object.prototype.hasOwnProperty.call(obj, prop)) {
       obj[prop] = proto[prop]
     }
@@ -131,6 +136,7 @@ function mixinProperties(obj: any, proto: any) {
   return obj
 }
 Object.setPrototypeOf =
+  // biome-ignore lint/suspicious/useIsArray: <explanation>
   { __proto__: [] } instanceof Array ? setProtoOf : mixinProperties
 
 export { Map, Set, Symbol }

@@ -26,7 +26,7 @@ function copyScreen(path: string) {
   command(`no-osd screenshot-to-file ${path}`)
   const result = setClipboardImage(path)
   if (result) {
-    osdMessage(`Copied to Clipboard`, 5)
+    osdMessage("Copied to Clipboard", 5)
   } else {
     osdMessage("Failed to copy screen to clipboard", 5)
   }

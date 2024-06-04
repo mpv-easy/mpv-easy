@@ -61,7 +61,7 @@ export const Progress = React.memo(({ width, height }: ProgressProps) => {
       if (thumbRef.current) {
         thumbRef.current.exit()
       }
-      const ipcId = "ipc_" + randomId()
+      const ipcId = `ipc_${randomId()}`
       thumbRef.current = new ThumbFast({
         ipcId,
         videoWidth: w,
@@ -198,7 +198,7 @@ export const Progress = React.memo(({ width, height }: ProgressProps) => {
               alignItems="center"
               text={formatTime(leftPreview * duration, format)}
               pointerEvents="none"
-            ></Box>
+            />
           )}
 
           {thumbRef.current && !previewCursorHide && !!thumbX && !!thumbY && (
@@ -212,7 +212,7 @@ export const Progress = React.memo(({ width, height }: ProgressProps) => {
               backgroundImage={thumbRef.current?.path}
               backgroundImageFormat={thumbRef.current?.format}
               pointerEvents="none"
-            ></Box>
+            />
           )}
         </Box>
       )}

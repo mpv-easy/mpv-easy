@@ -444,12 +444,12 @@ function computedNodeAlign(node: DOMElement) {
   const nodeYEnd = nodeYPos + nodeYSize
   let xAxisStart = 0
   let yAxisStart = 0
-  let xAxisSize = 0
-  let yAxisSize = 0
+  const xAxisSize = 0
+  const yAxisSize = 0
   let maxXAxisSize = 0
   let maxYAxisSize = 0
   let sumXAxisSize = 0
-  let sumYAxisSize = 0
+  const sumYAxisSize = 0
 
   switch (justifyContent) {
     case "start": {

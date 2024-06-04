@@ -19,9 +19,9 @@ if (!globalThis.console) {
 
 const levels = ["fatal", "error", "warn", "info", "debug", "trace"] as const
 
-levels.forEach((lv) => {
+for (const lv of levels) {
   mp.msg[lv] = log.bind(null, lv)
-})
+}
 
 // the following return undefined on error, null passthrough, or legacy object
 mp.get_osd_size = function get_osd_size() {
@@ -29,13 +29,13 @@ mp.get_osd_size = function get_osd_size() {
   return d && { width: d.w, height: d.h, aspect: d.aspect }
 }
 mp.get_osd_margins = function get_osd_margins() {
-  var d = mp.get_property_native("osd-dimensions") as any
+  const d = mp.get_property_native("osd-dimensions") as any
   return d && { left: d.ml, right: d.mr, top: d.mt, bottom: d.mb }
 }
 
 mp.command_native = (table) => {
   if (Array.isArray(table)) {
-    let rt = __mp.__command_json(table)
+    const rt = __mp.__command_json(table)
     return rt
   }
   return __mp.__command_native(table)
@@ -433,7 +433,7 @@ function setTimeout(fn: () => void, delay = 1000) {
 }
 
 let intervalId = 1
-let intervalIdMap: Record<number, number> = {}
+const intervalIdMap: Record<number, number> = {}
 function setInterval(fn: () => void, delay = 1000) {
   const id = intervalId++
   // log('setInterval: ' + fn + delay)

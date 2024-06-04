@@ -27,7 +27,7 @@ const setMpvProp = (name: string, type: keyof MpvType, value: any) => {
       break
     }
     default: {
-      throw new Error("prop type error: " + name + " " + type)
+      throw new Error(`prop type error: ${name} ${type}`)
     }
   }
 }
@@ -44,7 +44,7 @@ function useProp<T>(name: string, type: keyof MpvType, defaultValue: T) {
     (fn: T | ((oldValue: T) => T)) => {
       // TODO: https://github.com/microsoft/TypeScript/issues/37663#issuecomment-1827885694
       // @ts-ignore
-      let v = typeof fn === "function" ? fn(prop) : fn
+      const v = typeof fn === "function" ? fn(prop) : fn
       setProp(v)
       setMpvProp(name, type, v)
     },

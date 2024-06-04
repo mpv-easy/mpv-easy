@@ -1,6 +1,7 @@
 import { KeyEvent } from "./mpv"
 
 declare global {
+  // biome-ignore lint/style/noVar: <explanation>
   var mp: MPV
   function print(...args: any[]): void
   function dump(...args: any[]): void
@@ -50,6 +51,7 @@ export interface MpvOsdOverlay {
   z: number
   hidden: boolean
   compute_bounds: boolean
+  // biome-ignore lint/complexity/noBannedTypes: <explanation>
   update(): {} | { x0: number; y0: number; x1: number; y1: number }
   remove(): void
 }

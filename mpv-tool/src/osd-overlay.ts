@@ -17,7 +17,7 @@ function getOverlay(): MpvOsdOverlay {
   }
 
   const overlay = createOsdOverlay()
-  overlay.remove = function () {
+  overlay.remove = () => {
     overlay.hidden = true
     overlay.data = ""
     overlay.compute_bounds = false
@@ -139,9 +139,9 @@ export class OsdOverlay {
       const coord = this.overlay.update() as CoordRect
       this._lastRect = Rect.fromCoord(coord).scale(scale)
       return this._lastRect
-    } else {
-      const coord = this.overlay.update() as CoordRect
-      return Rect.fromCoord(coord).scale(scale)
     }
+
+    const coord = this.overlay.update() as CoordRect
+    return Rect.fromCoord(coord).scale(scale)
   }
 }

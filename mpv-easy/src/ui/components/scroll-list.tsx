@@ -101,7 +101,7 @@ export const ScrollList = React.memo(
         {visibleList.map(({ key, label, onClick }, k) => {
           return (
             <Button
-              id={"scroll-list-" + key}
+              id={`scroll-list-${key}`}
               key={key}
               text={label}
               width={max + button.padding * 2}
@@ -115,7 +115,7 @@ export const ScrollList = React.memo(
               fontSize={fontSize}
               color={button.color}
               onClick={onClick}
-            ></Button>
+            />
           )
         })}
       </Box>

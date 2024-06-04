@@ -387,7 +387,7 @@ export function updatePlaylist(list: string[], playIndex = 0) {
     }
     command(`playlist-play-index ${playIndex + oldList.length}`)
     for (let i = 0; i < oldList.length; i++) {
-      command(`playlist-remove 0`)
+      command("playlist-remove 0")
     }
     return
   }
@@ -403,6 +403,6 @@ export function updatePlaylist(list: string[], playIndex = 0) {
   }
   command(`playlist-play-index ${playIndex + oldCount}`)
   for (let i = 0; i < oldList.length; i++) {
-    command(`playlist-remove 0`)
+    command("playlist-remove 0")
   }
 }

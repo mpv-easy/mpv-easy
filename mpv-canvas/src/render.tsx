@@ -14,7 +14,7 @@ export function renderToCanvas(
   const mp = createMpvMock(canvas, width, height)
   globalThis.mp = mp
 
-  const render = function () {
+  const render = () => {
     let c = -1
     createRender({
       customRender: (node) => {

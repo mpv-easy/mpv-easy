@@ -93,6 +93,9 @@ export const fpsSelector = (state: RootState) =>
 export const buttonStyleSelector = (state: RootState) =>
   styleSelector(state)[modeSelector(state)].button.default
 
+export const fontSelector = (state: RootState) =>
+  styleSelector(state)[modeSelector(state)].font
+
 export const IconButtonSizeSelector = (state: RootState) => {
   const button = styleSelector(state)[modeSelector(state)].button.default
   return button.width + button.padding * 2
@@ -132,6 +135,8 @@ export const playlistStyleSelector = (state: RootState) =>
   styleSelector(state)[modeSelector(state)].playlist
 export const historyStyleSelector = (state: RootState) =>
   styleSelector(state)[modeSelector(state)].history
+export const speedStyleSelector = (state: RootState) =>
+  styleSelector(state)[modeSelector(state)].speed
 
 export const playlistSelector = (state: RootState) =>
   state.context[pluginName].player.playlist

@@ -22,6 +22,7 @@ import {
   getPropertyString,
   isHttp,
   existsSync,
+  commandv,
 } from "@mpv-easy/tool"
 import { Language } from "@mpv-easy/i18n"
 import { ThemeMode, UIName, createDefaultThemeConfig } from "../mpv-easy-theme"
@@ -109,7 +110,9 @@ export const context = createModel<RootModel>()({
       }
       return { ...state }
     },
-
+    playVideo(state, path: string) {
+      commandv("loadfile", path, "replace")
+    },
     screenshot(state) {
       command("screenshot video")
       return { ...state }
@@ -229,15 +232,15 @@ export const context = createModel<RootModel>()({
       const size = fontSize + 16
       const padding = fontSize / 8
       // TODO: color config vs size config
-      state[pluginName].style["dark"].button.default.fontSize = fontSize
-      state[pluginName].style["dark"].button.default.width = size
-      state[pluginName].style["dark"].button.default.height = size
-      state[pluginName].style["dark"].button.default.padding = padding
+      state[pluginName].style.dark.button.default.fontSize = fontSize
+      state[pluginName].style.dark.button.default.width = size
+      state[pluginName].style.dark.button.default.height = size
+      state[pluginName].style.dark.button.default.padding = padding
 
-      state[pluginName].style["light"].button.default.fontSize = fontSize
-      state[pluginName].style["light"].button.default.width = size
-      state[pluginName].style["light"].button.default.height = size
-      state[pluginName].style["light"].button.default.padding = padding
+      state[pluginName].style.light.button.default.fontSize = fontSize
+      state[pluginName].style.light.button.default.width = size
+      state[pluginName].style.light.button.default.height = size
+      state[pluginName].style.light.button.default.padding = padding
 
       return { ...state }
     },

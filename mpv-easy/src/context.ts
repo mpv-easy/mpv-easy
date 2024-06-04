@@ -1,4 +1,6 @@
+// biome-ignore lint/suspicious/useNamespaceKeyword: <explanation>
 declare module globalThis {
+  // biome-ignore lint/style/noVar: <explanation>
   var version: string
 }
 

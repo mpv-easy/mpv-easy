@@ -116,7 +116,7 @@ export class AssDraw {
 
   fontBorderAlpha(alpha: string) {
     if (alpha.length !== 2) {
-      throw new Error("alpha error: " + alpha)
+      throw new Error(`alpha error: ${alpha}`)
     }
     return this.append(`{\\3a&H${alpha}}`)
   }
@@ -131,7 +131,7 @@ export class AssDraw {
       )
     }
 
-    throw new Error("color error: " + color)
+    throw new Error(`color error: ${color}`)
   }
   newLine() {
     return this.append("\r")

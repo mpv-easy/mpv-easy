@@ -65,7 +65,7 @@ const __mp: MpvC = {
   __is_file: ops.op_is_file,
   __read_dir: ops.op_read_dir,
 
-  __command_native: function (table: any) {
+  __command_native: (table: any) => {
     const name = table.name
     const args = table.args
 
@@ -81,43 +81,43 @@ const __mp: MpvC = {
       stdout,
     }
   },
-  __command_native_async: function (id, table: any) {
+  __command_native_async: (id, table: any) => {
     const { name, args = [] } = table
     ops.op_command_native_async(name, args)
   },
-  __get_property_native: function (name: string) {
+  __get_property_native: (name: string) => {
     throw new Error("Function not implemented.")
   },
-  __get_property_number: function (name: string): number {
+  __get_property_number: (name: string): number => {
     throw new Error("Function not implemented.")
   },
-  __get_property_bool: function (name: string): boolean {
+  __get_property_bool: (name: string): boolean => {
     throw new Error("Function not implemented.")
   },
-  __set_property_native: function (name: string, v: string): void {
+  __set_property_native: (name: string, v: string): void => {
     throw new Error("Function not implemented.")
   },
-  __request_event: function (name: string, flag: boolean) {
+  __request_event: (name: string, flag: boolean) => {
     throw new Error("Function not implemented.")
   },
-  __observe_property: function (
+  __observe_property: (
     id: number,
     name: string,
     format?: string | undefined,
-  ) {
+  ) => {
     throw new Error("Function not implemented.")
   },
-  __unobserve_property: function (id: number) {
+  __unobserve_property: (id: number) => {
     throw new Error("Function not implemented.")
   },
 
-  __abort_async_command: function (id: number): void {
+  __abort_async_command: (id: number): void => {
     throw new Error("Function not implemented.")
   },
-  __set_last_error: function (s: string): void {
+  __set_last_error: (s: string): void => {
     throw new Error("Function not implemented.")
   },
-  __wait_event: function (wait: number): MpvWaitEvent {
+  __wait_event: (wait: number): MpvWaitEvent => {
     throw new Error("Function not implemented.")
   },
 }

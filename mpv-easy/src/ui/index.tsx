@@ -35,6 +35,7 @@ import { getPlayableList } from "@mpv-easy/autoload"
 import { VoiceControl } from "./voice-control"
 import { useFirstMountState, useRendersCount } from "react-use"
 import { History } from "./history"
+import { Speed } from "./speed"
 
 export * from "./progress"
 export * from "./toolbar"
@@ -96,6 +97,7 @@ export function Easy(props: Partial<EasyProps>) {
   const fps = useSelector(fpsSelector)
   const path = useSelector(pathSelector)
   const autoloadConfig = useSelector(audoloadConfigSelector)
+  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     if (props.fontSize) {
       dispatch.context.setFontSize(props.fontSize)
@@ -288,6 +290,7 @@ export function Easy(props: Partial<EasyProps>) {
         <ClickMenu ref={menuRef} hide={menuHide} />
         <Playlist />
         <History />
+        <Speed />
       </Box>
     </>
   )

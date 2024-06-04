@@ -29,7 +29,7 @@ export function formatTime(s: number, format: TimeFormat): string {
       return `${hourStr}:${minuteStr}:${secStr}`
     }
     default: {
-      throw new Error("formatTime error: second " + s + " format " + format)
+      throw new Error(`formatTime error: second ${s} format ${format}`)
     }
   }
 }

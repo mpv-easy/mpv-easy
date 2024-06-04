@@ -34,7 +34,7 @@ export function useOsdDimensions() {
     ) || { w: 0, y: 0 },
   )
   observeProperty("osd-dimensions", "native", (_, value) => {
-    if (value.w === _lastOsdW && _lastOsdH === _lastOsdH) {
+    if (value.w === _lastOsdW && value.h === _lastOsdH) {
       return dimension
     }
     _lastOsdW = value.w

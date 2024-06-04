@@ -17,7 +17,7 @@ import { pluginName as autoloadName, getPlayableList } from "@mpv-easy/autoload"
 import { normalize } from "@mpv-easy/tool"
 
 function getList(s: string | undefined, context: PluginContext): string[] {
-  let v: string[] = []
+  const v: string[] = []
   if (!s?.length) {
     return v
   }
@@ -49,7 +49,7 @@ function getList(s: string | undefined, context: PluginContext): string[] {
 
 function fn(context: PluginContext, api: SystemApi) {
   const s = getClipboard().trim().replace(/\\/g, "/")
-  let v = getList(s, context)
+  const v = getList(s, context)
 
   if (v?.length) {
     const index = v.indexOf(s)

@@ -5,12 +5,16 @@ import {
   addKeyBinding,
   clamp,
   command,
+  getOs,
   getPropertyNumber,
   getPropertyString,
+  openDialog,
   osdMessage,
   setClipboard,
   setPropertyNumber,
   todo,
+  print,
+  commandv,
 } from "@mpv-easy/tool"
 import {
   BaseElementProps,
@@ -53,10 +57,7 @@ export interface MenuItem {
   style?: Partial<ButtonProps>
 }
 
-export type ClickMenuProps = {}
-
 const mousePosProp = new PropertyNative<MousePos>("mouse-pos")
-const pauseProp = new PropertyBool("pause")
 
 export const ClickMenu = React.forwardRef<
   {
@@ -95,98 +96,26 @@ export const ClickMenu = React.forwardRef<
   const fontSize = useSelector(fontSizeSelector)
 
   function getClickMenuItems(): MenuItem[] {
-    return [
-      // TODO: open folder and select file
-      // {
-      //   key: i18n.open,
-      //   label: i18n.open,
-      //   onSelect: () => {
-      //     todo()
-      //   },
-      // },
-      {
-        key: pause ? i18n.play : i18n.pause,
-        label: pause ? i18n.play : i18n.pause,
-        onSelect: () => {
-          dispatch.context.setPause(!pause)
-        },
-      },
-      {
-        key: i18n.playlist,
-        label: i18n.playlist,
-        onSelect: () => {
-          dispatch.context.setPlaylistHide(false)
-        },
-      },
+    const os = getOs()
+    const platformItems: MenuItem[] = []
 
-      {
-        key: i18n.theme,
-        label: i18n.theme,
-        children: [
-          {
-            key: i18n.lightName,
-            label: i18n.lightName,
-            onSelect: () => {
-              dispatch.context.setMode("light")
-            },
-            style: {
-              justifyContent: "space-between",
-              alignItems: "center",
-              prefix: lightPrefix,
-            },
-          },
-          {
-            key: i18n.darkName,
-            label: i18n.darkName,
-            onSelect: () => {
-              dispatch.context.setMode("dark")
-            },
-            style: {
-              justifyContent: "space-between",
-              alignItems: "center",
-              prefix: darkPrefix,
-            },
-          },
-        ],
-      },
-      {
-        key: i18n.skin,
-        label: i18n.skin,
-        children: [
-          {
-            key: i18n.osc,
-            label: oscPrefix + "  " + i18n.osc,
-            onSelect: () => {
-              dispatch.context.setUI("osc")
-            },
-          },
-          {
-            key: i18n.uosc,
-            label: uoscPrefix + " " + i18n.uosc,
-            onSelect: () => {
-              dispatch.context.setUI("uosc")
-            },
-          },
-        ],
-      },
-      {
-        key: i18n.videoSpeed,
-        label: i18n.videoSpeed,
-        children: speedList.map((i) => {
-          const prefix = i === speed ? ICON.Ok : ICON.CheckboxBlankCircleOutline
-          return {
-            key: i18n.videoSpeed + "-" + i,
-            label: prefix + " " + i.toString(),
-            onSelect: () => {
-              if (speed !== i) {
-                dispatch.context.setSpeed(i)
-                setPropertyNumber("speed", i)
-              }
-            },
+    if (os === "windows") {
+      platformItems.push({
+        key: i18n.open,
+        label: i18n.open,
+        onSelect: () => {
+          const v = openDialog()[0]
+          if (v) {
+            dispatch.context.playVideo(v)
           }
-        }),
-      },
-      enablePlugins[anime4kName] && {
+        },
+      })
+    }
+
+    const pluginItems: MenuItem[] = []
+
+    if (enablePlugins[anime4kName]) {
+      pluginItems.push({
         key: "anime4k",
         label: "anime4k",
         children: anime4k.shaders.map((i, k) => {
@@ -194,7 +123,7 @@ export const ClickMenu = React.forwardRef<
             k === anime4k.current ? ICON.Ok : ICON.CheckboxBlankCircleOutline
           return {
             key: i.key,
-            label: prefix + " " + i.title,
+            label: `${prefix} ${i.title}`,
             onSelect: () => {
               const { value, title } = i
               if (value.length) {
@@ -213,7 +142,10 @@ export const ClickMenu = React.forwardRef<
             },
           }
         }),
-      },
+      })
+    }
+
+    const systemItems: MenuItem[] = [
       {
         key: i18n.style,
         label: i18n.style,
@@ -242,14 +174,14 @@ export const ClickMenu = React.forwardRef<
         children: [
           {
             key: i18n.languageChinese,
-            label: cnPrefix + " " + i18n.languageChinese,
+            label: `${cnPrefix} ${i18n.languageChinese}`,
             onSelect: () => {
               dispatch.context.setLanguage("cn")
             },
           },
           {
             key: i18n.languageEnglish,
-            label: enPrefix + " " + i18n.languageEnglish,
+            label: `${enPrefix} ${i18n.languageEnglish}`,
             onSelect: () => {
               dispatch.context.setLanguage("en")
             },
@@ -293,7 +225,92 @@ export const ClickMenu = React.forwardRef<
           dispatch.context.exit()
         },
       },
-    ].filter((i) => !!i) as MenuItem[]
+    ]
+    const commonItems: MenuItem[] = [
+      {
+        key: pause ? i18n.play : i18n.pause,
+        label: pause ? i18n.play : i18n.pause,
+        onSelect: () => {
+          dispatch.context.setPause(!pause)
+        },
+      },
+      {
+        key: i18n.playlist,
+        label: i18n.playlist,
+        onSelect: () => {
+          dispatch.context.setPlaylistHide(false)
+        },
+      },
+      {
+        key: i18n.theme,
+        label: i18n.theme,
+        children: [
+          {
+            key: i18n.lightName,
+            label: i18n.lightName,
+            onSelect: () => {
+              dispatch.context.setMode("light")
+            },
+            style: {
+              justifyContent: "space-between",
+              alignItems: "center",
+              prefix: lightPrefix,
+            },
+          },
+          {
+            key: i18n.darkName,
+            label: i18n.darkName,
+            onSelect: () => {
+              dispatch.context.setMode("dark")
+            },
+            style: {
+              justifyContent: "space-between",
+              alignItems: "center",
+              prefix: darkPrefix,
+            },
+          },
+        ],
+      },
+      {
+        key: i18n.skin,
+        label: i18n.skin,
+        children: [
+          {
+            key: i18n.osc,
+            label: `${oscPrefix}  ${i18n.osc}`,
+            onSelect: () => {
+              dispatch.context.setUI("osc")
+            },
+          },
+          {
+            key: i18n.uosc,
+            label: `${uoscPrefix} ${i18n.uosc}`,
+            onSelect: () => {
+              dispatch.context.setUI("uosc")
+            },
+          },
+        ],
+      },
+      {
+        key: i18n.videoSpeed,
+        label: i18n.videoSpeed,
+        children: speedList.map((i) => {
+          const prefix = i === speed ? ICON.Ok : ICON.CheckboxBlankCircleOutline
+          return {
+            key: `${i18n.videoSpeed}-${i}`,
+            label: `${prefix} ${i.toString()}`,
+            onSelect: () => {
+              if (speed !== i) {
+                dispatch.context.setSpeed(i)
+                setPropertyNumber("speed", i)
+              }
+            },
+          }
+        }),
+      },
+    ]
+
+    return [...platformItems, ...commonItems, ...pluginItems, ...systemItems]
   }
 
   const items = getClickMenuItems()
@@ -368,7 +385,7 @@ export const ClickMenu = React.forwardRef<
         {items.map((i, k) => {
           return (
             <Button
-              id={"click-menu-" + i.key}
+              id={`click-menu-${i.key}`}
               key={i.key}
               text={i.label}
               enableMouseStyle={mouseHoverStyle}
@@ -430,7 +447,7 @@ export const ClickMenu = React.forwardRef<
           {(selectedMenu?.children ?? []).map((i) => {
             return (
               <Button
-                id={"click-child-menu-" + i.key}
+                id={`click-child-menu-${i.key}`}
                 key={i.key}
                 text={i.label}
                 enableMouseStyle={mouseHoverStyle}

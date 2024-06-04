@@ -11,6 +11,6 @@ test("fromName", () => {
   const c1 = Bgr.fromName("AliceBlue").toHex()
   expect(c1).toEqual("FFF8F0")
 
-  const c2 = new Rgb(COLORS["AliceBlue"]).toBgr().toHex()
+  const c2 = new Rgb(COLORS.AliceBlue).toBgr().toHex()
   expect(c2).toEqual("FFF8F0")
 })

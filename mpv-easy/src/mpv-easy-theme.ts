@@ -28,6 +28,7 @@ export type ButtonStyle = {
   height: number
 }
 export type ThemeStyle = {
+  font: string
   button: {
     default: ButtonStyle
     active: ButtonStyle
@@ -66,6 +67,13 @@ export type ThemeStyle = {
     autoHideDelay: number
     zIndex: number
     step: number
+  }
+  speed: {
+    showText: boolean
+    steps: {
+      delay: number
+      speed: number
+    }[]
   }
   playlist: {
     backgroundColor: string
@@ -175,6 +183,7 @@ export function createDefaultThemeConfig(): EasyConfig {
     history: [],
     style: {
       dark: {
+        font: defaultFont,
         button: {
           default: {
             padding: defaultPadding,
@@ -244,6 +253,19 @@ export function createDefaultThemeConfig(): EasyConfig {
           previewCursorSize: defaultCursorSize,
           previewCursorColor: White + AlphaMedium,
         },
+        speed: {
+          showText: true,
+          steps: [
+            {
+              delay: 200,
+              speed: 2,
+            },
+            {
+              delay: 2000,
+              speed: 4,
+            },
+          ],
+        },
         playlist: {
           backgroundColor: Black + AlphaLow,
           zIndex: defaultPlaylistZIndex,
@@ -293,6 +315,7 @@ export function createDefaultThemeConfig(): EasyConfig {
         },
       },
       light: {
+        font: defaultFont,
         button: {
           default: {
             padding: defaultPadding,
@@ -361,6 +384,19 @@ export function createDefaultThemeConfig(): EasyConfig {
           zIndex: defaultVolumeZIndex,
           previewCursorSize: defaultCursorSize,
           previewCursorColor: Black + AlphaMedium,
+        },
+        speed: {
+          showText: true,
+          steps: [
+            {
+              delay: 200,
+              speed: 2,
+            },
+            {
+              delay: 2000,
+              speed: 4,
+            },
+          ],
         },
         playlist: {
           backgroundColor: White + AlphaLow,
