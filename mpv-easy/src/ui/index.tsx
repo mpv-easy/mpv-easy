@@ -97,7 +97,6 @@ export function Easy(props: Partial<EasyProps>) {
   const fps = useSelector(fpsSelector)
   const path = useSelector(pathSelector)
   const autoloadConfig = useSelector(audoloadConfigSelector)
-  // biome-ignore lint/correctness/useExhaustiveDependencies: <explanation>
   useEffect(() => {
     if (props.fontSize) {
       dispatch.context.setFontSize(props.fontSize)

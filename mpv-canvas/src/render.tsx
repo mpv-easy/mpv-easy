@@ -1,7 +1,7 @@
 // @ts-ignore
 import FontFaceObserver from "fontfaceobserver"
 import { createRender, renderNode } from "@mpv-easy/ui"
-import React from "react"
+import type React from "react"
 import { createMpvMock } from "./mock"
 
 export function renderToCanvas(

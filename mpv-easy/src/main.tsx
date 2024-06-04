@@ -12,6 +12,7 @@ import {
 import type { Store } from "./store"
 import { throttle } from "lodash-es"
 import { command } from "@mpv-easy/tool"
+export const pluginName = "@mpv-easy/mpv-easy-ui"
 
 declare module "@mpv-easy/plugin" {
   interface PluginContext {
@@ -22,9 +23,9 @@ declare module "@mpv-easy/plugin" {
     store: Store
   }
 }
+
 export { defaultConfig } from "./mpv-easy-theme"
 
-export const pluginName = "@mpv-easy/mpv-easy-ui"
 export default definePlugin((context, api) => ({
   name: pluginName,
   create() {

@@ -10,7 +10,7 @@ import {
   print,
 } from "@mpv-easy/tool"
 import type { MousePos } from "@mpv-easy/tool"
-import React from "react"
+import type React from "react"
 import createReconciler from "react-reconciler"
 import { DefaultEventPriority } from "react-reconciler/constants"
 

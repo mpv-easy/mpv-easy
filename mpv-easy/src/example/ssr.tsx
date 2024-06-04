@@ -1,5 +1,5 @@
 import "@mpv-easy/tool"
-import React from "react"
+import type React from "react"
 import { getConfig } from "../context"
 import { createStore } from "../store"
 import { Easy } from "../ui"

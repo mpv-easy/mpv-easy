@@ -28,10 +28,7 @@ type State = {
   count: number
 }
 
-const counterReducer = (
-  state: State = { count: 0 },
-  action: CounterActionTypes,
-): State => {
+const counterReducer = (state: State, action: CounterActionTypes): State => {
   switch (action.type) {
     case INCREMENT:
       return { count: state.count + 1 }
