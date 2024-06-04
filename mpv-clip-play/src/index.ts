@@ -11,8 +11,8 @@ import {
   webdavList,
 } from "@mpv-easy/tool"
 
-import { SystemApi, definePlugin } from "@mpv-easy/plugin"
-import { PluginContext } from "@mpv-easy/plugin"
+import { type SystemApi, definePlugin } from "@mpv-easy/plugin"
+import type { PluginContext } from "@mpv-easy/plugin"
 import { pluginName as autoloadName, getPlayableList } from "@mpv-easy/autoload"
 import { normalize } from "@mpv-easy/tool"
 

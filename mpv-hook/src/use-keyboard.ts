@@ -1,7 +1,7 @@
 import {
   AlphabetKeys,
   CtrlKeys,
-  InputKey,
+  type InputKey,
   NumberKeys,
   PunctuationKeys,
   addForcedKeyBinding,

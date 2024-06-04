@@ -1,12 +1,12 @@
 import { command, getFileName } from "@mpv-easy/tool"
-import { Box, Button, DOMElement } from "@mpv-easy/ui"
+import { Box, Button, type DOMElement } from "@mpv-easy/ui"
 import React, { useRef } from "react"
 import { useSelector, useDispatch } from "react-redux"
 import * as ICON from "../icon"
 import {
   buttonStyleSelector,
   mouseHoverStyleSelector,
-  Dispatch,
+  type Dispatch,
   playlistStyleSelector,
   playlistSelector,
   playlistHideSelector,

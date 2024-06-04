@@ -39,7 +39,6 @@
     "@mpv-easy/plugin": "workspace:*",
     "@mpv-easy/polyfill": "workspace:*",
     "@mpv-easy/thumbfast": "workspace:*",
-    "@mpv-easy/speed": "workspace:*",
     "@mpv-easy/tool": "workspace:*",
     "@mpv-easy/ui": "workspace:*",
     "@polkadot/x-textencoder": "^12.6.2",

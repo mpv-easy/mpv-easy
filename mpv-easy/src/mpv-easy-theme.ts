@@ -1,4 +1,4 @@
-import { MousePos, VideoParams } from "@mpv-easy/tool"
+import type { MousePos, VideoParams } from "@mpv-easy/tool"
 import { defaultFPS } from "@mpv-easy/ui"
 import { cloneDeep } from "lodash-es"
 
@@ -257,7 +257,7 @@ export function createDefaultThemeConfig(): EasyConfig {
           showText: true,
           steps: [
             {
-              delay: 200,
+              delay: 300,
               speed: 2,
             },
             {
@@ -389,7 +389,7 @@ export function createDefaultThemeConfig(): EasyConfig {
           showText: true,
           steps: [
             {
-              delay: 200,
+              delay: 300,
               speed: 2,
             },
             {

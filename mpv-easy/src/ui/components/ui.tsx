@@ -5,7 +5,7 @@ import * as ICON from "../../icon"
 import {
   buttonStyleSelector,
   pauseSelector,
-  Dispatch,
+  type Dispatch,
   i18nSelector,
   mouseHoverStyleSelector,
   dropdownStyleSelector,
@@ -34,7 +34,7 @@ export const UI = () => {
       items={[
         {
           key: "osc",
-          label: oscPrefix + " " + i18n.osc,
+          label: `${oscPrefix} ${i18n.osc}`,
           onSelect: () => {
             dispatch.context.setUI("osc")
           },
@@ -44,7 +44,7 @@ export const UI = () => {
         },
         {
           key: "uosc",
-          label: uoscPrefix + " " + i18n.uosc,
+          label: `${uoscPrefix} ${i18n.uosc}`,
           onSelect: () => {
             dispatch.context.setUI("uosc")
           },

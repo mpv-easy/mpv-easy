@@ -13,6 +13,6 @@ export function BorderText() {
       fontSize={48}
       fontBorderColor={"FF0000C0"}
       backgroundColor="00FFFFA0"
-    ></Box>
+    />
   )
 }

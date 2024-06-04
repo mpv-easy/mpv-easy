@@ -13,5 +13,5 @@ export interface MenuProps {
 }
 
 export function Menu(props: MenuProps) {
-  return <Box></Box>
+  return <Box />
 }

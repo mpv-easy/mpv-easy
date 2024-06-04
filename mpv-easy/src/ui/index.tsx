@@ -2,10 +2,10 @@ import React, { useEffect, useRef, useState } from "react"
 import { Uosc } from "./uosc"
 import { Osc } from "./osc"
 import { Toolbar } from "./toolbar"
-import { Box, DOMElement, Tooltip } from "@mpv-easy/ui"
+import { Box, type DOMElement, Tooltip } from "@mpv-easy/ui"
 import { useSelector, useDispatch } from "react-redux"
 import {
-  Dispatch,
+  type Dispatch,
   audoloadConfigSelector,
   fpsSelector,
   modeSelector,
@@ -21,9 +21,9 @@ import {
   PropertyNumber,
   PropertyString,
   PropertyNative,
-  MousePos,
-  MpvPropertyTypeMap,
-  VideoParams,
+  type MousePos,
+  type MpvPropertyTypeMap,
+  type VideoParams,
   normalize,
   dir,
   getMpvPlaylist,

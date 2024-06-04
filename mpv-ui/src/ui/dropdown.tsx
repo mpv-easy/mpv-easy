@@ -1,7 +1,7 @@
 import React, { useRef, useState } from "react"
-import { Button, ButtonProps } from "./button"
+import { Button, type ButtonProps } from "./button"
 import { Box } from "./box"
-import { DOMElement } from "../render"
+import type { DOMElement } from "../render"
 import { isEvent } from "../common"
 
 export type DropdownItem = {
@@ -98,7 +98,7 @@ export const Dropdown = (props: Partial<ButtonProps & DropdownProps>) => {
                     setShow(false)
                   }}
                   {...(i.style ?? {})}
-                ></Button>
+                />
               )
             })}
           </Box>

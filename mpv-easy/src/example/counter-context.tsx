@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useReducer, Dispatch } from "react"
+import React, { createContext, useContext, useReducer, type Dispatch } from "react"
 import * as ICON from "../icon"
 
 interface CounterState {

@@ -1,6 +1,6 @@
-import { BaseElementProps, Box, DOMElement } from "../index"
+import { type BaseElementProps, Box, type DOMElement } from "../index"
 import React, { useEffect, useRef, useState } from "react"
-import { MousePos, PropertyNative } from "@mpv-easy/tool"
+import { type MousePos, PropertyNative } from "@mpv-easy/tool"
 import { isEqual, throttle } from "lodash-es"
 import { getRootNode, dispatchEvent } from "../render/flex"
 
@@ -24,16 +24,13 @@ export function getDirection(
   if (x < halfW) {
     if (y < halfH) {
       return "left-top"
-    } else {
-      return "left-bottom"
     }
-  } else {
+      return "left-bottom"
+  }
     if (y < halfH) {
       return "right-top"
-    } else {
-      return "right-bottom"
     }
-  }
+      return "right-bottom"
 }
 
 export function computeTooltipPosition(

@@ -1,6 +1,6 @@
-import { Rect, CoordRect } from "./common"
+import { Rect, type CoordRect } from "./common"
 import { createOsdOverlay } from "./mpv"
-import { MpvOsdOverlay } from "./type"
+import type { MpvOsdOverlay } from "./type"
 
 const overlayPool: {
   overlay: MpvOsdOverlay

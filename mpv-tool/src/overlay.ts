@@ -15,10 +15,10 @@ export class Overlay {
 
   constructor(public id: number) {
     if (overlayIdUsed[id] !== false) {
-      throw new Error("overlay's id has already been used." + id)
+      throw new Error(`overlay's id has already been used.${id}`)
     }
     if (id < 0 || id >= maxId) {
-      throw new Error("overlay's id must be in the range [0, 63]" + id)
+      throw new Error(`overlay's id must be in the range [0, 63]${id}`)
     }
     overlayIdUsed[id] = true
   }

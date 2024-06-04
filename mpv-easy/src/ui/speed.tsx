@@ -23,6 +23,7 @@ export function Speed() {
       alignItems="center"
       font={font}
       onMouseDown={() => {
+        print("down", press)
         if (!press) {
           initSpeed.current = speed
           handleList.current = style.steps.map(
@@ -35,6 +36,7 @@ export function Speed() {
         }
       }}
       onMouseUp={() => {
+        print("up", press)
         if (press) {
           for (const hd of handleList.current) {
             clearTimeout(hd)

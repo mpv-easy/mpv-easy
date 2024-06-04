@@ -46,7 +46,7 @@ import autoloadPlugin, {
   pluginName as autoloadName,
 } from "@mpv-easy/autoload"
 
-import { PluginContext, SystemApi } from "@mpv-easy/plugin"
+import { type PluginContext, SystemApi } from "@mpv-easy/plugin"
 import {
   ConfigDir,
   existsSync,

@@ -52,7 +52,7 @@ export function FlexBoxText() {
           borderColor="00FFFF"
           padding={padding}
           borderSize={borderSize}
-        ></Button>
+        />
       </Box>
     </Box>
   )

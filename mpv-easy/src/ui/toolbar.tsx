@@ -1,4 +1,4 @@
-import { BaseElementProps, Box, DOMElement } from "@mpv-easy/ui"
+import { type BaseElementProps, Box, type DOMElement } from "@mpv-easy/ui"
 import React, { forwardRef } from "react"
 import { useSelector } from "react-redux"
 import {

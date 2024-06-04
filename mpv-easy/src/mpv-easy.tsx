@@ -3,7 +3,7 @@ import { getConfig, plugins, saveConfig } from "./context"
 import type { EnablePlugin } from "./context"
 import { print } from "@mpv-easy/tool"
 import { createStore } from "./store"
-import { SystemApi } from "@mpv-easy/plugin"
+import type { SystemApi } from "@mpv-easy/plugin"
 import { pluginName } from "./main"
 import { createDefaultThemeConfig } from "./mpv-easy-theme"
 

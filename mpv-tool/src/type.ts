@@ -1,4 +1,4 @@
-import { KeyEvent } from "./mpv"
+import type { KeyEvent } from "./mpv"
 
 declare global {
   // biome-ignore lint/style/noVar: <explanation>

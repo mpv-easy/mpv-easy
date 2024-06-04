@@ -1,6 +1,6 @@
 import {
-  KeyEvent,
-  MpvPropertyTypeMap,
+  type KeyEvent,
+  type MpvPropertyTypeMap,
   PropertyNative,
   addForcedKeyBinding,
   addKeyBinding,
@@ -9,18 +9,18 @@ import {
   observeProperty,
   print,
 } from "@mpv-easy/tool"
-import { MousePos } from "@mpv-easy/tool"
+import type { MousePos } from "@mpv-easy/tool"
 import React from "react"
 import createReconciler from "react-reconciler"
 import { DefaultEventPriority } from "react-reconciler/constants"
 
 import {
-  DOMElement,
+  type DOMElement,
   appendChildNode,
   createNode,
   insertBeforeNode,
   removeChildNode,
-  MouseEvent,
+  type MouseEvent,
 } from "./dom"
 import { RootId, getRootNode, dispatchEvent, renderNode } from "./flex"
 import { applyProps } from "../common"
@@ -48,7 +48,7 @@ export function createCustomReconciler(
     commitTextUpdate(node, _oldText, newText) {
       throw new Error("not support Text Component update")
     },
-    commitMount() {},
+    commitMount() { },
     removeChildFromContainer(root: DOMElement, node: DOMElement) {
       removeChildNode(root, node)
       customRenderNode(getRootNode())
@@ -72,10 +72,10 @@ export function createCustomReconciler(
     ): unknown => {
       throw new Error("not support Text components")
     },
-    hideTextInstance(node) {},
-    unhideTextInstance(node, text) {},
-    hideInstance(node) {},
-    unhideInstance(node) {},
+    hideTextInstance(node) { },
+    unhideTextInstance(node, text) { },
+    hideInstance(node) { },
+    unhideInstance(node) { },
     appendInitialChild: (
       parentInstance: DOMElement,
       child: DOMElement,
@@ -133,13 +133,13 @@ export function createCustomReconciler(
     prepareForCommit: (containerInfo: unknown): Record<string, any> | null => {
       return null
     },
-    resetTextContent(instance: unknown) {},
+    resetTextContent(instance: unknown) { },
     // shouldDeprioritizeSubtree() {
 
     // },
-    clearContainer: () => {},
-    resetAfterCommit: (containerInfo: unknown): void => {},
-    preparePortalMount: (containerInfo: unknown): void => {},
+    clearContainer: () => { },
+    resetAfterCommit: (containerInfo: unknown): void => { },
+    preparePortalMount: (containerInfo: unknown): void => { },
     scheduleTimeout: (
       fn: (...args: unknown[]) => unknown,
       delay?: number | undefined,
@@ -159,9 +159,9 @@ export function createCustomReconciler(
     getInstanceFromNode: (node: any): null => {
       return null
     },
-    beforeActiveInstanceBlur: (): void => {},
-    afterActiveInstanceBlur: (): void => {},
-    prepareScopeUpdate: (scopeInstance: any, instance: any): void => {},
+    beforeActiveInstanceBlur: (): void => { },
+    afterActiveInstanceBlur: (): void => { },
+    prepareScopeUpdate: (scopeInstance: any, instance: any): void => { },
     getInstanceFromScope: (scopeInstance: any): unknown => {
       return null
     },

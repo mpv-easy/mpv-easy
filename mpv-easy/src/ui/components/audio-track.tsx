@@ -1,4 +1,4 @@
-import { Dropdown, DropdownItem, dispatchEvent } from "@mpv-easy/ui"
+import { Dropdown, type DropdownItem, dispatchEvent } from "@mpv-easy/ui"
 import React, { useEffect } from "react"
 import { useSelector, useDispatch } from "react-redux"
 import * as ICON from "../../icon"
@@ -8,11 +8,11 @@ import {
   mouseHoverStyleSelector,
   dropdownStyleSelector,
   aidSelector,
-  Dispatch,
+  type Dispatch,
   smallFontSizeSelector,
 } from "../../store"
 import {
-  TrackItem,
+  type TrackItem,
   getPropertyBool,
   getPropertyNative,
   getPropertyNumber,

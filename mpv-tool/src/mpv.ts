@@ -1,6 +1,6 @@
 import { ConfigDir } from "./const"
 import { normalize } from "./path"
-import {
+import type {
   AddKeyBindingFlags,
   FileInfo,
   LogLevel,

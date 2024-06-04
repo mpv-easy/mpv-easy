@@ -62,9 +62,9 @@ function Progress({
         height={"100%"}
         justifyContent="start"
         alignItems="center"
-      ></Box>
+      />
       <Box
-        id={id + "-cursor"}
+        id={`${id}-cursor`}
         position="relative"
         width={cursorSize}
         left={`${left * 100}%`}
@@ -72,7 +72,7 @@ function Progress({
         backgroundColor="00FF00"
       />
       <Box
-        id={id + "-hover-cursor"}
+        id={`${id}-hover-cursor`}
         position="relative"
         width={cursorHoverWidth}
         left={`${leftHover * 100}%`}

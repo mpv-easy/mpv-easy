@@ -1,4 +1,4 @@
-import { MouseEvent } from "./render/dom"
+import type { MouseEvent } from "./render/dom"
 
 export type Len = number | string
 

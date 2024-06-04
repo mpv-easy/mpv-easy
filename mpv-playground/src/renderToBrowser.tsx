@@ -5,7 +5,7 @@ globalThis.print = console.log
 import { createMpvMock } from "@mpv-easy/canvas"
 import "./main.css"
 import { createRender, renderNode } from "@mpv-easy/ui"
-import { MPV } from "@mpv-easy/tool"
+import type { MPV } from "@mpv-easy/tool"
 // @ts-ignore
 import FontFaceObserver from "fontfaceobserver"
 

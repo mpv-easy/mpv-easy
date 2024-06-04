@@ -30,14 +30,14 @@ export function BoxZIndex() {
           height={"20%"}
           backgroundColor="00FFFF"
           display="flex"
-        ></Box>
+        />
         <Box
           id="flex-3"
           width={"30%"}
           height={"30%"}
           backgroundColor="FFFFFF"
           display="flex"
-        ></Box>
+        />
 
         <Box
           id="flex-4"
@@ -45,7 +45,7 @@ export function BoxZIndex() {
           backgroundColor="000000"
           display="flex"
           position="absolute"
-        ></Box>
+        />
       </Box>
     </Box>
   )

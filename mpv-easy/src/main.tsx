@@ -7,9 +7,9 @@ import { Provider } from "react-redux"
 import {
   defaultSaveConfigThrottle,
   defaultState,
-  EasyConfig,
+  type EasyConfig,
 } from "./mpv-easy-theme"
-import { Store } from "./store"
+import type { Store } from "./store"
 import { throttle } from "lodash-es"
 import { command } from "@mpv-easy/tool"
 

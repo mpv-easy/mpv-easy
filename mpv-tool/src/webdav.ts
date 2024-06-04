@@ -1,4 +1,4 @@
-import { url } from "inspector"
+import { url } from "node:inspector"
 import { fetch } from "./fetch"
 import { print } from "./mpv"
 export type WebdavItem = {

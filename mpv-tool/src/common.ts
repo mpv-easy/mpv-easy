@@ -1,9 +1,9 @@
 import { assert } from "./assert"
 import {
-  AlphabetKey,
+  type AlphabetKey,
   AlphabetKeys,
   DEFAULT_ASS_HEIGHT,
-  NumberKey,
+  type NumberKey,
   NumberKeys,
 } from "./const"
 import {

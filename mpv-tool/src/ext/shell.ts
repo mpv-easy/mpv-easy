@@ -1,4 +1,4 @@
-import { text } from "stream/consumers"
+import { text } from "node:stream/consumers"
 import { execSync, getOs } from "../common"
 import {
   commandNative,

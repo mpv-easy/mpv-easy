@@ -1,5 +1,5 @@
 import {
-  MpvType,
+  type MpvType,
   observeProperty,
   setProperty,
   setPropertyBool,

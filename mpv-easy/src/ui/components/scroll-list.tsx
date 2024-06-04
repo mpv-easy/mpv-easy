@@ -2,11 +2,11 @@ import { getFileName, command, clamp } from "@mpv-easy/tool"
 import {
   Box,
   Button,
-  MouseEvent,
+  type MouseEvent,
   // DOMElement,
-  ButtonProps,
+  type ButtonProps,
   createNode,
-  BaseElementProps,
+  type BaseElementProps,
   lenToNumber,
   DOMElement,
 } from "@mpv-easy/ui"

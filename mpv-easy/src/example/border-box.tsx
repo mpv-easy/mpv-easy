@@ -15,6 +15,6 @@ export function BorderBox() {
       borderSize={size}
       fontBorderColor="00FF00A0"
       padding={size}
-    ></Box>
+    />
   )
 }

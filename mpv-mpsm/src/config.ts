@@ -1,4 +1,4 @@
-import { join } from "path"
+import { join } from "node:path"
 import {
   outputJsonSync,
   readJsonSync,
@@ -7,7 +7,7 @@ import {
   readFileSync,
   statSync,
 } from "fs-extra"
-import { Meta, getMeta } from "./meta"
+import { type Meta, getMeta } from "./meta"
 import chalk from "chalk"
 
 export const ConfigFileName = "mpsm-config.json"

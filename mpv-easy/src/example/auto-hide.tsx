@@ -23,7 +23,7 @@ export function AutoHideBox() {
         justifyContent="center"
         alignItems="center"
       >
-        <Box width={500} height={500} backgroundColor="00FFFFA0"></Box>
+        <Box width={500} height={500} backgroundColor="00FFFFA0" />
       </AutoHide>
     </Box>
   )

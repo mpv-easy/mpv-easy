@@ -1,7 +1,7 @@
-import { join } from "path"
+import { join } from "node:path"
 import { getMpsmDir } from "./config"
 import { outputFileSync } from "fs-extra"
-import { Meta, addMeta, getMeta } from "./meta"
+import { type Meta, addMeta, getMeta } from "./meta"
 import {
   downloadJson,
   downloadText,

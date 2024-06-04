@@ -5,7 +5,7 @@ import * as ICON from "../../icon"
 import {
   buttonStyleSelector,
   pauseSelector,
-  Dispatch,
+  type Dispatch,
   i18nSelector,
   mouseHoverStyleSelector,
 } from "../../store"
@@ -39,6 +39,6 @@ export const Stop = () => {
         dispatch.context.setTimePos(0)
         setPropertyNumber("time-pos", 0)
       }}
-    ></Button>
+    />
   )
 }

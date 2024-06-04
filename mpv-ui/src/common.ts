@@ -1,6 +1,6 @@
 import { AssDraw } from "@mpv-easy/assdraw"
 import { OsdOverlay, Rect, getAssScale, isPercentage } from "@mpv-easy/tool"
-import { DOMElement, setAttribute } from "./render/dom"
+import { type DOMElement, setAttribute } from "./render/dom"
 import { Len } from "./type"
 import { lenToNumber } from "./render/flex"
 export const propsToSkip = {

@@ -1,5 +1,6 @@
-import React, { useEffect, useRef, useState } from "react"
-import { BaseElementProps } from "../type"
+import React from "react"
+import { useEffect, useRef, useState } from "react"
+import type { BaseElementProps } from "../type"
 import { Box } from "./box"
 
 export type PanelProps = {

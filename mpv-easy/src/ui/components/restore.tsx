@@ -5,7 +5,7 @@ import * as ICON from "../../icon"
 import {
   buttonStyleSelector,
   pauseSelector,
-  Dispatch,
+  type Dispatch,
   i18nSelector,
   mouseHoverStyleSelector,
 } from "../../store"

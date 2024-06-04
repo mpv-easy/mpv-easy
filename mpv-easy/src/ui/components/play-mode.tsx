@@ -1,4 +1,4 @@
-import { Dropdown, DropdownItem } from "@mpv-easy/ui"
+import { Dropdown, type DropdownItem } from "@mpv-easy/ui"
 import React, { useState } from "react"
 import { useSelector } from "react-redux"
 import * as ICON from "../../icon"
@@ -21,7 +21,7 @@ export const PlayMode = () => {
     (i): DropdownItem => {
       return {
         label:
-          (mode === i ? ICON.Ok : ICON.CheckboxBlankCircleOutline) + " " + i,
+          `${mode === i ? ICON.Ok : ICON.CheckboxBlankCircleOutline} ${i}`,
         key: i,
         onSelect: () => {
           setMode(i)

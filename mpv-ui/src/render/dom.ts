@@ -1,5 +1,5 @@
-import { OsdOverlay, Overlay } from "@mpv-easy/tool"
-import { BaseElementProps } from "../type"
+import { OsdOverlay, type Overlay } from "@mpv-easy/tool"
+import type { BaseElementProps } from "../type"
 import { Rect } from "@mpv-easy/tool"
 export class MouseEvent {
   private _x: number

@@ -8,6 +8,8 @@ import "core-js/stable/array/from"
 import "core-js/stable/array/some"
 import "core-js/stable/array/includes"
 import "core-js/stable/array/at"
+import "core-js/stable/number"
+
 // @ts-ignore
 // biome-ignore lint/suspicious/noShadowRestrictedNames: <explanation>
 import Map from "core-js/stable/map"

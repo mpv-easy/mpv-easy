@@ -153,7 +153,7 @@ export function SnakeGame() {
     }
 
     for (const [key, dir] of keyMap) {
-      addForcedKeyBinding(key, "snake-" + key, () => {
+      addForcedKeyBinding(key, `snake-${key}`, () => {
         snake.direction = dir
       })
     }

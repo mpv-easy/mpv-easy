@@ -1,10 +1,10 @@
-import { BaseElementProps, Box, DOMElement } from "@mpv-easy/ui"
+import { type BaseElementProps, Box, type DOMElement } from "@mpv-easy/ui"
 import React, { useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
 import {
   volumeMaxSelector,
   volumeSelector,
-  Dispatch,
+  type Dispatch,
   buttonStyleSelector,
   volumeStyleSelector,
   osdDimensionsSelector,

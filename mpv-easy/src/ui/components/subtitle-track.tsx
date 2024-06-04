@@ -1,4 +1,4 @@
-import { Dropdown, DropdownItem } from "@mpv-easy/ui"
+import { Dropdown, type DropdownItem } from "@mpv-easy/ui"
 import React from "react"
 import { useDispatch, useSelector } from "react-redux"
 import * as ICON from "../../icon"
@@ -14,7 +14,7 @@ import {
 } from "@mpv-easy/tool"
 import {
   buttonStyleSelector,
-  Dispatch,
+  type Dispatch,
   i18nSelector,
   mouseHoverStyleSelector,
   dropdownStyleSelector,
@@ -26,7 +26,7 @@ function getExtraSub(path: string) {
   const prefix = path.split(".").slice(0, -1).join(".")
   const subs: string[] = []
   for (const i of SubtitleTypes) {
-    const subPath = prefix + "." + i
+    const subPath = `${prefix}.${i}`
     if (existsSync(subPath)) {
       subs.push(subPath)
     }
@@ -77,7 +77,7 @@ export const SubtitleTrack = () => {
     ({ title, lang, external, selected, id }, k): DropdownItem => {
       const key = [title, lang, external, k].join("-")
       const prefix = sid === id ? ICON.Ok : ICON.CheckboxBlankCircleOutline
-      const label = prefix + " " + (title ?? lang ?? "default")
+      const label = `${prefix} ${title ?? lang ?? "default"}`
       return {
         label,
         key: key,

@@ -1,7 +1,7 @@
 import { AssDraw } from "@mpv-easy/assdraw"
 import { usePropertyBool } from "@mpv-easy/hook"
 import { PropertyBool, command, observeProperty } from "@mpv-easy/tool"
-import { Box, render, MouseEvent } from "@mpv-easy/ui"
+import { Box, render, type MouseEvent } from "@mpv-easy/ui"
 import React, { useEffect, useState } from "react"
 
 function createHandler(id: string | number) {
@@ -67,7 +67,7 @@ export function FlexNestEvent() {
             console.log("stop up 3")
             e.stopPropagation()
           }}
-        ></Box>
+        />
       </Box>
     </Box>
   )

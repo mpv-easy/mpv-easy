@@ -1,6 +1,6 @@
 import React, { forwardRef } from "react"
 import { Progress } from "../progress"
-import { Box, DOMElement, BaseElementProps } from "@mpv-easy/ui"
+import { Box, type DOMElement, type BaseElementProps } from "@mpv-easy/ui"
 import { UoscControl } from "./control"
 import { pluginName } from "../../main"
 import { useSelector } from "react-redux"

@@ -10,7 +10,7 @@ import {
   print,
   setPropertyNumber,
 } from "@mpv-easy/tool"
-import { Box, DOMElement, render } from "@mpv-easy/ui"
+import { Box, type DOMElement, render } from "@mpv-easy/ui"
 import React, { useEffect, useState, useRef, useLayoutEffect } from "react"
 
 command("set osc no")
@@ -82,7 +82,7 @@ export function ProgressPreview() {
         top={0}
         color="FFFFFF"
         text={left.toFixed(2)}
-      ></Box>
+      />
       <Box
         id="cursor"
         position="relative"
@@ -110,8 +110,8 @@ export function ProgressPreview() {
           display="flex"
           position="relative"
           backgroundImageFormat={thumb?.format}
-          backgroundImage={thumb?.path + "?ts=" + Date.now()}
-        ></Box>
+          backgroundImage={`${thumb?.path}?ts=${Date.now()}`}
+        />
       </Box>
     </Box>
   )

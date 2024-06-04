@@ -47,7 +47,7 @@ export function Progress() {
         top={0}
         color="FFFFFF"
         text={left.toFixed(2)}
-      ></Box>
+      />
       <Box
         id="cursor"
         position="relative"

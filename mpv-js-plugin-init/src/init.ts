@@ -1,4 +1,4 @@
-import { type MPV } from "@mpv-easy/tool"
+import type { MPV } from "@mpv-easy/tool"
 
 const log = globalThis.print
 
@@ -231,8 +231,8 @@ function runObserve() {
 
 mp.get_opt = (key, def) => {
   // log("get_opt: " + key + def)
-  var v = mp.get_property_native<any>("options/script-opts")?.[key]
-  return typeof v != "undefined" ? v : def
+  const v = mp.get_property_native<any>("options/script-opts")?.[key]
+  return typeof v !== "undefined" ? v : def
 }
 
 mp.get_script_name = (...args) => {
@@ -382,7 +382,7 @@ mp.utils = {
   },
   join_path(p1: string, p2: string) {
     // log("join_path: " + p1 + "/" + p2)
-    return p1 + "/" + p2
+    return `${p1}/${p2}`
   },
   getpid(...args) {
     // log("getpid: " + args.join(", "))

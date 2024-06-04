@@ -46,7 +46,7 @@ export function DragBall() {
         height={size}
         backgroundColor={move ? "00FFFF" : "00FF00"}
         borderRadius={size / 2}
-      ></Box>
+      />
     </Box>
   )
 }

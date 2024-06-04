@@ -1,4 +1,4 @@
-import { BaseElementProps, Box } from "@mpv-easy/ui"
+import { type BaseElementProps, Box } from "@mpv-easy/ui"
 import React from "react"
 import { useSelector } from "react-redux"
 import { buttonStyleSelector, controlStyleSelector } from "../../store"

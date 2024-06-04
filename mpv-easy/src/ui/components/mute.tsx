@@ -1,10 +1,10 @@
-import { Button, ButtonProps } from "@mpv-easy/ui"
+import { Button, type ButtonProps } from "@mpv-easy/ui"
 import React from "react"
 import { useDispatch, useSelector } from "react-redux"
 import * as ICON from "../../icon"
 import {
   buttonStyleSelector,
-  Dispatch,
+  type Dispatch,
   i18nSelector,
   mouseHoverStyleSelector,
   muteSelector,

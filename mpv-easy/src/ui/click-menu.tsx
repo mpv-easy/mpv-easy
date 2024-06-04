@@ -1,5 +1,5 @@
 import {
-  MousePos,
+  type MousePos,
   PropertyBool,
   PropertyNative,
   addKeyBinding,
@@ -17,13 +17,13 @@ import {
   commandv,
 } from "@mpv-easy/tool"
 import {
-  BaseElementProps,
-  DOMElement,
+  type BaseElementProps,
+  type DOMElement,
   Box,
   computeTooltipPosition,
   getDirection,
   Button,
-  ButtonProps,
+  type ButtonProps,
 } from "@mpv-easy/ui"
 import { getRootNode } from "@mpv-easy/ui"
 import React, { useEffect, useRef, useState } from "react"
@@ -32,7 +32,7 @@ import {
   buttonStyleSelector,
   clickMenuStyleSelector,
   mouseHoverStyleSelector,
-  Dispatch,
+  type Dispatch,
   i18nSelector,
   pauseSelector,
   anime4kSelector,

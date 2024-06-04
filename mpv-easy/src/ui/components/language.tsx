@@ -5,7 +5,7 @@ import * as ICON from "../../icon"
 import {
   buttonStyleSelector,
   pauseSelector,
-  Dispatch,
+  type Dispatch,
   i18nSelector,
   mouseHoverStyleSelector,
   dropdownStyleSelector,
@@ -34,14 +34,14 @@ export const Language = () => {
       items={[
         {
           key: "Chinese",
-          label: cnPrefix + " " + i18n.languageChinese,
+          label: `${cnPrefix} ${i18n.languageChinese}`,
           onSelect: () => {
             dispatch.context.setLanguage("cn")
           },
         },
         {
           key: "English",
-          label: enPrefix + " " + i18n.languageEnglish,
+          label: `${enPrefix} ${i18n.languageEnglish}`,
           onSelect: () => {
             dispatch.context.setLanguage("en")
           },

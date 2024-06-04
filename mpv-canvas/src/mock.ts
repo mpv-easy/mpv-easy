@@ -1,4 +1,4 @@
-import {
+import type {
   AddKeyBindingFlags,
   FileInfo,
   KeyEvent,
@@ -19,7 +19,7 @@ function getColor(s: string) {
   const match = s.match(regex)
   if (match) {
     const bgr = match[1]
-    const rgb = new Bgr(parseInt(bgr, 16)).toRgb().toHex()
+    const rgb = new Bgr(Number.parseInt(bgr, 16)).toRgb().toHex()
     return rgb
   }
   return undefined
@@ -58,7 +58,7 @@ function getAlpha(s: string) {
   const match = s.match(regex)
   if (match) {
     const alpha = match[1]
-    const revertAlpha = (255 - parseInt(alpha ?? "FF", 16))
+    const revertAlpha = (255 - Number.parseInt(alpha ?? "FF", 16))
       .toString(16)
       .padStart(2, "0")
       .toUpperCase()
@@ -430,7 +430,7 @@ export function createMpvMock(
           is_mouse: true,
           key_name: "WHEEL_DOWN",
         } as const
-        for (const fn of eventMap["MOUSE_BTN4"] || []) {
+        for (const fn of eventMap.MOUSE_BTN4 || []) {
           fn(mpvEvent)
         }
       } else {
@@ -439,7 +439,7 @@ export function createMpvMock(
           is_mouse: true,
           key_name: "WHEEL_UP",
         } as const
-        for (const fn of eventMap["MOUSE_BTN4"] || []) {
+        for (const fn of eventMap.MOUSE_BTN4 || []) {
           fn(mpvEvent)
         }
       }
@@ -456,7 +456,7 @@ export function createMpvMock(
             is_mouse: true,
             key_name: "MBTN_LEFT",
           } as const
-          for (const fn of eventMap["MOUSE_BTN0"] || []) {
+          for (const fn of eventMap.MOUSE_BTN0 || []) {
             fn(mpvEvent)
           }
           return
@@ -467,7 +467,7 @@ export function createMpvMock(
             is_mouse: true,
             key_name: "MBTN_RIGHT",
           } as const
-          for (const fn of eventMap["MOUSE_BTN2"] || []) {
+          for (const fn of eventMap.MOUSE_BTN2 || []) {
             fn(mpvEvent)
           }
           return
@@ -499,7 +499,7 @@ export function createMpvMock(
         key_name: "MBTN_LEFT",
       } as const
       // // console.log(mpvEvent)
-      for (const fn of eventMap["MOUSE_BTN0"] || []) {
+      for (const fn of eventMap.MOUSE_BTN0 || []) {
         fn(mpvEvent)
       }
     }, 1 / fps),
@@ -838,7 +838,7 @@ export function createMpvMock(
         const list = path.split("/")
         return [list.slice(0, -1).join("/"), list.at(-1) || ""]
       },
-      join_path: (p1: string, p2: string): string => p1 + "/" + p2,
+      join_path: (p1: string, p2: string): string => `${p1}/${p2}`,
       getpid: (): number => props.pid,
       getenv: (name: string): string | undefined => {
         // console.log("getenv not implemented.")

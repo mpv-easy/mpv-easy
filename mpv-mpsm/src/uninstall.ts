@@ -1,4 +1,4 @@
-import { join } from "path"
+import { join } from "node:path"
 import { getAllScript, getMpsmDir } from "./config"
 import { removeSync, existsSync, readFileSync } from "fs-extra"
 import { getMeta } from "./meta"

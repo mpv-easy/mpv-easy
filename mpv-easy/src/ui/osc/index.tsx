@@ -1,5 +1,5 @@
 import React, { forwardRef } from "react"
-import { Box, DOMElement, BaseElementProps } from "@mpv-easy/ui"
+import { Box, type DOMElement, type BaseElementProps } from "@mpv-easy/ui"
 import { OscControl } from "./control"
 import { pluginName } from "../../main"
 import { OscInfo } from "./info"

@@ -1,14 +1,14 @@
 import { createModel } from "@rematch/core"
 import type { RootModel } from "."
 import "@mpv-easy/tool"
-import { PluginContext } from "@mpv-easy/plugin"
+import type { PluginContext } from "@mpv-easy/plugin"
 import { pluginName } from "../main"
 import {
   PropertyBool,
   PropertyNumber,
   PropertyString,
   PropertyNative,
-  MousePos,
+  type MousePos,
   command,
   setPropertyBool,
   setPropertyNumber,
@@ -16,7 +16,7 @@ import {
   MpvPropertyTypeMap,
   getPropertyNative,
   setPropertyNative,
-  VideoParams,
+  type VideoParams,
   updatePlaylist,
   getPropertyNumber,
   getPropertyString,
@@ -24,10 +24,10 @@ import {
   existsSync,
   commandv,
 } from "@mpv-easy/tool"
-import { Language } from "@mpv-easy/i18n"
-import { ThemeMode, UIName, createDefaultThemeConfig } from "../mpv-easy-theme"
+import type { Language } from "@mpv-easy/i18n"
+import { type ThemeMode, type UIName, createDefaultThemeConfig } from "../mpv-easy-theme"
 import { pluginName as i18nName } from "@mpv-easy/i18n"
-import { pluginName as anime4kName, Anime4kConfig } from "@mpv-easy/anime4k"
+import { pluginName as anime4kName, type Anime4kConfig } from "@mpv-easy/anime4k"
 import { createDefaultContext } from "../context"
 import { historySelector, historyStyleSelector } from "../store"
 

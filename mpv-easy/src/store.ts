@@ -1,6 +1,6 @@
-import { RematchDispatch, RematchRootState, init } from "@rematch/core"
+import { type RematchDispatch, type RematchRootState, init } from "@rematch/core"
 import selectPlugin from "@rematch/select"
-import { RootModel, models } from "./models"
+import { type RootModel, models } from "./models"
 import { pluginName } from "./main"
 import i18nPlugin, { pluginName as i18nName } from "@mpv-easy/i18n"
 import { pluginName as anime4kName } from "@mpv-easy/anime4k"

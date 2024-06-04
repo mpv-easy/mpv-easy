@@ -1,4 +1,4 @@
-import { MousePos, observeProperty } from "@mpv-easy/tool"
+import { type MousePos, observeProperty } from "@mpv-easy/tool"
 import { useState } from "react"
 
 export function useMousePos() {

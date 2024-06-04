@@ -61,4 +61,4 @@ declare global {
   function exit(): void
 }
 // biome-ignore lint/complexity/noUselessEmptyExport: <explanation>
-export {}
+export type {}

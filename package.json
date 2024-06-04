@@ -15,7 +15,7 @@
     "example": "pnpm run --parallel dev",
     "lint": "biome check --apply-unsafe  ./",
     "format": "biome format --write  ./",
-    "lint:fix": "biome lint ./ --apply",
+    "lint:fix": "biome lint ./ --write --unsafe",
     "test": "pnpm run --parallel test",
     "clear": "rm -rf node_modules && pnpm -r exec rm -rf node_modules dist es5",
     "clear-dist": "rm -rf dist es5 && pnpm -r exec rm -rf dist es5",
@@ -31,19 +31,19 @@
   "author": "ahaoboy",
   "license": "MIT",
   "devDependencies": {
-    "@babel/cli": "^7.23.9",
-    "@babel/core": "^7.23.9",
-    "@babel/preset-env": "^7.23.9",
-    "@babel/preset-typescript": "^7.23.3",
-    "@biomejs/biome": "^1.5.3",
-    "@types/node": "^20.11.17",
+    "@babel/cli": "^7.24.6",
+    "@babel/core": "^7.24.6",
+    "@babel/preset-env": "^7.24.6",
+    "@babel/preset-typescript": "^7.24.6",
+    "@biomejs/biome": "^1.8.0",
+    "@types/node": "^20.14.1",
     "babel-minify": "^0.5.2",
     "case-police": "^0.6.1",
     "chokidar-cli": "^3.0.0",
-    "core-js": "^3.35.1",
-    "dotenv": "^16.4.1",
+    "core-js": "^3.37.1",
+    "dotenv": "^16.4.5",
     "esbuild": "^0.19.12",
-    "typescript": "^5.3.3",
-    "vitest": "^1.2.2"
+    "typescript": "^5.4.5",
+    "vitest": "^1.6.0"
   }
 }

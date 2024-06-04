@@ -1,6 +1,7 @@
-import React, { forwardRef } from "react"
-import { BaseElementProps } from "../type"
-import { DOMElement } from "../render"
+import React from "react"
+import { forwardRef } from "react"
+import type { BaseElementProps } from "../type"
+import type { DOMElement } from "../render"
 
 export type Ref = DOMElement
 

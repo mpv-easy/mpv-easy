@@ -3,16 +3,16 @@ import {
   getAssScale,
   assert,
   parsePercentage,
-  MousePos,
-  KeyEvent,
+  type MousePos,
+  type KeyEvent,
   Rect,
   isPercentage,
   print,
   fileInfo,
   Overlay,
 } from "@mpv-easy/tool"
-import { Len } from "../type"
-import { DOMElement, MouseEvent, createNode } from "./dom"
+import type { Len } from "../type"
+import { type DOMElement, MouseEvent, createNode } from "./dom"
 import { getAssText, measureText, readAttr } from "../common"
 
 let _RootNode: DOMElement
@@ -51,10 +51,10 @@ export function lenToNumber(
       if (isPercentage(len)) {
         return getAxisSize(node.parentNode!, isX) * parsePercentage(len)
       }
-      return parseFloat(len)
+      return Number.parseFloat(len)
     }
     default: {
-      throw new Error("len type error: " + len)
+      throw new Error(`len type error: ${len}`)
     }
   }
   return v
@@ -92,7 +92,7 @@ function computeNodeSizeAxis(
     setAxisSize(node, len, isX)
     return
   }
-  throw new Error("computeNodeSize error, not support length: " + v)
+  throw new Error(`computeNodeSize error, not support length: ${v}`)
 }
 
 const defaultZIndexStep = 1
@@ -819,7 +819,7 @@ function computedNodeAlign(node: DOMElement) {
   }
 
   throw new Error(
-    "not support flex align: " + justifyContent + " " + alignItems,
+    `not support flex align: ${justifyContent} ${alignItems}`,
   )
 }
 function computeNodeLayout(node: DOMElement, currentRenderCount: number) {
@@ -1085,10 +1085,7 @@ export function renderNode(
         }
         default: {
           throw new Error(
-            "text layout not support: justifyContent " +
-              justifyContent +
-              " alignItems " +
-              alignItems,
+            `text layout not support: justifyContent ${justifyContent} alignItems ${alignItems}`,
           )
         }
       }

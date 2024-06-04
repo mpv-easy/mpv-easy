@@ -40,8 +40,20 @@
         "noNonNullAssertion": "off",
         "noParameterAssign": "off"
       },
+      "complexity": {
+        "noBannedTypes": "off"
+      },
       "suspicious": {
-        "noExplicitAny": "off"
+        "noArrayIndexKey": "off",
+        "noRedeclare": "off",
+        "noUnsafeDeclarationMerging": "off",
+        "noExplicitAny": "off",
+        "noImplicitAnyLet": "off",
+        "noFallthroughSwitchClause": "off",
+        "noAssignInExpressions": "off"
+      },
+      "correctness": {
+        "useExhaustiveDependencies": "off"
       },
       "recommended": true
     }

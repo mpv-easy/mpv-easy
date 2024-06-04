@@ -45,7 +45,7 @@ export function DragBox() {
         width={size}
         height={size}
         backgroundColor={move ? "00FFFF" : "00FF00"}
-      ></Box>
+      />
     </Box>
   )
 }

@@ -1,4 +1,4 @@
-import { Models } from "@rematch/core"
+import type { Models } from "@rematch/core"
 import { context } from "./context"
 
 export interface RootModel extends Models<RootModel> {

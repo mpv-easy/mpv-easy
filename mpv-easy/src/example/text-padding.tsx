@@ -21,7 +21,7 @@ export function TextPadding() {
         alignItems="center"
         text="ABC"
         fontSize={32}
-      ></Box>
+      />
       <Box
         backgroundColor="0000FF"
         // width={"25%"}
@@ -32,7 +32,7 @@ export function TextPadding() {
         alignItems="center"
         text="EFG"
         fontSize={32}
-      ></Box>
+      />
     </Box>
   )
 }

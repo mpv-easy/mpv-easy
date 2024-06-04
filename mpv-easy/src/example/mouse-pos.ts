@@ -1,6 +1,6 @@
 import throttle from "lodash-es/throttle"
 import debounce from "lodash-es/debounce"
-import { PropertyNative, MousePos } from "@mpv-easy/tool"
+import { PropertyNative, type MousePos } from "@mpv-easy/tool"
 
 const time = 500
 const mousePosProp = new PropertyNative<MousePos>("mouse-pos")

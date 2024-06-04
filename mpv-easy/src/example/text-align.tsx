@@ -15,6 +15,6 @@ export function TextAlign() {
       color="0000FF"
       justifyContent="center"
       alignItems="center"
-    ></Box>
+    />
   )
 }

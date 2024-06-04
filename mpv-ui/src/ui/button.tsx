@@ -1,8 +1,8 @@
 import { clone, setMouseStyle } from "@mpv-easy/tool"
 import React, { useState } from "react"
-import { BaseElementProps, Len } from "../type"
+import { type BaseElementProps, Len } from "../type"
 import { Box } from "./box"
-import { DOMElement } from "../render"
+import type { DOMElement } from "../render"
 
 export type ButtonCustomProp =
   | "color"
@@ -60,7 +60,7 @@ function getHoverProps(props: any) {
 }
 
 export const Button = React.forwardRef<DOMElement, Partial<ButtonProps>>(
-  ({ prefix, postfix, text, ...props } = {}, ref) => {
+  ({ prefix, postfix, text, ...props }, ref) => {
     const hoverProps = getHoverProps(props)
     const [hover, setHover] = useState(false)
 
@@ -90,21 +90,21 @@ export const Button = React.forwardRef<DOMElement, Partial<ButtonProps>>(
       >
         {prefix && (
           <Box
-            id={"button-prefix-" + props.id}
+            id={`button-prefix-${props.id}`}
             pointerEvents="none"
             text={prefix}
           />
         )}
         {text && (
           <Box
-            id={"button-text-" + props.id}
+            id={`button-text-${props.id}`}
             pointerEvents="none"
             text={text}
           />
         )}
         {postfix && (
           <Box
-            id={"button-postfix-" + props.id}
+            id={`button-postfix-${props.id}`}
             pointerEvents="none"
             text={postfix}
           />

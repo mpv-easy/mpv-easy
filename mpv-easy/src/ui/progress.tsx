@@ -1,7 +1,7 @@
 import {
   PropertyNative,
   PropertyString,
-  VideoParams,
+  type VideoParams,
   command,
   formatTime,
   getPropertyBool,
@@ -10,13 +10,13 @@ import {
   randomId,
   setPropertyNumber,
 } from "@mpv-easy/tool"
-import { Box, DOMElement } from "@mpv-easy/ui"
+import { Box, type DOMElement } from "@mpv-easy/ui"
 import React, { useRef, useState, useLayoutEffect, useEffect } from "react"
-import { MouseEvent } from "@mpv-easy/ui"
-import { Len } from "@mpv-easy/ui"
+import type { MouseEvent } from "@mpv-easy/ui"
+import type { Len } from "@mpv-easy/ui"
 import { useSelector, useDispatch } from "react-redux"
 import {
-  Dispatch,
+  type Dispatch,
   progressStyleSelector,
   durationSelector,
   timePosSelector,

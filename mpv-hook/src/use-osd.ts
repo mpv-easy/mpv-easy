@@ -1,5 +1,5 @@
 import {
-  MpvPropertyTypeMap,
+  type MpvPropertyTypeMap,
   getPropertyNative,
   getPropertyNumber,
   observeProperty,

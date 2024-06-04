@@ -116,16 +116,16 @@ export function TextBox() {
           backgroundColor="FF0000"
           color="00FF00"
           fontSize={64}
-        ></Box>
+        />
       ))}
       <Box fontSize={64} id="-0+1111" backgroundColor="FF00FF">
-        <Box text="-" id="t1111111111111"></Box>
+        <Box text="-" id="t1111111111111" />
       </Box>
       <Box fontSize={64} backgroundColor="FF00FF" id="-0+2222">
-        <Box text="+" id="t22222222222"></Box>
+        <Box text="+" id="t22222222222" />
       </Box>
       <Box fontSize={64} backgroundColor="FF00FF" id="-0+3333">
-        <Box text="*" id="t3333333"></Box>
+        <Box text="*" id="t3333333" />
       </Box>
       <Box
         fontSize={64}
@@ -133,7 +133,7 @@ export function TextBox() {
         font="FiraCode Nerd Font Mono Reg"
         id="-0+3333"
       >
-        <Box text={ICON.Pause} id="t3333333"></Box>
+        <Box text={ICON.Pause} id="t3333333" />
       </Box>
       <Box
         fontSize={64}
@@ -141,7 +141,7 @@ export function TextBox() {
         backgroundColor="FF00FF"
         id="-0+3333"
       >
-        <Box text={ICON.Play} id="t3333333"></Box>
+        <Box text={ICON.Play} id="t3333333" />
       </Box>
       <Box
         fontSize={64}
@@ -149,7 +149,7 @@ export function TextBox() {
         backgroundColor="FF00FF"
         id="-0+3333"
       >
-        <Box text={ICON.Stop} id="t3333333"></Box>
+        <Box text={ICON.Stop} id="t3333333" />
       </Box>
       <Box
         fontSize={64}
@@ -157,7 +157,7 @@ export function TextBox() {
         backgroundColor="FF00FF"
         id="-0+3333"
       >
-        <Box text={ICON.Minus} id="t3333333"></Box>
+        <Box text={ICON.Minus} id="t3333333" />
       </Box>
       <Box
         fontSize={64}
@@ -165,7 +165,7 @@ export function TextBox() {
         backgroundColor="FF00FF"
         id="-0+3333"
       >
-        <Box text={ICON.Plus} id="t3333333"></Box>
+        <Box text={ICON.Plus} id="t3333333" />
       </Box>
 
       <Box
@@ -174,7 +174,7 @@ export function TextBox() {
         font="FiraCode Nerd Font Mono Reg"
         backgroundColor="FF00FF"
         id="-0+6555"
-      ></Box>
+      />
     </>
   )
 }

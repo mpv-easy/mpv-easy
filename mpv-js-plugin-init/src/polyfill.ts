@@ -1,12 +1,11 @@
-import { MpvC, MpvWaitEvent } from "./type"
+import type { MpvC, MpvWaitEvent } from "./type"
 
 if (!Array.prototype.at) {
   Array.prototype.at = function (index) {
     if (index >= 0) {
       return this[index]
-    } else {
-      return this[this.length + index]
     }
+      return this[this.length + index]
   }
 }
 
@@ -14,7 +13,7 @@ const core = globalThis.Deno.core
 const ops = core.ops
 
 globalThis.print = (...args) =>
-  globalThis.Deno.core.print(args.join(" ") + "\n")
+  globalThis.Deno.core.print(`${args.join(" ")}\n`)
 
 declare global {
   var Deno: {

@@ -1,4 +1,4 @@
-import { Box, render, DOMElement } from "@mpv-easy/ui"
+import { Box, render, type DOMElement } from "@mpv-easy/ui"
 import React, { useEffect, useRef } from "react"
 import { useUpdate } from "react-use"
 
@@ -36,7 +36,7 @@ export function BorderBoxList() {
         .map((_, k) => {
           return (
             <Box
-              id={"box-list-" + k}
+              id={`box-list-${k}`}
               key={k}
               width={size}
               height={size}
@@ -46,7 +46,7 @@ export function BorderBoxList() {
               fontBorderColor="0000FFA0"
               padding={size}
               zIndex={100}
-            ></Box>
+            />
           )
         })}
     </Box>

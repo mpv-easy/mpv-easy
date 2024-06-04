@@ -2,12 +2,12 @@ import React from "react"
 import { Provider, useDispatch, useSelector } from "react-redux"
 import { store } from "./store"
 import { Box, render } from "@mpv-easy/ui"
-import { RootState, Dispatch } from "./store"
+import type { RootState, Dispatch } from "./store"
 import { print } from "@mpv-easy/tool"
 
 function CounterText({ c }: { c: number }) {
   print("CounterText")
-  return <Box text={c.toString()}></Box>
+  return <Box text={c.toString()} />
 }
 
 function CounterA() {
@@ -30,15 +30,15 @@ function CounterA() {
             print("-")
             dispatch.counter.changeA(-1)
           }}
-        ></Box>
-        <CounterText c={counterA}></CounterText>
+        />
+        <CounterText c={counterA} />
         <Box
           text="+"
           onClick={() => {
             print("+")
             dispatch.counter.changeA(1)
           }}
-        ></Box>
+        />
       </Box>
     </>
   )
@@ -62,8 +62,8 @@ function CounterB() {
             print("-")
             dispatch.counter.changeB(-1)
           }}
-        ></Box>
-        <CounterText c={counterB}></CounterText>
+        />
+        <CounterText c={counterB} />
         {/* <Box text={counter.count.toString()}></Box> */}
         <Box
           text="+"
@@ -71,7 +71,7 @@ function CounterB() {
             print("+")
             dispatch.counter.changeB(1)
           }}
-        ></Box>
+        />
       </Box>
     </>
   )

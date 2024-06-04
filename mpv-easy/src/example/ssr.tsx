@@ -19,12 +19,12 @@ const RecursiveDiv: React.FC<RecursiveDivProps> = ({ deep, count }) => {
   // @ts-ignore
   return (
     <div
-      id={deep + "-" + count}
-      key={deep + "-" + count}
+      id={`${deep}-${count}`}
+      key={`${deep}-${count}`}
       // @ts-ignore
-      width={deep + "-" + count}
+      width={`${deep}-${count}`}
       // @ts-ignore
-      height={deep + "-" + count}
+      height={`${deep}-${count}`}
     >
       {children}
     </div>
