@@ -5,7 +5,7 @@ if (!Array.prototype.at) {
     if (index >= 0) {
       return this[index]
     }
-      return this[this.length + index]
+    return this[this.length + index]
   }
 }
 

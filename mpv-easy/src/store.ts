@@ -1,4 +1,8 @@
-import { type RematchDispatch, type RematchRootState, init } from "@rematch/core"
+import {
+  type RematchDispatch,
+  type RematchRootState,
+  init,
+} from "@rematch/core"
 import selectPlugin from "@rematch/select"
 import { type RootModel, models } from "./models"
 import { pluginName } from "./main"

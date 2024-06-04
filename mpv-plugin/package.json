@@ -4,11 +4,7 @@
   "description": "",
   "main": "dist/index.js",
   "types": "./dist/index.d.ts",
-  "files": [
-    "dist",
-    "readme.md",
-    "package.json"
-  ],
+  "files": ["dist", "readme.md", "package.json"],
   "scripts": {
     "es5": "babel ./src/index.ts -d ./b",
     "build": "tsc -p ./tsconfig.build.json",

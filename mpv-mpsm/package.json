@@ -1,12 +1,7 @@
 {
   "name": "@mpv-easy/mpsm",
   "version": "0.1.9-alpha.1",
-  "files": [
-    "bin",
-    "dist",
-    "readme.md",
-    "package.json"
-  ],
+  "files": ["bin", "dist", "readme.md", "package.json"],
   "description": "@mpv-easy/mpsm",
   "main": "./dist/index.js",
   "bin": {

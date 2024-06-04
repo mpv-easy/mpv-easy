@@ -48,8 +48,6 @@ export function Speed() {
           display="flex"
           justifyContent="center"
           alignItems="center"
-          left={"50%"}
-          top={"50%"}
           text={`${ICON.Forward}x${speed}`}
         />
       )}

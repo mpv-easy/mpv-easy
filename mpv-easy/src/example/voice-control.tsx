@@ -1,7 +1,11 @@
 import { dispatchEvent, getRootNode } from "@mpv-easy/ui"
 import { Box } from "@mpv-easy/ui"
 import React, { useEffect } from "react"
-import { PropertyNative, type MousePos, addForcedKeyBinding } from "@mpv-easy/tool"
+import {
+  PropertyNative,
+  type MousePos,
+  addForcedKeyBinding,
+} from "@mpv-easy/tool"
 
 const mousePosProp = new PropertyNative<MousePos>("mouse-pos")
 

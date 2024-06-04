@@ -25,9 +25,16 @@ import {
   commandv,
 } from "@mpv-easy/tool"
 import type { Language } from "@mpv-easy/i18n"
-import { type ThemeMode, type UIName, createDefaultThemeConfig } from "../mpv-easy-theme"
+import {
+  type ThemeMode,
+  type UIName,
+  createDefaultThemeConfig,
+} from "../mpv-easy-theme"
 import { pluginName as i18nName } from "@mpv-easy/i18n"
-import { pluginName as anime4kName, type Anime4kConfig } from "@mpv-easy/anime4k"
+import {
+  pluginName as anime4kName,
+  type Anime4kConfig,
+} from "@mpv-easy/anime4k"
 import { createDefaultContext } from "../context"
 import { historySelector, historyStyleSelector } from "../store"
 

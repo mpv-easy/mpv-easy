@@ -1,6 +1,6 @@
 import type { MousePos, VideoParams } from "@mpv-easy/tool"
 import { defaultFPS } from "@mpv-easy/ui"
-import { cloneDeep } from "lodash-es"
+import { cloneDeep, delay } from "lodash-es"
 
 const White = "FFFFFF"
 const Black = "000000"
@@ -175,7 +175,16 @@ export const defaultMaxItemCount = 8
 export const defaultVolumeStep = 10
 export const defaultHideUIDelay = 5000
 export const defaultSaveConfigThrottle = 2000
-
+export const defaultSpeedSteps = [
+  {
+    delay: 500,
+    speed: 2,
+  },
+  {
+    delay: 2000,
+    speed: 4,
+  },
+]
 export function createDefaultThemeConfig(): EasyConfig {
   return cloneDeep({
     mode: "dark",
@@ -255,16 +264,7 @@ export function createDefaultThemeConfig(): EasyConfig {
         },
         speed: {
           showText: true,
-          steps: [
-            {
-              delay: 500,
-              speed: 2,
-            },
-            {
-              delay: 2000,
-              speed: 4,
-            },
-          ],
+          steps: defaultSpeedSteps,
         },
         playlist: {
           backgroundColor: Black + AlphaLow,
@@ -387,16 +387,7 @@ export function createDefaultThemeConfig(): EasyConfig {
         },
         speed: {
           showText: true,
-          steps: [
-            {
-              delay: 500,
-              speed: 2,
-            },
-            {
-              delay: 2000,
-              speed: 4,
-            },
-          ],
+          steps: defaultSpeedSteps,
         },
         playlist: {
           backgroundColor: White + AlphaLow,

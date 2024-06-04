@@ -818,9 +818,7 @@ function computedNodeAlign(node: DOMElement) {
     }
   }
 
-  throw new Error(
-    `not support flex align: ${justifyContent} ${alignItems}`,
-  )
+  throw new Error(`not support flex align: ${justifyContent} ${alignItems}`)
 }
 function computeNodeLayout(node: DOMElement, currentRenderCount: number) {
   const { layoutNode, attributes } = node
@@ -848,8 +846,10 @@ function computeNodeLayout(node: DOMElement, currentRenderCount: number) {
       }
       break
     }
-
     case "absolute": {
+      if (node.childNodes.length && node.attributes.display === "flex") {
+        computedNodeAlign(node)
+      }
       break
     }
     default: {

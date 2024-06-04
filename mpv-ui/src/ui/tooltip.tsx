@@ -25,12 +25,12 @@ export function getDirection(
     if (y < halfH) {
       return "left-top"
     }
-      return "left-bottom"
+    return "left-bottom"
   }
-    if (y < halfH) {
-      return "right-top"
-    }
-      return "right-bottom"
+  if (y < halfH) {
+    return "right-top"
+  }
+  return "right-bottom"
 }
 
 export function computeTooltipPosition(

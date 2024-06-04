@@ -1,11 +1,7 @@
 {
   "name": "@mpv-easy/mpv-easy",
   "version": "0.1.9-alpha.1",
-  "files": [
-    "dist",
-    "readme.md",
-    "package.json"
-  ],
+  "files": ["dist", "readme.md", "package.json"],
   "description": "@mpv-easy/easy",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
