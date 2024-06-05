@@ -1,6 +1,6 @@
 {
   "name": "@mpv-easy/mock",
-  "version": "0.1.9-alpha.1",
+  "version": "0.1.9-alpha.3",
   "files": ["dist", "readme.md", "package.json"],
   "description": "",
   "main": "dist/index.js",

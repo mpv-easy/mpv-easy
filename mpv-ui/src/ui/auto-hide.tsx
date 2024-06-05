@@ -1,4 +1,5 @@
-import type React from "react"
+// biome-ignore lint/style/useImportType: <explanation>
+import React from "react"
 import { useEffect, useRef, useState } from "react"
 import type { BaseElementProps } from "../type"
 import { Box } from "./box"

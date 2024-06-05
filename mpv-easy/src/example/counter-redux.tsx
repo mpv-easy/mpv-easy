@@ -28,7 +28,13 @@ type State = {
   count: number
 }
 
-const counterReducer = (state: State, action: CounterActionTypes): State => {
+const counterReducer = (
+  state: State | undefined,
+  action: CounterActionTypes,
+): State => {
+  if (!state) {
+    return { count: 1 }
+  }
   switch (action.type) {
     case INCREMENT:
       return { count: state.count + 1 }

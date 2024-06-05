@@ -2,7 +2,8 @@ import { execSync, getOs } from "../common"
 import { joinPath, getScriptConfigDir, error } from "../mpv"
 import decodeUriComponent from "decode-uri-component"
 import { getFileName } from "../path"
-import { Buffer } from "node:buffer"
+// biome-ignore lint/style/useNodejsImportProtocol: <explanation>
+import { Buffer } from "buffer"
 
 export const defaultBinDirName = "rs-ext"
 export const getDefaultBinDirPath = () =>
