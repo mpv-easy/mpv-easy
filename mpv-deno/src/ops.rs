@@ -1,9 +1,9 @@
+use api::{commandv, get_property};
+use deno_core::*;
 use mpv_easy_client::api::{
     self, command_json, get_property_string, set_property_bool, set_property_number,
     set_property_string,
 };
-use api::{commandv, get_property};
-use deno_core::*;
 use std::process::Command;
 
 #[op2]
@@ -116,10 +116,10 @@ fn exec_command(name: String, args: Vec<String>) -> String {
         (&name, args.as_slice())
     };
     let output = Command::new(cmd_name).args(cmd_args).output().unwrap();
-    
 
     String::from_utf8(output.stdout).unwrap()
 }
+
 #[op2]
 #[string]
 fn op_command_native(
@@ -150,31 +150,29 @@ fn op_command_native_async(
 }
 
 pub fn new_runtime() -> JsRuntime {
-    // Build a deno_core::Extension providing custom ops
+    const OPS: [OpDecl; 15] = [
+        op_commandv(),
+        op_command_string(),
+        op_get_property_string(),
+        op_set_property_bool(),
+        op_set_property_number(),
+        op_set_property_string(),
+        op_read_file(),
+        op_write_file(),
+        op_file_size(),
+        op_file_exists(),
+        op_is_file(),
+        op_read_dir(),
+        op_command_native(),
+        op_command_native_async(),
+        op_command_json(),
+    ];
     let ext = Extension {
-        name: "my_ext",
-        ops: std::borrow::Cow::Borrowed(&[
-            op_commandv::DECL,
-            op_command_string::DECL,
-            op_get_property_string::DECL,
-            op_set_property_bool::DECL,
-            op_set_property_number::DECL,
-            op_set_property_string::DECL,
-            op_read_file::DECL,
-            op_write_file::DECL,
-            op_file_size::DECL,
-            op_file_exists::DECL,
-            op_is_file::DECL,
-            op_read_dir::DECL,
-            op_command_native::DECL,
-            op_command_native_async::DECL,
-            op_command_json::DECL,
-        ]),
+        name: "mpv_ext",
+        ops: std::borrow::Cow::Borrowed(&OPS),
         ..Default::default()
     };
 
-    // Initialize a runtime instance
-    
     JsRuntime::new(RuntimeOptions {
         extensions: vec![ext],
         ..Default::default()
