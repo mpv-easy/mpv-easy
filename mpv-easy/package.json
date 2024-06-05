@@ -1,6 +1,6 @@
 {
   "name": "@mpv-easy/mpv-easy",
-  "version": "0.1.9-alpha.1",
+  "version": "0.1.9-alpha.2",
   "files": ["dist", "readme.md", "package.json"],
   "description": "@mpv-easy/easy",
   "main": "./dist/index.js",
@@ -8,7 +8,7 @@
   "scripts": {
     "bundle:example": "esbuild ./src/example/*.(tsx|ts) --bundle --outdir=bundle/example --charset=utf8 --define:globalThis.version='\"0.1.6-alpha.3\"'",
     "es5:example": "babel --presets  @babel/preset-env ./bundle/example -d es5/example --plugins ./src/babel/hack.js",
-    "bundle": "esbuild ./src/mpv-easy-*.tsx --bundle --outdir=bundle --charset=utf8 --define:globalThis.version='\"0.1.9-alpha.1\"'",
+    "bundle": "esbuild ./src/mpv-easy-*.tsx --bundle --outdir=bundle --charset=utf8 --define:globalThis.version='\"0.1.9-alpha.2\"'",
     "es5": "babel --presets  @babel/preset-env ./bundle -d es5 --plugins ./src/babel/hack.js",
     "dev": "chokidar \"../mpv-*/src/**/*.(ts|tsx|json)\" -c \"pnpm run build && pnpm run copy\" -t 3000  --initial",
     "dev-ts": "tsc -p ./tsconfig.build.json -w",

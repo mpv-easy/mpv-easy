@@ -1,6 +1,6 @@
 {
   "name": "@mpv-easy/js-plugin-init",
-  "version": "0.1.9-alpha.1",
+  "version": "0.1.9-alpha.2",
   "private": true,
   "description": "",
   "main": "./dist/index.js",
@@ -9,11 +9,12 @@
   "author": "",
   "license": "ISC",
   "scripts": {
-    "build": "esbuild ./src/*.(ts|tsx) --bundle --outdir=./dist --charset=utf8 --format=iife",
+    "build": "esbuild ./src/*.(ts|tsx) --bundle --outdir=./dist --charset=utf8 --format=iife && pnpm run copy",
     "build-minify": "esbuild ./src/*.(ts|tsx) --bundle --outdir=./dist --charset=utf8 --format=iife --minify",
-    "copy-js": "cp -r ./dist/*.js $MPV_SCRIPT_DENO_DIR/",
-    "copy-dll": "cp ./dist/*.dll $MPV_SCRIPT_DENO_DIR/../scripts",
-    "copy": "npm run copy-js && npm run copy-dll"
+    "copy": "pnpm run copy:boa && pnpm run copy:qjs && pnpm run copy:deno",
+    "copy:boa": "rm -rf ../mpv-boa/dist && cp -r ./dist ../mpv-boa/dist",
+    "copy:qjs": "rm -rf ../mpv-qjs/dist && cp -r ./dist ../mpv-qjs/dist",
+    "copy:deno": "rm -rf ../mpv-deno/dist && cp -r ./dist ../mpv-deno/dist"
   },
   "devDependencies": {},
   "dependencies": {

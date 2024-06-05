@@ -17,15 +17,8 @@ jobs:
           pnpm i
 
           cd ./mpv-js-plugin-init
-
-          esbuild ./src/init.ts --bundle --outdir=./dist --charset=utf8 --format=iife
-          esbuild ./src/polyfill.ts --bundle --outdir=./dist --charset=utf8 --format=iife
-
-          cp -r ./dist ../mpv-deno
-          cp -r ./dist ../mpv-qjs
-          cp -r ./dist ../mpv-boa
-          cd ..
-
+          pnpm run build
+ 
       - uses: actions-rust-lang/setup-rust-toolchain@v1
         with:
           rustflags: "-A warnings"
@@ -297,4 +290,4 @@ jobs:
           cd ..
       - uses: ncipollo/release-action@v1
         with:
-          artifacts: "./mpy-easy-*/*.zip"
+          artifacts: "./mpy-easy-*/*.zip,./mpv-easy/es5/mpv-easy-es5.js,./mpv-easy/bundle/mpv-easy-es6.js,./mpv-easy/mpv-easy.meta.js"

@@ -1,6 +1,6 @@
 {
   "name": "@mpv-easy/mpv-easy-tpl",
-  "version": "0.1.9-alpha.1",
+  "version": "0.1.9-alpha.2",
   "files": ["dist", "readme.md", "package.json"],
   "description": "",
   "main": "./dist/index.js",
