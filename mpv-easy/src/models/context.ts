@@ -119,6 +119,7 @@ export const context = createModel<RootModel>()({
     },
     playVideo(state, path: string) {
       commandv("loadfile", path, "replace")
+      return state
     },
     screenshot(state) {
       command("screenshot video")
