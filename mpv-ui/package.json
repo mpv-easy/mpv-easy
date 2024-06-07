@@ -1,6 +1,6 @@
 {
   "name": "@mpv-easy/ui",
-  "version": "0.1.9-alpha.3",
+  "version": "0.1.9",
   "files": ["dist", "readme.md", "package.json"],
   "description": "@mpv-easy/ui",
   "main": "dist/index.js",
