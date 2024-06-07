@@ -1,5 +1,5 @@
 import { getOs, execSync } from "./common"
-import { fileInfo, getPropertyBool, setPropertyBool } from "./mpv"
+import { error, fileInfo, getPropertyBool, setPropertyBool } from "./mpv"
 
 export function existsSync(path: string): boolean {
   return !!fileInfo(path)
@@ -22,18 +22,19 @@ export function dir(path: string | undefined): string | undefined {
 }
 
 export function openDialog(): string[] {
-  switch (getOs()) {
-    case "windows": {
-      const onTop = getPropertyBool("ontop")
-      if (onTop) {
-        setPropertyBool("ontop", false)
-      }
+  try {
+    switch (getOs()) {
+      case "windows": {
+        const onTop = getPropertyBool("ontop")
+        if (onTop) {
+          setPropertyBool("ontop", false)
+        }
 
-      const s = execSync([
-        "powershell",
-        "-NoProfile",
-        "-Command",
-        `
+        const s = execSync([
+          "powershell",
+          "-NoProfile",
+          "-Command",
+          `
 Trap {
   Write-Error -ErrorRecord $_
   Exit 1
@@ -54,19 +55,23 @@ If ($ofd.ShowDialog() -eq $true) {
   }
 }
 `,
-      ])
-      if (onTop) {
-        setPropertyBool("ontop", true)
+        ])
+        if (onTop) {
+          setPropertyBool("ontop", true)
+        }
+        const list = s
+          .trim()
+          .split("\n")
+          .map((i) => i.trim())
+          .filter((i) => existsSync(i))
+        return list
       }
-      const list = s
-        .trim()
-        .split("\n")
-        .map((i) => i.trim())
-        .filter((i) => existsSync(i))
-      return list
+      default: {
+        return []
+      }
     }
-    default: {
-      return []
-    }
+  } catch (e) {
+    error(`openDialog error: ${e}`)
   }
+  return []
 }
