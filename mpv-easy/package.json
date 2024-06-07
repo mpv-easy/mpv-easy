@@ -13,10 +13,11 @@
     "dev": "chokidar \"../mpv-*/src/**/*.(ts|tsx|json)\" -c \"pnpm run build && pnpm run copy\" -t 3000  --initial",
     "dev-ts": "tsc -p ./tsconfig.build.json -w",
     "echo": "chokidar \"./\" -c \"echo hello\" -d 0 -t 0 --initial",
-    "build": "tsc -p ./tsconfig.build.json && pnpm run bundle && pnpm run es5",
+    "build": "tsc -p ./tsconfig.build.json && pnpm run bundle && pnpm run es5 && pnpm run meta",
     "build-es6": "esbuild ./src/mpv-easy-es6.tsx --bundle --outdir=bundle --charset=utf8 --define:globalThis.version='\"0.1.6-alpha.3\"'",
     "copy": "cp -r ./es5/mpv-easy-es5.js $MPV_SCRIPT_DIR/mpv-easy.js",
     "test": "echo \"Error: no test specified\" && exit 1",
+    "meta": "tsx ./meta/build.ts",
     "babel": "minify ./dist/mpv-easy.js --out-file ./dist/input.min.js"
   },
   "keywords": [],
