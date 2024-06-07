@@ -50,6 +50,7 @@ export const OscControl = React.memo(
           <History />
           <Screenshot />
           <PlayMode />
+          <History />
         </Box>
         <Progress width={"60%"} height={height || 0} />
         <Box
