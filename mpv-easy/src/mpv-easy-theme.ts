@@ -109,6 +109,7 @@ export type ThemeStyle = {
   clickMenu: {
     zIndex: number
     backgroundColor: string
+    disable: boolean
   }
 }
 export type EasyConfig = {
@@ -312,6 +313,7 @@ export function createDefaultThemeConfig(): EasyConfig {
         clickMenu: {
           backgroundColor: Black + AlphaLow,
           zIndex: defaultClickMenuZIndex,
+          disable: false
         },
       },
       light: {
@@ -435,6 +437,7 @@ export function createDefaultThemeConfig(): EasyConfig {
         clickMenu: {
           backgroundColor: White + AlphaLow,
           zIndex: defaultClickMenuZIndex,
+          disable: false
         },
       },
     },

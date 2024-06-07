@@ -15,6 +15,7 @@ import {
   styleSelector,
   toolbarStyleSelector,
   uiNameSelector,
+  clickMenuStyleSelector,
 } from "../store"
 import {
   PropertyBool,
@@ -244,7 +245,7 @@ export function Easy(props: Partial<EasyProps>) {
   const isFirstMount = useFirstMountState() && props.skipFirstRender
 
   const fontSize = useSelector(smallFontSizeSelector)
-
+  const clickMenuStyle = useSelector(clickMenuStyleSelector)
   return (
     <>
       <Tooltip
@@ -286,7 +287,7 @@ export function Easy(props: Partial<EasyProps>) {
         <Toolbar ref={toolbarRef} hide={hide || isFirstMount} />
         <Element ref={elementRef} hide={hide || isFirstMount} />
         <VoiceControl ref={volumeRef} hide={hide || isFirstMount} />
-        <ClickMenu ref={menuRef} hide={menuHide} />
+        {!clickMenuStyle.disable && <ClickMenu ref={menuRef} hide={menuHide} />}
         <Playlist />
         <History />
         <Speed />
