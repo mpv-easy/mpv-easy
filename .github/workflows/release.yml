@@ -217,6 +217,8 @@ jobs:
 
       - name: "create dist"
         run: |
+          sudo apt install p7zip-full -y
+
           mkdir ./dist/scripts/mpv-easy-config/rs-ext -p
 
           cp ./mpv-easy/es5/mpv-easy-es5.js ./dist/scripts/mpv-easy-es5.js
@@ -262,9 +264,11 @@ jobs:
           mv ./mpy-easy-boa-windows/scripts/mpv-easy-config ./mpy-easy-boa-windows/scripts-boa/mpv-easy-config
 
 
-          wget -O ./yt-dlp https://github.com/yt-dlp/yt-dlp/releases/download/2024.05.27/yt-dlp.exe
-          mkdir -p ./mpy-easy-windows/yt-dlp
-          cp ./yt-dlp ./mpy-easy-windows/yt-dlp/yt-dlp
+          wget -P ./mpy-easy-windows/yt-dlp yt-dlp  https://github.com/yt-dlp/yt-dlp/releases/download/2024.05.27/yt-dlp.exe
+
+          cp -r ./mpy-easy-windows ./mpy-easy-windows-full
+          wget -O ./mpv-win.7z https://github.com/zhongfly/mpv-winbuild/releases/download/2024-06-08-fe709c9/mpv-x86_64-v3-20240608-git-fe709c9.7z
+          7z x ./mpv-win.7z -o./mpy-easy-windows-full -y
 
           cd ./mpy-easy-macos
           zip -r -q ./mpy-easy-macos.zip .
@@ -293,6 +297,10 @@ jobs:
           cd ./mpy-easy-boa-windows
           zip -r -q ./mpy-easy-boa-windows.zip .
           cd ..
+
+          cd ./mpy-easy-windows-full
+          zip -r -q ./mpy-easy-windows-full.zip .
+          cd ..
       - uses: ncipollo/release-action@v1
         with:
-          artifacts: "./mpy-easy-*/*.zip,./mpv-easy/es5/mpv-easy-es5.js,./mpv-easy/bundle/mpv-easy-es6.js,./mpv-easy/mpv-easy.meta.js"
+          artifacts: "./mpy-easy-*/*.zip,./mpv-easy/es5/mpv-easy-es5.js,./mpv-easy/bundle/mpv-easy-es6.js"
