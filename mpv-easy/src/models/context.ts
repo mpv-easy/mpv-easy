@@ -37,6 +37,7 @@ import {
 } from "@mpv-easy/anime4k"
 import { createDefaultContext } from "../context"
 import { historySelector, historyStyleSelector } from "../store"
+import { getVideoName } from "../common"
 
 const windowMaximizedProp = new PropertyBool("window-maximized")
 const fullscreenProp = new PropertyBool("fullscreen")
@@ -162,19 +163,21 @@ export const context = createModel<RootModel>()({
         return state
       }
       const history = state[pluginName].history || []
-      const index = history.findIndex((i) => i === path)
+      const index = history.findIndex((i) => i.path === path)
 
       const newHistory = [...history]
       if (index >= 0) {
         newHistory.splice(index, 1)
       }
-      newHistory.unshift(path)
+      newHistory.unshift({ path, name: getVideoName(path) })
 
       const mode = state[pluginName].mode
       const stackSize = state[pluginName].style[mode].history.stackSize
+
       while (newHistory.length > stackSize) {
         newHistory.pop()
       }
+
       state[pluginName].history = newHistory
       return { ...state }
     },
@@ -188,6 +191,9 @@ export const context = createModel<RootModel>()({
       const len = list.length
       const pos = list.indexOf(path)
       const newPos = (pos + 1) % len
+      if (newPos === pos) {
+        return state
+      }
       state[pluginName].player.playlistPos = newPos
       state[pluginName].player.path = list[newPos]
       pathProp.value = list[newPos]
@@ -200,6 +206,9 @@ export const context = createModel<RootModel>()({
       const len = list.length
       const pos = list.indexOf(path)
       const newPos = (pos + len - 1) % len
+      if (newPos === pos) {
+        return state
+      }
       state[pluginName].player.playlistPos = newPos
       state[pluginName].player.path = list[newPos]
       command(`playlist-play-index ${newPos}`)

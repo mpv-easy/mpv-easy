@@ -16,6 +16,7 @@ import {
   getPropertyString,
   normalize,
 } from "@mpv-easy/tool"
+import { getVideoName } from "./common"
 
 export function createStore() {
   return init<RootModel>({
@@ -87,7 +88,7 @@ export const videoParamsSelector = (state: RootState) =>
 
 export const filenameSelector = (state: RootState) => {
   const path = pathSelector(state)
-  const name = getFileName(path) ?? ""
+  const name = getVideoName(path) ?? ""
   return name
 }
 

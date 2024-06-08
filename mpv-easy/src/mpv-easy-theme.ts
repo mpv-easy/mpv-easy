@@ -122,7 +122,7 @@ export type EasyConfig = {
     save: boolean
     time: number
   }
-  history: string[]
+  history: { path: string; name: string }[]
   player: {
     pause: boolean
     timePos: number
@@ -313,7 +313,7 @@ export function createDefaultThemeConfig(): EasyConfig {
         clickMenu: {
           backgroundColor: Black + AlphaLow,
           zIndex: defaultClickMenuZIndex,
-          disable: false
+          disable: false,
         },
       },
       light: {
@@ -437,7 +437,7 @@ export function createDefaultThemeConfig(): EasyConfig {
         clickMenu: {
           backgroundColor: White + AlphaLow,
           zIndex: defaultClickMenuZIndex,
-          disable: false
+          disable: false,
         },
       },
     },

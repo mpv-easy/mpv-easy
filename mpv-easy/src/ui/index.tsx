@@ -159,7 +159,7 @@ export function Easy(props: Partial<EasyProps>) {
 
     pathProp.observe((v) => {
       v = normalize(v ?? "")
-      if (v?.length && path.length && v !== path) {
+      if (v?.length && v !== path) {
         dispatch.context.addHistory(v)
         dispatch.context.setPath(v)
         const d = dir(v)
