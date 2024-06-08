@@ -18,7 +18,7 @@ jobs:
 
           cd ./mpv-js-plugin-init
           pnpm run build
- 
+
       - uses: actions-rust-lang/setup-rust-toolchain@v1
         with:
           rustflags: "-A warnings"
@@ -260,6 +260,11 @@ jobs:
           mkdir ./mpy-easy-boa-windows/scripts-boa
           cp ./mpv-easy/bundle/mpv-easy-es6.js ./mpy-easy-boa-windows/scripts-boa/mpv-easy-es6.js
           mv ./mpy-easy-boa-windows/scripts/mpv-easy-config ./mpy-easy-boa-windows/scripts-boa/mpv-easy-config
+
+
+          wget -O ./yt-dlp https://github.com/yt-dlp/yt-dlp/releases/download/2024.05.27/yt-dlp.exe
+          mkdir -p ./mpy-easy-windows/yt-dlp
+          cp ./yt-dlp ./mpy-easy-windows/yt-dlp/yt-dlp
 
           cd ./mpy-easy-macos
           zip -r -q ./mpy-easy-macos.zip .
