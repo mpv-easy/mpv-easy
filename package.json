@@ -30,7 +30,7 @@
     "@types/node": "^20.14.1",
     "babel-minify": "^0.5.2",
     "case-police": "^0.6.1",
-    "chokidar-cli": "^3.0.0",
+    "@chokidar-napi/chokidar": "0.1.1",
     "core-js": "^3.37.1",
     "dotenv": "^16.4.5",
     "esbuild": "^0.19.12",

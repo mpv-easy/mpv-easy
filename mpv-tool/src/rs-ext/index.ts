@@ -5,13 +5,13 @@ import { getFileName } from "../path"
 // biome-ignore lint/style/useNodejsImportProtocol: <explanation>
 import { Buffer } from "buffer"
 
-export const defaultBinDirName = "rs-ext"
+export const defaultBinDirName = "mpv-easy-ext"
 export const getDefaultBinDirPath = () =>
   joinPath(getScriptConfigDir(), defaultBinDirName)
 
-export const defaultMacExeName = "rs-ext-macos"
-export const defaultWinExeName = "rs-ext-windows"
-export const defaultLinuxExeName = "rs-ext-linux"
+export const defaultMacExeName = "mpv-easy-ext-macos"
+export const defaultWinExeName = "mpv-easy-ext-windows"
+export const defaultLinuxExeName = "mpv-easy-ext-linux"
 
 export function getRsExtExePath() {
   const os = getOs()
@@ -26,7 +26,7 @@ export function getRsExtExePath() {
       return joinPath(getDefaultBinDirPath(), defaultWinExeName)
     }
     default: {
-      throw new Error(`rs-ext not support os: ${os}`)
+      throw new Error(`mpv-easy-ext not support os: ${os}`)
     }
   }
 }

@@ -7,8 +7,7 @@
   "scripts": {
     "bundle": "esbuild ./src/index.tsx --bundle --outdir=dist",
     "es5": "babel --presets  @babel/preset-env ./dist -d es5",
-    "dev2": "pnpm run build && pnpm run copy && chokidar \"./src/**/*.(ts|tsx|json)\" -c \"pnpm run build && pnpm run copy\" -t 0 -d 3000",
-    "dev": "echo dev",
+    "dev": "chokidar 'src/**/*.{ts,tsx,json}' -c \"pnpm run build && pnpm run copy\" -d 2000  --initial",
     "build": "pnpm run bundle&& pnpm run es5",
     "copy": "cp es5/index.js $MPV_SCRIPT_DIR",
     "test": "echo \"Error: no test specified\" && exit 1"

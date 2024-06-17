@@ -1,12 +1,15 @@
 {
-  "name": "@mpv-easy/mpv-s-ext",
+  "name": "@mpv-easy/ext",
   "version": "0.1.9",
   "private": true,
   "description": "",
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "scripts": {},
+  "scripts": {
+    "build": "",
+    "dev": ""
+  },
   "devDependencies": {},
   "dependencies": {}
 }

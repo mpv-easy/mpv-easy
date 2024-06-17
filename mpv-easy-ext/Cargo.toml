@@ -1,12 +1,16 @@
 [package]
-name = "mpv-rs-ext"
+name = "mpv-easy-ext"
 version = "0.1.0"
 edition = "2021"
+license = "MIT"
+authors=["ahaoboy"]
+repository="https://github.com/mpv-easy/mpv-easy"
+description = "mpv-easy rust extension"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [[bin]]
-name = "rs-ext"
+name = "mpv-easy-ext"
 path = "./src/main.rs"
 
 [dependencies]
@@ -25,10 +29,10 @@ tokio = { version = "1.36.0", features = ["full"] }
 colored = "2.1.0"
 once_cell = "1.19.0"
 enum_dispatch = "0.3.12"
-reqwest = { version = "0.11", features = ["json"] }
+reqwest = { version = "0.12.4", features = ["json"] }
 serde-xml-rs = "0.6.0"
 webdav-serde = "0.1.1"
-image = "0.24.8"
+image = "0.25.1"
 rand = "0.8.5"
 glob = "0.3.1"
 

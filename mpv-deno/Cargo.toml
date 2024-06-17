@@ -12,8 +12,8 @@ crate-type = ["cdylib"]
 
 [dependencies]
 mpv-easy-client = { path = "../mpv-easy-client" }
-deno = "1.44.0"
-deno_core = "0.284.0"
+# deno = "1.44.2"
+deno_core = "0.289.0"
 serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0"
 

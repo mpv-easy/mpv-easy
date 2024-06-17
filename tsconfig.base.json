@@ -30,6 +30,7 @@
       "@mpv-easy/ui": ["./mpv-ui/src"],
       "@mpv-easy/plugin": ["./mpv-plugin/src"],
       "@mpv-easy/anime4k": ["./mpv-anime4k/src"],
+      "@mpv-easy/anime": ["./mpv-anime/src"],
       "@mpv-easy/i18n": ["./mpv-i18n/src"],
       "@mpv-easy/copy-time": ["./mpv-copy-time/src"],
       "@mpv-easy/copy-screen": ["./mpv-copy-screen/src"],

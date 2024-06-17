@@ -28,10 +28,10 @@ jobs:
 
       - name: build ext
         run: |
-          cd ./mpv-rs-ext
+          cd ./mpv-easy-ext
           cargo build --release --out-dir=./output -Z unstable-options
           cd ..
-          mv ./mpv-rs-ext/output/rs-ext.exe ./rs-ext-windows
+          mv ./mpv-easy-ext/output/mpv-easy-ext.exe ./mpv-easy-ext-windows
 
 
       - name: build deno
@@ -85,8 +85,8 @@ jobs:
       - name: Upload windows Artifact ext
         uses: actions/upload-artifact@v4
         with:
-          name: rs-ext-windows
-          path: ./rs-ext-windows
+          name: mpv-easy-ext-windows
+          path: ./mpv-easy-ext-windows
 
       - name: Upload windows Artifact deno
         uses: actions/upload-artifact@v4
@@ -117,17 +117,17 @@ jobs:
 
       - name: build macos-latest
         run: |
-          cd ./mpv-rs-ext
+          cd ./mpv-easy-ext
           cargo build --release --out-dir=./output -Z unstable-options
           cd ..
 
-          mv ./mpv-rs-ext/output/rs-ext ./rs-ext-macos
+          mv ./mpv-easy-ext/output/mpv-easy-ext ./mpv-easy-ext-macos
 
       - name: Upload macos Artifact ext
         uses: actions/upload-artifact@v4
         with:
-          name: rs-ext-macos
-          path: ./rs-ext-macos
+          name: mpv-easy-ext-macos
+          path: ./mpv-easy-ext-macos
 
   build-ext-ubuntu:
     runs-on: ubuntu-latest
@@ -141,16 +141,16 @@ jobs:
 
       - name: build ubuntu-latest
         run: |
-          cd ./mpv-rs-ext
+          cd ./mpv-easy-ext
           cargo build --release --out-dir=./output -Z unstable-options
           cd ..
 
-          mv ./mpv-rs-ext/output/rs-ext ./rs-ext-ubuntu
+          mv ./mpv-easy-ext/output/mpv-easy-ext ./mpv-easy-ext-ubuntu
       - name: Upload ubuntu Artifact ext
         uses: actions/upload-artifact@v4
         with:
-          name: rs-ext-ubuntu
-          path: ./rs-ext-ubuntu
+          name: mpv-easy-ext-ubuntu
+          path: ./mpv-easy-ext-ubuntu
 
   build-ext-android:
     runs-on: ubuntu-latest
@@ -165,18 +165,18 @@ jobs:
       - name: build ubuntu-latest
         run: |
 
-          cd ./mpv-rs-ext
+          cd ./mpv-easy-ext
 
           cargo install cross --git https://github.com/cross-rs/cross
           cross build --release --target aarch64-linux-android --out-dir=./output -Z unstable-options
           cd ..
 
-          mv ./mpv-rs-ext/output/rs-ext ./rs-ext-android
+          mv ./mpv-easy-ext/output/mpv-easy-ext ./mpv-easy-ext-android
       - name: Upload android Artifact ext
         uses: actions/upload-artifact@v4
         with:
-          name: rs-ext-android
-          path: ./rs-ext-android
+          name: mpv-easy-ext-android
+          path: ./mpv-easy-ext-android
 
   release:
     needs: [build-ext-windows, build-ext-macos, build-ext-ubuntu, build-ext-android]
@@ -189,8 +189,8 @@ jobs:
 
       - uses: actions/download-artifact@v4
         with:
-          path: rs-ext
-          pattern: rs-ext-*
+          path: mpv-easy-ext
+          pattern: mpv-easy-ext-*
           merge-multiple: true
 
       - uses: actions/download-artifact@v4
@@ -221,14 +221,14 @@ jobs:
         run: |
           sudo apt install p7zip-full -y
 
-          mkdir ./dist/scripts/mpv-easy-config/rs-ext -p
+          mkdir ./dist/scripts/mpv-easy-config/mpv-easy-ext -p
 
           cp ./mpv-easy/es5/mpv-easy-es5.js ./dist/scripts/mpv-easy-es5.js
           cp -r ./mpv-easy/fonts ./dist
           cp -r ./mpv-anime4k/shaders ./dist
           cp ./mpv-easy/mpv-conf/mpv.conf ./dist/mpv.conf
 
-          chmod 777 ./rs-ext/*
+          chmod 777 ./mpv-easy-ext/*
 
           cp -r ./dist ./mpy-easy-macos
           cp -r ./dist ./mpy-easy-linux
@@ -238,13 +238,13 @@ jobs:
           cp -r ./dist ./mpy-easy-qjs-windows
           cp -r ./dist ./mpy-easy-boa-windows
 
-          cp ./rs-ext/rs-ext-macos ./mpy-easy-macos/scripts/mpv-easy-config/rs-ext/rs-ext-macos
-          cp ./rs-ext/rs-ext-ubuntu ./mpy-easy-linux/scripts/mpv-easy-config/rs-ext/rs-ext-linux
-          cp ./rs-ext/rs-ext-android ./mpy-easy-android/scripts/mpv-easy-config/rs-ext/rs-ext-android
-          cp ./rs-ext/rs-ext-windows ./mpy-easy-windows/scripts/mpv-easy-config/rs-ext/rs-ext-windows
-          cp ./rs-ext/rs-ext-windows ./mpy-easy-deno-windows/scripts/mpv-easy-config/rs-ext/rs-ext-windows
-          cp ./rs-ext/rs-ext-windows ./mpy-easy-qjs-windows/scripts/mpv-easy-config/rs-ext/rs-ext-windows
-          cp ./rs-ext/rs-ext-windows ./mpy-easy-boa-windows/scripts/mpv-easy-config/rs-ext/rs-ext-windows
+          cp ./mpv-easy-ext/mpv-easy-ext-macos ./mpy-easy-macos/scripts/mpv-easy-config/mpv-easy-ext/mpv-easy-ext-macos
+          cp ./mpv-easy-ext/mpv-easy-ext-ubuntu ./mpy-easy-linux/scripts/mpv-easy-config/mpv-easy-ext/mpv-easy-ext-linux
+          cp ./mpv-easy-ext/mpv-easy-ext-android ./mpy-easy-android/scripts/mpv-easy-config/mpv-easy-ext/mpv-easy-ext-android
+          cp ./mpv-easy-ext/mpv-easy-ext-windows ./mpy-easy-windows/scripts/mpv-easy-config/mpv-easy-ext/mpv-easy-ext-windows
+          cp ./mpv-easy-ext/mpv-easy-ext-windows ./mpy-easy-deno-windows/scripts/mpv-easy-config/mpv-easy-ext/mpv-easy-ext-windows
+          cp ./mpv-easy-ext/mpv-easy-ext-windows ./mpy-easy-qjs-windows/scripts/mpv-easy-config/mpv-easy-ext/mpv-easy-ext-windows
+          cp ./mpv-easy-ext/mpv-easy-ext-windows ./mpy-easy-boa-windows/scripts/mpv-easy-config/mpv-easy-ext/mpv-easy-ext-windows
 
           cp ./deno-dll/mpv-deno-windows.dll ./mpy-easy-deno-windows/scripts/mpv-deno-windows.dll
           rm ./mpy-easy-deno-windows/scripts/mpv-easy-es5.js
