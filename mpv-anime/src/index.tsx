@@ -1,2 +1,2 @@
-export * from './easings'
-export * from './spring'
+export * from "./easings"
+export * from "./spring"

@@ -1,7 +1,7 @@
 import React, { useRef, useState } from "react"
 
 export type SpringInput = number
-export type SpringState = 'init' | 'start' | 'stop' | 'play' | "pause"
+export type SpringState = "init" | "start" | "stop" | "play" | "pause"
 export type SpringConfig = {
   duration: number
   fps: number
@@ -9,19 +9,23 @@ export type SpringConfig = {
 
 export const defaultSpringConfig: SpringConfig = {
   duration: 1000,
-  fps: 60
+  fps: 60,
 }
 
-export function useSpring(from: SpringInput, to: SpringInput, config: SpringConfig = defaultSpringConfig) {
+export function useSpring(
+  from: SpringInput,
+  to: SpringInput,
+  config: SpringConfig = defaultSpringConfig,
+) {
   const { fps, duration } = {
     ...defaultSpringConfig,
-    ...config
+    ...config,
   }
 
   const [value, setValue] = useState(from)
   const [playing, setPlaying] = useState(false)
 
-  const handleRef = useRef(0);
+  const handleRef = useRef(0)
 
   const restart = () => {
     stop()
@@ -43,10 +47,9 @@ export function useSpring(from: SpringInput, to: SpringInput, config: SpringConf
     const startTime = +new Date()
     setPlaying(true)
     handleRef.current = +setInterval(() => {
-      const now = +new Date();
+      const now = +new Date()
       const percent = (now - startTime) / duration
-      const newValue = percent >= 1. ? to :
-        percent * (to - from) + from
+      const newValue = percent >= 1 ? to : percent * (to - from) + from
       setValue(newValue)
       if (percent >= 1) {
         clearInterval(handleRef.current)
@@ -63,4 +66,3 @@ export function useSpring(from: SpringInput, to: SpringInput, config: SpringConf
     start,
   }
 }
-
