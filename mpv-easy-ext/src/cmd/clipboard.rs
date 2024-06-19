@@ -9,7 +9,7 @@ pub struct Clipboard {
     text: String,
 }
 
-#[cfg(not(android))]
+#[cfg(not(target_os = "android"))]
 mod clip {
     use clipboard_rs::{common::RustImage, Clipboard as _, ClipboardContext};
     pub fn set_text(text: &str) {
@@ -28,7 +28,7 @@ mod clip {
         ctx.set_image(img).unwrap();
     }
 }
-#[cfg(android)]
+#[cfg(target_os = "android")]
 mod clip {
     pub fn set_text(text: &str) {
         todo!()

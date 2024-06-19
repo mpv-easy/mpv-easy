@@ -1,6 +1,6 @@
 {
   "name": "@mpv-easy/canvas",
-  "version": "0.1.9",
+  "version": "0.1.9-alpha.8",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "files": ["dist", "readme.md", "package.json"],
