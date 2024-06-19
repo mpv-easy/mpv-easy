@@ -1,14 +1,3 @@
-#[cfg(target_os = "macos")]
-use crate::cmd::clip::clip_mac::{get_image, get_text, set_image, set_text};
-#[cfg(target_os = "windows")]
-use crate::cmd::clip::clip_win::{get_image, get_text, set_image, set_text};
-
-#[cfg(target_os = "linux")]
-use crate::cmd::clip::clip_linux::{get_image, get_text, set_image, set_text};
-
-#[cfg(target_os = "android")]
-use crate::cmd::clip::clip_android::{get_image, get_text, set_image, set_text};
-
 use super::cli::Cmd;
 
 #[derive(clap::Parser, Debug)]
@@ -19,14 +8,33 @@ pub struct Clipboard {
     #[clap(required = false, default_value_t = String::new())]
     text: String,
 }
+use clipboard_rs::{common::RustImage, Clipboard as _, ClipboardContext};
+
+pub fn set_text(text: &str) {
+    let ctx = ClipboardContext::new().unwrap();
+    ctx.set_text(text.to_string()).unwrap();
+}
+
+pub fn get_text() -> String {
+    let ctx = ClipboardContext::new().unwrap();
+    ctx.get_text().unwrap()
+}
+
+pub fn set_image(path: &str) {
+    let ctx = ClipboardContext::new().unwrap();
+    let img = RustImage::from_path(path).unwrap();
+    ctx.set_image(img).unwrap();
+}
+
+pub fn get_image() {
+    todo!()
+}
 
 impl Cmd for Clipboard {
     fn call(&self) {
         use base64::prelude::*;
 
         let cmd = self.cmd.as_str();
-
-        // println!("{:?} {:?}", cmd, text);
 
         match cmd {
             "set" => {
