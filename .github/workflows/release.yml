@@ -145,12 +145,12 @@ jobs:
           cargo build --release --out-dir=./output -Z unstable-options
           cd ..
 
-          mv ./mpv-easy-ext/output/mpv-easy-ext ./mpv-easy-ext-ubuntu
+          mv ./mpv-easy-ext/output/mpv-easy-ext ./mpv-easy-ext-linux
       - name: Upload ubuntu Artifact ext
         uses: actions/upload-artifact@v4
         with:
-          name: mpv-easy-ext-ubuntu
-          path: ./mpv-easy-ext-ubuntu
+          name: mpv-easy-ext-linux
+          path: ./mpv-easy-ext-linux
 
   build-ext-android:
     runs-on: ubuntu-latest
@@ -239,7 +239,7 @@ jobs:
           cp -r ./dist ./mpy-easy-boa-windows
 
           cp ./mpv-easy-ext/mpv-easy-ext-macos ./mpy-easy-macos/scripts/mpv-easy-config/mpv-easy-ext/mpv-easy-ext-macos
-          cp ./mpv-easy-ext/mpv-easy-ext-ubuntu ./mpy-easy-linux/scripts/mpv-easy-config/mpv-easy-ext/mpv-easy-ext-linux
+          cp ./mpv-easy-ext/mpv-easy-ext-linux ./mpy-easy-linux/scripts/mpv-easy-config/mpv-easy-ext/mpv-easy-ext-linux
           cp ./mpv-easy-ext/mpv-easy-ext-android ./mpy-easy-android/scripts/mpv-easy-config/mpv-easy-ext/mpv-easy-ext-android
           cp ./mpv-easy-ext/mpv-easy-ext-windows ./mpy-easy-windows/scripts/mpv-easy-config/mpv-easy-ext/mpv-easy-ext-windows
           cp ./mpv-easy-ext/mpv-easy-ext-windows ./mpy-easy-deno-windows/scripts/mpv-easy-config/mpv-easy-ext/mpv-easy-ext-windows
@@ -304,4 +304,4 @@ jobs:
           cd ..
       - uses: ncipollo/release-action@v1
         with:
-          artifacts: "./mpy-easy-*/*.zip,./mpv-easy/es5/mpv-easy-es5.js,./mpv-easy/bundle/mpv-easy-es6.js"
+          artifacts: "./mpy-easy-*/*.zip,./mpv-easy/es5/mpv-easy-es5.js,./mpv-easy/bundle/mpv-easy-es6.js,./mpv-easy-ext/*"
