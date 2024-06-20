@@ -37,6 +37,12 @@ mpv-easy-ext clipboard set-image '"./a.png"'
 mpv-easy-ext webdav list '"http://192.168.0.111:9421/"'
 ```
 
+## fetch
+
+```bash
+mpv-easy-ext fetch '"http://127.0.0.1:5000/test.srt"'
+```
+
 
 ## todo
 - [ ] fetch

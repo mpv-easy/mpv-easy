@@ -81,8 +81,13 @@ export type FetchParams = {
   headers: Record<string, string>
   body: string
 }
-export function fetch(params: FetchParams, exe = getRsExtExePath()) {
-  return execSync([exe, "fetch", JSON.stringify(params)])
+
+export type FetchResponse = {
+  status: number,
+  text: string
+}
+export function fetch(url: string, exe = getRsExtExePath()): FetchResponse {
+  return JSON.parse(execSync([exe, "fetch", JSON.stringify(url)]))
 }
 
 export function webdavList(url: string, exe = getRsExtExePath()) {

@@ -288,7 +288,7 @@ export type TrackItem = {
   "main-selection": number
   selected: boolean
   "src-id": number
-  type: "video" | "audio" | "image" | (string & {})
+  type: "video" | "audio" | "image" | 'sub' | (string & {})
   "visual-impaired": boolean
 }
 
