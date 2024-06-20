@@ -1,10 +1,10 @@
-name: Releases
+name: build-mpv-easy
 
 on: [push]
 
 jobs:
-  release:
-    name: release
+  build:
+    name: build
     runs-on: ubuntu-latest
     permissions:
       contents: write

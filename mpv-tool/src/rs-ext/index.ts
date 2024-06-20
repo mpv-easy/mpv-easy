@@ -10,7 +10,8 @@ export const getDefaultBinDirPath = () =>
   joinPath(getScriptConfigDir(), defaultBinDirName)
 
 export const defaultMacExeName = "mpv-easy-ext-macos"
-export const defaultWinExeName = "mpv-easy-ext-windows"
+export const defaultWindowsExeName = "mpv-easy-ext-windows"
+export const defaultAndroidExeName = "mpv-easy-ext-android"
 export const defaultLinuxExeName = "mpv-easy-ext-linux"
 
 export function getRsExtExePath() {
@@ -34,7 +35,10 @@ export function getRsExtExePath() {
       return joinPath(getDefaultBinDirPath(), defaultLinuxExeName)
     }
     case "windows": {
-      return joinPath(getDefaultBinDirPath(), defaultWinExeName)
+      return joinPath(getDefaultBinDirPath(), defaultWindowsExeName)
+    }
+    case "android": {
+      return joinPath(getDefaultBinDirPath(), defaultAndroidExeName)
     }
     default: {
       throw new Error(`mpv-easy-ext not support os: ${os}`)
@@ -83,7 +87,7 @@ export type FetchParams = {
 }
 
 export type FetchResponse = {
-  status: number,
+  status: number
   text: string
 }
 export function fetch(url: string, exe = getRsExtExePath()): FetchResponse {

@@ -144,6 +144,7 @@ const OsPatterns = {
   "^cygwin": "windows",
   bsd$: "darwin",
   sunos: "darwin",
+  android: "android",
 } as const
 
 export type OsType = (typeof OsPatterns)[keyof typeof OsPatterns]
@@ -151,6 +152,7 @@ export type OsType = (typeof OsPatterns)[keyof typeof OsPatterns]
 export const Windows = "windows"
 export const Linux = "linux"
 export const Darwin = "darwin"
+export const Android = "android"
 
 let osCache: OsType
 export function getOs(): OsType {
