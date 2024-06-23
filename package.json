@@ -1,7 +1,11 @@
 {
   "name": "mpv-easy",
   "version": "0.1.9-alpha.8",
-  "files": ["dist", "readme.md", "package.json"],
+  "files": [
+    "dist",
+    "readme.md",
+    "package.json"
+  ],
   "description": "TS and React toolkit for mpv script",
   "scripts": {
     "case-police": "case-police \"**/*.ts\"  fix",
@@ -18,7 +22,12 @@
     "release": "pnpm publish -r --access public",
     "release-alpha": "pnpm publish -r --access public --tag alpha"
   },
-  "keywords": ["TS", "React", "mpv", "mpv script"],
+  "keywords": [
+    "TS",
+    "React",
+    "mpv",
+    "mpv script"
+  ],
   "author": "ahaoboy",
   "license": "MIT",
   "devDependencies": {
@@ -27,15 +36,15 @@
     "@babel/preset-env": "^7.24.6",
     "@babel/preset-typescript": "^7.24.6",
     "@biomejs/biome": "^1.8.0",
+    "@chokidar-napi/chokidar": "0.1.3",
     "@types/node": "^20.14.1",
     "babel-minify": "^0.5.2",
     "case-police": "^0.6.1",
-    "@chokidar-napi/chokidar": "0.1.3",
     "core-js": "^3.37.1",
     "dotenv": "^16.4.5",
     "esbuild": "^0.19.12",
     "tsx": "^4.13.0",
-    "typescript": "^5.4.5",
+    "typescript": "^5.5.2",
     "vitest": "^1.6.0"
   }
 }

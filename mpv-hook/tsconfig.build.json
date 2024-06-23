@@ -1,8 +1,3 @@
 {
-  "extends": "../tsconfig.build.json",
-  "compilerOptions": {
-    "outDir": "./dist/"
-  },
-  "include": ["src/index.ts"],
-  "exclude": ["test"]
+  "extends": "../tsconfig.build.json"
 }

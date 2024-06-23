@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "outDir": "dist/",
+    "outDir": "${configDir}/dist",
     "target": "ESNext",
     "useDefineForClassFields": true,
     "lib": ["DOM", "DOM.Iterable", "ESNext", "ES2022"],
@@ -22,5 +22,6 @@
     "sourceMap": false,
     "declaration": true
   },
-  "include": ["./src"]
+  "include": ["${configDir}/src"],
+  "exclude": ["${configDir}/test"]
 }
