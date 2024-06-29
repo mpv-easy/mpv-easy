@@ -56,6 +56,12 @@ g.WeakSet = Set
 g.Symbol = Symbol
 g.Promise = Promise
 
+if (!g.performance) {
+  g.performance = {
+    now: () => +new Date()
+  }
+}
+
 if (!Array.prototype.fill) {
   Array.prototype.fill = function (value, start, end) {
     // 处理参数缺失的情况
