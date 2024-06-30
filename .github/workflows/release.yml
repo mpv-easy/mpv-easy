@@ -227,6 +227,7 @@ jobs:
           cp -r ./mpv-easy/fonts ./dist
           cp -r ./mpv-anime4k/shaders ./dist
           cp ./mpv-easy/mpv-conf/mpv.conf ./dist/mpv.conf
+          cp ./mpv-easy/mpv-conf/input.conf ./dist/input.conf
 
           chmod 777 ./mpv-easy-ext/*
 
