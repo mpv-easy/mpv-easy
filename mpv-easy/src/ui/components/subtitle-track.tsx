@@ -110,7 +110,7 @@ export const SubtitleTrack = () => {
       width={button.width}
       height={button.height}
       display="flex"
-      justifyContent="center"
+      justifyContent="start"
       alignItems="center"
       enableMouseStyle={mouseHoverStyle}
       colorHover={dropdown.colorHover}

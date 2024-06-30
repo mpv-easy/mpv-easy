@@ -67,7 +67,7 @@ export const AudioTrack = () => {
       direction="top"
       dropdownStyle={dropdown.button}
       display="flex"
-      justifyContent="center"
+      justifyContent="start"
       alignItems="center"
       enableMouseStyle={mouseHoverStyle}
       colorHover={dropdown.colorHover}
