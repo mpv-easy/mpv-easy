@@ -92,8 +92,7 @@ export const SubtitleTrack = () => {
           }
         },
         style: {
-          // postfix: ('  ' + (external ? i18n.externalTrack : i18n.builtinTrack)),
-          justifyContent: "space-between",
+          justifyContent: "start",
         },
       }
     },
@@ -110,7 +109,7 @@ export const SubtitleTrack = () => {
       width={button.width}
       height={button.height}
       display="flex"
-      justifyContent="start"
+      justifyContent="center"
       alignItems="center"
       enableMouseStyle={mouseHoverStyle}
       colorHover={dropdown.colorHover}

@@ -49,7 +49,7 @@ export const AudioTrack = () => {
           dispatch.context.setAid(id)
         },
         style: {
-          // postfix: ("  " + (external ? i18n.externalTrack : i18n.builtinTrack)),
+          justifyContent: "start",
         },
       }
     },
@@ -67,7 +67,7 @@ export const AudioTrack = () => {
       direction="top"
       dropdownStyle={dropdown.button}
       display="flex"
-      justifyContent="start"
+      justifyContent="center"
       alignItems="center"
       enableMouseStyle={mouseHoverStyle}
       colorHover={dropdown.colorHover}

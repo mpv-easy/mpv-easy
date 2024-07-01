@@ -28,6 +28,7 @@ import {
   normalize,
   dir,
   getMpvPlaylist,
+  loadRemoteSubtitle,
 } from "@mpv-easy/tool"
 import { throttle, isEqual } from "lodash-es"
 import { ClickMenu } from "./click-menu"
@@ -104,6 +105,7 @@ export function Easy(props: Partial<EasyProps>) {
     }
 
     dispatch.context.addHistory(path)
+    loadRemoteSubtitle(path)
 
     playlistCount.observe((v) => {
       const p = pathProp.value
@@ -161,6 +163,7 @@ export function Easy(props: Partial<EasyProps>) {
       v = normalize(v ?? "")
       if (v?.length && v !== path) {
         dispatch.context.addHistory(v)
+        loadRemoteSubtitle(v)
         dispatch.context.setPath(v)
         const d = dir(v)
         if (!d) {

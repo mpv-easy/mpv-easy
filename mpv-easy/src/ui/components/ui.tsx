@@ -39,7 +39,7 @@ export const UI = () => {
             dispatch.context.setUI("osc")
           },
           style: {
-            justifyContent: "start",
+            justifyContent: "space-between",
           },
         },
         {
@@ -49,7 +49,7 @@ export const UI = () => {
             dispatch.context.setUI("uosc")
           },
           style: {
-            justifyContent: "start",
+            justifyContent: "space-between",
           },
         },
       ]}

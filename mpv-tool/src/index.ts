@@ -19,3 +19,4 @@ export * from "./osd-overlay"
 export * from "./overlay"
 export * from "./path"
 export * from "./rs-ext"
+export * from './subtitle'
