@@ -10,10 +10,9 @@ import {
   randomId,
   setPropertyNumber,
 } from "@mpv-easy/tool"
-import { Box, type DOMElement } from "@mpv-easy/ui"
+import { Box, type MpDom } from "@mpv-easy/ui"
 import React, { useRef, useState, useLayoutEffect, useEffect } from "react"
 import type { MouseEvent } from "@mpv-easy/ui"
-import type { Len } from "@mpv-easy/ui"
 import { useSelector, useDispatch } from "react-redux"
 import {
   type Dispatch,
@@ -28,6 +27,7 @@ import {
 } from "../store"
 import { ThumbFast } from "@mpv-easy/thumbfast"
 
+type Len = any
 export type ProgressProps = {
   width: Len
   height: Len
@@ -43,8 +43,8 @@ export const Progress = React.memo(({ width, height }: ProgressProps) => {
   const dispatch = useDispatch<Dispatch>()
   const format = getTimeFormat(duration)
   const thumbRef = useRef<ThumbFast>()
-  const cursorTextStartRef = useRef<DOMElement>(null)
-  const progressRef = useRef<DOMElement>(null)
+  const cursorTextStartRef = useRef<MpDom>(null)
+  const progressRef = useRef<MpDom>(null)
   const progressW = progressRef.current?.layoutNode.width
   const cursorLeftOffset = progressW ? progress.cursorSize / 2 / progressW : 0
   const cursorLeft = timePos / duration - cursorLeftOffset
@@ -70,14 +70,14 @@ export const Progress = React.memo(({ width, height }: ProgressProps) => {
     })
   }, [])
   const updatePreviewCursor = (e: MouseEvent) => {
-    const w = e.target.layoutNode.width
+    const w = e.target?.layoutNode.width || 0
     const per = (e.offsetX - progress.cursorSize / 2) / w
     setLeftPreview(per)
     const time = duration * (e.offsetX / w)
     thumbRef.current?.seek(time)
     return per
   }
-  const hoverCursorRef = useRef<DOMElement>(null)
+  const hoverCursorRef = useRef<MpDom>(null)
 
   const previewTimeTextOffsetX =
     (progress.cursorSize -
@@ -107,7 +107,7 @@ export const Progress = React.memo(({ width, height }: ProgressProps) => {
       font={progress.font}
       backgroundColor={progress.backgroundColor}
       onMouseDown={(e) => {
-        const w = e.target.layoutNode.width
+        const w = e.target?.layoutNode.width || 0
         const per = e.offsetX / w
         const timePos = per * duration
         dispatch.context.setTimePos(timePos)

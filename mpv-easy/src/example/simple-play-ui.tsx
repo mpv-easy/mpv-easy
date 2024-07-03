@@ -1,22 +1,18 @@
 import { usePropertyBool } from "@mpv-easy/hook"
-import { PropertyBool, command, observeProperty } from "@mpv-easy/tool"
-import { Button, render } from "@mpv-easy/ui"
-import { AssColor } from "e-color"
+import { PropertyBool } from "@mpv-easy/tool"
+import { Button } from "@mpv-easy/ui"
 import * as ICON from "../icon"
 import React, { useEffect, useState } from "react"
 
-command("set osc no")
-command("set window-dragging no")
-
 const pauseProp = new PropertyBool("pause")
-export function SimplePlay() {
-  const pauseIcon = ICON.Pause
-  const playIcon = ICON.Play
-  const [pause, setPause] = usePropertyBool("pause", pauseProp.value)
-  const iconColor = AssColor.Colors.Black
-  const iconHoverColor = AssColor.Colors.Yellow
-  const [color, setColor] = useState(iconColor.toHex())
+const iconColor = "00FF00"
+const iconHoverColor = "00FFFF"
+const pauseIcon = ICON.Pause
+const playIcon = ICON.Play
 
+export function SimplePlay() {
+  const [pause, setPause] = usePropertyBool("pause", pauseProp.value)
+  const [color, setColor] = useState(iconColor)
   useEffect(() => {
     pauseProp.observe((v) => {
       console.log("pause change: ", v)
@@ -29,10 +25,10 @@ export function SimplePlay() {
         setPause(!pause)
       }}
       onMouseEnter={() => {
-        setColor(iconHoverColor.toHex())
+        setColor(iconHoverColor)
       }}
       onMouseLeave={() => {
-        setColor(iconColor.toHex())
+        setColor(iconColor)
       }}
       font="FiraCode Nerd Font Mono Reg"
       fontSize={64}

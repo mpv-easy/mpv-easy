@@ -14,9 +14,7 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "devDependencies": {
-    "typescript": "^5.5.2"
-  },
+  "devDependencies": {},
   "dependencies": {
     "@polkadot/x-textencoder": "^12.6.2",
     "buffer": "^6.0.3",

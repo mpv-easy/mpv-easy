@@ -2,7 +2,7 @@
 // import { OsdOverlay } from "./mpv"
 
 // let __measureOverlay: OsdOverlay
-// export function measureText(node: DOMElement): Rect {
+// export function measureText(node: MpDom): Rect {
 //   const { color = "FFFFFF", text = "" } = node.attributes
 //   const font = readAttr(node, "font") || ""
 //   const fontSize = readAttr(node, "fontSize") || 16

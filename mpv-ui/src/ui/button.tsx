@@ -1,8 +1,8 @@
 import { clone, setMouseStyle } from "@mpv-easy/tool"
 import React, { useState } from "react"
-import { type BaseElementProps, Len } from "../type"
 import { Box } from "./box"
-import type { DOMElement } from "../render"
+import type { MpDom, MpDomProps } from "../render/dom"
+import type { BaseDomProps } from "@r-tui/flex"
 
 export type ButtonCustomProp =
   | "color"
@@ -35,7 +35,7 @@ export type ButtonProps = {
 
   prefix: string
   postfix: string
-} & BaseElementProps
+} & MpDomProps
 
 export const ButtonState = ["hover", "active", "disable"] as const
 
@@ -59,7 +59,7 @@ function getHoverProps(props: any) {
   return newProps
 }
 
-export const Button = React.forwardRef<DOMElement, Partial<ButtonProps>>(
+export const Button = React.forwardRef<MpDom, Partial<ButtonProps>>(
   ({ prefix, postfix, text, ...props }, ref) => {
     const hoverProps = getHoverProps(props)
     const [hover, setHover] = useState(false)

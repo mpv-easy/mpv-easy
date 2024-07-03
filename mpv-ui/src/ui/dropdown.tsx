@@ -1,8 +1,8 @@
 import React, { useRef, useState } from "react"
 import { Button, type ButtonProps } from "./button"
 import { Box } from "./box"
-import type { DOMElement } from "../render"
-import { isEvent } from "../common"
+import { isEvent } from "@r-tui/flex"
+import type { MpDom } from "../render/dom"
 
 export type DropdownItem = {
   key: string | number
@@ -46,7 +46,7 @@ function getProps(props: any) {
 }
 
 export const Dropdown = (props: Partial<ButtonProps & DropdownProps>) => {
-  const buttonRef = useRef<DOMElement>(null)
+  const buttonRef = useRef<MpDom>(null)
   const [show, setShow] = useState(false)
   const { items = [], direction = "bottom" } = props
   const newProps = getProps(props)

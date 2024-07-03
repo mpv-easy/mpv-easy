@@ -17,8 +17,8 @@ import {
   commandv,
 } from "@mpv-easy/tool"
 import {
-  type BaseElementProps,
-  type DOMElement,
+  type MpDomProps,
+  type MpDom,
   Box,
   computeTooltipPosition,
   getDirection,
@@ -26,7 +26,15 @@ import {
   type ButtonProps,
 } from "@mpv-easy/ui"
 import { getRootNode } from "@mpv-easy/ui"
-import React, { useEffect, useRef, useState } from "react"
+import React, {
+  type ForwardRefExoticComponent,
+  type PropsWithoutRef,
+  type RefAttributes,
+  forwardRef,
+  useEffect,
+  useRef,
+  useState,
+} from "react"
 import { useDispatch, useSelector } from "react-redux"
 import {
   buttonStyleSelector,
@@ -45,10 +53,7 @@ import {
   fontSizeSelector,
 } from "../store"
 import * as ICON from "../icon"
-import { PluginContext } from "@mpv-easy/plugin"
-
 import { pluginName as anime4kName } from "@mpv-easy/anime4k"
-import { context } from "../models/context"
 export interface MenuItem {
   key: string
   label: string
@@ -59,12 +64,17 @@ export interface MenuItem {
 
 const mousePosProp = new PropertyNative<MousePos>("mouse-pos")
 
-export const ClickMenu = React.forwardRef<
+export const ClickMenu: ForwardRefExoticComponent<
+  PropsWithoutRef<Partial<MpDomProps>> &
+    RefAttributes<{
+      setHide: (v: boolean) => void
+    }>
+> = React.forwardRef<
   {
     setHide: (v: boolean) => void
   },
-  Partial<BaseElementProps>
->((props, ref) => {
+  Partial<MpDomProps>
+>((props: Partial<MpDomProps>, ref) => {
   const [menuPos, setMenuPos] = useState({ x: 0, y: 0 })
   const [childMenuPos, setChildMenuPos] = useState({ x: 0, y: 0 })
   const [hide, setHide] = useState(true)
@@ -318,8 +328,8 @@ export const ClickMenu = React.forwardRef<
     undefined,
   )
 
-  const menuRef = useRef<DOMElement>(null)
-  const childMenuRef = useRef<DOMElement>(null)
+  const menuRef = useRef<MpDom>(null)
+  const childMenuRef = useRef<MpDom>(null)
   const button = useSelector(buttonStyleSelector)
   const mouseHoverStyle = useSelector(mouseHoverStyleSelector)
   const clickMenu = useSelector(clickMenuStyleSelector)
@@ -403,7 +413,12 @@ export const ClickMenu = React.forwardRef<
 
                 if (i.children?.length) {
                   setSelectedMenu(i)
-                  const { x, y, width, height } = e.target.layoutNode
+                  const {
+                    x = 0,
+                    y = 0,
+                    width = 0,
+                    height = 0,
+                  } = e.target?.layoutNode || {}
                   setChildMenuPos({ x: x + width, y: y })
                 } else {
                   setTimeout(() => {

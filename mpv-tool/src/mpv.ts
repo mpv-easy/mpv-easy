@@ -104,7 +104,7 @@ export function getTime(): number {
   return getMPV().get_time()
 }
 
-export type KeyEvent = {
+export type KeyEvent = { key: string } & {
   event: "up" | "down" | "press"
   is_mouse: boolean
   key_name?:

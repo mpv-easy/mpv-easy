@@ -1,5 +1,5 @@
 import { command, getFileName, loadfile } from "@mpv-easy/tool"
-import { Box, Button, type DOMElement } from "@mpv-easy/ui"
+import { Box, Button, type MpDom } from "@mpv-easy/ui"
 import React, { useEffect, useRef } from "react"
 import { useSelector, useDispatch } from "react-redux"
 import * as ICON from "../icon"
@@ -29,7 +29,7 @@ export const History = React.memo(() => {
   const historyStyle = useSelector(historyStyleSelector)
   const dispatch = useDispatch<Dispatch>()
   const history = useSelector(historySelector)
-  const historyRef = useRef<DOMElement>(null)
+  const historyRef = useRef<MpDom>(null)
   const historyHide = useSelector(historyHideSelector)
   const button = useSelector(buttonStyleSelector)
   let x = 0

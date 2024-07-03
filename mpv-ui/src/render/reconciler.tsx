@@ -1,3 +1,4 @@
+import type React from "react"
 import {
   type KeyEvent,
   type MpvPropertyTypeMap,
@@ -10,49 +11,40 @@ import {
   print,
 } from "@mpv-easy/tool"
 import type { MousePos } from "@mpv-easy/tool"
-// biome-ignore lint/style/useImportType: <explanation>
-import React from "react"
+import type { MouseEvent } from "react"
 import createReconciler from "react-reconciler"
 import { DefaultEventPriority } from "react-reconciler/constants"
-
+import { DefaultFps, type MpFlex, RootFlex } from "./flex"
 import {
-  type DOMElement,
   appendChildNode,
-  createNode,
   insertBeforeNode,
   removeChildNode,
-  type MouseEvent,
-} from "./dom"
-import { RootId, getRootNode, dispatchEvent, renderNode } from "./flex"
-import { applyProps } from "../common"
-
+  applyProps,
+} from "@r-tui/flex"
+import { type MpDom, createNode } from "./dom"
+import throttle from "lodash-es/throttle"
 const NO_CONTEXT = {}
-export let currentRenderCount = -1
 
-import { throttle } from "lodash-es"
-
-export function createCustomReconciler(
-  customRenderNode: (node: DOMElement) => void,
-) {
+export function createCustomReconciler(customRender: () => void) {
   return createReconciler({
     supportsMutation: true,
     supportsPersistence: false,
-    appendChildToContainer(root: DOMElement, node: DOMElement) {
+    appendChildToContainer(root: MpDom, node: MpDom) {
       appendChildNode(root, node)
-      customRenderNode(getRootNode())
+      customRender()
     },
     insertInContainerBefore: insertBeforeNode,
-    commitUpdate(node: DOMElement, props) {
+    commitUpdate(node: MpDom, props) {
       applyProps(node, props)
-      customRenderNode(getRootNode())
+      customRender()
     },
     commitTextUpdate(node, _oldText, newText) {
       throw new Error("not support Text Component update")
     },
     commitMount() {},
-    removeChildFromContainer(root: DOMElement, node: DOMElement) {
+    removeChildFromContainer(root: MpDom, node: MpDom) {
       removeChildNode(root, node)
-      customRenderNode(getRootNode())
+      customRender()
     },
     createInstance: (
       originalType: unknown,
@@ -77,24 +69,21 @@ export function createCustomReconciler(
     unhideTextInstance(node, text) {},
     hideInstance(node) {},
     unhideInstance(node) {},
-    appendInitialChild: (
-      parentInstance: DOMElement,
-      child: DOMElement,
-    ): void => {
+    appendInitialChild: (parentInstance: MpDom, child: MpDom): void => {
       appendChildNode(parentInstance, child)
-      customRenderNode(getRootNode())
+      customRender()
     },
-    appendChild(parentInstance: DOMElement, child: DOMElement): void {
+    appendChild(parentInstance: MpDom, child: MpDom): void {
       appendChildNode(parentInstance, child)
-      customRenderNode(getRootNode())
+      customRender()
     },
     insertBefore(
-      parentInstance: DOMElement,
-      child: DOMElement,
-      beforeChild: DOMElement,
+      parentInstance: MpDom,
+      child: MpDom,
+      beforeChild: MpDom,
     ): void {
       insertBeforeNode(parentInstance, child, beforeChild)
-      customRenderNode(getRootNode())
+      customRender()
     },
     finalizeInitialChildren: (
       instance: unknown,
@@ -166,41 +155,40 @@ export function createCustomReconciler(
     getInstanceFromScope: (scopeInstance: any): unknown => {
       return null
     },
-    detachDeletedInstance: (node: DOMElement): void => {
-      for (const ovl of node.osdOverlays) {
+    detachDeletedInstance: (node: MpDom): void => {
+      for (const ovl of node.props.osdOverlays) {
         ovl.data = ""
         ovl.computeBounds = false
         ovl.hidden = true
         // ovl.update()
         ovl.remove()
       }
-      const { backgroundImage, id } = node.attributes
+      const { backgroundImage } = node.attributes
       if (typeof backgroundImage === "string") {
-        node.imageOverlay?.remove()
-        node.imageOverlay?.destroy()
+        node.props.imageOverlay?.remove()
+        node.props.imageOverlay?.destroy()
       }
     },
-    removeChild(parentInstance: DOMElement, child: DOMElement) {
+    removeChild(parentInstance: MpDom, child: MpDom) {
       removeChildNode(parentInstance, child)
-      customRenderNode(getRootNode())
+      customRender()
     },
     supportsHydration: false,
   })
 }
 
 export type RenderConfig = {
+  flex: MpFlex
   enableMouseMoveEvent: boolean
   fps: number
-  customRender: (node: DOMElement) => void
+  customRender: () => void
   customDispatch: (
-    node: DOMElement,
+    node: MpDom,
     pos: MousePos,
     event: KeyEvent,
     mouseEvent?: MouseEvent,
   ) => void
 }
-
-export const defaultFPS = 30
 
 // let max = 0
 // let min = 1 << 20
@@ -208,11 +196,16 @@ export const defaultFPS = 30
 
 export function createRender({
   enableMouseMoveEvent = true,
-  fps = defaultFPS,
+  fps = DefaultFps,
+  flex = RootFlex,
   customRender = throttle(
     () => {
       // const st = +Date.now()
-      renderNode(getRootNode(), ++currentRenderCount, 0)
+      // renderNode(getRootNode(), ++currentRenderCount, 0)
+
+      // flex?.customRenderNode(getRootNode(), ++currentRenderCount, 0)
+      flex.renderToMpv()
+
       // const ed = +Date.now()
       // const t = ed - st
       // max = Math.max(max, t)
@@ -227,11 +220,14 @@ export function createRender({
       leading: true,
     },
   ),
-  customDispatch = throttle<typeof dispatchEvent>(
-    (node, pos, event, mouseEvent) => {
-      dispatchEvent(node, pos, event, mouseEvent)
+  // @ts-ignore
+  customDispatch = throttle(
+    (node: MpDom, pos: MousePos, event: KeyEvent, mouseEvent: MouseEvent) => {
+      // console.log('============customDispatch,', JSON.stringify(event), JSON.stringify(mouseEvent))
+      // @ts-ignore
+      flex?.dispatchEvent(node, pos, event, mouseEvent)
     },
-    0,
+    1000 / fps,
     {
       trailing: true,
       leading: true,
@@ -241,7 +237,7 @@ export function createRender({
   const reconciler = createCustomReconciler(customRender)
   return (reactNode: React.ReactNode) => {
     const container = reconciler.createContainer(
-      getRootNode(),
+      flex.rootNode,
       0,
       null,
       false,
@@ -257,9 +253,10 @@ export function createRender({
     observeProperty("mouse-pos", "native", (_, value: MousePos) => {
       lastMousePos = value
       if (enableMouseMoveEvent) {
-        customDispatch(getRootNode(), lastMousePos, {
+        customDispatch(flex.rootNode, lastMousePos, {
           event: "press",
           is_mouse: true,
+          key: "",
         })
       }
     })
@@ -268,7 +265,7 @@ export function createRender({
       "MOUSE_BTN0",
       "MPV_EASY_MOUSE_BTN0",
       (event) => {
-        customDispatch(getRootNode(), lastMousePos, event)
+        customDispatch(flex.rootNode, lastMousePos, event)
       },
       {
         complex: true,
@@ -281,7 +278,7 @@ export function createRender({
       "MOUSE_BTN3",
       "MPV_EASY_MOUSE_BTN3",
       (event) => {
-        customDispatch(getRootNode(), lastMousePos, event)
+        customDispatch(flex.rootNode, lastMousePos, event)
       },
       {
         complex: true,
@@ -294,7 +291,7 @@ export function createRender({
       "MOUSE_BTN4",
       "MPV_EASY_MOUSE_BTN4",
       (event) => {
-        customDispatch(getRootNode(), lastMousePos, event)
+        customDispatch(flex.rootNode, lastMousePos, event)
       },
       {
         complex: true,
@@ -311,16 +308,16 @@ export function createRender({
       }
       lastW = w
       lastH = h
-      const { attributes, layoutNode } = getRootNode()
-      attributes.id = RootId
+      const { attributes, layoutNode } = flex.rootNode
+      attributes.id = "__root__"
       attributes.width = w
       attributes.height = h
       attributes.position = "relative"
       attributes.color = "FFFFFF"
       attributes.display = "flex"
       attributes.backgroundColor = "000000FF"
-      // attributes.padding = 0
-      // attributes.borderSize = 0
+      attributes.padding = 0
+      attributes.borderSize = 0
       attributes.x = 0
       attributes.y = 0
       attributes.zIndex = 0
@@ -332,7 +329,10 @@ export function createRender({
       layoutNode.padding = 0
       layoutNode.border = 0
       reconciler.updateContainer(reactNode, container, null, null)
-      customRender(getRootNode())
+      // customRender(getRootNode())
+
+      // customRender()
+      customRender()
     }
     const dim = new PropertyNative<MpvPropertyTypeMap["osd-dimensions"]>(
       "osd-dimensions",
@@ -344,7 +344,4 @@ export function createRender({
   }
 }
 
-export const render = createRender({
-  // enableMouseMoveEvent: true,
-  // customRender: defaultRootRerender,
-})
+export const render = createRender({})

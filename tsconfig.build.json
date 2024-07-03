@@ -23,5 +23,5 @@
     "declaration": true
   },
   "include": ["${configDir}/src"],
-  "exclude": ["${configDir}/test"]
+  "exclude": ["**/test"]
 }

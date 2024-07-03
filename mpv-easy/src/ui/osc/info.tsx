@@ -1,4 +1,4 @@
-import { type BaseElementProps, Box } from "@mpv-easy/ui"
+import { type MpDomProps, Box } from "@mpv-easy/ui"
 import React from "react"
 import { useSelector } from "react-redux"
 import { buttonStyleSelector, controlStyleSelector } from "../../store"
@@ -8,7 +8,7 @@ import { Filename } from "../components/filename"
 import { NextFrame } from "../components/next-frame"
 import { PreviousFrame } from "../components/previous-frame"
 
-export const OscInfo = React.memo(({ height }: Partial<BaseElementProps>) => {
+export const OscInfo = React.memo(({ height }: Partial<MpDomProps>) => {
   const button = useSelector(buttonStyleSelector)
   const control = useSelector(controlStyleSelector)
   return (

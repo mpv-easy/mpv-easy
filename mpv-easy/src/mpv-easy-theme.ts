@@ -1,5 +1,5 @@
 import type { MousePos, VideoParams } from "@mpv-easy/tool"
-import { defaultFPS } from "@mpv-easy/ui"
+import { DefaultFps } from "@mpv-easy/ui"
 import { cloneDeep, delay } from "lodash-es"
 
 const White = "FFFFFF"
@@ -448,7 +448,7 @@ export function createDefaultThemeConfig(): EasyConfig {
     player: defaultPlayer,
     state: defaultState,
     config: {
-      fps: defaultFPS,
+      fps: DefaultFps,
       enableMouseMoveEvent: true,
       saveConfigThrottle: defaultSaveConfigThrottle,
     },

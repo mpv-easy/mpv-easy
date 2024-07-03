@@ -9,7 +9,6 @@ export const Remove = () => {
     }, 1000)
   }, [])
 
-  console.log("===remove", show)
   return (
     show && (
       <Box
@@ -32,7 +31,6 @@ render(
     alignItems="center"
   >
     <Remove />
-
     <Box id="tooltip" width={100} height={100} backgroundColor={"FFFFFF"} />
   </Box>,
 )

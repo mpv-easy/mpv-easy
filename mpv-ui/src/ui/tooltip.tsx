@@ -1,8 +1,9 @@
-import { type BaseElementProps, Box, type DOMElement } from "../index"
+import { Box } from "../index"
 import React, { useEffect, useRef, useState } from "react"
 import { type MousePos, PropertyNative } from "@mpv-easy/tool"
 import { isEqual, throttle } from "lodash-es"
-import { getRootNode, dispatchEvent } from "../render/flex"
+import { getRootNode } from "../render/flex"
+import type { MpDom, MpDomProps } from "../render/dom"
 
 export type TooltipProps = {
   tooltipThrottle: number
@@ -34,7 +35,7 @@ export function getDirection(
 }
 
 export function computeTooltipPosition(
-  node: DOMElement | null,
+  node: MpDom | null,
   mouseX: number,
   mouseY: number,
   direction: TooltipDirection,
@@ -71,10 +72,10 @@ export function computeTooltipPosition(
 }
 
 function getTooltipElement(
-  node: DOMElement,
+  node: MpDom,
   x: number,
   y: number,
-): DOMElement | undefined {
+): MpDom | undefined {
   for (const c of node.childNodes) {
     const el = getTooltipElement(c, x, y)
     if (el) {
@@ -93,14 +94,14 @@ const mousePosProp = new PropertyNative<MousePos>("mouse-pos")
 export const Tooltip = ({
   tooltipThrottle = 100,
   ...boxProps
-}: Partial<TooltipProps & BaseElementProps>) => {
+}: Partial<TooltipProps & MpDomProps>) => {
   const [show, setShow] = useState(true)
   const [text, setText] = useState("")
   const mousePos = mousePosProp.value
   const [tooltipPos, setTooltipPos] = useState<{ x: number; y: number }>(
     mousePos,
   )
-  const tooltipRef = useRef<DOMElement>(null)
+  const tooltipRef = useRef<MpDom>(null)
 
   useEffect(() => {
     let lastPos = mousePos

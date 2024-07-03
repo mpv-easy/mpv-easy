@@ -1,5 +1,10 @@
-import React, { forwardRef } from "react"
-import { Box, type DOMElement, type BaseElementProps } from "@mpv-easy/ui"
+import React, {
+  type ForwardRefExoticComponent,
+  type PropsWithoutRef,
+  type RefAttributes,
+  forwardRef,
+} from "react"
+import { Box, type MpDomProps, type MpDom } from "@mpv-easy/ui"
 import { OscControl } from "./control"
 import { pluginName } from "../../main"
 import { OscInfo } from "./info"
@@ -14,26 +19,26 @@ import {
 export * from "./control"
 export * from "./info"
 
-export const Osc = React.memo(
-  forwardRef<DOMElement, Partial<BaseElementProps>>((props, ref) => {
-    const h = useSelector(IconButtonSizeSelector)
+export const Osc: ForwardRefExoticComponent<
+  PropsWithoutRef<Partial<MpDomProps>> & RefAttributes<MpDom>
+> = forwardRef<MpDom, Partial<MpDomProps>>((props, ref) => {
+  const h = useSelector(IconButtonSizeSelector)
 
-    return (
-      <Box
-        width={"100%"}
-        height={h * 2}
-        display="flex"
-        flexDirection="row"
-        hide={props.hide}
-        ref={ref}
-        justifyContent="end"
-        alignItems="end"
-        id="osc"
-        onMouseDown={(e) => e.stopPropagation}
-      >
-        <OscInfo {...props} width={"100%"} height={h} />
-        <OscControl {...props} width={"100%"} height={h} />
-      </Box>
-    )
-  }),
-)
+  return (
+    <Box
+      width={"100%"}
+      height={h * 2}
+      display="flex"
+      flexDirection="row"
+      hide={props.hide}
+      ref={ref}
+      justifyContent="end"
+      alignItems="end"
+      id="osc"
+      onMouseDown={(e) => e.stopPropagation}
+    >
+      <OscInfo {...props} width={"100%"} height={h} />
+      <OscControl {...props} width={"100%"} height={h} />
+    </Box>
+  )
+})
