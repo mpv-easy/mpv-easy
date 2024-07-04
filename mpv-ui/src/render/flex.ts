@@ -153,33 +153,10 @@ export class MpFlex extends Flex<MpAttrs, MpProps, MpEvent> {
 
       borderSize = borderSize || 0
 
-      // bg ovl
-
-      if (typeof backgroundColor !== "undefined") {
-        if (backgroundColor.length === 6) {
-          backgroundColor += "00"
-        }
-        const rect = new Rect(
-          x + borderSize + paddingSize,
-          y + borderSize + paddingSize,
-          width - 2 * borderSize - 2 * paddingSize,
-          height - 2 * borderSize - 2 * paddingSize,
-        )
-
-        const bgData = drawRect({
-          ...rect.scale(assScale),
-          color: backgroundColor,
-          borderRadius: borderRadiusSize * assScale,
-        })
-
-        bgOverlay.data = bgData
-        bgOverlay.hidden = false
-        bgOverlay.update()
-      }
 
       // text ovl
-
-      if (typeof attributes.text !== "undefined") {
+      const hasText = typeof attributes.text !== "undefined"
+      if (hasText) {
         let textX = 0 + paddingSize + layoutNode.x + borderSize
         let textY = 0 + paddingSize + layoutNode.y + borderSize
 
@@ -288,7 +265,41 @@ export class MpFlex extends Flex<MpAttrs, MpProps, MpEvent> {
 
         textOverlay.data = getAssText(node, textX * assScale, textY * assScale)
         textOverlay.hidden = false
-        textOverlay.update()
+        textOverlay.computeBounds = true
+      }
+      const textRect = textOverlay.update(1 / assScale)
+
+      // bg ovl
+      if (typeof backgroundColor !== "undefined") {
+        if (backgroundColor.length === 6) {
+          backgroundColor += "00"
+        }
+
+        let bgX = x;
+        let bgY = y;
+        let bgW = width
+        let bgH = height
+        if (hasText && node.parentNode?.attributes.alignContent !== 'stretch') {
+          bgX = textRect.x
+          bgY = textRect.y
+          bgW = textRect.width
+          bgH = textRect.height
+        }
+        const rect = new Rect(
+          bgX + borderSize + paddingSize,
+          bgY + borderSize + paddingSize,
+          bgW - 2 * borderSize - 2 * paddingSize,
+          bgH - 2 * borderSize - 2 * paddingSize,
+        )
+        const bgData = drawRect({
+          ...rect.scale(assScale),
+          color: backgroundColor,
+          borderRadius: borderRadiusSize * assScale,
+        })
+
+        bgOverlay.data = bgData
+        bgOverlay.hidden = false
+        bgOverlay.update()
       }
 
       // image
