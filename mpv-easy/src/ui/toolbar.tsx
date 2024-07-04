@@ -4,13 +4,13 @@ import React, {
   type PropsWithoutRef,
   type RefAttributes,
   forwardRef,
+  MemoExoticComponent,
 } from "react"
 import { useSelector } from "react-redux"
 import {
   buttonStyleSelector,
   toolbarStyleSelector,
   fullscreenSelector,
-  uiNameSelector,
   fontSizeSelector,
 } from "../store"
 import { Language } from "./components/language"
@@ -21,54 +21,58 @@ import { Close } from "./components/close"
 import { Minimize } from "./components/minimize"
 import { Filename } from "./components/filename"
 
-export const Toolbar: ForwardRefExoticComponent<
-  PropsWithoutRef<Partial<MpDomProps>> & RefAttributes<MpDom>
-> = forwardRef<MpDom, Partial<MpDomProps>>(({ hide }, ref) => {
-  const fullscreen = useSelector(fullscreenSelector)
-  const button = useSelector(buttonStyleSelector)
-  const toolbar = useSelector(toolbarStyleSelector)
-  const fontSize = useSelector(fontSizeSelector)
-  return (
-    <Box
-      id="toolbar"
-      ref={ref}
-      display="flex"
-      justifyContent="space-between"
-      alignItems="center"
-      font={button.font}
-      fontSize={fontSize}
-      color={button.color}
-      width={"100%"}
-      hide={hide}
-    >
+export const Toolbar: MemoExoticComponent<
+  ForwardRefExoticComponent<
+    PropsWithoutRef<Partial<MpDomProps>> & RefAttributes<MpDom>
+  >
+> = React.memo(
+  forwardRef<MpDom, Partial<MpDomProps>>(({ hide }, ref) => {
+    const fullscreen = useSelector(fullscreenSelector)
+    const button = useSelector(buttonStyleSelector)
+    const toolbar = useSelector(toolbarStyleSelector)
+    const fontSize = useSelector(fontSizeSelector)
+    return (
       <Box
-        position="relative"
+        id="toolbar"
+        ref={ref}
         display="flex"
-        justifyContent="start"
+        justifyContent="space-between"
         alignItems="center"
-        backgroundColor={toolbar.backgroundColor}
+        font={button.font}
+        fontSize={fontSize}
         color={button.color}
-        id="toolbar-left"
+        width={"100%"}
+        hide={hide}
       >
-        <Theme />
-        <Language />
-        <UI />
-        <Filename />
-      </Box>
-
-      {fullscreen && (
         <Box
+          position="relative"
           display="flex"
-          font={button.font}
-          justifyContent="end"
+          justifyContent="start"
           alignItems="center"
           backgroundColor={toolbar.backgroundColor}
+          color={button.color}
+          id="toolbar-left"
         >
-          <Minimize />
-          <Restore />
-          <Close />
+          <Theme />
+          <Language />
+          <UI />
+          <Filename />
         </Box>
-      )}
-    </Box>
-  )
-})
+
+        {fullscreen && (
+          <Box
+            display="flex"
+            font={button.font}
+            justifyContent="end"
+            alignItems="center"
+            backgroundColor={toolbar.backgroundColor}
+          >
+            <Minimize />
+            <Restore />
+            <Close />
+          </Box>
+        )}
+      </Box>
+    )
+  }),
+)

@@ -36,7 +36,7 @@ function useProp<T>(name: string, type: keyof MpvType, defaultValue: T) {
   const [prop, setProp] = useState(defaultValue)
 
   observeProperty(name, type, (_, value) => {
-    setProp(value)
+    if (defaultValue !== value) setProp(value)
   })
 
   return [

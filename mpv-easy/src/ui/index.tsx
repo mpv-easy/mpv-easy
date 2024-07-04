@@ -35,7 +35,7 @@ import { ClickMenu } from "./click-menu"
 import { Playlist } from "./playlist"
 import { getPlayableList } from "@mpv-easy/autoload"
 import { VoiceControl } from "./voice-control"
-import { useFirstMountState, useRendersCount } from "react-use"
+import { useFirstMountState } from "react-use"
 import { History } from "./history"
 import { Speed } from "./speed"
 
@@ -90,7 +90,7 @@ export type EasyProps = {
   skipFirstRender: boolean
   fontSize: number
 }
-export function Easy(props: Partial<EasyProps>) {
+export const Easy = React.memo((props: Partial<EasyProps>) => {
   const dispatch = useDispatch<Dispatch>()
   const fps = useSelector(fpsSelector)
   const path = useSelector(pathSelector)
@@ -293,4 +293,4 @@ export function Easy(props: Partial<EasyProps>) {
       </Box>
     </>
   )
-}
+})

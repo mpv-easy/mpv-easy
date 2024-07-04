@@ -1,39 +1,46 @@
 import { drawBorder, drawRect } from "@mpv-easy/assdraw"
 import {
   getAssScale,
-  assert,
   parsePercentage,
   type MousePos,
   type KeyEvent,
   Rect,
-  isPercentage,
   print,
   fileInfo,
   Overlay,
 } from "@mpv-easy/tool"
-import {
-  Flex,
-  type LayoutNode,
-  type BaseDom,
-  type BaseMouseEvent,
-} from "@r-tui/flex"
+import { Flex, type BaseMouseEvent } from "@r-tui/flex"
 import type { Shape } from "@r-tui/share"
 import { type MpDom, createNode, type MpAttrs, type MpProps } from "./dom"
 import { getAssText, measureText, readAttr } from "../common"
 
 const RootName = "@mpv-easy/root"
 const BoxName = "@mpv-easy/box"
-const RootNode: MpDom = createNode(RootName)
-
-import throttle from "lodash-es/throttle"
+let RootNode: MpDom
 
 export const getRootNode = () => {
+  if (RootNode) return RootNode
+  RootNode = createNode(RootName)
   return RootNode
 }
 
 export const DefaultFps = 30
 
 export class MpFlex extends Flex<MpAttrs, {}, MpProps> {
+  constructor() {
+    super()
+    // TODO: babel or esbuild can't access super's renderCount,maxRenderCount
+    // @ts-ignore
+    this.renderCount = 0
+    // @ts-ignore
+    this.maxRenderCount = 1 << 10
+
+    // TODO: abstract method not work?
+    this.rootNode = getRootNode()
+    // console.log("rootNode", this.rootNode)
+  }
+
+
   customCreateMouseEvent(
     node: MpDom | undefined,
     x: number,
@@ -52,7 +59,7 @@ export class MpFlex extends Flex<MpAttrs, {}, MpProps> {
         return this.y - (this.target?.layoutNode.y || 0)
       },
       stopPropagation() {
-        this.defaultPrevented = true
+        this.bubbles = false
       },
       clientX: 0,
       clientY: 0,
@@ -62,19 +69,7 @@ export class MpFlex extends Flex<MpAttrs, {}, MpProps> {
     }
   }
 
-  // renderToMpv: () => void = throttle(
-  //   () => {
-  //     print('renderToMpv1:')
-  //     this.rerender()
-  //   },
-  //   1000 / DefaultFps,
-  //   {
-  //     trailing: true,
-  //     leading: true,
-  //   },
-  // )
   renderToMpv() {
-    print("renderToMpv1: ")
     this.rerender()
   }
 
@@ -83,14 +78,11 @@ export class MpFlex extends Flex<MpAttrs, {}, MpProps> {
   }
   customIsRootNode(node: MpDom): boolean {
     return node.props.nodeName === RootName
-    // return RootNode
   }
-  rootNode: MpDom = RootNode
   customCreateRootNode(): MpDom {
-    // console.log("customCreateRootNode:", this.rootNode)
-    // return createNode(RootName)
-    return RootNode
+    return getRootNode()
   }
+
   customRenderNode(node: MpDom): void {
     const hide = readAttr(node, "hide") ?? false
     const {
@@ -118,7 +110,6 @@ export class MpFlex extends Flex<MpAttrs, {}, MpProps> {
         node.props.imageOverlay?.remove()
       }
     } else if (node.props.nodeName === "@mpv-easy/box") {
-      // print("customRenderNode222:", node.attributes.text)
       layoutNode._hideCache = false
       const assScale = getAssScale()
       let {
@@ -333,13 +324,12 @@ export class MpFlex extends Flex<MpAttrs, {}, MpProps> {
         const info = fileInfo(backgroundImage)
         if (!info) {
           // throw new Error("backgroundImage file not found")
-          // print("backgroundImage file not found: " + backgroundImage)
+          print(`backgroundImage file not found: ${backgroundImage}`)
         } else {
           const { size } = info
           const pixels = w * h * 4
           if (pixels !== size) {
-            // throw new Error("backgroundImage size error: " + w + '-' + h + "-" + size)
-            // print("backgroundImage size error: " + w + "-" + h + "-" + size)
+            print(`backgroundImage size error: ${w}-${h}-${size}`)
           } else {
             overlay.x = x | 0
             overlay.y = y | 0
@@ -370,10 +360,16 @@ export class MpFlex extends Flex<MpAttrs, {}, MpProps> {
   }
 }
 
-export const RootFlex = new MpFlex()
+let RootFlex: MpFlex
+
+export function getRootFlex() {
+  if (RootFlex) return RootFlex
+  return (RootFlex = new MpFlex())
+}
+
 export const dispatchEvent = (node: MpDom, pos: MousePos, event: KeyEvent) =>
-  RootFlex.dispatchEvent(node, pos, event)
+  getRootFlex().dispatchEvent(node, pos, event)
 
 export const renderNode = () => {
-  RootFlex.renderToMpv()
+  getRootFlex().renderToMpv()
 }

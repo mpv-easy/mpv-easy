@@ -7,17 +7,6 @@ import {
   type BaseMouseEvent,
 } from "@r-tui/flex"
 
-// export type EventProps = Pick<MpDom, (typeof EventName)[number]>
-
-// export interface MpDomProps extends BaseDomProps, EventProps {
-//   title: string
-//   backgroundImageFormat: "rgba" | "bgra"
-//   backgroundImage: string
-//   backgroundColor: string,
-//   color: string
-//   hide: boolean
-// }
-
 export interface MpAttrs {
   title: string
   backgroundImageFormat: "rgba" | "bgra"
@@ -33,7 +22,7 @@ export interface MpProps {
   imageOverlay?: Overlay
 }
 
-export interface MpDom extends BaseDom<MpAttrs, {}, MpProps> {}
+export interface MpDom extends BaseDom<MpAttrs, {}, MpProps> { }
 
 export type MpDomProps = MpDom["attributes"]
 

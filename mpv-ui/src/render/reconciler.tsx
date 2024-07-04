@@ -11,17 +11,16 @@ import {
   print,
 } from "@mpv-easy/tool"
 import type { MousePos } from "@mpv-easy/tool"
-import type { MouseEvent } from "react"
 import createReconciler from "react-reconciler"
 import { DefaultEventPriority } from "react-reconciler/constants"
-import { DefaultFps, type MpFlex, RootFlex } from "./flex"
+import { DefaultFps, dispatchEvent, getRootFlex, type MpFlex } from "./flex"
 import {
   appendChildNode,
   insertBeforeNode,
   removeChildNode,
   applyProps,
 } from "@r-tui/flex"
-import { type MpDom, createNode } from "./dom"
+import { type MpDom, createNode, MouseEvent } from "./dom"
 import throttle from "lodash-es/throttle"
 const NO_CONTEXT = {}
 
@@ -41,7 +40,7 @@ export function createCustomReconciler(customRender: () => void) {
     commitTextUpdate(node, _oldText, newText) {
       throw new Error("not support Text Component update")
     },
-    commitMount() {},
+    commitMount() { },
     removeChildFromContainer(root: MpDom, node: MpDom) {
       removeChildNode(root, node)
       customRender()
@@ -65,10 +64,10 @@ export function createCustomReconciler(customRender: () => void) {
     ): unknown => {
       throw new Error("not support Text components")
     },
-    hideTextInstance(node) {},
-    unhideTextInstance(node, text) {},
-    hideInstance(node) {},
-    unhideInstance(node) {},
+    hideTextInstance(node) { },
+    unhideTextInstance(node, text) { },
+    hideInstance(node) { },
+    unhideInstance(node) { },
     appendInitialChild: (parentInstance: MpDom, child: MpDom): void => {
       appendChildNode(parentInstance, child)
       customRender()
@@ -123,13 +122,13 @@ export function createCustomReconciler(customRender: () => void) {
     prepareForCommit: (containerInfo: unknown): Record<string, any> | null => {
       return null
     },
-    resetTextContent(instance: unknown) {},
+    resetTextContent(instance: unknown) { },
     // shouldDeprioritizeSubtree() {
 
     // },
-    clearContainer: () => {},
-    resetAfterCommit: (containerInfo: unknown): void => {},
-    preparePortalMount: (containerInfo: unknown): void => {},
+    clearContainer: () => { },
+    resetAfterCommit: (containerInfo: unknown): void => { },
+    preparePortalMount: (containerInfo: unknown): void => { },
     scheduleTimeout: (
       fn: (...args: unknown[]) => unknown,
       delay?: number | undefined,
@@ -149,9 +148,9 @@ export function createCustomReconciler(customRender: () => void) {
     getInstanceFromNode: (node: any): null => {
       return null
     },
-    beforeActiveInstanceBlur: (): void => {},
-    afterActiveInstanceBlur: (): void => {},
-    prepareScopeUpdate: (scopeInstance: any, instance: any): void => {},
+    beforeActiveInstanceBlur: (): void => { },
+    afterActiveInstanceBlur: (): void => { },
+    prepareScopeUpdate: (scopeInstance: any, instance: any): void => { },
     getInstanceFromScope: (scopeInstance: any): unknown => {
       return null
     },
@@ -188,31 +187,36 @@ export type RenderConfig = {
     event: KeyEvent,
     mouseEvent?: MouseEvent,
   ) => void
+  showFps?: boolean
 }
 
-// let max = 0
-// let min = 1 << 20
-// let sum = 0
+let max = 0
+let min = 1 << 20
+let sum = 0
+const fpsList: number[] = []
 
 export function createRender({
   enableMouseMoveEvent = true,
   fps = DefaultFps,
-  flex = RootFlex,
+  flex = getRootFlex(),
+  showFps = false,
   customRender = throttle(
     () => {
-      // const st = +Date.now()
-      // renderNode(getRootNode(), ++currentRenderCount, 0)
-
-      // flex?.customRenderNode(getRootNode(), ++currentRenderCount, 0)
+      const st = +Date.now()
       flex.renderToMpv()
-
-      // const ed = +Date.now()
-      // const t = ed - st
-      // max = Math.max(max, t)
-      // min = Math.min(min, t)
-      // sum += t
-      // const every = sum / (currentRenderCount + 1)
-      // print("render time:", currentRenderCount, t, min, max, every)
+      const ed = +Date.now()
+      const t = ed - st
+      max = Math.max(max, t)
+      min = Math.min(min, t)
+      sum += t
+      fpsList.push(t)
+      if (fpsList.length > 32) {
+        fpsList.shift()
+      }
+      const every = fpsList.reduce((a, b) => a + b, 0) / fpsList.length
+      if (showFps) {
+        print("render time:", ed, min, max, every)
+      }
     },
     1000 / fps,
     {
@@ -220,19 +224,7 @@ export function createRender({
       leading: true,
     },
   ),
-  // @ts-ignore
-  customDispatch = throttle(
-    (node: MpDom, pos: MousePos, event: KeyEvent, mouseEvent: MouseEvent) => {
-      // console.log('============customDispatch,', JSON.stringify(event), JSON.stringify(mouseEvent))
-      // @ts-ignore
-      flex?.dispatchEvent(node, pos, event, mouseEvent)
-    },
-    1000 / fps,
-    {
-      trailing: true,
-      leading: true,
-    },
-  ),
+  customDispatch = dispatchEvent
 }: Partial<RenderConfig> = {}) {
   const reconciler = createCustomReconciler(customRender)
   return (reactNode: React.ReactNode) => {
@@ -329,9 +321,6 @@ export function createRender({
       layoutNode.padding = 0
       layoutNode.border = 0
       reconciler.updateContainer(reactNode, container, null, null)
-      // customRender(getRootNode())
-
-      // customRender()
       customRender()
     }
     const dim = new PropertyNative<MpvPropertyTypeMap["osd-dimensions"]>(
@@ -344,4 +333,12 @@ export function createRender({
   }
 }
 
-export const render = createRender({})
+let r: (reactNode: React.ReactNode) => void
+export const render: (reactNode: React.ReactNode) => void = (
+  reactNode: React.ReactNode,
+) => {
+  if (!r) {
+    r = createRender({})
+  }
+  return r(reactNode)
+}
