@@ -9,8 +9,6 @@ import {
   getPropertyNumber,
   getPropertyString,
   setPropertyNative,
-  setPropertyNumber,
-  setPropertyString,
 } from "@mpv-easy/tool"
 import {
   buttonStyleSelector,
@@ -19,21 +17,7 @@ import {
   mouseHoverStyleSelector,
   dropdownStyleSelector,
   sidSelector,
-  smallFontSizeSelector,
 } from "../../store"
-
-function getExtraSub(path: string) {
-  const prefix = path.split(".").slice(0, -1).join(".")
-  const subs: string[] = []
-  for (const i of SubtitleTypes) {
-    const subPath = `${prefix}.${i}`
-    if (existsSync(subPath)) {
-      subs.push(subPath)
-    }
-  }
-
-  return subs
-}
 
 type SubtitleTrack = {
   title?: string
@@ -92,12 +76,12 @@ export const SubtitleTrack = () => {
           }
         },
         style: {
+          ...dropdown.item,
           justifyContent: "start",
         },
       }
     },
   )
-  const fontSize = useSelector(smallFontSizeSelector)
   return (
     <Dropdown
       id="mpv-easy-button-subtitle-track"
@@ -112,13 +96,14 @@ export const SubtitleTrack = () => {
       justifyContent="center"
       alignItems="center"
       enableMouseStyle={mouseHoverStyle}
-      colorHover={dropdown.colorHover}
-      backgroundColorHover={dropdown.backgroundColorHover}
-      padding={dropdown.padding}
-      backgroundColor={dropdown.backgroundColor}
-      font={dropdown.font}
-      fontSize={fontSize}
-      color={dropdown.color}
+      colorHover={dropdown.button.colorHover}
+      backgroundColorHover={dropdown.button.backgroundColorHover}
+      padding={dropdown.button.padding}
+      backgroundColor={dropdown.button.backgroundColor}
+      font={dropdown.button.font}
+      fontSize={button.fontSize}
+      color={dropdown.button.color}
+      dropdownListStyle={dropdown.list}
       onMouseDown={(e) => {
         // e.stopPropagation()
         // todo()

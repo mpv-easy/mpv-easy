@@ -4,7 +4,6 @@ import { useDispatch, useSelector } from "react-redux"
 import * as ICON from "../../icon"
 import {
   buttonStyleSelector,
-  pauseSelector,
   type Dispatch,
   i18nSelector,
   mouseHoverStyleSelector,
@@ -33,7 +32,7 @@ export const Screenshot = () => {
       font={button.font}
       fontSize={button.fontSize}
       color={button.color}
-      onMouseDown={(e) => {
+      onMouseDown={() => {
         dispatch.context.screenshot()
       }}
     />

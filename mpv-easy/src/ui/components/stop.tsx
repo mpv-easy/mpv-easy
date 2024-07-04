@@ -4,7 +4,6 @@ import { useDispatch, useSelector } from "react-redux"
 import * as ICON from "../../icon"
 import {
   buttonStyleSelector,
-  pauseSelector,
   type Dispatch,
   i18nSelector,
   mouseHoverStyleSelector,
@@ -34,7 +33,7 @@ export const Stop = () => {
       font={button.font}
       fontSize={button.fontSize}
       color={button.color}
-      onMouseDown={(e) => {
+      onMouseDown={() => {
         dispatch.context.setPause(true)
         dispatch.context.setTimePos(0)
         setPropertyNumber("time-pos", 0)

@@ -1,17 +1,14 @@
-import { Button, Dropdown } from "@mpv-easy/ui"
+import { Dropdown } from "@mpv-easy/ui"
 import React from "react"
 import { useDispatch, useSelector } from "react-redux"
 import * as ICON from "../../icon"
 import {
   buttonStyleSelector,
-  pauseSelector,
   type Dispatch,
   i18nSelector,
   mouseHoverStyleSelector,
   dropdownStyleSelector,
   modeSelector,
-  languageSelector,
-  smallFontSizeSelector,
 } from "../../store"
 
 export const Theme = () => {
@@ -19,16 +16,11 @@ export const Theme = () => {
   const i18n = useSelector(i18nSelector)
   const dispatch = useDispatch<Dispatch>()
   const mouseHoverStyle = useSelector(mouseHoverStyleSelector)
-
   const dropdown = useSelector(dropdownStyleSelector)
-
-  const language = useSelector(languageSelector)
-
   const mode = useSelector(modeSelector)
   const darkPrefix = mode === "dark" ? ICON.Ok : ICON.CheckboxBlankCircleOutline
   const lightPrefix =
     mode === "light" ? ICON.Ok : ICON.CheckboxBlankCircleOutline
-  const fontSize = useSelector(smallFontSizeSelector)
 
   return (
     <Dropdown
@@ -44,6 +36,7 @@ export const Theme = () => {
             dispatch.context.setMode("light")
           },
           style: {
+            ...dropdown.item,
             justifyContent: "space-between",
             alignItems: "center",
             prefix: lightPrefix,
@@ -56,6 +49,7 @@ export const Theme = () => {
             dispatch.context.setMode("dark")
           },
           style: {
+            ...dropdown.item,
             justifyContent: "space-between",
             alignItems: "center",
             prefix: darkPrefix,
@@ -70,13 +64,14 @@ export const Theme = () => {
       justifyContent="center"
       alignItems="center"
       enableMouseStyle={mouseHoverStyle}
-      padding={dropdown.padding}
-      colorHover={dropdown.colorHover}
-      backgroundColorHover={dropdown.backgroundColorHover}
-      backgroundColor={dropdown.backgroundColor}
-      font={dropdown.font}
-      fontSize={fontSize}
-      color={dropdown.color}
+      padding={dropdown.button.padding}
+      colorHover={dropdown.button.colorHover}
+      backgroundColorHover={dropdown.button.backgroundColorHover}
+      backgroundColor={dropdown.button.backgroundColor}
+      font={dropdown.button.font}
+      fontSize={button.fontSize}
+      color={dropdown.button.color}
+      dropdownListStyle={dropdown.list}
     />
   )
 }

@@ -40,7 +40,7 @@ export function createCustomReconciler(customRender: () => void) {
     commitTextUpdate(node, _oldText, newText) {
       throw new Error("not support Text Component update")
     },
-    commitMount() { },
+    commitMount() {},
     removeChildFromContainer(root: MpDom, node: MpDom) {
       removeChildNode(root, node)
       customRender()
@@ -64,10 +64,10 @@ export function createCustomReconciler(customRender: () => void) {
     ): unknown => {
       throw new Error("not support Text components")
     },
-    hideTextInstance(node) { },
-    unhideTextInstance(node, text) { },
-    hideInstance(node) { },
-    unhideInstance(node) { },
+    hideTextInstance(node) {},
+    unhideTextInstance(node, text) {},
+    hideInstance(node) {},
+    unhideInstance(node) {},
     appendInitialChild: (parentInstance: MpDom, child: MpDom): void => {
       appendChildNode(parentInstance, child)
       customRender()
@@ -122,13 +122,13 @@ export function createCustomReconciler(customRender: () => void) {
     prepareForCommit: (containerInfo: unknown): Record<string, any> | null => {
       return null
     },
-    resetTextContent(instance: unknown) { },
+    resetTextContent(instance: unknown) {},
     // shouldDeprioritizeSubtree() {
 
     // },
-    clearContainer: () => { },
-    resetAfterCommit: (containerInfo: unknown): void => { },
-    preparePortalMount: (containerInfo: unknown): void => { },
+    clearContainer: () => {},
+    resetAfterCommit: (containerInfo: unknown): void => {},
+    preparePortalMount: (containerInfo: unknown): void => {},
     scheduleTimeout: (
       fn: (...args: unknown[]) => unknown,
       delay?: number | undefined,
@@ -148,9 +148,9 @@ export function createCustomReconciler(customRender: () => void) {
     getInstanceFromNode: (node: any): null => {
       return null
     },
-    beforeActiveInstanceBlur: (): void => { },
-    afterActiveInstanceBlur: (): void => { },
-    prepareScopeUpdate: (scopeInstance: any, instance: any): void => { },
+    beforeActiveInstanceBlur: (): void => {},
+    afterActiveInstanceBlur: (): void => {},
+    prepareScopeUpdate: (scopeInstance: any, instance: any): void => {},
     getInstanceFromScope: (scopeInstance: any): unknown => {
       return null
     },
@@ -313,7 +313,7 @@ export function createRender({
       attributes.x = 0
       attributes.y = 0
       attributes.zIndex = 0
-      attributes.alignContent = 'stretch'
+      attributes.alignContent = "stretch"
       layoutNode.x = 0
       layoutNode.y = 0
       layoutNode.width = w

@@ -11,7 +11,13 @@ import {
 } from "@mpv-easy/tool"
 import { BaseDom, Flex, BaseMouseEvent } from "@r-tui/flex"
 import type { Shape } from "@r-tui/share"
-import { type MpDom, createNode, type MpAttrs, type MpProps, MpEvent } from "./dom"
+import {
+  type MpDom,
+  createNode,
+  type MpAttrs,
+  type MpProps,
+  MpEvent,
+} from "./dom"
 import { getAssText, measureText, readAttr } from "../common"
 
 const RootName = "@mpv-easy/root"
@@ -27,7 +33,13 @@ export const getRootNode = () => {
 export const DefaultFps = 30
 
 export class MpFlex extends Flex<MpAttrs, MpProps, MpEvent> {
-  customCreateMouseEvent(node: BaseDom<MpAttrs, MpProps, MpEvent> | undefined, x: number, y: number, hover: boolean, event: MpEvent): BaseMouseEvent<MpAttrs, MpProps, MpEvent> {
+  customCreateMouseEvent(
+    node: BaseDom<MpAttrs, MpProps, MpEvent> | undefined,
+    x: number,
+    y: number,
+    hover: boolean,
+    event: MpEvent,
+  ): BaseMouseEvent<MpAttrs, MpProps, MpEvent> {
     return new BaseMouseEvent(node, x, y, hover, event)
   }
   customIsWheelDown(e: BaseMouseEvent<MpAttrs, MpProps, MpEvent>): boolean {
@@ -153,7 +165,6 @@ export class MpFlex extends Flex<MpAttrs, MpProps, MpEvent> {
 
       borderSize = borderSize || 0
 
-
       // text ovl
       const hasText = typeof attributes.text !== "undefined"
       if (hasText) {
@@ -275,11 +286,11 @@ export class MpFlex extends Flex<MpAttrs, MpProps, MpEvent> {
           backgroundColor += "00"
         }
 
-        let bgX = x;
-        let bgY = y;
+        let bgX = x
+        let bgY = y
         let bgW = width
         let bgH = height
-        if (hasText && node.parentNode?.attributes.alignContent !== 'stretch') {
+        if (hasText && node.parentNode?.attributes.alignContent !== "stretch") {
           bgX = textRect.x
           bgY = textRect.y
           bgW = textRect.width
@@ -368,7 +379,13 @@ export function getRootFlex() {
 }
 
 export const dispatchEvent = (node: MpDom, pos: MousePos, event: KeyEvent) => {
-  const e = getRootFlex().customCreateMouseEvent(node, pos.x, pos.y, pos.hover, event)
+  const e = getRootFlex().customCreateMouseEvent(
+    node,
+    pos.x,
+    pos.y,
+    pos.hover,
+    event,
+  )
   getRootFlex().dispatchMouseEvent(node, e)
 }
 

@@ -1,10 +1,8 @@
 import {
   Box,
   Button,
-  // MpDom,
   type ButtonProps,
   createNode,
-  MpDom,
   type MpDomProps,
 } from "@mpv-easy/ui"
 import React, { useRef, useState } from "react"
@@ -13,9 +11,7 @@ import {
   buttonStyleSelector,
   fontSizeSelector,
   mouseHoverStyleSelector,
-  osdDimensionsSelector,
   scrollListStyleSelector,
-  smallFontSizeSelector,
 } from "../../store"
 import { measureText, type MouseEvent } from "@mpv-easy/ui"
 

@@ -4,12 +4,10 @@ import { useDispatch, useSelector } from "react-redux"
 import * as ICON from "../../icon"
 import {
   buttonStyleSelector,
-  pauseSelector,
   type Dispatch,
   i18nSelector,
   mouseHoverStyleSelector,
 } from "../../store"
-import { command } from "@mpv-easy/tool"
 
 export const Restore = () => {
   const button = useSelector(buttonStyleSelector)
@@ -34,7 +32,7 @@ export const Restore = () => {
       font={button.font}
       fontSize={button.fontSize}
       color={button.color}
-      onMouseDown={(e) => {
+      onMouseDown={() => {
         dispatch.context.setFullscreen(false)
       }}
     />

@@ -1,4 +1,4 @@
-import { Box, } from "@mpv-easy/ui"
+import { Box } from "@mpv-easy/ui"
 import React, { useState } from "react"
 
 export function MouseEvent() {

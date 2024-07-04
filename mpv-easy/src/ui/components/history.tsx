@@ -8,7 +8,6 @@ import {
   historyHideSelector,
   i18nSelector,
   mouseHoverStyleSelector,
-  playlistHideSelector,
 } from "../../store"
 
 export const History = () => {

@@ -72,7 +72,7 @@ export const context = createModel<RootModel>()({
       state[i18nName].default = language
       return { ...state }
     },
-    setUI(state, name: "osc" | "uosc") {
+    setUI(state, name: UIName) {
       state[pluginName].uiName = name
       return { ...state }
     },

@@ -1,11 +1,9 @@
 import { Button } from "@mpv-easy/ui"
 import React from "react"
-import { useDispatch, useSelector } from "react-redux"
+import { useSelector } from "react-redux"
 import * as ICON from "../../icon"
 import {
   buttonStyleSelector,
-  pauseSelector,
-  Dispatch,
   i18nSelector,
   mouseHoverStyleSelector,
 } from "../../store"
@@ -33,7 +31,7 @@ export const PreviousFrame = () => {
       font={button.font}
       fontSize={button.fontSize}
       color={button.color}
-      onMouseDown={(e) => {
+      onMouseDown={() => {
         command("no-osd frame-back-step")
       }}
     />

@@ -9,11 +9,9 @@ import {
   i18nSelector,
   mouseHoverStyleSelector,
 } from "../../store"
-import { command } from "@mpv-easy/tool"
 
 export const Close = () => {
   const button = useSelector(buttonStyleSelector)
-  const pause = useSelector(pauseSelector)
   const i18n = useSelector(i18nSelector)
   const dispatch = useDispatch<Dispatch>()
   const mouseHoverStyle = useSelector(mouseHoverStyleSelector)
@@ -35,7 +33,7 @@ export const Close = () => {
       font={button.font}
       fontSize={button.fontSize}
       color={button.color}
-      onMouseDown={(e) => {
+      onMouseDown={() => {
         dispatch.context.exit()
       }}
     />

@@ -97,14 +97,33 @@ export type ThemeStyle = {
     backgroundColorHover: string
   }
   dropdown: {
-    zIndex: number
-    font: string
-    padding: number
-    color: string
-    backgroundColor: string
-    colorHover: string
-    backgroundColorHover: string
-    button: Omit<ButtonStyle, "width" | "height">
+    list: {
+      zIndex: number
+      font: string
+      padding: number
+      color: string
+      backgroundColor: string
+      colorHover: string
+      backgroundColorHover: string
+    }
+    button: {
+      zIndex: number
+      font: string
+      padding: number
+      color: string
+      backgroundColor: string
+      colorHover: string
+      backgroundColorHover: string
+    }
+    item: {
+      zIndex: number
+      font: string
+      padding: number
+      color: string
+      backgroundColor: string
+      colorHover: string
+      backgroundColorHover: string
+    }
   }
   clickMenu: {
     zIndex: number
@@ -166,7 +185,7 @@ export const defaultPreviewZIndex = 256
 export const defaultClickMenuZIndex = 256
 export const defaultVolumeZIndex = 128
 export const defaultPlaylistZIndex = 512
-export const defaultFont = "FiraCode Nerd Font Mono Reg"
+export const defaultFont = "JetBrainsMono NFM Regular"
 export const defaultFontSize = 64
 export const defaultName = "uosc"
 export const defaultPadding = 8
@@ -290,15 +309,27 @@ export function createDefaultThemeConfig(): EasyConfig {
           font: defaultFont,
         },
         dropdown: {
-          zIndex: defaultDropdownZIndex,
-          padding: defaultPadding,
-          color: White + AlphaShow,
-          backgroundColor: Black + AlphaLow,
-          colorHover: Yellow + AlphaShow,
-          backgroundColorHover: White + AlphaMedium,
-          fontSize: defaultFontSize * 0.75,
-          font: defaultFont,
+          list: {
+            padding: 0,
+            color: White + AlphaShow,
+            backgroundColor: Black + AlphaLow,
+            colorHover: Yellow + AlphaShow,
+            backgroundColorHover: White + AlphaMedium,
+            fontSize: defaultFontSize,
+            font: defaultFont,
+            zIndex: defaultDropdownZIndex + 1,
+          },
           button: {
+            padding: defaultPadding,
+            color: White + AlphaShow,
+            backgroundColor: Black + AlphaHide,
+            colorHover: Yellow + AlphaShow,
+            backgroundColorHover: White + AlphaMedium,
+            fontSize: defaultFontSize,
+            font: defaultFont,
+            zIndex: defaultDropdownZIndex,
+          },
+          item: {
             padding: defaultPadding,
             color: White + AlphaShow,
             backgroundColor: Black + AlphaHide,
@@ -306,8 +337,7 @@ export function createDefaultThemeConfig(): EasyConfig {
             backgroundColorHover: White + AlphaMedium,
             fontSize: defaultFontSize * 0.75,
             font: defaultFont,
-            // width: defaultButtonSize,
-            // height: defaultButtonSize,
+            zIndex: defaultDropdownZIndex + 2,
           },
         },
         clickMenu: {
@@ -414,24 +444,35 @@ export function createDefaultThemeConfig(): EasyConfig {
           font: defaultFont,
         },
         dropdown: {
-          padding: defaultPadding,
-          color: Black + AlphaShow,
-          backgroundColor: White + AlphaLow,
-          colorHover: Yellow + AlphaShow,
-          backgroundColorHover: Black + AlphaMedium,
-          fontSize: defaultFontSize * 0.75,
-          font: defaultFont,
-          zIndex: defaultDropdownZIndex,
+          list: {
+            padding: 0,
+            color: Black + AlphaShow,
+            backgroundColor: White + AlphaLow,
+            colorHover: Yellow + AlphaShow,
+            backgroundColorHover: Black + AlphaMedium,
+            fontSize: defaultFontSize,
+            font: defaultFont,
+            zIndex: defaultDropdownZIndex + 1,
+          },
           button: {
             padding: defaultPadding,
             color: Black + AlphaShow,
             backgroundColor: White + AlphaHide,
             colorHover: Yellow + AlphaShow,
             backgroundColorHover: Black + AlphaMedium,
+            fontSize: defaultFontSize,
+            font: defaultFont,
+            zIndex: defaultDropdownZIndex,
+          },
+          item: {
+            padding: defaultPadding,
+            color: Black + AlphaShow,
+            backgroundColor: White + AlphaLow,
+            colorHover: Yellow + AlphaShow,
+            backgroundColorHover: Black + AlphaMedium,
             fontSize: defaultFontSize * 0.75,
             font: defaultFont,
-            // width: defaultButtonSize,
-            // height: defaultButtonSize,
+            zIndex: defaultDropdownZIndex + 2,
           },
         },
         clickMenu: {

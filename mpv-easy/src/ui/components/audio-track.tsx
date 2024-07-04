@@ -1,5 +1,5 @@
-import { Dropdown, type DropdownItem, dispatchEvent } from "@mpv-easy/ui"
-import React, { useEffect } from "react"
+import { Dropdown, type DropdownItem } from "@mpv-easy/ui"
+import React from "react"
 import { useSelector, useDispatch } from "react-redux"
 import * as ICON from "../../icon"
 import {
@@ -9,32 +9,26 @@ import {
   dropdownStyleSelector,
   aidSelector,
   type Dispatch,
-  smallFontSizeSelector,
 } from "../../store"
 import {
   type TrackItem,
-  getPropertyBool,
   getPropertyNative,
-  getPropertyNumber,
-  getPropertyString,
-  observeProperty,
   setPropertyNative,
-  setPropertyNumber,
-  todo,
 } from "@mpv-easy/tool"
 
 function getAudioTracks() {
   const trackList = getPropertyNative<TrackItem[]>("track-list") || []
   return trackList.filter((i) => i.type === "audio")
 }
-// ./mpv.com D:/迅雷下载/拾荒者统治(2023)/Scavengers.Reign.S01E06.1080p.WEB.h264.mkv   --log - file=./log.txt
 export const AudioTrack = () => {
+  const dropdown = useSelector(dropdownStyleSelector)
   const button = useSelector(buttonStyleSelector)
   const i18n = useSelector(i18nSelector)
   const mouseHoverStyle = useSelector(mouseHoverStyleSelector)
   const tracks = getAudioTracks()
   const aid = useSelector(aidSelector)
   const dispatch = useDispatch<Dispatch>()
+
   const items = tracks.map(
     ({ title, lang, external, selected, id }, k): DropdownItem => {
       const key = [title, lang, external, k].join("-")
@@ -49,13 +43,12 @@ export const AudioTrack = () => {
           dispatch.context.setAid(id)
         },
         style: {
+          ...dropdown.item,
           justifyContent: "start",
         },
       }
     },
   )
-  const fontSize = useSelector(smallFontSizeSelector)
-  const dropdown = useSelector(dropdownStyleSelector)
   return (
     <Dropdown
       id="mpv-easy-button-audio-track"
@@ -70,13 +63,14 @@ export const AudioTrack = () => {
       justifyContent="center"
       alignItems="center"
       enableMouseStyle={mouseHoverStyle}
-      colorHover={dropdown.colorHover}
-      backgroundColorHover={dropdown.backgroundColorHover}
-      padding={dropdown.padding}
-      backgroundColor={dropdown.backgroundColor}
-      font={dropdown.font}
-      fontSize={fontSize}
-      color={dropdown.color}
+      colorHover={dropdown.button.colorHover}
+      backgroundColorHover={dropdown.button.backgroundColorHover}
+      padding={dropdown.button.padding}
+      backgroundColor={dropdown.button.backgroundColor}
+      font={dropdown.button.font}
+      fontSize={button.fontSize}
+      color={dropdown.button.color}
+      dropdownListStyle={dropdown.list}
     />
   )
 }

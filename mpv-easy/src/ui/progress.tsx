@@ -1,17 +1,13 @@
 import {
   PropertyNative,
-  PropertyString,
   type VideoParams,
-  command,
   formatTime,
-  getPropertyBool,
   getTimeFormat,
-  isVideo,
   randomId,
   setPropertyNumber,
 } from "@mpv-easy/tool"
 import { Box, type MpDom } from "@mpv-easy/ui"
-import React, { useRef, useState, useLayoutEffect, useEffect } from "react"
+import React, { useRef, useState, useEffect } from "react"
 import type { MouseEvent } from "@mpv-easy/ui"
 import { useSelector, useDispatch } from "react-redux"
 import {
@@ -19,18 +15,14 @@ import {
   progressStyleSelector,
   durationSelector,
   timePosSelector,
-  pathSelector,
-  videoParamsSelector,
-  filenameSelector,
   smallFontSizeSelector,
   buttonStyleSelector,
 } from "../store"
 import { ThumbFast } from "@mpv-easy/thumbfast"
 
-type Len = any
 export type ProgressProps = {
-  width: Len
-  height: Len
+  width: number | string
+  height: number | string
 }
 
 export const Progress = React.memo(({ width, height }: ProgressProps) => {
@@ -184,6 +176,10 @@ export const Progress = React.memo(({ width, height }: ProgressProps) => {
           color={progress.previewCursorColor}
           pointerEvents="none"
           zIndex={progress.previewZIndex}
+          display="flex"
+          alignContent="stretch"
+          // justifyContent="center"
+          // alignItems="center"
         >
           {!previewCursorHide && (
             <Box
@@ -194,10 +190,12 @@ export const Progress = React.memo(({ width, height }: ProgressProps) => {
               left={previewTimeTextOffsetX}
               backgroundColor={progress.backgroundColor}
               color={progress.color}
-              justifyContent="center"
-              alignItems="center"
               text={formatTime(leftPreview * duration, format)}
               pointerEvents="none"
+              display="flex"
+              // alignContent='stretch'
+              justifyContent="center"
+              alignItems="center"
             />
           )}
 
@@ -212,6 +210,10 @@ export const Progress = React.memo(({ width, height }: ProgressProps) => {
               backgroundImage={thumbRef.current?.path}
               backgroundImageFormat={thumbRef.current?.format}
               pointerEvents="none"
+              // display="flex"
+              // alignContent='stretch'
+              // justifyContent="center"
+              // alignItems="center"
             />
           )}
         </Box>

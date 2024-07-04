@@ -7,15 +7,15 @@ import {
   dropdownStyleSelector,
   i18nSelector,
   mouseHoverStyleSelector,
-  smallFontSizeSelector,
 } from "../../store"
-import { getPropertyNative, setPropertyNative } from "@mpv-easy/tool"
+import { setPropertyNative } from "@mpv-easy/tool"
 
 export const PlayMode = () => {
   const button = useSelector(buttonStyleSelector)
   const i18n = useSelector(i18nSelector)
   const mouseHoverStyle = useSelector(mouseHoverStyleSelector)
   const [mode, setMode] = useState(i18n.loopPlaylist)
+  const dropdown = useSelector(dropdownStyleSelector)
 
   const items: DropdownItem[] = [i18n.loopFile, i18n.loopPlaylist].map(
     (i): DropdownItem => {
@@ -33,18 +33,18 @@ export const PlayMode = () => {
           }
         },
         style: {
+          ...dropdown.item,
           justifyContent: "start",
         },
       }
     },
   )
-  const dropdown = useSelector(dropdownStyleSelector)
-  const fontSize = useSelector(smallFontSizeSelector)
   return (
     <Dropdown
       id="mpv-easy-button-play-mode"
       items={items}
       title={i18n.playMode}
+      text={mode === i18n.loopPlaylist ? ICON.Refresh : ICON.Sync}
       width={button.width}
       height={button.height}
       display="flex"
@@ -52,15 +52,15 @@ export const PlayMode = () => {
       alignItems="center"
       direction="top"
       dropdownStyle={dropdown.button}
-      colorHover={dropdown.colorHover}
-      backgroundColorHover={dropdown.backgroundColorHover}
-      padding={dropdown.padding}
-      backgroundColor={dropdown.backgroundColor}
-      font={dropdown.font}
-      fontSize={fontSize}
-      color={dropdown.color}
+      colorHover={dropdown.button.colorHover}
+      backgroundColorHover={dropdown.button.backgroundColorHover}
+      padding={dropdown.button.padding}
+      backgroundColor={dropdown.button.backgroundColor}
+      font={dropdown.button.font}
+      fontSize={button.fontSize}
+      color={dropdown.button.color}
       enableMouseStyle={mouseHoverStyle}
-      text={mode === i18n.loopPlaylist ? ICON.Refresh : ICON.Sync}
+      dropdownListStyle={dropdown.list}
     />
   )
 }

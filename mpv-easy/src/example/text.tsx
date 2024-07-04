@@ -97,7 +97,7 @@ import React from "react"
 //   "`",
 //   "~",
 // ]
-const TEXT = '󰐑󰐐󰨖󰋚'.split('')
+const TEXT = "󰐑󰐐󰨖󰋚".split("")
 // const TEXT = ''.split('')
 export function TextBox() {
   return (
@@ -110,7 +110,7 @@ export function TextBox() {
 
       <Box
         display="flex"
-      // alignContent="stretch"
+        // alignContent="stretch"
       >
         {TEXT.map((_, k) => (
           <Box

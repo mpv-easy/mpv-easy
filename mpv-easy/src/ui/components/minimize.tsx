@@ -4,16 +4,13 @@ import { useDispatch, useSelector } from "react-redux"
 import * as ICON from "../../icon"
 import {
   buttonStyleSelector,
-  pauseSelector,
   type Dispatch,
   i18nSelector,
   mouseHoverStyleSelector,
 } from "../../store"
-import { command } from "@mpv-easy/tool"
 
 export const Minimize = () => {
   const button = useSelector(buttonStyleSelector)
-  const pause = useSelector(pauseSelector)
   const i18n = useSelector(i18nSelector)
   const dispatch = useDispatch<Dispatch>()
   const mouseHoverStyle = useSelector(mouseHoverStyleSelector)
@@ -35,7 +32,7 @@ export const Minimize = () => {
       font={button.font}
       fontSize={button.fontSize}
       color={button.color}
-      onMouseDown={(e) => {
+      onMouseDown={() => {
         dispatch.context.setWindowMinimized(true)
         // e.stopPropagation()
       }}

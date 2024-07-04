@@ -22,10 +22,9 @@ export interface MpProps {
   imageOverlay?: Overlay
 }
 
-export interface MpEvent extends KeyEvent {
-}
+export interface MpEvent extends KeyEvent {}
 
-export interface MpDom extends BaseDom<MpAttrs, MpProps, MpEvent> { }
+export interface MpDom extends BaseDom<MpAttrs, MpProps, MpEvent> {}
 
 export type MpDomProps = MpDom["attributes"]
 

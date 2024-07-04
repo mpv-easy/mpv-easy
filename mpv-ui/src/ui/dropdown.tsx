@@ -18,14 +18,14 @@ export type DropdownProps = {
   items: DropdownItem[]
   direction: DropdownDirection
   dropdownStyle: Partial<ButtonProps>
-  dropdownWrapStyle: Partial<ButtonProps>
+  dropdownListStyle: Partial<ButtonProps>
 }
 
 function getProps(props: any) {
   const newProps: any = {}
   for (const i in props) {
     if (
-      EventName.find(x => x === i) ||
+      EventName.find((x) => x === i) ||
       [
         "width",
         "height",
@@ -50,7 +50,7 @@ export const Dropdown = (props: Partial<ButtonProps & DropdownProps>) => {
   const [show, setShow] = useState(false)
   const { items = [], direction = "bottom" } = props
   const newProps = getProps(props)
-  const { dropdownStyle = {} } = props
+  const { dropdownStyle = {}, dropdownListStyle = {} } = props
   const offsetProps = direction === "top" ? { bottom: "100%" } : { top: "100%" }
 
   return (
@@ -82,6 +82,7 @@ export const Dropdown = (props: Partial<ButtonProps & DropdownProps>) => {
             alignContent="stretch"
             color={props.color}
             backgroundColor={props.backgroundColor}
+            {...dropdownListStyle}
           >
             {items.map((i) => {
               return (

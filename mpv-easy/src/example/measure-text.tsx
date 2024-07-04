@@ -1,8 +1,8 @@
-import { AssDraw, drawRect } from "@mpv-easy/assdraw";
-import { OsdOverlay, getAssScale, getOsdSize } from "@mpv-easy/tool";
+import { AssDraw, drawRect } from "@mpv-easy/assdraw"
+import { OsdOverlay, getAssScale, getOsdSize } from "@mpv-easy/tool"
 
 // TODO: mujs bug? can't use for of
-const icons = '󰐑󰐐󰨖󰋚'.split('')
+const icons = "󰐑󰐐󰨖󰋚".split("")
 export function MeasureText() {
   setTimeout(() => {
     let x = 0

@@ -1,14 +1,9 @@
-import { pluginName } from "../../main"
 import { Box } from "@mpv-easy/ui"
 import React from "react"
 import { useSelector } from "react-redux"
 import {
-  RootState,
   buttonStyleSelector,
-  controlStyleSelector,
   filenameSelector,
-  fullscreenSelector,
-  osdDimensionsSelector,
   toolbarStyleSelector,
 } from "../../store"
 import { textEllipsis } from "../../common"
