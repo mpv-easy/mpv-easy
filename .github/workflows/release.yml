@@ -189,7 +189,7 @@ jobs:
 
       - uses: actions/download-artifact@v4
         with:
-          path: mpv-easy-ext
+          path: mpv-easy-ext-dist
           pattern: mpv-easy-ext-*
           merge-multiple: true
 
@@ -221,7 +221,7 @@ jobs:
         run: |
           sudo apt install p7zip-full -y
 
-          mkdir ./dist/scripts/mpv-easy-config/mpv-easy-ext -p
+          mkdir ./dist/scripts/mpv-easy-config/mpv-easy-ext-dist -p
 
           cp ./mpv-easy/es5/mpv-easy-es5.js ./dist/scripts/mpv-easy-es5.js
           cp -r ./mpv-easy/fonts ./dist
@@ -229,7 +229,7 @@ jobs:
           cp ./mpv-easy/mpv-conf/mpv.conf ./dist/mpv.conf
           cp ./mpv-easy/mpv-conf/input.conf ./dist/input.conf
 
-          chmod 777 ./mpv-easy-ext/*
+          chmod 777 ./mpv-easy-ext-dist/*
 
           cp -r ./dist ./mpy-easy-macos
           cp -r ./dist ./mpy-easy-linux
@@ -239,13 +239,13 @@ jobs:
           cp -r ./dist ./mpy-easy-qjs-windows
           cp -r ./dist ./mpy-easy-boa-windows
 
-          cp ./mpv-easy-ext/mpv-easy-ext-macos ./mpy-easy-macos/scripts/mpv-easy-config/mpv-easy-ext/mpv-easy-ext-macos
-          cp ./mpv-easy-ext/mpv-easy-ext-linux ./mpy-easy-linux/scripts/mpv-easy-config/mpv-easy-ext/mpv-easy-ext-linux
-          cp ./mpv-easy-ext/mpv-easy-ext-android ./mpy-easy-android/scripts/mpv-easy-config/mpv-easy-ext/mpv-easy-ext-android
-          cp ./mpv-easy-ext/mpv-easy-ext-windows ./mpy-easy-windows/scripts/mpv-easy-config/mpv-easy-ext/mpv-easy-ext-windows
-          cp ./mpv-easy-ext/mpv-easy-ext-windows ./mpy-easy-deno-windows/scripts/mpv-easy-config/mpv-easy-ext/mpv-easy-ext-windows
-          cp ./mpv-easy-ext/mpv-easy-ext-windows ./mpy-easy-qjs-windows/scripts/mpv-easy-config/mpv-easy-ext/mpv-easy-ext-windows
-          cp ./mpv-easy-ext/mpv-easy-ext-windows ./mpy-easy-boa-windows/scripts/mpv-easy-config/mpv-easy-ext/mpv-easy-ext-windows
+          cp ./mpv-easy-ext-dist/mpv-easy-ext-macos ./mpy-easy-macos/scripts/mpv-easy-config/mpv-easy-ext/mpv-easy-ext-macos
+          cp ./mpv-easy-ext-dist/mpv-easy-ext-linux ./mpy-easy-linux/scripts/mpv-easy-config/mpv-easy-ext/mpv-easy-ext-linux
+          cp ./mpv-easy-ext-dist/mpv-easy-ext-android ./mpy-easy-android/scripts/mpv-easy-config/mpv-easy-ext/mpv-easy-ext-android
+          cp ./mpv-easy-ext-dist/mpv-easy-ext-windows ./mpy-easy-windows/scripts/mpv-easy-config/mpv-easy-ext/mpv-easy-ext-windows
+          cp ./mpv-easy-ext-dist/mpv-easy-ext-windows ./mpy-easy-deno-windows/scripts/mpv-easy-config/mpv-easy-ext/mpv-easy-ext-windows
+          cp ./mpv-easy-ext-dist/mpv-easy-ext-windows ./mpy-easy-qjs-windows/scripts/mpv-easy-config/mpv-easy-ext/mpv-easy-ext-windows
+          cp ./mpv-easy-ext-dist/mpv-easy-ext-windows ./mpy-easy-boa-windows/scripts/mpv-easy-config/mpv-easy-ext/mpv-easy-ext-windows
 
           cp ./deno-dll/mpv-deno-windows.dll ./mpy-easy-deno-windows/scripts/mpv-deno-windows.dll
           rm ./mpy-easy-deno-windows/scripts/mpv-easy-es5.js
@@ -305,4 +305,4 @@ jobs:
           cd ..
       - uses: ncipollo/release-action@v1
         with:
-          artifacts: "./mpy-easy-*/*.zip,./mpv-easy/es5/mpv-easy-es5.js,./mpv-easy/bundle/mpv-easy-es6.js,./mpv-easy-ext/*"
+          artifacts: "./mpy-easy-*/*.zip,./mpv-easy/es5/mpv-easy-es5.js,./mpv-easy/bundle/mpv-easy-es6.js,./mpv-easy-ext-dist/*"
