@@ -467,7 +467,7 @@ export function createDefaultThemeConfig(): EasyConfig {
           item: {
             padding: defaultPadding,
             color: Black + AlphaShow,
-            backgroundColor: White + AlphaLow,
+            backgroundColor: White + AlphaHide,
             colorHover: Yellow + AlphaShow,
             backgroundColorHover: Black + AlphaMedium,
             fontSize: defaultFontSize * 0.75,
