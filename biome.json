@@ -37,6 +37,7 @@
     "enabled": true,
     "rules": {
       "style": {
+        "useImportType": "off",
         "noNonNullAssertion": "off",
         "noParameterAssign": "off"
       },

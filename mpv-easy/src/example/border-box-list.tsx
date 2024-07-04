@@ -1,10 +1,10 @@
-import { Box, render, type DOMElement } from "@mpv-easy/ui"
+import { Box, type MpDom } from "@mpv-easy/ui"
 import React, { useEffect, useRef } from "react"
 import { useUpdate } from "react-use"
 
 const size = 100
 export function BorderBoxList() {
-  const ref = useRef<DOMElement>(null)
+  const ref = useRef<MpDom>(null)
 
   console.log(
     "ref:",

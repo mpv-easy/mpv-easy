@@ -1,5 +1,4 @@
 import "@mpv-easy/tool"
-// biome-ignore lint/style/useImportType: <explanation>
 import React from "react"
 import { getConfig } from "../context"
 import { createStore } from "../store"

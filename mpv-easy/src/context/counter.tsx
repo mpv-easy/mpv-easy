@@ -1,4 +1,3 @@
-// biome-ignore lint/style/useImportType: <explanation>
 import React from "react"
 import { StoreProvider } from "./"
 

@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from "react"
 import { Uosc } from "./uosc"
 import { Osc } from "./osc"
 import { Toolbar } from "./toolbar"
-import { Box, type DOMElement, Tooltip } from "@mpv-easy/ui"
+import { Box, type MpDom, Tooltip } from "@mpv-easy/ui"
 import { useSelector, useDispatch } from "react-redux"
 import {
   type Dispatch,
@@ -35,7 +35,7 @@ import { ClickMenu } from "./click-menu"
 import { Playlist } from "./playlist"
 import { getPlayableList } from "@mpv-easy/autoload"
 import { VoiceControl } from "./voice-control"
-import { useFirstMountState, useRendersCount } from "react-use"
+import { useFirstMountState } from "react-use"
 import { History } from "./history"
 import { Speed } from "./speed"
 
@@ -69,11 +69,7 @@ const osdDimensionsProp = new PropertyNative<
   MpvPropertyTypeMap["osd-dimensions"]
 >("osd-dimensions")
 
-export function hasPoint(
-  node: DOMElement | null,
-  x: number,
-  y: number,
-): boolean {
+export function hasPoint(node: MpDom | null, x: number, y: number): boolean {
   if (!node) {
     return false
   }
@@ -94,7 +90,7 @@ export type EasyProps = {
   skipFirstRender: boolean
   fontSize: number
 }
-export function Easy(props: Partial<EasyProps>) {
+export const Easy = React.memo((props: Partial<EasyProps>) => {
   const dispatch = useDispatch<Dispatch>()
   const fps = useSelector(fpsSelector)
   const path = useSelector(pathSelector)
@@ -219,10 +215,10 @@ export function Easy(props: Partial<EasyProps>) {
 
   const tooltip = style[mode].tooltip
 
-  const toolbarRef = useRef<DOMElement>(null)
-  const elementRef = useRef<DOMElement>(null)
+  const toolbarRef = useRef<MpDom>(null)
+  const elementRef = useRef<MpDom>(null)
   const menuRef = useRef<{ setHide: (v: boolean) => void }>(null)
-  const volumeRef = useRef<DOMElement>(null)
+  const volumeRef = useRef<MpDom>(null)
   const [menuHide, setMenuHide] = useState(true)
 
   const { x, y } = mousePos
@@ -274,8 +270,8 @@ export function Easy(props: Partial<EasyProps>) {
         position="relative"
         onClick={(e) => {
           const isEmptyClick =
-            e.target.attributes.id === "mpv-easy-main" ||
-            e.target.attributes.id === undefined
+            e.target?.attributes.id === "mpv-easy-main" ||
+            e.target?.attributes.id === undefined
           setTimeout(() => {
             menuRef.current?.setHide(true)
           }, 16)
@@ -297,4 +293,4 @@ export function Easy(props: Partial<EasyProps>) {
       </Box>
     </>
   )
-}
+})

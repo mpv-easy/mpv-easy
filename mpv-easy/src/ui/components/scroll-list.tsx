@@ -1,14 +1,11 @@
-import { getFileName, command, clamp } from "@mpv-easy/tool"
 import {
   Box,
   Button,
-  type MouseEvent,
-  // DOMElement,
+  // MpDom,
   type ButtonProps,
   createNode,
-  type BaseElementProps,
-  lenToNumber,
-  DOMElement,
+  MpDom,
+  type MpDomProps,
 } from "@mpv-easy/ui"
 import React, { useRef, useState } from "react"
 import { useSelector } from "react-redux"
@@ -20,7 +17,7 @@ import {
   scrollListStyleSelector,
   smallFontSizeSelector,
 } from "../../store"
-import { measureText } from "@mpv-easy/ui"
+import { measureText, type MouseEvent } from "@mpv-easy/ui"
 
 export type ScrollListProps = {
   items: {
@@ -42,7 +39,7 @@ function getMaxWidth(textList: string[], button: Partial<ButtonProps>) {
 }
 
 export const ScrollList = React.memo(
-  ({ items, ...props }: ScrollListProps & Partial<BaseElementProps>) => {
+  ({ items, ...props }: ScrollListProps & Partial<MpDomProps>) => {
     const button = useSelector(buttonStyleSelector)
     const scrollListStyle = useSelector(scrollListStyleSelector)
     const maxItemCount = scrollListStyle.maxItemCount

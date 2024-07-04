@@ -1,15 +1,14 @@
-// biome-ignore lint/style/useImportType: <explanation>
 import React from "react"
 import { useEffect, useRef, useState } from "react"
-import type { BaseElementProps } from "../type"
 import { Box } from "./box"
+import type { MpDomProps } from "../render"
 
 export type PanelProps = {
   hideDelay: number
   showDelay: number
   children: React.ReactNode
   initHide: boolean
-} & BaseElementProps
+} & MpDomProps
 
 export function AutoHide(props: Partial<PanelProps>) {
   const [hide, setHide] = useState(!!props.initHide)

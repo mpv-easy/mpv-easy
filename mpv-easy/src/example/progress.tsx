@@ -1,17 +1,6 @@
-import { AssDraw } from "@mpv-easy/assdraw"
-import { usePropertyBool } from "@mpv-easy/hook"
-import {
-  PropertyBool,
-  command,
-  getPropertyNumber,
-  observeProperty,
-  setPropertyNumber,
-} from "@mpv-easy/tool"
-import { Box, render } from "@mpv-easy/ui"
-import React, { useEffect, useState } from "react"
-
-command("set osc no")
-command("set window-dragging no")
+import { getPropertyNumber, setPropertyNumber } from "@mpv-easy/tool"
+import { Box } from "@mpv-easy/ui"
+import React, { useState } from "react"
 
 const cursorSize = 100
 const cursorHoverWidth = 100
@@ -28,7 +17,7 @@ export function Progress() {
       fontSize={100}
       backgroundColor="FF0000"
       onMouseDown={(e) => {
-        const w = e.target.layoutNode.width
+        const w = e.target?.layoutNode.width || 0
         const per = (e.offsetX - cursorSize / 2) / w
         setLeft(per)
         const duration = getPropertyNumber("duration")!
@@ -36,7 +25,7 @@ export function Progress() {
         setPropertyNumber("time-pos", time)
       }}
       onMouseMove={(e) => {
-        const w = e.target.layoutNode.width
+        const w = e.target?.layoutNode.width || 0
         const per = (e.offsetX - cursorHoverWidth / 2) / w
         setLeftHover(per)
       }}

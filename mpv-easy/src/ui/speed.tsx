@@ -1,5 +1,5 @@
 import { Box } from "@mpv-easy/ui"
-import React, { useRef, useState, useLayoutEffect, useEffect } from "react"
+import React, { useRef, useState } from "react"
 import { useSelector } from "react-redux"
 import { fontSelector, speedStyleSelector } from "../store"
 import * as ICON from "../icon"

@@ -10,11 +10,8 @@ import {
   print,
   setPropertyNumber,
 } from "@mpv-easy/tool"
-import { Box, type DOMElement, render } from "@mpv-easy/ui"
+import { Box, type MpDom, render } from "@mpv-easy/ui"
 import React, { useEffect, useState, useRef, useLayoutEffect } from "react"
-
-command("set osc no")
-command("set window-dragging no")
 
 const cursorSize = 100
 const cursorHoverWidth = 100
@@ -28,7 +25,7 @@ export function ProgressPreview() {
   const [left, setLeft] = useState(0)
   const [leftHover, setLeftHover] = useState(0)
   const [hoverHide, setHoverHide] = useState(true)
-  const hoverCursorRef = useRef<DOMElement>(null)
+  const hoverCursorRef = useRef<MpDom>(null)
   if (!thumb) {
     thumb = new ThumbFast()
   }
@@ -52,7 +49,7 @@ export function ProgressPreview() {
       fontSize={100}
       backgroundColor="FF0000"
       onMouseDown={(e) => {
-        const w = e.target.layoutNode.width
+        const w = e.target?.layoutNode.width || 0
         const per = e.offsetX / w
         const left = (e.offsetX - cursorSize / 2) / w
         setLeft(left)
@@ -68,7 +65,7 @@ export function ProgressPreview() {
       }}
       onMouseMove={(e) => {
         setHoverHide(false)
-        const w = e.target.layoutNode.width
+        const w = e.target?.layoutNode.width || 0
         const leftHover = (e.offsetX - cursorHoverWidth / 2) / w
         const duration = getPropertyNumber("duration")!
         const time = (duration * e.offsetX) / w

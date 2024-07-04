@@ -1,6 +1,6 @@
 {
   "name": "@mpv-easy/mpv-easy",
-  "version": "0.1.9-alpha.8",
+  "version": "0.1.9-alpha.10",
   "files": ["dist", "readme.md", "package.json"],
   "description": "@mpv-easy/easy",
   "main": "./dist/index.js",
@@ -9,7 +9,7 @@
     "bundle:example": "esbuild ./src/example/*.(tsx|ts) --bundle --outdir=bundle/example --charset=utf8 --define:globalThis.version='\"0.1.9-alpha.8\"'",
     "es5:example": "babel --presets  @babel/preset-env ./bundle/example -d es5/example --plugins ./src/babel/hack.js",
     "bundle": "esbuild ./src/mpv-easy-*.tsx --bundle --outdir=bundle --charset=utf8 --define:globalThis.version='\"0.1.9\"'",
-    "es5": "babel --presets  @babel/preset-env ./bundle -d es5 --plugins ./src/babel/hack.js",
+    "es5": "babel --presets  @babel/preset-env ./bundle -d es5 --plugins ./babel/hack.js",
     "dev": "chokidar '../mpv-*/src/**/*' -c 'pnpm run build && pnpm run copy' -d 2000 --initial",
     "dev-ts": "tsc -p ./tsconfig.build.json -w",
     "build": "tsc -p ./tsconfig.build.json && pnpm run bundle && pnpm run es5 && pnpm run meta",
@@ -59,8 +59,7 @@
     "@types/lodash-es": "^4.17.12",
     "@types/react": "^18.2.55",
     "@types/react-reconciler": "^0.28.8",
-    "@types/react-redux": "^7.1.33",
-    "typescript": "^5.5.2"
+    "@types/react-redux": "^7.1.33"
   },
   "browserslist": [
     "iOS >= 9",

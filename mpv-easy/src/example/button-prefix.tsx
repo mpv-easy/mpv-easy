@@ -1,8 +1,5 @@
-import { AssDraw } from "@mpv-easy/assdraw"
-import { usePropertyBool } from "@mpv-easy/hook"
-import { PropertyBool, command, observeProperty } from "@mpv-easy/tool"
-import { Box, Button, render } from "@mpv-easy/ui"
-import React, { useEffect, useState } from "react"
+import { Box, Button } from "@mpv-easy/ui"
+import React from "react"
 
 const button = {
   color: "FFFFFF",
@@ -43,7 +40,7 @@ export function ButtonPrefix() {
           display="flex"
           justifyContent="space-between"
           onMouseDown={(e) => {
-            console.log("play click: ", e.target.attributes.id)
+            console.log("play click: ", e.target?.attributes.id)
           }}
         />
         {/* <Button

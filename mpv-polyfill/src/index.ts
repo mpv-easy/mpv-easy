@@ -58,7 +58,7 @@ g.Promise = Promise
 
 if (!g.performance) {
   g.performance = {
-    now: () => +new Date()
+    now: () => +new Date(),
   }
 }
 

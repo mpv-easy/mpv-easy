@@ -1,8 +1,8 @@
 import { AssDraw } from "@mpv-easy/assdraw"
 import { OsdOverlay, Rect, getAssScale, isPercentage } from "@mpv-easy/tool"
-import { type DOMElement, setAttribute } from "./render/dom"
-import { Len } from "./type"
-import { lenToNumber } from "./render/flex"
+import { lenToNumber, setAttribute } from "@r-tui/flex"
+import type { MpDom } from "./render/dom"
+import type { Shape } from "@r-tui/share"
 export const propsToSkip = {
   children: true,
   ref: true,
@@ -25,7 +25,7 @@ export function readAttr(node: any, attrName: string) {
   return node.attributes[attrName]
 }
 
-export function getAssText(node: DOMElement, x: number, y: number) {
+export function getAssText(node: MpDom, x: number, y: number) {
   const { text = "" } = node.attributes
   const assScale = getAssScale()
   const font = readAttr(node, "font") ?? ""
@@ -54,15 +54,11 @@ export function getAssText(node: DOMElement, x: number, y: number) {
 }
 
 let _measureOverlay: OsdOverlay
-const _measureCache: Record<string, Rect> = {}
-export function measureText(node: DOMElement): Rect {
+const _measureCache: Record<string, Shape> = {}
+export function measureText(node: MpDom): Shape {
   const { layoutNode } = node
   const assScale = getAssScale()
-  const offsetX = 0 * assScale
-  const offsetY = 0 * assScale
-  const textCache = getAssText(node, offsetX, offsetY)
-
-  // TODO:
+  const textCache = getAssText(node, 0, 0)
   if (_measureCache[textCache]) {
     return _measureCache[textCache]
   }
@@ -75,23 +71,19 @@ export function measureText(node: DOMElement): Rect {
   }
 
   _measureOverlay.data = textCache
-
   const { width, height, x, y } = _measureOverlay.update(1 / assScale)
-  const dx = x - offsetX
-  const dy = y - offsetY
-  const rect = new Rect(offsetX, offsetY, width + dx, height + dy)
-  layoutNode.textRect.width = rect.width
-  layoutNode.textRect.height = rect.height
-  _measureCache[textCache] = layoutNode.textRect
+  layoutNode.textRect.width = width
+  layoutNode.textRect.height = height
+  _measureCache[textCache] = { width, height }
   return _measureCache[textCache]
 }
 
-export function isEvent(name: string) {
-  return name[0] === "o" && name[1] === "n"
-}
-export function applyProps(node: DOMElement, props: any) {
-  for (const name in props) {
-    if (!propsToSkip[name as keyof typeof propsToSkip])
-      setAttribute(node, name, props[name])
-  }
-}
+// export function isEvent(name: string) {
+//   return name[0] === "o" && name[1] === "n"
+// }
+// export function applyProps(node: MpDom, props: any) {
+//   for (const name in props) {
+//     if (!propsToSkip[name as keyof typeof propsToSkip])
+//       setAttribute(node, name, props[name])
+//   }
+// }

@@ -1,21 +1,24 @@
-import React, { forwardRef } from "react"
-import { Box, type DOMElement, type BaseElementProps } from "@mpv-easy/ui"
+import React, {
+  type ForwardRefExoticComponent,
+  type PropsWithoutRef,
+  type RefAttributes,
+  forwardRef,
+  MemoExoticComponent,
+} from "react"
+import { Box, type MpDomProps, type MpDom } from "@mpv-easy/ui"
 import { OscControl } from "./control"
-import { pluginName } from "../../main"
 import { OscInfo } from "./info"
 import { useSelector } from "react-redux"
-import {
-  IconButtonSizeSelector,
-  RootState,
-  buttonStyleSelector,
-  fontSizeSelector,
-  progressStyleSelector,
-} from "../../store"
+import { IconButtonSizeSelector } from "../../store"
 export * from "./control"
 export * from "./info"
 
-export const Osc = React.memo(
-  forwardRef<DOMElement, Partial<BaseElementProps>>((props, ref) => {
+export const Osc: MemoExoticComponent<
+  ForwardRefExoticComponent<
+    PropsWithoutRef<Partial<MpDomProps>> & RefAttributes<MpDom>
+  >
+> = React.memo(
+  forwardRef<MpDom, MpDomProps>((props, ref) => {
     const h = useSelector(IconButtonSizeSelector)
 
     return (

@@ -1,5 +1,11 @@
-import { type BaseElementProps, Box, type DOMElement } from "@mpv-easy/ui"
-import React, { useState } from "react"
+import { type MpDomProps, Box, type MpDom } from "@mpv-easy/ui"
+import React, {
+  type ForwardRefExoticComponent,
+  type PropsWithoutRef,
+  type RefAttributes,
+  useState,
+  MemoExoticComponent,
+} from "react"
 import { useDispatch, useSelector } from "react-redux"
 import {
   volumeMaxSelector,
@@ -14,8 +20,12 @@ import {
 import { clamp, setPropertyNumber } from "@mpv-easy/tool"
 import { Mute } from "./components/mute"
 
-export const VoiceControl = React.memo(
-  React.forwardRef<DOMElement, Partial<BaseElementProps>>((props, ref) => {
+export const VoiceControl: MemoExoticComponent<
+  ForwardRefExoticComponent<
+    PropsWithoutRef<Partial<MpDomProps>> & RefAttributes<MpDom>
+  >
+> = React.memo(
+  React.forwardRef<MpDom, Partial<MpDomProps>>((props, ref) => {
     const volume = useSelector(volumeSelector)
     const volumeMax = useSelector(volumeMaxSelector)
     const dispatch = useDispatch<Dispatch>()
@@ -97,7 +107,9 @@ export const VoiceControl = React.memo(
             onMouseDown={(e) => {
               setPreviewHide(false)
               const v =
-                ((1 - e.offsetY / e.target.layoutNode.height) * volumeMax) | 0
+                ((1 - e.offsetY / (e.target?.layoutNode.height || 0)) *
+                  volumeMax) |
+                0
               const newVolume = clamp(v, 0, volumeMax)
               dispatch.context.setVolume(newVolume)
               setPropertyNumber("volume", newVolume)
@@ -106,7 +118,7 @@ export const VoiceControl = React.memo(
               setPreviewHide(false)
             }}
             onMouseMove={(e) => {
-              const { height } = e.target.layoutNode
+              const height = e.target?.layoutNode.height || 0
               const v = ((1 - e.offsetY / height) * volumeMax) | 0
               const newVolume = clamp(v, 0, volumeMax)
               setPreviewHide(false)

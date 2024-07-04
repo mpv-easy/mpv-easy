@@ -1,22 +1,29 @@
 import { dispatchEvent, getRootNode } from "@mpv-easy/ui"
 import { Box } from "@mpv-easy/ui"
-import React, { useEffect } from "react"
+import React, { useEffect, useRef } from "react"
 import {
   PropertyNative,
   type MousePos,
   addForcedKeyBinding,
 } from "@mpv-easy/tool"
+import { usePropertyNumber } from "@mpv-easy/hook"
 
 const mousePosProp = new PropertyNative<MousePos>("mouse-pos")
 
-export function VoiceControl() {
+export function VolumeControl() {
+  const [volume, setVolume] = usePropertyNumber("volume", 100)
+  const h = useRef<(x: number) => void>()
+  h.current = (x) => {
+    setVolume(volume + x)
+  }
   useEffect(() => {
     addForcedKeyBinding(
       "MOUSE_BTN3",
-      "__MOUSE_BTN3__RENDER__",
+      "__MOUSE_BTN3_UP__",
       (event) => {
+        console.log("volume up")
         dispatchEvent(getRootNode(), mousePosProp.value, event)
-        // console.log("up", JSON.stringify(event))
+        h.current?.(10)
       },
       {
         complex: true,
@@ -27,10 +34,11 @@ export function VoiceControl() {
 
     addForcedKeyBinding(
       "MOUSE_BTN4",
-      "__MOUSE_BTN3__RENDER__",
+      "__MOUSE_BTN3_DOWN__",
       (event) => {
-        // console.log("down", JSON.stringify(event))
+        console.log("volume down")
         dispatchEvent(getRootNode(), mousePosProp.value, event)
+        h.current?.(-10)
       },
       {
         complex: true,
@@ -39,5 +47,5 @@ export function VoiceControl() {
       },
     )
   }, [])
-  return <Box />
+  return <Box text={`volume: ${volume}`} />
 }

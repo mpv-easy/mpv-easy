@@ -14,9 +14,7 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "devDependencies": {
-    "typescript": "^5.5.2"
-  },
+  "devDependencies": {},
   "dependencies": {
     "@mpv-easy/polyfill": "workspace:*",
     "buffer": "^6.0.3",

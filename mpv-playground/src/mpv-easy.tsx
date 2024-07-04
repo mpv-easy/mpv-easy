@@ -1,7 +1,8 @@
+import "./polyfill"
 import React from "react"
+import { renderToBrowser } from "./renderToBrowser"
 import { renderToCanvas } from "@mpv-easy/canvas"
 import { Counter } from "./counter"
-import { renderToBrowser } from "./renderToBrowser"
 import { Example, Easy, createStore, getConfig } from "@mpv-easy/mpv-easy"
 import { Provider } from "react-redux"
 

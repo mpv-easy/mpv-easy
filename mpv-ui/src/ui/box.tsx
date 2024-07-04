@@ -1,14 +1,12 @@
-// biome-ignore lint/style/useImportType: <explanation>
 import React from "react"
 import { forwardRef } from "react"
-import type { BaseElementProps } from "../type"
-import type { DOMElement } from "../render"
+import type { MpDom } from "../render/dom"
 
-export type Ref = DOMElement
+export type Ref = MpDom
 
 export const Box = forwardRef<
   Ref,
-  Partial<BaseElementProps & { children?: React.ReactNode }>
+  Partial<MpDom["attributes"] & { children?: React.ReactNode }>
 >((props, ref) => {
   // @ts-ignore
   return props.display !== "none" && <mpv-box ref={ref} {...props} />

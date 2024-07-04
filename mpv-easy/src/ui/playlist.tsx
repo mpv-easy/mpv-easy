@@ -1,5 +1,5 @@
 import { command, getFileName } from "@mpv-easy/tool"
-import { Box, Button, type DOMElement } from "@mpv-easy/ui"
+import { Box, Button, type MpDom } from "@mpv-easy/ui"
 import React, { useRef } from "react"
 import { useSelector, useDispatch } from "react-redux"
 import * as ICON from "../icon"
@@ -26,7 +26,7 @@ export const Playlist = React.memo(() => {
   const playlistStyle = useSelector(playlistStyleSelector)
   const dispatch = useDispatch<Dispatch>()
   const playlist = useSelector(playlistSelector)
-  const playlistRef = useRef<DOMElement>(null)
+  const playlistRef = useRef<MpDom>(null)
   const playlistHide = useSelector(playlistHideSelector)
   const button = useSelector(buttonStyleSelector)
   let x = 0

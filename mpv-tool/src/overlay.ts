@@ -1,7 +1,7 @@
 import { command, commandNativeAsync } from "./mpv"
 
 const maxId = 64
-const overlayIdUsed = Array(maxId).fill(false)
+const overlayIdUsed = new Array(maxId).map(() => false)
 
 export class Overlay {
   public x = 0
@@ -14,7 +14,7 @@ export class Overlay {
   public stride = 0
 
   constructor(public id: number) {
-    if (overlayIdUsed[id] !== false) {
+    if (overlayIdUsed[id]) {
       throw new Error(`overlay's id has already been used.${id}`)
     }
     if (id < 0 || id >= maxId) {

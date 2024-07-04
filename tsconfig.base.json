@@ -12,8 +12,8 @@
     "skipLibCheck": true,
     "noEmit": false,
     "noEmitOnError": false,
-    "module": "NodeNext",
-    "moduleResolution": "NodeNext",
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
     "resolveJsonModule": true,
     "isolatedModules": true,
     "declaration": true,
@@ -42,5 +42,7 @@
       "@mpv-easy/js-plugin-init": ["./mpv-js-plugin-init/src"],
       "@mpv-easy/mpv-mpsm": ["./mpv-mpsm/src"]
     }
-  }
+  },
+  "include": ["**/src", "**/test", "**/example"],
+  "exclude": ["**/dist"]
 }

@@ -19,7 +19,5 @@
     "@mpv-easy/autoload": "workspace:*",
     "@mpv-easy/plugin": "workspace:*"
   },
-  "devDependencies": {
-    "typescript": "^5.5.2"
-  }
+  "devDependencies": {}
 }

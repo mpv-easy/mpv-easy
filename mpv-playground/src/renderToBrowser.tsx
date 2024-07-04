@@ -1,7 +1,4 @@
-const canvas = document.createElement("canvas")
-globalThis.mp = createMpvMock(canvas, 1920, 720, 30)
-globalThis.print = console.log
-
+import "./polyfill"
 import { createMpvMock } from "@mpv-easy/canvas"
 import "./main.css"
 import { createRender, renderNode } from "@mpv-easy/ui"
@@ -21,10 +18,9 @@ declare module globalThis {
 
 export function renderToBrowser(reactNode: React.ReactNode, fontName?: string) {
   const render = () => {
-    let c = -1
     createRender({
-      customRender: (node) => {
-        renderNode(node, ++c, 0)
+      customRender: () => {
+        renderNode()
         globalThis.mp.renderAll()
       },
     })(reactNode)

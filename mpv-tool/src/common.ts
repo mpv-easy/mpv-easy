@@ -167,7 +167,9 @@ export function getOs(): OsType {
     if (_osName) {
       return _osName
     }
-    const uname = execSync(["uname", "-s"])
+
+    // mpv-mock execSync maybe undefined
+    const uname = execSync(["uname", "-s"]) || ""
     const rawOsName = uname.toLowerCase()
 
     // Default to "windows"

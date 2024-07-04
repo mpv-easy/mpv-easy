@@ -1,11 +1,16 @@
-import { type BaseElementProps, Box, type DOMElement } from "@mpv-easy/ui"
-import React, { forwardRef } from "react"
+import { type MpDomProps, Box, type MpDom } from "@mpv-easy/ui"
+import React, {
+  type ForwardRefExoticComponent,
+  type PropsWithoutRef,
+  type RefAttributes,
+  forwardRef,
+  MemoExoticComponent,
+} from "react"
 import { useSelector } from "react-redux"
 import {
   buttonStyleSelector,
   toolbarStyleSelector,
   fullscreenSelector,
-  uiNameSelector,
   fontSizeSelector,
 } from "../store"
 import { Language } from "./components/language"
@@ -16,8 +21,12 @@ import { Close } from "./components/close"
 import { Minimize } from "./components/minimize"
 import { Filename } from "./components/filename"
 
-export const Toolbar = React.memo(
-  forwardRef<DOMElement, Partial<BaseElementProps>>(({ hide }, ref) => {
+export const Toolbar: MemoExoticComponent<
+  ForwardRefExoticComponent<
+    PropsWithoutRef<Partial<MpDomProps>> & RefAttributes<MpDom>
+  >
+> = React.memo(
+  forwardRef<MpDom, Partial<MpDomProps>>(({ hide }, ref) => {
     const fullscreen = useSelector(fullscreenSelector)
     const button = useSelector(buttonStyleSelector)
     const toolbar = useSelector(toolbarStyleSelector)

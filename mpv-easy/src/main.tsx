@@ -1,5 +1,5 @@
 import "@mpv-easy/tool"
-import { createRender, defaultFPS } from "@mpv-easy/ui"
+import { render, DefaultFps, createRender } from "@mpv-easy/ui"
 import React from "react"
 import { definePlugin } from "@mpv-easy/plugin"
 import { Easy } from "./ui"
@@ -47,7 +47,7 @@ export default definePlugin((context, api) => ({
         },
       ),
     )
-    const fps = context[pluginName].config.fps || defaultFPS
+    const fps = context[pluginName].config.fps || DefaultFps
     const render = createRender({
       fps,
       enableMouseMoveEvent:

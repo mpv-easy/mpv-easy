@@ -1,4 +1,4 @@
-import { type BaseElementProps, Box } from "@mpv-easy/ui"
+import { type MpDomProps, Box } from "@mpv-easy/ui"
 import React from "react"
 import { Progress } from "../progress"
 import { useSelector } from "react-redux"
@@ -19,7 +19,7 @@ import { PlayMode } from "../components/play-mode"
 import { MoreInfo } from "../components/more-info"
 import { History } from "../components/history"
 export const OscControl = React.memo(
-  ({ height, width }: Partial<BaseElementProps>) => {
+  ({ height, width }: Partial<MpDomProps>) => {
     const button = useSelector(buttonStyleSelector)
     const control = useSelector(controlStyleSelector)
     const fullscreen = useSelector(fullscreenSelector)

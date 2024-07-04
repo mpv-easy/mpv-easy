@@ -8,7 +8,7 @@
     "bundle": "esbuild ./src/index.tsx --bundle --outdir=dist",
     "es5": "babel --presets  @babel/preset-env ./dist -d es5",
     "dev": "chokidar 'src/**/*.{ts,tsx,json}' -c \"pnpm run build && pnpm run copy\" -d 2000  --initial",
-    "build": "pnpm run bundle&& pnpm run es5",
+    "build": "pnpm run bundle && pnpm run es5",
     "copy": "cp es5/index.js $MPV_SCRIPT_DIR",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -22,11 +22,6 @@
     "e-color": "^0.1.3"
   },
   "devDependencies": {
-    "@types/react": "^18.2.55",
-    "@types/react-reconciler": "^0.28.8",
-    "firacode-icon": "^0.1.0",
-    "react": "^18.2.0",
-    "react-reconciler": "^0.29.0",
-    "typescript": "^5.5.2"
+    "firacode-icon": "^0.1.0"
   }
 }
