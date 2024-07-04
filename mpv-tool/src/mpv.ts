@@ -14,6 +14,7 @@ import type {
 } from "./type"
 
 export function getMPV(): MPV {
+  // @ts-ignore
   return globalThis.mp
 }
 
@@ -108,11 +109,11 @@ export type KeyEvent = { key: string } & {
   event: "up" | "down" | "press"
   is_mouse: boolean
   key_name?:
-    | "WHEEL_DOWN"
-    | "WHEEL_UP"
-    | "MBTN_LEFT"
-    | "MBTN_RIGHT"
-    | (string & {})
+  | "WHEEL_DOWN"
+  | "WHEEL_UP"
+  | "MBTN_LEFT"
+  | "MBTN_RIGHT"
+  | (string & {})
 }
 
 export function addKeyBinding(

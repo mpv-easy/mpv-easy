@@ -9,9 +9,9 @@ import {
   fileInfo,
   Overlay,
 } from "@mpv-easy/tool"
-import { Flex, type BaseMouseEvent } from "@r-tui/flex"
+import { BaseDom, Flex, BaseMouseEvent } from "@r-tui/flex"
 import type { Shape } from "@r-tui/share"
-import { type MpDom, createNode, type MpAttrs, type MpProps } from "./dom"
+import { type MpDom, createNode, type MpAttrs, type MpProps, MpEvent } from "./dom"
 import { getAssText, measureText, readAttr } from "../common"
 
 const RootName = "@mpv-easy/root"
@@ -26,7 +26,25 @@ export const getRootNode = () => {
 
 export const DefaultFps = 30
 
-export class MpFlex extends Flex<MpAttrs, {}, MpProps> {
+export class MpFlex extends Flex<MpAttrs, MpProps, MpEvent> {
+  customCreateMouseEvent(node: BaseDom<MpAttrs, MpProps, MpEvent> | undefined, x: number, y: number, hover: boolean, event: MpEvent): BaseMouseEvent<MpAttrs, MpProps, MpEvent> {
+    return new BaseMouseEvent(node, x, y, hover, event)
+  }
+  customIsWheelDown(e: BaseMouseEvent<MpAttrs, MpProps, MpEvent>): boolean {
+    return e.event.key_name === "WHEEL_DOWN"
+  }
+  customIsWheelUp(e: BaseMouseEvent<MpAttrs, MpProps, MpEvent>): boolean {
+    return e.event.key_name === "WHEEL_UP"
+  }
+  customIsMousePress(e: BaseMouseEvent<MpAttrs, MpProps, MpEvent>): boolean {
+    return e.event.event === "press"
+  }
+  customIsMouseDown(e: BaseMouseEvent<MpAttrs, MpProps, MpEvent>): boolean {
+    return e.event.event === "down"
+  }
+  customIsMouseUp(e: BaseMouseEvent<MpAttrs, MpProps, MpEvent>): boolean {
+    return e.event.event === "up"
+  }
   constructor() {
     super()
     // TODO: babel or esbuild can't access super's renderCount,maxRenderCount
@@ -38,34 +56,6 @@ export class MpFlex extends Flex<MpAttrs, {}, MpProps> {
     // TODO: abstract method not work?
     this.rootNode = getRootNode()
     // console.log("rootNode", this.rootNode)
-  }
-
-  customCreateMouseEvent(
-    node: MpDom | undefined,
-    x: number,
-    y: number,
-  ): BaseMouseEvent<MpAttrs, {}, MpProps> {
-    return {
-      target: node,
-      x,
-      y,
-      bubbles: true,
-      defaultPrevented: false,
-      get offsetX() {
-        return this.x - (this.target?.layoutNode.x || 0)
-      },
-      get offsetY() {
-        return this.y - (this.target?.layoutNode.y || 0)
-      },
-      stopPropagation() {
-        this.bubbles = false
-      },
-      clientX: 0,
-      clientY: 0,
-      preventDefault() {
-        this.defaultPrevented = true
-      },
-    }
   }
 
   renderToMpv() {
@@ -366,8 +356,10 @@ export function getRootFlex() {
   return (RootFlex = new MpFlex())
 }
 
-export const dispatchEvent = (node: MpDom, pos: MousePos, event: KeyEvent) =>
-  getRootFlex().dispatchEvent(node, pos, event)
+export const dispatchEvent = (node: MpDom, pos: MousePos, event: KeyEvent) => {
+  const e = getRootFlex().customCreateMouseEvent(node, pos.x, pos.y, pos.hover, event)
+  getRootFlex().dispatchMouseEvent(node, e)
+}
 
 export const renderNode = () => {
   getRootFlex().renderToMpv()

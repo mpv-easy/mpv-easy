@@ -16,7 +16,6 @@ export function BoxClick() {
   const boxW = width / col
   const boxH = height / row
 
-  console.log(boxW, boxH, colorList.join(","))
   return new Array(row * col).fill(0).map((_, k) => {
     return (
       <Box

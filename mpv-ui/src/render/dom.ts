@@ -1,4 +1,4 @@
-import { OsdOverlay, type Overlay } from "@mpv-easy/tool"
+import { KeyEvent, OsdOverlay, type Overlay } from "@mpv-easy/tool"
 import {
   type BaseDomProps,
   type BaseDom,
@@ -22,11 +22,14 @@ export interface MpProps {
   imageOverlay?: Overlay
 }
 
-export interface MpDom extends BaseDom<MpAttrs, {}, MpProps> {}
+export interface MpEvent extends KeyEvent {
+}
+
+export interface MpDom extends BaseDom<MpAttrs, MpProps, MpEvent> { }
 
 export type MpDomProps = MpDom["attributes"]
 
-export type MouseEvent = BaseMouseEvent<BaseDom<MpAttrs, {}, MpProps>>
+export type MouseEvent = BaseMouseEvent<BaseDom<MpAttrs, MpProps, MpEvent>>
 
 export const createNode = (
   nodeName: string,

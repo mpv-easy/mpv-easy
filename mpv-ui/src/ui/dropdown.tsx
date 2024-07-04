@@ -1,7 +1,7 @@
 import React, { useRef, useState } from "react"
 import { Button, type ButtonProps } from "./button"
 import { Box } from "./box"
-import { isEvent } from "@r-tui/flex"
+import { EventName } from "@r-tui/flex"
 import type { MpDom } from "../render/dom"
 
 export type DropdownItem = {
@@ -25,7 +25,7 @@ function getProps(props: any) {
   const newProps: any = {}
   for (const i in props) {
     if (
-      isEvent(i) ||
+      EventName.find(x => x === i) ||
       [
         "width",
         "height",
