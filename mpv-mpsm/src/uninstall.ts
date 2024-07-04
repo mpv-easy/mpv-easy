@@ -1,7 +1,5 @@
-import { join } from "node:path"
-import { getAllScript, getMpsmDir } from "./config"
-import { removeSync, existsSync, readFileSync } from "fs-extra"
-import { getMeta } from "./meta"
+import { getAllScript } from "./config"
+import { removeSync } from "fs-extra"
 import chalk from "chalk"
 
 export async function uninstall(scripts: string[]) {

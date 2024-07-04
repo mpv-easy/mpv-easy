@@ -26,10 +26,7 @@
     "lodash-es": "^4.17.21",
     "react-use": "^17.5.0"
   },
-  "devDependencies": {
-    "@types/react": "^18.2.55",
-    "@types/react-reconciler": "^0.28.8"
-  },
+  "devDependencies": {},
   "peerDependencies": {
     "react": "^18.2.0",
     "react-reconciler": "^0.29.0"

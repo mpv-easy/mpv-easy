@@ -1,6 +1,6 @@
 import { command } from "@mpv-easy/tool"
 import { Box, render } from "@mpv-easy/ui"
-import * as ICON from "firacode-icon"
+import * as ICON from "../icon"
 import React from "react"
 
 command("set osc no")

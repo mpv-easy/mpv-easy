@@ -6,7 +6,6 @@ import {
   downloadJson,
   downloadText,
   getFileNameFromUrl,
-  getLang,
   isMeta,
   isRemote,
 } from "./share"

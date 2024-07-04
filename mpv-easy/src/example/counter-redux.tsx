@@ -1,6 +1,6 @@
 import { command } from "@mpv-easy/tool"
 import { Box, render } from "@mpv-easy/ui"
-import * as ICON from "firacode-icon"
+import * as ICON from "../icon"
 import React, { useEffect } from "react"
 import { Provider } from "react-redux"
 

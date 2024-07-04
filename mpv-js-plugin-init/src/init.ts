@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 import type { MPV } from "@mpv-easy/tool"
 
 const log = globalThis.print

@@ -40,7 +40,6 @@ export class MpFlex extends Flex<MpAttrs, {}, MpProps> {
     // console.log("rootNode", this.rootNode)
   }
 
-
   customCreateMouseEvent(
     node: MpDom | undefined,
     x: number,

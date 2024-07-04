@@ -22,7 +22,7 @@ export interface MpProps {
   imageOverlay?: Overlay
 }
 
-export interface MpDom extends BaseDom<MpAttrs, {}, MpProps> { }
+export interface MpDom extends BaseDom<MpAttrs, {}, MpProps> {}
 
 export type MpDomProps = MpDom["attributes"]
 

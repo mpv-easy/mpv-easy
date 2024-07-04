@@ -1,6 +1,6 @@
 import { PropertyBool, command, observeProperty } from "@mpv-easy/tool"
 import { Box, Button, Dropdown, render } from "@mpv-easy/ui"
-import * as ICON from "firacode-icon"
+import * as ICON from "../icon"
 import React, { useEffect, useState } from "react"
 
 command("set osc no")
