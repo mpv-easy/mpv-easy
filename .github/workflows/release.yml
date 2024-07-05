@@ -191,7 +191,7 @@ jobs:
         with:
           path: mpv-easy-ext-dist
           pattern: mpv-easy-ext-*
-          merge-multiple: true
+          merge-multiple: false
 
       - uses: actions/download-artifact@v4
         with:
