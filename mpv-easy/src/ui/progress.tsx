@@ -8,7 +8,7 @@ import {
 } from "@mpv-easy/tool"
 import { Box, type MpDom } from "@mpv-easy/ui"
 import React, { useRef, useState, useEffect } from "react"
-import type { MouseEvent } from "@mpv-easy/ui"
+import type { MouseEvent, MpDomProps } from "@mpv-easy/ui"
 import { useSelector, useDispatch } from "react-redux"
 import {
   type Dispatch,
@@ -20,12 +20,8 @@ import {
 } from "../store"
 import { ThumbFast } from "@mpv-easy/thumbfast"
 
-export type ProgressProps = {
-  width: number | string
-  height: number | string
-}
 
-export const Progress = React.memo(({ width, height }: ProgressProps) => {
+export const Progress = React.memo(({ width, height, ...props }: MpDomProps) => {
   const [leftPreview, setLeftPreview] = useState(0)
   const [previewCursorHide, setPreviewCursorHide] = useState(true)
   const progress = useSelector(progressStyleSelector)
@@ -125,6 +121,7 @@ export const Progress = React.memo(({ width, height }: ProgressProps) => {
         setPreviewCursorHide(true)
         e.stopPropagation()
       }}
+      {...props}
     >
       <Box
         ref={cursorTextStartRef}
@@ -177,8 +174,8 @@ export const Progress = React.memo(({ width, height }: ProgressProps) => {
           zIndex={progress.previewZIndex}
           display="flex"
           alignContent="stretch"
-          // justifyContent="center"
-          // alignItems="center"
+        // justifyContent="center"
+        // alignItems="center"
         >
           {!previewCursorHide && (
             <Box
@@ -210,10 +207,10 @@ export const Progress = React.memo(({ width, height }: ProgressProps) => {
               backgroundImage={thumbRef.current?.path}
               backgroundImageFormat={thumbRef.current?.format}
               pointerEvents="none"
-              // display="flex"
-              // alignContent='stretch'
-              // justifyContent="center"
-              // alignItems="center"
+            // display="flex"
+            // alignContent='stretch'
+            // justifyContent="center"
+            // alignItems="center"
             />
           )}
         </Box>

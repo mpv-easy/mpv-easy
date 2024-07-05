@@ -60,7 +60,16 @@ export const PlayMode = () => {
       fontSize={button.fontSize}
       color={dropdown.button.color}
       enableMouseStyle={mouseHoverStyle}
-      dropdownListStyle={dropdown.list}
+      dropdownListStyle={{
+        ...dropdown.list,
+        onMouseMove: e => e.stopPropagation(),
+        onMouseLeave: e => e.stopPropagation(),
+        onMouseEnter: e => e.stopPropagation(),
+        onMouseDown: e => e.stopPropagation(),
+        onMouseUp: e => e.stopPropagation(),
+        onClick: e => e.stopPropagation(),
+        onFocus: e => e.stopPropagation(),
+      }}
     />
   )
 }

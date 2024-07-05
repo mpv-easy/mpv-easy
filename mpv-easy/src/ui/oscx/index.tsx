@@ -6,11 +6,10 @@ import React, {
   MemoExoticComponent,
 } from "react"
 import { Box, type MpDomProps, type MpDom } from "@mpv-easy/ui"
-import { OscControl } from "./control"
-import { OscInfo } from "./info"
 import { useSelector } from "react-redux"
 import { IconButtonSizeSelector } from "../../store"
-export * from "./control"
+import { Progress } from "../progress"
+import { OscInfo } from "./info"
 export * from "./info"
 
 export const Oscx: MemoExoticComponent<
@@ -34,8 +33,9 @@ export const Oscx: MemoExoticComponent<
         id="osc"
         onMouseDown={(e) => e.stopPropagation}
       >
-        <OscControl {...props} width={"100%"} height={h} />
-        <OscInfo {...props} width={"100%"} height={h} />
+        {/* TODO: event dispatch follow zIndex order */}
+        <OscInfo bottom={0} {...props} width={"100%"} height={h} />
+        <Progress bottom={h} width={"100%"} height={h} />
       </Box>
     )
   }),

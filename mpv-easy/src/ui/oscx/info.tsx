@@ -48,6 +48,8 @@ export const OscInfo = React.memo(({ height }: Partial<MpDomProps>) => {
         alignItems="center"
       >
         <Screenshot />
+        <SubtitleTrack />
+        <AudioTrack />
       </Box>
 
       <Box
@@ -56,6 +58,7 @@ export const OscInfo = React.memo(({ height }: Partial<MpDomProps>) => {
         justifyContent="center"
         alignItems="center"
       >
+
         <History />
         <PreviousFrame />
         <Previous />
@@ -71,6 +74,8 @@ export const OscInfo = React.memo(({ height }: Partial<MpDomProps>) => {
         justifyContent="end"
         alignItems="center"
       >
+        <PlayMode />
+        <MoreInfo />
         {fullscreen ? <Restore /> : <Fullscreen />}
       </Box>
     </Box>

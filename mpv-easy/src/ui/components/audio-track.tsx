@@ -70,7 +70,15 @@ export const AudioTrack = () => {
       font={dropdown.button.font}
       fontSize={button.fontSize}
       color={dropdown.button.color}
-      dropdownListStyle={dropdown.list}
-    />
+      dropdownListStyle={{
+        ...dropdown.list,
+        onMouseMove: e => e.stopPropagation(),
+        onMouseLeave: e => e.stopPropagation(),
+        onMouseEnter: e => e.stopPropagation(),
+        onMouseDown: e => e.stopPropagation(),
+        onMouseUp: e => e.stopPropagation(),
+        onClick: e => e.stopPropagation(),
+        onFocus: e => e.stopPropagation(),
+      }} />
   )
 }
