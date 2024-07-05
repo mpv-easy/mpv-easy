@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from "react"
 import { Uosc } from "./uosc"
 import { Osc } from "./osc"
+import { Oscx } from "./oscx"
 import { Toolbar } from "./toolbar"
 import { Box, type MpDom, Tooltip } from "@mpv-easy/ui"
 import { useSelector, useDispatch } from "react-redux"
@@ -211,6 +212,7 @@ export const Easy = React.memo((props: Partial<EasyProps>) => {
   const Element = {
     osc: Osc,
     uosc: Uosc,
+    oscx: Oscx,
   }[uiName]
 
   const tooltip = style[mode].tooltip

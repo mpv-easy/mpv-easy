@@ -1,4 +1,4 @@
-import { Dropdown } from "@mpv-easy/ui"
+import { Dropdown, DropdownItem } from "@mpv-easy/ui"
 import React from "react"
 import { useDispatch, useSelector } from "react-redux"
 import * as ICON from "../../icon"
@@ -10,6 +10,7 @@ import {
   dropdownStyleSelector,
   uiNameSelector,
 } from "../../store"
+import { UINameList } from "../../mpv-easy-theme"
 
 export const UI = () => {
   const button = useSelector(buttonStyleSelector)
@@ -18,39 +19,28 @@ export const UI = () => {
   const mouseHoverStyle = useSelector(mouseHoverStyleSelector)
   const dropdown = useSelector(dropdownStyleSelector)
   const uiName = useSelector(uiNameSelector)
-  const oscPrefix = uiName === "osc" ? ICON.Ok : ICON.CheckboxBlankCircleOutline
-  const uoscPrefix =
-    uiName === "uosc" ? ICON.Ok : ICON.CheckboxBlankCircleOutline
+
+  const items = UINameList.map((i): DropdownItem => {
+    const prefix = uiName === i ? ICON.Ok : ICON.CheckboxBlankCircleOutline
+    return {
+      key: i,
+      label: `${prefix} ${i18n[i]}`,
+      onSelect: () => {
+        dispatch.context.setUI(i)
+      },
+      style: {
+        ...dropdown.item,
+        justifyContent: "space-between",
+      },
+    }
+  })
 
   return (
     <Dropdown
       id="mpv-easy-button-ui"
       direction="bottom"
       title={i18n.skin}
-      items={[
-        {
-          key: "osc",
-          label: `${oscPrefix} ${i18n.osc}`,
-          onSelect: () => {
-            dispatch.context.setUI("osc")
-          },
-          style: {
-            ...dropdown.item,
-            justifyContent: "space-between",
-          },
-        },
-        {
-          key: "uosc",
-          label: `${uoscPrefix} ${i18n.uosc}`,
-          onSelect: () => {
-            dispatch.context.setUI("uosc")
-          },
-          style: {
-            ...dropdown.item,
-            justifyContent: "space-between",
-          },
-        },
-      ]}
+      items={items}
       text={ICON.PaletteColor}
       height={button.height}
       width={button.width}

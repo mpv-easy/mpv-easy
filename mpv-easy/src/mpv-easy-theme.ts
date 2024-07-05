@@ -14,7 +14,9 @@ const AlphaLow = "40"
 const AlphaShow = "00"
 
 export type ThemeMode = "dark" | "light"
-export type UIName = "osc" | "uosc"
+
+export const UINameList = ["osc", "uosc", "oscx"] as const
+export type UIName = (typeof UINameList)[number]
 
 export type ButtonStyle = {
   padding: number
@@ -178,8 +180,8 @@ export type EasyConfig = {
     saveConfigThrottle: number
   }
 }
-export const defaultTooltipZIndex = 512
-export const defaultDropdownZIndex = 256
+export const defaultTooltipZIndex = 1024
+export const defaultDropdownZIndex = 512
 export const defaultToolbarZIndex = 256
 export const defaultPreviewZIndex = 256
 export const defaultClickMenuZIndex = 256

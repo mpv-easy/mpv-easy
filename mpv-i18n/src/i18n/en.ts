@@ -1,6 +1,7 @@
 export default {
   uosc: "uosc",
   osc: "osc",
+  oscx: "oscx",
 
   darkName: "dark mode",
   lightName: "light mode",

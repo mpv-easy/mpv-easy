@@ -1,6 +1,7 @@
 export default {
   uosc: "uosc",
   osc: "osc",
+  oscx: "oscx",
   darkName: "深色模式",
   lightName: "浅色模式",
   languageChinese: "中文",

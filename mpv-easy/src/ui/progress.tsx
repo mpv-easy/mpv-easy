@@ -73,9 +73,7 @@ export const Progress = React.memo(({ width, height }: ProgressProps) => {
   const hoverCursorRef = useRef<MpDom>(null)
 
   const previewTimeTextOffsetX =
-    (progress.cursorSize -
-      (previewTextRef.current?.layoutNode.width ?? 0)) /
-    2
+    (progress.cursorSize - (previewTextRef.current?.layoutNode.width ?? 0)) / 2
   let thumbX = 0
   let thumbY = 0
 
@@ -179,8 +177,8 @@ export const Progress = React.memo(({ width, height }: ProgressProps) => {
           zIndex={progress.previewZIndex}
           display="flex"
           alignContent="stretch"
-        // justifyContent="center"
-        // alignItems="center"
+          // justifyContent="center"
+          // alignItems="center"
         >
           {!previewCursorHide && (
             <Box
@@ -212,10 +210,10 @@ export const Progress = React.memo(({ width, height }: ProgressProps) => {
               backgroundImage={thumbRef.current?.path}
               backgroundImageFormat={thumbRef.current?.format}
               pointerEvents="none"
-            // display="flex"
-            // alignContent='stretch'
-            // justifyContent="center"
-            // alignItems="center"
+              // display="flex"
+              // alignContent='stretch'
+              // justifyContent="center"
+              // alignItems="center"
             />
           )}
         </Box>
