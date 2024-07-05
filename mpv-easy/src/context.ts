@@ -50,6 +50,7 @@ import { type PluginContext, SystemApi } from "@mpv-easy/plugin"
 import {
   ConfigDir,
   existsSync,
+  getOs,
   getScriptDir,
   joinPath,
   mkdir,
@@ -120,8 +121,8 @@ export function createDefaultContext() {
     enablePlugins: {
       [i18nName]: true,
       [easyName]: true,
-      [clipPlayName]: false,
-      [anime4kName]: false,
+      [clipPlayName]: getOs() === "windows",
+      [anime4kName]: true,
       [copyTimeName]: false,
       [autoloadName]: true,
       [thumbfastName]: true,

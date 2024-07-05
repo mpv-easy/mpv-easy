@@ -26,9 +26,15 @@ function getList(s: string | undefined, context: PluginContext): string[] {
     if (isVideo(s)) {
       return [normalize(s)]
     }
-    return webdavList(s)
-      .map((i) => normalize(s + i))
-      .filter((p) => isVideo(p))
+
+    try {
+      return webdavList(s)
+        .map((i) => normalize(s + i))
+        .filter((p) => isVideo(p))
+    } catch (e) {
+      print(e)
+      return [s]
+    }
   }
 
   if (isVideo(s)) {
