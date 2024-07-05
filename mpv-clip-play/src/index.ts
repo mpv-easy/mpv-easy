@@ -1,5 +1,6 @@
 import {
   addKeyBinding,
+  alphaNumSort,
   command,
   detectCmd,
   dir,
@@ -14,8 +15,8 @@ import {
 import { type SystemApi, definePlugin } from "@mpv-easy/plugin"
 import type { PluginContext } from "@mpv-easy/plugin"
 import { pluginName as autoloadName, getPlayableList } from "@mpv-easy/autoload"
-import { normalize } from "@mpv-easy/tool"
-
+import { normalize, jellyfin } from "@mpv-easy/tool"
+import { pluginName as jellyfinName } from "@mpv-easy/jellyfin"
 function getList(s: string | undefined, context: PluginContext): string[] {
   const v: string[] = []
   if (!s?.length) {
@@ -33,8 +34,22 @@ function getList(s: string | undefined, context: PluginContext): string[] {
         .filter((p) => isVideo(p))
     } catch (e) {
       print(e)
-      return [s]
     }
+
+    const cfg = context[jellyfinName]
+    if (cfg.apiKey?.length && cfg.userName?.length) {
+      try {
+        const list = jellyfin
+          .getPlayableListFromUrl(s, cfg.apiKey, cfg.userName)
+          .sort((a, b) => a.name.localeCompare(b.name))
+          .map((i) => i.path)
+        return list
+      } catch (e) {
+        print(e)
+      }
+    }
+
+    return [s]
   }
 
   if (isVideo(s)) {

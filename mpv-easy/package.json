@@ -38,6 +38,7 @@
     "@mpv-easy/thumbfast": "workspace:*",
     "@mpv-easy/tool": "workspace:*",
     "@mpv-easy/ui": "workspace:*",
+    "@mpv-easy/jellyfin": "workspace:*",
     "@react-spring/rafz": "^9.7.3",
     "@reduxjs/toolkit": "^2.1.0",
     "@rematch/core": "^2.2.0",

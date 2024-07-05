@@ -51,8 +51,8 @@ declare global {
 
   var mp: MPV & InnerMpvC
   var exit: () => void
-  var setTimeout: (fn: () => void, delay?: number) => number
-  var setInterval: (fn: () => void, delay?: number) => number
+  var setTimeout: (fn: (v?: unknown) => void, delay?: number) => number
+  var setInterval: (fn: (v?: unknown) => void, delay?: number) => number
   var clearInterval: (id: number) => void
   var clearTimeout: (id: number) => void
 

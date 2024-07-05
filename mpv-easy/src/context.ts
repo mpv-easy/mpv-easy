@@ -45,7 +45,10 @@ import autoloadPlugin, {
   defaultConfig as autoloadConfig,
   pluginName as autoloadName,
 } from "@mpv-easy/autoload"
-
+import jellyfinPlugin, {
+  defaultConfig as jellyfinConfig,
+  pluginName as jellyfinName,
+} from "@mpv-easy/jellyfin"
 import { type PluginContext, SystemApi } from "@mpv-easy/plugin"
 import {
   ConfigDir,
@@ -74,6 +77,7 @@ export const plugins = [
   autoloadPlugin,
   thumbfastPlugin,
   copyScreenPlugin,
+  jellyfinPlugin
 ]
 
 export interface EnablePlugin {
@@ -85,6 +89,7 @@ export interface EnablePlugin {
   [autoloadName]: boolean
   [thumbfastName]: boolean
   [copyScreenName]: boolean
+  [jellyfinName]: boolean
 }
 
 declare module "@mpv-easy/plugin" {
@@ -118,6 +123,7 @@ export function createDefaultContext() {
     [autoloadName]: autoloadConfig,
     [thumbfastName]: thumbfastConfig,
     [copyScreenName]: copyScreenConfig,
+    [jellyfinName]: jellyfinConfig,
     enablePlugins: {
       [i18nName]: true,
       [easyName]: true,
@@ -127,6 +133,7 @@ export function createDefaultContext() {
       [autoloadName]: true,
       [thumbfastName]: true,
       [copyScreenName]: false,
+      [jellyfinName]: true,
     },
     version,
     experimental,

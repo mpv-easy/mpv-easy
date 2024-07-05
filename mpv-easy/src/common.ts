@@ -1,4 +1,9 @@
-import { getFileName, getPropertyString, isYoutube } from "@mpv-easy/tool"
+import {
+  getFileName,
+  getPropertyString,
+  isYoutube,
+  jellyfin,
+} from "@mpv-easy/tool"
 
 export function textEllipsis(
   text: string,
@@ -15,6 +20,13 @@ export function textEllipsis(
 export function getVideoName(p: string): string {
   if (isYoutube(p)) {
     return getPropertyString("force-media-title") || ""
+  }
+
+  if (jellyfin.isJellyfin(p)) {
+    const n = jellyfin.getNameFromUrl(p)
+    if (n) {
+      return getFileName(n) || ""
+    }
   }
 
   return getFileName(p) || ""

@@ -24,6 +24,7 @@
       "@mpv-easy/tool": ["./mpv-tool/src"],
       "@mpv-easy/clip-play": ["./mpv-clip-play/src"],
       "@mpv-easy/hook": ["./mpv-hook/src"],
+      "@mpv-easy/jellyfin": ["./mpv-jellyfin/src"],
       "@mpv-easy/autoload": ["./mpv-autoload/src"],
       "@mpv-easy/assdraw": ["./mpv-assdraw/src"],
       "@mpv-easy/mock": ["./mpv-mock/src"],

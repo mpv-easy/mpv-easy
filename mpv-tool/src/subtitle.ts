@@ -1,5 +1,5 @@
 import { SubtitleTypes, isHttp, isYoutube } from "./common"
-import { fetch } from "./rs-ext"
+import { fetch, jellyfin } from "./rs-ext"
 import { existsSync } from "./fs"
 import {
   commandv,
@@ -13,7 +13,7 @@ import { getFileName } from "./path"
 import type { TrackItem } from "./type"
 
 export function loadRemoteSubtitle(path = getProperty("path")) {
-  if (!path?.length || isYoutube(path)) {
+  if (!path?.length || isYoutube(path) || jellyfin.isJellyfin(path)) {
     return
   }
   const trackList = (getPropertyNative<TrackItem[]>("track-list") || []).filter(

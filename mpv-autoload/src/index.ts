@@ -1,5 +1,11 @@
 import { SystemApi, definePlugin } from "@mpv-easy/plugin"
-import { dir, getMpvPlaylist, updatePlaylist } from "@mpv-easy/tool"
+import {
+  dir,
+  getMpvPlaylist,
+  isYoutube,
+  jellyfin,
+  updatePlaylist,
+} from "@mpv-easy/tool"
 import { normalize } from "@mpv-easy/tool"
 import {
   getPropertyString,
@@ -63,6 +69,10 @@ export function autoload(
   const path = normalize(getPropertyString("path") || "")
 
   if (isHttp(path)) {
+    if (isYoutube(path) || jellyfin.isJellyfin(path)) {
+      return
+    }
+
     const list = getMpvPlaylist()
     if (!list.includes(path)) {
       updatePlaylist([path], 0)

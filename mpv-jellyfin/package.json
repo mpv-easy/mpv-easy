@@ -1,5 +1,5 @@
 {
-  "name": "@mpv-easy/clip-play",
+  "name": "@mpv-easy/jellyfin",
   "version": "0.1.9-alpha.8",
   "files": ["dist", "readme.md", "package.json"],
   "description": "",
@@ -15,9 +15,6 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@mpv-easy/tool": "workspace:*",
-    "@mpv-easy/jellyfin": "workspace:*",
-    "@mpv-easy/autoload": "workspace:*",
     "@mpv-easy/plugin": "workspace:*"
   },
   "devDependencies": {}

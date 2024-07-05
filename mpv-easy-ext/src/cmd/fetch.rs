@@ -29,7 +29,6 @@ async fn fetch(url: &str) -> Result<(), Box<dyn std::error::Error>> {
 
 impl Cmd for Fetch {
     fn call(&self) {
-        let params = self.params.as_str();
         let url: String = serde_json::from_str(self.params.as_str()).unwrap();
         fetch(&url).unwrap();
     }
