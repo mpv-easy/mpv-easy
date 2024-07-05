@@ -20,8 +20,7 @@ import {
 } from "../store"
 import { ThumbFast } from "@mpv-easy/thumbfast"
 
-
-export const Progress = React.memo(({ width, height, ...props }: MpDomProps) => {
+export const Progress = ({ width, height, ...props }: MpDomProps) => {
   const [leftPreview, setLeftPreview] = useState(0)
   const [previewCursorHide, setPreviewCursorHide] = useState(true)
   const progress = useSelector(progressStyleSelector)
@@ -68,8 +67,8 @@ export const Progress = React.memo(({ width, height, ...props }: MpDomProps) => 
   }
   const hoverCursorRef = useRef<MpDom>(null)
 
-  const previewTimeTextOffsetX =
-    (progress.cursorSize - (previewTextRef.current?.layoutNode.width ?? 0)) / 2
+  const previewTextWidth = previewTextRef.current?.layoutNode.width ?? 0
+  const previewTimeTextOffsetX = (progress.cursorSize - previewTextWidth) >> 1
   let thumbX = 0
   let thumbY = 0
 
@@ -174,8 +173,8 @@ export const Progress = React.memo(({ width, height, ...props }: MpDomProps) => 
           zIndex={progress.previewZIndex}
           display="flex"
           alignContent="stretch"
-        // justifyContent="center"
-        // alignItems="center"
+          // justifyContent="center"
+          // alignItems="center"
         >
           {!previewCursorHide && (
             <Box
@@ -207,14 +206,14 @@ export const Progress = React.memo(({ width, height, ...props }: MpDomProps) => 
               backgroundImage={thumbRef.current?.path}
               backgroundImageFormat={thumbRef.current?.format}
               pointerEvents="none"
-            // display="flex"
-            // alignContent='stretch'
-            // justifyContent="center"
-            // alignItems="center"
+              // display="flex"
+              // alignContent='stretch'
+              // justifyContent="center"
+              // alignItems="center"
             />
           )}
         </Box>
       )}
     </Box>
   )
-})
+}

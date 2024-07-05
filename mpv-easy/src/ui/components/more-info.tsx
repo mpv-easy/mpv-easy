@@ -31,11 +31,11 @@ export const MoreInfo = () => {
       font={button.font}
       fontSize={button.fontSize}
       color={button.color}
-      onMouseDown={(e) => {
+      onMouseDown={() => {
         if (consoleShow) {
-          command("script-binding console/enable")
+          command("script-message-to console disable")
         } else {
-          command("script-message-to console type")
+          command("script-message-to console enable")
         }
         setConsoleShow((c) => !c)
       }}

@@ -16,10 +16,9 @@ import { Restore } from "../components/restore"
 import { PlayMode } from "../components/play-mode"
 import { PreviousFrame } from "../components/previous-frame"
 import { NextFrame } from "../components/next-frame"
-import { MoreInfo } from "../components/more-info"
 import { History } from "../components/history"
 
-export const UoscControl = React.memo((props: Partial<MpDomProps>) => {
+export const UoscControl = (props: Partial<MpDomProps>) => {
   const { width, height } = props
   const mode = useSelector((store: RootState) => store.context[pluginName].mode)
   const button = useSelector(
@@ -75,4 +74,4 @@ export const UoscControl = React.memo((props: Partial<MpDomProps>) => {
       </Box>
     </Box>
   )
-})
+}

@@ -58,7 +58,6 @@ const mousePosProp = new PropertyNative<MousePos>("mouse-pos")
 const videoParamsProp = new PropertyNative<VideoParams>("video-params")
 const muteProp = new PropertyBool("mute")
 
-const timePosFullProp = new PropertyNumber("time-pos/full")
 const aidProp = new PropertyNumber("aid")
 const vidProp = new PropertyNumber("vid")
 const sidProp = new PropertyNumber("sid")
@@ -91,7 +90,7 @@ export type EasyProps = {
   skipFirstRender: boolean
   fontSize: number
 }
-export const Easy = React.memo((props: Partial<EasyProps>) => {
+export const Easy = (props: Partial<EasyProps>) => {
   const dispatch = useDispatch<Dispatch>()
   const fps = useSelector(fpsSelector)
   const path = useSelector(pathSelector)
@@ -295,4 +294,4 @@ export const Easy = React.memo((props: Partial<EasyProps>) => {
       </Box>
     </>
   )
-})
+}

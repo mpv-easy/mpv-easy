@@ -77,7 +77,7 @@ export const plugins = [
   autoloadPlugin,
   thumbfastPlugin,
   copyScreenPlugin,
-  jellyfinPlugin
+  jellyfinPlugin,
 ]
 
 export interface EnablePlugin {

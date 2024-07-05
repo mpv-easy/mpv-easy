@@ -1,17 +1,15 @@
-import { command, getFileName } from "@mpv-easy/tool"
-import { Box, Button, type MpDom } from "@mpv-easy/ui"
+import { command } from "@mpv-easy/tool"
+import { Box, type MpDom } from "@mpv-easy/ui"
 import React, { useRef } from "react"
 import { useSelector, useDispatch } from "react-redux"
 import * as ICON from "../icon"
 import {
   buttonStyleSelector,
-  mouseHoverStyleSelector,
   type Dispatch,
   playlistStyleSelector,
   playlistSelector,
   playlistHideSelector,
   pathSelector,
-  osdDimensionsSelector,
 } from "../store"
 import { getRootNode } from "@mpv-easy/ui"
 import { ScrollList } from "./components/scroll-list"
@@ -22,7 +20,7 @@ export type PlaylistProps = {
   current: number
 }
 
-export const Playlist = React.memo(() => {
+export const Playlist = () => {
   const playlistStyle = useSelector(playlistStyleSelector)
   const dispatch = useDispatch<Dispatch>()
   const playlist = useSelector(playlistSelector)
@@ -86,4 +84,4 @@ export const Playlist = React.memo(() => {
       )}
     </Box>
   )
-})
+}

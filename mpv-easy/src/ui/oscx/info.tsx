@@ -6,9 +6,7 @@ import {
   controlStyleSelector,
   fullscreenSelector,
 } from "../../store"
-import { Filename } from "../components/filename"
 import { Play } from "../components/play"
-import { Stop } from "../components/stop"
 import { Screenshot } from "../components/screenshot"
 import { Fullscreen } from "../components/fullscreen"
 import { Next } from "../components/next"
@@ -23,7 +21,7 @@ import { History } from "../components/history"
 import { PlayMode } from "../components/play-mode"
 import { Restore } from "../components/restore"
 
-export const OscInfo = React.memo(({ height }: Partial<MpDomProps>) => {
+export const OscInfo = ({ height }: Partial<MpDomProps>) => {
   const button = useSelector(buttonStyleSelector)
   const control = useSelector(controlStyleSelector)
   const fullscreen = useSelector(fullscreenSelector)
@@ -58,7 +56,6 @@ export const OscInfo = React.memo(({ height }: Partial<MpDomProps>) => {
         justifyContent="center"
         alignItems="center"
       >
-
         <History />
         <PreviousFrame />
         <Previous />
@@ -80,4 +77,4 @@ export const OscInfo = React.memo(({ height }: Partial<MpDomProps>) => {
       </Box>
     </Box>
   )
-})
+}

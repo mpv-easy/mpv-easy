@@ -105,13 +105,14 @@ export const SubtitleTrack = () => {
       color={dropdown.button.color}
       dropdownListStyle={{
         ...dropdown.list,
-        onMouseMove: e => e.stopPropagation(),
-        onMouseLeave: e => e.stopPropagation(),
-        onMouseEnter: e => e.stopPropagation(),
-        onMouseDown: e => e.stopPropagation(),
-        onMouseUp: e => e.stopPropagation(),
-        onClick: e => e.stopPropagation(),
-        onFocus: e => e.stopPropagation(),
-      }} />
+        onMouseMove: (e) => e.stopPropagation(),
+        onMouseLeave: (e) => e.stopPropagation(),
+        onMouseEnter: (e) => e.stopPropagation(),
+        onMouseDown: (e) => e.stopPropagation(),
+        onMouseUp: (e) => e.stopPropagation(),
+        onClick: (e) => e.stopPropagation(),
+        onFocus: (e) => e.stopPropagation(),
+      }}
+    />
   )
 }

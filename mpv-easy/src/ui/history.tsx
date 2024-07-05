@@ -1,31 +1,26 @@
-import { command, getFileName, loadfile } from "@mpv-easy/tool"
-import { Box, Button, type MpDom } from "@mpv-easy/ui"
-import React, { useEffect, useRef } from "react"
+import { loadfile } from "@mpv-easy/tool"
+import { Box, type MpDom } from "@mpv-easy/ui"
+import React, { useRef } from "react"
 import { useSelector, useDispatch } from "react-redux"
 import * as ICON from "../icon"
 import {
   buttonStyleSelector,
-  mouseHoverStyleSelector,
   type Dispatch,
-  playlistStyleSelector,
-  playlistSelector,
-  playlistHideSelector,
   pathSelector,
-  osdDimensionsSelector,
   historyHideSelector,
   historySelector,
   historyStyleSelector,
 } from "../store"
 import { getRootNode } from "@mpv-easy/ui"
 import { ScrollList } from "./components/scroll-list"
-import { getVideoName, textEllipsis } from "../common"
+import { textEllipsis } from "../common"
 
 export type PlaylistProps = {
   list: string[]
   current: number
 }
 
-export const History = React.memo(() => {
+export const History = () => {
   const historyStyle = useSelector(historyStyleSelector)
   const dispatch = useDispatch<Dispatch>()
   const history = useSelector(historySelector)
@@ -86,4 +81,4 @@ export const History = React.memo(() => {
       )}
     </Box>
   )
-})
+}

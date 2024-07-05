@@ -191,7 +191,7 @@ jobs:
         with:
           path: mpv-easy-ext-dist
           pattern: mpv-easy-ext-*
-          merge-multiple: false
+          merge-multiple: true
 
       - uses: actions/download-artifact@v4
         with:
@@ -239,13 +239,13 @@ jobs:
           cp -r ./dist ./mpy-easy-qjs-windows
           cp -r ./dist ./mpy-easy-boa-windows
 
-          cp ./mpv-easy-ext-dist/mpv-easy-ext-macos ./mpy-easy-macos/scripts/mpv-easy-config/mpv-easy-ext/mpv-easy-ext-macos
-          cp ./mpv-easy-ext-dist/mpv-easy-ext-linux ./mpy-easy-linux/scripts/mpv-easy-config/mpv-easy-ext/mpv-easy-ext-linux
-          cp ./mpv-easy-ext-dist/mpv-easy-ext-android ./mpy-easy-android/scripts/mpv-easy-config/mpv-easy-ext/mpv-easy-ext-android
-          cp ./mpv-easy-ext-dist/mpv-easy-ext-windows ./mpy-easy-windows/scripts/mpv-easy-config/mpv-easy-ext/mpv-easy-ext-windows
-          cp ./mpv-easy-ext-dist/mpv-easy-ext-windows ./mpy-easy-deno-windows/scripts/mpv-easy-config/mpv-easy-ext/mpv-easy-ext-windows
-          cp ./mpv-easy-ext-dist/mpv-easy-ext-windows ./mpy-easy-qjs-windows/scripts/mpv-easy-config/mpv-easy-ext/mpv-easy-ext-windows
-          cp ./mpv-easy-ext-dist/mpv-easy-ext-windows ./mpy-easy-boa-windows/scripts/mpv-easy-config/mpv-easy-ext/mpv-easy-ext-windows
+          cp ./mpv-easy/mpv-easy-ext-dist/mpv-easy-ext-macos ./mpy-easy-macos/scripts/mpv-easy-config/mpv-easy-ext/mpv-easy-ext-macos
+          cp ./mpv-easy/mpv-easy-ext-dist/mpv-easy-ext-linux ./mpy-easy-linux/scripts/mpv-easy-config/mpv-easy-ext/mpv-easy-ext-linux
+          cp ./mpv-easy/mpv-easy-ext-dist/mpv-easy-ext-android ./mpy-easy-android/scripts/mpv-easy-config/mpv-easy-ext/mpv-easy-ext-android
+          cp ./mpv-easy/mpv-easy-ext-dist/mpv-easy-ext-windows ./mpy-easy-windows/scripts/mpv-easy-config/mpv-easy-ext/mpv-easy-ext-windows
+          cp ./mpv-easy/mpv-easy-ext-dist/mpv-easy-ext-windows ./mpy-easy-deno-windows/scripts/mpv-easy-config/mpv-easy-ext/mpv-easy-ext-windows
+          cp ./mpv-easy/mpv-easy-ext-dist/mpv-easy-ext-windows ./mpy-easy-qjs-windows/scripts/mpv-easy-config/mpv-easy-ext/mpv-easy-ext-windows
+          cp ./mpv-easy/mpv-easy-ext-dist/mpv-easy-ext-windows ./mpy-easy-boa-windows/scripts/mpv-easy-config/mpv-easy-ext/mpv-easy-ext-windows
 
           cp ./deno-dll/mpv-deno-windows.dll ./mpy-easy-deno-windows/scripts/mpv-deno-windows.dll
           rm ./mpy-easy-deno-windows/scripts/mpv-easy-es5.js
