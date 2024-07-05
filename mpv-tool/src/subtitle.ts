@@ -1,4 +1,4 @@
-import { SubtitleTypes, isHttp } from "./common"
+import { SubtitleTypes, isHttp, isYoutube } from "./common"
 import { fetch } from "./rs-ext"
 import { existsSync } from "./fs"
 import {
@@ -13,7 +13,7 @@ import { getFileName } from "./path"
 import type { TrackItem } from "./type"
 
 export function loadRemoteSubtitle(path = getProperty("path")) {
-  if (!path?.length) {
+  if (!path?.length || isYoutube(path)) {
     return
   }
   const trackList = (getPropertyNative<TrackItem[]>("track-list") || []).filter(
@@ -47,7 +47,7 @@ export function loadRemoteSubtitle(path = getProperty("path")) {
         writeFile(subPath, resp.text)
         commandv("sub-add", subPath)
       } catch (e) {
-        print("fetch error:", e)
+        print("loadRemoteSubtitle error:", e)
       }
     }
   } else {
