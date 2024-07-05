@@ -12,7 +12,7 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
-      - name: build js
+      - name: build mpv-js-plugin-init
         run: |
           npm install -g pnpm esbuild
           pnpm setup
