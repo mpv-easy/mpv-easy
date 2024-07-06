@@ -110,14 +110,14 @@ export function TextBox() {
 
       <Box
         display="flex"
-        // alignContent="stretch"
+      // alignContent="stretch"
       >
         {TEXT.map((_, k) => (
           <Box
             id={k.toString()}
             key={k}
             text={TEXT[k]}
-            font="FiraCode Nerd Font Mono Reg"
+            font="JetBrainsMono NFM Regular"
             backgroundColor="FF0000"
             color="00FF00"
             display="flex"
@@ -140,14 +140,14 @@ export function TextBox() {
       <Box
         fontSize={64}
         backgroundColor="FF00FF"
-        font="FiraCode Nerd Font Mono Reg"
+        font="JetBrainsMono NFM Regular"
         id="-0+3333"
       >
         <Box text={ICON.Pause} id="t3333333" />
       </Box>
       <Box
         fontSize={64}
-        font="FiraCode Nerd Font Mono Reg"
+        font="JetBrainsMono NFM Regular"
         backgroundColor="FF00FF"
         id="-0+3333"
       >
@@ -155,7 +155,7 @@ export function TextBox() {
       </Box>
       <Box
         fontSize={64}
-        font="FiraCode Nerd Font Mono Reg"
+        font="JetBrainsMono NFM Regular"
         backgroundColor="FF00FF"
         id="-0+3333"
       >
@@ -163,7 +163,7 @@ export function TextBox() {
       </Box>
       <Box
         fontSize={64}
-        font="FiraCode Nerd Font Mono Reg"
+        font="JetBrainsMono NFM Regular"
         backgroundColor="FF00FF"
         id="-0+3333"
       >
@@ -171,7 +171,7 @@ export function TextBox() {
       </Box>
       <Box
         fontSize={64}
-        font="FiraCode Nerd Font Mono Reg"
+        font="JetBrainsMono NFM Regular"
         backgroundColor="FF00FF"
         id="-0+3333"
       >
@@ -181,7 +181,7 @@ export function TextBox() {
       <Box
         fontSize={16}
         text={TEXT.join("")}
-        font="FiraCode Nerd Font Mono Reg"
+        font="JetBrainsMono NFM Regular"
         backgroundColor="FF00FF"
         id="-0+6555"
       /> */}

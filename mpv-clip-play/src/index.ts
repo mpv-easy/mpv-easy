@@ -49,6 +49,11 @@ function getList(s: string | undefined, context: PluginContext): string[] {
       }
     }
 
+    if (jellyfin.isJellyfin(s)) {
+      // maybe forget config jellyfin apiKey and username
+      osdMessage("Please add jellyfin apiKey and username first", 2000)
+      return []
+    }
     return [s]
   }
 

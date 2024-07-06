@@ -4,6 +4,6 @@ import { renderToBrowser } from "./renderToBrowser"
 
 // renderToBrowser(<Counter />)
 
-// renderToBrowser(<Example.CounterUI />, "FiraCode Nerd Font Mono Reg")
+// renderToBrowser(<Example.CounterUI />, "JetBrainsMono NFM Regular")
 
 import "./mpv-easy"

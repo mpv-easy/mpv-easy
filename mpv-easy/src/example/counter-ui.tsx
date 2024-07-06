@@ -20,7 +20,7 @@ export function CounterUI() {
   return (
     <Box
       id="counter-main"
-      font="FiraCode Nerd Font Mono Reg"
+      font="JetBrainsMono NFM Regular"
       fontSize={boxSize / 4}
       display="flex"
       flexDirection="column"

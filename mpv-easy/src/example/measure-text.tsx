@@ -16,7 +16,7 @@ export function MeasureText() {
       const txt = new AssDraw()
         .pos(x, y)
         .fontSize(size)
-        .font("FiraCode Nerd Font Mono Reg")
+        .font("JetBrainsMono NFM Regular")
         .append(i)
       overlay.data = txt.toString()
       overlay.computeBounds = true

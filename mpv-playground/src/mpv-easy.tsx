@@ -14,8 +14,7 @@ setTimeout(() => {
     <Provider store={store}>
       <Easy fontSize={24} initHide={false} skipFirstRender={false} />
     </Provider>,
-    "FiraCode Nerd Font Mono Reg",
+    "JetBrainsMono NFM Regular",
   )
   console.log("render: ", store)
 }, 1000)
-// renderToBrowser(<Example.CounterUI />, "FiraCode Nerd Font Mono Reg")
