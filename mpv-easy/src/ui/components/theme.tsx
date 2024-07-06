@@ -1,4 +1,4 @@
-import { Dropdown } from "@mpv-easy/ui"
+import { Dropdown, DropdownItem } from "@mpv-easy/ui"
 import React from "react"
 import { useDispatch, useSelector } from "react-redux"
 import * as ICON from "../../icon"
@@ -10,6 +10,7 @@ import {
   dropdownStyleSelector,
   modeSelector,
 } from "../../store"
+import { ThemeModeList } from "../../mpv-easy-theme"
 
 export const Theme = () => {
   const button = useSelector(buttonStyleSelector)
@@ -18,44 +19,33 @@ export const Theme = () => {
   const mouseHoverStyle = useSelector(mouseHoverStyleSelector)
   const dropdown = useSelector(dropdownStyleSelector)
   const mode = useSelector(modeSelector)
-  const darkPrefix = mode === "dark" ? ICON.Ok : ICON.CheckboxBlankCircleOutline
-  const lightPrefix =
-    mode === "light" ? ICON.Ok : ICON.CheckboxBlankCircleOutline
-
+  const maxLen = ThemeModeList.map((i) => i18n[i].length).reduce(
+    (a, b) => Math.max(a, b),
+    0,
+  )
+  const items = ThemeModeList.map((i): DropdownItem => {
+    const prefix = mode === i ? ICON.Ok : ICON.CheckboxBlankCircleOutline
+    const text = `${prefix} ${i18n[i].padStart(maxLen, " ")}`
+    return {
+      key: i,
+      label: text,
+      onSelect: () => {
+        dispatch.context.setMode(i)
+      },
+      style: {
+        ...dropdown.item,
+        justifyContent: "space-between",
+        alignItems: "center",
+      },
+    }
+  })
   return (
     <Dropdown
       id="mpv-easy-button-theme"
       // text={mode === 'dark' ? ICON.Sun : ICON.Moon}
       text={ICON.ThemeLightDark}
       title={i18n.theme}
-      items={[
-        {
-          key: i18n.lightName,
-          label: i18n.lightName,
-          onSelect: () => {
-            dispatch.context.setMode("light")
-          },
-          style: {
-            ...dropdown.item,
-            justifyContent: "space-between",
-            alignItems: "center",
-            prefix: lightPrefix,
-          },
-        },
-        {
-          key: i18n.darkName,
-          label: i18n.darkName,
-          onSelect: () => {
-            dispatch.context.setMode("dark")
-          },
-          style: {
-            ...dropdown.item,
-            justifyContent: "space-between",
-            alignItems: "center",
-            prefix: darkPrefix,
-          },
-        },
-      ]}
+      items={items}
       dropdownStyle={dropdown.button}
       direction="bottom"
       width={button.width}

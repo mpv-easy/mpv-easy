@@ -4,7 +4,6 @@ import { useDispatch, useSelector } from "react-redux"
 import * as ICON from "../../icon"
 import {
   buttonStyleSelector,
-  pauseSelector,
   type Dispatch,
   i18nSelector,
   mouseHoverStyleSelector,
@@ -13,7 +12,6 @@ import {
 
 export const Playlist = () => {
   const button = useSelector(buttonStyleSelector)
-  const pause = useSelector(pauseSelector)
   const i18n = useSelector(i18nSelector)
   const dispatch = useDispatch<Dispatch>()
   const mouseHoverStyle = useSelector(mouseHoverStyleSelector)

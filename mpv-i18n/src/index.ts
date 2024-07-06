@@ -8,8 +8,11 @@ const resources = { en, cn }
 
 export const pluginName = "@mpv-easy/i18n"
 
+export const LanguageList = ["cn", "en"] as const
+export type LanguageName = (typeof LanguageList)[number]
+
 export type I18nConfig = {
-  default: "en" | "cn"
+  default: LanguageName
   lang: { en: typeof en; cn: typeof cn }
 }
 

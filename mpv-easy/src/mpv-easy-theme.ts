@@ -13,10 +13,15 @@ const AlphaMedium = "80"
 const AlphaLow = "40"
 const AlphaShow = "00"
 
-export type ThemeMode = "dark" | "light"
+export const PlayModeList = ["loopOne", "loopAll", "shuffle"] as const
+export type PlayMode = (typeof PlayModeList)[number]
+
+export const ThemeModeList = ["dark", "light"] as const
+export type ThemeMode = (typeof ThemeModeList)[number]
 
 export const UINameList = ["osc", "uosc", "oscx"] as const
 export type UIName = (typeof UINameList)[number]
+export const DefaultPlayMode: PlayMode = "loopAll"
 
 export type ButtonStyle = {
   padding: number
@@ -168,6 +173,7 @@ export type EasyConfig = {
     volumeMax: number
     speed: number
     speedList: number[]
+    playMode: PlayMode
   }
   state: {
     hide: boolean
@@ -190,7 +196,7 @@ export const defaultPlaylistZIndex = 512
 export const defaultFont = "JetBrainsMono NFM Regular"
 export const defaultFontSize = 48
 export const defaultName = "uosc"
-export const defaultPadding = 8
+export const defaultPadding = 6
 export const defaultButtonSize = defaultFontSize * 1.25
 export const defaultCursorSize = 4
 export const defaultMaxItemCount = 8
@@ -531,5 +537,6 @@ export const defaultPlayer: EasyConfig["player"] = {
   volumeMax: 130,
   speed: 1,
   speedList: [0.25, 0.5, 0.75, 1, 1.25, 1.5, 2, 4],
+  playMode: DefaultPlayMode,
 }
 export const defaultConfig = createDefaultThemeConfig()

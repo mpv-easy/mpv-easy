@@ -153,6 +153,8 @@ export const speedListSelector = (state: RootState) =>
   state.context[pluginName].player.speedList
 export const historySelector = (state: RootState) =>
   state.context[pluginName].history
+export const playModeSelector = (state: RootState) =>
+  state.context[pluginName].player.playMode
 
 export const playlistHideSelector = (state: RootState) =>
   state.context[pluginName].state.playlistHide

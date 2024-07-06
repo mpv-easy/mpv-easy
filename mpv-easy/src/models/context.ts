@@ -29,6 +29,7 @@ import {
   type ThemeMode,
   type UIName,
   createDefaultThemeConfig,
+  PlayMode,
 } from "../mpv-easy-theme"
 import { pluginName as i18nName } from "@mpv-easy/i18n"
 import {
@@ -143,6 +144,10 @@ export const context = createModel<RootModel>()({
     },
     setHistoryHide(state, hide: boolean) {
       state[pluginName].state.historyHide = hide
+      return { ...state }
+    },
+    setPlayMode(state, playMode: PlayMode) {
+      state[pluginName].player.playMode = playMode
       return { ...state }
     },
     setSpeed(state, speed: number) {

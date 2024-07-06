@@ -48,6 +48,9 @@ import {
 } from "../store"
 import * as ICON from "../icon"
 import { pluginName as anime4kName } from "@mpv-easy/anime4k"
+import { ThemeModeList, UINameList } from "../mpv-easy-theme"
+import { getMaxStringLength } from "../common"
+import { LanguageList } from "@mpv-easy/i18n"
 export interface MenuItem {
   key: string
   label: string
@@ -80,17 +83,10 @@ export const ClickMenu: ForwardRefExoticComponent<
   const speedList = useSelector(speedListSelector)
 
   const language = useSelector(languageSelector)
-  const cnPrefix = language === "cn" ? ICON.Ok : ICON.CheckboxBlankCircleOutline
-  const enPrefix = language === "en" ? ICON.Ok : ICON.CheckboxBlankCircleOutline
+
   const mode = useSelector(modeSelector)
-  const darkPrefix = mode === "dark" ? ICON.Ok : ICON.CheckboxBlankCircleOutline
-  const lightPrefix =
-    mode === "light" ? ICON.Ok : ICON.CheckboxBlankCircleOutline
 
   const uiName = useSelector(uiNameSelector)
-  const oscPrefix = uiName === "osc" ? ICON.Ok : ICON.CheckboxBlankCircleOutline
-  const uoscPrefix =
-    uiName === "uosc" ? ICON.Ok : ICON.CheckboxBlankCircleOutline
 
   const enablePlugins = useSelector(enablePluginsStyleSelector)
 
@@ -175,22 +171,18 @@ export const ClickMenu: ForwardRefExoticComponent<
       {
         key: i18n.language,
         label: i18n.language,
-        children: [
-          {
+        children: LanguageList.map((i) => {
+          const prefix =
+            language === i ? ICON.Ok : ICON.CheckboxBlankCircleOutline
+          const maxLen = getMaxStringLength(LanguageList)
+          return {
             key: i18n.languageChinese,
-            label: `${cnPrefix} ${i18n.languageChinese}`,
+            label: `${prefix} ${i18n[i].padEnd(maxLen)}`,
             onSelect: () => {
-              dispatch.context.setLanguage("cn")
+              dispatch.context.setLanguage(i)
             },
-          },
-          {
-            key: i18n.languageEnglish,
-            label: `${enPrefix} ${i18n.languageEnglish}`,
-            onSelect: () => {
-              dispatch.context.setLanguage("en")
-            },
-          },
-        ],
+          }
+        }),
       },
       {
         key: i18n.more,
@@ -248,52 +240,45 @@ export const ClickMenu: ForwardRefExoticComponent<
       {
         key: i18n.theme,
         label: i18n.theme,
-        children: [
-          {
-            key: i18n.lightName,
-            label: i18n.lightName,
+        children: ThemeModeList.map((i): MenuItem => {
+          const prefix = mode === i ? ICON.Ok : ICON.CheckboxBlankCircleOutline
+          const maxLen = getMaxStringLength(ThemeModeList.map((i) => i18n[i]))
+          const label = `${prefix} ${i18n[i].padStart(maxLen, " ")}`
+
+          return {
+            key: i,
+            label: label,
             onSelect: () => {
-              dispatch.context.setMode("light")
+              dispatch.context.setMode(i)
             },
             style: {
+              display: "flex",
               justifyContent: "space-between",
               alignItems: "center",
-              prefix: lightPrefix,
             },
-          },
-          {
-            key: i18n.darkName,
-            label: i18n.darkName,
-            onSelect: () => {
-              dispatch.context.setMode("dark")
-            },
-            style: {
-              justifyContent: "space-between",
-              alignItems: "center",
-              prefix: darkPrefix,
-            },
-          },
-        ],
+          }
+        }),
       },
       {
         key: i18n.skin,
         label: i18n.skin,
-        children: [
-          {
-            key: i18n.osc,
-            label: `${oscPrefix}  ${i18n.osc}`,
+        children: UINameList.map((i): MenuItem => {
+          const maxLen = getMaxStringLength(UINameList)
+          const prefix =
+            uiName === i ? ICON.Ok : ICON.CheckboxBlankCircleOutline
+          const label = `${prefix} ${i18n[i].padEnd(maxLen, " ")}`
+          return {
+            key: i,
+            label,
             onSelect: () => {
-              dispatch.context.setUI("osc")
+              dispatch.context.setUI(i)
             },
-          },
-          {
-            key: i18n.uosc,
-            label: `${uoscPrefix} ${i18n.uosc}`,
-            onSelect: () => {
-              dispatch.context.setUI("uosc")
+            style: {
+              justifyContent: "space-between",
+              alignItems: "center",
             },
-          },
-        ],
+          }
+        }),
       },
       {
         key: i18n.videoSpeed,
@@ -400,6 +385,7 @@ export const ClickMenu: ForwardRefExoticComponent<
               font={button.font}
               fontSize={button.fontSize}
               color={button.color}
+              height={button.fontSize}
               onMouseDown={(e) => {
                 e.stopPropagation()
                 i.onSelect?.(i)
@@ -424,7 +410,6 @@ export const ClickMenu: ForwardRefExoticComponent<
               display="flex"
               flexDirection="column"
               justifyContent="space-between"
-              alignContent="stretch"
               alignItems="start"
               postfix={i.children?.length ? ">" : undefined}
             />
@@ -445,9 +430,9 @@ export const ClickMenu: ForwardRefExoticComponent<
           color={button.color}
           display="flex"
           flexDirection="row"
-          alignContent="stretch"
           justifyContent="start"
           alignItems="start"
+          alignContent="stretch"
           backgroundColor={clickMenu.backgroundColor}
           onMouseDown={(e) => {
             e.stopPropagation()
@@ -467,6 +452,7 @@ export const ClickMenu: ForwardRefExoticComponent<
                 font={button.font}
                 fontSize={button.fontSize}
                 color={button.color}
+                height={button.fontSize}
                 onMouseDown={(e) => {
                   e.stopPropagation()
                   i.onSelect?.(i)
@@ -476,7 +462,6 @@ export const ClickMenu: ForwardRefExoticComponent<
                 display="flex"
                 flexDirection="column"
                 justifyContent="space-between"
-                alignContent="stretch"
                 alignItems="start"
                 {...i.style}
               />

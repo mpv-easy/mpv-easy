@@ -1,4 +1,4 @@
-import { Dropdown } from "@mpv-easy/ui"
+import { Dropdown, DropdownItem } from "@mpv-easy/ui"
 import React from "react"
 import { useDispatch, useSelector } from "react-redux"
 import * as ICON from "../../icon"
@@ -10,6 +10,9 @@ import {
   dropdownStyleSelector,
   languageSelector,
 } from "../../store"
+import { LanguageList } from "@mpv-easy/i18n"
+import { getMaxStringLength } from "../../common"
+import { ThemeModeList } from "../../mpv-easy-theme"
 
 export const Language = () => {
   const button = useSelector(buttonStyleSelector)
@@ -18,8 +21,18 @@ export const Language = () => {
   const mouseHoverStyle = useSelector(mouseHoverStyleSelector)
   const dropdown = useSelector(dropdownStyleSelector)
   const language = useSelector(languageSelector)
-  const cnPrefix = language === "cn" ? ICON.Ok : ICON.CheckboxBlankCircleOutline
-  const enPrefix = language === "en" ? ICON.Ok : ICON.CheckboxBlankCircleOutline
+  const maxLen = getMaxStringLength(ThemeModeList.map((i) => i18n[i]))
+  const items = LanguageList.map((i): DropdownItem => {
+    const prefix = language === i ? ICON.Ok : ICON.CheckboxBlankCircleOutline
+    return {
+      key: i,
+      label: `${prefix} ${i18n[i].padEnd(maxLen)}`,
+      onSelect: () => {
+        dispatch.context.setLanguage(i)
+      },
+      style: dropdown.item,
+    }
+  })
   return (
     <Dropdown
       // TODO: language switch icon
@@ -27,24 +40,7 @@ export const Language = () => {
       id="mpv-easy-button-language"
       title={i18n.language}
       direction="bottom"
-      items={[
-        {
-          key: "Chinese",
-          label: `${cnPrefix} ${i18n.languageChinese}`,
-          onSelect: () => {
-            dispatch.context.setLanguage("cn")
-          },
-          style: dropdown.item,
-        },
-        {
-          key: "English",
-          label: `${enPrefix} ${i18n.languageEnglish}`,
-          onSelect: () => {
-            dispatch.context.setLanguage("en")
-          },
-          style: dropdown.item,
-        },
-      ]}
+      items={items}
       height={button.height}
       width={button.width}
       display="flex"

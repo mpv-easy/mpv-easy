@@ -2,8 +2,11 @@ export default {
   uosc: "uosc",
   osc: "osc",
   oscx: "oscx",
-  darkName: "深色模式",
-  lightName: "浅色模式",
+  dark: "深色",
+  light: "浅色",
+  cn: "中文",
+  en: "英文",
+
   languageChinese: "中文",
   languageEnglish: "英文",
 
@@ -43,8 +46,10 @@ export default {
   externalTrack: "外挂",
 
   playMode: "播放模式",
-  loopFile: "单集循环",
-  loopPlaylist: "列表循环",
+  loopOne: "单集循环",
+  loopAll: "列表循环",
+  shuffle: "随机播放",
+
   nextFrame: "下一帧",
   previousFrame: "上一帧",
   moreInfo: "更多信息",

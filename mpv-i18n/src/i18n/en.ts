@@ -3,8 +3,11 @@ export default {
   osc: "osc",
   oscx: "oscx",
 
-  darkName: "dark mode",
-  lightName: "light mode",
+  dark: "dark",
+  light: "light",
+  cn: "Chinese",
+  en: "English",
+
   languageChinese: "Chinese",
   languageEnglish: "English",
   next: "next",
@@ -43,8 +46,9 @@ export default {
   externalTrack: "external",
 
   playMode: "play mode",
-  loopFile: "loop file",
-  loopPlaylist: "loop playlist",
+  loopOne: "loop one",
+  loopAll: "loop all",
+  shuffle: "shuffle",
 
   nextFrame: "next frame",
   previousFrame: "previous frame",

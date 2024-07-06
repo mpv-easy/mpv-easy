@@ -82,3 +82,4 @@ export const Refresh = "󰑐" //   󰑐
 export const Info = ""
 export const History = "󰋚"
 export const Language = ""
+export const Shuffle = ""

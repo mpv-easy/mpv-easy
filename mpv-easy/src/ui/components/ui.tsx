@@ -11,7 +11,7 @@ import {
   uiNameSelector,
 } from "../../store"
 import { UINameList } from "../../mpv-easy-theme"
-
+import { getMaxStringLength } from "../../common"
 export const UI = () => {
   const button = useSelector(buttonStyleSelector)
   const i18n = useSelector(i18nSelector)
@@ -19,12 +19,13 @@ export const UI = () => {
   const mouseHoverStyle = useSelector(mouseHoverStyleSelector)
   const dropdown = useSelector(dropdownStyleSelector)
   const uiName = useSelector(uiNameSelector)
+  const maxLen = getMaxStringLength(UINameList)
 
   const items = UINameList.map((i): DropdownItem => {
     const prefix = uiName === i ? ICON.Ok : ICON.CheckboxBlankCircleOutline
     return {
       key: i,
-      label: `${prefix} ${i18n[i]}`,
+      label: `${prefix} ${i18n[i].padEnd(maxLen, " ")}`,
       onSelect: () => {
         dispatch.context.setUI(i)
       },

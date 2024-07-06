@@ -31,3 +31,26 @@ export function getVideoName(p: string): string {
 
   return getFileName(p) || ""
 }
+
+export function getMaxStringLength(list: readonly string[]): number {
+  let max = 0
+  for (const i of list) {
+    max = Math.max(i.length, max)
+  }
+  return max
+}
+export function stringListPadEnd(
+  list: readonly string[],
+  fill = " ",
+): string[] {
+  const max = getMaxStringLength(list)
+  return list.map((i) => i.padEnd(max, fill))
+}
+export function stringListPadStart(
+  list: readonly string[],
+  fill = " ",
+): string[] {
+  const max = getMaxStringLength(list)
+
+  return list.map((i) => i.padStart(max, fill))
+}
