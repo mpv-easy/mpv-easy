@@ -9,7 +9,7 @@ Folders do not support recursive scanning
 - webdav folder: http://<host>/a
 - jellyfin file http://<host>/web/index.html#!/details?id=<id>&serverId=<sid>
 - jellyfin folder: http://<host>/web/index.html#!/movies.html?topParentId=<id>
-
+- youtube: https://www.youtube.com/watch?v=<id>
 
 ## todo
 - [ ] open video from clipboard
