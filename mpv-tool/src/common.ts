@@ -1,4 +1,3 @@
-import { assert } from "./assert"
 import {
   type AlphabetKey,
   AlphabetKeys,
@@ -9,17 +8,13 @@ import {
 import {
   command,
   commandNative,
+  commandNativeAsync,
   commandv,
-  getOptions,
   getProperty,
   getPropertyNumber,
   getPropertyString,
-  observeProperty,
   observePropertyNumber,
   osdMessage,
-  print,
-  setPropertyBool,
-  setPropertyNumber,
 } from "./mpv"
 import { normalize } from "./path"
 
@@ -122,18 +117,44 @@ export function execSync(
     playback_only,
     capture_stdout,
     capture_stderr,
-  }) as {
-    error_string: string
-    killed_by_us: boolean
-    status: number
-    stderr: string
-    stdout: string
-  }
+  })
   if (r.status < 0) {
     throw new Error(`subprocess error status:${r.status} stderr:${r.stderr}`)
   }
   return r.stdout
 }
+
+export function execAsync(
+  args: string[],
+  playback_only = false,
+  capture_stdout = true,
+  capture_stderr = true,
+): Promise<string> {
+  return new Promise((resolve, reject) => {
+    commandNativeAsync(
+      {
+        name: "subprocess",
+        args,
+        playback_only,
+        capture_stdout,
+        capture_stderr,
+      },
+      (success, result, error) => {
+        if (success) {
+          if (result.status < 0) {
+            reject(result.stderr)
+          } else {
+            console.log("r:", JSON.stringify(result))
+            resolve(result.stdout)
+          }
+        } else {
+          reject(error)
+        }
+      },
+    )
+  })
+}
+
 const OsPatterns = {
   windows: "windows",
   linux: "linux",

@@ -1,7 +1,9 @@
 import type { KeyEvent } from "./mpv"
 
 declare global {
+  // @ts-ignore
   var mp: MPV
+  // @ts-ignore
   function print(...args: any[]): void
   function dump(...args: any[]): void
   function exit(): void
@@ -76,16 +78,28 @@ export interface FileInfo {
   is_dir: boolean
 }
 
+export type CommandResult = {
+  error_string: string
+  killed_by_us: boolean
+  status: number
+  stderr: string
+  stdout: string
+}
+
 export type MPV = {
   command(command: string): true | undefined
 
   commandv(...args: string[]): true | undefined
 
-  command_native(table: unknown, def?: unknown): unknown
+  command_native(table: unknown, def?: unknown): CommandResult
 
   command_native_async(
     table: unknown,
-    fn?: (success: boolean, result: unknown, error: string | undefined) => void,
+    fn?: (
+      success: boolean,
+      result: CommandResult,
+      error: string | undefined,
+    ) => void,
   ): unknown
 
   abort_async_command(t: number): void

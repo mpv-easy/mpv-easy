@@ -1,12 +1,5 @@
-import { text } from "node:stream/consumers"
 import { execSync, getOs } from "../common"
-import {
-  commandNative,
-  getScriptDir,
-  joinPath,
-  readFile,
-  writeFile,
-} from "../mpv"
+import { readFile, writeFile } from "../mpv"
 
 export function readFileBase64() {}
 

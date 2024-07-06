@@ -1,6 +1,10 @@
-import { execSync } from "../common"
+import { execAsync, execSync } from "../common"
 import { getRsExtExePath } from "./share"
 
 export function mkdir(dir: string, exe = getRsExtExePath()) {
-  execSync([exe, "fs", "mkdir", JSON.stringify(dir)])
+  return execSync([exe, "fs", "mkdir", JSON.stringify(dir)])
+}
+
+export function mkdirAsync(dir: string, exe = getRsExtExePath()) {
+  return execAsync([exe, "fs", "mkdir", JSON.stringify(dir)])
 }

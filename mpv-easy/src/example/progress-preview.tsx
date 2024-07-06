@@ -1,24 +1,12 @@
 import { ThumbFast } from "@mpv-easy/thumbfast"
-import {
-  PropertyBool,
-  command,
-  commandNative,
-  commandNativeAsync,
-  getPropertyNumber,
-  getPropertyString,
-  observeProperty,
-  print,
-  setPropertyNumber,
-} from "@mpv-easy/tool"
-import { Box, type MpDom, render } from "@mpv-easy/ui"
-import React, { useEffect, useState, useRef, useLayoutEffect } from "react"
+import { getPropertyNumber, setPropertyNumber } from "@mpv-easy/tool"
+import { Box, type MpDom } from "@mpv-easy/ui"
+import React, { useState, useRef } from "react"
 
 const cursorSize = 100
 const cursorHoverWidth = 100
-const serverId = "mpv_easy_test_001"
 const thumbFormat = "bgra"
 const thumbId = 42
-const thumbPath = `./thumb?.${thumbFormat}`
 
 let thumb: ThumbFast
 export function ProgressPreview() {

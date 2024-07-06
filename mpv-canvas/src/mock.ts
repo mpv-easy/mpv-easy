@@ -1,5 +1,6 @@
 import type {
   AddKeyBindingFlags,
+  CommandResult,
   FileInfo,
   KeyEvent,
   LogLevel,
@@ -568,16 +569,22 @@ export function createMpvMock(
       // console.log("cmd: ", ...args)
       return true
     },
-    command_native: (table: unknown, def?: unknown): unknown => {
+    command_native: (table: unknown, def?: unknown): CommandResult => {
       // console.log("command_native: ")
-      return true
+      return {
+        status: 0,
+        stderr: "",
+        stdout: "",
+        error_string: "",
+        killed_by_us: false,
+      }
     },
     command_native_async: (
       table: unknown,
       fn?:
         | ((
             success: boolean,
-            result: unknown,
+            result: CommandResult,
             error: string | undefined,
           ) => void)
         | undefined,

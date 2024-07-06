@@ -1,4 +1,4 @@
-import { command, commandNative, lastError, print, writeFile } from "./mpv"
+import { commandNative, lastError, writeFile } from "./mpv"
 
 export function writeStringFile(path: string, content: string) {
   return writeFile(path, content, "file://")

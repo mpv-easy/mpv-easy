@@ -1,4 +1,4 @@
-import { command, commandNativeAsync } from "./mpv"
+import { command } from "./mpv"
 
 const maxId = 64
 const overlayIdUsed = new Array(maxId).map(() => false)

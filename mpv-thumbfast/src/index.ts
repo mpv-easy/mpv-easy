@@ -1,9 +1,7 @@
 import { definePlugin } from "@mpv-easy/plugin"
 import {
-  commandNative,
   commandNativeAsync,
   dir,
-  execSync,
   existsSync,
   getOs,
   getPropertyString,
@@ -156,7 +154,7 @@ export class ThumbFast {
   }
 
   seek(time: number) {
-    commandNative({
+    commandNativeAsync({
       name: "subprocess",
       args: [
         getOs() === "windows" ? "cmd" : "sh",
@@ -172,7 +170,7 @@ export class ThumbFast {
   }
 
   exit() {
-    commandNative({
+    commandNativeAsync({
       name: "subprocess",
       args: [
         getOs() === "windows" ? "cmd" : "sh",

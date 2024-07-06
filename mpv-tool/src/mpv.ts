@@ -11,6 +11,7 @@ import type {
   MpvOsdOverlay,
   OSDSize,
   StrToType,
+  CommandResult,
 } from "./type"
 
 export function getMPV(): MPV {
@@ -26,13 +27,17 @@ export function commandv(...args: string[]): true | undefined {
   return getMPV().commandv(...args)
 }
 
-export function commandNative(table: unknown): unknown {
+export function commandNative(table: unknown): CommandResult {
   return getMPV().command_native(table)
 }
 
 export function commandNativeAsync(
   table: unknown,
-  fn?: (success: boolean, result: unknown, error: string | undefined) => void,
+  fn?: (
+    success: boolean,
+    result: CommandResult,
+    error: string | undefined,
+  ) => void,
 ): unknown {
   return getMPV().command_native_async(table, fn)
 }
