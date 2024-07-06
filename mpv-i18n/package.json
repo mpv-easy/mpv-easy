@@ -1,6 +1,6 @@
 {
   "name": "@mpv-easy/i18n",
-  "version": "0.1.9-alpha.8",
+  "version": "0.1.10",
   "files": ["dist", "readme.md", "package.json"],
   "description": "",
   "main": "dist/index.js",

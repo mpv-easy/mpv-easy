@@ -1,6 +1,6 @@
 {
   "name": "@mpv-easy/js-plugin-init",
-  "version": "0.1.9-alpha.8",
+  "version": "0.1.10",
   "private": true,
   "description": "",
   "main": "./dist/index.js",

@@ -1,6 +1,6 @@
 {
   "name": "@mpv-easy/anime4k",
-  "version": "0.1.9-alpha.8",
+  "version": "0.1.10",
   "description": "",
   "main": "dist/index.js",
   "types": "./dist/index.d.ts",
