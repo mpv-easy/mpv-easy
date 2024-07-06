@@ -8,6 +8,7 @@ import {
   isDir,
   isHttp,
   isVideo,
+  isYoutube,
   osdMessage,
   webdavList,
 } from "@mpv-easy/tool"
@@ -28,6 +29,10 @@ function getList(s: string | undefined, context: PluginContext): string[] {
       return [normalize(s)]
     }
 
+    if (isYoutube(s)) {
+      return [s]
+    }
+
     try {
       return webdavList(s)
         .map((i) => normalize(s + i))
@@ -36,22 +41,21 @@ function getList(s: string | undefined, context: PluginContext): string[] {
       print(e)
     }
 
-    const cfg = context[jellyfinName]
-    if (cfg.apiKey?.length && cfg.userName?.length) {
-      try {
-        const list = jellyfin
-          .getPlayableListFromUrl(s, cfg.apiKey, cfg.userName)
-          .sort((a, b) => a.name.localeCompare(b.name))
-          .map((i) => i.path)
-        return list
-      } catch (e) {
-        print(e)
-      }
-    }
-
     if (jellyfin.isJellyfin(s)) {
-      // maybe forget config jellyfin apiKey and username
-      osdMessage("Please add jellyfin apiKey and username first", 2000)
+      const cfg = context[jellyfinName]
+      if (cfg.apiKey?.length && cfg.userName?.length) {
+        try {
+          const list = jellyfin
+            .getPlayableListFromUrl(s, cfg.apiKey, cfg.userName)
+            .sort((a, b) => a.name.localeCompare(b.name))
+            .map((i) => i.path)
+          return list
+        } catch (e) {
+          print(e)
+          // maybe forget config jellyfin apiKey and username
+          osdMessage("Please add jellyfin apiKey and username first", 2000)
+        }
+      }
       return []
     }
     return [s]
