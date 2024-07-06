@@ -22,6 +22,7 @@ export type ThemeMode = (typeof ThemeModeList)[number]
 export const UINameList = ["osc", "uosc", "oscx"] as const
 export type UIName = (typeof UINameList)[number]
 export const DefaultPlayMode: PlayMode = "loopAll"
+export const DefaultClickMenuDisable = true
 
 export type ButtonStyle = {
   padding: number
@@ -351,7 +352,7 @@ export function createDefaultThemeConfig(): EasyConfig {
         clickMenu: {
           backgroundColor: Black + AlphaLow,
           zIndex: defaultClickMenuZIndex,
-          disable: false,
+          disable: DefaultClickMenuDisable,
         },
       },
       light: {
@@ -486,7 +487,7 @@ export function createDefaultThemeConfig(): EasyConfig {
         clickMenu: {
           backgroundColor: White + AlphaLow,
           zIndex: defaultClickMenuZIndex,
-          disable: false,
+          disable: DefaultClickMenuDisable,
         },
       },
     },
