@@ -65,7 +65,7 @@ export const SubtitleTrack = () => {
       return {
         label,
         key: key,
-        onSelect: () => {
+        onSelect: (_, e) => {
           if (sid === id) {
             dispatch.context.setSid(-1)
             setPropertyNative("sid", "no")
@@ -74,6 +74,7 @@ export const SubtitleTrack = () => {
             setPropertyNative("sid", "yes")
             setPropertyNative("sid", id)
           }
+          e.stopPropagation()
         },
         style: {
           ...dropdown.item,
@@ -103,16 +104,7 @@ export const SubtitleTrack = () => {
       font={dropdown.button.font}
       fontSize={button.fontSize}
       color={dropdown.button.color}
-      dropdownListStyle={{
-        ...dropdown.list,
-        onMouseMove: (e) => e.stopPropagation(),
-        onMouseLeave: (e) => e.stopPropagation(),
-        onMouseEnter: (e) => e.stopPropagation(),
-        onMouseDown: (e) => e.stopPropagation(),
-        onMouseUp: (e) => e.stopPropagation(),
-        onClick: (e) => e.stopPropagation(),
-        onFocus: (e) => e.stopPropagation(),
-      }}
+      dropdownListStyle={dropdown.list}
     />
   )
 }

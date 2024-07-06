@@ -19,7 +19,7 @@
   "dependencies": {
     "@mpv-easy/assdraw": "workspace:*",
     "@mpv-easy/tool": "workspace:*",
-    "@r-tui/flex": "0.1.5",
+    "@r-tui/flex": "0.1.6-alpha.0",
     "@r-tui/share": "0.1.4",
     "@types/lodash-es": "^4.17.12",
     "e-color": "^0.1.3",

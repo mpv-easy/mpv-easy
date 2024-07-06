@@ -29,7 +29,7 @@ export const PlayMode = () => {
     return {
       label: `${playMode === i ? ICON.Ok : ICON.CheckboxBlankCircleOutline} ${i}`,
       key: i,
-      onSelect: () => {
+      onSelect: (_, e) => {
         dispatch.context.setPlayMode(i)
         if (i === i18n.loopOne) {
           setPropertyBool("loop-playlist", false)
@@ -44,6 +44,7 @@ export const PlayMode = () => {
           setPropertyBool("loop-file", false)
           setPropertyBool("loop-playlist", true)
         }
+        e.stopPropagation()
       },
       style: {
         ...dropdown.item,
@@ -72,16 +73,7 @@ export const PlayMode = () => {
       fontSize={button.fontSize}
       color={dropdown.button.color}
       enableMouseStyle={mouseHoverStyle}
-      dropdownListStyle={{
-        ...dropdown.list,
-        onMouseMove: (e) => e.stopPropagation(),
-        onMouseLeave: (e) => e.stopPropagation(),
-        onMouseEnter: (e) => e.stopPropagation(),
-        onMouseDown: (e) => e.stopPropagation(),
-        onMouseUp: (e) => e.stopPropagation(),
-        onClick: (e) => e.stopPropagation(),
-        onFocus: (e) => e.stopPropagation(),
-      }}
+      dropdownListStyle={dropdown.list}
     />
   )
 }

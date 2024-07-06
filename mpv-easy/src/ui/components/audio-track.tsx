@@ -38,9 +38,10 @@ export const AudioTrack = () => {
       return {
         label,
         key: key,
-        onSelect: () => {
+        onSelect: (_, e) => {
           setPropertyNative("aid", id)
           dispatch.context.setAid(id)
+          e.stopPropagation()
         },
         style: {
           ...dropdown.item,
@@ -70,16 +71,7 @@ export const AudioTrack = () => {
       font={dropdown.button.font}
       fontSize={button.fontSize}
       color={dropdown.button.color}
-      dropdownListStyle={{
-        ...dropdown.list,
-        onMouseMove: (e) => e.stopPropagation(),
-        onMouseLeave: (e) => e.stopPropagation(),
-        onMouseEnter: (e) => e.stopPropagation(),
-        onMouseDown: (e) => e.stopPropagation(),
-        onMouseUp: (e) => e.stopPropagation(),
-        onClick: (e) => e.stopPropagation(),
-        onFocus: (e) => e.stopPropagation(),
-      }}
+      dropdownListStyle={dropdown.list}
     />
   )
 }

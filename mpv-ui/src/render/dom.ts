@@ -28,7 +28,7 @@ export interface MpDom extends BaseDom<MpAttrs, MpProps, MpEvent> {}
 
 export type MpDomProps = MpDom["attributes"]
 
-export type MouseEvent = BaseMouseEvent<BaseDom<MpAttrs, MpProps, MpEvent>>
+export type MouseEvent = BaseMouseEvent<MpAttrs, MpProps, MpEvent>
 
 export const createNode = (
   nodeName: string,

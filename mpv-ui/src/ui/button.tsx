@@ -1,8 +1,7 @@
-import { clone, setMouseStyle } from "@mpv-easy/tool"
+import { setMouseStyle } from "@mpv-easy/tool"
 import React, { useState } from "react"
 import { Box } from "./box"
 import type { MpDom, MpDomProps } from "../render/dom"
-import type { BaseDomProps } from "@r-tui/flex"
 
 export type ButtonCustomProp =
   | "color"

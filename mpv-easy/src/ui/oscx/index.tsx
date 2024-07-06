@@ -29,9 +29,8 @@ export const Oscx: ForwardRefExoticComponent<
       id="osc"
       onMouseDown={(e) => e.stopPropagation}
     >
-      {/* TODO: event dispatch follow zIndex order */}
-      <OscInfo bottom={0} {...props} width={"100%"} height={h} />
-      <Progress bottom={h} width={"100%"} height={h} />
+      <Progress width={"100%"} height={h} />
+      <OscInfo {...props} width={"100%"} height={h} />
     </Box>
   )
 })

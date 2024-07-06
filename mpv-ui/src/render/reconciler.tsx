@@ -196,7 +196,7 @@ let sum = 0
 const fpsList: number[] = []
 
 export function createRender({
-  enableMouseMoveEvent = true,
+  enableMouseMoveEvent = false,
   fps = DefaultFps,
   flex = getRootFlex(),
   showFps = false,
