@@ -219,7 +219,9 @@ jobs:
 
       - name: "create dist"
         run: |
-          sudo apt install p7zip-full -y
+          sudo apt install p7zip-full tree -y
+
+          tree
 
           mkdir ./dist/scripts/mpv-easy-config/mpv-easy-ext-dist -p
 
