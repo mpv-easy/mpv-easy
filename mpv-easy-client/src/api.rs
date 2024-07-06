@@ -29,7 +29,7 @@ pub fn command_string<S: AsRef<str>>(cmd: S) {
 pub fn command_json<I: IntoIterator<Item = S>, S: AsRef<str>>(cmd: I) -> serde_json::Value {
     unsafe {
         let h = GLOBAL_MP_HANDLE.as_deref_mut().unwrap();
-        return h.command_json(cmd).unwrap();
+        h.command_json(cmd).unwrap()
     }
 }
 
@@ -64,60 +64,60 @@ pub fn get_property_string<S: AsRef<str>>(name: S) -> String {
 
 pub fn observe_property<S: AsRef<str>>(reply: u64, name: S, format: u32) {
     unsafe {
-        let p = GLOBAL_MP_HANDLE
+        GLOBAL_MP_HANDLE
             .as_deref_mut()
             .unwrap()
             // TODO: format enum
             .observe_property(reply, name, format as i32)
             .unwrap();
-        p
+        
     }
 }
 
 pub fn request_event(event_id: u32, enable: bool) {
     unsafe {
-        let p = GLOBAL_MP_HANDLE
+        GLOBAL_MP_HANDLE
             .as_deref_mut()
             .unwrap()
             // TODO: format enum
             .request_event(event_id, enable)
             .unwrap();
-        p
+        
     }
 }
 
 pub fn set_property_number(name: String, v: f64) {
     unsafe {
-        let p = GLOBAL_MP_HANDLE
+        GLOBAL_MP_HANDLE
             .as_deref_mut()
             .unwrap()
             // TODO: format enum
             .set_property(name, v)
             .unwrap();
-        p
+        
     }
 }
 
 pub fn set_property_string(name: String, v: String) {
     unsafe {
-        let p = GLOBAL_MP_HANDLE
+        GLOBAL_MP_HANDLE
             .as_deref_mut()
             .unwrap()
             // TODO: format enum
             .set_property(name, v)
             .unwrap();
-        p
+        
     }
 }
 
 pub fn set_property_bool(name: String, v: bool) {
     unsafe {
-        let p = GLOBAL_MP_HANDLE
+        GLOBAL_MP_HANDLE
             .as_deref_mut()
             .unwrap()
             // TODO: format enum
             .set_property(name, v)
             .unwrap();
-        p
+        
     }
 }

@@ -14,7 +14,7 @@ export function dir(path: string | undefined): string | undefined {
     return undefined
   }
 
-  const d = path.split("/      ").slice(0, -1).join("/")
+  const d = path.split("/").slice(0, -1).join("/")
   if (isDir(d)) {
     return d
   }

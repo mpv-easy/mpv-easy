@@ -110,7 +110,7 @@ export function TextBox() {
 
       <Box
         display="flex"
-      // alignContent="stretch"
+        // alignContent="stretch"
       >
         {TEXT.map((_, k) => (
           <Box

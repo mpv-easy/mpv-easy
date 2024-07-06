@@ -27,7 +27,7 @@ export const PlayMode = () => {
   const dispatch = useDispatch<Dispatch>()
   const items: DropdownItem[] = PlayModeList.map((i): DropdownItem => {
     return {
-      label: `${playMode === i ? ICON.Ok : ICON.CheckboxBlankCircleOutline} ${i}`,
+      label: `${playMode === i ? ICON.Ok : ICON.CheckboxBlankCircleOutline} ${i18n[i]}`,
       key: i,
       onSelect: (_, e) => {
         dispatch.context.setPlayMode(i)

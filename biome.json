@@ -5,7 +5,8 @@
   },
   "javascript": {
     "formatter": {
-      "semicolons": "asNeeded"
+      "semicolons": "asNeeded",
+      "bracketSpacing": true
     }
   },
   "formatter": {

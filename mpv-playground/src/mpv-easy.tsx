@@ -12,7 +12,7 @@ setTimeout(() => {
   store.getState().context = config
   renderToBrowser(
     <Provider store={store}>
-      <Easy fontSize={24} initHide={false} skipFirstRender={false} />
+      <Easy fontSize={24} initHide={false} />
     </Provider>,
     "JetBrainsMono NFM Regular",
   )

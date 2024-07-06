@@ -25,7 +25,7 @@ export const Theme = () => {
   )
   const items = ThemeModeList.map((i): DropdownItem => {
     const prefix = mode === i ? ICON.Ok : ICON.CheckboxBlankCircleOutline
-    const text = `${prefix} ${i18n[i].padStart(maxLen, " ")}`
+    const text = `${prefix} ${i18n[i].padEnd(maxLen, " ")}`
     return {
       key: i,
       label: text,

@@ -19,7 +19,7 @@ impl Format for String {
     }
 
     fn to_mpv<F: Fn(*const c_void) -> Result<()>>(self, fun: F) -> Result<()> {
-        let str = CString::new::<String>(self.into())?;
+        let str = CString::new::<String>(self)?;
         fun(&str.as_ptr() as *const *const c_char as *const c_void)
     }
 

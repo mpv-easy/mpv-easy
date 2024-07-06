@@ -120,7 +120,7 @@ pub struct ClientMessage(*const mpv_event_client_message);
 pub struct Hook(*const mpv_event_hook);
 use super::ffi::{
     mpv_client_id, mpv_client_name, mpv_command_node, mpv_create, mpv_create_client,
-    mpv_create_weak_client, mpv_destroy, mpv_error, mpv_error_string, mpv_event, mpv_event_id,
+    mpv_create_weak_client, mpv_destroy, mpv_error, mpv_event, mpv_event_id,
     mpv_event_name, mpv_handle, mpv_wait_event,
 };
 use super::format::Format;
@@ -302,10 +302,10 @@ impl Handle {
         }
         let args_list_node_ptr = args_list_node.as_ptr() as *mut mpv_node;
 
-        let mut args_list = mpv_node_list {
+        let args_list = mpv_node_list {
             num: args_list_node.len() as i32,
             values: args_list_node_ptr,
-            keys: 0 as *mut *mut i8,
+            keys: std::ptr::null_mut::<*mut i8>(),
         };
 
         let mut args_node = mpv_node {
@@ -340,7 +340,7 @@ impl Handle {
             }
         }
 
-        return Ok(serde_json::Value::Null);
+        Ok(serde_json::Value::Null)
     }
 
     /// Same as `Handle::command`, but run the command asynchronously.
@@ -652,7 +652,7 @@ impl ClientMessage {
     pub fn args<'a>(&self) -> Vec<&'a str> {
         unsafe {
             let args = std::slice::from_raw_parts((*self.0).args, (*self.0).num_args as usize);
-            args.into_iter()
+            args.iter()
                 .map(|arg| CStr::from_ptr(*arg).to_str().unwrap())
                 .collect()
         }

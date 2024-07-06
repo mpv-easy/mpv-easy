@@ -3,7 +3,7 @@ import { Uosc } from "./uosc"
 import { Osc } from "./osc"
 import { Oscx } from "./oscx"
 import { Toolbar } from "./toolbar"
-import { Box, type MpDom, Tooltip } from "@mpv-easy/ui"
+import { Box, DefaultFps, type MpDom, Tooltip } from "@mpv-easy/ui"
 import { useSelector, useDispatch } from "react-redux"
 import {
   type Dispatch,
@@ -36,7 +36,6 @@ import { ClickMenu } from "./click-menu"
 import { Playlist } from "./playlist"
 import { getPlayableList } from "@mpv-easy/autoload"
 import { VoiceControl } from "./voice-control"
-import { useFirstMountState } from "react-use"
 import { History } from "./history"
 import { Speed } from "./speed"
 
@@ -87,7 +86,6 @@ export function hasPoint(node: MpDom | null, x: number, y: number): boolean {
 
 export type EasyProps = {
   initHide: boolean
-  skipFirstRender: boolean
   fontSize: number
 }
 export const Easy = (props: Partial<EasyProps>) => {
@@ -242,8 +240,6 @@ export const Easy = (props: Partial<EasyProps>) => {
     }, toolbar.autoHideDelay ?? 5000)
   }
 
-  const isFirstMount = useFirstMountState() && props.skipFirstRender
-
   const fontSize = useSelector(smallFontSizeSelector)
   const clickMenuStyle = useSelector(clickMenuStyleSelector)
   return (
@@ -273,20 +269,21 @@ export const Easy = (props: Partial<EasyProps>) => {
           const isEmptyClick =
             e.target?.attributes.id === "mpv-easy-main" ||
             e.target?.attributes.id === undefined
+
           setTimeout(() => {
             menuRef.current?.setHide(true)
-          }, 16)
+          }, 1 / DefaultFps)
 
-          dispatch.context.setPlaylistHide(true)
-          dispatch.context.setHistoryHide(true)
           if (isEmptyClick) {
             // console.log("click empty")
+            dispatch.context.setPlaylistHide(true)
+            dispatch.context.setHistoryHide(true)
           }
         }}
       >
-        <Toolbar ref={toolbarRef} hide={hide || isFirstMount} />
-        <Element ref={elementRef} hide={hide || isFirstMount} />
-        <VoiceControl ref={volumeRef} hide={hide || isFirstMount} />
+        <Toolbar ref={toolbarRef} hide={hide} />
+        <Element ref={elementRef} hide={hide} />
+        <VoiceControl ref={volumeRef} hide={hide} />
         {!clickMenuStyle.disable && <ClickMenu ref={menuRef} hide={menuHide} />}
         <Playlist />
         <History />

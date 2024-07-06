@@ -3,17 +3,20 @@ import {
   type KeyEvent,
   type MpvPropertyTypeMap,
   PropertyNative,
-  addForcedKeyBinding,
   addKeyBinding,
-  command,
-  commandNativeAsync,
   observeProperty,
   print,
 } from "@mpv-easy/tool"
 import type { MousePos } from "@mpv-easy/tool"
 import createReconciler from "react-reconciler"
 import { DefaultEventPriority } from "react-reconciler/constants"
-import { DefaultFps, dispatchEvent, getRootFlex, type MpFlex } from "./flex"
+import {
+  DefaultFps,
+  dispatchEvent,
+  getRootFlex,
+  renderNode,
+  type MpFlex,
+} from "./flex"
 import {
   appendChildNode,
   insertBeforeNode,
@@ -28,6 +31,7 @@ export function createCustomReconciler(customRender: () => void) {
   return createReconciler({
     supportsMutation: true,
     supportsPersistence: false,
+    supportsMicrotasks: false,
     appendChildToContainer(root: MpDom, node: MpDom) {
       appendChildNode(root, node)
       customRender()
@@ -191,31 +195,27 @@ export type RenderConfig = {
 }
 
 let max = 0
-let min = 1 << 20
-let sum = 0
 const fpsList: number[] = []
 
 export function createRender({
-  enableMouseMoveEvent = false,
+  enableMouseMoveEvent = true,
   fps = DefaultFps,
   flex = getRootFlex(),
   showFps = false,
   customRender = throttle(
     () => {
       const st = +Date.now()
-      flex.renderToMpv()
+      renderNode()
       const ed = +Date.now()
       const t = ed - st
       max = Math.max(max, t)
-      min = Math.min(min, t)
-      sum += t
       fpsList.push(t)
       if (fpsList.length > 32) {
         fpsList.shift()
       }
       const every = fpsList.reduce((a, b) => a + b, 0) / fpsList.length
       if (showFps) {
-        print("render time:", ed, min, max, every)
+        print("render time:", ed, t, max, every)
       }
     },
     1000 / fps,
@@ -321,7 +321,9 @@ export function createRender({
       layoutNode.padding = 0
       layoutNode.border = 0
       reconciler.updateContainer(reactNode, container, null, null)
-      customRender()
+
+      // delay first render
+      // customRender()
     }
     const dim = new PropertyNative<MpvPropertyTypeMap["osd-dimensions"]>(
       "osd-dimensions",
