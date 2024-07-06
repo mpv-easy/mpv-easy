@@ -41,7 +41,9 @@ pub struct PlayItem {
     pub Name: String,
     // pub ServerId: String,
     pub Id: String,
-    pub HasSubtitles: bool,
+
+    // maybe empty
+    // pub HasSubtitles: bool,
     pub IsFolder: bool,
     pub Type: String,
     pub LocationType: String,
@@ -87,12 +89,14 @@ pub fn get_views(host: &str, api_key: &str, user_id: &str) -> Option<View> {
     reqwest::blocking::get(url).unwrap().json::<View>().ok()
 }
 
-pub fn get_playlist(host: &str, api_key: &str, user_id: &str, parent_id: &str) -> Option<PlayList> {
+pub fn get_list_by_parent_id(
+    host: &str,
+    api_key: &str,
+    user_id: &str,
+    parent_id: &str,
+) -> Option<PlayList> {
     let url = format!("http://{host}/Users/{user_id}/Items?ParentId={parent_id}&api_key={api_key}");
-    reqwest::blocking::get(url)
-        .unwrap()
-        .json::<PlayList>()
-        .ok()
+    reqwest::blocking::get(url).unwrap().json::<PlayList>().ok()
 }
 
 impl Cmd for Jellyfin {
@@ -117,7 +121,7 @@ impl Cmd for Jellyfin {
                 println!("{}", serde_json::to_string(&resp).unwrap())
             }
             "playlist" => {
-                let list = get_playlist(host, api_key, &user_id, id).unwrap();
+                let list = get_list_by_parent_id(host, api_key, &user_id, id).unwrap();
                 println!("{}", serde_json::to_string(&list).unwrap())
             }
             "userid" => {
@@ -128,7 +132,7 @@ impl Cmd for Jellyfin {
                 println!("{}", serde_json::to_string(&v).unwrap());
             }
             _ => {
-              todo!()
+                todo!()
             }
         }
     }

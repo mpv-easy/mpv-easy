@@ -1,10 +1,17 @@
 import { execSync } from "../common"
 import { getRsExtExePath } from "./share"
 
-export const TopParentIdReg =
-  /^https?:\/\/(.*?)\/web\/index.html#!\/movies.html\?topParentId=(.*?)$/
+export const MoviesReg =
+  /^https?:\/\/(.*?)\/web\/index.html#!\/movies.html\?topParentId=(.*?)/
+
+// http://localhost:8096/web/index.html#!/list.html?parentId=9c7fd714fe6d7ff24e4efb3c224058f1&serverId=2083222010f64f9d83397a375a2ef38f
+export const ListReg =
+  /^https?:\/\/(.*?)\/web\/index.html#!\/list.html\?parentId=(.*?)&serverId=(.*?)/
+
+
 export const IdReg =
-  /^https?:\/\/(.*?)\/web\/index.html#!\/details\?id=(.*?)&serverId=(.*?)$/
+  /^https?:\/\/(.*?)\/web\/index.html#!\/details\?id=(.*?)&serverId=(.*?)/
+
 export const StreamReg = /^https?:\/\/(.*?)\/Videos\/(.*?)\/stream/
 
 export type Info = {
@@ -20,28 +27,35 @@ export type Item = {
 }
 
 export function isJellyfin(url: string): boolean {
-  return [TopParentIdReg, IdReg, StreamReg].some((i) => i.test(url))
+  return [MoviesReg, IdReg, StreamReg, ListReg].some((i) => i.test(url))
 }
 
 export function getInfo(url: string): Info | undefined {
-  const topRet = url.match(TopParentIdReg)
-  if (topRet) {
-    console.log(topRet)
+  const movieRet = url.match(MoviesReg)
+  if (movieRet) {
     return {
-      host: topRet[1],
-      topParentId: topRet[2],
+      host: movieRet[1],
+      topParentId: movieRet[2],
     }
   }
 
   const idRet = url.match(IdReg)
   if (idRet) {
-    console.log(idRet)
     return {
       host: idRet[1],
       id: idRet[2],
       serverId: idRet[3],
     }
   }
+
+  const listRet = url.match(ListReg)
+  if (listRet) {
+    return {
+      host: listRet[1],
+      topParentId: listRet[2],
+    }
+  }
+
   return undefined
 }
 
