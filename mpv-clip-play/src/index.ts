@@ -23,13 +23,14 @@ function getList(s: string | undefined, context: PluginContext): string[] {
   if (!s?.length) {
     return v
   }
-
+  const osdDuration = context[pluginName].osdDuration
   if (isHttp(s)) {
     if (isVideo(s)) {
       return [normalize(s)]
     }
 
     if (isYoutube(s)) {
+      osdDuration && osdMessage(`play youtube: ${s}`, osdDuration)
       return [s]
     }
 
@@ -49,6 +50,7 @@ function getList(s: string | undefined, context: PluginContext): string[] {
             .getPlayableListFromUrl(s, cfg.apiKey, cfg.userName)
             .sort((a, b) => a.name.localeCompare(b.name))
             .map((i) => i.path)
+          osdDuration && osdMessage(`play jellyfin: ${s}`, osdDuration)
           return list
         } catch (e) {
           print(e)
@@ -97,10 +99,12 @@ export const pluginName = "@mpv-easy/clip-play"
 
 export const defaultConfig: ClipPlayConfig = {
   key: "ctrl+v",
+  osdDuration: 2000,
 }
 
 export type ClipPlayConfig = {
   key: string
+  osdDuration: number
 }
 
 declare module "@mpv-easy/plugin" {

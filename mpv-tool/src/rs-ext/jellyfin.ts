@@ -8,7 +8,6 @@ export const MoviesReg =
 export const ListReg =
   /^https?:\/\/(.*?)\/web\/index.html#!\/list.html\?parentId=(.*?)&serverId=(.*?)/
 
-
 export const IdReg =
   /^https?:\/\/(.*?)\/web\/index.html#!\/details\?id=(.*?)&serverId=(.*?)/
 

@@ -11,5 +11,13 @@ Folders do not support recursive scanning
 - jellyfin folder: http://<host>/web/index.html#!/movies.html?topParentId=<id>
 - youtube: https://www.youtube.com/watch?v=<id>
 
+
+## config
+
+```
+key: "ctrl+v",
+osdDuration: 2000
+```
+
 ## todo
 - [ ] open video from clipboard
