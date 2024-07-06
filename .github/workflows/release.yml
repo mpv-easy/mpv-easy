@@ -221,7 +221,7 @@ jobs:
         run: |
           sudo apt install p7zip-full tree -y
 
-          mkdir ./dist/scripts/mpv-easy-config/mpv-easy-ext-dist -p
+          mkdir ./dist/scripts/mpv-easy-config/mpv-easy-ext -p
 
           cp ./mpv-easy/es5/mpv-easy-es5.js ./dist/scripts/mpv-easy-es5.js
           cp -r ./mpv-easy/fonts ./dist
