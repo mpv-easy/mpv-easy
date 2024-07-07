@@ -30,24 +30,28 @@ fish
 ```fish
 set -x MPV_SCRIPT_DIR /your_mpv_dir/portable_config/scripts ; pnpm run dev
 ```
+
 ## UI
 
 ### uosc
+
 <div style="display: flex;">
-  <img src="./assets/img/uosc-dark.webp" alt="uosc-dark" width="50%"/>
-  <img src="./assets/img/uosc-light.webp" alt="uosc-light" width="50%"/>
+  <img src="./assets/img/uosc-dark.webp" alt="uosc-dark"/>
+  <img src="./assets/img/uosc-light.webp" alt="uosc-light"/>
 </div>
 
 ### osc
+
 <div style="display: flex;">
-  <img src="./assets/img/osc-dark.webp" alt="osc-dark" width="50%"/>
-  <img src="./assets/img/osc-light.webp" alt="osc-light" width="50%"/>
+  <img src="./assets/img/osc-dark.webp" alt="osc-dark"/>
+  <img src="./assets/img/osc-light.webp" alt="osc-light"/>
 </div>
 
 ### oscx
+
 <div style="display: flex;">
-  <img src="./assets/img/oscx-dark.webp" alt="oscx-dark" width="50%"/>
-  <img src="./assets/img/oscx-light.webp" alt="oscx-light" width="50%"/>
+  <img src="./assets/img/oscx-dark.webp" alt="oscx-dark"/>
+  <img src="./assets/img/oscx-light.webp" alt="oscx-light"/>
 </div>
 
 ## example
@@ -138,7 +142,6 @@ Maybe should use GitHub action to automatically update this
 - [ ] menu system
 - [ ] CI snapshot test
 - [ ] font rem
-- [ ] sourcemap
 - [ ] node console
 - [ ] es/cjs plugin module
 - [ ] real-time subtitle translation
