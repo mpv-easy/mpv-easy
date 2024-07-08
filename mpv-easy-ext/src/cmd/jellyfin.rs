@@ -1,60 +1,5 @@
 use super::cli::Cmd;
-use clap::builder::Str;
-use serde::{Deserialize, Serialize};
-use std::collections::HashMap;
-
-#[derive(Debug, Deserialize, Serialize)]
-pub struct User {
-    pub Name: String,
-    pub ServerId: String,
-    pub Id: String,
-}
-
-#[derive(Debug, Deserialize, Serialize)]
-pub struct MediaSource {
-    pub Protocol: String,
-    pub Id: String,
-    pub Path: String,
-}
-#[derive(Debug, Deserialize, Serialize)]
-pub struct PlaybackInfo {
-    pub MediaSources: Vec<MediaSource>,
-    pub PlaySessionId: String,
-}
-
-#[derive(Debug, Deserialize, Serialize)]
-pub struct ViewItem {
-    pub Name: String,
-    pub ServerId: String,
-    pub Id: String,
-    pub Path: String,
-    pub ParentId: String,
-}
-#[derive(Debug, Deserialize, Serialize)]
-pub struct View {
-    pub Items: Vec<ViewItem>,
-    pub TotalRecordCount: u32,
-    pub StartIndex: u32,
-}
-#[derive(Debug, Deserialize, Serialize)]
-pub struct PlayItem {
-    pub Name: String,
-    // pub ServerId: String,
-    pub Id: String,
-
-    // maybe empty
-    // pub HasSubtitles: bool,
-    pub IsFolder: bool,
-    pub Type: String,
-    pub LocationType: String,
-    pub MediaType: String,
-}
-#[derive(Debug, Deserialize, Serialize)]
-pub struct PlayList {
-    pub Items: Vec<PlayItem>,
-    pub TotalRecordCount: u32,
-    pub StartIndex: u32,
-}
+use serde_jellyfin::{base_item_dto_query_result::BaseItemDtoQueryResult, playback_info_response::PlaybackInfoResponse, user_dto::UserDto};
 
 #[derive(clap::Parser, Debug)]
 pub struct Jellyfin {
@@ -74,19 +19,24 @@ pub fn get_user_id(host: &str, api_key: &str, username: &str) -> Option<String> 
     let url = format!("http://{host}/Users?api_key={api_key}");
     let users = reqwest::blocking::get(url)
         .unwrap()
-        .json::<Vec<User>>()
+        .json::<Vec<UserDto>>()
         .unwrap();
 
     for i in users {
-        if i.Name == *username {
-            return Some(i.Id);
-        }
+        match (i.name, i.id) {
+            (Some(name), Some(id)) => {
+                if name == username {
+                    return Some(id);
+                }
+            }
+            _ => {}
+        };
     }
     None
 }
-pub fn get_views(host: &str, api_key: &str, user_id: &str) -> Option<View> {
+pub fn get_views(host: &str, api_key: &str, user_id: &str) -> Option<BaseItemDtoQueryResult> {
     let url = format!("http://{host}/Users/{user_id}/Views?api_key={api_key}");
-    reqwest::blocking::get(url).unwrap().json::<View>().ok()
+    reqwest::blocking::get(url).unwrap().json::<BaseItemDtoQueryResult>().ok()
 }
 
 pub fn get_list_by_parent_id(
@@ -94,9 +44,9 @@ pub fn get_list_by_parent_id(
     api_key: &str,
     user_id: &str,
     parent_id: &str,
-) -> Option<PlayList> {
+) -> Option<BaseItemDtoQueryResult> {
     let url = format!("http://{host}/Users/{user_id}/Items?ParentId={parent_id}&api_key={api_key}");
-    reqwest::blocking::get(url).unwrap().json::<PlayList>().ok()
+    reqwest::blocking::get(url).unwrap().json::<BaseItemDtoQueryResult>().ok()
 }
 
 impl Cmd for Jellyfin {
@@ -116,7 +66,7 @@ impl Cmd for Jellyfin {
                 );
                 let resp = reqwest::blocking::get(url)
                     .unwrap()
-                    .json::<PlaybackInfo>()
+                    .json::<PlaybackInfoResponse>()
                     .unwrap();
                 println!("{}", serde_json::to_string(&resp).unwrap())
             }

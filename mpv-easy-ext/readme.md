@@ -46,13 +46,14 @@ mpv-easy-ext fetch '"http://127.0.0.1:5000/test.srt"'
 ## jellyfin
 
 ```bash
+mpv-easy-ext jellyfin userid 'host' 'api_key' 'username'
+
 mpv-easy-ext jellyfin view 'host' 'api_key' 'username'
 
 mpv-easy-ext jellyfin playbackinfo 'host' 'api_key' 'username' 'id'
 
 mpv-easy-ext jellyfin playlist 'host' 'api_key' 'username' 'topParentId'
 
-mpv-easy-ext jellyfin userid 'host' 'api_key' 'username'
 ```
 
 
