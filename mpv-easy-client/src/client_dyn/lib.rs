@@ -120,8 +120,8 @@ pub struct ClientMessage(*const mpv_event_client_message);
 pub struct Hook(*const mpv_event_hook);
 use super::ffi::{
     mpv_client_id, mpv_client_name, mpv_command_node, mpv_create, mpv_create_client,
-    mpv_create_weak_client, mpv_destroy, mpv_error, mpv_event, mpv_event_id,
-    mpv_event_name, mpv_handle, mpv_wait_event,
+    mpv_create_weak_client, mpv_destroy, mpv_error, mpv_event, mpv_event_id, mpv_event_name,
+    mpv_handle, mpv_wait_event,
 };
 use super::format::Format;
 

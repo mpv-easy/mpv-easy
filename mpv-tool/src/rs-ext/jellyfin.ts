@@ -3,22 +3,22 @@ import { JSONParse } from "../json"
 import { getRsExtExePath } from "./share"
 
 export const MoviesReg =
-  /^https?:\/\/(.*?)\/web\/index.html#!\/movies.html\?topParentId=(.*?)/
+  /^(https?):\/\/(.*?)\/web\/index.html#!\/movies.html\?topParentId=(.*?)/
 
-// http://localhost:8096/web/index.html#!/list.html?parentId=9c7fd714fe6d7ff24e4efb3c224058f1&serverId=2083222010f64f9d83397a375a2ef38f
 export const ListReg =
-  /^https?:\/\/(.*?)\/web\/index.html#!\/list.html\?parentId=(.*?)&serverId=(.*?)/
+  /^(https?):\/\/(.*?)\/web\/index.html#!\/list.html\?parentId=(.*?)&serverId=(.*?)/
 
 export const IdReg =
-  /^https?:\/\/(.*?)\/web\/index.html#!\/details\?id=(.*?)&serverId=(.*?)/
+  /^(https?):\/\/(.*?)\/web\/index.html#!\/details\?id=(.*?)&serverId=(.*?)/
 
-export const StreamReg = /^https?:\/\/(.*?)\/Videos\/(.*?)\/stream/
+export const StreamReg = /^(https?):\/\/(.*?)\/Videos\/(.*?)\/stream/
 
 export type Info = {
   topParentId?: string
   id?: string
   serverId?: string
   host: string
+  protocol: string
 }
 
 export type Item = {
@@ -34,25 +34,28 @@ export function getInfo(url: string): Info | undefined {
   const movieRet = url.match(MoviesReg)
   if (movieRet) {
     return {
-      host: movieRet[1],
-      topParentId: movieRet[2],
+      protocol: movieRet[1],
+      host: movieRet[2],
+      topParentId: movieRet[3],
     }
   }
 
   const idRet = url.match(IdReg)
   if (idRet) {
     return {
-      host: idRet[1],
-      id: idRet[2],
-      serverId: idRet[3],
+      protocol: idRet[1],
+      host: idRet[2],
+      id: idRet[3],
+      serverId: idRet[4],
     }
   }
 
   const listRet = url.match(ListReg)
   if (listRet) {
     return {
-      host: listRet[1],
-      topParentId: listRet[2],
+      protocol: listRet[1],
+      host: listRet[2],
+      topParentId: listRet[3],
     }
   }
 
@@ -102,35 +105,35 @@ export type PlayList = {
 
 const CommandName = "jellyfin"
 export function getUserId(
-  host: string,
+  server: string,
   apiKey: string,
   userName: string,
   exe = getRsExtExePath(),
 ) {
-  return execSync([exe, CommandName, "userid", host, apiKey, userName])
+  return execSync([exe, CommandName, "userid", server, apiKey, userName])
 }
 
 export function getUserIdAsync(
-  host: string,
+  server: string,
   apiKey: string,
   userName: string,
   exe = getRsExtExePath(),
 ) {
-  return execAsync([exe, CommandName, "userid", host, apiKey, userName])
+  return execAsync([exe, CommandName, "userid", server, apiKey, userName])
 }
 
 export function getView(
-  host: string,
+  server: string,
   apiKey: string,
   userName: string,
   exe = getRsExtExePath(),
 ): View {
-  const txt = execSync([exe, CommandName, "view", host, apiKey, userName])
+  const txt = execSync([exe, CommandName, "view", server, apiKey, userName])
   return JSON.parse(txt) as View
 }
 
 export async function getViewAsync(
-  host: string,
+  server: string,
   apiKey: string,
   userName: string,
   exe = getRsExtExePath(),
@@ -139,7 +142,7 @@ export async function getViewAsync(
     exe,
     CommandName,
     "view",
-    host,
+    server,
     apiKey,
     userName,
   ])
@@ -147,7 +150,7 @@ export async function getViewAsync(
 }
 
 export function getPlaylist(
-  host: string,
+  server: string,
   apiKey: string,
   userName: string,
   parentId: string,
@@ -157,7 +160,7 @@ export function getPlaylist(
     exe,
     CommandName,
     "playlist",
-    host,
+    server,
     apiKey,
     userName,
     parentId,
@@ -166,7 +169,7 @@ export function getPlaylist(
 }
 
 export async function getPlaylistAsync(
-  host: string,
+  server: string,
   apiKey: string,
   userName: string,
   parentId: string,
@@ -176,7 +179,7 @@ export async function getPlaylistAsync(
     exe,
     CommandName,
     "playlist",
-    host,
+    server,
     apiKey,
     userName,
     parentId,
@@ -185,7 +188,7 @@ export async function getPlaylistAsync(
 }
 
 export function getPlaybackinfo(
-  host: string,
+  server: string,
   apiKey: string,
   userName: string,
   id: string,
@@ -195,7 +198,7 @@ export function getPlaybackinfo(
     exe,
     CommandName,
     "playbackinfo",
-    host,
+    server,
     apiKey,
     userName,
     id,
@@ -204,7 +207,7 @@ export function getPlaybackinfo(
 }
 
 export async function getPlaybackinfoAsync(
-  host: string,
+  server: string,
   apiKey: string,
   userName: string,
   id: string,
@@ -214,7 +217,7 @@ export async function getPlaybackinfoAsync(
     exe,
     CommandName,
     "playbackinfo",
-    host,
+    server,
     apiKey,
     userName,
     id,
@@ -235,12 +238,13 @@ export function getPlayableListFromUrl(
   const info = getInfo(url)
   if (!info) return []
 
-  const { host, topParentId, id } = info
+  const { host, topParentId, id, protocol } = info
+  const server = `${protocol}://${host}`
   if (topParentId) {
-    const list = getPlaylist(host, apiKey, userName, topParentId)
+    const list = getPlaylist(server, apiKey, userName, topParentId)
     return list.Items.map((i) => {
       const { Id, Name } = i
-      const path = `http://${host}/Videos/${Id}/stream?Static=true`
+      const path = `${server}/Videos/${Id}/stream?Static=true`
       nameCache[path] = Name
       return {
         name: Name,
@@ -250,9 +254,9 @@ export function getPlayableListFromUrl(
   }
 
   if (id) {
-    const playback = getPlaybackinfo(host, apiKey, userName, id)
+    const playback = getPlaybackinfo(server, apiKey, userName, id)
     return playback.MediaSources.map((i) => {
-      const path = `http://${host}/Videos/${i.Id}/stream?Static=true`
+      const path = `${server}/Videos/${i.Id}/stream?Static=true`
       nameCache[path] = i.Path
       return {
         path,
@@ -276,12 +280,13 @@ export async function getPlayableListFromUrlAsync(
   const info = getInfo(url)
   if (!info) return []
 
-  const { host, topParentId, id } = info
+  const { host, topParentId, id, protocol } = info
+  const server = `${protocol}://${host}`
   if (topParentId) {
-    const list = await getPlaylistAsync(host, apiKey, userName, topParentId)
+    const list = await getPlaylistAsync(server, apiKey, userName, topParentId)
     return list.Items.map((i) => {
       const { Id, Name } = i
-      const path = `http://${host}/Videos/${Id}/stream?Static=true`
+      const path = `${server}/Videos/${Id}/stream?Static=true`
       nameCache[path] = Name
       return {
         name: Name,
@@ -291,9 +296,9 @@ export async function getPlayableListFromUrlAsync(
   }
 
   if (id) {
-    const playback = await getPlaybackinfoAsync(host, apiKey, userName, id)
+    const playback = await getPlaybackinfoAsync(server, apiKey, userName, id)
     return playback.MediaSources.map((i) => {
-      const path = `http://${host}/Videos/${i.Id}/stream?Static=true`
+      const path = `${server}/Videos/${i.Id}/stream?Static=true`
       nameCache[path] = i.Path
       return {
         path,

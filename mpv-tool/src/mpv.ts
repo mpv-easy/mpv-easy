@@ -115,11 +115,11 @@ export type KeyEvent = {
   event: "up" | "down" | "press"
   is_mouse: boolean
   key_name?:
-    | "WHEEL_DOWN"
-    | "WHEEL_UP"
-    | "MBTN_LEFT"
-    | "MBTN_RIGHT"
-    | (string & {})
+  | "WHEEL_DOWN"
+  | "WHEEL_UP"
+  | "MBTN_LEFT"
+  | "MBTN_RIGHT"
+  | (string & {})
 }
 
 export function addKeyBinding(
@@ -182,8 +182,8 @@ export function getScriptName(): string {
   return getMPV().get_script_name()
 }
 
-export function osdMessage(text: string, duration?: number) {
-  return getMPV().osd_message(text, duration)
+export function osdMessage(text: string, seconds?: number) {
+  return getMPV().osd_message(text, seconds)
 }
 
 export function registerIdle(fn: () => void) {

@@ -25,7 +25,7 @@ pub type mpv_format = ::std::os::raw::c_uint;
 
 #[doc = " Generic data storage.\n\n If mpv writes this struct (e.g. via mpv_get_property()), you must not change\n the data. In some cases (mpv_get_property()), you have to free it with\n mpv_free_node_contents(). If you fill this struct yourself, you're also\n responsible for freeing it, and you must not call mpv_free_node_contents()."]
 #[repr(C)]
-#[derive(Copy, Clone )]
+#[derive(Copy, Clone)]
 pub struct mpv_node {
     pub u: mpv_node__bindgen_ty_1,
     #[doc = " Type of the data stored in this struct. This value rules what members in\n the given union can be accessed. The following formats are currently\n defined to be allowed in mpv_node:\n\n  MPV_FORMAT_STRING       (u.string)\n  MPV_FORMAT_FLAG         (u.flag)\n  MPV_FORMAT_INT64        (u.int64)\n  MPV_FORMAT_DOUBLE       (u.double_)\n  MPV_FORMAT_NODE_ARRAY   (u.list)\n  MPV_FORMAT_NODE_MAP     (u.list)\n  MPV_FORMAT_BYTE_ARRAY   (u.ba)\n  MPV_FORMAT_NONE         (no member)\n\n If you encounter a value you don't know, you must not make any\n assumptions about the contents of union u."]
@@ -33,7 +33,7 @@ pub struct mpv_node {
 }
 
 #[repr(C)]
-#[derive(Copy, Clone )]
+#[derive(Copy, Clone)]
 pub union mpv_node__bindgen_ty_1 {
     pub string: *mut ::std::os::raw::c_char,
     #[doc = " valid if format==MPV_FORMAT_STRING"]

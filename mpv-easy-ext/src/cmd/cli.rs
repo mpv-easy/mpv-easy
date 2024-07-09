@@ -6,7 +6,10 @@ pub trait Cmd {
     fn call(&self);
 }
 
-use super::{clipboard::Clipboard, completion::Completion, fetch::Fetch, fs::Fs, jellyfin::Jellyfin, webdav::Webdav};
+use super::{
+    clipboard::Clipboard, completion::Completion, fetch::Fetch, fs::Fs, jellyfin::Jellyfin,
+    webdav::Webdav,
+};
 
 #[derive(clap::Parser, Debug)]
 #[enum_dispatch]

@@ -156,11 +156,14 @@ $(
           op_command_native_async
         );
 
-          let op_str  = op_list.into_iter().map( |i|
-              format!("ops.{} = globalThis.{};", i,i)
-          ).collect::<Vec<_>>().join("\n");
+        let op_str = op_list
+            .into_iter()
+            .map(|i| format!("ops.{} = globalThis.{};", i, i))
+            .collect::<Vec<_>>()
+            .join("\n");
 
-          let code = format!(r#"
+        let code = format!(
+            r#"
 const Deno = {{}};
 const core = {{}};
 const ops = {{}};
@@ -172,9 +175,9 @@ Deno.core = core;
 core.print = globalThis.op_print
 
 globalThis.Deno = Deno;
-          "#);
-          let _v:Value = ctx.eval(            code        )
-        .unwrap();
+          "#
+        );
+        let _v: Value = ctx.eval(code).unwrap();
     });
     ctx
 }

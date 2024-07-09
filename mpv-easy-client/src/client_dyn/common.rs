@@ -13,7 +13,7 @@ pub unsafe fn mpv_node_to_json(node: *mut mpv_node) -> serde_json::Value {
             let s = CString::from_raw(node.u.string)
                 .to_string_lossy()
                 .to_string();
-            
+
             serde_json::Value::String(s)
         }
         mpv_format_MPV_FORMAT_INT64 => {
@@ -37,7 +37,6 @@ pub unsafe fn mpv_node_to_json(node: *mut mpv_node) -> serde_json::Value {
                 m.insert(key, json);
             }
 
-            
             serde_json::Value::Object(m)
         }
         mpv_format_MPV_FORMAT_NODE_ARRAY => {
@@ -49,7 +48,6 @@ pub unsafe fn mpv_node_to_json(node: *mut mpv_node) -> serde_json::Value {
                 v.push(json);
             }
 
-            
             serde_json::Value::Array(v)
         }
         _ => serde_json::Value::Null,

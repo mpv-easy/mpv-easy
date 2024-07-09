@@ -1,15 +1,12 @@
 import {
   addKeyBinding,
-  alphaNumSort,
-  command,
-  detectCmd,
   dir,
   getClipboard,
+  printAndOsd,
   isDir,
   isHttp,
   isVideo,
   isYoutube,
-  osdMessage,
   webdavList,
 } from "@mpv-easy/tool"
 
@@ -18,6 +15,7 @@ import type { PluginContext } from "@mpv-easy/plugin"
 import { pluginName as autoloadName, getPlayableList } from "@mpv-easy/autoload"
 import { normalize, jellyfin } from "@mpv-easy/tool"
 import { pluginName as jellyfinName } from "@mpv-easy/jellyfin"
+
 function getList(s: string | undefined, context: PluginContext): string[] {
   const v: string[] = []
   if (!s?.length) {
@@ -30,7 +28,7 @@ function getList(s: string | undefined, context: PluginContext): string[] {
     }
 
     if (isYoutube(s)) {
-      osdDuration && osdMessage(`play youtube: ${s}`, osdDuration)
+      osdDuration && printAndOsd(`play youtube: ${s}`, osdDuration)
       return [s]
     }
 
@@ -39,7 +37,7 @@ function getList(s: string | undefined, context: PluginContext): string[] {
         .map((i) => normalize(s + i))
         .filter((p) => isVideo(p))
     } catch (e) {
-      print(e)
+      print("webdav error: ", e)
     }
 
     if (jellyfin.isJellyfin(s)) {
@@ -50,12 +48,12 @@ function getList(s: string | undefined, context: PluginContext): string[] {
             .getPlayableListFromUrl(s, cfg.apiKey, cfg.userName)
             .sort((a, b) => a.name.localeCompare(b.name))
             .map((i) => i.path)
-          osdDuration && osdMessage(`play jellyfin: ${s}`, osdDuration)
+          osdDuration && printAndOsd(`play jellyfin: ${s}`, osdDuration)
           return list
         } catch (e) {
           print(e)
           // maybe forget config jellyfin apiKey and username
-          osdMessage("Please add jellyfin apiKey and username first", 2000)
+          osdDuration && printAndOsd("Please add jellyfin apiKey and username first", osdDuration)
         }
       }
       return []
@@ -99,7 +97,7 @@ export const pluginName = "@mpv-easy/clip-play"
 
 export const defaultConfig: ClipPlayConfig = {
   key: "ctrl+v",
-  osdDuration: 2000,
+  osdDuration: 3,
 }
 
 export type ClipPlayConfig = {

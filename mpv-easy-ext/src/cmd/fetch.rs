@@ -19,10 +19,7 @@ async fn fetch(url: &str) -> Result<(), Box<dyn std::error::Error>> {
     let resp = reqwest::get(url).await?;
     let status = resp.status().as_u16();
     let text = resp.text().await?;
-    let r = FetchResponse{
-      text,
-      status
-    };
+    let r = FetchResponse { text, status };
     println!("{}", serde_json::to_string(&r).unwrap());
     Ok(())
 }

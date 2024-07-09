@@ -70,7 +70,6 @@ pub fn observe_property<S: AsRef<str>>(reply: u64, name: S, format: u32) {
             // TODO: format enum
             .observe_property(reply, name, format as i32)
             .unwrap();
-        
     }
 }
 
@@ -82,7 +81,6 @@ pub fn request_event(event_id: u32, enable: bool) {
             // TODO: format enum
             .request_event(event_id, enable)
             .unwrap();
-        
     }
 }
 
@@ -94,7 +92,6 @@ pub fn set_property_number(name: String, v: f64) {
             // TODO: format enum
             .set_property(name, v)
             .unwrap();
-        
     }
 }
 
@@ -106,7 +103,6 @@ pub fn set_property_string(name: String, v: String) {
             // TODO: format enum
             .set_property(name, v)
             .unwrap();
-        
     }
 }
 
@@ -118,6 +114,5 @@ pub fn set_property_bool(name: String, v: bool) {
             // TODO: format enum
             .set_property(name, v)
             .unwrap();
-        
     }
 }

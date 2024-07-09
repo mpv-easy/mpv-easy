@@ -240,9 +240,7 @@ where
         self()
     }
 
-    fn args(&self, _args: &[JsValue], _context: &mut Context) {
-
-    }
+    fn args(&self, _args: &[JsValue], _context: &mut Context) {}
 }
 
 impl<A0, R, F> BoaFn<(A0,), R> for F

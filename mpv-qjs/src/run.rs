@@ -67,7 +67,7 @@ pub unsafe fn run_mp_scripts() {
         );
 
         ctx.with(|ctx| {
-            let _v:Value  = ctx.eval(code).unwrap();
+            let _v: Value = ctx.eval(code).unwrap();
         });
 
         runtime_map.insert(p, ctx);
@@ -81,9 +81,9 @@ pub unsafe fn run_mp_scripts() {
         let init_code = init_code.clone();
 
         ctx.with(|ctx| {
-            let _v:Value  = ctx.eval(polyfill_code).unwrap();
-            let _v:Value  = ctx.eval(init_code).unwrap();
-            let  _v:Value = ctx.eval(script_code).unwrap();
+            let _v: Value = ctx.eval(polyfill_code).unwrap();
+            let _v: Value = ctx.eval(init_code).unwrap();
+            let _v: Value = ctx.eval(script_code).unwrap();
         });
     }
 
