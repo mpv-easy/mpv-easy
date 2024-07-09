@@ -3,13 +3,13 @@ import { JSONParse } from "../json"
 import { getRsExtExePath } from "./share"
 
 export const MoviesReg =
-  /^(https?):\/\/(.*?)\/web\/index.html#!\/movies.html\?topParentId=(.*?)/
+  /^(https?):\/\/(.*?)\/web\/index.html#\!\/movies.html\?topParentId=(.*?)$/
 
 export const ListReg =
-  /^(https?):\/\/(.*?)\/web\/index.html#!\/list.html\?parentId=(.*?)&serverId=(.*?)/
+  /^(https?):\/\/(.*?)\/web\/index.html#!\/list.html\?parentId=(.*?)&serverId=(.*?)$/
 
 export const IdReg =
-  /^(https?):\/\/(.*?)\/web\/index.html#!\/details\?id=(.*?)&serverId=(.*?)/
+  /^(https?):\/\/(.*?)\/web\/index.html#!\/details\?id=(.*?)&serverId=(.*?)$/
 
 export const StreamReg = /^(https?):\/\/(.*?)\/Videos\/(.*?)\/stream/
 
