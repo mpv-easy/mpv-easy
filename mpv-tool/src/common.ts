@@ -271,7 +271,7 @@ export class Rect {
     public y: number,
     public width: number,
     public height: number,
-  ) { }
+  ) {}
 
   get x0() {
     return this.x
@@ -335,7 +335,7 @@ export type Cycle = {
   radius: number
 }
 
-export function assSizeToScreen() { }
+export function assSizeToScreen() {}
 
 export function clone<T>(v: T): T {
   return JSON.parse(JSON.stringify(v))

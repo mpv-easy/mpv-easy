@@ -62,6 +62,8 @@ export const UI = () => {
       onMouseDown={() => {
         // e.stopPropagation()
       }}
+      pageDown={{ style: dropdown.item, text: ICON.TriangleDown }}
+      pageUp={{ style: dropdown.item, text: ICON.TriangleUp }}
     />
   )
 }

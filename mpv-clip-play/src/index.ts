@@ -53,10 +53,18 @@ function getList(s: string | undefined, context: PluginContext): string[] {
         } catch (e) {
           print(e)
           // maybe forget config jellyfin apiKey and username
-          osdDuration && printAndOsd("Please add jellyfin apiKey and username first", osdDuration)
+          osdDuration &&
+            printAndOsd(
+              "Please add jellyfin apiKey and username first",
+              osdDuration,
+            )
         }
       } else {
-        osdDuration && printAndOsd("Please add jellyfin apiKey and username first", osdDuration)
+        osdDuration &&
+          printAndOsd(
+            "Please add jellyfin apiKey and username first",
+            osdDuration,
+          )
       }
       return []
     }

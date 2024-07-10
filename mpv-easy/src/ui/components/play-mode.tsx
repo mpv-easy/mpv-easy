@@ -74,6 +74,8 @@ export const PlayMode = () => {
       color={dropdown.button.color}
       enableMouseStyle={mouseHoverStyle}
       dropdownListStyle={dropdown.list}
+      pageDown={{ style: dropdown.item, text: ICON.TriangleDown }}
+      pageUp={{ style: dropdown.item, text: ICON.TriangleUp }}
     />
   )
 }

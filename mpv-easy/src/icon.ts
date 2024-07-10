@@ -83,3 +83,7 @@ export const Info = ""
 export const History = "󰋚"
 export const Language = ""
 export const Shuffle = ""
+export const ChevronDown = "󰅀" //   󰅀
+export const ChevronUp = "󰅃" //   󰅃
+export const TriangleDown = ""
+export const TriangleUp = ""

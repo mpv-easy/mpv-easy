@@ -56,6 +56,8 @@ export const Language = () => {
       fontSize={button.fontSize}
       color={dropdown.button.color}
       dropdownListStyle={dropdown.list}
+      pageDown={{ style: dropdown.item, text: ICON.TriangleDown }}
+      pageUp={{ style: dropdown.item, text: ICON.TriangleUp }}
     />
   )
 }

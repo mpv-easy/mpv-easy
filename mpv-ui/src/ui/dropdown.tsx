@@ -22,6 +22,15 @@ export type DropdownProps = {
   direction: DropdownDirection
   dropdownStyle: Partial<ButtonProps>
   dropdownListStyle: Partial<ButtonProps>
+  maxItemCount: number
+  pageDown: {
+    style: Partial<ButtonProps>
+    text: string
+  }
+  pageUp: {
+    style: Partial<ButtonProps>
+    text: string
+  }
 }
 
 function getProps(props: any) {
@@ -53,8 +62,22 @@ export const Dropdown = (props: Partial<ButtonProps & DropdownProps>) => {
   const [show, setShow] = useState(false)
   const { items = [], direction = "bottom" } = props
   const newProps = getProps(props)
-  const { dropdownStyle = {}, dropdownListStyle = {} } = props
+  const {
+    dropdownStyle = {},
+    dropdownListStyle = {},
+    maxItemCount = 6,
+    pageDown,
+    pageUp,
+  } = props
   const offsetProps = direction === "top" ? { bottom: "100%" } : { top: "100%" }
+
+  const showPage = items.length > maxItemCount
+  const [page, setPage] = useState(0)
+  const pageCount = Math.ceil(items.length / maxItemCount)
+  const pageStart = maxItemCount * page
+  const pageEnd = pageStart + maxItemCount
+
+  const showItems = items.slice(pageStart, pageEnd)
 
   return (
     <>
@@ -87,7 +110,23 @@ export const Dropdown = (props: Partial<ButtonProps & DropdownProps>) => {
             backgroundColor={props.backgroundColor}
             {...dropdownListStyle}
           >
-            {items.map((i) => {
+            {showPage && (
+              <Button
+                position="relative"
+                {...newProps}
+                {...dropdownStyle}
+                width={undefined}
+                key={"dropdown-up"}
+                text={pageUp?.text}
+                {...pageUp?.style}
+                onMouseDown={(e) => {
+                  const p = (page - 1 + pageCount) % pageCount
+                  setPage(p)
+                  e.stopPropagation()
+                }}
+              />
+            )}
+            {showItems.map((i) => {
               return (
                 <Button
                   position="relative"
@@ -101,10 +140,26 @@ export const Dropdown = (props: Partial<ButtonProps & DropdownProps>) => {
                     i.onSelect?.(i, e)
                     setShow(false)
                   }}
-                  {...(i.style ?? {})}
+                  {...i.style}
                 />
               )
             })}
+            {showPage && (
+              <Button
+                position="relative"
+                {...newProps}
+                {...dropdownStyle}
+                width={undefined}
+                key={"dropdown-down"}
+                {...pageDown?.style}
+                text={pageDown?.text}
+                onMouseDown={(e) => {
+                  const p = (page + 1) % pageCount
+                  setPage(p)
+                  e.stopPropagation()
+                }}
+              />
+            )}
           </Box>
         )}
       </Button>

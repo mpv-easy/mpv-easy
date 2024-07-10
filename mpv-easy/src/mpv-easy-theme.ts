@@ -131,6 +131,7 @@ export type ThemeStyle = {
       backgroundColor: string
       colorHover: string
       backgroundColorHover: string
+      height: number
     }
   }
   clickMenu: {
@@ -347,6 +348,7 @@ export function createDefaultThemeConfig(): EasyConfig {
             fontSize: defaultFontSize * 0.75,
             font: defaultFont,
             zIndex: defaultDropdownZIndex + 2,
+            height: defaultFontSize * 0.75,
           },
         },
         clickMenu: {
@@ -482,6 +484,7 @@ export function createDefaultThemeConfig(): EasyConfig {
             fontSize: defaultFontSize * 0.75,
             font: defaultFont,
             zIndex: defaultDropdownZIndex + 2,
+            height: defaultFontSize * 0.75,
           },
         },
         clickMenu: {
