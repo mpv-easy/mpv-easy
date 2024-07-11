@@ -34,7 +34,7 @@ import {
   loadRemoteSubtitleAsync,
   getMpvExePath,
   setProtocolHook,
-  getMpvPlayWithPath,
+  getPlayWithExePath,
 } from "@mpv-easy/tool"
 import { throttle, isEqual } from "lodash-es"
 import { ClickMenu } from "./click-menu"
@@ -102,7 +102,7 @@ export const Easy = (props: Partial<EasyProps>) => {
   useEffect(() => {
     const mpvExe = getMpvExePath()
     if (protocolHook !== mpvExe) {
-      const playPath = getMpvPlayWithPath()
+      const playPath = getPlayWithExePath()
       setProtocolHook(mpvExe, playPath)
       dispatch.context.setProtocolHook(mpvExe)
     }

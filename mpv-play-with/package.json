@@ -6,8 +6,9 @@
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
-    "build": "esbuild ./src/index.tsx --outfile=./dist/play-with.user.js --bundle  --loader:.png=base64 --format=iife",
-    "dev": "esbuild ./src/index.tsx --outfile=./dist/play-with.user.js --bundle  --loader:.png=base64 --format=iife --watch",
+    "meta": "tsx ./script/meta.ts",
+    "build": "esbuild ./src/index.tsx --outfile=./dist/mpv-easy-play-with.js --bundle  --loader:.png=base64 --format=iife && npm run meta",
+    "dev": "esbuild ./src/index.tsx --outfile=./dist/mpv-easy-play-with.js --bundle  --loader:.png=base64 --format=iife --watch",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],

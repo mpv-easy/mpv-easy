@@ -32,6 +32,7 @@ jobs:
           cargo build --release --out-dir=./output -Z unstable-options
           cd ..
           mv ./mpv-easy-ext/output/mpv-easy-ext.exe ./mpv-easy-ext-windows
+          mv ./mpv-easy-ext/output/mpv-easy-play-with.exe ./mpv-easy-play-with-windows
 
 
       - name: build deno
@@ -87,6 +88,11 @@ jobs:
         with:
           name: mpv-easy-ext-windows
           path: ./mpv-easy-ext-windows
+      - name: Upload windows Artifact play-with
+        uses: actions/upload-artifact@v4
+        with:
+          name: mpv-easy-play-with-windows
+          path: ./mpv-easy-play-with-windows
 
       - name: Upload windows Artifact deno
         uses: actions/upload-artifact@v4
@@ -122,12 +128,18 @@ jobs:
           cd ..
 
           mv ./mpv-easy-ext/output/mpv-easy-ext ./mpv-easy-ext-macos
+          mv ./mpv-easy-ext/output/mpv-easy-play-with ./mpv-easy-play-with-macos
 
       - name: Upload macos Artifact ext
         uses: actions/upload-artifact@v4
         with:
           name: mpv-easy-ext-macos
           path: ./mpv-easy-ext-macos
+      - name: Upload macos Artifact play-with
+        uses: actions/upload-artifact@v4
+        with:
+          name: mpv-easy-play-with-macos
+          path: ./mpv-easy-play-with-macos
 
   build-ext-ubuntu:
     runs-on: ubuntu-latest
@@ -146,11 +158,17 @@ jobs:
           cd ..
 
           mv ./mpv-easy-ext/output/mpv-easy-ext ./mpv-easy-ext-linux
+          mv ./mpv-easy-ext/output/mpv-easy-play-with ./mpv-easy-play-with-linux
       - name: Upload ubuntu Artifact ext
         uses: actions/upload-artifact@v4
         with:
           name: mpv-easy-ext-linux
           path: ./mpv-easy-ext-linux
+      - name: Upload ubuntu Artifact play-with
+        uses: actions/upload-artifact@v4
+        with:
+          name: mpv-easy-play-with-linux
+          path: ./mpv-easy-play-with-linux
 
   build-ext-android:
     runs-on: ubuntu-latest
@@ -172,11 +190,17 @@ jobs:
           cd ..
 
           mv ./mpv-easy-ext/output/mpv-easy-ext ./mpv-easy-ext-android
+          mv ./mpv-easy-ext/output/mpv-easy-play-with ./mpv-easy-play-with-android
       - name: Upload android Artifact ext
         uses: actions/upload-artifact@v4
         with:
           name: mpv-easy-ext-android
           path: ./mpv-easy-ext-android
+      - name: Upload android Artifact play-with
+        uses: actions/upload-artifact@v4
+        with:
+          name: mpv-easy-play-with-android
+          path: ./mpv-easy-play-with-android
 
   release:
     needs: [build-ext-windows, build-ext-macos, build-ext-ubuntu, build-ext-android]
@@ -191,6 +215,11 @@ jobs:
         with:
           path: mpv-easy-ext-dist
           pattern: mpv-easy-ext-*
+          merge-multiple: true
+      - uses: actions/download-artifact@v4
+        with:
+          path: mpv-easy-play-with-dist
+          pattern: mpv-easy-play-with-*
           merge-multiple: true
 
       - uses: actions/download-artifact@v4
@@ -230,6 +259,7 @@ jobs:
           cp ./mpv-easy/mpv-conf/input.conf ./dist/input.conf
 
           chmod 777 ./mpv-easy-ext-dist/*
+          chmod 777 ./mpv-easy-play-with-dist/*
 
           cp -r ./dist ./mpy-easy-macos
           cp -r ./dist ./mpy-easy-linux
@@ -246,6 +276,15 @@ jobs:
           cp ./mpv-easy-ext-dist/mpv-easy-ext-windows ./mpy-easy-deno-windows/scripts/mpv-easy-config/mpv-easy-ext/mpv-easy-ext-windows
           cp ./mpv-easy-ext-dist/mpv-easy-ext-windows ./mpy-easy-qjs-windows/scripts/mpv-easy-config/mpv-easy-ext/mpv-easy-ext-windows
           cp ./mpv-easy-ext-dist/mpv-easy-ext-windows ./mpy-easy-boa-windows/scripts/mpv-easy-config/mpv-easy-ext/mpv-easy-ext-windows
+
+          cp ./mpv-easy-play-with-dist/mpv-easy-play-with-macos ./mpy-easy-macos/scripts/mpv-easy-config/mpv-easy-ext/mpv-easy-play-with-macos
+          cp ./mpv-easy-play-with-dist/mpv-easy-play-with-linux ./mpy-easy-linux/scripts/mpv-easy-config/mpv-easy-ext/mpv-easy-play-with-linux
+          cp ./mpv-easy-play-with-dist/mpv-easy-play-with-android ./mpy-easy-android/scripts/mpv-easy-config/mpv-easy-ext/mpv-easy-play-with-android
+          cp ./mpv-easy-play-with-dist/mpv-easy-play-with-windows ./mpy-easy-windows/scripts/mpv-easy-config/mpv-easy-ext/mpv-easy-play-with-windows
+          cp ./mpv-easy-play-with-dist/mpv-easy-play-with-windows ./mpy-easy-deno-windows/scripts/mpv-easy-config/mpv-easy-ext/mpv-easy-play-with-windows
+          cp ./mpv-easy-play-with-dist/mpv-easy-play-with-windows ./mpy-easy-qjs-windows/scripts/mpv-easy-config/mpv-easy-ext/mpv-easy-play-with-windows
+          cp ./mpv-easy-play-with-dist/mpv-easy-play-with-windows ./mpy-easy-boa-windows/scripts/mpv-easy-config/mpv-easy-ext/mpv-easy-play-with-windows
+
 
           cp ./deno-dll/mpv-deno-windows.dll ./mpy-easy-deno-windows/scripts/mpv-deno-windows.dll
           rm ./mpy-easy-deno-windows/scripts/mpv-easy-es5.js

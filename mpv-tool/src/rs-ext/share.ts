@@ -5,10 +5,10 @@ export const defaultBinDirName = "mpv-easy-ext"
 export const getDefaultBinDirPath = () =>
   joinPath(getScriptConfigDir(), defaultBinDirName)
 
-export const defaultMacExeName = "mpv-easy-ext-macos"
-export const defaultWindowsExeName = "mpv-easy-ext-windows"
-export const defaultAndroidExeName = "mpv-easy-ext-android"
-export const defaultLinuxExeName = "mpv-easy-ext-linux"
+const defaultMacExeName = "mpv-easy-ext-macos"
+const defaultWindowsExeName = "mpv-easy-ext-windows"
+const defaultAndroidExeName = "mpv-easy-ext-android"
+const defaultLinuxExeName = "mpv-easy-ext-linux"
 
 export function getRsExtExePath() {
   // TODO: custom path

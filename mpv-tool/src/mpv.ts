@@ -459,11 +459,3 @@ export function getMpvExePath() {
   }
   return exePath
 }
-
-export function getMpvPlayWithPath() {
-  const exePath = joinPath(getDefaultBinDirPath(), "mpv-play-with")
-  if (getOs() === "windows") {
-    return exePath.replaceAll("/", "\\\\")
-  }
-  return exePath
-}
