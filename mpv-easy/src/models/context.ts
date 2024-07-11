@@ -250,6 +250,10 @@ export const context = createModel<RootModel>()({
     resetConfig(state) {
       return createDefaultContext()
     },
+    setProtocolHook(state, exePath: string) {
+      state[pluginName].config.protocolHook = exePath
+      return { ...state }
+    },
     setFontSize(state, fontSize: number) {
       const size = fontSize + 16
       const padding = fontSize / 8

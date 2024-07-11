@@ -167,3 +167,6 @@ export const mouseHoverStyleSelector = (state: RootState) =>
 
 export const enablePluginsStyleSelector = (state: RootState) =>
   state.context.enablePlugins
+
+export const protocolHookSelector = (state: RootState) =>
+  state.context[pluginName].config.protocolHook

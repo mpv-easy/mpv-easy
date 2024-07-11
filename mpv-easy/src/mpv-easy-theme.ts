@@ -186,6 +186,7 @@ export type EasyConfig = {
     fps: number
     enableMouseMoveEvent: boolean
     saveConfigThrottle: number
+    protocolHook: string
   }
 }
 export const defaultTooltipZIndex = 1024
@@ -504,6 +505,7 @@ export function createDefaultThemeConfig(): EasyConfig {
       fps: DefaultFps,
       enableMouseMoveEvent: true,
       saveConfigThrottle: defaultSaveConfigThrottle,
+      protocolHook: "",
     },
   } as const)
 }

@@ -17,6 +17,7 @@ import {
   toolbarStyleSelector,
   uiNameSelector,
   clickMenuStyleSelector,
+  protocolHookSelector,
 } from "../store"
 import {
   PropertyBool,
@@ -31,6 +32,8 @@ import {
   getMpvPlaylist,
   loadRemoteSubtitle,
   loadRemoteSubtitleAsync,
+  getMpvExePath,
+  setProtocolHook,
 } from "@mpv-easy/tool"
 import { throttle, isEqual } from "lodash-es"
 import { ClickMenu } from "./click-menu"
@@ -94,7 +97,14 @@ export const Easy = (props: Partial<EasyProps>) => {
   const fps = useSelector(fpsSelector)
   const path = useSelector(pathSelector)
   const autoloadConfig = useSelector(audoloadConfigSelector)
+  const protocolHook = useSelector(protocolHookSelector)
   useEffect(() => {
+    const mpvExe = getMpvExePath()
+    if (protocolHook !== mpvExe) {
+      setProtocolHook(mpvExe)
+      dispatch.context.setProtocolHook(mpvExe)
+    }
+
     if (props.fontSize) {
       dispatch.context.setFontSize(props.fontSize)
     }
