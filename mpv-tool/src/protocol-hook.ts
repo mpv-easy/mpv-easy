@@ -2,7 +2,7 @@ import { execSync, getOs } from "./common"
 import { joinPath, writeFile } from "./mpv"
 import { getTmpDir } from "./tmp"
 
-function setProtocolHookWindows(mpvPath: string) {
+function setProtocolHookWindows(mpvPath: string, mpvPlayWithPath: string) {
   const regCode = `
 Windows Registry Editor Version 5.00
 [HKEY_LOCAL_MACHINE\\SOFTWARE\\Policies\\Google\\Chrome]
@@ -11,21 +11,22 @@ Windows Registry Editor Version 5.00
 [HKEY_LOCAL_MACHINE\\SOFTWARE\\Policies\\Microsoft\\Edge]
 "ExternalProtocolDialogShowAlwaysOpenCheckbox"=dword:00000001
 
-[HKEY_CLASSES_ROOT\\mpv]
-@="mpv Protocol"
+[HKEY_CLASSES_ROOT\\mpv-easy]
+@="mpv-easy"
 "URL Protocol"=""
 
-[HKEY_CLASSES_ROOT\\mpv\\DefaultIcon]
+[HKEY_CLASSES_ROOT\\mpv-easy\\DefaultIcon]
 @=""
 
-[HKEY_CLASSES_ROOT\\mpv\\shell]
+[HKEY_CLASSES_ROOT\\mpv-easy\\shell]
 @=""
 
-[HKEY_CLASSES_ROOT\\mpv\\shell\\open]
+[HKEY_CLASSES_ROOT\\mpv-easy\\shell\\open]
 @=""
 
-[HKEY_CLASSES_ROOT\\mpv\\shell\\open\\command]
-@="C:\\\\Windows\\\\System32\\\\WindowsPowerShell\\\\v1.0\\\\powershell.exe -WindowStyle Hidden -Command \\"& {Add-Type -AssemblyName System.Web;$PARAMS=([System.Web.HTTPUtility]::UrlDecode('%1') -replace '^mpv://'); Start-Process -FilePath \\\\\\"${mpvPath}\\\\\\" -ArgumentList $PARAMS}\\""
+[HKEY_CLASSES_ROOT\\mpv-easy\\shell\\open\\command]
+@="${mpvPlayWithPath} ${mpvPath} %1"
+
 `.trim()
 
   const tmpPath = joinPath(getTmpDir(), "set-protocol-hook-windows.reg")
@@ -33,11 +34,11 @@ Windows Registry Editor Version 5.00
   execSync(["regedit.exe", "/S", tmpPath])
 }
 
-export function setProtocolHook(mpvPath: string) {
+export function setProtocolHook(mpvPath: string, mpvPlayWithPath: string) {
   const os = getOs()
   switch (os) {
     case "windows": {
-      setProtocolHookWindows(mpvPath)
+      setProtocolHookWindows(mpvPath, mpvPlayWithPath)
       break
     }
     default: {

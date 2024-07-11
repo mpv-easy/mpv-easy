@@ -1,16 +1,31 @@
-import React, { useEffect, useState } from "react"
+import React, { useEffect, useRef, useState } from "react"
 import { Icon } from "./icons"
 import { Bilibili, Youtube } from "./rules"
-import { openMpv } from "./share"
+import { openMpv, PlayItem } from "./share"
+import { Jellyfin } from "./rules/Jellyfin"
 
-const Rules = [Bilibili, Youtube]
+const Rules = [Bilibili, Youtube, Jellyfin]
 
 export function App() {
+  const width = 100
+  const height = 100
+  const [pos, setPos] = useState({ x: 0, y: 0 })
+  const zIndex = 1 << 20
+  const [display, setDisplay] = useState(false)
+  const [hover, setHover] = useState(false)
+  const opacity = hover ? 100 : 0
+  const domRef = useRef<HTMLDivElement>(null)
   const [logo, setLogo] = useState(Icon.Mpv)
-  const [videos, setVideos] = useState<string[]>([])
+  const [videos, setVideos] = useState<PlayItem[]>([])
   function detect() {
     const url = window.location.href
     const rule = Rules.find((i) => i.match(url))
+    if (rule) {
+      setDisplay(true)
+    } else {
+      setDisplay(false)
+    }
+
     if (rule) {
       const videoList = rule.getVideos(url)
       const logo = rule.getLogo(url)
@@ -25,22 +40,31 @@ export function App() {
     detect()
   }, [])
   return (
-    <div
-      style={{
-        width: 100,
-        height: 100,
-        display: "flex",
-        position: "absolute",
-        left: 0,
-        top: 0,
-        zIndex: 9999,
-      }}
-      onMouseDown={() => {
-        console.log("onMouseDown")
-        openMpv(videos)
-      }}
-    >
-      <img width={"100%"} height={"100%"} src={logo} alt="play-with-mpv" />
-    </div>
+    display && (
+      <div
+        ref={domRef}
+        style={{
+          width,
+          height,
+          display: "flex",
+          position: "absolute",
+          left: pos.x,
+          bottom: pos.y,
+          zIndex,
+          opacity,
+        }}
+        onMouseDown={() => {
+          openMpv(videos)
+        }}
+        onMouseEnter={() => {
+          setHover(true)
+        }}
+        onMouseLeave={() => {
+          setHover(false)
+        }}
+      >
+        <img width={"100%"} height={"100%"} src={logo} alt="play-with-mpv" />
+      </div>
+    )
   )
 }

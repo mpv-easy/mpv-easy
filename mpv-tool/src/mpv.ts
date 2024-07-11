@@ -1,5 +1,7 @@
+import { getOs } from "./common"
 import { ConfigDir } from "./const"
 import { normalize } from "./path"
+import { getDefaultBinDirPath } from "./rs-ext"
 import type {
   AddKeyBindingFlags,
   FileInfo,
@@ -448,6 +450,20 @@ export function getMpvExePath() {
     "expand-path",
     "~~home/",
   ]) as unknown as string
-  const exePath = joinPath(...splitPath(configPath).slice(0, -1), "mpv.exe")
+
+  const exeName = getOs() === "windows" ? "mpv.exe" : "mpv"
+
+  const exePath = joinPath(...splitPath(configPath).slice(0, -1), exeName)
+  if (getOs() === "windows") {
+    return exePath.replaceAll("/", "\\\\")
+  }
+  return exePath
+}
+
+export function getMpvPlayWithPath() {
+  const exePath = joinPath(getDefaultBinDirPath(), "mpv-play-with")
+  if (getOs() === "windows") {
+    return exePath.replaceAll("/", "\\\\")
+  }
   return exePath
 }

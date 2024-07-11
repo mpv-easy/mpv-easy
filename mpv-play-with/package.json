@@ -13,6 +13,8 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "dependencies": {},
+  "dependencies": {
+    "@mpv-easy/tool": "workspace:*"
+  },
   "devDependencies": {}
 }

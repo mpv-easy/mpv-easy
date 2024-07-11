@@ -8,7 +8,7 @@ export const MoviesReg =
 export const ListReg =
   /^(https?):\/\/(.*?)\/web\/index.html#!\/list.html\?parentId=(.*?)&serverId=(.*?)$/
 
-export const IdReg =
+export const detailsReg =
   /^(https?):\/\/(.*?)\/web\/index.html#!\/details\?id=(.*?)&serverId=(.*?)$/
 
 export const StreamReg = /^(https?):\/\/(.*?)\/Videos\/(.*?)\/stream/
@@ -27,7 +27,7 @@ export type Item = {
 }
 
 export function isJellyfin(url: string): boolean {
-  return [MoviesReg, IdReg, StreamReg, ListReg].some((i) => i.test(url))
+  return [MoviesReg, detailsReg, StreamReg, ListReg].some((i) => i.test(url))
 }
 
 export function getInfo(url: string): Info | undefined {
@@ -40,7 +40,7 @@ export function getInfo(url: string): Info | undefined {
     }
   }
 
-  const idRet = url.match(IdReg)
+  const idRet = url.match(detailsReg)
   if (idRet) {
     return {
       protocol: idRet[1],

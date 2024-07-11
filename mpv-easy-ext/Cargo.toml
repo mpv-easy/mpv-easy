@@ -7,12 +7,6 @@ authors = ["ahaoboy"]
 repository = "https://github.com/mpv-easy/mpv-easy"
 description = "mpv-easy rust extension"
 
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
-
-[[bin]]
-name = "mpv-easy-ext"
-path = "src/main.rs"
-
 [dependencies]
 base64 = "0.22"
 openssl = { version = "0.10", features = ["vendored"] }
