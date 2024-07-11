@@ -11,6 +11,7 @@ import {
 } from "./mpv"
 import { getFileName } from "./path"
 import type { TrackItem } from "./type"
+import { getTmpDir } from "./tmp"
 
 export function loadRemoteSubtitle(path = getProperty("path")) {
   if (!path?.length || isYoutube(path) || jellyfin.isJellyfin(path)) {
@@ -25,7 +26,7 @@ export function loadRemoteSubtitle(path = getProperty("path")) {
       s.push(i)
       return s.join(".")
     })
-    const tmp = getenv("TMPDIR") || getenv("TMP") || getenv("tmp") || "./"
+    const tmp = getTmpDir()
     for (const url of list) {
       const name = getFileName(url)
       if (!name?.length) {
@@ -81,7 +82,7 @@ export async function loadRemoteSubtitleAsync(path = getProperty("path")) {
       s.push(i)
       return s.join(".")
     })
-    const tmp = getenv("TMPDIR") || getenv("TMP") || getenv("tmp") || "./"
+    const tmp = getTmpDir()
     for (const url of list) {
       const name = getFileName(url)
       if (!name?.length) {

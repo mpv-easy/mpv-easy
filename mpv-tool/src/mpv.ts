@@ -442,3 +442,12 @@ export function setGeometry(w: number, h: number, x: number, y: number) {
   const s = [w, "x", h, "+", x, "+", y].join("")
   setPropertyString("geometry", s)
 }
+
+export function getMpvExePath() {
+  const configPath = commandNative([
+    "expand-path",
+    "~~home/",
+  ]) as unknown as string
+  const exePath = joinPath(...splitPath(configPath).slice(0, -1), "mpv.exe")
+  return exePath
+}
