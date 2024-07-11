@@ -7,7 +7,7 @@ export const Jellyfin: Rule = {
   match: (url: string): boolean => {
     return jellyfin.isJellyfin(url)
   },
-  getLogo: (url: string): string => Icon.Bilibili,
+  getLogo: (url: string): string => Icon.Jellyfin,
   getVideos: (url: string): PlayItem[] => {
     if (jellyfin.detailsReg.test(url)) {
       const dom = document.querySelector(

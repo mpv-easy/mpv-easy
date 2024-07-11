@@ -9,14 +9,17 @@ const Rules = [Bilibili, Youtube, Jellyfin]
 export function App() {
   const width = 100
   const height = 100
+  // TODO: drag move
   const [pos, setPos] = useState({ x: 0, y: 0 })
+
   const zIndex = 1 << 20
   const [display, setDisplay] = useState(false)
   const [hover, setHover] = useState(false)
-  const opacity = hover ? 100 : 0
   const domRef = useRef<HTMLDivElement>(null)
   const [logo, setLogo] = useState(Icon.Mpv)
   const [videos, setVideos] = useState<PlayItem[]>([])
+  const opacity = hover && videos.length ? 100 : 0
+
   function detect() {
     const url = window.location.href
     const rule = Rules.find((i) => i.match(url))
@@ -35,10 +38,12 @@ export function App() {
       }
     }
   }
+
   useEffect(() => {
     setInterval(detect, 1000)
     detect()
   }, [])
+
   return (
     display && (
       <div
@@ -52,6 +57,7 @@ export function App() {
           bottom: pos.y,
           zIndex,
           opacity,
+          cursor: "pointer",
         }}
         onMouseDown={() => {
           openMpv(videos)
