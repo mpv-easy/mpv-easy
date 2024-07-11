@@ -18,8 +18,9 @@ export function textEllipsis(
 }
 
 export function getVideoName(p: string): string {
-  if (isYoutube(p)) {
-    return getPropertyString("force-media-title") || ""
+  const forceTitle = getPropertyString("force-media-title")
+  if (forceTitle?.length) {
+    return forceTitle
   }
 
   if (jellyfin.isJellyfin(p)) {
