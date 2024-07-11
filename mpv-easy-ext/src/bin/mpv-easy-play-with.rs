@@ -8,6 +8,7 @@ use base64::{prelude::BASE64_STANDARD, Engine};
 pub struct Play {
     url: String,
     args: Vec<String>,
+    title: String,
 }
 
 const HEADER: &str = "mpv-easy://";
@@ -33,8 +34,15 @@ fn main() {
     }
     if play_list.len() == 1 {
         let play = &play_list[0];
-        let arg = format!("\"{}\" {}", play.url, play.args.join(" "));
-        cmd.raw_arg(arg);
+        let mut args = vec![format!("\"{}\"", &play.url)];
+        if !play.title.is_empty() {
+            args.push(format!("--force-media-title=\"{}\"", play.title));
+        }
+        for i in play.args.clone() {
+            args.push(i);
+        }
+        let args_str = args.join(" ");
+        cmd.raw_arg(args_str);
         cmd.output().unwrap();
     }
 

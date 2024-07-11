@@ -1,14 +1,15 @@
 import React, { useEffect, useRef, useState } from "react"
 import { Icon } from "./icons"
 import { Bilibili, Youtube } from "./rules"
-import { openMpv, PlayItem } from "./share"
+import { openMpv, } from "./share"
 import { Jellyfin } from "./rules/Jellyfin"
+import { PlayItem } from "./type"
 
 const Rules = [Bilibili, Youtube, Jellyfin]
 
 export function App() {
-  const width = 100
-  const height = 100
+  const width = 64
+  const height = 64
   // TODO: drag move
   const [pos, setPos] = useState({ x: 0, y: 0 })
 
@@ -18,7 +19,7 @@ export function App() {
   const domRef = useRef<HTMLDivElement>(null)
   const [logo, setLogo] = useState(Icon.Mpv)
   const [videos, setVideos] = useState<PlayItem[]>([])
-  const opacity = hover && videos.length ? 100 : 0
+  const opacity = hover ? 100 : 0
 
   function detect() {
     const url = window.location.href
@@ -45,14 +46,14 @@ export function App() {
   }, [])
 
   return (
-    display && (
+    display && videos.length && (
       <div
         ref={domRef}
         style={{
           width,
           height,
           display: "flex",
-          position: "absolute",
+          position: 'fixed',
           left: pos.x,
           bottom: pos.y,
           zIndex,

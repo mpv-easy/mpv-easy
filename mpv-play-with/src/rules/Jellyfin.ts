@@ -1,5 +1,6 @@
 import { Icon } from "../icons"
-import { getTitle, PlayItem } from "../share"
+import { getTitle, } from "../share"
+import { PlayItem } from "../type"
 import { Rule } from "./rule"
 import { jellyfin } from "@mpv-easy/tool"
 
@@ -20,16 +21,14 @@ export const Jellyfin: Rule = {
       const titleDom = document.querySelector(
         "#itemDetailPage > div.detailPageWrapperContainer.padded-bottom-page > div.detailPagePrimaryContainer.padded-left.padded-right.detailRibbon > div.infoWrapper > div.nameContainer > h1",
       )
-      const title = titleDom?.textContent
+      const title = titleDom?.textContent?.trim()
       const args: string[] = []
-      if (title?.length) {
-        args.push(`--force-media-title=${getTitle(title.trim())}`)
-      }
 
-      const streamUrl = `${location.origin}/Videos/${id}/stream?Static=true`
+      const streamUrl = `${location.origin} /Videos/${id}/stream?Static=true`
       const play: PlayItem = {
         url: streamUrl,
         args,
+        title: getTitle(title || '') || ""
       }
 
       return [play]

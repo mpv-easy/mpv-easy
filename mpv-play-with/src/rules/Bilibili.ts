@@ -1,5 +1,5 @@
 import { Icon } from "../icons"
-import { PlayItem } from "../share"
+import { PlayItem } from "../type"
 import { Rule } from "./rule"
 
 export const Bilibili: Rule = {

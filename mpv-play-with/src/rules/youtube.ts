@@ -1,7 +1,7 @@
 import { isYoutube } from "@mpv-easy/tool"
 import { Icon } from "../icons"
-import { PlayItem } from "../share"
 import { Rule } from "./rule"
+import { PlayItem } from "../type"
 
 export const Youtube: Rule = {
   match: (url: string): boolean => isYoutube(url),
@@ -11,6 +11,7 @@ export const Youtube: Rule = {
     const play = {
       url,
       args,
+      title: ''
     }
     return [play]
   },
