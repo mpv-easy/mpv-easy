@@ -1,0 +1,18 @@
+{
+  "name": "@mpv-easy/play-with",
+  "version": "0.1.0",
+  "files": ["dist", "readme.md", "package.json"],
+  "description": "",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "esbuild ./src/index.tsx --outfile=./dist/play-with.user.js --bundle  --loader:.png=base64 --format=iife",
+    "dev": "esbuild ./src/index.tsx --outfile=./dist/play-with.user.js --bundle  --loader:.png=base64 --format=iife --watch",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {},
+  "devDependencies": {}
+}

@@ -37,11 +37,12 @@
       "@mpv-easy/copy-screen": ["./mpv-copy-screen/src"],
       "@mpv-easy/polyfill": ["./mpv-polyfill/src"],
       "@mpv-easy/thumbfast": ["./mpv-thumbfast/src"],
-      "@mpv-easy/mpv-easy": ["./mpv-easy/src"],
+      "@mpv-easy/easy": ["./mpv-easy/src"],
       "@mpv-easy/canvas": ["./mpv-canvas/src"],
       "@mpv-easy/playground": ["./mpv-playground/src"],
       "@mpv-easy/js-plugin-init": ["./mpv-js-plugin-init/src"],
-      "@mpv-easy/mpv-mpsm": ["./mpv-mpsm/src"]
+      "@mpv-easy/mpsm": ["./mpv-mpsm/src"],
+      "@mpv-easy/play-with": ["./mpv-play-with/src"]
     }
   },
   "include": ["**/src", "**/test", "**/example"],

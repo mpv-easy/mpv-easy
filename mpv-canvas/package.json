@@ -11,7 +11,7 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
-    "@mpv-easy/mpv-easy": "workspace:*",
+    "@mpv-easy/easy": "workspace:*",
     "@mpv-easy/tool": "workspace:*",
     "@mpv-easy/ui": "workspace:*",
     "@types/fabric": "^5.3.7",

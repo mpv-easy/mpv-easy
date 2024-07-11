@@ -1,5 +1,5 @@
 {
-  "name": "@mpv-easy/mpv-easy",
+  "name": "@mpv-easy/easy",
   "version": "0.1.10",
   "files": ["dist", "readme.md", "package.json"],
   "description": "@mpv-easy/easy",

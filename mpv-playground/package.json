@@ -11,7 +11,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@mpv-easy/mpv-easy": "workspace:*",
+    "@mpv-easy/easy": "workspace:*",
     "@mpv-easy/polyfill": "workspace:*",
     "@mpv-easy/tool": "workspace:*",
     "@mpv-easy/ui": "workspace:*",

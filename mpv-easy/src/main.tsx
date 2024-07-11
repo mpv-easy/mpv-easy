@@ -12,7 +12,7 @@ import {
 import type { Store } from "./store"
 import { throttle } from "lodash-es"
 import { command } from "@mpv-easy/tool"
-export const pluginName = "@mpv-easy/mpv-easy-ui"
+export const pluginName = "@mpv-easy/easy-ui"
 
 declare module "@mpv-easy/plugin" {
   interface PluginContext {
