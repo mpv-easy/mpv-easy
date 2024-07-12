@@ -305,9 +305,11 @@ jobs:
           cp ./mpv-easy/bundle/mpv-easy-es6.js ./mpy-easy-boa-windows/scripts-boa/mpv-easy-es6.js
           mv ./mpy-easy-boa-windows/scripts/mpv-easy-config ./mpy-easy-boa-windows/scripts-boa/mpv-easy-config
 
+          # https://github.com/yt-dlp/yt-dlp/releases
           wget -P ./mpy-easy-windows/yt-dlp yt-dlp https://github.com/yt-dlp/yt-dlp/releases/download/2024.07.09/yt-dlp.exe || true
 
-          wget -O ./mpv-win.7z https://github.com/zhongfly/mpv-winbuild/releases/download/2024-07-08-daa6068/mpv-x86_64-v3-20240708-git-daa6068.7z
+          # https://github.com/zhongfly/mpv-winbuild/releases
+          wget -O ./mpv-win.7z https://github.com/zhongfly/mpv-winbuild/releases/download/2024-07-12-c0f5d23/mpv-x86_64-v3-20240712-git-c0f5d23.7z
           7z x ./mpv-win.7z -o./mpy-easy-windows-full -y
           cp -r ./mpy-easy-windows ./mpy-easy-windows-full/portable_config
 
