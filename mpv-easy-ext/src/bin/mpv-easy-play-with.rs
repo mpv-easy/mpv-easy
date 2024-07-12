@@ -3,6 +3,8 @@
 use base64::{prelude::BASE64_STANDARD, Engine};
 use flate2::read::GzDecoder;
 use std::io::prelude::*;
+
+#[cfg(windows)]
 use std::os::windows::process::CommandExt;
 
 #[derive(Debug, Clone, serde::Serialize, serde::Deserialize)]
@@ -47,7 +49,13 @@ fn main() {
             args.push(i);
         }
         let args_str = args.join(" ");
+
+        #[cfg(windows)]
         cmd.raw_arg(args_str);
+
+        #[cfg(not(windows))]
+        cmd.arg(args_str);
+
         cmd.output().unwrap();
         return;
     }
@@ -61,6 +69,12 @@ fn main() {
     let d = TempDir::new().unwrap();
     let m3u_path = d.path().join(".mpv-easy-play-with.m3u");
     std::fs::write(&m3u_path, m3u.join("\n")).unwrap();
-    cmd.raw_arg(format!("--playlist={}", m3u_path.to_string_lossy()));
+
+    let args_str = format!("--playlist={}", m3u_path.to_string_lossy());
+    #[cfg(windows)]
+    cmd.raw_arg(args_str);
+    #[cfg(not(windows))]
+    cmd.arg(args_str);
+
     cmd.output().unwrap();
 }
