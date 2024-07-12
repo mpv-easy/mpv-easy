@@ -103,8 +103,9 @@ export const Easy = (props: Partial<EasyProps>) => {
     const mpvExe = getMpvExePath()
     if (protocolHook !== mpvExe) {
       const playPath = getPlayWithExePath()
-      setProtocolHook(mpvExe, playPath)
-      dispatch.context.setProtocolHook(mpvExe)
+      if (setProtocolHook(mpvExe, playPath)) {
+        dispatch.context.setProtocolHook(mpvExe)
+      }
     }
 
     if (props.fontSize) {

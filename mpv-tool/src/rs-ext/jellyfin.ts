@@ -11,6 +11,8 @@ export const ListReg =
 export const detailsReg =
   /^(https?):\/\/(.*?)\/web\/index.html#!\/details\?id=(.*?)&serverId=(.*?)$/
 
+export const videoReg = /^(https?):\/\/(.*?)\/web\/index.html#!\/video$/
+
 export const StreamReg = /^(https?):\/\/(.*?)\/Videos\/(.*?)\/stream/
 
 export type Info = {

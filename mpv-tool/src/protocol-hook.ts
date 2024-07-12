@@ -31,15 +31,20 @@ Windows Registry Editor Version 5.00
 
   const tmpPath = joinPath(getTmpDir(), "set-protocol-hook-windows.reg")
   writeFile(tmpPath, regCode)
-  execSync(["regedit.exe", "/S", tmpPath])
+  const cmd = ["cmd", "/c", `regedit.exe /S ${tmpPath.replaceAll("/", "\\")}`]
+  execSync(cmd)
 }
 
 export function setProtocolHook(mpvPath: string, mpvPlayWithPath: string) {
   const os = getOs()
   switch (os) {
     case "windows": {
-      setProtocolHookWindows(mpvPath, mpvPlayWithPath)
-      break
+      try {
+        setProtocolHookWindows(mpvPath, mpvPlayWithPath)
+        return true
+      } catch (e) {
+        console.log(`windows setProtocolHook error: ${e}`)
+      }
     }
     default: {
       console.log(`${os} not support setProtocolHook`)

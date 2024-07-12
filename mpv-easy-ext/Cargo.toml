@@ -8,6 +8,7 @@ repository = "https://github.com/mpv-easy/mpv-easy"
 description = "mpv-easy rust extension"
 
 [dependencies]
+flate2 = "1.0"
 base64 = "0.22"
 openssl = { version = "0.10", features = ["vendored"] }
 clap = { version = "4", features = ["wrap_help", "derive"] }

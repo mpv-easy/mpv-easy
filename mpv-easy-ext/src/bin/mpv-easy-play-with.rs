@@ -1,8 +1,9 @@
 #![windows_subsystem = "windows"]
 
-use std::os::windows::process::CommandExt;
-
 use base64::{prelude::BASE64_STANDARD, Engine};
+use flate2::read::GzDecoder;
+use std::io::prelude::*;
+use std::os::windows::process::CommandExt;
 
 #[derive(Debug, Clone, serde::Serialize, serde::Deserialize)]
 pub struct Play {
@@ -25,9 +26,13 @@ fn main() {
         b64 = b64[HEADER.len()..].to_string();
     }
 
-    let bin = BASE64_STANDARD.decode(b64).unwrap();
-    let text = String::from_utf8_lossy(&bin);
-    let play_list: Vec<Play> = serde_json::from_str(&text).unwrap();
+    let gzip = BASE64_STANDARD.decode(b64).unwrap();
+
+    let mut decoder = GzDecoder::new(&gzip[..]);
+    let mut json_str = String::new();
+    decoder.read_to_string(&mut json_str).unwrap();
+
+    let play_list: Vec<Play> = serde_json::from_str(&json_str).unwrap();
     let mut cmd = std::process::Command::new(mpv_path);
     if play_list.is_empty() {
         return;
@@ -56,9 +61,6 @@ fn main() {
     let d = TempDir::new().unwrap();
     let m3u_path = d.path().join(".mpv-easy-play-with.m3u");
     std::fs::write(&m3u_path, m3u.join("\n")).unwrap();
-    cmd.raw_arg(format!(
-        "--playlist={}",
-        m3u_path.to_string_lossy()
-    ));
+    cmd.raw_arg(format!("--playlist={}", m3u_path.to_string_lossy()));
     cmd.output().unwrap();
 }

@@ -1778,6 +1778,7 @@ dependencies = [
  "colored",
  "crossbeam",
  "enum_dispatch",
+ "flate2",
  "glob",
  "image",
  "once_cell",

@@ -61,8 +61,9 @@ export function App() {
           opacity,
           cursor: "pointer",
         }}
-        onMouseDown={() => {
+        onMouseUp={(e) => {
           openMpv(videos)
+          e.stopPropagation()
         }}
         onMouseEnter={() => {
           setHover(true)
