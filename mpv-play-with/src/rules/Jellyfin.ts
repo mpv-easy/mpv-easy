@@ -14,16 +14,12 @@ export const Jellyfin: Rule = {
   },
   getVideos: (url: string): PlayItem[] => {
     if (jellyfin.detailsReg.test(url)) {
-      const dom = document.querySelector(
-        "#itemDetailPage > div.detailPageWrapperContainer.padded-bottom-page > div.detailPagePrimaryContainer.padded-left.padded-right.detailRibbon > div.infoWrapper > div.detailImageContainer.padded-left > div",
-      )
+      const dom = document.querySelector(".detailImageContainer > .card")
       if (!dom) {
         return []
       }
       const id = dom.getAttribute("data-id")
-      const titleDom = document.querySelector(
-        "#itemDetailPage > div.detailPageWrapperContainer.padded-bottom-page > div.detailPagePrimaryContainer.padded-left.padded-right.detailRibbon > div.infoWrapper > div.nameContainer > h1",
-      )
+      const titleDom = document.querySelector(".nameContainer > .itemName")
       const title = titleDom?.textContent?.trim()
       const args: string[] = []
 
@@ -65,8 +61,14 @@ export const Jellyfin: Rule = {
     }
 
     if (jellyfin.MoviesReg.test(url)) {
-      const dom = document.querySelectorAll(
-        "#moviesTab > div.itemsContainer.padded-left.padded-right.padded-right-withalphapicker.vertical-wrap > div",
+      const pageEl = Array.from(document.querySelectorAll(".page")).find(
+        (i) => !i.classList.contains("hide"),
+      )
+      if (!pageEl) {
+        return []
+      }
+      const dom = pageEl.querySelectorAll(
+        "#moviesTab > .itemsContainer > .card",
       )
       return Array.from(dom).map((i) => {
         const id = i.getAttribute("data-id")
