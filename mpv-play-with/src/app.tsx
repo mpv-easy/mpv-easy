@@ -3,13 +3,18 @@ import { Bilibili, Jellyfin, Youtube } from "./rules"
 import { encodeToBase64, openUrl } from "./share"
 import { PlayItem } from "./type"
 import { MPV_LOGO } from "./icons"
+import { useLocalStorage } from "react-use"
 
 const Rules = [Bilibili, Youtube, Jellyfin]
 
+const LocalStorageKey = "mpv-easy-play-with"
 export function App() {
   const width = 64
   const height = 64
-  const [pos, setPos] = useState({ x: 0, y: 0 })
+
+  // _pos maybe undefined ?
+  const [_pos, setPos] = useLocalStorage(LocalStorageKey, { x: 0, y: 0 })
+  const pos = { x: 0, y: 0, ..._pos }
   const dragStartMousePos = useRef(pos)
 
   const zIndex = 1 << 20
