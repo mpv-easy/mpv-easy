@@ -5,6 +5,12 @@ If you use mpv-easy, you only need to start mpv once, and mpv-easy will automati
 
 Inspired by https://github.com/LuckyPuppy514/Play-With-MPV
 
+## install
+You need to install the [tampermonkey](https://www.tampermonkey.net/) extension first
+
+Then install script [mpv-easy-play-with.user.js](https://github.com/mpv-easy/mpv-easy/releases/download/v0.1.11-aplha.1/mpv-easy-play-with.user.js)
+
+
 
 ## type
 A playable video corresponds to the following structure
