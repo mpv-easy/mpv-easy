@@ -1,3 +1,3 @@
-export * from "./Bilibili"
+export * from "./bilibili"
 export * from "./youtube"
-export * from "./rule"
+export * from "./jellyfin"

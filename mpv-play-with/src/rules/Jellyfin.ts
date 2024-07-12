@@ -1,7 +1,5 @@
-import { Icon } from "../icons"
 import { getTitle } from "../share"
-import { PlayItem } from "../type"
-import { Rule } from "./rule"
+import { PlayItem, Rule } from "../type"
 import { jellyfin } from "@mpv-easy/tool"
 
 export const Jellyfin: Rule = {
@@ -14,7 +12,6 @@ export const Jellyfin: Rule = {
       jellyfin.videoReg,
     ].some((i) => i.test(url))
   },
-  getLogo: (_: string): string => Icon.Jellyfin,
   getVideos: (url: string): PlayItem[] => {
     if (jellyfin.detailsReg.test(url)) {
       const dom = document.querySelector(

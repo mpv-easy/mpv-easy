@@ -31,6 +31,17 @@ fish
 set -x MPV_SCRIPT_DIR /your_mpv_dir/portable_config/scripts ; pnpm run dev
 ```
 
+## plugin
+
+- [mpv-anime4k](./mpv-anime4k/readme.md)
+- [mpv-autoload](./mpv-autoload/readme.md)
+- [mpv-clip-play](./mpv-clip-play/readme.md)
+- [mpv-copy-screen](./mpv-copy-screen/readme.md)
+- [mpv-copy-time](./mpv-copy-time/readme.md)
+- [mpv-thumbfast](./mpv-thumbfast/readme.md)
+- [mpv-play-with](./mpv-play-with/readme.md)
+
+
 ## UI
 
 ### uosc
@@ -83,15 +94,6 @@ set-executionpolicy remotesigned
 ```
 
 ![mouseHoverStyle](./assets/img/mouseHoverStyle.png)
-
-## plugin
-
-- [mpv-anime4k](./mpv-anime4k/readme.md)
-- [mpv-autoload](./mpv-autoload/readme.md)
-- [mpv-clip-play](./mpv-clip-play/readme.md)
-- [mpv-copy-screen](./mpv-copy-screen/readme.md)
-- [mpv-copy-time](./mpv-copy-time/readme.md)
-- [mpv-thumbfast](./mpv-thumbfast/readme.md)
 
 ## quick start
 

@@ -1,9 +1,6 @@
-import { Icon } from "../icons"
-import { PlayItem } from "../type"
-import { Rule } from "./rule"
+import { PlayItem, Rule } from "../type"
 
 export const Bilibili: Rule = {
   match: (url: string): boolean => url.includes("bilibili"),
-  getLogo: (url: string): string => Icon.Bilibili,
   getVideos: (url: string): PlayItem[] => [],
 }

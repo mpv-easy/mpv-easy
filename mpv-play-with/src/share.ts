@@ -34,7 +34,6 @@ export function encode(arraybuffer: ArrayBuffer): string {
   return base64
 }
 
-
 export function getMpvUrl(playList: PlayItem[]): string {
   const jsonStr = JSON.stringify(playList)
   const zipBuf = gzipSync(strToU8(jsonStr))
@@ -42,7 +41,7 @@ export function getMpvUrl(playList: PlayItem[]): string {
   return `mpv-easy://${base64}`
 }
 
-export function openUrl(url:string) {
+export function openUrl(url: string) {
   const a = document.createElement("a")
   a.href = url
   a.click()

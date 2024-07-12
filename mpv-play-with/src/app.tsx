@@ -1,26 +1,23 @@
 import React, { useEffect, useRef, useState } from "react"
-import { Icon } from "./icons"
-import { Bilibili, Youtube } from "./rules"
+import { Bilibili, Jellyfin, Youtube } from "./rules"
 import { getMpvUrl, openUrl } from "./share"
-import { Jellyfin } from "./rules/Jellyfin"
 import { PlayItem } from "./type"
+import { MPV_LOGO } from "./icons"
 
 const Rules = [Bilibili, Youtube, Jellyfin]
 
 export function App() {
   const width = 64
   const height = 64
-  // TODO: drag move
   const [pos, setPos] = useState({ x: 0, y: 0 })
+  const dragStartMousePos = useRef(pos)
 
   const zIndex = 1 << 20
   const [display, setDisplay] = useState(false)
   const [hover, setHover] = useState(false)
   const domRef = useRef<HTMLDivElement>(null)
-  const [logo, setLogo] = useState(Icon.Mpv)
   const [videos, setVideos] = useState<PlayItem[]>([])
   const opacity = hover ? 100 : 0
-
   const [loading, setLoading] = useState(false)
 
   function detect() {
@@ -34,8 +31,6 @@ export function App() {
 
     if (rule) {
       const videoList = rule.getVideos(url)
-      const logo = rule.getLogo(url)
-      setLogo(logo)
       if (videoList.length) {
         setVideos(videoList)
       }
@@ -62,7 +57,9 @@ export function App() {
           zIndex,
           opacity,
           cursor: "pointer",
-          pointerEvents: loading ? "none" : 'inherit'
+          pointerEvents: loading ? "none" : "inherit",
+          // @ts-ignore
+          WebkitUserDrag: "element",
         }}
         onMouseUp={(e) => {
           e.stopPropagation()
@@ -75,7 +72,7 @@ export function App() {
           openUrl(url)
           setTimeout(() => {
             setLoading(false)
-          }, 1000);
+          }, 1000)
         }}
         onMouseEnter={() => {
           setHover(true)
@@ -83,8 +80,26 @@ export function App() {
         onMouseLeave={() => {
           setHover(false)
         }}
+        onDragStart={(e) => {
+          dragStartMousePos.current = { x: e.clientX, y: e.clientY }
+        }}
+        onDragEnd={(e) => {
+          const dx = e.clientX - dragStartMousePos.current.x
+          const dy = e.clientY - dragStartMousePos.current.y
+          setPos({
+            x: pos.x + dx,
+            y: pos.y - dy,
+          })
+          e.stopPropagation()
+          e.preventDefault()
+        }}
       >
-        <img width={"100%"} height={"100%"} src={logo} alt="play-with-mpv" />
+        <img
+          width={"100%"}
+          height={"100%"}
+          src={MPV_LOGO}
+          alt="play-with-mpv"
+        />
       </div>
     )
   )
