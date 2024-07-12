@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react"
 import { Icon } from "./icons"
 import { Bilibili, Youtube } from "./rules"
-import { openMpv } from "./share"
+import { getMpvUrl, openUrl } from "./share"
 import { Jellyfin } from "./rules/Jellyfin"
 import { PlayItem } from "./type"
 
@@ -20,6 +20,8 @@ export function App() {
   const [logo, setLogo] = useState(Icon.Mpv)
   const [videos, setVideos] = useState<PlayItem[]>([])
   const opacity = hover ? 100 : 0
+
+  const [loading, setLoading] = useState(false)
 
   function detect() {
     const url = window.location.href
@@ -60,10 +62,20 @@ export function App() {
           zIndex,
           opacity,
           cursor: "pointer",
+          pointerEvents: loading ? "none" : 'inherit'
         }}
         onMouseUp={(e) => {
-          openMpv(videos)
           e.stopPropagation()
+          const url = getMpvUrl(videos)
+          if (url.length > 2048) {
+            alert("url too long!")
+            return
+          }
+          setLoading(true)
+          openUrl(url)
+          setTimeout(() => {
+            setLoading(false)
+          }, 1000);
         }}
         onMouseEnter={() => {
           setHover(true)

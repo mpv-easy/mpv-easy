@@ -34,14 +34,16 @@ export function encode(arraybuffer: ArrayBuffer): string {
   return base64
 }
 
-export function openMpv(playList: PlayItem[]) {
-  const a = document.createElement("a")
+
+export function getMpvUrl(playList: PlayItem[]): string {
   const jsonStr = JSON.stringify(playList)
   const zipBuf = gzipSync(strToU8(jsonStr))
   const base64 = encode(zipBuf)
-  if (base64.length > 2048) {
-    console.error("url too long!")
-  }
-  a.href = `mpv-easy://${base64}`
+  return `mpv-easy://${base64}`
+}
+
+export function openUrl(url:string) {
+  const a = document.createElement("a")
+  a.href = url
   a.click()
 }

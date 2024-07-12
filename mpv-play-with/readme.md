@@ -17,12 +17,13 @@ export type PlayItem = {
 ```
 
 Encode a set of video information in base64 and pass it to the player
+Since the URL length is limited to 2048, zip compression is used to support more videos.
 ```ts
-export function openMpv(playList: PlayItem[]) {
-  const a = document.createElement("a")
-  const base64 = encode(JSON.stringify(playList))
-  a.href = `mpv-easy://${base64}`
-  a.click()
+export function getMpvUrl(playList: PlayItem[]): string {
+  const jsonStr = JSON.stringify(playList)
+  const zipBuf = gzipSync(strToU8(jsonStr))
+  const base64 = encode(zipBuf)
+  return `mpv-easy://${base64}`
 }
 ```
 
