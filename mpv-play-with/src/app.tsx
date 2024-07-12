@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react"
 import { Icon } from "./icons"
 import { Bilibili, Youtube } from "./rules"
-import { openMpv, } from "./share"
+import { openMpv } from "./share"
 import { Jellyfin } from "./rules/Jellyfin"
 import { PlayItem } from "./type"
 
@@ -46,14 +46,15 @@ export function App() {
   }, [])
 
   return (
-    display && videos.length && (
+    display &&
+    videos.length && (
       <div
         ref={domRef}
         style={{
           width,
           height,
           display: "flex",
-          position: 'fixed',
+          position: "fixed",
           left: pos.x,
           bottom: pos.y,
           zIndex,

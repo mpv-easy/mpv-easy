@@ -1,7 +1,6 @@
 import { encode } from "js-base64"
 import { PlayItem } from "./type"
 
-
 export function getTitle(s: string): string {
   return s.replaceAll("'", "").replaceAll('"', "")
 }

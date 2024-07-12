@@ -11,7 +11,7 @@ export const Youtube: Rule = {
     const play = {
       url,
       args,
-      title: ''
+      title: "",
     }
     return [play]
   },

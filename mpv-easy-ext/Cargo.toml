@@ -30,6 +30,7 @@ image = "0.25.1"
 rand = "0.8.5"
 glob = "0.3.1"
 serde-jellyfin= { version = "0.1"}
+temp-dir = "0.1.13"
 
 [target.'cfg(not(target_os = "android"))'.dependencies]
 clipboard-rs = "0.1.7"

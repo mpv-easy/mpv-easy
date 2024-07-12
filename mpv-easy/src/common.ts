@@ -1,5 +1,6 @@
 import {
   getFileName,
+  getPropertyNumber,
   getPropertyString,
   isYoutube,
   jellyfin,
@@ -17,6 +18,17 @@ export function textEllipsis(
   return text.slice(0, maxLength - ellipsis.length) + ellipsis
 }
 
+export function getVideoTitle(p: string) {
+  const c = getPropertyNumber("playlist-count") || 0
+  for (let i = 0; i < c; i++) {
+    const a = getPropertyString(`playlist/${i}/filename`) ?? ""
+    const b = getPropertyString(`playlist/${i}/title`) ?? ""
+    if (p === a && b.length) {
+      return b
+    }
+  }
+}
+
 export function getVideoName(p: string): string {
   const forceTitle = getPropertyString("force-media-title")
   if (forceTitle?.length) {
@@ -30,7 +42,7 @@ export function getVideoName(p: string): string {
     }
   }
 
-  return getFileName(p) || ""
+  return getVideoTitle(p) || getFileName(p) || ""
 }
 
 export function getMaxStringLength(list: readonly string[]): number {

@@ -44,7 +44,21 @@ fn main() {
         let args_str = args.join(" ");
         cmd.raw_arg(args_str);
         cmd.output().unwrap();
+        return;
     }
 
-    // TODO: support playlist
+    let mut m3u = vec!["#EXTM3U".to_string()];
+    for play in play_list {
+        m3u.push(format!("#EXTINF:-1,{}", play.title));
+        m3u.push(play.url);
+    }
+    use temp_dir::TempDir;
+    let d = TempDir::new().unwrap();
+    let m3u_path = d.path().join(".mpv-easy-play-with.m3u");
+    std::fs::write(&m3u_path, m3u.join("\n")).unwrap();
+    cmd.raw_arg(format!(
+        "--playlist={}",
+        m3u_path.to_string_lossy()
+    ));
+    cmd.output().unwrap();
 }
