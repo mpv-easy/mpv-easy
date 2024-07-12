@@ -34,15 +34,46 @@ export function encode(arraybuffer: ArrayBuffer): string {
   return base64
 }
 
-export function getMpvUrl(playList: PlayItem[]): string {
+export function encodeToBase64(playList: PlayItem[]): string {
   const jsonStr = JSON.stringify(playList)
   const zipBuf = gzipSync(strToU8(jsonStr))
   const base64 = encode(zipBuf)
-  return `mpv-easy://${base64}`
+  return base64
 }
 
-export function openUrl(url: string) {
+export const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms))
+
+export function splitChunk(array: string, chunkSize: number): string[] {
+  const chunks: string[] = []
+  for (let i = 0; i < array.length; i += chunkSize) {
+    const chunk = array.slice(i, i + chunkSize)
+    chunks.push(chunk)
+  }
+  return chunks
+}
+
+export const Header = "mpv-easy://"
+const ChunkSize = 2000
+const WaitTime = 100
+
+export async function sendToMpv(base64: string) {
   const a = document.createElement("a")
-  a.href = url
+  a.href = Header + base64
   a.click()
+}
+export async function openUrl(base64: string) {
+  if (base64.length > ChunkSize) {
+    const count = Math.ceil(base64.length / ChunkSize)
+    const chunks = splitChunk(base64, ChunkSize)
+    for (let i = 0; i < count; i++) {
+      const chunk = chunks[i]
+      const url = `${chunk}?${i}&${count}`
+      sendToMpv(url)
+
+      // Wait for mpv-easy-play-with to write the file to prevent out-of-order problems
+      await sleep(WaitTime)
+    }
+    return
+  }
+  sendToMpv(base64)
 }

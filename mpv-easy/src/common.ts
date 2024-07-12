@@ -30,11 +30,20 @@ export function getVideoTitle(p: string) {
 }
 
 export function getVideoName(p: string): string {
+  // --playlist=m3u
+  const title = getVideoTitle(p)
+
+  if (title?.length) {
+    return title
+  }
+
+  // yt-dl
   const forceTitle = getPropertyString("force-media-title")
   if (forceTitle?.length) {
     return forceTitle
   }
 
+  // jellyfin
   if (jellyfin.isJellyfin(p)) {
     const n = jellyfin.getNameFromUrl(p)
     if (n) {
@@ -42,7 +51,7 @@ export function getVideoName(p: string): string {
     }
   }
 
-  return getVideoTitle(p) || getFileName(p) || ""
+  return getFileName(p) || ""
 }
 
 export function getMaxStringLength(list: readonly string[]): number {

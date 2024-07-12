@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react"
 import { Bilibili, Jellyfin, Youtube } from "./rules"
-import { getMpvUrl, openUrl } from "./share"
+import { encodeToBase64, openUrl } from "./share"
 import { PlayItem } from "./type"
 import { MPV_LOGO } from "./icons"
 
@@ -61,15 +61,11 @@ export function App() {
           // @ts-ignore
           WebkitUserDrag: "element",
         }}
-        onMouseUp={(e) => {
+        onMouseUp={async (e) => {
           e.stopPropagation()
-          const url = getMpvUrl(videos)
-          if (url.length > 2048) {
-            alert("url too long!")
-            return
-          }
+          const url = encodeToBase64(videos)
           setLoading(true)
-          openUrl(url)
+          await openUrl(url)
           setTimeout(() => {
             setLoading(false)
           }, 1000)
