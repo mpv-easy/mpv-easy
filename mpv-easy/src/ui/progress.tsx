@@ -3,6 +3,7 @@ import {
   type VideoParams,
   formatTime,
   getTimeFormat,
+  isYoutube,
   randomId,
   setPropertyNumber,
 } from "@mpv-easy/tool"
@@ -17,6 +18,7 @@ import {
   timePosSelector,
   smallFontSizeSelector,
   buttonStyleSelector,
+  pathSelector,
 } from "../store"
 import { ThumbFast } from "@mpv-easy/thumbfast"
 
@@ -37,9 +39,13 @@ export const Progress = ({ width, height, ...props }: MpDomProps) => {
   const cursorLeftOffset = progressW ? progress.cursorSize / 2 / progressW : 0
   const cursorLeft = timePos / duration - cursorLeftOffset
 
+  const path = useSelector(pathSelector)
+  // TODO: support youtube thumbfast
+  const supportThumbfast = !isYoutube(path)
+
   useEffect(() => {
     new PropertyNative<VideoParams>("video-params").observe((v) => {
-      if (!v) {
+      if (!v || !supportThumbfast) {
         return
       }
       const { w = 0, h = 0 } = v
@@ -173,8 +179,6 @@ export const Progress = ({ width, height, ...props }: MpDomProps) => {
           zIndex={progress.previewZIndex}
           display="flex"
           alignContent="stretch"
-          // justifyContent="center"
-          // alignItems="center"
         >
           {!previewCursorHide && (
             <Box
@@ -189,29 +193,29 @@ export const Progress = ({ width, height, ...props }: MpDomProps) => {
               pointerEvents="none"
               display="flex"
               ref={previewTextRef}
-              // alignContent='stretch'
               justifyContent="center"
               alignItems="center"
             />
           )}
 
-          {thumbRef.current && !previewCursorHide && !!thumbX && !!thumbY && (
-            <Box
-              id={42}
-              position="absolute"
-              x={thumbX}
-              y={thumbY}
-              width={thumbRef.current?.thumbWidth}
-              height={thumbRef.current?.thumbHeight}
-              backgroundImage={thumbRef.current?.path}
-              backgroundImageFormat={thumbRef.current?.format}
-              pointerEvents="none"
-              // display="flex"
-              // alignContent='stretch'
-              // justifyContent="center"
-              // alignItems="center"
-            />
-          )}
+          {thumbRef.current &&
+            !previewCursorHide &&
+            !!thumbX &&
+            !!thumbY &&
+            supportThumbfast && (
+              <Box
+                id={42}
+                position="absolute"
+                x={thumbX}
+                y={thumbY}
+                width={thumbRef.current?.thumbWidth}
+                height={thumbRef.current?.thumbHeight}
+                backgroundImage={thumbRef.current?.path}
+                backgroundImageFormat={thumbRef.current?.format}
+                pointerEvents="none"
+                // alignItems="center"
+              />
+            )}
         </Box>
       )}
     </Box>
