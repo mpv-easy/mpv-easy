@@ -45,6 +45,30 @@ To prevent errors in the order of chunk merging, it is recommended to wait 100ms
 base64?chunkId&chunkCount
 ```
 
+## rules
+
+### youtube
+
+```
+https://www.youtube.com/
+https://www.youtube.com/watch?v=xxx
+https://www.youtube.com/watch?v=xxx&list=xxx
+https://www.youtube.com/@xxx
+https://www.youtube.com/@xxx/videos
+```
+
+### jellyfin
+
+```
+host/web/index.html#!/movies.html?topParentId=xxx
+host/web/index.html#!/details?id=xxx&serverId=xxx
+host/web/index.html#!/video
+```
+
+### bilibili
+todo
+
+
 ## custom protocol
 
 ```cmd
