@@ -6,7 +6,8 @@ import {
   isDir,
   isHttp,
   isVideo,
-  isYoutube,
+  youtube,
+  bilibili,
   webdavList,
 } from "@mpv-easy/tool"
 
@@ -27,8 +28,13 @@ function getList(s: string | undefined, context: PluginContext): string[] {
       return [normalize(s)]
     }
 
-    if (isYoutube(s)) {
+    if (youtube.isYoutube(s)) {
       osdDuration && printAndOsd(`play youtube: ${s}`, osdDuration)
+      return [s]
+    }
+
+    if (bilibili.isBilibili(s)) {
+      osdDuration && printAndOsd(`play bilibili: ${s}`, osdDuration)
       return [s]
     }
 

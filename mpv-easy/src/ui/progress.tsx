@@ -1,11 +1,12 @@
 import {
   PropertyNative,
   type VideoParams,
+  bilibili,
   formatTime,
   getTimeFormat,
-  isYoutube,
   randomId,
   setPropertyNumber,
+  youtube,
 } from "@mpv-easy/tool"
 import { Box, type MpDom } from "@mpv-easy/ui"
 import React, { useRef, useState, useEffect } from "react"
@@ -40,8 +41,9 @@ export const Progress = ({ width, height, ...props }: MpDomProps) => {
   const cursorLeft = timePos / duration - cursorLeftOffset
 
   const path = useSelector(pathSelector)
-  // TODO: support youtube thumbfast
-  const supportThumbfast = !isYoutube(path)
+  // TODO: support yt-dlp thumbfast
+  const supportThumbfast =
+    !youtube.isYoutube(path) && !bilibili.isBilibili(path)
 
   useEffect(() => {
     new PropertyNative<VideoParams>("video-params").observe((v) => {

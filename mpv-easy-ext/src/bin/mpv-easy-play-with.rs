@@ -36,8 +36,8 @@ fn main() {
     let tmp_dir = std::env::temp_dir();
 
     if let (Some(chunk_index), Some(count_index)) = (chunk_index, count_index) {
-        let chunk_id: u32 = b64[chunk_index+1..count_index].parse().unwrap();
-        let chunk_count: u32 = b64[count_index+1..].parse().unwrap();
+        let chunk_id: u32 = b64[chunk_index + 1..count_index].parse().unwrap();
+        let chunk_count: u32 = b64[count_index + 1..].parse().unwrap();
         let chunk = &b64[0..chunk_index];
         let chunk_name = format!("{}-{}", CHUNK_PREFIX, chunk_id);
         let chunk_path = tmp_dir.join(chunk_name);
@@ -71,7 +71,10 @@ fn main() {
     decoder.read_to_string(&mut json_str).unwrap();
 
     let play_list: Vec<Play> = serde_json::from_str(&json_str).unwrap();
-    let mut cmd = std::process::Command::new(mpv_path);
+    let mpv_path = std::path::PathBuf::from(mpv_path);
+    let mut cmd = std::process::Command::new(&mpv_path);
+    let mpv_dir = mpv_path.parent().unwrap();
+    cmd.current_dir(mpv_dir);
     if play_list.is_empty() {
         return;
     }

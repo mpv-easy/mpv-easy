@@ -2,7 +2,6 @@ import {
   getFileName,
   getPropertyNumber,
   getPropertyString,
-  isYoutube,
   jellyfin,
 } from "@mpv-easy/tool"
 

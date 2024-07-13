@@ -13,9 +13,16 @@ import { getFileName } from "./path"
 import type { TrackItem } from "./type"
 import { getTmpDir } from "./tmp"
 import { isYoutube } from "./youtube"
+import { isBilibili } from "./bilibili"
+import { bilibili } from "."
 
 export function loadRemoteSubtitle(path = getProperty("path")) {
-  if (!path?.length || isYoutube(path) || jellyfin.isJellyfin(path)) {
+  if (
+    !path?.length ||
+    isYoutube(path) ||
+    jellyfin.isJellyfin(path) ||
+    bilibili.isBilibili(path)
+  ) {
     return
   }
   const trackList = (getPropertyNative<TrackItem[]>("track-list") || []).filter(
@@ -71,7 +78,12 @@ export function loadRemoteSubtitle(path = getProperty("path")) {
 }
 
 export async function loadRemoteSubtitleAsync(path = getProperty("path")) {
-  if (!path?.length || isYoutube(path) || jellyfin.isJellyfin(path)) {
+  if (
+    !path?.length ||
+    isYoutube(path) ||
+    jellyfin.isJellyfin(path) ||
+    isBilibili(path)
+  ) {
     return
   }
   const trackList = (getPropertyNative<TrackItem[]>("track-list") || []).filter(

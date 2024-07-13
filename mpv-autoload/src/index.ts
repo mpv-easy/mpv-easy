@@ -2,9 +2,9 @@ import { SystemApi, definePlugin } from "@mpv-easy/plugin"
 import {
   dir,
   getMpvPlaylist,
-  isYoutube,
+  youtube,
   jellyfin,
-  updatePlaylist,
+  bilibili,
 } from "@mpv-easy/tool"
 import { normalize } from "@mpv-easy/tool"
 import {
@@ -16,7 +16,7 @@ import {
   joinPath,
   readdir,
 } from "@mpv-easy/tool"
-import { getProperty, registerEvent } from "@mpv-easy/tool"
+import { registerEvent } from "@mpv-easy/tool"
 
 export const pluginName = "@mpv-easy/autoload"
 
@@ -69,7 +69,11 @@ export function autoload(
   const path = normalize(getPropertyString("path") || "")
 
   if (isHttp(path)) {
-    if (isYoutube(path) || jellyfin.isJellyfin(path)) {
+    if (
+      youtube.isYoutube(path) ||
+      jellyfin.isJellyfin(path) ||
+      bilibili.isBilibili(path)
+    ) {
       return
     }
 
