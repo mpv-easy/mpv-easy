@@ -20,6 +20,27 @@ export const Bilibili: Rule = {
       ]
     }
 
+    if (bilibili.MainReg.test(url)) {
+      const list: PlayItem[] = []
+      for (const i of Array.from(
+        document.querySelectorAll(".feed-card .bili-video-card__info--tit"),
+      )) {
+        const a = i.querySelector("a")
+        const href = a?.getAttribute("href")
+        const title = a?.textContent
+
+        if (!href?.length || !title?.length) {
+          continue
+        }
+
+        list.push({
+          url: href,
+          title,
+          args: [],
+        })
+      }
+    }
+
     return []
   },
 }
