@@ -45,6 +45,11 @@ To prevent errors in the order of chunk merging, it is recommended to wait 100ms
 base64?chunkId&chunkCount
 ```
 
+## short key
+
+### ctrl+shift+r
+reset icon position to bottom left
+
 ## rules
 
 ### youtube

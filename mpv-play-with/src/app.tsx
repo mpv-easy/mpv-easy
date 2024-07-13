@@ -13,8 +13,11 @@ export function App() {
   const height = 64
 
   // _pos maybe undefined ?
-  const [_pos, setPos] = useLocalStorage(LocalStorageKey, { x: 0, y: 0 })
-  const pos = { x: 0, y: 0, ..._pos }
+  const [_pos, setPos, removePos] = useLocalStorage(LocalStorageKey, {
+    left: 0,
+    bottom: 0,
+  })
+  const pos = { left: 0, bottom: 0, ..._pos }
   const dragStartMousePos = useRef(pos)
 
   const zIndex = 1 << 20
@@ -45,6 +48,13 @@ export function App() {
   useEffect(() => {
     setInterval(detect, 1000)
     detect()
+
+    document.body.addEventListener("keydown", (e) => {
+      if (e.code === "KeyR" && e.shiftKey && e.ctrlKey) {
+        setPos({ left: 0, bottom: 0 })
+        removePos()
+      }
+    })
   }, [])
 
   return (
@@ -57,8 +67,8 @@ export function App() {
           height,
           display: "flex",
           position: "fixed",
-          left: pos.x,
-          bottom: pos.y,
+          left: pos.left,
+          bottom: pos.bottom,
           zIndex,
           opacity,
           cursor: "pointer",
@@ -82,14 +92,14 @@ export function App() {
           setHover(false)
         }}
         onDragStart={(e) => {
-          dragStartMousePos.current = { x: e.clientX, y: e.clientY }
+          dragStartMousePos.current = { left: e.clientX, bottom: e.clientY }
         }}
         onDragEnd={(e) => {
-          const dx = e.clientX - dragStartMousePos.current.x
-          const dy = e.clientY - dragStartMousePos.current.y
+          const dx = e.clientX - dragStartMousePos.current.left
+          const dy = e.clientY - dragStartMousePos.current.bottom
           setPos({
-            x: pos.x + dx,
-            y: pos.y - dy,
+            left: pos.left + dx,
+            bottom: pos.bottom - dy,
           })
           e.stopPropagation()
           e.preventDefault()
