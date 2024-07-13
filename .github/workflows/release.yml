@@ -257,6 +257,7 @@ jobs:
           cp -r ./mpv-anime4k/shaders ./dist
           cp ./mpv-easy/mpv-conf/mpv.conf ./dist/mpv.conf
           cp ./mpv-easy/mpv-conf/input.conf ./dist/input.conf
+          cp ./mpv-easy/mpv-conf/yt-cookies.txt ./dist/yt-cookies.txt
 
           chmod 777 ./mpv-easy-ext-dist/*
           chmod 777 ./mpv-easy-play-with-dist/*
