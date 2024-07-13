@@ -12,6 +12,21 @@ You need to install the [tampermonkey](https://www.tampermonkey.net/) extension 
 
 Then install script [mpv-easy-play-with.user.js](https://github.com/mpv-easy/mpv-easy/releases/latest/download/mpv-easy-play-with.user.js)
 
+## npm
+
+```bash
+npm i @mpv-easy/play-with
+```
+
+```ts
+import { sendToMpv, encodeToBase64 } from '@mpv-easy/play-with';
+import type { PlayItem } from '@mpv-easy/play-with';
+
+const list: PlayItem[] = [];
+const base64 = encodeToBase64(list);
+sendToMpv(base64);
+```
+
 ## type
 
 A playable video corresponds to the following structure
@@ -48,6 +63,7 @@ base64?chunkId&chunkCount
 ## short key
 
 ### ctrl+shift+r
+
 reset icon position to bottom left
 
 ## rules
@@ -71,8 +87,8 @@ host/web/index.html#!/video
 ```
 
 ### bilibili
-todo
 
+todo
 
 ## custom protocol
 

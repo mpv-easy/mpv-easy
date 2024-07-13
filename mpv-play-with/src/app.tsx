@@ -2,13 +2,14 @@ import React, { useEffect, useRef, useState } from "react"
 import { Bilibili, Jellyfin, Youtube } from "./rules"
 import { encodeToBase64, openUrl } from "./share"
 import { PlayItem } from "./type"
-import { MPV_LOGO } from "./icons"
+import Mpv from "../assets/mpv-logo.png"
+export const MPV_LOGO = `data:image/png;base64,${Mpv}`
 import { useLocalStorage } from "react-use"
 
 const Rules = [Bilibili, Youtube, Jellyfin]
 
 const LocalStorageKey = "mpv-easy-play-with"
-const LoadingTime = 2000;
+const LoadingTime = 2000
 
 export function App() {
   const width = 64
@@ -76,7 +77,7 @@ export function App() {
           cursor: "pointer",
           // @ts-ignore
           WebkitUserDrag: "element",
-          filter: loading ? "grayscale(100%)" : ""
+          filter: loading ? "grayscale(100%)" : "",
         }}
         onMouseUp={async (e) => {
           e.stopPropagation()

@@ -9,7 +9,8 @@ const VideoReg = /^(?:https?:\/\/)(.*?).youtube\.(.*?)\/watch\?v=(.*?)$/
 
 export const Youtube: Rule = {
   match: (url: string): boolean =>
-    isYoutube(url) || [MainPageReg, MyVideosReg, VideoReg].some((i) => i.test(url)),
+    isYoutube(url) ||
+    [MainPageReg, MyVideosReg, VideoReg].some((i) => i.test(url)),
   getVideos: (url: string): PlayItem[] => {
     if (ListReg.test(url)) {
       const list: PlayItem[] = []
@@ -33,14 +34,16 @@ export const Youtube: Rule = {
     }
 
     if (VideoReg.test(url)) {
-      const title = document.querySelector('yt-formatted-string.style-scope.ytd-watch-metadata')?.textContent
+      const title = document.querySelector(
+        "yt-formatted-string.style-scope.ytd-watch-metadata",
+      )?.textContent
       if (title?.length) {
         return [
           {
             url,
             title,
-            args: []
-          }
+            args: [],
+          },
         ]
       }
     }

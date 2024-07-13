@@ -1,14 +1,15 @@
 {
   "name": "@mpv-easy/play-with",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "files": ["dist", "readme.md", "package.json"],
   "description": "",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
     "meta": "tsx ./script/meta.ts",
-    "build": "esbuild ./src/index.tsx --outfile=./dist/mpv-easy-play-with.js --bundle  --loader:.png=base64 --format=iife && npm run meta",
-    "dev": "esbuild ./src/index.tsx --outfile=./dist/mpv-easy-play-with.js --bundle  --loader:.png=base64 --format=iife --watch",
+    "build": "tsc  -p ./tsconfig.build.json && npm run bundle",
+    "bundle": "esbuild ./src/play-with.tsx --outfile=./dist/mpv-easy-play-with.js --bundle  --loader:.png=base64 --format=iife && npm run meta",
+    "dev": "esbuild ./src/play-with.tsx --outfile=./dist/mpv-easy-play-with.js --bundle  --loader:.png=base64 --format=iife --watch",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
