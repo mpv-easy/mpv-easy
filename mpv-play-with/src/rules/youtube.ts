@@ -2,13 +2,14 @@ import { isYoutube } from "@mpv-easy/tool"
 import { PlayItem, Rule } from "../type"
 
 const MainPageReg = /^(?:https?:\/\/)(.*?)\.youtube\.(.*?)\/?$/
-const MyVideoReg = /^(?:https?:\/\/)(.*?).youtube\.(.*?)\/@(.*?)\/videos\/?/
+const MyVideosReg = /^(?:https?:\/\/)(.*?).youtube\.(.*?)\/@(.*?)\/videos\/?/
 const ListReg =
   /^(?:https?:\/\/)(.*?).youtube\.(.*?)\/watch\?v=(.*?)&list=(.*?)/
+const VideoReg = /^(?:https?:\/\/)(.*?).youtube\.(.*?)\/watch\?v=(.*?)$/
 
 export const Youtube: Rule = {
   match: (url: string): boolean =>
-    isYoutube(url) || [MainPageReg, MyVideoReg].some((i) => i.test(url)),
+    isYoutube(url) || [MainPageReg, MyVideosReg, VideoReg].some((i) => i.test(url)),
   getVideos: (url: string): PlayItem[] => {
     if (ListReg.test(url)) {
       const list: PlayItem[] = []
@@ -31,7 +32,20 @@ export const Youtube: Rule = {
       return list
     }
 
-    if (MainPageReg.test(url) || MyVideoReg.test(url)) {
+    if (VideoReg.test(url)) {
+      const title = document.querySelector('yt-formatted-string.style-scope.ytd-watch-metadata')?.textContent
+      if (title?.length) {
+        return [
+          {
+            url,
+            title,
+            args: []
+          }
+        ]
+      }
+    }
+
+    if (MainPageReg.test(url) || MyVideosReg.test(url)) {
       const list: PlayItem[] = []
       const videoTitleLinkList = Array.from(
         document.querySelectorAll("#video-title-link"),
@@ -44,7 +58,7 @@ export const Youtube: Rule = {
         const href = i.getAttribute("href") || ""
         const url = location.origin + href
 
-        if (title?.length && url.length) {
+        if (title?.length && href.length) {
           list.push({
             url,
             title,

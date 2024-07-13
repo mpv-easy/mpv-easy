@@ -8,6 +8,8 @@ import { useLocalStorage } from "react-use"
 const Rules = [Bilibili, Youtube, Jellyfin]
 
 const LocalStorageKey = "mpv-easy-play-with"
+const LoadingTime = 2000;
+
 export function App() {
   const width = 64
   const height = 64
@@ -72,18 +74,21 @@ export function App() {
           zIndex,
           opacity,
           cursor: "pointer",
-          pointerEvents: loading ? "none" : "inherit",
           // @ts-ignore
           WebkitUserDrag: "element",
+          filter: loading ? "grayscale(100%)" : ""
         }}
         onMouseUp={async (e) => {
           e.stopPropagation()
+          if (loading) {
+            return
+          }
           const url = encodeToBase64(videos)
           setLoading(true)
           await openUrl(url)
           setTimeout(() => {
             setLoading(false)
-          }, 1000)
+          }, LoadingTime)
         }}
         onMouseEnter={() => {
           setHover(true)
