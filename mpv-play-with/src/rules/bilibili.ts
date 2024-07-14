@@ -28,9 +28,7 @@ export const Bilibili: Rule = {
         return { items }
       }
 
-
-
-      const ranks = document.querySelectorAll('.rank-list .rank-item .info > a')
+      const ranks = document.querySelectorAll(".rank-list .rank-item .info > a")
       for (const i of Array.from(ranks)) {
         const href = i.getAttribute("href")
         const title = i.getAttribute("title")
