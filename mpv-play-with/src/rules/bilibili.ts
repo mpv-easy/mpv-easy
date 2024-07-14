@@ -11,28 +11,28 @@ export const Bilibili: Rule = {
       const name =
         document.querySelector("a[class^=mediainfo_mediaTitle_]")
           ?.textContent || ""
+      let start = 0
       for (const i of Array.from(
         document.querySelectorAll(
-          "div[class^=numberListItem_number_list_item__] > a",
+          "div[class^=numberListItem_number_list_item__]",
         ),
       )) {
-        const href = i.getAttribute("href")
-        const n = i.querySelector(
-          "span[class^=numberListItem_title__]",
-        )?.textContent
+        const href = i.querySelector("a")?.getAttribute("href")
+        const title = i?.textContent
 
-        if (!href?.length || !n?.length) {
+        if (!href?.length || !title?.length) {
           continue
         }
-
-        const title = Number.isInteger(+n) ? `${name} ${n}` : n
+        if (i.getAttribute("class")?.includes("select")) {
+          start = items.length
+        }
         items.push({
           url: location.origin + href,
-          title,
+          title: `${name} ${title}`.trim(),
         })
       }
 
-      return { items }
+      return { items, start }
     }
     if (bilibili.PopularReg.test(url)) {
       const items: PlayItem[] = []
