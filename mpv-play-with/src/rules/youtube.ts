@@ -1,5 +1,5 @@
 import { youtube } from "@mpv-easy/tool"
-import { PlayItem, Rule } from "../type"
+import { PlayItem, PlayList, Rule } from "../type"
 
 export const Youtube: Rule = {
   match: (url: string): boolean =>
@@ -7,9 +7,9 @@ export const Youtube: Rule = {
     [youtube.MainPageReg, youtube.MyVideosReg, youtube.VideoReg].some((i) =>
       i.test(url),
     ),
-  getVideos: async (url: string): Promise<PlayItem[]> => {
+  getVideos: async (url: string): Promise<PlayList | undefined> => {
     if (youtube.ListReg.test(url)) {
-      const list: PlayItem[] = []
+      const items: PlayItem[] = []
       const videoTitleLinkList = Array.from(
         document.querySelectorAll("#wc-endpoint"),
       )
@@ -19,14 +19,13 @@ export const Youtube: Rule = {
         const titleDom = i.querySelector("#video-title")
         const title = titleDom?.textContent?.trim() || ""
         if (href.length) {
-          list.push({
+          items.push({
             url,
             title,
-            args: [],
           })
         }
       }
-      return list
+      return { items }
     }
 
     if (youtube.VideoReg.test(url)) {
@@ -34,18 +33,19 @@ export const Youtube: Rule = {
         "yt-formatted-string.style-scope.ytd-watch-metadata",
       )?.textContent
       if (title?.length) {
-        return [
-          {
-            url,
-            title,
-            args: [],
-          },
-        ]
+        return {
+          items: [
+            {
+              url,
+              title,
+            },
+          ],
+        }
       }
     }
 
     if (youtube.MainPageReg.test(url) || youtube.MyVideosReg.test(url)) {
-      const list: PlayItem[] = []
+      const items: PlayItem[] = []
       const videoTitleLinkList = Array.from(
         document.querySelectorAll("#video-title-link"),
       )
@@ -58,14 +58,13 @@ export const Youtube: Rule = {
         const url = location.origin + href
 
         if (title?.length && href.length) {
-          list.push({
+          items.push({
             url,
             title,
-            args: [],
           })
         }
       }
-      return list
+      return { items }
     }
 
     const args: string[] = []
@@ -74,6 +73,6 @@ export const Youtube: Rule = {
       args,
       title: "",
     }
-    return [play]
+    return { items: [play] }
   },
 }

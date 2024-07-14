@@ -12,6 +12,7 @@ You need to install the [tampermonkey](https://www.tampermonkey.net/) extension 
 
 Then install script [mpv-easy-play-with.user.js](https://github.com/mpv-easy/mpv-easy/releases/latest/download/mpv-easy-play-with.user.js)
 
+When play-with detects videos in the page, you can add all videos to the mpv player through the mpv icon in the bottom left corner
 ## npm
 
 ```bash
@@ -20,9 +21,14 @@ npm i @mpv-easy/play-with
 
 ```ts
 import { sendToMpv, encodeToBase64 } from '@mpv-easy/play-with';
-import type { PlayItem } from '@mpv-easy/play-with';
+import type { PlayItem, PlayList } from '@mpv-easy/play-with';
 
-const list: PlayItem[] = [];
+const items: PlayItem[] = [
+  url: 'http://hello.mp4',
+  title: 'mpv-easy'
+];
+const playList: PlayList = { items, start: 0 } ;
+
 const base64 = encodeToBase64(list);
 sendToMpv(base64);
 ```
@@ -43,7 +49,7 @@ Encode a set of video information in base64 and pass it to the player
 Since the URL length is limited to 2048, zip compression is used to support more videos.
 
 ```ts
-export function getMpvUrl(playList: PlayItem[]): string {
+export function getMpvUrl(playList: PlayList): string {
   const jsonStr = JSON.stringify(playList);
   const zipBuf = gzipSync(strToU8(jsonStr));
   const base64 = encode(zipBuf);
