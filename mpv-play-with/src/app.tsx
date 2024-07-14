@@ -28,9 +28,6 @@ export function App() {
   const [hover, setHover] = useState(false)
   const domRef = useRef<HTMLDivElement>(null)
   const [list, setList] = useState<PlayList>()
-
-  console.log("list", list)
-
   const videos = list?.items || []
   const opacity = hover ? 100 : 0
   const [loading, setLoading] = useState(false)
@@ -42,11 +39,13 @@ export function App() {
       setDisplay(true)
     } else {
       setDisplay(false)
+      setList({ items: [] })
     }
 
     if (rule) {
       const videoList = await rule.getVideos(url)
       if (!videoList?.items.length) {
+        setList({ items: [] })
         return
       }
       setList(videoList)

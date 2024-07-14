@@ -24,7 +24,31 @@ export const Bilibili: Rule = {
         })
       }
 
-      return { items }
+      if (items.length) {
+        return { items }
+      }
+
+
+
+      const ranks = document.querySelectorAll('.rank-list .rank-item .info > a')
+      for (const i of Array.from(ranks)) {
+        const href = i.getAttribute("href")
+        const title = i.getAttribute("title")
+
+        if (!href?.length || !title?.length) {
+          continue
+        }
+        items.push({
+          url: location.protocol + href,
+          title,
+        })
+      }
+
+      if (items.length) {
+        return { items }
+      }
+
+      return
     }
 
     if (document.querySelector(".video-sections-content-list")) {
