@@ -14,6 +14,7 @@ import {
   scrollListStyleSelector,
 } from "../../store"
 import { measureText, type MouseEvent } from "@mpv-easy/ui"
+import { getOsdSize } from "@mpv-easy/tool"
 
 export type ScrollListProps = {
   items: {
@@ -23,7 +24,15 @@ export type ScrollListProps = {
   }[]
 }
 
+const MaxWidthCache: Record<string, number> = {}
 function getMaxWidth(textList: string[], button: Partial<ButtonProps>) {
+  const size = getOsdSize()
+  const cacheKey = `${JSON.stringify(size)}\n${textList.join("\n")}`
+
+  if (MaxWidthCache[cacheKey]) {
+    return MaxWidthCache[cacheKey]
+  }
+
   let max = 0
   for (const i of textList) {
     const node = createNode("@mpv-easy/box")
@@ -31,6 +40,7 @@ function getMaxWidth(textList: string[], button: Partial<ButtonProps>) {
     node.attributes.text = i
     max = Math.max(max, measureText(node).width)
   }
+  MaxWidthCache[cacheKey] = max
   return max
 }
 

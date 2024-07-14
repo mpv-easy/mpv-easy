@@ -71,7 +71,7 @@ export function measureText(node: MpDom): Shape {
   }
 
   _measureOverlay.data = textCache
-  const { width, height, x, y } = _measureOverlay.update(1 / assScale)
+  const { width, height } = _measureOverlay.update(1 / assScale)
   layoutNode.textRect.width = width
   layoutNode.textRect.height = height
   _measureCache[textCache] = { width, height }

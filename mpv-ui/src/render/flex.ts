@@ -30,7 +30,7 @@ export const getRootNode = () => {
   return RootNode
 }
 
-export const DefaultFps = 15
+export const DefaultFps = 30
 
 export class MpFlex extends Flex<MpAttrs, MpProps, MpEvent> {
   customCreateMouseEvent(
