@@ -14,14 +14,15 @@ import type { TrackItem } from "./type"
 import { getTmpDir } from "./tmp"
 import { isYoutube } from "./youtube"
 import { isBilibili } from "./bilibili"
-import { bilibili } from "."
+import { bilibili, twitch } from "."
 
 export function loadRemoteSubtitle(path = getProperty("path")) {
   if (
     !path?.length ||
     isYoutube(path) ||
     jellyfin.isJellyfin(path) ||
-    bilibili.isBilibili(path)
+    bilibili.isBilibili(path) ||
+    twitch.isTwitch(path)
   ) {
     return
   }
@@ -82,7 +83,8 @@ export async function loadRemoteSubtitleAsync(path = getProperty("path")) {
     !path?.length ||
     isYoutube(path) ||
     jellyfin.isJellyfin(path) ||
-    isBilibili(path)
+    isBilibili(path) ||
+    twitch.isTwitch(path)
   ) {
     return
   }
