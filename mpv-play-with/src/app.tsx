@@ -66,7 +66,7 @@ export function App() {
 
   return (
     display &&
-    videos.length && (
+    videos.length > 0 && (
       <div
         ref={domRef}
         style={{
