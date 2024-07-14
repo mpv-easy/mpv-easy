@@ -5,8 +5,10 @@ export const MainReg =
 
 export const PopularReg = /^https?:\/\/(.*?)\.bilibili\.com\/v\/popular/
 
+export const BangumiReg = /^https?:\/\/(.*?)\.bilibili\.com\/bangumi/
+
 export function isBilibili(url: string) {
-  return [VideoReg, MainReg, PopularReg].some((i) => i.test(url))
+  return [VideoReg, MainReg, PopularReg, BangumiReg].some((i) => i.test(url))
 }
 
 export function getBV(url: string) {

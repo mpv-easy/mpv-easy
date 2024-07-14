@@ -5,6 +5,35 @@ import { getBvid } from "../../../mpv-tool/src/bilibili"
 export const Bilibili: Rule = {
   match: (url: string): boolean => bilibili.isBilibili(url),
   getVideos: async (url: string): Promise<PlayList | undefined> => {
+    if (bilibili.BangumiReg.test(url)) {
+      const items: PlayItem[] = []
+
+      const name =
+        document.querySelector("a[class^=mediainfo_mediaTitle_]")
+          ?.textContent || ""
+      for (const i of Array.from(
+        document.querySelectorAll(
+          "div[class^=numberListItem_number_list_item__] > a",
+        ),
+      )) {
+        const href = i.getAttribute("href")
+        const n = i.querySelector(
+          "span[class^=numberListItem_title__]",
+        )?.textContent
+
+        if (!href?.length || !n?.length) {
+          continue
+        }
+
+        const title = Number.isInteger(+n) ? `${name} ${n}` : n
+        items.push({
+          url: location.origin + href,
+          title,
+        })
+      }
+
+      return { items }
+    }
     if (bilibili.PopularReg.test(url)) {
       const items: PlayItem[] = []
       const cardList = [
