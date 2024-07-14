@@ -242,7 +242,7 @@ jobs:
 
       - name: "build ts"
         run: |
-          npm i pnpm -g
+          npm i pnpm @rwget/rwget -g
           pnpm i
           pnpm run build
 
@@ -307,10 +307,11 @@ jobs:
           mv ./mpy-easy-boa-windows/scripts/mpv-easy-config ./mpy-easy-boa-windows/scripts-boa/mpv-easy-config
 
           # https://github.com/yt-dlp/yt-dlp/releases
-          wget -P ./mpy-easy-windows/yt-dlp yt-dlp https://github.com/yt-dlp/yt-dlp/releases/download/2024.07.09/yt-dlp.exe || true
+          rwget -o ./mpy-easy-windows/yt-dlp/yt-dlp https://github.com/yt-dlp/yt-dlp/releases/download/2024.07.09/yt-dlp.exe
 
           # https://github.com/zhongfly/mpv-winbuild/releases
-          wget -O ./mpv-win.7z https://github.com/zhongfly/mpv-winbuild/releases/download/2024-07-12-c0f5d23/mpv-x86_64-v3-20240712-git-c0f5d23.7z
+          rwget -o ./mpv-win.7z https://github.com/zhongfly/mpv-winbuild/releases/download/2024-07-12-c0f5d23/mpv-x86_64-v3-20240712-git-c0f5d23.7z
+
           7z x ./mpv-win.7z -o./mpy-easy-windows-full -y
           cp -r ./mpy-easy-windows ./mpy-easy-windows-full/portable_config
 
