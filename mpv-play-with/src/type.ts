@@ -6,5 +6,5 @@ export type PlayItem = {
 
 export type Rule = {
   match(url: string): boolean
-  getVideos(url: string): PlayItem[]
+  getVideos(url: string): Promise<PlayItem[]>
 }

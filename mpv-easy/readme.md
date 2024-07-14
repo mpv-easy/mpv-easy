@@ -14,12 +14,6 @@ fish
 set -x MPV_SCRIPT_DIR /your_mpv_dir/portable_config/scripts ; pnpm run dev
 ```
 
-## yt-dlp
-
-### cookie
-
-Install the chrome extension [get-cookiestxt-locally](https://chromewebstore.google.com/detail/get-cookiestxt-locally/cclelndahbckbenkjhflpdbgdldlbecc) and copy the cookie string to portable_config/yt-cookies.txt
-
 ## todo
 
 - [ ] @reduxjs/toolkit

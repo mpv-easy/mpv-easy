@@ -7,7 +7,7 @@ export const Youtube: Rule = {
     [youtube.MainPageReg, youtube.MyVideosReg, youtube.VideoReg].some((i) =>
       i.test(url),
     ),
-  getVideos: (url: string): PlayItem[] => {
+  getVideos: async (url: string): Promise<PlayItem[]> => {
     if (youtube.ListReg.test(url)) {
       const list: PlayItem[] = []
       const videoTitleLinkList = Array.from(

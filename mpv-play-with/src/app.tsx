@@ -31,7 +31,7 @@ export function App() {
   const opacity = hover ? 100 : 0
   const [loading, setLoading] = useState(false)
 
-  function detect() {
+  async function detect() {
     const url = window.location.href
     const rule = Rules.find((i) => i.match(url))
     if (rule) {
@@ -41,7 +41,7 @@ export function App() {
     }
 
     if (rule) {
-      const videoList = rule.getVideos(url)
+      const videoList = await rule.getVideos(url)
       if (videoList.length) {
         setVideos(videoList)
       }

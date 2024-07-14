@@ -5,17 +5,7 @@ TS and React toolkit for mpv script
 
 ## install
 
-Download latest release zip file and extract all to the mpv scripts directory, for example:
-
-```txt
-portable_config
-├── fonts
-│   └── JetBrainsMonoNerdFontMono-Regular.ttf
-├── scripts
-│   ├── mpv-easy.js
-└── shaders
-    ├── *.glsl
-```
+[install](./mpv-easy/install.md)
 
 ## dev
 

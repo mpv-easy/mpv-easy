@@ -12,7 +12,7 @@ export const Jellyfin: Rule = {
       jellyfin.videoReg,
     ].some((i) => i.test(url))
   },
-  getVideos: (url: string): PlayItem[] => {
+  getVideos: async (url: string): Promise<PlayItem[]> => {
     if (jellyfin.detailsReg.test(url)) {
       const dom = document.querySelector(".detailImageContainer > .card")
       if (!dom) {
