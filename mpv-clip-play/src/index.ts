@@ -9,6 +9,7 @@ import {
   youtube,
   bilibili,
   webdavList,
+  twitch,
 } from "@mpv-easy/tool"
 
 import { type SystemApi, definePlugin } from "@mpv-easy/plugin"
@@ -35,6 +36,11 @@ function getList(s: string | undefined, context: PluginContext): string[] {
 
     if (bilibili.isBilibili(s)) {
       osdDuration && printAndOsd(`play bilibili: ${s}`, osdDuration)
+      return [s]
+    }
+
+    if (twitch.isTwitch(s)) {
+      osdDuration && printAndOsd(`play twitch: ${s}`, osdDuration)
       return [s]
     }
 

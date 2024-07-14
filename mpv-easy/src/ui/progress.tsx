@@ -4,6 +4,7 @@ import {
   bilibili,
   formatTime,
   getTimeFormat,
+  isYtdlp,
   randomId,
   setPropertyNumber,
   youtube,
@@ -42,8 +43,7 @@ export const Progress = ({ width, height, ...props }: MpDomProps) => {
 
   const path = useSelector(pathSelector)
   // TODO: support yt-dlp thumbfast
-  const supportThumbfast =
-    !youtube.isYoutube(path) && !bilibili.isBilibili(path)
+  const supportThumbfast = !isYtdlp(path)
 
   useEffect(() => {
     new PropertyNative<VideoParams>("video-params").observe((v) => {

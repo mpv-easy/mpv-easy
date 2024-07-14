@@ -12,18 +12,10 @@ import {
 import { getFileName } from "./path"
 import type { TrackItem } from "./type"
 import { getTmpDir } from "./tmp"
-import { isYoutube } from "./youtube"
-import { isBilibili } from "./bilibili"
-import { bilibili, twitch } from "."
+import { isYtdlp } from "./yt-dlp"
 
 export function loadRemoteSubtitle(path = getProperty("path")) {
-  if (
-    !path?.length ||
-    isYoutube(path) ||
-    jellyfin.isJellyfin(path) ||
-    bilibili.isBilibili(path) ||
-    twitch.isTwitch(path)
-  ) {
+  if (!path?.length || isYtdlp(path)) {
     return
   }
   const trackList = (getPropertyNative<TrackItem[]>("track-list") || []).filter(
@@ -79,13 +71,7 @@ export function loadRemoteSubtitle(path = getProperty("path")) {
 }
 
 export async function loadRemoteSubtitleAsync(path = getProperty("path")) {
-  if (
-    !path?.length ||
-    isYoutube(path) ||
-    jellyfin.isJellyfin(path) ||
-    isBilibili(path) ||
-    twitch.isTwitch(path)
-  ) {
+  if (!path?.length || isYtdlp(path)) {
     return
   }
   const trackList = (getPropertyNative<TrackItem[]>("track-list") || []).filter(
