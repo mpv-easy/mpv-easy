@@ -4,9 +4,17 @@ import { useSelector } from "react-redux"
 import {
   buttonStyleSelector,
   filenameSelector,
+  pathSelector,
   toolbarStyleSelector,
 } from "../../store"
 import { textEllipsis } from "../../common"
+import {
+  existsSync,
+  isHttp,
+  isYtdlp,
+  openBrowser,
+  openExplorer,
+} from "@mpv-easy/tool"
 
 export const Filename = () => {
   const button = useSelector(buttonStyleSelector)
@@ -15,7 +23,7 @@ export const Filename = () => {
   // TODO: text-overflow: ellipsis;
   const maxLen = useSelector(toolbarStyleSelector).maxTitleLength
   const text = textEllipsis(fileName, maxLen)
-
+  const path = useSelector(pathSelector)
   return (
     (fileName?.length ?? 0) > 0 && (
       <Box
@@ -30,6 +38,16 @@ export const Filename = () => {
         font={button.font}
         fontSize={button.fontSize}
         color={button.color}
+        onMouseUp={() => {
+          if (isYtdlp(path) || isHttp(path)) {
+            openBrowser(path)
+            return
+          }
+          if (existsSync(path)) {
+            openExplorer(path)
+            return
+          }
+        }}
       />
     )
   )

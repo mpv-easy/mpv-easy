@@ -144,7 +144,6 @@ export function execAsync(
           if (result.status < 0) {
             reject(result.stderr)
           } else {
-            console.log("r:", JSON.stringify(result))
             resolve(result.stdout)
           }
         } else {
