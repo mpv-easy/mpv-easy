@@ -7,6 +7,10 @@ TS and React toolkit for mpv script
 
 [install](./mpv-easy/install.md)
 
+## CONTRIBUTING
+
+[CONTRIBUTING](./mpv-easy/CONTRIBUTING.md)
+
 ## dev
 
 bash
@@ -30,7 +34,6 @@ set -x MPV_SCRIPT_DIR /your_mpv_dir/portable_config/scripts ; pnpm run dev
 - [mpv-copy-time](./mpv-copy-time/readme.md)
 - [mpv-thumbfast](./mpv-thumbfast/readme.md)
 - [mpv-play-with](./mpv-play-with/readme.md)
-
 
 ## UI
 
