@@ -11,6 +11,7 @@ import {
   mkdir,
   normalize,
   isYtdlp,
+  removeFile,
 } from "@mpv-easy/tool"
 export const pluginName = "@mpv-easy/thumbfast"
 
@@ -87,7 +88,12 @@ export class ThumbFast {
     } = { ...defaultConfig, videoHeight: 0, videoWidth: 0 },
   ) {
     const mpvPath = getMpvExePath()
+
+    if (existsSync(path)) {
+      removeFile(path)
+    }
     this.path = path
+
     this.format = format
     this.maxWidth = maxWidth
     this.maxHeight = maxHeight

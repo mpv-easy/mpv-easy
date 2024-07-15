@@ -62,7 +62,7 @@ fn main() {
                 .map(|i| {
                     let s = std::fs::read_to_string(i).unwrap();
                     std::fs::remove_file(i).unwrap();
-                    return s;
+                    s
                 })
                 .collect();
         } else {

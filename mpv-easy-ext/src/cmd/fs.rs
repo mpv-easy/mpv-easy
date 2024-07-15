@@ -19,6 +19,15 @@ impl Cmd for Fs {
             "mkdir" => {
                 std::fs::create_dir_all(path).unwrap();
             }
+            "remove_file" => {
+                std::fs::remove_file(path).unwrap();
+            }
+            "remove_dir_all" => {
+                std::fs::remove_dir_all(path).unwrap();
+            }
+            "remove_dir" => {
+                std::fs::remove_dir(path).unwrap();
+            }
             _ => {
                 panic!("fs not support cmd: {} {}", cmd, path);
             }
