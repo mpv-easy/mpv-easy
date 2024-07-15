@@ -3,7 +3,6 @@ import {
   type RematchRootState,
   init,
 } from "@rematch/core"
-import selectPlugin from "@rematch/select"
 import { type RootModel, models } from "./models"
 import { pluginName } from "./main"
 import { pluginName as i18nName } from "@mpv-easy/i18n"
@@ -16,8 +15,6 @@ import { getVideoName } from "./common"
 export function createStore() {
   return init<RootModel>({
     models,
-    // add selectPlugin to your store
-    plugins: [selectPlugin()],
   })
 }
 

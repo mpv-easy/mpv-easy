@@ -229,8 +229,8 @@ export const Easy = (props: Partial<EasyProps>) => {
   const smallFontSize = useSelector(smallFontSizeSelector)
 
   useEffect(() => {
-    const upName = '__ctrl_up__'
-    const downName = '__ctrl_down__'
+    const upName = "__ctrl_up__"
+    const downName = "__ctrl_down__"
     const up = () => {
       const s = clamp(fontSize + fontStep, minFontSize, maxFontSize)
       dispatch.context.setFontSize(s)
