@@ -3,12 +3,14 @@ import {
   commandNativeAsync,
   dir,
   existsSync,
+  getMpvExePath,
   getOs,
   getPropertyString,
   getScriptConfigDir,
   joinPath,
   mkdir,
   normalize,
+  isYtdlp,
 } from "@mpv-easy/tool"
 export const pluginName = "@mpv-easy/thumbfast"
 
@@ -84,30 +86,44 @@ export class ThumbFast {
       videoHeight: number
     } = { ...defaultConfig, videoHeight: 0, videoWidth: 0 },
   ) {
+    const mpvPath = getMpvExePath()
     this.path = path
     this.format = format
     this.maxWidth = maxWidth
     this.maxHeight = maxHeight
     this.ipcId = ipcId
     this.startTime = startTime
-    const videoPath = normalize(getPropertyString("path") || "")
+    let videoPath = normalize(getPropertyString("path") || "")
     const w = videoWidth
     const h = videoHeight
     const [thumbWidth, thumbHeight] = scaleToFit(w, h, maxWidth, maxHeight)
-    this.thumbWidth = thumbWidth
-    this.thumbHeight = thumbHeight
+    // resize 4x
+    this.thumbWidth = thumbWidth & ~3
+    this.thumbHeight = thumbHeight & ~3
+
+    const streamPath = getPropertyString("stream-open-filename")
+    if (
+      isYtdlp(path) &&
+      getPropertyString("demuxer-via-network") &&
+      streamPath?.length &&
+      streamPath !== path
+    ) {
+      videoPath = streamPath
+    }
     const args = [
-      "mpv",
-      "--config=no",
-      "--terminal=no",
+      mpvPath,
+      "--no-config",
       "--msg-level=all=no",
-      "--idle=yes",
+      "--idle",
       "--keep-open=always",
-      "--pause=yes",
+      "--pause",
+      "--really-quiet",
+      "--terminal=no",
       "--ao=null",
       "--vo=null",
       "--load-auto-profiles=no",
       "--load-osd-console=no",
+      "--load-scripts=no",
       "--load-stats-overlay=no",
       "--osc=no",
       "--vd-lavc-skiploopfilter=all",
@@ -119,10 +135,14 @@ export class ThumbFast {
       "--edition=auto",
       "--vid=1",
       "--sub=no",
+      "--hr-seek=no",
+      "--no-sub",
+      "--no-audio",
       "--audio=no",
       "--sub-auto=no",
       "--audio-file-auto=no",
       "--start=0",
+      "--ytdl=no",
       "--ytdl-format=worst",
       "--demuxer-readahead-secs=0",
       "--gpu-dumb-mode=yes",
@@ -136,10 +156,12 @@ export class ThumbFast {
       "--of=image2",
       "--ofopts=update=1",
       "--ocopy-metadata=no",
+      "--sws-allow-zimg=no",
       "--demuxer-max-bytes=512KiB",
-      `--vf=scale=w=${this.thumbWidth}:h=${this.thumbHeight}:flags=fast_bilinear,format=fmt=${this.format}`,
+      `--vf=scale=w=${this.thumbWidth}:h=${this.thumbHeight}:force_original_aspect_ratio=decrease,pad=w=${this.thumbWidth}:h=${this.thumbHeight}:x=-1:y=-1,format=${this.format}`,
       `--o=${this.path}`,
       `--input-ipc-server=${this.ipcId}`,
+      "--",
       videoPath,
     ]
 
