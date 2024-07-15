@@ -46,11 +46,21 @@ export const Youtube: Rule = {
 
     if (youtube.MainPageReg.test(url) || youtube.MyVideosReg.test(url)) {
       const items: PlayItem[] = []
+
+      // @ts-ignore
+      const browser = Array.from(document.querySelectorAll("ytd-browse")).find(
+        (i) => !i.hidden,
+      )
+
+      if (!browser) {
+        return
+      }
+
       const videoTitleLinkList = Array.from(
-        document.querySelectorAll("#video-title-link"),
+        browser.querySelectorAll("#video-title-link"),
       )
       const videoTitleList = Array.from(
-        document.querySelectorAll("#video-title"),
+        browser.querySelectorAll("#video-title"),
       )
       for (const i of [...videoTitleLinkList, ...videoTitleList]) {
         const title = i.getAttribute("title") || ""
