@@ -35,6 +35,14 @@ set -x MPV_SCRIPT_DIR /your_mpv_dir/portable_config/scripts ; pnpm run dev
 - [mpv-thumbfast](./mpv-thumbfast/readme.md)
 - [mpv-play-with](./mpv-play-with/readme.md)
 
+## short key
+
+ctrl+o: open dialog select file
+
+ctrl+up: Increase font size
+
+ctrl+down: decrease font size
+
 ## UI
 
 ### uosc

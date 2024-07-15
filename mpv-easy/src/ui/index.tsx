@@ -18,6 +18,7 @@ import {
   uiNameSelector,
   clickMenuStyleSelector,
   protocolHookSelector,
+  fontSizeSelector,
 } from "../store"
 import {
   PropertyBool,
@@ -37,8 +38,9 @@ import {
   getPlayWithExePath,
   addKeyBinding,
   openDialog,
+  removeKeyBinding,
 } from "@mpv-easy/tool"
-import { throttle, isEqual } from "lodash-es"
+import { throttle, isEqual, clamp } from "lodash-es"
 import { ClickMenu } from "./click-menu"
 import { Playlist } from "./playlist"
 import { getPlayableList } from "@mpv-easy/autoload"
@@ -74,7 +76,9 @@ const playlistCount = new PropertyNumber("playlist/count")
 const osdDimensionsProp = new PropertyNative<
   MpvPropertyTypeMap["osd-dimensions"]
 >("osd-dimensions")
-
+const minFontSize = 12
+const maxFontSize = 120
+const fontStep = 12
 export function hasPoint(node: MpDom | null, x: number, y: number): boolean {
   if (!node) {
     return false
@@ -221,6 +225,28 @@ export const Easy = (props: Partial<EasyProps>) => {
       }
     })
   }, [])
+  const fontSize = useSelector(fontSizeSelector)
+  const smallFontSize = useSelector(smallFontSizeSelector)
+
+  useEffect(() => {
+    const upName = '__ctrl_up__'
+    const downName = '__ctrl_down__'
+    const up = () => {
+      const s = clamp(fontSize + fontStep, minFontSize, maxFontSize)
+      dispatch.context.setFontSize(s)
+    }
+    const down = () => {
+      const s = clamp(fontSize - fontStep, minFontSize, maxFontSize)
+      dispatch.context.setFontSize(s)
+    }
+
+    addKeyBinding("ctrl+down", downName, down)
+    addKeyBinding("ctrl+up", upName, up)
+    return () => {
+      removeKeyBinding(upName)
+      removeKeyBinding(downName)
+    }
+  }, [fontSize])
 
   const style = useSelector(styleSelector)
   const mode = useSelector(modeSelector)
@@ -263,14 +289,13 @@ export const Easy = (props: Partial<EasyProps>) => {
     }, toolbar.autoHideDelay ?? 5000)
   }
 
-  const fontSize = useSelector(smallFontSizeSelector)
   const clickMenuStyle = useSelector(clickMenuStyleSelector)
   return (
     <>
       <Tooltip
         backgroundColor={tooltip.backgroundColor}
         font={tooltip.font}
-        fontSize={fontSize}
+        fontSize={smallFontSize}
         color={tooltip.color}
         padding={tooltip.padding}
         display="flex"
