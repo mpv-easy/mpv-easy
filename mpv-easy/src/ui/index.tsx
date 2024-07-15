@@ -35,6 +35,8 @@ import {
   getMpvExePath,
   setProtocolHook,
   getPlayWithExePath,
+  addKeyBinding,
+  openDialog,
 } from "@mpv-easy/tool"
 import { throttle, isEqual } from "lodash-es"
 import { ClickMenu } from "./click-menu"
@@ -211,6 +213,13 @@ export const Easy = (props: Partial<EasyProps>) => {
       ),
       isEqual,
     )
+
+    addKeyBinding("ctrl+o", "__openDialog__", () => {
+      const v = openDialog()[0]
+      if (v) {
+        dispatch.context.playVideo(v)
+      }
+    })
   }, [])
 
   const style = useSelector(styleSelector)
