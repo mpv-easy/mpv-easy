@@ -8,8 +8,8 @@
   "scripts": {
     "meta": "tsx ./script/meta.ts",
     "build": "tsc  -p ./tsconfig.build.json && npm run bundle",
-    "bundle": "esbuild ./src/play-with.tsx --outfile=./dist/mpv-easy-play-with.js --bundle  --loader:.png=base64 --format=iife && npm run meta",
-    "dev": "esbuild ./src/play-with.tsx --outfile=./dist/mpv-easy-play-with.js --bundle  --loader:.png=base64 --format=iife --watch",
+    "bundle": "esbuild --minify ./src/play-with.tsx --outfile=./dist/mpv-easy-play-with.js --bundle  --loader:.png=base64 --format=iife && npm run meta",
+    "dev": "esbuild --minify ./src/play-with.tsx --outfile=./dist/mpv-easy-play-with.js --bundle  --loader:.png=base64 --format=iife --watch",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
