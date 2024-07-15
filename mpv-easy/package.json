@@ -8,7 +8,7 @@
   "scripts": {
     "bundle:example": "esbuild ./src/example/*.(tsx|ts) --bundle --outdir=bundle/example --charset=utf8 --define:globalThis.version='\"0.1.10\"'",
     "es5:example": "babel --presets  @babel/preset-env ./bundle/example -d es5/example",
-    "bundle": "esbuild ./src/mpv-easy-*.tsx --bundle --outdir=bundle --charset=utf8 --define:globalThis.version='\"0.1.9\"'",
+    "bundle": "esbuild ./src/mpv-easy-*.tsx --bundle --outdir=bundle --charset=utf8 --define:globalThis.version='\"0.1.9\"' --minify",
     "es5": "babel --presets  @babel/preset-env ./bundle -d es5",
     "dev": "chokidar '../mpv-*/src/**/*' -c 'pnpm run build && pnpm run copy' -d 2000 --initial",
     "dev-ts": "tsc -p ./tsconfig.build.json -w",
