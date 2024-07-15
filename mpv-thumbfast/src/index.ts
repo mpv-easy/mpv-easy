@@ -1,6 +1,5 @@
 import { definePlugin } from "@mpv-easy/plugin"
 import {
-  commandNativeAsync,
   dir,
   existsSync,
   getMpvExePath,
@@ -12,6 +11,8 @@ import {
   normalize,
   isYtdlp,
   removeFile,
+  commandNative,
+  commandNativeAsync,
 } from "@mpv-easy/tool"
 export const pluginName = "@mpv-easy/thumbfast"
 
@@ -22,6 +23,7 @@ export type ThumbFastConfig = {
   maxHeight: number
   ipcId: string
   startTime: number
+  hrSeek: boolean
 }
 
 declare module "@mpv-easy/plugin" {
@@ -32,6 +34,7 @@ declare module "@mpv-easy/plugin" {
 
 export const defaultThumbMaxWidth = 360
 export const defaultThumbMaxHeight = 360
+export const defaultHrSeek = true
 export const defaultThumbFormat = "bgra"
 export const defaultThumbPath = joinPath(
   getScriptConfigDir(),
@@ -46,6 +49,7 @@ export const defaultConfig: ThumbFastConfig = {
   maxHeight: defaultThumbMaxHeight,
   ipcId: defaultThumbIpcId,
   startTime: defaultThumbStartTime,
+  hrSeek: defaultHrSeek,
 }
 
 function scaleToFit(
@@ -82,6 +86,7 @@ export class ThumbFast {
       startTime = 0,
       videoWidth = 0,
       videoHeight = 0,
+      hrSeek = defaultHrSeek,
     }: Partial<ThumbFastConfig> & {
       videoWidth: number
       videoHeight: number
@@ -141,7 +146,7 @@ export class ThumbFast {
       "--edition=auto",
       "--vid=1",
       "--sub=no",
-      "--hr-seek=no",
+      `--hr-seek=${hrSeek ? "yes" : "no"}`,
       "--no-sub",
       "--no-audio",
       "--audio=no",
@@ -171,7 +176,7 @@ export class ThumbFast {
       videoPath,
     ]
 
-    // console.log("ThumbFast: ", args.join(' '))
+    // async: this cmd run forever
     commandNativeAsync({
       name: "subprocess",
       args,
@@ -182,7 +187,8 @@ export class ThumbFast {
   }
 
   seek(time: number) {
-    commandNativeAsync({
+    // sync: for waiting image write to file
+    commandNative({
       name: "subprocess",
       args: [
         getOs() === "windows" ? "cmd" : "sh",
@@ -198,7 +204,7 @@ export class ThumbFast {
   }
 
   exit() {
-    commandNativeAsync({
+    commandNative({
       name: "subprocess",
       args: [
         getOs() === "windows" ? "cmd" : "sh",

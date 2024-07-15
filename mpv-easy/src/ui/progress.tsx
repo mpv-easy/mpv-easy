@@ -20,6 +20,7 @@ import {
   smallFontSizeSelector,
   buttonStyleSelector,
   pathSelector,
+  thumbfastSelector,
 } from "../store"
 import { ThumbFast } from "@mpv-easy/thumbfast"
 
@@ -44,6 +45,7 @@ export const Progress = ({ width, height, ...props }: MpDomProps) => {
 
   // TODO: support yt-dlp thumbfast
   const supportThumbfast = !isYtdlp(path) && isSeekable
+  const thumbfast = useSelector(thumbfastSelector)
 
   useEffect(() => {
     new PropertyNative<VideoParams>("video-params").observe((v) => {
@@ -59,6 +61,7 @@ export const Progress = ({ width, height, ...props }: MpDomProps) => {
       }
       const ipcId = `ipc_${randomId()}`
       thumbRef.current = new ThumbFast({
+        ...thumbfast,
         ipcId,
         videoWidth: w,
         videoHeight: h,

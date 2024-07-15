@@ -6,16 +6,11 @@ import {
 import selectPlugin from "@rematch/select"
 import { type RootModel, models } from "./models"
 import { pluginName } from "./main"
-import i18nPlugin, { pluginName as i18nName } from "@mpv-easy/i18n"
+import { pluginName as i18nName } from "@mpv-easy/i18n"
 import { pluginName as anime4kName } from "@mpv-easy/anime4k"
 import { pluginName as autoloadName } from "@mpv-easy/autoload"
-import {
-  getFileName,
-  getOs,
-  getProperty,
-  getPropertyString,
-  normalize,
-} from "@mpv-easy/tool"
+import { pluginName as thumbfastName } from "@mpv-easy/thumbfast"
+import { normalize } from "@mpv-easy/tool"
 import { getVideoName } from "./common"
 
 export function createStore() {
@@ -170,3 +165,6 @@ export const enablePluginsStyleSelector = (state: RootState) =>
 
 export const protocolHookSelector = (state: RootState) =>
   state.context[pluginName].config.protocolHook
+
+export const thumbfastSelector = (state: RootState) =>
+  state.context[thumbfastName]
