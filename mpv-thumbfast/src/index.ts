@@ -119,7 +119,8 @@ export class ThumbFast {
       streamPath?.length &&
       streamPath !== path
     ) {
-      videoPath = streamPath
+      // remove description, it's too long
+      videoPath = streamPath.replace(/,ytdl_description.*/, "")
     }
     const args = [
       mpvPath,
