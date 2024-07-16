@@ -40,12 +40,13 @@ export const Progress = ({ width, height, ...props }: MpDomProps) => {
   const progressW = progressRef.current?.layoutNode.width
   const cursorLeftOffset = progressW ? progress.cursorSize / 2 / progressW : 0
   const cursorLeft = timePos / duration - cursorLeftOffset
-  const path = useSelector(pathSelector)
+  // const path = useSelector(pathSelector)
   const isSeekable = getPropertyBool("seekable")
+  const thumbfast = useSelector(thumbfastSelector)
 
   // TODO: support yt-dlp thumbfast
-  const supportThumbfast = !isYtdlp(path) && isSeekable
-  const thumbfast = useSelector(thumbfastSelector)
+  // const supportThumbfast = !isYtdlp(path) && isSeekable
+  const supportThumbfast = isSeekable && thumbfast.network
 
   useEffect(() => {
     new PropertyNative<VideoParams>("video-params").observe((v) => {

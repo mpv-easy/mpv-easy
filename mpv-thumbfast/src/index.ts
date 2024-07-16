@@ -24,6 +24,7 @@ export type ThumbFastConfig = {
   ipcId: string
   startTime: number
   hrSeek: boolean
+  network: boolean
 }
 
 declare module "@mpv-easy/plugin" {
@@ -36,6 +37,7 @@ export const defaultThumbMaxWidth = 360
 export const defaultThumbMaxHeight = 360
 export const defaultHrSeek = true
 export const defaultThumbFormat = "bgra"
+export const defaultNetwork = true
 export const defaultThumbPath = joinPath(
   getScriptConfigDir(),
   "mpv-easy-thumbfast.tmp",
@@ -50,6 +52,7 @@ export const defaultConfig: ThumbFastConfig = {
   ipcId: defaultThumbIpcId,
   startTime: defaultThumbStartTime,
   hrSeek: defaultHrSeek,
+  network: defaultNetwork,
 }
 
 function scaleToFit(
