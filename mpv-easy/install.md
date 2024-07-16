@@ -28,7 +28,7 @@ When you start mpv for the first time, it will register the mpv-easy protocol an
 
 ### cookie
 
-Install the chrome extension [get-cookiestxt-locally](https://chromewebstore.google.com/detail/get-cookiestxt-locally/cclelndahbckbenkjhflpdbgdldlbecc) and copy the cookie string to portable_config/yt-cookies.txt
+Install the chrome extension [get-cookiestxt-locally](https://chromewebstore.google.com/detail/get-cookiestxt-locally/cclelndahbckbenkjhflpdbgdldlbecc) and copy the cookie string to portable_config/cookies.txt
 
 If you want to use cookies from multiple websites, you can directly splice it after this file. Note that you need to delete the first two lines.
 For example:

@@ -257,7 +257,7 @@ jobs:
           cp -r ./mpv-anime4k/shaders ./dist
           cp ./mpv-easy/mpv-conf/mpv.conf ./dist/mpv.conf
           cp ./mpv-easy/mpv-conf/input.conf ./dist/input.conf
-          cp ./mpv-easy/mpv-conf/yt-cookies.txt ./dist/yt-cookies.txt
+          cp ./mpv-easy/mpv-conf/cookies.txt ./dist/cookies.txt
 
           chmod 777 ./mpv-easy-ext-dist/*
           chmod 777 ./mpv-easy-play-with-dist/*
@@ -307,10 +307,10 @@ jobs:
           mv ./mpy-easy-boa-windows/scripts/mpv-easy-config ./mpy-easy-boa-windows/scripts-boa/mpv-easy-config
 
           # https://github.com/yt-dlp/yt-dlp/releases
-          rwget -o ./mpy-easy-windows/yt-dlp/yt-dlp https://github.com/yt-dlp/yt-dlp/releases/download/2024.07.09/yt-dlp.exe
+          rwget -o ./mpy-easy-windows/yt-dlp https://github.com/yt-dlp/yt-dlp/releases/download/2024.07.09/yt-dlp.exe
 
-          # https://github.com/zhongfly/mpv-winbuild/releases
-          rwget -o ./mpv-win.7z https://github.com/zhongfly/mpv-winbuild/releases/download/2024-07-12-c0f5d23/mpv-x86_64-v3-20240712-git-c0f5d23.7z
+          # https://github.com/shinchiro/mpv-winbuild-cmake/releases
+          rwget -o ./mpv-win.7z https://github.com/shinchiro/mpv-winbuild-cmake/releases/download/20240712/mpv-x86_64-v3-20240712-git-f470b63.7z
 
           7z x ./mpv-win.7z -o./mpy-easy-windows-full -y
           cp -r ./mpy-easy-windows ./mpy-easy-windows-full/portable_config
