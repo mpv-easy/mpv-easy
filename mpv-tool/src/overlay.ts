@@ -24,7 +24,7 @@ export class Overlay {
   }
 
   update() {
-    const cmd = `overlay-add ${this.id} ${this.x} ${this.y} ${this.file} 0 ${this.fmt} ${this.w} ${this.h} ${this.stride}`
+    const cmd = `overlay-add ${this.id} ${this.x} ${this.y} "${this.file}" 0 ${this.fmt} ${this.w} ${this.h} ${this.stride}`
     command(cmd)
   }
 

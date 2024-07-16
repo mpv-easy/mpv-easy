@@ -9,10 +9,10 @@ import {
   joinPath,
   mkdir,
   normalize,
-  isYtdlp,
   removeFile,
   commandNative,
   commandNativeAsync,
+  getPropertyBool,
 } from "@mpv-easy/tool"
 export const pluginName = "@mpv-easy/thumbfast"
 
@@ -78,7 +78,7 @@ export class ThumbFast {
 
   public thumbWidth: number
   public thumbHeight: number
-
+  public network: boolean
   constructor(
     {
       path = defaultThumbPath,
@@ -90,6 +90,7 @@ export class ThumbFast {
       videoWidth = 0,
       videoHeight = 0,
       hrSeek = defaultHrSeek,
+      network = defaultNetwork,
     }: Partial<ThumbFastConfig> & {
       videoWidth: number
       videoHeight: number
@@ -114,17 +115,18 @@ export class ThumbFast {
     // resize 4x
     this.thumbWidth = thumbWidth & ~3
     this.thumbHeight = thumbHeight & ~3
-
+    this.network = network
     const streamPath = getPropertyString("stream-open-filename")
     if (
-      isYtdlp(path) &&
-      getPropertyString("demuxer-via-network") &&
+      getPropertyBool("demuxer-via-network") &&
       streamPath?.length &&
+      network &&
       streamPath !== path
     ) {
       // remove description, it's too long
       videoPath = streamPath.replace(/,ytdl_description.*/, "")
     }
+
     const args = [
       mpvPath,
       "--no-config",
