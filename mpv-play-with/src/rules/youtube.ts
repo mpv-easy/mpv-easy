@@ -47,8 +47,8 @@ export const Youtube: Rule = {
     if (youtube.MainPageReg.test(url) || youtube.MyVideosReg.test(url)) {
       const items: PlayItem[] = []
 
-      // @ts-ignore
       const browser = Array.from(document.querySelectorAll("ytd-browse")).find(
+        // @ts-ignore
         (i) => !i.hidden,
       )
 
