@@ -1,4 +1,4 @@
-import { Box } from "@mpv-easy/ui"
+import { Box, Button } from "@mpv-easy/ui"
 import React from "react"
 import { useSelector } from "react-redux"
 import {
@@ -26,7 +26,7 @@ export const Filename = () => {
   const path = useSelector(pathSelector)
   return (
     (fileName?.length ?? 0) > 0 && (
-      <Box
+      <Button
         height={button.height}
         display="flex"
         flexDirection="column"
@@ -38,6 +38,7 @@ export const Filename = () => {
         font={button.font}
         fontSize={button.fontSize}
         color={button.color}
+        colorHover={button.colorHover}
         onMouseUp={() => {
           if (isYtdlp(path) || isHttp(path)) {
             openBrowser(path)
