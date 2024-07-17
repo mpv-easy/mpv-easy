@@ -5,6 +5,10 @@ import { getBvid } from "../../../mpv-tool/src/bilibili"
 export const Bilibili: Rule = {
   match: (url: string): boolean => bilibili.isBilibili(url),
   getVideos: async (url: string): Promise<PlayList | undefined> => {
+    if (bilibili.LiveReg.test(url)) {
+      return { items: [{ url, title: document.title }] }
+    }
+
     if (bilibili.BangumiReg.test(url)) {
       const items: PlayItem[] = []
 
