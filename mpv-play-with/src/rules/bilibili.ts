@@ -99,6 +99,31 @@ export const Bilibili: Rule = {
       }
     }
 
+    if (document.querySelector("#multi_page")) {
+      const bv = bilibili.getBvid()
+      const videoData = bilibili.getVideoData()
+      const pages = videoData.pages
+      if (!bv?.length || !pages.length) return
+
+      const items: PlayItem[] = []
+      let start = 0
+      const p = +(new URLSearchParams(location.search).get("p") || "1")
+      for (const i of pages) {
+        let url = i.weblink
+        const title = i.part
+        if (!url.length) {
+          url = `${location.origin}/video/${bv}/?p=${i.page}`
+        }
+
+        if (i.page === p) {
+          start = items.length
+        }
+
+        items.push({ url, title })
+      }
+      return { items, start }
+    }
+
     if (bilibili.VideoReg.test(url)) {
       const title = document
         .querySelector(".video-title")

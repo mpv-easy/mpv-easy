@@ -54,6 +54,7 @@ export type Episode = {
   section_id: number
   bvid: string
 }
+
 export function getEpisodes() {
   const s = getSections()
   const list = []
@@ -63,4 +64,21 @@ export function getEpisodes() {
   }
 
   return list.flat()
+}
+
+export type VideoData = {
+  pages: {
+    cid: number
+    page: number
+    from: string
+    part: string
+    duration: number
+    vid: string
+    weblink: string
+  }[]
+}
+
+export function getVideoData(): VideoData {
+  // @ts-ignore
+  return globalThis?.__INITIAL_STATE__.videoData as any
 }

@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react"
 import { Bilibili, Jellyfin, Youtube, Twitch } from "./rules"
 import { encodeToBase64, openUrl } from "./share"
-import { PlayItem, PlayList } from "./type"
+import { PlayList } from "./type"
 import Mpv from "../assets/mpv-logo.png"
 export const MPV_LOGO = `data:image/png;base64,${Mpv}`
 import { useLocalStorage } from "react-use"

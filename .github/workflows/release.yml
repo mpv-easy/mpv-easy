@@ -307,7 +307,7 @@ jobs:
           mv ./mpy-easy-boa-windows/scripts/mpv-easy-config ./mpy-easy-boa-windows/scripts-boa/mpv-easy-config
 
           # https://github.com/yt-dlp/yt-dlp/releases
-          rwget -o ./mpy-easy-windows/yt-dlp https://github.com/yt-dlp/yt-dlp/releases/download/2024.07.09/yt-dlp.exe
+          rwget -o ./mpy-easy-windows/yt-dlp https://github.com/yt-dlp/yt-dlp/releases/download/2024.07.16/yt-dlp.exe
 
           # https://github.com/shinchiro/mpv-winbuild-cmake/releases
           rwget -o ./mpv-win.7z https://github.com/shinchiro/mpv-winbuild-cmake/releases/download/20240712/mpv-x86_64-v3-20240712-git-f470b63.7z
