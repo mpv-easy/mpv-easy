@@ -22,6 +22,8 @@ You only need to run the mpv player once, and mpv-easy will automatically regist
 
 ## manual steps
 
+Make sure you have already installed [yt-dlp](https://github.com/yt-dlp/yt-dlp)
+
 - download [play-with](https://github.com/mpv-easy/mpv-easy/releases/latest/download/mpv-easy-play-with-windows)
 - create file play-with.reg and double click to run it. NOTE: Replace the path with yours and make sure to use Windows-style path separators.
 
@@ -131,35 +133,15 @@ host/web/index.html#!/video
 
 ### bilibili
 
-todo
-
-## custom protocol
-
-```cmd
-regedit.exe /S ./mpv-easy.reg
+```
+https://www.bilibili.com/
+https://www.bilibili.com/video/BVxxx
+https://live.bilibili.com/xxx
 ```
 
+### twitch
+
 ```
-Windows Registry Editor Version 5.00
-[HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Google\Chrome]
-"ExternalProtocolDialogShowAlwaysOpenCheckbox"=dword:00000001
-
-[HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Edge]
-"ExternalProtocolDialogShowAlwaysOpenCheckbox"=dword:00000001
-
-[HKEY_CLASSES_ROOT\mpv-easy]
-@="mpv-easy"
-"URL Protocol"=""
-
-[HKEY_CLASSES_ROOT\mpv-easy\DefaultIcon]
-@=""
-
-[HKEY_CLASSES_ROOT\mpv-easy\shell]
-@=""
-
-[HKEY_CLASSES_ROOT\mpv-easy\shell\open]
-@=""
-
-[HKEY_CLASSES_ROOT\mpv-easy\shell\open\command]
-@="c:\\your\\mpv-easy-play-with-windows c:\\your\\mpv.exe %1"
+https://www.twitch.tv/xxx
+https://www.twitch.tv/xxx/video/xxx
 ```
