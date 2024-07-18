@@ -14,16 +14,18 @@ Then install script [mpv-easy-play-with.user.js](https://github.com/mpv-easy/mpv
 
 When play-with detects videos in the page, you can add all videos to the mpv player through the mpv icon in the bottom left corner
 
-
 ## install protocol
 
 ### mpv-easy
+
 You only need to run the mpv player once, and mpv-easy will automatically register the protocol.
 
 ## manual steps
+
 - download [play-with](https://github.com/mpv-easy/mpv-easy/releases/latest/download/mpv-easy-play-with-windows)
-- create file play-with.reg and double click to run it
-````
+- create file play-with.reg and double click to run it. NOTE: Replace the path with yours and make sure to use Windows-style path separators.
+
+```
 Windows Registry Editor Version 5.00
 [HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Google\Chrome]
 "ExternalProtocolDialogShowAlwaysOpenCheckbox"=dword:00000001
@@ -46,10 +48,7 @@ Windows Registry Editor Version 5.00
 
 [HKEY_CLASSES_ROOT\mpv-easy\shell\open\command]
 @="C:\\path\\to\\mpv-easy-play-with-windows C:\\path\\to\\mpv.exe %1"
-````
-
-
-
+```
 
 ## npm
 
