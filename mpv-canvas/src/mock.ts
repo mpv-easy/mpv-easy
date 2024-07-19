@@ -11,10 +11,9 @@ import type {
   OSDSize,
 } from "@mpv-easy/tool"
 import { throttle } from "es-toolkit"
-import { fabric } from "fabric" // browser
+import * as fabric from "fabric" // browser
 import { Bgra, Bgr } from "e-color"
-import { IEvent } from "fabric/fabric-impl"
-const { Canvas, Rect, Text } = fabric
+const { Canvas, Rect, FabricText } = fabric
 
 function getColor(s: string) {
   const regex = /\\c&(.*?)&/
@@ -320,7 +319,7 @@ function createOsdOverlay(
         }
       }
       if (!this.fabricNode) {
-        this.fabricNode = new Text(getText(this.data), {
+        this.fabricNode = new FabricText(getText(this.data), {
           left: dom.x,
           top: dom.y,
           fontSize: fontSize,
@@ -425,7 +424,7 @@ export function createMpvMock(
 
   fabricCanvas.on(
     "mouse:wheel",
-    throttle((e) => {
+    throttle((e: fabric.TPointerEventInfo<WheelEvent>) => {
       if (e.e.deltaY > 0) {
         const mpvEvent = {
           event: "down",
@@ -450,7 +449,7 @@ export function createMpvMock(
 
   fabricCanvas.on(
     "mouse:down",
-    throttle((e) => {
+    throttle(({ e }: fabric.TPointerEventInfo<MouseEvent>) => {
       switch (e.button) {
         case 1: {
           const mpvEvent = {
@@ -477,11 +476,9 @@ export function createMpvMock(
       }
     }, 1 / fps),
   )
-
   fabricCanvas.on(
-    "mouse:leave",
-    // TODO: fabric type bug
-    throttle((e: any) => {
+    "mouse:out",
+    throttle(({ e }: fabric.TPointerEventInfo<MouseEvent>) => {
       const pos: MousePos = {
         x: e.offsetX,
         y: e.offsetY,
@@ -511,7 +508,7 @@ export function createMpvMock(
   fabricCanvas.on(
     "mouse:move",
     // fabric hack
-    throttle(({ e }) => {
+    throttle(({ e }: fabric.TPointerEventInfo<MouseEvent>) => {
       const pos: MousePos = {
         x: e.offsetX,
         y: e.offsetY,
@@ -844,7 +841,7 @@ export function createMpvMock(
       },
       split_path: (path: string): [string, string] => {
         // console.log("split_path not implemented.")
-        const list = path.split("/")
+        const list = path?.split?.("/") ?? []
         return [list.slice(0, -1).join("/"), list.at(-1) || ""]
       },
       join_path: (p1: string, p2: string): string => `${p1}/${p2}`,
