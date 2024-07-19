@@ -1788,6 +1788,7 @@ dependencies = [
  "reqwest",
  "serde",
  "serde-jellyfin",
+ "serde-m3u",
  "serde-xml-rs",
  "serde_json",
  "serde_yaml",
@@ -2623,6 +2624,17 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "9b46f801308a5ad59117028ee397c726e7f01d3ed324e7d2f93c99f01270555f"
 dependencies = [
  "serde",
+]
+
+[[package]]
+name = "serde-m3u"
+version = "0.1.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "8254f74916150eb8f6f33498e251d09d6a7894f1a4820ac3bd1278fde24e323e"
+dependencies = [
+ "serde",
+ "serde_derive",
+ "serde_json",
 ]
 
 [[package]]

@@ -1,16 +1,20 @@
 export type PlayItem = {
   url: string
   title: string
-  args?: string[]
+  time?: number
 }
 
-export type PlayList = {
-  items: PlayItem[]
+export type Playlist = {
+  list: PlayItem[]
+}
+
+export type PlayWith = {
+  playlist: Playlist
   start?: number
   args?: string[]
 }
 
 export type Rule = {
   match(url: string): boolean
-  getVideos(url: string): Promise<PlayList | undefined>
+  getVideos(url: string): Promise<PlayWith | undefined>
 }

@@ -1,5 +1,5 @@
 import { getTitle } from "../share"
-import { PlayItem, PlayList, Rule } from "../type"
+import { PlayWith, Rule } from "../type"
 import { jellyfin } from "@mpv-easy/tool"
 
 export const Jellyfin: Rule = {
@@ -12,7 +12,7 @@ export const Jellyfin: Rule = {
       jellyfin.videoReg,
     ].some((i) => i.test(url))
   },
-  getVideos: async (url: string): Promise<PlayList | undefined> => {
+  getVideos: async (url: string): Promise<PlayWith | undefined> => {
     if (jellyfin.detailsReg.test(url)) {
       const dom = document.querySelector(".detailImageContainer > .card")
       if (!dom) {
@@ -21,16 +21,18 @@ export const Jellyfin: Rule = {
       const id = dom.getAttribute("data-id")
       const titleDom = document.querySelector(".nameContainer > .itemName")
       const title = titleDom?.textContent?.trim()
-      const args: string[] = []
 
       const streamUrl = `${location.origin}/Videos/${id}/stream?Static=true`
-      const play: PlayItem = {
-        url: streamUrl,
-        args,
-        title: getTitle(title || "") || "",
+      return {
+        playlist: {
+          list: [
+            {
+              url: streamUrl,
+              title: getTitle(title || "") || "",
+            },
+          ],
+        },
       }
-
-      return { items: [play] }
     }
 
     if (jellyfin.videoReg.test(url)) {
@@ -52,13 +54,14 @@ export const Jellyfin: Rule = {
       const streamUrl = `${location.origin}/Videos/${id}/stream?Static=true`
       const title = document.title
       return {
-        items: [
-          {
-            url: streamUrl,
-            args: [],
-            title: getTitle(title || "") || "",
-          },
-        ],
+        playlist: {
+          list: [
+            {
+              url: streamUrl,
+              title: getTitle(title || "") || "",
+            },
+          ],
+        },
       }
     }
 
@@ -72,7 +75,7 @@ export const Jellyfin: Rule = {
       const dom = pageEl.querySelectorAll(
         "#moviesTab > .itemsContainer > .card",
       )
-      const items = Array.from(dom).map((i) => {
+      const list = Array.from(dom).map((i) => {
         const id = i.getAttribute("data-id")
         const streamUrl = `${location.origin}/Videos/${id}/stream?Static=true`
         const btn = i.querySelector(".cardText > button")
@@ -83,7 +86,7 @@ export const Jellyfin: Rule = {
         }
       })
 
-      return { items }
+      return { playlist: { list } }
     }
 
     return

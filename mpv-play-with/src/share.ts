@@ -1,4 +1,4 @@
-import { PlayItem, PlayList } from "./type"
+import { PlayWith } from "./type"
 import { strToU8, gzipSync } from "fflate"
 
 export function getTitle(s: string): string {
@@ -34,7 +34,7 @@ export function encode(arraybuffer: ArrayBuffer): string {
   return base64
 }
 
-export function encodeToBase64(playList: PlayList): string {
+export function encodeToBase64(playList: PlayWith): string {
   const jsonStr = JSON.stringify(playList)
   const zipBuf = gzipSync(strToU8(jsonStr))
   const base64 = encode(zipBuf)

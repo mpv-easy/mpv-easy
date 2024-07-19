@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react"
 import { Bilibili, Jellyfin, Youtube, Twitch } from "./rules"
 import { encodeToBase64, openUrl } from "./share"
-import { PlayList } from "./type"
+import { PlayWith } from "./type"
 import Mpv from "../assets/mpv-logo.png"
 export const MPV_LOGO = `data:image/png;base64,${Mpv}`
 import { useLocalStorage } from "react-use"
@@ -27,8 +27,8 @@ export function App() {
   const [display, setDisplay] = useState(false)
   const [hover, setHover] = useState(false)
   const domRef = useRef<HTMLDivElement>(null)
-  const [list, setList] = useState<PlayList>()
-  const videos = list?.items || []
+  const [playWith, setPlayWith] = useState<PlayWith>()
+  const videos = playWith?.playlist.list || []
   const opacity = hover ? 100 : 0
   const [loading, setLoading] = useState(false)
 
@@ -39,16 +39,16 @@ export function App() {
       setDisplay(true)
     } else {
       setDisplay(false)
-      setList({ items: [] })
+      setPlayWith({ playlist: { list: [] } })
     }
 
     if (rule) {
       const videoList = await rule.getVideos(url)
-      if (!videoList?.items.length) {
-        setList({ items: [] })
+      if (!videoList?.playlist.list.length) {
+        setPlayWith({ playlist: { list: [] } })
         return
       }
-      setList(videoList)
+      setPlayWith(videoList)
     }
   }
 
@@ -85,10 +85,10 @@ export function App() {
         }}
         onMouseUp={async (e) => {
           e.stopPropagation()
-          if (loading || !list) {
+          if (loading || !playWith) {
             return
           }
-          const url = encodeToBase64(list)
+          const url = encodeToBase64(playWith)
           setLoading(true)
           await openUrl(url)
           setTimeout(() => {

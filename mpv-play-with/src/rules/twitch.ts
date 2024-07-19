@@ -1,9 +1,9 @@
 import { twitch } from "@mpv-easy/tool"
-import { PlayItem, PlayList, Rule } from "../type"
+import { PlayWith, Rule } from "../type"
 
 export const Twitch: Rule = {
   match: (url: string): boolean => twitch.isTwitch(url),
-  getVideos: async (url: string): Promise<PlayList | undefined> => {
+  getVideos: async (url: string): Promise<PlayWith | undefined> => {
     if (twitch.TvReg.test(url) || twitch.VideoReg.test(url)) {
       const title = document.querySelector(
         ".channel-info-content .tw-title",
@@ -13,7 +13,7 @@ export const Twitch: Rule = {
       }
       const url = location.href
       return {
-        items: [{ url, title }],
+        playlist: { list: [{ url, title }] },
       }
     }
 

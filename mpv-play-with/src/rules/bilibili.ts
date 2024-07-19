@@ -1,16 +1,16 @@
 import { bilibili } from "@mpv-easy/tool"
-import { PlayList, PlayItem, Rule } from "../type"
+import { PlayWith, PlayItem, Rule } from "../type"
 import { getBvid } from "../../../mpv-tool/src/bilibili"
 
 export const Bilibili: Rule = {
   match: (url: string): boolean => bilibili.isBilibili(url),
-  getVideos: async (url: string): Promise<PlayList | undefined> => {
+  getVideos: async (url: string): Promise<PlayWith | undefined> => {
     if (bilibili.LiveReg.test(url)) {
-      return { items: [{ url, title: document.title }] }
+      return { playlist: { list: [{ url, title: document.title }] } }
     }
 
     if (bilibili.BangumiReg.test(url)) {
-      const items: PlayItem[] = []
+      const list: PlayItem[] = []
 
       const name =
         document.querySelector("a[class^=mediainfo_mediaTitle_]")
@@ -28,18 +28,18 @@ export const Bilibili: Rule = {
           continue
         }
         if (i.getAttribute("class")?.includes("select")) {
-          start = items.length
+          start = list.length
         }
-        items.push({
+        list.push({
           url: location.origin + href,
           title: `${name} ${title}`.trim(),
         })
       }
 
-      return { items, start }
+      return { playlist: { list }, start }
     }
     if (bilibili.PopularReg.test(url)) {
-      const items: PlayItem[] = []
+      const list: PlayItem[] = []
       const cardList = [
         ...Array.from(document.querySelectorAll(".card-list .video-card")),
         ...Array.from(document.querySelectorAll(".video-list .video-card")),
@@ -51,14 +51,14 @@ export const Bilibili: Rule = {
         if (!href?.length || !title?.length) {
           continue
         }
-        items.push({
+        list.push({
           url: location.protocol + href,
           title,
         })
       }
 
-      if (items.length) {
-        return { items }
+      if (list.length) {
+        return { playlist: { list } }
       }
 
       const ranks = document.querySelectorAll(".rank-list .rank-item .info > a")
@@ -69,14 +69,14 @@ export const Bilibili: Rule = {
         if (!href?.length || !title?.length) {
           continue
         }
-        items.push({
+        list.push({
           url: location.protocol + href,
           title,
         })
       }
 
-      if (items.length) {
-        return { items }
+      if (list.length) {
+        return { playlist: { list } }
       }
 
       return
@@ -85,9 +85,9 @@ export const Bilibili: Rule = {
     if (document.querySelector(".video-sections-content-list")) {
       const episodes = bilibili.getEpisodes()
       if (!episodes.length) {
-        return { items: [] }
+        return { playlist: { list: [] } }
       }
-      const items = episodes.map((i) => {
+      const list = episodes.map((i) => {
         return {
           url: `${location.origin}/video/${i.bvid}`,
           title: i.title,
@@ -99,7 +99,7 @@ export const Bilibili: Rule = {
       const start = episodes.findIndex((i) => i.bvid === bvid)
       return {
         start: start === -1 ? 0 : start,
-        items,
+        playlist: { list },
       }
     }
 
@@ -109,7 +109,7 @@ export const Bilibili: Rule = {
       const pages = videoData.pages
       if (!bv?.length || !pages.length) return
 
-      const items: PlayItem[] = []
+      const list: PlayItem[] = []
       let start = 0
       const p = +(new URLSearchParams(location.search).get("p") || "1")
       for (const i of pages) {
@@ -120,12 +120,12 @@ export const Bilibili: Rule = {
         }
 
         if (i.page === p) {
-          start = items.length
+          start = list.length
         }
 
-        items.push({ url, title })
+        list.push({ url, title })
       }
-      return { items, start }
+      return { playlist: { list }, start }
     }
 
     if (bilibili.VideoReg.test(url)) {
@@ -136,17 +136,19 @@ export const Bilibili: Rule = {
         return
       }
       return {
-        items: [
-          {
-            url,
-            title,
-          },
-        ],
+        playlist: {
+          list: [
+            {
+              url,
+              title,
+            },
+          ],
+        },
       }
     }
 
     if (bilibili.MainReg.test(url)) {
-      const items: PlayItem[] = []
+      const list: PlayItem[] = []
       for (const i of Array.from(
         document.querySelectorAll(".feed-card .bili-video-card__info--tit"),
       )) {
@@ -158,12 +160,12 @@ export const Bilibili: Rule = {
           continue
         }
 
-        items.push({
+        list.push({
           url: href,
           title,
         })
       }
-      return { items }
+      return { playlist: { list } }
     }
 
     return

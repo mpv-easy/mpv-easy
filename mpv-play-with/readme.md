@@ -60,40 +60,16 @@ npm i @mpv-easy/play-with
 
 ```ts
 import { sendToMpv, encodeToBase64 } from '@mpv-easy/play-with';
-import type { PlayItem, PlayList } from '@mpv-easy/play-with';
+import type { PlayItem, PlayWith } from '@mpv-easy/play-with';
 
-const items: PlayItem[] = [
+const list: PlayItem[] = [
   url: 'http://hello.mp4',
   title: 'mpv-easy'
 ];
-const playList: PlayList = { items, start: 0 } ;
+const playWith: PlayWith= { playlist:{ list }, start: 0 } ;
 
-const base64 = encodeToBase64(list);
+const base64 = encodeToBase64(playWith);
 sendToMpv(base64);
-```
-
-## type
-
-A playable video corresponds to the following structure
-
-```ts
-export type PlayItem = {
-  url: string;
-  title: string;
-  args: string[];
-};
-```
-
-Encode a set of video information in base64 and pass it to the player
-Since the URL length is limited to 2048, zip compression is used to support more videos.
-
-```ts
-export function getMpvUrl(playList: PlayList): string {
-  const jsonStr = JSON.stringify(playList);
-  const zipBuf = gzipSync(strToU8(jsonStr));
-  const base64 = encode(zipBuf);
-  return `mpv-easy://${base64}`;
-}
 ```
 
 ## chunk

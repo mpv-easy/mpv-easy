@@ -2,19 +2,15 @@
 
 use base64::{prelude::BASE64_STANDARD, Engine};
 use flate2::read::GzDecoder;
+use serde_m3u::Playlist;
 use std::io::prelude::*;
 
 #[cfg(windows)]
 use std::os::windows::process::CommandExt;
 
 #[derive(Debug, Clone, serde::Serialize, serde::Deserialize)]
-pub struct PlayItem {
-    pub url: String,
-    pub title: String,
-}
-#[derive(Debug, Clone, serde::Serialize, serde::Deserialize)]
-pub struct PlayList {
-    pub items: Vec<PlayItem>,
+pub struct PlayWith {
+    pub playlist: Playlist,
     pub start: Option<i32>,
     // args when start mpv
     pub args: Option<Vec<String>>,
@@ -22,7 +18,7 @@ pub struct PlayList {
 
 const HEADER: &str = "mpv-easy://";
 
-const M3U_NAME: &str = "mpv-easy-play-with.m3u";
+const M3U_NAME: &str = "mpv-easy-play-with.m3u8";
 const CHUNK_PREFIX: &str = "mpv-easy-play-with-chunk-";
 
 fn main() {
@@ -76,30 +72,27 @@ fn main() {
     let mut json_str = String::new();
     decoder.read_to_string(&mut json_str).unwrap();
 
-    let play_list: PlayList = serde_json::from_str(&json_str).unwrap();
+    let play_with: PlayWith = serde_json::from_str(&json_str).unwrap();
     let mpv_path = std::path::PathBuf::from(mpv_path);
     let mut cmd = std::process::Command::new(&mpv_path);
     let mpv_dir = mpv_path.parent().unwrap();
     cmd.current_dir(mpv_dir);
-    if play_list.items.is_empty() {
+    if play_with.playlist.list.is_empty() {
         return;
     }
 
-    let mut m3u = vec!["#EXTM3U".to_string()];
-    for play in play_list.items {
-        m3u.push(format!("#EXTINF:-1,{}", play.title));
-        m3u.push(play.url);
-    }
+    let m3u = play_with.playlist.to_string();
+
     let m3u_path = tmp_dir.join(M3U_NAME);
-    std::fs::write(&m3u_path, m3u.join("\n")).unwrap();
+    std::fs::write(&m3u_path, m3u).unwrap();
 
     let mut args_str = format!(" --playlist={} ", m3u_path.to_string_lossy());
 
-    if let Some(start) = play_list.start {
+    if let Some(start) = play_with.start {
         args_str.push_str(&format!(" --playlist-start={} ", start));
     }
 
-    if let Some(args) = play_list.args {
+    if let Some(args) = play_with.args {
         args_str.push_str(&args.join(" "));
     }
 

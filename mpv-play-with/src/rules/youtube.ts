@@ -1,5 +1,5 @@
 import { youtube } from "@mpv-easy/tool"
-import { PlayItem, PlayList, Rule } from "../type"
+import { PlayItem, PlayWith, Rule } from "../type"
 
 export const Youtube: Rule = {
   match: (url: string): boolean =>
@@ -7,9 +7,9 @@ export const Youtube: Rule = {
     [youtube.MainPageReg, youtube.MyVideosReg, youtube.VideoReg].some((i) =>
       i.test(url),
     ),
-  getVideos: async (url: string): Promise<PlayList | undefined> => {
+  getVideos: async (url: string): Promise<PlayWith | undefined> => {
     if (youtube.ListReg.test(url)) {
-      const items: PlayItem[] = []
+      const list: PlayItem[] = []
       const videoTitleLinkList = Array.from(
         document.querySelectorAll("#wc-endpoint"),
       )
@@ -19,13 +19,13 @@ export const Youtube: Rule = {
         const titleDom = i.querySelector("#video-title")
         const title = titleDom?.textContent?.trim() || ""
         if (href.length) {
-          items.push({
+          list.push({
             url,
             title,
           })
         }
       }
-      return { items }
+      return { playlist: { list } }
     }
 
     if (youtube.VideoReg.test(url)) {
@@ -34,18 +34,20 @@ export const Youtube: Rule = {
       )?.textContent
       if (title?.length) {
         return {
-          items: [
-            {
-              url,
-              title,
-            },
-          ],
+          playlist: {
+            list: [
+              {
+                url,
+                title,
+              },
+            ],
+          },
         }
       }
     }
 
     if (youtube.MainPageReg.test(url) || youtube.MyVideosReg.test(url)) {
-      const items: PlayItem[] = []
+      const list: PlayItem[] = []
 
       const browser = Array.from(document.querySelectorAll("ytd-browse")).find(
         // @ts-ignore
@@ -68,21 +70,24 @@ export const Youtube: Rule = {
         const url = location.origin + href
 
         if (title?.length && href.length) {
-          items.push({
+          list.push({
             url,
             title,
           })
         }
       }
-      return { items }
+      return { playlist: { list } }
     }
 
-    const args: string[] = []
-    const play = {
-      url,
-      args,
-      title: "",
+    return {
+      playlist: {
+        list: [
+          {
+            url,
+            title: document.title,
+          },
+        ],
+      },
     }
-    return { items: [play] }
   },
 }
