@@ -310,7 +310,7 @@ jobs:
           rwget -o ./mpy-easy-windows/yt-dlp https://github.com/yt-dlp/yt-dlp/releases/download/2024.07.16/yt-dlp.exe
 
           # https://github.com/shinchiro/mpv-winbuild-cmake/releases
-          rwget -o ./mpv-win.7z https://github.com/shinchiro/mpv-winbuild-cmake/releases/download/20240712/mpv-x86_64-v3-20240712-git-f470b63.7z
+          rwget -o ./mpv-win.7z https://github.com/shinchiro/mpv-winbuild-cmake/releases/download/20240719/mpv-x86_64-v3-20240719-git-07acdf0.7z
 
           7z x ./mpv-win.7z -o./mpy-easy-windows-full -y
           cp -r ./mpy-easy-windows ./mpy-easy-windows-full/portable_config
