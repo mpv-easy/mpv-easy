@@ -10,9 +10,10 @@ import type {
   OSDMargins,
   OSDSize,
 } from "@mpv-easy/tool"
-import { throttle } from "lodash-es"
+import { throttle } from "es-toolkit"
 import { fabric } from "fabric" // browser
-import { Bgra, Rgba, Bgr } from "e-color"
+import { Bgra, Bgr } from "e-color"
+import { IEvent } from "fabric/fabric-impl"
 const { Canvas, Rect, Text } = fabric
 
 function getColor(s: string) {
@@ -479,7 +480,8 @@ export function createMpvMock(
 
   fabricCanvas.on(
     "mouse:leave",
-    throttle((e) => {
+    // TODO: fabric type bug
+    throttle((e: any) => {
       const pos: MousePos = {
         x: e.offsetX,
         y: e.offsetY,

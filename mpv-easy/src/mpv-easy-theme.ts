@@ -1,6 +1,5 @@
 import type { MousePos, VideoParams } from "@mpv-easy/tool"
 import { DefaultFps } from "@mpv-easy/ui"
-import { cloneDeep, delay } from "lodash-es"
 
 const White = "FFFFFF"
 const Black = "000000"
@@ -217,7 +216,7 @@ export const defaultSpeedSteps = [
   },
 ]
 export function createDefaultThemeConfig(): EasyConfig {
-  return cloneDeep({
+  return structuredClone({
     mode: "dark",
     uiName: defaultName,
     history: [],

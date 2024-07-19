@@ -10,7 +10,7 @@ import {
   type EasyConfig,
 } from "./mpv-easy-theme"
 import type { Store } from "./store"
-import { throttle } from "lodash-es"
+import { throttle } from "es-toolkit"
 export const pluginName = "@mpv-easy/easy-ui"
 
 declare module "@mpv-easy/plugin" {
@@ -34,17 +34,10 @@ export default definePlugin((context, api) => ({
     // TODO: Temporary attributes should not be saved
     context[pluginName].state = defaultState
     store.subscribe(
-      throttle(
-        () => {
-          const state = store.getState().context
-          api.saveConfig(state)
-        },
-        defaultSaveConfigThrottle,
-        {
-          leading: false,
-          trailing: true,
-        },
-      ),
+      throttle(() => {
+        const state = store.getState().context
+        api.saveConfig(state)
+      }, defaultSaveConfigThrottle),
     )
     const fps = context[pluginName].config.fps || DefaultFps
     const render = createRender({

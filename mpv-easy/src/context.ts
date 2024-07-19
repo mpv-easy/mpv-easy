@@ -61,7 +61,6 @@ import {
   readFile,
   writeFile,
 } from "@mpv-easy/tool"
-import { cloneDeep } from "lodash-es"
 
 export type Experimental = {
   mouseHoverStyle: boolean
@@ -114,7 +113,7 @@ const experimental: Experimental = {
 }
 
 export function createDefaultContext() {
-  return cloneDeep({
+  return structuredClone({
     [clipPlayName]: clipPlayConfig,
     [anime4kName]: anime4kConfig,
     [copyTimeName]: copyTimeConfig,

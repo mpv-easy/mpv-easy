@@ -13,6 +13,8 @@ export function renderToCanvas(
   fontName?: string,
 ) {
   const mp = createMpvMock(canvas, width, height)
+
+  // @ts-ignore
   globalThis.mp = mp
 
   const render = () => {

@@ -40,7 +40,7 @@ import {
   openDialog,
   removeKeyBinding,
 } from "@mpv-easy/tool"
-import { throttle, isEqual, clamp } from "lodash-es"
+import { throttle, isEqual, clamp } from "es-toolkit"
 import { ClickMenu } from "./click-menu"
 import { Playlist } from "./playlist"
 import { getPlayableList } from "@mpv-easy/autoload"
@@ -159,15 +159,11 @@ export const Easy = (props: Partial<EasyProps>) => {
       dispatch.context.setFullscreen(v)
     })
 
-    const updateTimePos = throttle(
-      (v: number) => {
-        dispatch.context.setTimePos(v ?? 0)
-      },
-      1000 / fps,
-      { leading: true, trailing: true },
-    )
+    const updateTimePos = throttle((v: number) => {
+      dispatch.context.setTimePos(v ?? 0)
+    }, 1000 / fps)
 
-    timePosProp.observe(throttle(updateTimePos))
+    timePosProp.observe(throttle(updateTimePos, 1000 / fps))
 
     durationProp.observe((v) => {
       dispatch.context.setDuration(v || 0)
@@ -189,13 +185,9 @@ export const Easy = (props: Partial<EasyProps>) => {
       }
     })
 
-    const cb = throttle(
-      (v) => {
-        dispatch.context.setMousePos(v)
-      },
-      1000 / fps,
-      { leading: true, trailing: true },
-    )
+    const cb = throttle((v) => {
+      dispatch.context.setMousePos(v)
+    }, 1000 / fps)
 
     muteProp.observe((v) => {
       dispatch.context.setMute(v)
@@ -208,13 +200,9 @@ export const Easy = (props: Partial<EasyProps>) => {
     mousePosProp.observe(cb, isEqual)
 
     osdDimensionsProp.observe(
-      throttle(
-        (v) => {
-          dispatch.context.setOsdDimensions(v)
-        },
-        1000 / fps,
-        { leading: true, trailing: true },
-      ),
+      throttle((v) => {
+        dispatch.context.setOsdDimensions(v)
+      }, 1000 / fps),
       isEqual,
     )
 

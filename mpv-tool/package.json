@@ -8,8 +8,7 @@
   "scripts": {
     "es5": "babel ./dist -d es5",
     "build": "tsc -p ./tsconfig.build.json",
-    "dev": "tsc -p ./tsconfig.build.json -w",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "tsc -p ./tsconfig.build.json -w"
   },
   "keywords": [],
   "author": "",

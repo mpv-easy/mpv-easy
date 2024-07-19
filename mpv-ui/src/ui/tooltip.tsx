@@ -1,7 +1,7 @@
 import { Box } from "../index"
 import React, { useEffect, useRef, useState } from "react"
 import { type MousePos, PropertyNative } from "@mpv-easy/tool"
-import { isEqual, throttle } from "lodash-es"
+import { isEqual, throttle } from "es-toolkit"
 import { getRootNode } from "../render/flex"
 import type { MpDom, MpDomProps } from "../render/dom"
 
@@ -105,47 +105,35 @@ export const Tooltip = ({
 
   useEffect(() => {
     let lastPos = mousePos
-    const update = throttle(
-      (pos) => {
-        lastPos = pos
-        const { x, y, hover } = pos
-        if (!hover) {
-          setShow(false)
-          return
-        }
+    const update = throttle((pos) => {
+      lastPos = pos
+      const { x, y, hover } = pos
+      if (!hover) {
+        setShow(false)
+        return
+      }
 
-        const target = getTooltipElement(getRootNode(), x, y)
+      const target = getTooltipElement(getRootNode(), x, y)
 
-        if (!target) {
-          setShow(false)
-          return
-        }
+      if (!target) {
+        setShow(false)
+        return
+      }
 
-        const title = target?.attributes.title
-        if (title?.length) {
-          const direction = getDirection(
-            x,
-            y,
-            getRootNode().layoutNode.width,
-            getRootNode().layoutNode.height,
-          )
-          const pos = computeTooltipPosition(
-            tooltipRef.current,
-            x,
-            y,
-            direction,
-          )
-          setTooltipPos(pos)
-          setShow(true)
-          setText(title)
-        }
-      },
-      tooltipThrottle,
-      {
-        trailing: true,
-        leading: false,
-      },
-    )
+      const title = target?.attributes.title
+      if (title?.length) {
+        const direction = getDirection(
+          x,
+          y,
+          getRootNode().layoutNode.width,
+          getRootNode().layoutNode.height,
+        )
+        const pos = computeTooltipPosition(tooltipRef.current, x, y, direction)
+        setTooltipPos(pos)
+        setShow(true)
+        setText(title)
+      }
+    }, tooltipThrottle)
     mousePosProp.observe(update, isEqual)
   }, [])
 

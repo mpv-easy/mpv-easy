@@ -24,7 +24,7 @@ import {
   applyProps,
 } from "@r-tui/flex"
 import { type MpDom, createNode, MouseEvent } from "./dom"
-import throttle from "lodash-es/throttle"
+import { throttle } from "es-toolkit"
 const NO_CONTEXT = {}
 
 export function createCustomReconciler(customRender: () => void) {
@@ -202,28 +202,21 @@ export function createRender({
   fps = DefaultFps,
   flex = getRootFlex(),
   showFps = false,
-  customRender = throttle(
-    () => {
-      const st = +Date.now()
-      renderNode()
-      const ed = +Date.now()
-      const t = ed - st
-      max = Math.max(max, t)
-      fpsList.push(t)
-      if (fpsList.length > 32) {
-        fpsList.shift()
-      }
-      const every = fpsList.reduce((a, b) => a + b, 0) / fpsList.length
-      if (showFps) {
-        print("render time:", ed, t, max, every)
-      }
-    },
-    1000 / fps,
-    {
-      trailing: true,
-      leading: true,
-    },
-  ),
+  customRender = throttle(() => {
+    const st = +Date.now()
+    renderNode()
+    const ed = +Date.now()
+    const t = ed - st
+    max = Math.max(max, t)
+    fpsList.push(t)
+    if (fpsList.length > 32) {
+      fpsList.shift()
+    }
+    const every = fpsList.reduce((a, b) => a + b, 0) / fpsList.length
+    if (showFps) {
+      print("render time:", ed, t, max, every)
+    }
+  }, 1000 / fps),
   customDispatch = dispatchEvent,
 }: Partial<RenderConfig> = {}) {
   const reconciler = createCustomReconciler(customRender)

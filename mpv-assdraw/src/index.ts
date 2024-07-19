@@ -1,4 +1,4 @@
-import { Bgr, COLORS, Rgb } from "e-color"
+import { Rgb, COLORS } from "e-color"
 import type { ColorName } from "e-color"
 
 const c = 0.551915024494 // 圆形近似值

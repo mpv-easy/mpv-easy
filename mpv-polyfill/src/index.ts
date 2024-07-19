@@ -43,6 +43,7 @@ import Symbol from "es-symbol"
 import { getGlobal } from "./global"
 import { TextEncoder } from "@polkadot/x-textencoder"
 
+import "core-js/stable/structured-clone"
 // TODO: add global Buffer
 // import { Buffer } from 'buffer'
 

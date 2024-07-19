@@ -76,7 +76,10 @@ export const defaultConfig: Anime4kConfig = {
 }
 
 export function toggle(s: string) {
-  const cmd = s.split(';').map(i => `no-osd change-list glsl-shaders toggle "${i}"`).join(';')
+  const cmd = s
+    .split(";")
+    .map((i) => `no-osd change-list glsl-shaders toggle "${i}"`)
+    .join(";")
   command(cmd)
 }
 

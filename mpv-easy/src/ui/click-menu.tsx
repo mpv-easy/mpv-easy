@@ -63,9 +63,9 @@ const mousePosProp = new PropertyNative<MousePos>("mouse-pos")
 
 export const ClickMenu: ForwardRefExoticComponent<
   PropsWithoutRef<Partial<MpDomProps>> &
-  RefAttributes<{
-    setHide: (v: boolean) => void
-  }>
+    RefAttributes<{
+      setHide: (v: boolean) => void
+    }>
 > = React.forwardRef<
   {
     setHide: (v: boolean) => void
