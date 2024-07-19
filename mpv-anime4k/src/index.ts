@@ -75,13 +75,18 @@ export const defaultConfig: Anime4kConfig = {
   ],
 }
 
+export function toggle(s: string) {
+  const cmd = s.split(';').map(i => `no-osd change-list glsl-shaders toggle "${i}"`).join(';')
+  command(cmd)
+}
+
 export default definePlugin((context, api) => ({
   name: pluginName,
   create() {
     const config = context[pluginName]
     const { value } = config.shaders[config.current]
     if (!config.current) {
-      command(`no-osd change-list glsl-shaders toggle "${value}";`)
+      toggle(value)
     } else {
       command(`no-osd change-list glsl-shaders clr "";`)
     }
@@ -89,7 +94,7 @@ export default definePlugin((context, api) => ({
       const { key, value, title } = config.shaders[i]
       addKeyBinding(key, `${pluginName}/${key}`, () => {
         if (value.length) {
-          command(`no-osd change-list glsl-shaders toggle "${value}";`)
+          toggle(value)
         } else {
           command(`no-osd change-list glsl-shaders clr "";`)
         }
