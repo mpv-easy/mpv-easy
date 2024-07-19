@@ -63,9 +63,9 @@ const mousePosProp = new PropertyNative<MousePos>("mouse-pos")
 
 export const ClickMenu: ForwardRefExoticComponent<
   PropsWithoutRef<Partial<MpDomProps>> &
-    RefAttributes<{
-      setHide: (v: boolean) => void
-    }>
+  RefAttributes<{
+    setHide: (v: boolean) => void
+  }>
 > = React.forwardRef<
   {
     setHide: (v: boolean) => void
@@ -128,13 +128,13 @@ export const ClickMenu: ForwardRefExoticComponent<
               const { value, title } = i
               if (value.length) {
                 command(`no-osd change-list glsl-shaders set "${value}";`)
-                if (!anime4k.noOsd) {
-                  osdMessage(title, 5)
+                if (anime4k.osdDuration) {
+                  osdMessage(title, anime4k.osdDuration)
                 }
               } else {
                 command(`no-osd change-list glsl-shaders clr "";`)
-                if (!anime4k.noOsd) {
-                  osdMessage(title, 5)
+                if (anime4k.osdDuration) {
+                  osdMessage(title, anime4k.osdDuration)
                 }
               }
               anime4k.current = k

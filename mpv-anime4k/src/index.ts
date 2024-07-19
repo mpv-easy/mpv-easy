@@ -16,7 +16,7 @@ export type ShaderItem = {
 
 export type Anime4kConfig = {
   current: number
-  noOsd: boolean
+  osdDuration: number
   shaders: ShaderItem[]
 }
 
@@ -28,7 +28,7 @@ declare module "@mpv-easy/plugin" {
 
 export const defaultConfig: Anime4kConfig = {
   current: 0,
-  noOsd: false,
+  osdDuration: 2,
   shaders: [
     {
       key: "CTRL+0",
@@ -79,33 +79,23 @@ export default definePlugin((context, api) => ({
   name: pluginName,
   create() {
     const config = context[pluginName]
-    const { value, title } = config.shaders[config.current]
+    const { value } = config.shaders[config.current]
     if (!config.current) {
       command(`no-osd change-list glsl-shaders toggle "${value}";`)
-      // if (!config.noOsd) {
-      //   osdMessage(title, 5)
-      // }
     } else {
       command(`no-osd change-list glsl-shaders clr "";`)
-      // if (!config.noOsd) {
-      //   osdMessage(title, 5)
-      // }
     }
     for (let i = 0; i < config.shaders.length; i++) {
       const { key, value, title } = config.shaders[i]
       addKeyBinding(key, `${pluginName}/${key}`, () => {
         if (value.length) {
           command(`no-osd change-list glsl-shaders toggle "${value}";`)
-          if (!config.noOsd) {
-            osdMessage(title, 5)
-          }
         } else {
           command(`no-osd change-list glsl-shaders clr "";`)
-          if (!config.noOsd) {
-            osdMessage(title, 5)
-          }
         }
-
+        if (config.osdDuration) {
+          osdMessage(title, config.osdDuration)
+        }
         config.current = i
         api.saveConfig(context)
       })
