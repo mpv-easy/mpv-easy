@@ -9,9 +9,11 @@ export const BangumiReg = /^https?:\/\/(.*?)\.bilibili\.com\/bangumi/
 
 export const LiveReg = /^https?:\/\/live.bilibili.com\/(.*?)/
 
+export const SpaceReg = /^https?:\/\/space.bilibili.com\/(.*?)/
+
 export function isBilibili(url: string) {
-  return [VideoReg, MainReg, PopularReg, BangumiReg, LiveReg].some((i) =>
-    i.test(url),
+  return [VideoReg, MainReg, PopularReg, BangumiReg, LiveReg, SpaceReg].some(
+    (i) => i.test(url),
   )
 }
 

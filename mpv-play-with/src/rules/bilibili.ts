@@ -5,6 +5,25 @@ import { getBvid } from "../../../mpv-tool/src/bilibili"
 export const Bilibili: Rule = {
   match: (url: string): boolean => bilibili.isBilibili(url),
   getVideos: async (url: string): Promise<PlayWith | undefined> => {
+    if (bilibili.SpaceReg.test(url)) {
+      const list: PlayItem[] = []
+      for (const i of Array.from(document.querySelectorAll("a.title"))) {
+        const url = i.getAttribute("href")
+        const title = i.getAttribute("title")
+        if (!url?.length || !title?.length || url === "javascript:;") {
+          continue
+        }
+
+        list.push({
+          url: location.protocol + url,
+          title,
+        })
+      }
+      return {
+        playlist: { list },
+      }
+    }
+
     if (bilibili.LiveReg.test(url)) {
       return { playlist: { list: [{ url, title: document.title }] } }
     }

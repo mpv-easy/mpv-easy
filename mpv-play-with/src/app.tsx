@@ -29,6 +29,7 @@ export function App() {
   const domRef = useRef<HTMLDivElement>(null)
   const [playWith, setPlayWith] = useState<PlayWith>()
   const videos = playWith?.playlist.list || []
+  // console.log('videos: ', videos)
   const opacity = hover ? 100 : 0
   const [loading, setLoading] = useState(false)
 
@@ -37,18 +38,15 @@ export function App() {
     const rule = Rules.find((i) => i.match(url))
     if (rule) {
       setDisplay(true)
-    } else {
-      setDisplay(false)
-      setPlayWith({ playlist: { list: [] } })
-    }
-
-    if (rule) {
       const videoList = await rule.getVideos(url)
       if (!videoList?.playlist.list.length) {
         setPlayWith({ playlist: { list: [] } })
         return
       }
       setPlayWith(videoList)
+    } else {
+      setDisplay(false)
+      setPlayWith({ playlist: { list: [] } })
     }
   }
 
