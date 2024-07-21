@@ -13,9 +13,9 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "devDependencies": {},
   "dependencies": {
-    "@polkadot/x-textencoder": "^12.6.2",
+    "@polkadot/x-textdecoder": "^13.0.2",
+    "@polkadot/x-textencoder": "13.0.2",
     "buffer": "^6.0.3",
     "core-js": "^3.35.1",
     "decode-uri-component": "^0.4.1",

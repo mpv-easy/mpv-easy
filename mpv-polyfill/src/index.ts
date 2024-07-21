@@ -3,53 +3,42 @@ import "core-js/stable/array/fill"
 import "core-js/stable/array/find-index"
 import "core-js/stable/array/find"
 import "core-js/stable/array/find-last"
+import "core-js/stable/array-buffer"
+import "core-js/stable/array/find-last-index"
 import "core-js/stable/array/for-each"
 import "core-js/stable/array/from"
 import "core-js/stable/array/some"
 import "core-js/stable/array/includes"
 import "core-js/stable/array/at"
 import "core-js/stable/number"
-
-// @ts-ignore
-// biome-ignore lint/suspicious/noShadowRestrictedNames: <explanation>
-import Map from "core-js/stable/map"
-// import "core-js/stable/object"
 import "core-js/stable/object/assign"
 import "core-js/stable/object/entries"
 import "core-js/stable/object/entries"
 import "core-js/stable/object/is"
 import "core-js/stable/object/values"
-// import "core-js/stable/object/set-prototype-of"
-
-// @ts-ignore
-// biome-ignore lint/suspicious/noShadowRestrictedNames: <explanation>
-import Promise from "core-js/stable/promise"
-// @ts-ignore
-// biome-ignore lint/suspicious/noShadowRestrictedNames: <explanation>
-import Set from "core-js/stable/set"
 import "core-js/stable/string/pad-end"
 import "core-js/stable/string/pad-start"
 import "core-js/stable/string/at"
 import "core-js/stable/string"
-
-// import "core-js/stable/atob"
-// import "core-js/stable/btoa"
+import "core-js/stable/structured-clone"
 import "core-js/stable/typed-array"
-import "core-js/stable/array-buffer"
 
 // @ts-ignore
-// biome-ignore lint/suspicious/noShadowRestrictedNames: <explanation>
+import Promise from "core-js/stable/promise"
+// @ts-ignore
+import Set from "core-js/stable/set"
+// @ts-ignore
+import Map from "core-js/stable/map"
+// @ts-ignore
 import Symbol from "es-symbol"
 import { getGlobal } from "./global"
 import { TextEncoder } from "@polkadot/x-textencoder"
-
-import "core-js/stable/structured-clone"
-// TODO: add global Buffer
-// import { Buffer } from 'buffer'
+import { TextDecoder } from "@polkadot/x-textdecoder"
 
 const g = getGlobal()
 // g.Buffer = Buffer
 g.TextEncoder = TextEncoder
+g.TextDecoder = TextDecoder
 g.Map = Map
 g.WeakMap = Map
 g.Set = Set
@@ -79,56 +68,6 @@ if (!Array.prototype.fill) {
     }
     return this
   }
-}
-// if (!String.prototype.find) {
-//   String.prototype.find = function (searchString, position) {
-//     if (this == null) {
-//       throw new TypeError('String.prototype.find called on null or undefined');
-//     }
-//     let str = String(this);
-//     let len = str.length;
-//     let start = position ? Number(position) || 0 : 0;
-
-//     // Loop through the string to find the searchString
-//     for (let i = start; i < len; i++) {
-//       if (str.charAt(i) === searchString.charAt(0)) {
-//         let substr = str.substr(i, searchString.length);
-//         if (substr === searchString) {
-//           return i;
-//         }
-//       }
-//     }
-
-//     return -1; // Return -1 if searchString is not found
-//   };
-// }
-
-// Polyfill for Array.prototype.find()
-if (!Array.prototype.find) {
-  Object.defineProperty(Array.prototype, "find", {
-    value: function (predicate: any) {
-      if (this == null) {
-        throw new TypeError("Array.prototype.find called on null or undefined")
-      }
-      if (typeof predicate !== "function") {
-        throw new TypeError("predicate must be a function")
-      }
-      const list = Object(this)
-      const length = list.length >>> 0
-      // biome-ignore lint/style/noArguments: <explanation>
-      const thisArg = arguments[1]
-
-      for (let i = 0; i < length; i++) {
-        if (i in list) {
-          const value = list[i]
-          if (predicate.call(thisArg, value, i, list)) {
-            return value
-          }
-        }
-      }
-      return undefined
-    },
-  })
 }
 
 function setProtoOf(obj: any, proto: any) {

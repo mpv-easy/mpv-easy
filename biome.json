@@ -46,6 +46,7 @@
         "noBannedTypes": "off"
       },
       "suspicious": {
+        "noShadowRestrictedNames": "off",
         "noArrayIndexKey": "off",
         "noRedeclare": "off",
         "noUnsafeDeclarationMerging": "off",
