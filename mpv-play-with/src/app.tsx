@@ -12,6 +12,7 @@ const LocalStorageKey = "mpv-easy-play-with"
 const LoadingTime = 2000
 
 export function App() {
+  const fullscreen = document.fullscreen || !!document.fullscreenElement
   const width = 64
   const height = 64
 
@@ -64,6 +65,7 @@ export function App() {
 
   return (
     display &&
+    !fullscreen &&
     videos.length > 0 && (
       <div
         ref={domRef}
