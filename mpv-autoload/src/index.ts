@@ -89,7 +89,16 @@ export function getPlayableList(
   if (videoList.length > config.maxSize) {
     printAndOsd(`load too many videos(${videoList.length})`, 2)
   }
-  return videoList.slice(0, config.maxSize)
+  const path = normalize(getPropertyString("path") || "")
+  const startIndex = videoList.indexOf(path)
+
+  if (startIndex === -1) {
+    return videoList.slice(0, config.maxSize)
+  }
+
+  const st = Math.max(startIndex - (config.maxSize >> 1), 0)
+  const ed = st + config.maxSize
+  return videoList.slice(st, ed)
 }
 
 export function autoload(
