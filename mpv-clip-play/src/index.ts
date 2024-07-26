@@ -10,6 +10,7 @@ import {
   bilibili,
   webdavList,
   twitch,
+  getExtName,
 } from "@mpv-easy/tool"
 
 import { type SystemApi, definePlugin } from "@mpv-easy/plugin"
@@ -89,12 +90,13 @@ function getList(s: string | undefined, context: PluginContext): string[] {
     if (!d) {
       return []
     }
-    return getPlayableList(c, d)
+    return getPlayableList(c, d, getExtName(s) || "")
   }
   if (isDir(s)) {
     const c = context[autoloadName]
 
-    return getPlayableList(c, s)
+    // only load default type video
+    return getPlayableList(c, s, undefined)
   }
   return []
 }

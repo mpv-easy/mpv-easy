@@ -39,6 +39,7 @@ import {
   addKeyBinding,
   openDialog,
   removeKeyBinding,
+  getExtName,
 } from "@mpv-easy/tool"
 import { throttle, isEqual, clamp } from "es-toolkit"
 import { ClickMenu } from "./click-menu"
@@ -179,7 +180,7 @@ export const Easy = (props: Partial<EasyProps>) => {
         if (!d) {
           return
         }
-        const list = getPlayableList(autoloadConfig, d)
+        const list = getPlayableList(autoloadConfig, d, getExtName(v) || "")
         const playIndex = list.indexOf(v)
         dispatch.context.setPlaylist(list, playIndex === -1 ? 0 : playIndex)
       }

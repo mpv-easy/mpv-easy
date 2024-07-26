@@ -1,5 +1,13 @@
 import { SystemApi, definePlugin } from "@mpv-easy/plugin"
-import { dir, getMpvPlaylist, isYtdlp } from "@mpv-easy/tool"
+import {
+  AudioTypes,
+  dir,
+  getExtName,
+  getMpvPlaylist,
+  ImageTypes,
+  isYtdlp,
+  VideoTypes,
+} from "@mpv-easy/tool"
 import { normalize } from "@mpv-easy/tool"
 import {
   getPropertyString,
@@ -38,17 +46,40 @@ export const defaultConfig: AutoloadConfig = {
   audio: true,
 }
 
-export function getPlayableList(config: AutoloadConfig, dir: string) {
+/**
+ *
+ * @param config AutoloadConfig
+ * @param dir dir path
+ * @param extName: undefined match default rules, '' match all
+ * @returns
+ */
+export function getPlayableList(
+  config: AutoloadConfig,
+  dir: string,
+  extName: string | undefined = undefined,
+) {
   if (isHttp(dir)) {
     return []
   }
-  const list = readdir(dir) || []
+  const list = readdir(dir, "files") || []
   const videoList = list
     .filter(
       (i) =>
-        (config.video && isVideo(i)) ||
-        (config.audio && isAudio(i)) ||
-        (config.image && isImage(i)),
+        (config.video &&
+          isVideo(
+            i,
+            extName !== undefined ? [extName, ...VideoTypes] : VideoTypes,
+          )) ||
+        (config.audio &&
+          isAudio(
+            i,
+            extName !== undefined ? [extName, ...AudioTypes] : AudioTypes,
+          )) ||
+        (config.image &&
+          isImage(
+            i,
+            extName !== undefined ? [extName, ...ImageTypes] : ImageTypes,
+          )),
     )
     .map((i) => joinPath(dir, i))
     .sort((a, b) => a.localeCompare(b))
@@ -79,7 +110,8 @@ export function autoload(
     return
   }
 
-  const videoList = getPlayableList(config, d)
+  const ext = getExtName(path)
+  const videoList = getPlayableList(config, d, ext || "")
   if (JSON.stringify(videoList) === JSON.stringify(getPlaylist())) {
     return
   }

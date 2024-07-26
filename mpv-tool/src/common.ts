@@ -63,19 +63,19 @@ export function isHttp(s: string) {
   return startsWith(s, ["http", "webdav", "dav"])
 }
 
-export function isVideo(s: string) {
-  return endsWith(s, VideoTypes)
+export function isVideo(s: string, types = VideoTypes) {
+  return endsWith(s, types)
 }
-export function isAudio(s: string) {
-  return endsWith(s, AudioTypes)
-}
-
-export function isImage(s: string) {
-  return endsWith(s, ImageTypes)
+export function isAudio(s: string, types = AudioTypes) {
+  return endsWith(s, types)
 }
 
-export function isSubtitle(s: string) {
-  return endsWith(s, SubtitleTypes)
+export function isImage(s: string, types = ImageTypes) {
+  return endsWith(s, types)
+}
+
+export function isSubtitle(s: string, types = SubtitleTypes) {
+  return endsWith(s, types)
 }
 
 export function addToPlaylist(v: string[]) {
