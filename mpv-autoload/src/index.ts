@@ -6,6 +6,7 @@ import {
   getMpvPlaylist,
   ImageTypes,
   isYtdlp,
+  printAndOsd,
   VideoTypes,
 } from "@mpv-easy/tool"
 import { normalize } from "@mpv-easy/tool"
@@ -26,6 +27,7 @@ export type AutoloadConfig = {
   image: boolean
   video: boolean
   audio: boolean
+  maxSize: number
   // additionalImageExts: string,
   // additionalVideoExts: string,
   // additionalAudioExts: string,
@@ -44,6 +46,7 @@ export const defaultConfig: AutoloadConfig = {
   image: true,
   video: true,
   audio: true,
+  maxSize: 128,
 }
 
 /**
@@ -83,7 +86,10 @@ export function getPlayableList(
     )
     .map((i) => joinPath(dir, i))
     .sort((a, b) => a.localeCompare(b))
-  return videoList
+  if (videoList.length > config.maxSize) {
+    printAndOsd(`load too many videos(${videoList.length})`, 2)
+  }
+  return videoList.slice(0, config.maxSize)
 }
 
 export function autoload(
