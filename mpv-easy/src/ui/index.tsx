@@ -19,6 +19,10 @@ import {
   clickMenuStyleSelector,
   protocolHookSelector,
   fontSizeSelector,
+  volumeSelector,
+  volumeMaxSelector,
+  speedListSelector,
+  speedSelector,
 } from "../store"
 import {
   PropertyBool,
@@ -101,6 +105,7 @@ export type EasyProps = {
   initHide: boolean
   fontSize: number
 }
+
 export const Easy = (props: Partial<EasyProps>) => {
   const dispatch = useDispatch<Dispatch>()
   const fps = useSelector(fpsSelector)
@@ -110,6 +115,18 @@ export const Easy = (props: Partial<EasyProps>) => {
   const fontSize = useSelector(fontSizeSelector)
   const fontSizeRef = useRef(fontSize)
   fontSizeRef.current = fontSize
+
+  const volume = useSelector(volumeSelector)
+  const volumeRef = useRef(volume)
+  volumeRef.current = volume
+  const volumeMax = useSelector(volumeMaxSelector)
+
+  const speed = useSelector(speedSelector)
+  const speedRef = useRef(speed)
+  speedRef.current = speed
+  const speedList = useSelector(speedListSelector)
+  const speedMax = Math.max(...speedList)
+  const speedMin = Math.min(...speedList)
 
   useEffect(() => {
     const mpvExe = getMpvExePath()
@@ -212,31 +229,31 @@ export const Easy = (props: Partial<EasyProps>) => {
       isEqual,
     )
 
-    addKeyBinding("ctrl+o", "__openDialog__", () => {
+    registerScriptMessage("open-dialog", () => {
       const v = openDialog()[0]
       if (v) {
         dispatch.context.playVideo(v)
       }
     })
-    registerScriptMessage("font-size", (e) => {
+
+    registerScriptMessage("volume-change", (e) => {
       const v = Number.parseFloat(`${e}`)
-      if (v > 0) {
-        const s = clamp(
-          fontSizeRef.current + fontStep,
-          minFontSize,
-          maxFontSize,
-        )
-        dispatch.context.setFontSize(s)
-        setPropertyNumber("volume", v)
-      } else {
-        const s = clamp(
-          fontSizeRef.current - fontStep,
-          minFontSize,
-          maxFontSize,
-        )
-        dispatch.context.setFontSize(s)
-        setPropertyNumber("volume", v)
-      }
+      const s = clamp(volumeRef.current + v, 0, volumeMax)
+      dispatch.context.setVolume(s)
+      setPropertyNumber("volume", s)
+    })
+
+    registerScriptMessage("fontsize-change", (e) => {
+      const v = Number.parseFloat(`${e}`)
+      const s = clamp(fontSizeRef.current + v, minFontSize, maxFontSize)
+      dispatch.context.setFontSize(s)
+    })
+
+    registerScriptMessage("speed-change", (e) => {
+      const v = Number.parseFloat(`${e}`)
+      const s = clamp(speedRef.current + v, speedMin, speedMax)
+      dispatch.context.setSpeed(s)
+      setPropertyNumber("speed", s)
     })
   }, [])
   const smallFontSize = useSelector(smallFontSizeSelector)
@@ -258,7 +275,7 @@ export const Easy = (props: Partial<EasyProps>) => {
   const toolbarRef = useRef<MpDom>(null)
   const elementRef = useRef<MpDom>(null)
   const menuRef = useRef<{ setHide: (v: boolean) => void }>(null)
-  const volumeRef = useRef<MpDom>(null)
+  const volumeDomRef = useRef<MpDom>(null)
   const [menuHide, setMenuHide] = useState(true)
 
   const { x, y } = mousePos
@@ -267,7 +284,7 @@ export const Easy = (props: Partial<EasyProps>) => {
   const mouseInUI = [
     toolbarRef.current,
     elementRef.current,
-    volumeRef.current,
+    volumeDomRef.current,
   ].some((i) => hasPoint(i, x, y))
 
   if (mouseInUI) {
@@ -323,7 +340,7 @@ export const Easy = (props: Partial<EasyProps>) => {
       >
         <Toolbar ref={toolbarRef} hide={hide} />
         <Element ref={elementRef} hide={hide} />
-        <VoiceControl ref={volumeRef} hide={hide} />
+        <VoiceControl ref={volumeDomRef} hide={hide} />
         {!clickMenuStyle.disable && <ClickMenu ref={menuRef} hide={menuHide} />}
         <Playlist />
         <History />
