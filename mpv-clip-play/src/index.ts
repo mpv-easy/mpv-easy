@@ -90,13 +90,13 @@ function getList(s: string | undefined, context: PluginContext): string[] {
     if (!d) {
       return []
     }
-    return getPlayableList(c, d, getExtName(s) || "")
+    return getPlayableList(c, s, d, getExtName(s) || "")
   }
   if (isDir(s)) {
     const c = context[autoloadName]
 
     // only load default type video
-    return getPlayableList(c, s, undefined)
+    return getPlayableList(c, undefined, s, undefined)
   }
   return []
 }

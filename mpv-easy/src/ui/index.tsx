@@ -38,8 +38,9 @@ import {
   getPlayWithExePath,
   addKeyBinding,
   openDialog,
-  removeKeyBinding,
   getExtName,
+  registerScriptMessage,
+  setPropertyNumber,
 } from "@mpv-easy/tool"
 import { throttle, isEqual, clamp } from "es-toolkit"
 import { ClickMenu } from "./click-menu"
@@ -106,6 +107,10 @@ export const Easy = (props: Partial<EasyProps>) => {
   const path = useSelector(pathSelector)
   const autoloadConfig = useSelector(audoloadConfigSelector)
   const protocolHook = useSelector(protocolHookSelector)
+  const fontSize = useSelector(fontSizeSelector)
+  const fontSizeRef = useRef(fontSize)
+  fontSizeRef.current = fontSize
+
   useEffect(() => {
     const mpvExe = getMpvExePath()
     if (protocolHook !== mpvExe) {
@@ -180,7 +185,7 @@ export const Easy = (props: Partial<EasyProps>) => {
         if (!d) {
           return
         }
-        const list = getPlayableList(autoloadConfig, d, getExtName(v) || "")
+        const list = getPlayableList(autoloadConfig, v, d, getExtName(v) || "")
         const playIndex = list.indexOf(v)
         dispatch.context.setPlaylist(list, playIndex === -1 ? 0 : playIndex)
       }
@@ -213,30 +218,28 @@ export const Easy = (props: Partial<EasyProps>) => {
         dispatch.context.playVideo(v)
       }
     })
+    registerScriptMessage("font-size", (e) => {
+      const v = Number.parseFloat(`${e}`)
+      if (v > 0) {
+        const s = clamp(
+          fontSizeRef.current + fontStep,
+          minFontSize,
+          maxFontSize,
+        )
+        dispatch.context.setFontSize(s)
+        setPropertyNumber("volume", v)
+      } else {
+        const s = clamp(
+          fontSizeRef.current - fontStep,
+          minFontSize,
+          maxFontSize,
+        )
+        dispatch.context.setFontSize(s)
+        setPropertyNumber("volume", v)
+      }
+    })
   }, [])
-  const fontSize = useSelector(fontSizeSelector)
   const smallFontSize = useSelector(smallFontSizeSelector)
-
-  useEffect(() => {
-    const upName = "__ctrl_up__"
-    const downName = "__ctrl_down__"
-    const up = () => {
-      const s = clamp(fontSize + fontStep, minFontSize, maxFontSize)
-      dispatch.context.setFontSize(s)
-    }
-    const down = () => {
-      const s = clamp(fontSize - fontStep, minFontSize, maxFontSize)
-      dispatch.context.setFontSize(s)
-    }
-
-    addKeyBinding("ctrl+down", downName, down)
-    addKeyBinding("ctrl+up", upName, up)
-    return () => {
-      removeKeyBinding(upName)
-      removeKeyBinding(downName)
-    }
-  }, [fontSize])
-
   const style = useSelector(styleSelector)
   const mode = useSelector(modeSelector)
   const toolbar = useSelector(toolbarStyleSelector)

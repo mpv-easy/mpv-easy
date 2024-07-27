@@ -6,7 +6,6 @@ import {
   getMpvPlaylist,
   ImageTypes,
   isYtdlp,
-  printAndOsd,
   VideoTypes,
 } from "@mpv-easy/tool"
 import { normalize } from "@mpv-easy/tool"
@@ -46,25 +45,26 @@ export const defaultConfig: AutoloadConfig = {
   image: true,
   video: true,
   audio: true,
-  maxSize: 128,
+  maxSize: 64,
 }
 
 /**
  *
  * @param config AutoloadConfig
- * @param dir dir path
+ * @param searchDir dir path
  * @param extName: undefined match default rules, '' match all
  * @returns
  */
 export function getPlayableList(
   config: AutoloadConfig,
-  dir: string,
+  currentPath: string | undefined,
+  searchDir: string,
   extName: string | undefined = undefined,
 ) {
-  if (isHttp(dir)) {
+  if (isHttp(searchDir)) {
     return []
   }
-  const list = readdir(dir, "files") || []
+  const list = readdir(searchDir, "files") || []
   const videoList = list
     .filter(
       (i) =>
@@ -84,13 +84,12 @@ export function getPlayableList(
             extName !== undefined ? [extName, ...ImageTypes] : ImageTypes,
           )),
     )
-    .map((i) => joinPath(dir, i))
+    .map((i) => joinPath(searchDir, i))
     .sort((a, b) => a.localeCompare(b))
   if (videoList.length > config.maxSize) {
-    printAndOsd(`load too many videos(${videoList.length})`, 2)
+    print(`load too many videos(${videoList.length})`)
   }
-  const path = normalize(getPropertyString("path") || "")
-  const startIndex = videoList.indexOf(path)
+  const startIndex = currentPath ? videoList.indexOf(currentPath) : -1
 
   if (startIndex === -1) {
     return videoList.slice(0, config.maxSize)
@@ -126,7 +125,7 @@ export function autoload(
   }
 
   const ext = getExtName(path)
-  const videoList = getPlayableList(config, d, ext || "")
+  const videoList = getPlayableList(config, path, d, ext || "")
   if (JSON.stringify(videoList) === JSON.stringify(getPlaylist())) {
     return
   }
