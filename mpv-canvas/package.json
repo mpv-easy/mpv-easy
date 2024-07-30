@@ -14,7 +14,7 @@
     "@mpv-easy/tool": "workspace:*",
     "@mpv-easy/ui": "workspace:*",
     "e-color": "^0.1.3",
-    "es-toolkit": "^1.12.0",
+    "lodash-es": "^4.17.21",
     "fabric": "6.0.2",
     "fontfaceobserver": "^2.3.0"
   },

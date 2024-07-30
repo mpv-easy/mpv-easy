@@ -24,7 +24,7 @@ import {
   applyProps,
 } from "@r-tui/flex"
 import { type MpDom, createNode, MouseEvent } from "./dom"
-import { throttle } from "es-toolkit"
+import throttle from "lodash-es/throttle"
 const NO_CONTEXT = {}
 
 export function createCustomReconciler(customRender: () => void) {

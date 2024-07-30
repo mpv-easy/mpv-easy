@@ -40,13 +40,15 @@ import {
   getMpvExePath,
   setProtocolHook,
   getPlayWithExePath,
-  addKeyBinding,
   openDialog,
   getExtName,
   registerScriptMessage,
   setPropertyNumber,
+  printAndOsd,
 } from "@mpv-easy/tool"
-import { throttle, isEqual, clamp } from "es-toolkit"
+import throttle from "lodash-es/throttle"
+import isEqual from "lodash-es/isEqual"
+import clamp from "lodash-es/clamp"
 import { ClickMenu } from "./click-menu"
 import { Playlist } from "./playlist"
 import { getPlayableList } from "@mpv-easy/autoload"
@@ -241,12 +243,14 @@ export const Easy = (props: Partial<EasyProps>) => {
       const s = clamp(volumeRef.current + v, 0, volumeMax)
       dispatch.context.setVolume(s)
       setPropertyNumber("volume", s)
+      printAndOsd(`volume: ${s}`, 2)
     })
 
     registerScriptMessage("fontsize-change", (e) => {
       const v = Number.parseFloat(`${e}`)
       const s = clamp(fontSizeRef.current + v, minFontSize, maxFontSize)
       dispatch.context.setFontSize(s)
+      printAndOsd(`fontsize: ${s}`, 2)
     })
 
     registerScriptMessage("speed-change", (e) => {
@@ -254,6 +258,7 @@ export const Easy = (props: Partial<EasyProps>) => {
       const s = clamp(speedRef.current + v, speedMin, speedMax)
       dispatch.context.setSpeed(s)
       setPropertyNumber("speed", s)
+      printAndOsd(`speed: ${s}`, 2)
     })
   }, [])
   const smallFontSize = useSelector(smallFontSizeSelector)

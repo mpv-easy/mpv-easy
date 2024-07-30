@@ -1,4 +1,4 @@
-import { throttle } from "es-toolkit"
+import throttle from "lodash-es/throttle"
 import { PropertyNative, type MousePos } from "@mpv-easy/tool"
 
 const time = 500

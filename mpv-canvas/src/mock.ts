@@ -10,7 +10,7 @@ import type {
   OSDMargins,
   OSDSize,
 } from "@mpv-easy/tool"
-import { throttle } from "es-toolkit"
+import throttle from "lodash-es/throttle"
 import * as fabric from "fabric" // browser
 import { Bgra, Bgr } from "e-color"
 const { Canvas, Rect, FabricText } = fabric

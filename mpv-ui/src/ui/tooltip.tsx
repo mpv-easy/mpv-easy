@@ -1,7 +1,8 @@
 import { Box } from "../index"
 import React, { useEffect, useRef, useState } from "react"
 import { type MousePos, PropertyNative } from "@mpv-easy/tool"
-import { isEqual, throttle } from "es-toolkit"
+import isEqual from "lodash-es/isEqual"
+import throttle from "lodash-es/throttle"
 import { getRootNode } from "../render/flex"
 import type { MpDom, MpDomProps } from "../render/dom"
 

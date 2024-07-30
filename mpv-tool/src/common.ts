@@ -445,7 +445,7 @@ export function loadfile(
   command(`loadfile ${path} ${flag}`)
 }
 
-export function printAndOsd(s: string, duration: number) {
-  osdMessage(s, duration)
+export function printAndOsd(s: string, seconds: number) {
+  osdMessage(s, seconds)
   print(s)
 }

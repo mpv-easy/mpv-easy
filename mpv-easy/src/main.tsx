@@ -10,7 +10,7 @@ import {
   type EasyConfig,
 } from "./mpv-easy-theme"
 import type { Store } from "./store"
-import { throttle } from "es-toolkit"
+import throttle from "lodash-es/throttle"
 export const pluginName = "@mpv-easy/easy-ui"
 
 declare module "@mpv-easy/plugin" {
