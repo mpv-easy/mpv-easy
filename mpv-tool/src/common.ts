@@ -416,18 +416,33 @@ export function updatePlaylist(list: string[], playIndex = 0) {
     return
   }
   if (JSON.stringify(oldList) === JSON.stringify(list)) {
-    const oldIndex = getPropertyNumber("playlist-pos")
-    if (oldIndex !== playIndex) {
+    if (oldListIndex !== playIndex) {
       command(`playlist-play-index ${playIndex}`)
     }
     return
   }
-  for (const i of list) {
-    command(`loadfile "${i}" append`)
-  }
-  command(`playlist-play-index ${playIndex + oldCount}`)
-  for (let i = 0; i < oldList.length; i++) {
-    command("playlist-remove 0")
+  if (oldListIndex === -1) {
+    for (const i of list) {
+      command(`loadfile "${i}" append`)
+    }
+    command(`playlist-play-index ${playIndex + oldCount}`)
+    for (let i = 0; i < oldList.length; i++) {
+      command("playlist-remove 0")
+    }
+  } else {
+    for (let i = 0; i < oldListIndex; i++) {
+      command("playlist-remove 0")
+    }
+    for (let i = 0; i < oldCount - oldListIndex - 1; i++) {
+      command("playlist-remove 1")
+    }
+    for (let i = 0; i < list.length; i++) {
+      if (i === playIndex) {
+        continue
+      }
+      command(`loadfile "${list[i]}" insert-at ${i}`)
+    }
+    command(`playlist-play-index ${playIndex}`)
   }
 }
 
