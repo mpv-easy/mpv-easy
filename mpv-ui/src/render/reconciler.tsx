@@ -27,6 +27,22 @@ import { type MpDom, createNode, MouseEvent } from "./dom"
 import throttle from "lodash-es/throttle"
 const NO_CONTEXT = {}
 
+function detachDeletedInstance(node: MpDom) {
+  for (const c of node.childNodes) {
+    detachDeletedInstance(c)
+  }
+
+  for (const ovl of node.props.osdOverlays) {
+    ovl.remove()
+  }
+
+  const { backgroundImage } = node.attributes
+  if (typeof backgroundImage === "string") {
+    node.props.imageOverlay?.remove()
+    node.props.imageOverlay?.destroy()
+  }
+}
+
 export function createCustomReconciler(customRender: () => void) {
   return createReconciler({
     supportsMutation: true,
@@ -158,19 +174,8 @@ export function createCustomReconciler(customRender: () => void) {
     getInstanceFromScope: (scopeInstance: any): unknown => {
       return null
     },
-    detachDeletedInstance: (node: MpDom): void => {
-      for (const ovl of node.props.osdOverlays) {
-        ovl.data = ""
-        ovl.computeBounds = false
-        ovl.hidden = true
-        // ovl.update()
-        ovl.remove()
-      }
-      const { backgroundImage } = node.attributes
-      if (typeof backgroundImage === "string") {
-        node.props.imageOverlay?.remove()
-        node.props.imageOverlay?.destroy()
-      }
+    detachDeletedInstance(node: MpDom): void {
+      detachDeletedInstance(node)
     },
     removeChild(parentInstance: MpDom, child: MpDom) {
       removeChildNode(parentInstance, child)

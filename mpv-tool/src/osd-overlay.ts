@@ -9,9 +9,8 @@ const overlayPool: {
 function getOverlay(): MpvOsdOverlay {
   for (let i = 0; i < overlayPool.length; i++) {
     const item = overlayPool[i]
-    if (!item.busy) {
+    if (item && !item.busy) {
       item.busy = true
-      // console.log("overlay cache: ", i, overlayPool.length)
       return item.overlay
     }
   }
@@ -22,14 +21,9 @@ function getOverlay(): MpvOsdOverlay {
     overlay.data = ""
     overlay.compute_bounds = false
     overlay.update()
-    for (let i = 0; i < overlayPool.length; i++) {
-      const item = overlayPool[i]
-      if (item.overlay === overlay) {
-        item.busy = false
-      }
-    }
+    overlayPool[overlay.id || 0].busy = false
   }
-  overlayPool.push({ overlay, busy: true })
+  overlayPool[overlay.id || 0] = { overlay, busy: true }
   return overlay
 }
 
