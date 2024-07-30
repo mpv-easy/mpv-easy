@@ -120,17 +120,17 @@ export const Progress = ({ width, height, ...props }: MpDomProps) => {
       onMouseMove={(e) => {
         setPreviewCursorHide(false)
         updatePreviewCursor(e)
-        e.stopPropagation()
+        // e.stopPropagation()
       }}
       onMouseEnter={(e) => {
         updatePreviewCursor(e)
         setPreviewCursorHide(false)
-        e.stopPropagation()
+        // e.stopPropagation()
       }}
       onMouseLeave={(e) => {
         updatePreviewCursor(e)
         setPreviewCursorHide(true)
-        e.stopPropagation()
+        // e.stopPropagation()
       }}
       {...props}
     >
