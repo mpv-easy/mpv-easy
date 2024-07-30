@@ -3,9 +3,10 @@ import {
   Button,
   type ButtonProps,
   createNode,
+  MpDom,
   type MpDomProps,
 } from "@mpv-easy/ui"
-import React, { useState } from "react"
+import React, { useRef, useState } from "react"
 import { useSelector } from "react-redux"
 import {
   buttonStyleSelector,
@@ -25,7 +26,13 @@ export type ScrollListProps = {
 }
 
 const MaxWidthCache: Record<string, number> = {}
-function getMaxWidth(textList: string[], button: Partial<ButtonProps>) {
+const MaxWidthDomCache: MpDom[] = []
+
+function getMaxWidth(
+  textList: string[],
+  button: Partial<ButtonProps>,
+  parent?: MpDom | null | undefined,
+) {
   const size = getOsdSize()
   const cacheKey = `${JSON.stringify(size)}\n${textList.join("\n")}`
 
@@ -33,12 +40,20 @@ function getMaxWidth(textList: string[], button: Partial<ButtonProps>) {
     return MaxWidthCache[cacheKey]
   }
 
+  while (MaxWidthDomCache.length < textList.length) {
+    MaxWidthDomCache.push(createNode("@mpv-easy/box"))
+  }
+
   let max = 0
-  for (const i of textList) {
-    const node = createNode("@mpv-easy/box")
+  for (let i = 0; i < textList.length; i++) {
+    const text = textList[i]
+    const node = MaxWidthDomCache[i]
     node.attributes = button
-    node.attributes.text = i
+    node.attributes.text = text
     max = Math.max(max, measureText(node).width)
+    if (parent) {
+      node.parentNode = parent
+    }
   }
   MaxWidthCache[cacheKey] = max
   return max
@@ -63,9 +78,12 @@ export const ScrollList = ({
     button.padding * 2 +
     (startIndex / (items.length - maxItemCount)) * scrollBarSpace
   const visibleList = items.slice(startIndex, startIndex + maxItemCount)
+  const ref = useRef<MpDom | null>(null)
+
   const max = getMaxWidth(
     items.map((i) => i.label),
     button,
+    ref.current,
   )
 
   const fontSize = useSelector(fontSizeSelector)
@@ -91,6 +109,7 @@ export const ScrollList = ({
         }
       }}
       zIndex={props.zIndex}
+      ref={ref}
     >
       {showScrollBar && (
         <Box
