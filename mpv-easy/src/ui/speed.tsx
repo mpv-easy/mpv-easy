@@ -22,7 +22,6 @@ export function Speed() {
       justifyContent="center"
       alignItems="center"
       font={font}
-      pointerEvents="none"
       onMouseDown={() => {
         if (!press) {
           initSpeed.current = speed
