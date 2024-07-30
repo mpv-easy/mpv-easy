@@ -194,6 +194,7 @@ export const context = createModel<RootModel>()({
       }
       state[pluginName].player.playlistPos = newPos
       state[pluginName].player.path = list[newPos]
+      pathProp.value = list[newPos]
       command(`playlist-play-index ${newPos}`)
       return { ...state }
     },
