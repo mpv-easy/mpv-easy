@@ -327,9 +327,10 @@ export const Easy = (props: Partial<EasyProps>) => {
         justifyContent="space-between"
         alignItems="start"
         position="relative"
-        onClick={(e) => {
+        onMouseDown={(e) => {
           const isEmptyClick =
             e.target?.attributes.id === "mpv-easy-main" ||
+            e.target?.attributes.id === "mpv-easy-speed" ||
             e.target?.attributes.id === undefined
 
           setTimeout(() => {

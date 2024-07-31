@@ -14,7 +14,7 @@ export function Speed() {
   const initSpeed = useRef(1)
   return (
     <Box
-      id="speed"
+      id="mpv-easy-speed"
       position="absolute"
       display="flex"
       width={"100%"}
