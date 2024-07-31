@@ -442,7 +442,9 @@ export function updatePlaylist(list: string[], playIndex = 0) {
       }
       command(`loadfile "${list[i]}" insert-at ${i}`)
     }
-    command(`playlist-play-index ${playIndex}`)
+    if (getPropertyNumber("playlist-pos") !== playIndex) {
+      command(`playlist-play-index ${playIndex}`)
+    }
   }
 }
 
