@@ -40,6 +40,9 @@ export function endsWith(s: string | undefined, exts: string[]) {
     return false
   }
   for (const i of exts) {
+    if (i.length === 0) {
+      return !s.includes(".")
+    }
     if (s.endsWith(`.${i}`)) {
       return true
     }
