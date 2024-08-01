@@ -11,6 +11,16 @@ export const ListReg =
 
 export const VideoReg = /^(?:https?:\/\/)(.*?).youtube\.(.*?)\/watch\?v=(.*?)$/
 
+export const ResultReg =
+  /^(?:https?:\/\/)(.*?).youtube\.(.*?)\/results\?search_query=(.*?)/
+
 export function isYoutube(s: string): boolean {
-  return YoutubeRegex.test(s)
+  return [
+    YoutubeRegex,
+    MainPageReg,
+    MyVideosReg,
+    ListReg,
+    VideoReg,
+    ResultReg,
+  ].some((i) => i.test(s))
 }

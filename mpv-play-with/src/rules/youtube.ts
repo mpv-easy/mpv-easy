@@ -8,6 +8,23 @@ export const Youtube: Rule = {
       i.test(url),
     ),
   getVideos: async (url: string): Promise<PlayWith | undefined> => {
+    if (youtube.ResultReg.test(url)) {
+      const list: PlayItem[] = []
+      for (const i of Array.from(document.querySelectorAll("a#video-title"))) {
+        const title = i.getAttribute("title") || ""
+        const href = i.getAttribute("href") || ""
+        const url = location.origin + href
+
+        if (title?.length && href.length) {
+          list.push({
+            url,
+            title,
+          })
+        }
+      }
+      return { playlist: { list } }
+    }
+
     if (youtube.ListReg.test(url)) {
       const list: PlayItem[] = []
       const videoTitleLinkList = Array.from(
@@ -46,7 +63,11 @@ export const Youtube: Rule = {
       }
     }
 
-    if (youtube.MainPageReg.test(url) || youtube.MyVideosReg.test(url)) {
+    if (
+      youtube.MainPageReg.test(url) ||
+      youtube.MyVideosReg.test(url) ||
+      youtube.ResultReg.test(url)
+    ) {
       const list: PlayItem[] = []
 
       const browser = Array.from(document.querySelectorAll("ytd-browse")).find(
