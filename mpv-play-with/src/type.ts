@@ -12,6 +12,7 @@ export type PlayWith = {
   playlist: Playlist
   start?: number
   args?: string[]
+  log?: string
 }
 
 export type Rule = {

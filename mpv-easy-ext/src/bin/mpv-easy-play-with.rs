@@ -14,12 +14,14 @@ pub struct PlayWith {
     pub start: Option<i32>,
     // args when start mpv
     pub args: Option<Vec<String>>,
+    pub log: Option<String>,
 }
 
 const HEADER: &str = "mpv-easy://";
 
 const M3U_NAME: &str = "mpv-easy-play-with.m3u8";
 const CHUNK_PREFIX: &str = "mpv-easy-play-with-chunk-";
+const LOG_FILE_NAME: &str = "mpv-easy-play-with.log";
 
 fn main() {
     let mut args = std::env::args().skip(1);
@@ -95,6 +97,11 @@ fn main() {
     if let Some(args) = play_with.args {
         args_str.push_str(&args.join(" "));
     }
+
+    let log_path = play_with
+        .log
+        .unwrap_or(tmp_dir.join(LOG_FILE_NAME).to_string_lossy().to_string());
+    args_str.push_str(&format!(" --log-file=\"{}\" ", log_path));
 
     #[cfg(windows)]
     cmd.raw_arg(args_str);
