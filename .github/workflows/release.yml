@@ -35,53 +35,53 @@ jobs:
           mv ./mpv-easy-ext/output/mpv-easy-play-with.exe ./mpv-easy-play-with-windows
 
 
-      - name: build deno
-        run: |
+      # - name: build deno
+      #   run: |
 
-          rustup target add nightly-x86_64-pc-windows-msvc
-          rustup toolchain install nightly-x86_64-pc-windows-msvc
-          rustup default nightly-x86_64-pc-windows-msvc
-          rustup set default-host nightly-x86_64-pc-windows-msvc
-          rustup override set nightly-x86_64-pc-windows-msvc
+      #     rustup target add nightly-x86_64-pc-windows-msvc
+      #     rustup toolchain install nightly-x86_64-pc-windows-msvc
+      #     rustup default nightly-x86_64-pc-windows-msvc
+      #     rustup set default-host nightly-x86_64-pc-windows-msvc
+      #     rustup override set nightly-x86_64-pc-windows-msvc
 
-          rustc --version
+      #     rustc --version
 
-          cd ./mpv-deno
-          cargo build --release --out-dir=./output -Z unstable-options
-          cd ..
-          mv ./mpv-deno/output/mpv_deno.dll ./mpv-deno-windows.dll
-      - uses: msys2/setup-msys2@v2
-      - shell: msys2 {0}
-        run: |
-          pacman -S mingw-w64-x86_64-gcc --noconfirm
+      #     cd ./mpv-deno
+      #     cargo build --release --out-dir=./output -Z unstable-options
+      #     cd ..
+      #     mv ./mpv-deno/output/mpv_deno.dll ./mpv-deno-windows.dll
+      # - uses: msys2/setup-msys2@v2
+      # - shell: msys2 {0}
+      #   run: |
+      #     pacman -S mingw-w64-x86_64-gcc --noconfirm
 
-      - name: build qjs
-        run: |
-          rustup target add x86_64-pc-windows-gnu
-          rustup toolchain install nightly-x86_64-pc-windows-gnu
-          rustup default nightly-x86_64-pc-windows-gnu
-          rustup set default-host x86_64-pc-windows-gnu
-          rustup override set nightly-x86_64-pc-windows-gnu
-          rustc --version
+      # - name: build qjs
+      #   run: |
+      #     rustup target add x86_64-pc-windows-gnu
+      #     rustup toolchain install nightly-x86_64-pc-windows-gnu
+      #     rustup default nightly-x86_64-pc-windows-gnu
+      #     rustup set default-host x86_64-pc-windows-gnu
+      #     rustup override set nightly-x86_64-pc-windows-gnu
+      #     rustc --version
 
-          cd ./mpv-qjs
-          cargo build --release --out-dir=./output -Z unstable-options
-          cd ..
-          mv ./mpv-qjs/output/mpv_qjs.dll ./mpv-qjs-windows.dll
+      #     cd ./mpv-qjs
+      #     cargo build --release --out-dir=./output -Z unstable-options
+      #     cd ..
+      #     mv ./mpv-qjs/output/mpv_qjs.dll ./mpv-qjs-windows.dll
 
-      - name: build boa
-        run: |
-          rustup target add x86_64-pc-windows-gnu
-          rustup toolchain install nightly-x86_64-pc-windows-gnu
-          rustup default nightly-x86_64-pc-windows-gnu
-          rustup set default-host x86_64-pc-windows-gnu
-          rustup override set nightly-x86_64-pc-windows-gnu
-          rustc --version
+      # - name: build boa
+      #   run: |
+      #     rustup target add x86_64-pc-windows-gnu
+      #     rustup toolchain install nightly-x86_64-pc-windows-gnu
+      #     rustup default nightly-x86_64-pc-windows-gnu
+      #     rustup set default-host x86_64-pc-windows-gnu
+      #     rustup override set nightly-x86_64-pc-windows-gnu
+      #     rustc --version
 
-          cd ./mpv-boa
-          cargo build --release --out-dir=./output -Z unstable-options
-          cd ..
-          mv ./mpv-boa/output/mpv_boa.dll ./mpv-boa-windows.dll
+      #     cd ./mpv-boa
+      #     cargo build --release --out-dir=./output -Z unstable-options
+      #     cd ..
+      #     mv ./mpv-boa/output/mpv_boa.dll ./mpv-boa-windows.dll
 
       - name: Upload windows Artifact ext
         uses: actions/upload-artifact@v4
@@ -94,22 +94,22 @@ jobs:
           name: mpv-easy-play-with-windows
           path: ./mpv-easy-play-with-windows
 
-      - name: Upload windows Artifact deno
-        uses: actions/upload-artifact@v4
-        with:
-          name: mpv-deno-windows
-          path: ./mpv-deno-windows.dll
+      # - name: Upload windows Artifact deno
+      #   uses: actions/upload-artifact@v4
+      #   with:
+      #     name: mpv-deno-windows
+      #     path: ./mpv-deno-windows.dll
 
-      - name: Upload windows Artifact qjs
-        uses: actions/upload-artifact@v4
-        with:
-          name: mpv-qjs-windows
-          path: ./mpv-qjs-windows.dll
-      - name: Upload windows Artifact boa
-        uses: actions/upload-artifact@v4
-        with:
-          name: mpv-boa-windows
-          path: ./mpv-boa-windows.dll
+      # - name: Upload windows Artifact qjs
+      #   uses: actions/upload-artifact@v4
+      #   with:
+      #     name: mpv-qjs-windows
+      #     path: ./mpv-qjs-windows.dll
+      # - name: Upload windows Artifact boa
+      #   uses: actions/upload-artifact@v4
+      #   with:
+      #     name: mpv-boa-windows
+      #     path: ./mpv-boa-windows.dll
 
   build-ext-macos:
     runs-on: macos-latest
@@ -222,23 +222,23 @@ jobs:
           pattern: mpv-easy-play-with-*
           merge-multiple: true
 
-      - uses: actions/download-artifact@v4
-        with:
-          path: deno-dll
-          pattern: mpv-deno-*
-          merge-multiple: true
+      # - uses: actions/download-artifact@v4
+      #   with:
+      #     path: deno-dll
+      #     pattern: mpv-deno-*
+      #     merge-multiple: true
 
-      - uses: actions/download-artifact@v4
-        with:
-          path: qjs-dll
-          pattern: mpv-qjs-*
-          merge-multiple: true
+      # - uses: actions/download-artifact@v4
+      #   with:
+      #     path: qjs-dll
+      #     pattern: mpv-qjs-*
+      #     merge-multiple: true
 
-      - uses: actions/download-artifact@v4
-        with:
-          path: boa-dll
-          pattern: mpv-boa-*
-          merge-multiple: true
+      # - uses: actions/download-artifact@v4
+      #   with:
+      #     path: boa-dll
+      #     pattern: mpv-boa-*
+      #     merge-multiple: true
 
       - name: "build ts"
         run: |
@@ -266,45 +266,45 @@ jobs:
           cp -r ./dist ./mpy-easy-linux
           cp -r ./dist ./mpy-easy-android
           cp -r ./dist ./mpy-easy-windows
-          cp -r ./dist ./mpy-easy-deno-windows
-          cp -r ./dist ./mpy-easy-qjs-windows
-          cp -r ./dist ./mpy-easy-boa-windows
+          # cp -r ./dist ./mpy-easy-deno-windows
+          # cp -r ./dist ./mpy-easy-qjs-windows
+          # cp -r ./dist ./mpy-easy-boa-windows
 
           cp ./mpv-easy-ext-dist/mpv-easy-ext-macos ./mpy-easy-macos/scripts/mpv-easy-config/mpv-easy-ext/mpv-easy-ext-macos
           cp ./mpv-easy-ext-dist/mpv-easy-ext-linux ./mpy-easy-linux/scripts/mpv-easy-config/mpv-easy-ext/mpv-easy-ext-linux
           cp ./mpv-easy-ext-dist/mpv-easy-ext-android ./mpy-easy-android/scripts/mpv-easy-config/mpv-easy-ext/mpv-easy-ext-android
           cp ./mpv-easy-ext-dist/mpv-easy-ext-windows ./mpy-easy-windows/scripts/mpv-easy-config/mpv-easy-ext/mpv-easy-ext-windows
-          cp ./mpv-easy-ext-dist/mpv-easy-ext-windows ./mpy-easy-deno-windows/scripts/mpv-easy-config/mpv-easy-ext/mpv-easy-ext-windows
-          cp ./mpv-easy-ext-dist/mpv-easy-ext-windows ./mpy-easy-qjs-windows/scripts/mpv-easy-config/mpv-easy-ext/mpv-easy-ext-windows
-          cp ./mpv-easy-ext-dist/mpv-easy-ext-windows ./mpy-easy-boa-windows/scripts/mpv-easy-config/mpv-easy-ext/mpv-easy-ext-windows
+          # cp ./mpv-easy-ext-dist/mpv-easy-ext-windows ./mpy-easy-deno-windows/scripts/mpv-easy-config/mpv-easy-ext/mpv-easy-ext-windows
+          # cp ./mpv-easy-ext-dist/mpv-easy-ext-windows ./mpy-easy-qjs-windows/scripts/mpv-easy-config/mpv-easy-ext/mpv-easy-ext-windows
+          # cp ./mpv-easy-ext-dist/mpv-easy-ext-windows ./mpy-easy-boa-windows/scripts/mpv-easy-config/mpv-easy-ext/mpv-easy-ext-windows
 
           cp ./mpv-easy-play-with-dist/mpv-easy-play-with-macos ./mpy-easy-macos/scripts/mpv-easy-config/mpv-easy-ext/mpv-easy-play-with-macos
           cp ./mpv-easy-play-with-dist/mpv-easy-play-with-linux ./mpy-easy-linux/scripts/mpv-easy-config/mpv-easy-ext/mpv-easy-play-with-linux
           cp ./mpv-easy-play-with-dist/mpv-easy-play-with-android ./mpy-easy-android/scripts/mpv-easy-config/mpv-easy-ext/mpv-easy-play-with-android
           cp ./mpv-easy-play-with-dist/mpv-easy-play-with-windows ./mpy-easy-windows/scripts/mpv-easy-config/mpv-easy-ext/mpv-easy-play-with-windows
-          cp ./mpv-easy-play-with-dist/mpv-easy-play-with-windows ./mpy-easy-deno-windows/scripts/mpv-easy-config/mpv-easy-ext/mpv-easy-play-with-windows
-          cp ./mpv-easy-play-with-dist/mpv-easy-play-with-windows ./mpy-easy-qjs-windows/scripts/mpv-easy-config/mpv-easy-ext/mpv-easy-play-with-windows
-          cp ./mpv-easy-play-with-dist/mpv-easy-play-with-windows ./mpy-easy-boa-windows/scripts/mpv-easy-config/mpv-easy-ext/mpv-easy-play-with-windows
+          # cp ./mpv-easy-play-with-dist/mpv-easy-play-with-windows ./mpy-easy-deno-windows/scripts/mpv-easy-config/mpv-easy-ext/mpv-easy-play-with-windows
+          # cp ./mpv-easy-play-with-dist/mpv-easy-play-with-windows ./mpy-easy-qjs-windows/scripts/mpv-easy-config/mpv-easy-ext/mpv-easy-play-with-windows
+          # cp ./mpv-easy-play-with-dist/mpv-easy-play-with-windows ./mpy-easy-boa-windows/scripts/mpv-easy-config/mpv-easy-ext/mpv-easy-play-with-windows
 
 
-          cp ./deno-dll/mpv-deno-windows.dll ./mpy-easy-deno-windows/scripts/mpv-deno-windows.dll
-          rm ./mpy-easy-deno-windows/scripts/mpv-easy-es5.js
-          mkdir ./mpy-easy-deno-windows/scripts-deno
-          cp ./mpv-easy/bundle/mpv-easy-es6.js ./mpy-easy-deno-windows/scripts-deno/mpv-easy-es6.js
-          mv ./mpy-easy-deno-windows/scripts/mpv-easy-config ./mpy-easy-deno-windows/scripts-deno/mpv-easy-config
+          # cp ./deno-dll/mpv-deno-windows.dll ./mpy-easy-deno-windows/scripts/mpv-deno-windows.dll
+          # rm ./mpy-easy-deno-windows/scripts/mpv-easy-es5.js
+          # mkdir ./mpy-easy-deno-windows/scripts-deno
+          # cp ./mpv-easy/bundle/mpv-easy-es6.js ./mpy-easy-deno-windows/scripts-deno/mpv-easy-es6.js
+          # mv ./mpy-easy-deno-windows/scripts/mpv-easy-config ./mpy-easy-deno-windows/scripts-deno/mpv-easy-config
 
 
-          cp ./qjs-dll/mpv-qjs-windows.dll ./mpy-easy-qjs-windows/scripts/mpv-qjs-windows.dll
-          rm ./mpy-easy-qjs-windows/scripts/mpv-easy-es5.js
-          mkdir ./mpy-easy-qjs-windows/scripts-qjs
-          cp ./mpv-easy/bundle/mpv-easy-es6.js ./mpy-easy-qjs-windows/scripts-qjs/mpv-easy-es6.js
-          mv ./mpy-easy-qjs-windows/scripts/mpv-easy-config ./mpy-easy-qjs-windows/scripts-qjs/mpv-easy-config
+          # cp ./qjs-dll/mpv-qjs-windows.dll ./mpy-easy-qjs-windows/scripts/mpv-qjs-windows.dll
+          # rm ./mpy-easy-qjs-windows/scripts/mpv-easy-es5.js
+          # mkdir ./mpy-easy-qjs-windows/scripts-qjs
+          # cp ./mpv-easy/bundle/mpv-easy-es6.js ./mpy-easy-qjs-windows/scripts-qjs/mpv-easy-es6.js
+          # mv ./mpy-easy-qjs-windows/scripts/mpv-easy-config ./mpy-easy-qjs-windows/scripts-qjs/mpv-easy-config
 
-          cp ./boa-dll/mpv-boa-windows.dll ./mpy-easy-boa-windows/scripts/mpv-boa-windows.dll
-          rm ./mpy-easy-boa-windows/scripts/mpv-easy-es5.js
-          mkdir ./mpy-easy-boa-windows/scripts-boa
-          cp ./mpv-easy/bundle/mpv-easy-es6.js ./mpy-easy-boa-windows/scripts-boa/mpv-easy-es6.js
-          mv ./mpy-easy-boa-windows/scripts/mpv-easy-config ./mpy-easy-boa-windows/scripts-boa/mpv-easy-config
+          # cp ./boa-dll/mpv-boa-windows.dll ./mpy-easy-boa-windows/scripts/mpv-boa-windows.dll
+          # rm ./mpy-easy-boa-windows/scripts/mpv-easy-es5.js
+          # mkdir ./mpy-easy-boa-windows/scripts-boa
+          # cp ./mpv-easy/bundle/mpv-easy-es6.js ./mpy-easy-boa-windows/scripts-boa/mpv-easy-es6.js
+          # mv ./mpy-easy-boa-windows/scripts/mpv-easy-config ./mpy-easy-boa-windows/scripts-boa/mpv-easy-config
 
           # https://github.com/yt-dlp/yt-dlp/releases
           rwget -o ./mpy-easy-windows/yt-dlp https://github.com/yt-dlp/yt-dlp/releases/download/2024.07.25/yt-dlp.exe
@@ -331,17 +331,17 @@ jobs:
           zip -r -q ./mpy-easy-windows.zip .
           cd ..
 
-          cd ./mpy-easy-deno-windows
-          zip -r -q ./mpy-easy-deno-windows.zip .
-          cd ..
+          # cd ./mpy-easy-deno-windows
+          # zip -r -q ./mpy-easy-deno-windows.zip .
+          # cd ..
 
-          cd ./mpy-easy-qjs-windows
-          zip -r -q ./mpy-easy-qjs-windows.zip .
-          cd ..
+          # cd ./mpy-easy-qjs-windows
+          # zip -r -q ./mpy-easy-qjs-windows.zip .
+          # cd ..
 
-          cd ./mpy-easy-boa-windows
-          zip -r -q ./mpy-easy-boa-windows.zip .
-          cd ..
+          # cd ./mpy-easy-boa-windows
+          # zip -r -q ./mpy-easy-boa-windows.zip .
+          # cd ..
 
           cd ./mpy-easy-windows-full
           zip -r -q ./mpy-easy-windows-full.zip .
