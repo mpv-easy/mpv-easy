@@ -1,5 +1,5 @@
 {
-  "name": "@mpv-easy/easy-tpl",
+  "name": "@mpv-easy/easy-react-tpl",
   "version": "0.1.10",
   "files": ["dist", "readme.md", "package.json"],
   "description": "",

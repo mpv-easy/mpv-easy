@@ -11,7 +11,7 @@ import {
 } from "./mpv-easy-theme"
 import type { Store } from "./store"
 import throttle from "lodash-es/throttle"
-export const pluginName = "@mpv-easy/easy-ui"
+export const pluginName = "@mpv-easy/easy-react"
 
 declare module "@mpv-easy/plugin" {
   interface PluginContext {

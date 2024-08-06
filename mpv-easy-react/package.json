@@ -2,7 +2,7 @@
   "name": "@mpv-easy/easy-react",
   "version": "0.1.10",
   "files": ["dist", "readme.md", "package.json"],
-  "description": "@mpv-easy/easy",
+  "description": "@mpv-easy/easy-react",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "scripts": {

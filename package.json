@@ -1,11 +1,7 @@
 {
   "name": "mpv-easy",
   "version": "0.1.10",
-  "files": [
-    "dist",
-    "readme.md",
-    "package.json"
-  ],
+  "files": ["dist", "readme.md", "package.json"],
   "description": "TS and React toolkit for mpv script",
   "scripts": {
     "case-police": "case-police \"**/*.ts\"  fix",
@@ -22,12 +18,7 @@
     "release": "pnpm publish -r --access public",
     "release-alpha": "pnpm publish -r --access public --tag alpha"
   },
-  "keywords": [
-    "TS",
-    "React",
-    "mpv",
-    "mpv script"
-  ],
+  "keywords": ["TS", "React", "mpv", "mpv script"],
   "author": "ahaoboy",
   "license": "MIT",
   "devDependencies": {

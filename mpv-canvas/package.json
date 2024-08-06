@@ -10,7 +10,7 @@
     "dev": "tsc -p ./tsconfig.build.json -w"
   },
   "dependencies": {
-    "@mpv-easy/easy": "workspace:*",
+    "@mpv-easy/easy-react": "workspace:*",
     "@mpv-easy/tool": "workspace:*",
     "@mpv-easy/react": "workspace:*",
     "e-color": "^0.1.3",
