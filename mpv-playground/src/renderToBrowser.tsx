@@ -1,7 +1,7 @@
 import "./polyfill"
 import { createMpvMock } from "@mpv-easy/canvas"
 import "./main.css"
-import { createRender, renderNode } from "@mpv-easy/ui"
+import { createRender, renderNode } from "@mpv-easy/react"
 import type { MPV } from "@mpv-easy/tool"
 // @ts-ignore
 import FontFaceObserver from "fontfaceobserver"

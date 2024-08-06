@@ -1,0 +1,31 @@
+{
+  "name": "@mpv-easy/react",
+  "version": "0.1.10",
+  "files": ["dist", "readme.md", "package.json"],
+  "description": "@mpv-easy/react",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "es5": "babel ./es5 -d ./bundle",
+    "build": "tsc -p ./tsconfig.build.json",
+    "app": "esbuild ./src/app.tsx --outfile=./es5/button.js --bundle && pnpm run es5 && esbuild --bundle ./bundle/button.js --outfile=./es5/button.es5.js",
+    "tsx": "esbuild ./src/app.tsx --outfile=./es5/button.js --bundle && pnpm run es5",
+    "dev": "tsc -p ./tsconfig.build.json -w"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "lodash-es": "^4.17.21",
+    "@mpv-easy/assdraw": "workspace:*",
+    "@mpv-easy/tool": "workspace:*",
+    "@r-tui/flex": "0.1.6",
+    "@r-tui/share": "0.1.6",
+    "e-color": "^0.1.3",
+    "react-use": "^17.5.0"
+  },
+  "peerDependencies": {
+    "react": "^18.2.0",
+    "react-reconciler": "^0.29.0"
+  }
+}

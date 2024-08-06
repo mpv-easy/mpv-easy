@@ -1,6 +1,6 @@
 import { usePropertyBool } from "@mpv-easy/hook"
 import "@mpv-easy/tool"
-import { Box, render } from "@mpv-easy/ui"
+import { Box, render } from "@mpv-easy/react"
 import React from "react"
 
 const pauseIcon = ""

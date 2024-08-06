@@ -14,7 +14,7 @@
     "@mpv-easy/easy": "workspace:*",
     "@mpv-easy/polyfill": "workspace:*",
     "@mpv-easy/tool": "workspace:*",
-    "@mpv-easy/ui": "workspace:*",
+    "@mpv-easy/react": "workspace:*",
     "@mpv-easy/canvas": "workspace:*",
     "react": "^18.2.0",
     "fontfaceobserver": "^2.3.0",

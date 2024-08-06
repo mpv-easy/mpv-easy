@@ -8,7 +8,7 @@ The frontend is implemented using ts and react
 
 Provide complete UI and interaction
 
-### mpv-ui
+### mpv-react
 
 Provides basic components such as Button and Dropdown
 
