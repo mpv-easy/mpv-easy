@@ -22,6 +22,8 @@
   "author": "ahaoboy",
   "license": "MIT",
   "devDependencies": {
+    "babel-preset-solid": "^1.8.19",
+
     "@babel/cli": "^7.24.8",
     "@babel/core": "^7.25.2",
     "@babel/preset-env": "^7.25.2",
