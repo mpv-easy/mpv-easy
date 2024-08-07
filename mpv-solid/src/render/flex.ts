@@ -370,6 +370,19 @@ export class MpFlex extends Flex<MpAttrs, MpProps, MpEvent> {
     return measureText(node)
   }
 }
+export type RenderConfig = {
+  flex: MpFlex
+  enableMouseMoveEvent: boolean
+  fps: number
+  customRender: () => void
+  customDispatch: (
+    node: MpDom,
+    pos: MousePos,
+    event: KeyEvent,
+    mouseEvent?: MouseEvent,
+  ) => void
+  showFps?: boolean
+}
 
 let RootFlex: MpFlex
 

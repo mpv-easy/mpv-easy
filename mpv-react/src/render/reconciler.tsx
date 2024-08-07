@@ -200,6 +200,7 @@ export type RenderConfig = {
 }
 
 let max = 0
+let frame = 0
 const fpsList: number[] = []
 
 export function createRender({
@@ -208,6 +209,7 @@ export function createRender({
   flex = getRootFlex(),
   showFps = false,
   customRender = throttle(() => {
+    frame++
     const st = +Date.now()
     renderNode()
     const ed = +Date.now()
@@ -217,9 +219,9 @@ export function createRender({
     if (fpsList.length > 32) {
       fpsList.shift()
     }
-    const every = fpsList.reduce((a, b) => a + b, 0) / fpsList.length
+    const avg = fpsList.reduce((a, b) => a + b, 0) / fpsList.length
     if (showFps) {
-      print("render time:", ed, t, max, every)
+      print("render time(react):", frame, t, max, avg)
     }
   }, 1000 / fps),
   customDispatch = dispatchEvent,

@@ -1,8 +1,9 @@
 import { build } from "esbuild"
 import { solidPlugin } from "esbuild-plugin-solid"
+import fs from 'fs'
 
 build({
-  entryPoints: ["./src/examples/index.tsx"],
+  entryPoints: ["./src/mpv-easy-*.ts"],
   bundle: true,
   outdir: "bundle",
   // minify: true,
@@ -17,9 +18,14 @@ build({
   plugins: [
     solidPlugin({
       solid: {
-        moduleName: "@r-tui/solid",
+        moduleName: "@mpv-easy/solid",
         generate: "universal",
       },
     }),
   ],
-}).catch(() => process.exit(1))
+
+  metafile: true,
+}).then(
+  r => {
+    fs.writeFileSync('./bundle/metafile.json', JSON.stringify(r.metafile));
+  }).catch(() => process.exit(1))

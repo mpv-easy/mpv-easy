@@ -1,10 +1,10 @@
-import type { TDom } from "@r-tui/solid"
+import type { MpDom } from "../render"
 
 export const Box = (
-  props: Partial<TDom["attributes"]> & {
+  props: Partial<MpDom["attributes"]> & {
     children?: any
   },
 ) => {
   // @ts-ignore
-  return props.display !== "none" && <tui-box {...props} />
+  return props.display !== "none" && <mpv-box {...props} />
 }

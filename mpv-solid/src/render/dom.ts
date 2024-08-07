@@ -7,6 +7,10 @@ import {
   type BaseMouseEvent,
 } from "@r-tui/flex"
 
+export const TextName = "@mpv-easy/text"
+export const RootName = "@mpv-easy/root"
+export const BoxName = "@mpv-easy/box"
+
 export interface MpAttrs {
   title: string
   backgroundImageFormat: "rgba" | "bgra"

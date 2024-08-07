@@ -1,24 +1,11 @@
-import { Box, render } from "@mpv-easy/solid"
-import { createSignal } from "solid-js"
+import "@mpv-easy/polyfill"
+import "@mpv-easy/tool"
+import { Box, render, effect } from "@mpv-easy/solid"
 
-export default function App() {
-  const [count, setCount] = createSignal(0)
-  setInterval(() => {
-    setCount((c) => ++c)
-  }, 1000)
 
-  return (
-    <Box
-      width={"100%"}
-      height={"100%"}
-      display="flex"
-      flexDirection="column"
-      justifyContent="center"
-      alignItems="center"
-    >
-      <Box color="red" text={"count"} />
-      <Box color="green" text={":"} />
-      <Box color="blue" text={`${count()}`} />
-    </Box>
-  )
-}
+import { SimpleBox } from './box'
+import { CounterUI } from './counter-ui'
+import { SnakeGame } from './snake'
+import { ColorBox } from './color-box'
+
+render(() => <ColorBox />)
