@@ -3,7 +3,7 @@ import React, { useRef, useState } from "react"
 import { useSelector } from "react-redux"
 import { fontSelector, speedStyleSelector } from "../store"
 import * as ICON from "../icon"
-import { usePropertyNumber } from "@mpv-easy/hook"
+import { usePropertyNumber } from "@mpv-easy/react"
 
 export function Speed() {
   const style = useSelector(speedStyleSelector)

@@ -1,4 +1,4 @@
-import { useOsdDimensions, usePause, usePropertyBool } from "@mpv-easy/hook"
+import { useOsdDimensions, usePause, usePropertyBool } from "@mpv-easy/react"
 import {
   PropertyBool,
   addForcedKeyBinding,

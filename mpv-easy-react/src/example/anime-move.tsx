@@ -1,7 +1,7 @@
 import "@mpv-easy/polyfill"
 import React, { useEffect } from "react"
 import { Box } from "@mpv-easy/react"
-import { usePropertyBool } from "@mpv-easy/hook"
+import { usePropertyBool } from "@mpv-easy/react"
 import { print } from "@mpv-easy/tool"
 import { useSpring } from "@mpv-easy/anime"
 export function AnimeMove() {

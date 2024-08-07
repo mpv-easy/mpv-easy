@@ -1,4 +1,4 @@
-import { usePropertyBool } from "@mpv-easy/hook"
+import { usePropertyBool } from "@mpv-easy/react"
 import { PropertyBool } from "@mpv-easy/tool"
 import { Button } from "@mpv-easy/react"
 import * as ICON from "../icon"

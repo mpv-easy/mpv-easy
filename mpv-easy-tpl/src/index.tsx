@@ -1,4 +1,4 @@
-import { usePropertyBool } from "@mpv-easy/hook"
+import { usePropertyBool } from "@mpv-easy/react"
 import "@mpv-easy/tool"
 import { Box, render } from "@mpv-easy/react"
 import React from "react"

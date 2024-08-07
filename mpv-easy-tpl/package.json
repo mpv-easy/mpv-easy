@@ -15,7 +15,6 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@mpv-easy/hook": "workspace:*",
     "@mpv-easy/tool": "workspace:*",
     "@mpv-easy/react": "workspace:*",
     "e-color": "^0.1.3"

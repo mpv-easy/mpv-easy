@@ -6,7 +6,7 @@ import {
   type MousePos,
   addForcedKeyBinding,
 } from "@mpv-easy/tool"
-import { usePropertyNumber } from "@mpv-easy/hook"
+import { usePropertyNumber } from "@mpv-easy/react"
 
 const mousePosProp = new PropertyNative<MousePos>("mouse-pos")
 

@@ -1,5 +1,5 @@
 import { AssDraw } from "@mpv-easy/assdraw"
-import { usePropertyBool } from "@mpv-easy/hook"
+import { usePropertyBool } from "@mpv-easy/react"
 import { PropertyBool, command, observeProperty } from "@mpv-easy/tool"
 import { Box, Button, render } from "@mpv-easy/react"
 import React, { useEffect, useState } from "react"

@@ -33,7 +33,6 @@
     "@mpv-easy/clip-play": "workspace:*",
     "@mpv-easy/copy-screen": "workspace:*",
     "@mpv-easy/copy-time": "workspace:*",
-    "@mpv-easy/hook": "workspace:*",
     "@mpv-easy/i18n": "workspace:*",
     "@mpv-easy/jellyfin": "workspace:*",
     "@mpv-easy/mock": "workspace:*",
