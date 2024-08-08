@@ -78,13 +78,3 @@ export function measureText(node: MpDom): Shape {
   _measureCache[textCache] = { width, height }
   return _measureCache[textCache]
 }
-
-// export function isEvent(name: string) {
-//   return name[0] === "o" && name[1] === "n"
-// }
-// export function applyProps(node: MpDom, props: any) {
-//   for (const name in props) {
-//     if (!propsToSkip[name as keyof typeof propsToSkip])
-//       setAttribute(node, name, props[name])
-//   }
-// }

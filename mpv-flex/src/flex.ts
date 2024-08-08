@@ -361,15 +361,10 @@ export class MpFlex extends Flex<MpAttrs, MpProps, MpEvent> {
   }
   constructor() {
     super()
-    // TODO: babel or esbuild can't access super's renderCount,maxRenderCount
-    // @ts-ignore
-    this.renderCount = 0
-    // @ts-ignore
-    this.maxRenderCount = 1 << 20
-
     // TODO: abstract method not work?
+    // console.log("rootNode1", this.rootNode)
     this.rootNode = getRootNode()
-    // console.log("rootNode", this.rootNode)
+    // console.log("rootNode2", this.rootNode)
   }
 
   customCreateNode(): MpDom {

@@ -23,9 +23,9 @@ import {
   appendChildNode,
   insertBeforeNode,
   removeChildNode,
-  applyProps,
   setAttribute,
   setLayoutNode,
+  applyAttributes,
 } from "@r-tui/flex"
 import { type MpDom, createNode, MouseEvent } from "@mpv-easy/flex"
 import throttle from "lodash-es/throttle"
@@ -58,7 +58,7 @@ export function createCustomReconciler(customRender: () => void) {
     },
     insertInContainerBefore: insertBeforeNode,
     commitUpdate(node: MpDom, props: any) {
-      applyProps(node, props)
+      applyAttributes(node, props)
       customRender()
     },
     commitTextUpdate(node, _oldText, newText) {
@@ -77,7 +77,7 @@ export function createCustomReconciler(customRender: () => void) {
       internalHandle: any,
     ): unknown => {
       const node = createNode("@mpv-easy/box")
-      applyProps(node, props)
+      applyAttributes(node, props)
       return node
     },
     createTextInstance: (
@@ -197,7 +197,7 @@ export function createRender({
   enableMouseMoveEvent = true,
   fps = DefaultFps,
   flex = getRootFlex(),
-  showFps = true,
+  showFps = false,
   customRender = throttle(() => {
     frame++
     const st = +Date.now()
@@ -294,15 +294,15 @@ export function createRender({
       setAttribute(flex.rootNode, "width", w)
       setAttribute(flex.rootNode, "height", h)
       setAttribute(flex.rootNode, "position", "relative")
-      setAttribute(flex.rootNode, "color", 'FFFFFF')
-      setAttribute(flex.rootNode, "backgroundColor", '000000FF')
+      setAttribute(flex.rootNode, "color", "FFFFFF")
+      setAttribute(flex.rootNode, "backgroundColor", "000000FF")
       setAttribute(flex.rootNode, "display", "flex")
       setAttribute(flex.rootNode, "padding", 0)
       setAttribute(flex.rootNode, "borderSize", 0)
       setAttribute(flex.rootNode, "x", 0)
       setAttribute(flex.rootNode, "y", 0)
       setAttribute(flex.rootNode, "zIndex", 0)
-      setAttribute(flex.rootNode, "alignContent", 'stretch')
+      setAttribute(flex.rootNode, "alignContent", "stretch")
 
       setLayoutNode(flex.rootNode, "x", 0)
       setLayoutNode(flex.rootNode, "y", 0)

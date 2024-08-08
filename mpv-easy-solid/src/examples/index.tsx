@@ -6,5 +6,6 @@ import { SimpleBox } from "./box"
 import { CounterUI } from "./counter-ui"
 import { SnakeGame } from "./snake"
 import { ColorBox } from "./color-box"
+import { ColorBoxDirty } from "./color-box-dirty"
 
-render(() => <ColorBox />)
+// render(() => <ColorBoxDirty />)
