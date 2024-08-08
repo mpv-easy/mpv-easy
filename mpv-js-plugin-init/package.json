@@ -19,9 +19,9 @@
   "devDependencies": {},
   "dependencies": {
     "@mpv-easy/assdraw": "workspace:*",
-    "@mpv-easy/easy": "workspace:*",
+    "@mpv-easy/easy-react": "workspace:*",
     "@mpv-easy/polyfill": "workspace:*",
     "@mpv-easy/tool": "workspace:*",
-    "@mpv-easy/ui": "workspace:*"
+    "@mpv-easy/react": "workspace:*"
   }
 }

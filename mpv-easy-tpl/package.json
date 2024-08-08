@@ -1,5 +1,5 @@
 {
-  "name": "@mpv-easy/easy-tpl",
+  "name": "@mpv-easy/easy-react-tpl",
   "version": "0.1.10",
   "files": ["dist", "readme.md", "package.json"],
   "description": "",
@@ -15,9 +15,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@mpv-easy/hook": "workspace:*",
     "@mpv-easy/tool": "workspace:*",
-    "@mpv-easy/ui": "workspace:*",
+    "@mpv-easy/react": "workspace:*",
     "e-color": "^0.1.3"
   },
   "devDependencies": {}

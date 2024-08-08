@@ -2,7 +2,9 @@ import React from "react"
 
 // @ts-ignore
 import FontFaceObserver from "fontfaceobserver"
-import { getRootFlex, createRender } from "@mpv-easy/ui"
+import { getRootFlex } from "@mpv-easy/flex"
+import { createRender } from "@mpv-easy/react"
+
 import { createMpvMock } from "./mock"
 
 export function renderToCanvas(
@@ -20,7 +22,7 @@ export function renderToCanvas(
   const render = () => {
     createRender({
       customRender: () => {
-        getRootFlex().rerender()
+        getRootFlex().renderRoot()
         // renderNode(node, ++c, 0)
         mp.renderAll()
       },

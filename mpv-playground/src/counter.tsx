@@ -1,5 +1,5 @@
 import React, { useState } from "react"
-import { Box } from "@mpv-easy/ui"
+import { Box } from "@mpv-easy/react"
 
 const Minus = "-"
 const Plus = "+"

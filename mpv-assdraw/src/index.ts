@@ -5,15 +5,14 @@ const c = 0.551915024494 // 圆形近似值
 
 export class AssDraw {
   private _scale: number
-  private _text: string
-  constructor(scale = 1, text = "") {
-    this._text = text
+  private _textBuffer: string[] = []
+  constructor(scale = 1) {
     this._scale = scale
   }
 
   newEvent() {
-    if (this._text.length > 0) {
-      this._text += "\n"
+    if (this._textBuffer.length > 0) {
+      this._textBuffer.push("\n")
     }
     return this
   }
@@ -25,17 +24,17 @@ export class AssDraw {
     this._scale = scale
     return this
   }
-  text(text: string) {
-    this._text = text
+  clear() {
+    this._textBuffer.length = 0
     return this
   }
   drawStart() {
-    this._text = `${this._text}{\\p${this._scale}}`
+    this._textBuffer.push(`{\\p${this._scale}}`)
     return this
   }
 
   drawStop() {
-    this._text = `${this._text}{\\p0}`
+    this._textBuffer.push("{\\p0}")
     return this
   }
 
@@ -43,17 +42,17 @@ export class AssDraw {
     const scale = 2 ** (this._scale - 1)
     const ix = Math.ceil(x * scale)
     const iy = Math.ceil(y * scale)
-    this._text = `${this._text} ${ix} ${iy}`
+    this._textBuffer.push(` ${ix} ${iy}`)
     return this
   }
 
   append(s: string) {
-    this._text += s
+    this._textBuffer.push(s)
     return this
   }
 
   merge(other: AssDraw) {
-    this._text += other.text
+    this._textBuffer.push(other.toString())
     return this
   }
 
@@ -314,7 +313,7 @@ export class AssDraw {
   }
 
   toString() {
-    return this._text
+    return this._textBuffer.join("")
   }
 }
 
@@ -354,6 +353,7 @@ for (const i in COLORS) {
   }
 }
 
+const DrawRectAssdraw = new AssDraw()
 export function drawRect({
   x,
   y,
@@ -373,7 +373,7 @@ export function drawRect({
   borderColor?: string
   borderRadius?: number
 }) {
-  return new AssDraw()
+  return DrawRectAssdraw.clear()
     .color(color)
     .drawStart()
     .pos(x, y)
@@ -400,7 +400,7 @@ export function drawBorder({
   borderColor: string
 }): string {
   return (
-    new AssDraw()
+    DrawRectAssdraw.clear()
       .color(borderColor)
       .drawStart()
       .borderSize(0)
@@ -454,7 +454,7 @@ export function drawCircle({
   radius: number
   alpha: number | string
 }) {
-  return new AssDraw()
+  return DrawRectAssdraw.clear()
     .color(color)
     .drawStart()
     .pos(x, y)
