@@ -1,4 +1,8 @@
-import { getPropertyNative, MpvPropertyTypeMap, observeProperty } from "@mpv-easy/tool"
+import {
+  getPropertyNative,
+  MpvPropertyTypeMap,
+  observeProperty,
+} from "@mpv-easy/tool"
 import { createSignal } from "solid-js"
 
 let _lastOsdW = 0
@@ -17,7 +21,7 @@ export function useOsdDimensions() {
     }
     _lastOsdW = value.w
     _lastOsdH = value.h
-    console.log('value',value)
+    // console.log("value", value)
     setDimension(value)
   })
 

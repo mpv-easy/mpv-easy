@@ -1,7 +1,7 @@
 {
   "extends": "../tsconfig.build.json",
   "compilerOptions": {
-            "jsx": "preserve",
+    "jsx": "preserve",
     "jsxImportSource": "solid-js"
   }
 }

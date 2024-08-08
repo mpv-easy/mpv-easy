@@ -1,4 +1,4 @@
-import { Box, } from "@mpv-easy/solid"
+import { Box } from "@mpv-easy/solid"
 import { createSignal } from "solid-js"
 
 const White = "FFFFFF"
@@ -13,8 +13,8 @@ export function CounterUI() {
   const [count, setCount] = createSignal(0)
 
   setInterval(() => {
-    setCount(c => c + 1)
-  }, 1000);
+    setCount((c) => c + 1)
+  }, 1000)
 
   console.log("============count: ", count())
   return (
@@ -28,7 +28,6 @@ export function CounterUI() {
       color="00FF00"
       backgroundColor="00FFFF"
       text={`${count()}`}
-    >
-    </Box>
+    />
   )
 }

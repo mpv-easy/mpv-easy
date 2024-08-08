@@ -3,8 +3,8 @@ import React, { useEffect, useRef, useState } from "react"
 import { type MousePos, PropertyNative } from "@mpv-easy/tool"
 import isEqual from "lodash-es/isEqual"
 import throttle from "lodash-es/throttle"
-import { getRootNode } from "../render/flex"
-import type { MpDom, MpDomProps } from "../render/dom"
+import { getRootNode } from "@mpv-easy/flex"
+import type { MpDom, MpDomProps } from "@mpv-easy/flex"
 
 export type TooltipProps = {
   tooltipThrottle: number

@@ -1,7 +1,7 @@
 import { setMouseStyle } from "@mpv-easy/tool"
 import React, { useState } from "react"
 import { Box } from "./box"
-import type { MpDom, MpDomProps } from "../render/dom"
+import type { MpDom, MpDomProps } from "@mpv-easy/flex"
 
 export type ButtonCustomProp =
   | "color"

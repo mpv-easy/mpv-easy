@@ -1,7 +1,7 @@
 import { AssDraw } from "@mpv-easy/assdraw"
 import { OsdOverlay, Rect, getAssScale, isPercentage } from "@mpv-easy/tool"
 import { lenToNumber, setAttribute } from "@r-tui/flex"
-import type { MpDom } from "./render/dom"
+import type { MpDom } from "./dom"
 import type { Shape } from "@r-tui/share"
 export const propsToSkip = {
   children: true,
@@ -15,16 +15,18 @@ export const propsToSkip = {
 }
 
 export function readAttr(node: any, attrName: string) {
-  while (node && typeof node.attributes[attrName] === "undefined") {
-    if (node.parentNode) {
-      node = node.parentNode
+  const { attributes, parentNode } = node
+  while (node && typeof attributes[attrName] === "undefined") {
+    if (parentNode) {
+      node = parentNode
     } else {
       return undefined
     }
   }
-  return node.attributes[attrName]
+  return attributes[attrName]
 }
 
+const GetAssTextAssdraw = new AssDraw()
 export function getAssText(node: MpDom, x: number, y: number) {
   const { text = "" } = node.attributes
   const assScale = getAssScale()
@@ -41,7 +43,7 @@ export function getAssText(node: MpDom, x: number, y: number) {
     alpha = color.slice(6, 8)
     color = color.slice(0, 6)
   }
-  return new AssDraw()
+  return GetAssTextAssdraw.clear()
     .pos(x, y)
     .font(font)
     .fontSize(lenToNumber(node, fontSize, false, 32) * assScale)
@@ -53,25 +55,22 @@ export function getAssText(node: MpDom, x: number, y: number) {
     .toString()
 }
 
-let _measureOverlay: OsdOverlay
+const MeasureOverlay: OsdOverlay = new OsdOverlay({
+  computeBounds: true,
+  hidden: true,
+})
+
 const _measureCache: Record<string, Shape> = {}
 export function measureText(node: MpDom): Shape {
-  const { layoutNode } = node
   const assScale = getAssScale()
   const textCache = getAssText(node, 0, 0)
   if (_measureCache[textCache]) {
     return _measureCache[textCache]
   }
 
-  if (!_measureOverlay) {
-    _measureOverlay = new OsdOverlay({
-      computeBounds: true,
-      hidden: true,
-    })
-  }
-
-  _measureOverlay.data = textCache
-  const { width, height } = _measureOverlay.update(1 / assScale)
+  MeasureOverlay.data = textCache
+  const { width, height } = MeasureOverlay.update(1 / assScale)
+  const { layoutNode } = node
   layoutNode.textRect.width = width
   layoutNode.textRect.height = height
   _measureCache[textCache] = { width, height }

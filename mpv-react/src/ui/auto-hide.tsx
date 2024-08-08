@@ -1,7 +1,7 @@
 import React from "react"
 import { useEffect, useRef, useState } from "react"
 import { Box } from "./box"
-import type { MpDomProps } from "../render"
+import type { MpDomProps } from "@mpv-easy/flex"
 
 export type PanelProps = {
   hideDelay: number

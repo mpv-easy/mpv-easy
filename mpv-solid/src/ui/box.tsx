@@ -1,4 +1,4 @@
-import type { MpDom } from "../render"
+import type { MpDom } from "@mpv-easy/flex"
 
 export const Box = (
   props: Partial<MpDom["attributes"]> & {

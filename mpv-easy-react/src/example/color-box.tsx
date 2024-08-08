@@ -16,8 +16,8 @@ export function ColorBox() {
 
   useEffect(() => {
     setInterval(() => {
-      setCount(c => c + 1)
-    }, 100);
+      setCount((c) => c + 1)
+    }, 100)
   }, [])
 
   const boxW = width / col

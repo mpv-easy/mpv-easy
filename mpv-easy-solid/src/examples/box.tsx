@@ -1,4 +1,4 @@
-import { Box  } from "@mpv-easy/solid"
+import { Box } from "@mpv-easy/solid"
 export function SimpleBox() {
   return (
     <>

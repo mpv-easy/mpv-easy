@@ -28,6 +28,7 @@
       "@mpv-easy/assdraw": ["./mpv-assdraw/src"],
       "@mpv-easy/mock": ["./mpv-mock/src"],
       "@mpv-easy/react": ["./mpv-react/src"],
+      "@mpv-easy/flex": ["./mpv-flex/src"],
       "@mpv-easy/solid": ["./mpv-solid/src"],
       "@mpv-easy/plugin": ["./mpv-plugin/src"],
       "@mpv-easy/anime4k": ["./mpv-anime4k/src"],

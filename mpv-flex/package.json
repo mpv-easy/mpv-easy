@@ -1,8 +1,8 @@
 {
-  "name": "@mpv-easy/solid",
+  "name": "@mpv-easy/flex",
   "version": "0.1.1",
   "files": ["dist", "readme.md", "package.json"],
-  "description": "@mpv-easy/solid",
+  "description": "@mpv-easy/flex",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
@@ -17,9 +17,7 @@
   "license": "ISC",
   "dependencies": {
     "@mpv-easy/assdraw": "workspace:*",
-    "@mpv-easy/solid": "workspace:*",
     "@mpv-easy/tool": "workspace:*",
-    "@mpv-easy/flex": "workspace:*",
     "@r-tui/flex": "file://C:/wt/r-tui/flex/dist",
     "@r-tui/share": "0.1.6",
     "e-color": "^0.1.3",

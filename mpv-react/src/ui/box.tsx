@@ -1,6 +1,6 @@
 import React from "react"
 import { forwardRef } from "react"
-import type { MpDom, MpDomProps } from "../render/dom"
+import type { MpDom, MpDomProps } from "@mpv-easy/flex"
 
 export type Ref = MpDom
 

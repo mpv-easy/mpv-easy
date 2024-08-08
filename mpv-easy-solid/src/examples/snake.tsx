@@ -138,7 +138,6 @@ export function SnakeGame() {
     }
   }
 
-
   snake.body = []
   snake.direction = 3
   snake.grow = 0

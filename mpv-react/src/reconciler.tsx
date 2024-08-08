@@ -14,16 +14,17 @@ import {
   DefaultFps,
   dispatchEvent,
   getRootFlex,
+  RenderConfig,
   renderNode,
   type MpFlex,
-} from "./flex"
+} from "@mpv-easy/flex"
 import {
   appendChildNode,
   insertBeforeNode,
   removeChildNode,
   applyProps,
 } from "@r-tui/flex"
-import { type MpDom, createNode, MouseEvent } from "./dom"
+import { type MpDom, createNode, MouseEvent } from "@mpv-easy/flex"
 import throttle from "lodash-es/throttle"
 const NO_CONTEXT = {}
 
@@ -183,20 +184,6 @@ export function createCustomReconciler(customRender: () => void) {
     },
     supportsHydration: false,
   })
-}
-
-export type RenderConfig = {
-  flex: MpFlex
-  enableMouseMoveEvent: boolean
-  fps: number
-  customRender: () => void
-  customDispatch: (
-    node: MpDom,
-    pos: MousePos,
-    event: KeyEvent,
-    mouseEvent?: MouseEvent,
-  ) => void
-  showFps?: boolean
 }
 
 let max = 0
