@@ -50,7 +50,7 @@ export const getRootNode = () => {
 export const DefaultFps = 30
 
 
-function renderToMpv(node: MpDom) {
+function renderNodeToMpv(node: MpDom) {
   const hide = readAttr(node, "hide") ?? false
   const {
     props: {
@@ -322,6 +322,18 @@ function renderToMpv(node: MpDom) {
     }
   }
 }
+
+function renderRootToMpv(node: MpDom) {
+  const q: MpDom[] = [node]
+  while (q.length) {
+    const top = q.shift()!
+    renderNodeToMpv(top)
+    for (const c of top.childNodes) {
+      q.push(c)
+    }
+  }
+}
+
 export class MpFlex extends Flex<MpAttrs, MpProps, MpEvent> {
   customCreateMouseEvent(
     node: BaseDom<MpAttrs, MpProps, MpEvent> | undefined,
@@ -353,7 +365,7 @@ export class MpFlex extends Flex<MpAttrs, MpProps, MpEvent> {
     // @ts-ignore
     this.renderCount = 0
     // @ts-ignore
-    this.maxRenderCount = 1 << 10
+    this.maxRenderCount = 1 << 20
 
     // TODO: abstract method not work?
     this.rootNode = getRootNode()
@@ -369,9 +381,8 @@ export class MpFlex extends Flex<MpAttrs, MpProps, MpEvent> {
   customCreateRootNode(): MpDom {
     return getRootNode()
   }
-
-  customRenderNode(node: MpDom): void {
-
+  customRenderRoot(node: MpDom): void {
+    renderRootToMpv(node)
   }
   customComputeZIndex(node: MpDom, zIndex: number): void {
     const {

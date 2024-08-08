@@ -1,4 +1,4 @@
-import { getNextSibling, insertBeforeNode, removeChildNode, getFirstChild, getParentNode } from "@r-tui/flex"
+import { getNextSibling, insertBeforeNode, removeChildNode, getFirstChild, getParentNode,setAttribute } from "@r-tui/flex"
 import { createRenderer } from "solid-js/universal"
 import { DefaultFps, MpFlex, RenderConfig, renderNode } from "@mpv-easy/flex"
 import { BoxName, MpDom, RootName, TextName, createNode, } from "@mpv-easy/flex"
@@ -63,8 +63,7 @@ const {
   },
   setProperty(node: MpDom, name: string, value: any) {
     log("setProperty", node.attributes.id, name, value)
-    // @ts-ignore
-    node.attributes[name] = value
+    setAttribute(node, name, value)
     customRender()
   },
   insertNode(parent: MpDom, node: MpDom, anchor: MpDom) {
@@ -148,7 +147,7 @@ function render(code: () => any, config: Partial<RenderConfig> = {}) {
     layoutNode.padding = 0
     layoutNode.border = 0
 
-    // customRender()
+    customRender()
   }
 
   dim.observe((value) => {
