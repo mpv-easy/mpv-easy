@@ -9,7 +9,7 @@ import {
   fileInfo,
   Overlay,
 } from "@mpv-easy/tool"
-import { BaseDom, Flex, BaseMouseEvent, isDirty } from "@r-tui/flex"
+import { BaseDom, Flex, BaseMouseEvent, isDirty, markClean } from "@r-tui/flex"
 import type { Shape } from "@r-tui/share"
 import {
   type MpDom,
@@ -331,7 +331,7 @@ function renderRootToMpv(node: MpDom) {
     renderNodeToMpv(c)
   }
   renderNodeToMpv(node)
-  node.dirty = false
+  markClean(node)
 }
 
 export class MpFlex extends Flex<MpAttrs, MpProps, MpEvent> {
