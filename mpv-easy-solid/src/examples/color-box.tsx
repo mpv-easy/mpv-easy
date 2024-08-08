@@ -23,7 +23,6 @@ export function ColorBox() {
   return new Array(row * col).fill(0).map((_, k) => {
     return (
       <Box
-        // @ts-ignore
         key={k}
         id={k.toString()}
         width={boxW()}

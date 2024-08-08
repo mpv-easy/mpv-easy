@@ -53,6 +53,7 @@ export const createNode = (
       nodeName,
       osdOverlays,
     },
+    dirty: true,
   }
 
   return node

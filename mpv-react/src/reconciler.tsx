@@ -16,6 +16,7 @@ import {
   getRootFlex,
   RenderConfig,
   renderNode,
+  RootName,
   type MpFlex,
 } from "@mpv-easy/flex"
 import {
@@ -23,6 +24,8 @@ import {
   insertBeforeNode,
   removeChildNode,
   applyProps,
+  setAttribute,
+  setLayoutNode,
 } from "@r-tui/flex"
 import { type MpDom, createNode, MouseEvent } from "@mpv-easy/flex"
 import throttle from "lodash-es/throttle"
@@ -54,7 +57,7 @@ export function createCustomReconciler(customRender: () => void) {
       customRender()
     },
     insertInContainerBefore: insertBeforeNode,
-    commitUpdate(node: MpDom, props) {
+    commitUpdate(node: MpDom, props: any) {
       applyProps(node, props)
       customRender()
     },
@@ -68,7 +71,7 @@ export function createCustomReconciler(customRender: () => void) {
     },
     createInstance: (
       originalType: unknown,
-      props: unknown,
+      props: any,
       rootContainer: unknown,
       hostContext: unknown,
       internalHandle: any,
@@ -194,7 +197,7 @@ export function createRender({
   enableMouseMoveEvent = true,
   fps = DefaultFps,
   flex = getRootFlex(),
-  showFps = false,
+  showFps = true,
   customRender = throttle(() => {
     frame++
     const st = +Date.now()
@@ -287,30 +290,30 @@ export function createRender({
       }
       lastW = w
       lastH = h
-      const { attributes, layoutNode } = flex.rootNode
-      attributes.id = "__root__"
-      attributes.width = w
-      attributes.height = h
-      attributes.position = "relative"
-      attributes.color = "FFFFFF"
-      attributes.display = "flex"
-      attributes.backgroundColor = "000000FF"
-      attributes.padding = 0
-      attributes.borderSize = 0
-      attributes.x = 0
-      attributes.y = 0
-      attributes.zIndex = 0
-      attributes.alignContent = "stretch"
-      layoutNode.x = 0
-      layoutNode.y = 0
-      layoutNode.width = w
-      layoutNode.height = h
-      layoutNode.padding = 0
-      layoutNode.border = 0
+      setAttribute(flex.rootNode, "id", RootName)
+      setAttribute(flex.rootNode, "width", w)
+      setAttribute(flex.rootNode, "height", h)
+      setAttribute(flex.rootNode, "position", "relative")
+      setAttribute(flex.rootNode, "color", 'FFFFFF')
+      setAttribute(flex.rootNode, "backgroundColor", '000000FF')
+      setAttribute(flex.rootNode, "display", "flex")
+      setAttribute(flex.rootNode, "padding", 0)
+      setAttribute(flex.rootNode, "borderSize", 0)
+      setAttribute(flex.rootNode, "x", 0)
+      setAttribute(flex.rootNode, "y", 0)
+      setAttribute(flex.rootNode, "zIndex", 0)
+      setAttribute(flex.rootNode, "alignContent", 'stretch')
+
+      setLayoutNode(flex.rootNode, "x", 0)
+      setLayoutNode(flex.rootNode, "y", 0)
+      setLayoutNode(flex.rootNode, "width", w)
+      setLayoutNode(flex.rootNode, "height", h)
+      setLayoutNode(flex.rootNode, "padding", 0)
+      setLayoutNode(flex.rootNode, "border", 0)
+
       reconciler.updateContainer(reactNode, container, null, null)
 
-      // delay first render
-      // customRender()
+      customRender()
     }
     const dim = new PropertyNative<MpvPropertyTypeMap["osd-dimensions"]>(
       "osd-dimensions",

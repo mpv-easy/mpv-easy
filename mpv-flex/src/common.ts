@@ -1,5 +1,5 @@
 import { AssDraw } from "@mpv-easy/assdraw"
-import { OsdOverlay, getAssScale, } from "@mpv-easy/tool"
+import { OsdOverlay, getAssScale } from "@mpv-easy/tool"
 import { lenToNumber, getAttribute } from "@r-tui/flex"
 import type { MpDom } from "./dom"
 import type { Shape } from "@r-tui/share"
@@ -14,7 +14,10 @@ export const propsToSkip = {
   className: true,
 }
 
-export function readAttr<D extends MpDom, R = any>(node: D, attrName: string): R | undefined {
+export function readAttr<D extends MpDom, R = any>(
+  node: D,
+  attrName: string,
+): R | undefined {
   while (node && typeof getAttribute<D, R>(node, attrName) === "undefined") {
     if (node.parentNode) {
       node = node.parentNode as D
