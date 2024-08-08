@@ -3,7 +3,7 @@ import { solidPlugin } from "esbuild-plugin-solid"
 import fs from "node:fs"
 
 build({
-  entryPoints: ["./src/mpv-easy-*.ts"],
+  entryPoints: ["./src/mpv-easy-es*.ts"],
   bundle: true,
   outdir: "bundle",
   minify: true,
