@@ -195,22 +195,29 @@ export function createRender({
   fps = DefaultFps,
   flex = getRootFlex(),
   showFps = false,
-  customRender = throttle(() => {
-    frame++
-    const st = +Date.now()
-    renderNode()
-    const ed = +Date.now()
-    const t = ed - st
-    max = Math.max(max, t)
-    fpsList.push(t)
-    if (fpsList.length > 32) {
-      fpsList.shift()
-    }
-    const avg = fpsList.reduce((a, b) => a + b, 0) / fpsList.length
-    if (showFps) {
-      print("render time(react):", frame, t, max, avg)
-    }
-  }, 1000 / fps),
+  customRender = throttle(
+    () => {
+      frame++
+      const st = +Date.now()
+      renderNode()
+      const ed = +Date.now()
+      const t = ed - st
+      max = Math.max(max, t)
+      fpsList.push(t)
+      if (fpsList.length > 32) {
+        fpsList.shift()
+      }
+      const avg = fpsList.reduce((a, b) => a + b, 0) / fpsList.length
+      if (showFps) {
+        print("render time(react):", frame, t, max, avg)
+      }
+    },
+    1000 / fps,
+    {
+      leading: true,
+      trailing: true,
+    },
+  ),
   customDispatch = dispatchEvent,
 }: Partial<RenderConfig> = {}) {
   const reconciler = createCustomReconciler(customRender)
@@ -323,11 +330,12 @@ export function createRender({
 }
 
 let r: (reactNode: React.ReactNode) => void
-export const render: (reactNode: React.ReactNode) => void = (
+export const render = (
   reactNode: React.ReactNode,
+  config: Partial<RenderConfig> = {},
 ) => {
   if (!r) {
-    r = createRender({})
+    r = createRender(config)
   }
   return r(reactNode)
 }

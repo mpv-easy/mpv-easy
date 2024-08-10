@@ -26,26 +26,31 @@ const showFps = true
 let max = 0
 let frame = 0
 const fpsList: number[] = []
-const customRender = throttle(
-  () => {
-    frame++
-    const st = +Date.now()
-    renderNode()
-    const ed = +Date.now()
-    const t = ed - st
-    max = Math.max(max, t)
-    fpsList.push(t)
-    if (fpsList.length > 32) {
-      fpsList.shift()
-    }
-    const avg = fpsList.reduce((a, b) => a + b, 0) / fpsList.length
-    if (showFps) {
-      print("render time(solid):", frame, t, max, avg)
-    }
-  },
-  1000 / DefaultFps,
-  { trailing: true, leading: false },
-)
+let customRender: () => void
+
+function initCustomRender(config: Partial<RenderConfig> = {}) {
+  const { fps = DefaultFps } = config
+  customRender = throttle(
+    () => {
+      frame++
+      const st = +Date.now()
+      renderNode()
+      const ed = +Date.now()
+      const t = ed - st
+      max = Math.max(max, t)
+      fpsList.push(t)
+      if (fpsList.length > 32) {
+        fpsList.shift()
+      }
+      const avg = fpsList.reduce((a, b) => a + b, 0) / fpsList.length
+      if (showFps) {
+        print("render time(solid):", frame, t, max, avg)
+      }
+    },
+    1000 / fps,
+    { trailing: true, leading: false },
+  )
+}
 
 const {
   render: _render,
@@ -67,7 +72,7 @@ const {
     throw new Error("not support text node")
   },
   replaceText(textNode: MpDom, value: string) {
-    setAttribute(textNode, 'text', value)
+    setAttribute(textNode, "text", value)
     customRender()
   },
   setProperty(node: MpDom, name: keyof MpDom["attributes"], value: any) {
@@ -111,7 +116,9 @@ export {
 export const defaultFPS = 30
 
 function render(code: () => any, config: Partial<RenderConfig> = {}) {
-  flex = new MpFlex()
+  initCustomRender(config)
+  flex = new MpFlex(config)
+
   const dim = new PropertyNative<MpvPropertyTypeMap["osd-dimensions"]>(
     "osd-dimensions",
   )

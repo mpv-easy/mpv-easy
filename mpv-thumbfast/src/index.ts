@@ -13,6 +13,7 @@ import {
   commandNative,
   commandNativeAsync,
   getPropertyBool,
+  abortAsyncCommand,
 } from "@mpv-easy/tool"
 export const pluginName = "@mpv-easy/thumbfast"
 
@@ -68,6 +69,9 @@ function scaleToFit(
   const h = height / scale
   return [w | 0, h | 0]
 }
+
+const ThumbFastSet = new Set<ThumbFast>()
+
 export class ThumbFast {
   public path: string
   public format: "rgba" | "bgra"
@@ -79,6 +83,7 @@ export class ThumbFast {
   public thumbWidth: number
   public thumbHeight: number
   public network: boolean
+  public subprocessId: number
   constructor(
     {
       path = defaultThumbPath,
@@ -183,13 +188,15 @@ export class ThumbFast {
     ]
 
     // async: this cmd run forever
-    commandNativeAsync({
+    this.subprocessId = commandNativeAsync({
       name: "subprocess",
       args,
       playback_only: true,
       capture_stdout: true,
       capture_stderr: true,
     })
+
+    ThumbFastSet.add(this)
   }
 
   seek(time: number) {
@@ -210,17 +217,22 @@ export class ThumbFast {
   }
 
   exit() {
-    commandNative({
-      name: "subprocess",
-      args: [
-        getOs() === "windows" ? "cmd" : "sh",
-        getOs() === "windows" ? "/c" : "-c",
-        `echo quit > \\\\.\\pipe\\${this.ipcId}`,
-      ],
-      playback_only: true,
-      capture_stdout: true,
-      capture_stderr: true,
-    })
+    try {
+      commandNative({
+        name: "subprocess",
+        args: [
+          getOs() === "windows" ? "cmd" : "sh",
+          getOs() === "windows" ? "/c" : "-c",
+          `echo quit > \\\\.\\pipe\\${this.ipcId}`,
+        ],
+        playback_only: true,
+        capture_stdout: true,
+        capture_stderr: true,
+      })
+      abortAsyncCommand(this.subprocessId)
+    } catch (e) {
+      console.log("ThumbFast abortAsyncCommand error: ", e)
+    }
   }
 }
 
@@ -232,5 +244,9 @@ export default definePlugin((context, api) => ({
       mkdir(d)
     }
   },
-  destroy() {},
+  destroy() {
+    for (const i of ThumbFastSet) {
+      i.exit()
+    }
+  },
 }))

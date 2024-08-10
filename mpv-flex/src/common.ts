@@ -18,7 +18,7 @@ const GetAssTextAssdraw = new AssDraw()
 export function getAssText(node: MpDom, x: number, y: number) {
   const { text = "" } = node.attributes
   const assScale = getAssScale()
-  const font = getFirstValidAttribute(node, 'font') ?? ""
+  const font = getFirstValidAttribute(node, "font") ?? ""
   let color = getFirstValidAttribute(node, "color") ?? "FFFFFFFF"
   const fontSize = getFirstValidAttribute(node, "fontSize") ?? "5%"
   const fontBorderSize = getFirstValidAttribute(node, "fontBorderSize") ?? 0

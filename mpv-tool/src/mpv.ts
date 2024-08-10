@@ -40,7 +40,7 @@ export function commandNativeAsync(
     result: CommandResult,
     error: string | undefined,
   ) => void,
-): unknown {
+): number {
   return getMPV().command_native_async(table, fn)
 }
 

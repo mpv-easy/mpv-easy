@@ -100,7 +100,7 @@ export type MPV = {
       result: CommandResult,
       error: string | undefined,
     ) => void,
-  ): unknown
+  ): number
 
   abort_async_command(t: number): void
 

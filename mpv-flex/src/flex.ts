@@ -366,7 +366,7 @@ export class MpFlex extends Flex<MpAttrs, MpProps, MpEvent> {
   customIsMouseUp(e: BaseMouseEvent<MpAttrs, MpProps, MpEvent>): boolean {
     return e.event.event === "up"
   }
-  constructor() {
+  constructor(config: Partial<RenderConfig> = {}) {
     super()
     // TODO: abstract method not work?
     // console.log("rootNode1", this.rootNode)

@@ -1,7 +1,7 @@
 import "@mpv-easy/tool"
 import { getConfig, plugins, saveConfig } from "./context"
 import type { EnablePlugin } from "./context"
-import { print } from "@mpv-easy/tool"
+import { print, registerEvent } from "@mpv-easy/tool"
 import { createStore } from "./store"
 import type { SystemApi } from "@mpv-easy/plugin"
 import { pluginName } from "./main"
@@ -34,5 +34,18 @@ function main() {
       print(`add plugin ${plugin.name}`)
     }
   }
+
+  registerEvent("shutdown", () => {
+    for (const definePlugin of plugins) {
+      const plugin = definePlugin(customConfig, api)
+      if (
+        customConfig.enablePlugins[plugin.name as keyof EnablePlugin] &&
+        plugin.destroy
+      ) {
+        plugin.destroy()
+        print(`destroy plugin ${plugin.name}`)
+      }
+    }
+  })
 }
 main()
