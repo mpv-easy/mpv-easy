@@ -1,6 +1,6 @@
 import { AssDraw } from "@mpv-easy/assdraw"
 import { OsdOverlay, getAssScale } from "@mpv-easy/tool"
-import { lenToNumber, getAttribute } from "@r-tui/flex"
+import { lenToNumber, getFirstValidAttribute } from "@r-tui/flex"
 import type { MpDom } from "./dom"
 import type { Shape } from "@r-tui/share"
 export const propsToSkip = {
@@ -14,29 +14,16 @@ export const propsToSkip = {
   className: true,
 }
 
-export function readAttr<D extends MpDom, R = any>(
-  node: D,
-  attrName: string,
-): R | undefined {
-  while (node && typeof getAttribute<D, R>(node, attrName) === "undefined") {
-    if (node.parentNode) {
-      node = node.parentNode as D
-    } else {
-      return undefined
-    }
-  }
-  return getAttribute<D, R>(node, attrName)
-}
-
 const GetAssTextAssdraw = new AssDraw()
 export function getAssText(node: MpDom, x: number, y: number) {
   const { text = "" } = node.attributes
   const assScale = getAssScale()
-  const font = readAttr(node, "font") ?? ""
-  let color = readAttr(node, "color") ?? "FFFFFFFF"
-  const fontSize = readAttr(node, "fontSize") ?? "5%"
-  const fontBorderSize = readAttr(node, "fontBorderSize") ?? 0
-  const fontBorderColor = readAttr(node, "fontBorderColor") ?? "000000"
+  const font = getFirstValidAttribute(node, 'font') ?? ""
+  let color = getFirstValidAttribute(node, "color") ?? "FFFFFFFF"
+  const fontSize = getFirstValidAttribute(node, "fontSize") ?? "5%"
+  const fontBorderSize = getFirstValidAttribute(node, "fontBorderSize") ?? 0
+  const fontBorderColor =
+    getFirstValidAttribute(node, "fontBorderColor") ?? "000000"
   let alpha = "FF"
   if (color.length === 6) {
     alpha = "00"

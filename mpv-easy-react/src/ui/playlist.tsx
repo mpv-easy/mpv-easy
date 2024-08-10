@@ -42,7 +42,7 @@ export const Playlist = () => {
 
   return (
     <Box
-      id={"playlist-main"}
+      id={"playlist"}
       ref={playlistRef}
       x={x}
       y={y}
@@ -57,6 +57,7 @@ export const Playlist = () => {
     >
       {!!playlist.length && (
         <ScrollList
+          id="playlist-scroll-list"
           zIndex={playlistStyle.zIndex}
           items={playlist.map((i) => {
             const prefix =

@@ -44,6 +44,7 @@ export function Speed() {
     >
       {style.showText && press && (
         <Box
+          id="mpv-easy-speed-text"
           position="relative"
           display="flex"
           justifyContent="center"

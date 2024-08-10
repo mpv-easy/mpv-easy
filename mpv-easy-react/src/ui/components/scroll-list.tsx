@@ -122,7 +122,7 @@ export const ScrollList = ({
           backgroundColor={button.color}
         />
       )}
-      {visibleList.map(({ key, label, onClick }, k) => {
+      {visibleList.map(({ key, label, onClick }) => {
         return (
           <Button
             id={`scroll-list-${key}`}

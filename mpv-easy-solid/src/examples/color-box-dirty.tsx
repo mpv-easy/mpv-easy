@@ -20,31 +20,36 @@ export function ColorBoxDirty() {
   const boxW = () => osd().w / col
   const boxH = () => osd().h / row
 
-  return <Box
-    position='relative'
-    display="flex"
-    width={'100%'}
-    height={'100%'}
-    alignContent='stretch'
-  >{new Array(row * col).fill(0).map((_, k) => {
-    return (
+  return (
+    <Box
+      id="color-box-dirty"
+      position="relative"
+      display="flex"
+      width={"100%"}
+      height={"100%"}
+      alignContent="stretch"
+    >
+      {new Array(row * col).fill(0).map((_, k) => {
+        return (
+          <Box
+            key={k}
+            id={k.toString()}
+            width={boxW()}
+            height={boxH()}
+            backgroundColor={colorList[k]}
+            text={`${k}`}
+          />
+        )
+      })}
       <Box
-        key={k}
-        id={k.toString()}
+        position="absolute"
+        display="flex"
+        id={"count"}
         width={boxW()}
         height={boxH()}
-        backgroundColor={colorList[k]}
-        text={`${k}`}
+        backgroundColor={colorList[0]}
+        text={`${count()}`}
       />
-    )
-  })}<Box
-      position="absolute"
-      display="flex"
-      id={"count"}
-      width={boxW()}
-      height={boxH()}
-      backgroundColor={colorList[0]}
-      text={`${count()}`}
-    />
-  </Box>
+    </Box>
+  )
 }

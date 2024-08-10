@@ -1,4 +1,6 @@
 import {
+  type MpDom,
+  MpFlex,
   getNextSibling,
   insertBeforeNode,
   removeChildNode,
@@ -6,12 +8,18 @@ import {
   getParentNode,
   setAttribute,
   setLayoutNode,
-} from "@r-tui/flex"
+  DefaultFps,
+  RenderConfig,
+  renderNode,
+  BoxName,
+  RootName,
+  TextName,
+  createNode,
+} from "@mpv-easy/flex"
 import { createRenderer } from "solid-js/universal"
-import { DefaultFps, MpFlex, RenderConfig, renderNode } from "@mpv-easy/flex"
-import { BoxName, MpDom, RootName, TextName, createNode } from "@mpv-easy/flex"
 import throttle from "lodash-es/throttle"
 import { MpvPropertyTypeMap, PropertyNative } from "@mpv-easy/tool"
+import { batch } from "solid-js"
 
 let flex: MpFlex
 const showFps = true
@@ -59,7 +67,7 @@ const {
     throw new Error("not support text node")
   },
   replaceText(textNode: MpDom, value: string) {
-    textNode.attributes.text = value
+    setAttribute(textNode, 'text', value)
     customRender()
   },
   setProperty(node: MpDom, name: keyof MpDom["attributes"], value: any) {
@@ -115,29 +123,34 @@ function render(code: () => any, config: Partial<RenderConfig> = {}) {
     }
     lastW = w
     lastH = h
-    setAttribute(flex.rootNode, "id", RootName)
-    setAttribute(flex.rootNode, "width", w)
-    setAttribute(flex.rootNode, "height", h)
-    setAttribute(flex.rootNode, "position", "relative")
-    setAttribute(flex.rootNode, "color", "FFFFFF")
-    setAttribute(flex.rootNode, "backgroundColor", "000000FF")
-    setAttribute(flex.rootNode, "display", "flex")
-    setAttribute(flex.rootNode, "padding", 0)
-    setAttribute(flex.rootNode, "borderSize", 0)
-    setAttribute(flex.rootNode, "x", 0)
-    setAttribute(flex.rootNode, "y", 0)
-    setAttribute(flex.rootNode, "zIndex", 0)
-    setAttribute(flex.rootNode, "alignContent", "stretch")
+    batch(() => {
+      setAttribute(flex.rootNode, "id", RootName)
+      setAttribute(flex.rootNode, "width", w)
+      setAttribute(flex.rootNode, "height", h)
+      setAttribute(flex.rootNode, "position", "relative")
+      setAttribute(flex.rootNode, "color", "FFFFFF")
+      setAttribute(flex.rootNode, "backgroundColor", "000000FF")
+      setAttribute(flex.rootNode, "display", "flex")
+      setAttribute(flex.rootNode, "padding", 0)
+      setAttribute(flex.rootNode, "borderSize", 0)
+      setAttribute(flex.rootNode, "x", 0)
+      setAttribute(flex.rootNode, "y", 0)
+      setAttribute(flex.rootNode, "zIndex", 0)
+      setAttribute(flex.rootNode, "alignContent", "stretch")
 
-    setLayoutNode(flex.rootNode, "x", 0)
-    setLayoutNode(flex.rootNode, "y", 0)
-    setLayoutNode(flex.rootNode, "width", w)
-    setLayoutNode(flex.rootNode, "height", h)
-    setLayoutNode(flex.rootNode, "padding", 0)
-    setLayoutNode(flex.rootNode, "border", 0)
-
+      setLayoutNode(flex.rootNode, "x", 0)
+      setLayoutNode(flex.rootNode, "y", 0)
+      setLayoutNode(flex.rootNode, "width", w)
+      setLayoutNode(flex.rootNode, "height", h)
+      setLayoutNode(flex.rootNode, "padding", 0)
+      setLayoutNode(flex.rootNode, "border", 0)
+    })
     customRender()
   }
+
+  // solidjs render is sync, so must set a init size
+  flex.rootNode.attributes.width = dim.value.w
+  flex.rootNode.attributes.height = dim.value.h
 
   dim.observe((value) => {
     renderRootNode(value)

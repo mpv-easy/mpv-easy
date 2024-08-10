@@ -42,6 +42,7 @@ export const UoscControl = (props: Partial<MpDomProps>) => {
       alignItems="center"
     >
       <Box
+        id="uosc-control-left"
         display="flex"
         justifyContent="start"
         height={height}
@@ -58,6 +59,7 @@ export const UoscControl = (props: Partial<MpDomProps>) => {
       </Box>
 
       <Box
+        id="uosc-control-right"
         display="flex"
         height={height}
         justifyContent="end"

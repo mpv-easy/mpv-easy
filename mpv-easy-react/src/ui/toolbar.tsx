@@ -57,6 +57,7 @@ export const Toolbar: ForwardRefExoticComponent<
 
       {fullscreen && (
         <Box
+          id="toolbar-right"
           display="flex"
           font={button.font}
           justifyContent="end"

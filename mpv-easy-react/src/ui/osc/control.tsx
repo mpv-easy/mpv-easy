@@ -36,7 +36,7 @@ export const OscControl = ({ height, width }: Partial<MpDomProps>) => {
       alignItems="center"
     >
       <Box
-        id="osc-control-buttons1"
+        id="osc-control-left"
         display="flex"
         justifyContent="start"
         alignItems="center"
@@ -52,7 +52,7 @@ export const OscControl = ({ height, width }: Partial<MpDomProps>) => {
       </Box>
       <Progress width={"60%"} height={height || 0} />
       <Box
-        id="osc-control-buttons2"
+        id="osc-control-right"
         display="flex"
         justifyContent="end"
         alignItems="center"

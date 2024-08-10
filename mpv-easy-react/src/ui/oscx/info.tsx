@@ -40,6 +40,7 @@ export const OscInfo = ({ height }: Partial<MpDomProps>) => {
       backgroundColor={control.backgroundColor}
     >
       <Box
+        id="oscx-info-left"
         display="flex"
         justifyContent="start"
         height={height}
@@ -51,6 +52,7 @@ export const OscInfo = ({ height }: Partial<MpDomProps>) => {
       </Box>
 
       <Box
+        id="oscx-info-middle"
         display="flex"
         height={height}
         justifyContent="center"
@@ -66,6 +68,7 @@ export const OscInfo = ({ height }: Partial<MpDomProps>) => {
       </Box>
 
       <Box
+        id="oscx-info-right"
         display="flex"
         height={height}
         justifyContent="end"

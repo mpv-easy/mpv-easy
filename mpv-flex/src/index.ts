@@ -1,3 +1,5 @@
 export * from "./dom"
 export * from "./flex"
 export * from "./common"
+export * from "@r-tui/flex"
+export * from "@r-tui/share"

@@ -27,6 +27,7 @@ export const Filename = () => {
   return (
     (fileName?.length ?? 0) > 0 && (
       <Button
+        id="mpv-easy-button-filename"
         height={button.height}
         display="flex"
         flexDirection="column"

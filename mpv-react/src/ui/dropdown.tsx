@@ -1,8 +1,14 @@
 import React, { useRef, useState } from "react"
 import { Button, type ButtonProps } from "./button"
 import { Box } from "./box"
-import { BaseMouseEvent, EventNameList } from "@r-tui/flex"
-import type { MpAttrs, MpDom, MpEvent, MpProps } from "@mpv-easy/flex"
+import {
+  type BaseMouseEvent,
+  type MpAttrs,
+  type MpDom,
+  type MpEvent,
+  type MpProps,
+  EventNameList,
+} from "@mpv-easy/flex"
 
 export type DropdownItem = {
   key: string | number

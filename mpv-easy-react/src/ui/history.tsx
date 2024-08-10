@@ -26,7 +26,6 @@ export const History = () => {
   const history = useSelector(historySelector)
   const historyRef = useRef<MpDom>(null)
   const historyHide = useSelector(historyHideSelector)
-  const button = useSelector(buttonStyleSelector)
   let x = 0
   let y = 0
   if (historyRef.current) {
@@ -42,7 +41,7 @@ export const History = () => {
 
   return (
     <Box
-      id={"history-main"}
+      id={"history"}
       ref={historyRef}
       x={x}
       y={y}
@@ -57,6 +56,7 @@ export const History = () => {
     >
       {!!history.length && (
         <ScrollList
+          id={"history-scroll-list"}
           zIndex={historyStyle.zIndex}
           items={history.map((i) => {
             const prefix =

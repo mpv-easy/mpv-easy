@@ -216,7 +216,7 @@ export const Progress = ({ width, height, ...props }: MpDomProps) => {
                 y={thumbY}
                 width={thumbRef.current?.thumbWidth}
                 height={thumbRef.current?.thumbHeight}
-                backgroundImage={thumbRef.current?.path}
+                backgroundImage={`${thumbRef.current?.path}?ts=${Date.now()}`}
                 backgroundImageFormat={thumbRef.current?.format}
                 pointerEvents="none"
               />

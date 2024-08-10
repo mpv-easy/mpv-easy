@@ -9,7 +9,14 @@ import {
   fileInfo,
   Overlay,
 } from "@mpv-easy/tool"
-import { BaseDom, Flex, BaseMouseEvent, isDirty, markClean } from "@r-tui/flex"
+import {
+  BaseDom,
+  Flex,
+  BaseMouseEvent,
+  isDirty,
+  markClean,
+  getFirstValidAttribute,
+} from "@r-tui/flex"
 import type { Shape } from "@r-tui/share"
 import {
   type MpDom,
@@ -18,7 +25,7 @@ import {
   type MpProps,
   MpEvent,
 } from "./dom"
-import { getAssText, measureText, readAttr } from "./common"
+import { getAssText, measureText } from "./common"
 
 export type RenderConfig = {
   flex: MpFlex
@@ -47,7 +54,7 @@ export const getRootNode = () => {
 export const DefaultFps = 30
 
 function renderNodeToMpv(node: MpDom) {
-  const hide = readAttr(node, "hide") ?? false
+  const hide = getFirstValidAttribute(node, "hide") ?? false
   const {
     props: {
       osdOverlays: [textOverlay, bgOverlay, borderOverlay],

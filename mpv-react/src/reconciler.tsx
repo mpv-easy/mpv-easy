@@ -1,6 +1,5 @@
 import type React from "react"
 import {
-  type KeyEvent,
   type MpvPropertyTypeMap,
   PropertyNative,
   addKeyBinding,
@@ -11,23 +10,21 @@ import type { MousePos } from "@mpv-easy/tool"
 import createReconciler from "react-reconciler"
 import { DefaultEventPriority } from "react-reconciler/constants"
 import {
-  DefaultFps,
+  type MpDom,
+  type RenderConfig,
   dispatchEvent,
   getRootFlex,
-  RenderConfig,
   renderNode,
   RootName,
-  type MpFlex,
-} from "@mpv-easy/flex"
-import {
   appendChildNode,
   insertBeforeNode,
   removeChildNode,
   setAttribute,
   setLayoutNode,
   applyAttributes,
-} from "@r-tui/flex"
-import { type MpDom, createNode, MouseEvent } from "@mpv-easy/flex"
+  createNode,
+  DefaultFps,
+} from "@mpv-easy/flex"
 import throttle from "lodash-es/throttle"
 const NO_CONTEXT = {}
 
