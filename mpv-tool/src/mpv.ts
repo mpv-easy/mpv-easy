@@ -34,7 +34,13 @@ export function commandNative(table: unknown): CommandResult {
 }
 
 export function commandNativeAsync(
-  table: unknown,
+  table: {
+    name: string
+    args?: string[]
+    playback_only?: boolean
+    capture_stdout?: boolean
+    capture_stderr?: boolean
+  },
   fn?: (
     success: boolean,
     result: CommandResult,

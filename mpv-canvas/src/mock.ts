@@ -579,7 +579,13 @@ export function createMpvMock(
       }
     },
     command_native_async: (
-      table: unknown,
+      table: {
+        name: string
+        args?: string[]
+        playback_only?: boolean
+        capture_stdout?: boolean
+        capture_stderr?: boolean
+      },
       fn?:
         | ((
             success: boolean,
@@ -587,9 +593,9 @@ export function createMpvMock(
             error: string | undefined,
           ) => void)
         | undefined,
-    ): unknown => {
+    ): number => {
       // console.log("command_native_async: ")
-      return true
+      return 0
     },
     abort_async_command: (t: number): void => {
       // console.log("Function not implemented.")
