@@ -15,13 +15,24 @@ import {
   RootName,
   TextName,
   createNode,
+  BaseDom,
+  MpAttrs,
+  MpEvent,
+  MpProps,
+  getRootFlex,
 } from "@mpv-easy/flex"
 import { createRenderer } from "solid-js/universal"
 import throttle from "lodash-es/throttle"
-import { MpvPropertyTypeMap, PropertyNative } from "@mpv-easy/tool"
+import {
+  addKeyBinding,
+  KeyEvent,
+  MousePos,
+  MpvPropertyTypeMap,
+  observeProperty,
+  PropertyNative,
+} from "@mpv-easy/tool"
 import { batch } from "solid-js"
 
-let flex: MpFlex
 const showFps = true
 let max = 0
 let frame = 0
@@ -52,6 +63,10 @@ function initCustomRender(config: Partial<RenderConfig> = {}) {
   )
 }
 
+export function mergeProps(...sources: unknown[]): unknown {
+  return Object.assign({}, ...sources)
+}
+
 const {
   render: _render,
   effect,
@@ -61,9 +76,9 @@ const {
   createTextNode,
   insertNode,
   insert,
-  spread,
   setProp,
-  mergeProps,
+  spread,
+  // mergeProps,
 } = createRenderer<MpDom>({
   createElement(nodeName: string): any {
     return createNode(BoxName)
@@ -116,8 +131,9 @@ export {
 export const defaultFPS = 30
 
 function render(code: () => any, config: Partial<RenderConfig> = {}) {
+  const { enableMouseMoveEvent = true } = config
   initCustomRender(config)
-  flex = new MpFlex(config)
+  const flex = getRootFlex(config)
 
   const dim = new PropertyNative<MpvPropertyTypeMap["osd-dimensions"]>(
     "osd-dimensions",
@@ -162,8 +178,57 @@ function render(code: () => any, config: Partial<RenderConfig> = {}) {
   dim.observe((value) => {
     renderRootNode(value)
   })
-  renderRootNode(dim.value)
 
+  let lastMousePos: MousePos = { x: 0, y: 0, hover: false }
+  observeProperty("mouse-pos", "native", (_, value: MousePos) => {
+    lastMousePos = value
+    if (enableMouseMoveEvent) {
+      customDispatch(flex.rootNode, lastMousePos, {
+        event: "press",
+        is_mouse: true,
+        key: "",
+      })
+    }
+  })
+
+  addKeyBinding(
+    "MOUSE_BTN0",
+    "MPV_EASY_MOUSE_BTN0",
+    (event) => {
+      customDispatch(flex.rootNode, lastMousePos, event)
+    },
+    {
+      complex: true,
+      repeatable: true,
+      forced: false,
+    },
+  )
+
+  addKeyBinding(
+    "MOUSE_BTN3",
+    "MPV_EASY_MOUSE_BTN3",
+    (event) => {
+      customDispatch(flex.rootNode, lastMousePos, event)
+    },
+    {
+      complex: true,
+      repeatable: true,
+      forced: false,
+    },
+  )
+
+  addKeyBinding(
+    "MOUSE_BTN4",
+    "MPV_EASY_MOUSE_BTN4",
+    (event) => {
+      customDispatch(flex.rootNode, lastMousePos, event)
+    },
+    {
+      complex: true,
+      repeatable: true,
+      forced: false,
+    },
+  )
   _render(code, flex.rootNode)
 }
 
@@ -178,5 +243,20 @@ export {
   insert,
   spread,
   setProp,
-  mergeProps,
+  // mergeProps,
+}
+
+function customDispatch(
+  node: BaseDom<MpAttrs, MpProps, MpEvent>,
+  pos: MousePos,
+  event: KeyEvent,
+) {
+  const e = getRootFlex().customCreateMouseEvent(
+    node,
+    pos.x,
+    pos.y,
+    pos.hover,
+    event,
+  )
+  getRootFlex().dispatchMouseEvent(node, e)
 }

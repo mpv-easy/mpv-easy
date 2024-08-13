@@ -7,5 +7,7 @@ import { CounterUI } from "./counter-ui"
 import { SnakeGame } from "./snake"
 import { ColorBox } from "./color-box"
 import { ColorBoxDirty } from "./color-box-dirty"
+import { DragBox } from "./drag-box"
+import { ButtonHover } from "./button-hover"
 
-// render(() => <ColorBoxDirty />)
+// render(() => <ButtonHover />)
