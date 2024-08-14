@@ -1,13 +1,12 @@
-import { Box, Button } from "@mpv-easy/react"
+import { Button } from "@mpv-easy/react"
 import React from "react"
 import { useSelector } from "react-redux"
 import {
   buttonStyleSelector,
-  filenameSelector,
   pathSelector,
   toolbarStyleSelector,
 } from "../../store"
-import { textEllipsis } from "../../common"
+import { getVideoName, getVideoTitle, textEllipsis } from "../../common"
 import {
   existsSync,
   isHttp,
@@ -18,14 +17,13 @@ import {
 
 export const Filename = () => {
   const button = useSelector(buttonStyleSelector)
-  const fileName = useSelector(filenameSelector)
-
+  const path = useSelector(pathSelector)
+  const title = getVideoTitle(path) || getVideoName(path) || ""
   // TODO: text-overflow: ellipsis;
   const maxLen = useSelector(toolbarStyleSelector).maxTitleLength
-  const text = textEllipsis(fileName, maxLen)
-  const path = useSelector(pathSelector)
+  const text = textEllipsis(title, maxLen)
   return (
-    (fileName?.length ?? 0) > 0 && (
+    (text?.length ?? 0) > 0 && (
       <Button
         id="mpv-easy-button-filename"
         height={button.height}

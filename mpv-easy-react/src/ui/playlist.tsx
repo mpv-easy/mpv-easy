@@ -26,7 +26,6 @@ export const Playlist = () => {
   const playlist = useSelector(playlistSelector)
   const playlistRef = useRef<MpDom>(null)
   const playlistHide = useSelector(playlistHideSelector)
-  const button = useSelector(buttonStyleSelector)
   let x = 0
   let y = 0
   if (playlistRef.current) {

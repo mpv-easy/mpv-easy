@@ -1,4 +1,5 @@
 import {
+  fileInfo,
   getFileName,
   getPropertyNumber,
   getPropertyString,
@@ -29,11 +30,11 @@ export function getVideoTitle(p: string) {
 }
 
 export function getVideoName(p: string): string {
-  // --playlist=m3u
-  const title = getVideoTitle(p)
-
-  if (title?.length) {
-    return title
+  // Some video files contain a title field. For consistency reasons
+  // we use the file name first in the playlist and history component,
+  // and the title first in the title component.
+  if (fileInfo(p)) {
+    return getFileName(p) || ""
   }
 
   // yt-dl

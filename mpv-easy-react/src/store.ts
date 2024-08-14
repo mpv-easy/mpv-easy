@@ -10,7 +10,7 @@ import { pluginName as anime4kName } from "@mpv-easy/anime4k"
 import { pluginName as autoloadName } from "@mpv-easy/autoload"
 import { pluginName as thumbfastName } from "@mpv-easy/thumbfast"
 import { normalize } from "@mpv-easy/tool"
-import { getVideoName } from "./common"
+import { getVideoName, getVideoTitle } from "./common"
 
 export function createStore() {
   return init<RootModel>({
@@ -77,12 +77,6 @@ export const volumeMaxSelector = (state: RootState) =>
 
 export const videoParamsSelector = (state: RootState) =>
   state.context[pluginName].player.videoParams
-
-export const filenameSelector = (state: RootState) => {
-  const path = pathSelector(state)
-  const name = getVideoName(path) ?? ""
-  return name
-}
 
 export const fpsSelector = (state: RootState) =>
   state.context[pluginName].config.fps
