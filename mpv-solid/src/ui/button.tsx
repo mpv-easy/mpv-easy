@@ -100,11 +100,7 @@ export const Button = ({
         />
       )}
       {text && (
-        <Box
-          id={`button-text-${props.id}`}
-          pointerEvents="none"
-          text={text}
-        />
+        <Box id={`button-text-${props.id}`} pointerEvents="none" text={text} />
       )}
       {postfix && (
         <Box

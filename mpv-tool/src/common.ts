@@ -406,8 +406,7 @@ export function updatePlaylist(list: string[], playIndex = 0) {
   }
 
   const oldListIndex = oldList.indexOf(path)
-  const newListIndex = list.indexOf(path)
-  if (newListIndex === -1) {
+  if (playIndex === -1) {
     // clear and replace
     for (const i of list) {
       command(`loadfile "${i}" append`)
@@ -441,10 +440,12 @@ export function updatePlaylist(list: string[], playIndex = 0) {
     }
     for (let i = 0; i < list.length; i++) {
       if (i === playIndex) {
-        continue
+        command(`loadfile "${list[i]}" append-play`)
+      } else {
+        command(`loadfile "${list[i]}" append`)
       }
-      command(`loadfile "${list[i]}" insert-at ${i}`)
     }
+    command("playlist-remove 0")
     if (getPropertyNumber("playlist-pos") !== playIndex) {
       command(`playlist-play-index ${playIndex}`)
     }
