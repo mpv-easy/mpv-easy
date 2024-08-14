@@ -11,7 +11,15 @@ export function Speed() {
   const [press, setPress] = useState(false)
   const font = useSelector(fontSelector)
   const handleList = useRef<number[]>([])
-  const initSpeed = useRef(1)
+  const initSpeed = useRef(speed)
+
+  const clear = () => {
+    for (const hd of handleList.current) {
+      clearTimeout(hd)
+    }
+    setPress(false)
+    setSpeed(initSpeed.current)
+  }
   return (
     <Box
       id="mpv-easy-speed"
@@ -23,6 +31,7 @@ export function Speed() {
       alignItems="center"
       font={font}
       onMouseDown={() => {
+        clear()
         if (!press) {
           initSpeed.current = speed
           handleList.current = style.steps.map(
@@ -35,11 +44,7 @@ export function Speed() {
         }
       }}
       onMouseUp={() => {
-        for (const hd of handleList.current) {
-          clearTimeout(hd)
-        }
-        setPress(false)
-        setSpeed(initSpeed.current)
+        clear()
       }}
     >
       {style.showText && press && (
