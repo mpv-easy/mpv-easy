@@ -24,7 +24,7 @@ You only need to run the mpv player once, and mpv-easy will automatically regist
 
 Make sure you have already installed [yt-dlp](https://github.com/yt-dlp/yt-dlp)
 
-- download [play-with](https://github.com/mpv-easy/mpv-easy/releases/latest/download/mpv-easy-play-with-windows)
+- download [mpv-easy-play-with-windows](https://github.com/mpv-easy/mpv-easy/releases/latest/download/mpv-easy-play-with-windows)
 - create file play-with.reg and double click to run it. NOTE: Replace the path with yours and make sure to use Windows-style path separators.
 
 ```
