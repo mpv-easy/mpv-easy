@@ -25,8 +25,7 @@ Windows Registry Editor Version 5.00
 @=""
 
 [HKEY_CLASSES_ROOT\\mpv-easy\\shell\\open\\command]
-@="${mpvPlayWithPath} ${mpvPath} %1"
-
+@="\\"${mpvPlayWithPath}\\" \\"${mpvPath}\\" \\"%1\\""
 `.trim()
 
   const tmpPath = joinPath(getTmpDir(), "set-protocol-hook-windows.reg")

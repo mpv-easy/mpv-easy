@@ -2,6 +2,7 @@
 
 use base64::{prelude::BASE64_STANDARD, Engine};
 use flate2::read::GzDecoder;
+use mpv_easy_ext::common::set_protocol_hook;
 use serde_m3u::Playlist;
 use std::io::prelude::*;
 
@@ -18,16 +19,11 @@ pub struct PlayWith {
 }
 
 const HEADER: &str = "mpv-easy://";
-
 const M3U_NAME: &str = "mpv-easy-play-with.m3u8";
 const CHUNK_PREFIX: &str = "mpv-easy-play-with-chunk-";
 const LOG_FILE_NAME: &str = "mpv-easy-play-with.log";
 
-fn main() {
-    let mut args = std::env::args().skip(1);
-    let mpv_path = args.next().unwrap();
-    let mut b64 = args.next().unwrap();
-
+fn play_with(mpv_path: String, mut b64: String) {
     if b64.ends_with('/') {
         b64 = b64[..b64.len() - 1].to_string();
     }
@@ -109,4 +105,19 @@ fn main() {
     cmd.arg(args_str);
 
     cmd.output().unwrap();
+}
+
+fn main() {
+    let mut args = std::env::args().skip(1);
+    match (args.next(), args.next()) {
+        (Some(mpv_path), Some(b64)) => {
+            play_with(mpv_path, b64);
+        }
+        (mpv_path, None) => {
+            set_protocol_hook(mpv_path);
+        }
+        _ => {
+            todo!("mpv-easy-play-with not support yet!")
+        }
+    };
 }

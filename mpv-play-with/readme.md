@@ -24,33 +24,9 @@ You only need to run the mpv player once, and mpv-easy will automatically regist
 
 Make sure you have already installed [yt-dlp](https://github.com/yt-dlp/yt-dlp)
 
-- download [mpv-easy-play-with-windows](https://github.com/mpv-easy/mpv-easy/releases/latest/download/mpv-easy-play-with-windows)
-- create file play-with.reg and double click to run it. NOTE: Replace the path with yours and make sure to use Windows-style path separators.
-
-```
-Windows Registry Editor Version 5.00
-[HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Google\Chrome]
-"ExternalProtocolDialogShowAlwaysOpenCheckbox"=dword:00000001
-
-[HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Edge]
-"ExternalProtocolDialogShowAlwaysOpenCheckbox"=dword:00000001
-
-[HKEY_CLASSES_ROOT\mpv-easy]
-@="mpv-easy"
-"URL Protocol"=""
-
-[HKEY_CLASSES_ROOT\mpv-easy\DefaultIcon]
-@=""
-
-[HKEY_CLASSES_ROOT\mpv-easy\shell]
-@=""
-
-[HKEY_CLASSES_ROOT\mpv-easy\shell\open]
-@=""
-
-[HKEY_CLASSES_ROOT\mpv-easy\shell\open\command]
-@="C:\\path\\to\\mpv-easy-play-with-windows C:\\path\\to\\mpv.exe %1"
-```
+- Download [mpv-easy-play-with-windows](https://github.com/mpv-easy/mpv-easy/releases/latest/download/mpv-easy-play-with-windows)
+- Move mpv-easy-play-with-windows to the same folder as mpv.exe
+- Double-click mpv-easy-play-with-windows
 
 ## npm
 
