@@ -31,8 +31,8 @@ jobs:
           cd ./mpv-easy-ext
           cargo build --release --out-dir=./output -Z unstable-options
           cd ..
-          mv ./mpv-easy-ext/output/mpv-easy-ext.exe ./mpv-easy-ext-windows
-          mv ./mpv-easy-ext/output/mpv-easy-play-with.exe ./mpv-easy-play-with-windows
+          mv ./mpv-easy-ext/output/mpv-easy-ext.exe ./mpv-easy-ext-windows.exe
+          mv ./mpv-easy-ext/output/mpv-easy-play-with.exe ./mpv-easy-play-with-windows.exe
 
 
       # - name: build deno
@@ -87,12 +87,12 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: mpv-easy-ext-windows
-          path: ./mpv-easy-ext-windows
+          path: ./mpv-easy-ext-windows.exe
       - name: Upload windows Artifact play-with
         uses: actions/upload-artifact@v4
         with:
           name: mpv-easy-play-with-windows
-          path: ./mpv-easy-play-with-windows
+          path: ./mpv-easy-play-with-windows.exe
 
       # - name: Upload windows Artifact deno
       #   uses: actions/upload-artifact@v4
@@ -273,18 +273,18 @@ jobs:
           cp ./mpv-easy-ext-dist/mpv-easy-ext-macos ./mpy-easy-macos/scripts/mpv-easy-config/mpv-easy-ext/mpv-easy-ext-macos
           cp ./mpv-easy-ext-dist/mpv-easy-ext-linux ./mpy-easy-linux/scripts/mpv-easy-config/mpv-easy-ext/mpv-easy-ext-linux
           cp ./mpv-easy-ext-dist/mpv-easy-ext-android ./mpy-easy-android/scripts/mpv-easy-config/mpv-easy-ext/mpv-easy-ext-android
-          cp ./mpv-easy-ext-dist/mpv-easy-ext-windows ./mpy-easy-windows/scripts/mpv-easy-config/mpv-easy-ext/mpv-easy-ext-windows
-          # cp ./mpv-easy-ext-dist/mpv-easy-ext-windows ./mpy-easy-deno-windows/scripts/mpv-easy-config/mpv-easy-ext/mpv-easy-ext-windows
-          # cp ./mpv-easy-ext-dist/mpv-easy-ext-windows ./mpy-easy-qjs-windows/scripts/mpv-easy-config/mpv-easy-ext/mpv-easy-ext-windows
-          # cp ./mpv-easy-ext-dist/mpv-easy-ext-windows ./mpy-easy-boa-windows/scripts/mpv-easy-config/mpv-easy-ext/mpv-easy-ext-windows
+          cp ./mpv-easy-ext-dist/mpv-easy-ext-windows.exe ./mpy-easy-windows/scripts/mpv-easy-config/mpv-easy-ext/mpv-easy-ext-windows.exe
+          # cp ./mpv-easy-ext-dist/mpv-easy-ext-windows.exe ./mpy-easy-deno-windows/scripts/mpv-easy-config/mpv-easy-ext/mpv-easy-ext-windows.exe
+          # cp ./mpv-easy-ext-dist/mpv-easy-ext-windows.exe ./mpy-easy-qjs-windows/scripts/mpv-easy-config/mpv-easy-ext/mpv-easy-ext-windows.exe
+          # cp ./mpv-easy-ext-dist/mpv-easy-ext-windows.exe ./mpy-easy-boa-windows/scripts/mpv-easy-config/mpv-easy-ext/mpv-easy-ext-windows.exe
 
           cp ./mpv-easy-play-with-dist/mpv-easy-play-with-macos ./mpy-easy-macos/scripts/mpv-easy-config/mpv-easy-ext/mpv-easy-play-with-macos
           cp ./mpv-easy-play-with-dist/mpv-easy-play-with-linux ./mpy-easy-linux/scripts/mpv-easy-config/mpv-easy-ext/mpv-easy-play-with-linux
           cp ./mpv-easy-play-with-dist/mpv-easy-play-with-android ./mpy-easy-android/scripts/mpv-easy-config/mpv-easy-ext/mpv-easy-play-with-android
-          cp ./mpv-easy-play-with-dist/mpv-easy-play-with-windows ./mpy-easy-windows/scripts/mpv-easy-config/mpv-easy-ext/mpv-easy-play-with-windows
-          # cp ./mpv-easy-play-with-dist/mpv-easy-play-with-windows ./mpy-easy-deno-windows/scripts/mpv-easy-config/mpv-easy-ext/mpv-easy-play-with-windows
-          # cp ./mpv-easy-play-with-dist/mpv-easy-play-with-windows ./mpy-easy-qjs-windows/scripts/mpv-easy-config/mpv-easy-ext/mpv-easy-play-with-windows
-          # cp ./mpv-easy-play-with-dist/mpv-easy-play-with-windows ./mpy-easy-boa-windows/scripts/mpv-easy-config/mpv-easy-ext/mpv-easy-play-with-windows
+          cp ./mpv-easy-play-with-dist/mpv-easy-play-with-windows.exe ./mpy-easy-windows/scripts/mpv-easy-config/mpv-easy-ext/mpv-easy-play-with-windows.exe
+          # cp ./mpv-easy-play-with-dist/mpv-easy-play-with-windows.exe ./mpy-easy-deno-windows/scripts/mpv-easy-config/mpv-easy-ext/mpv-easy-play-with-windows.exe
+          # cp ./mpv-easy-play-with-dist/mpv-easy-play-with-windows.exe ./mpy-easy-qjs-windows/scripts/mpv-easy-config/mpv-easy-ext/mpv-easy-play-with-windows.exe
+          # cp ./mpv-easy-play-with-dist/mpv-easy-play-with-windows.exe ./mpy-easy-boa-windows/scripts/mpv-easy-config/mpv-easy-ext/mpv-easy-play-with-windows.exe
 
 
           # cp ./deno-dll/mpv-deno-windows.dll ./mpy-easy-deno-windows/scripts/mpv-deno-windows.dll

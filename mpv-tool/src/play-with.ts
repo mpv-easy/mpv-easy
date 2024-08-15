@@ -3,7 +3,7 @@ import { joinPath } from "./mpv"
 import { getDefaultBinDirPath } from "./rs-ext"
 
 const defaultMacExeName = "mpv-easy-play-with-macos"
-const defaultWindowsExeName = "mpv-easy-play-with-windows"
+const defaultWindowsExeName = "mpv-easy-play-with-windows.exe"
 const defaultAndroidExeName = "mpv-easy-play-with-android"
 const defaultLinuxExeName = "mpv-easy-play-with-linux"
 

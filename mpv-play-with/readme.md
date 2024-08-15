@@ -24,9 +24,13 @@ You only need to run the mpv player once, and mpv-easy will automatically regist
 
 Make sure you have already installed [yt-dlp](https://github.com/yt-dlp/yt-dlp)
 
-- Download [mpv-easy-play-with-windows](https://github.com/mpv-easy/mpv-easy/releases/latest/download/mpv-easy-play-with-windows)
-- Move mpv-easy-play-with-windows to the same folder as mpv.exe
-- Double-click mpv-easy-play-with-windows
+- Download [mpv-easy-play-with-windows.exe](https://github.com/mpv-easy/mpv-easy/releases/latest/download/mpv-easy-play-with-windows.exe)
+- Move mpv-easy-play-with-windows.exe to the same folder as mpv.exe
+- Double-click mpv-easy-play-with-windows.exe
+
+## protocol test
+You can test whether the protocol is installed successfully by opening the [test link](mpv-easy://H4sIAIYBvmYAAyXLQQqCQBSA4as83jp0GQgRpC6CCIM2ES3UeenQOCP6xmkwITpDV+oinSSh1b/5vxFblXsle8ZoxH/PI9pOYYQ1c9tHYeicC7yxbAsKStOELueyXg+rjdZFtmzj7XDABbJkRbOKfUFda/UtglRU1Fmtqevh+3xDqoXUFRxraggesCOGk7GQGKeh8JDkTgrIjOhlLj4vMy974quSd5wu0/QDJfFha6wAAAA=)
+
 
 ## npm
 
