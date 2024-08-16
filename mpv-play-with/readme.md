@@ -6,7 +6,7 @@ If you use mpv-easy, you only need to start mpv once, and mpv-easy will automati
 
 Inspired by https://github.com/LuckyPuppy514/Play-With-MPV
 
-## install
+## install tampermonkey script
 
 You need to install the [tampermonkey](https://www.tampermonkey.net/) extension first
 
@@ -14,13 +14,18 @@ Then install script [mpv-easy-play-with.user.js](https://github.com/mpv-easy/mpv
 
 When play-with detects videos in the page, you can add all videos to the mpv player through the mpv icon in the bottom left corner
 
-## install protocol
+## install yt-dlp
+You need to make sure that mpv has been configured correctly [yt-dlp](https://github.com/yt-dlp/yt-dlp)
+You can execute the following command in the folder where mpv.exe is located to test whether youtube videos can be played
+```bash
+ ./mpv.exe --log-file=a.log 'https://www.youtube.com/watch?v=BnnbP7pCIvQ'
+```
 
-### mpv-easy
+## install protocol by mpv-easy
 
 You only need to run the mpv player once, and mpv-easy will automatically register the protocol.
 
-## manual steps
+## manual install protocol
 
 Make sure you have already installed [yt-dlp](https://github.com/yt-dlp/yt-dlp)
 
@@ -29,7 +34,11 @@ Make sure you have already installed [yt-dlp](https://github.com/yt-dlp/yt-dlp)
 - Double-click mpv-easy-play-with-windows.exe
 
 ## protocol test
-You can test whether the protocol is installed successfully by opening the [test link](mpv-easy://H4sIAIYBvmYAAyXLQQqCQBSA4as83jp0GQgRpC6CCIM2ES3UeenQOCP6xmkwITpDV+oinSSh1b/5vxFblXsle8ZoxH/PI9pOYYQ1c9tHYeicC7yxbAsKStOELueyXg+rjdZFtmzj7XDABbJkRbOKfUFda/UtglRU1Fmtqevh+3xDqoXUFRxraggesCOGk7GQGKeh8JDkTgrIjOhlLj4vMy974quSd5wu0/QDJfFha6wAAAA=)
+
+You can test whether the protocol is installed successfully by opening the test link
+```
+mpv-easy://H4sIAIYBvmYAAyXLQQqCQBSA4as83jp0GQgRpC6CCIM2ES3UeenQOCP6xmkwITpDV+oinSSh1b/5vxFblXsle8ZoxH/PI9pOYYQ1c9tHYeicC7yxbAsKStOELueyXg+rjdZFtmzj7XDABbJkRbOKfUFda/UtglRU1Fmtqevh+3xDqoXUFRxraggesCOGk7GQGKeh8JDkTgrIjOhlLj4vMy974quSd5wu0/QDJfFha6wAAAA=
+```
 
 
 ## npm
