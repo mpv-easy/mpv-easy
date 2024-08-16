@@ -13,7 +13,7 @@ export function MouseEvent() {
       y={100}
       width={400}
       height={400}
-      backgroundColor="000000"
+      backgroundColor="#000000"
       onMouseDown={({ x, y, offsetX, offsetY }) => {
         console.log("main: ", x, y, offsetX, offsetY)
         setPos({ x, y })
@@ -36,7 +36,7 @@ export function MouseEvent() {
         y={pos.y}
         width={50}
         height={50}
-        backgroundColor="FFFFFF"
+        backgroundColor="#FFFFFF"
       />
 
       <Box
@@ -47,7 +47,7 @@ export function MouseEvent() {
         y={hoverPos.y}
         width={50}
         height={50}
-        backgroundColor="FFFFFFC0"
+        backgroundColor="#FFFFFFC0"
       />
     </Box>
   )

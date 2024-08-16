@@ -16,9 +16,9 @@ When play-with detects videos in the page, you can add all videos to the mpv pla
 
 ## install yt-dlp
 You need to make sure that mpv has been configured correctly [yt-dlp](https://github.com/yt-dlp/yt-dlp)
-You can execute the following command in the folder where mpv.exe is located to test whether youtube videos can be played
-```bash
- ./mpv.exe --log-file=a.log 'https://www.youtube.com/watch?v=BnnbP7pCIvQ'
+You can execute the following powershell command in the folder where mpv.exe is located to test whether youtube videos can be played
+```powershell
+.\mpv.exe --log-file=a.log 'https://www.youtube.com/watch?v=BnnbP7pCIvQ'
 ```
 
 ## install protocol by mpv-easy

@@ -1,11 +1,8 @@
-import { command } from "@mpv-easy/tool"
 import { Box, render } from "@mpv-easy/react"
 import * as ICON from "../icon"
 import React, { useEffect } from "react"
 import { Provider } from "react-redux"
 
-command("set osc no")
-command("set window-dragging no")
 import { useDispatch, useSelector } from "react-redux"
 
 import { createStore } from "redux"
@@ -66,7 +63,7 @@ function Counter() {
           dispatch({ type: "DECREMENT" })
         }}
       />
-      <Box id="box_2" text={count.toString()} backgroundColor={"FF00FF"} />
+      <Box id="box_2" text={count.toString()} backgroundColor={"#FF00FF"} />
       <Box
         id="box_3"
         onMouseDown={() => {

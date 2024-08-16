@@ -19,18 +19,18 @@ export function getAssText(node: MpDom, x: number, y: number) {
   const { text = "" } = node.attributes
   const assScale = getAssScale()
   const font = getFirstValidAttribute(node, "font") ?? ""
-  let color = getFirstValidAttribute(node, "color") ?? "FFFFFFFF"
+  let color = getFirstValidAttribute(node, "color") ?? "#FFFFFFFF"
   const fontSize = getFirstValidAttribute(node, "fontSize") ?? "5%"
   const fontBorderSize = getFirstValidAttribute(node, "fontBorderSize") ?? 0
   const fontBorderColor =
-    getFirstValidAttribute(node, "fontBorderColor") ?? "000000"
+    getFirstValidAttribute(node, "fontBorderColor") ?? "#000000"
   let alpha = "FF"
-  if (color.length === 6) {
+  if (color.length === 7 || color.length === 6) {
     alpha = "00"
   }
-  if (color.length === 8) {
-    alpha = color.slice(6, 8)
-    color = color.slice(0, 6)
+  if (color.length === 8 || color.length === 9) {
+    alpha = color.slice(-2)
+    color = color.slice(0, -2)
   }
   return GetAssTextAssdraw.clear()
     .pos(x, y)

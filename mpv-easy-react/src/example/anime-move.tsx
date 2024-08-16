@@ -24,7 +24,7 @@ export function AnimeMove() {
           left={`${v.value}%`}
           top={`${v.value}%`}
           fontSize={32}
-          color="00FF00"
+          color="#00FF00"
           text={"⏹︎"}
         />
       )}

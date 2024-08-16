@@ -1,5 +1,5 @@
-import { Box, render } from "@mpv-easy/react"
-import React, { useEffect, useState } from "react"
+import { Box } from "@mpv-easy/react"
+import React from "react"
 
 export function TextAlign() {
   return (
@@ -11,8 +11,8 @@ export function TextAlign() {
       fontSize={32}
       // width={600}
       // height={400}
-      backgroundColor="FF0000"
-      color="0000FF"
+      backgroundColor="#FF0000"
+      color="#0000FF"
       justifyContent="center"
       alignItems="center"
     />

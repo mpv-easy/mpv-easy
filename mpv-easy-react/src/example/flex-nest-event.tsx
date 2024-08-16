@@ -35,7 +35,7 @@ export function FlexNestEvent() {
       id="flex-main"
       width={"50%"}
       height={"50%"}
-      backgroundColor="FF0000"
+      backgroundColor="#FF0000"
       display="flex"
       flexDirection="column"
       justifyContent="center"
@@ -46,7 +46,7 @@ export function FlexNestEvent() {
         id="flex-1"
         width={"50%"}
         height={"50%"}
-        backgroundColor="0000FF"
+        backgroundColor="#0000FF"
         display="flex"
         flexDirection="column"
         justifyContent="center"
@@ -57,7 +57,7 @@ export function FlexNestEvent() {
           id="flex-2"
           width={"50%"}
           height={"50%"}
-          backgroundColor="00FFFF"
+          backgroundColor="#00FFFF"
           display="flex"
           {...createHandler(3)}
           onMouseUp={(e) => {

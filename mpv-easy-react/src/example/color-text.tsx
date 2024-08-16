@@ -1,4 +1,4 @@
-import { Box, render } from "@mpv-easy/react"
+import { Box } from "@mpv-easy/react"
 import React from "react"
 
 import { COLORS } from "e-color"
@@ -10,7 +10,7 @@ const boxW = `${(1 / col) * 100}%`
 const boxH = `${(1 / row) * 100}%`
 
 const colorList = Object.entries(COLORS).map(
-  ([name, value]) => [name, value.toString(16).padStart(6, "0")] as const,
+  ([name, value]) => [name, `#${value.toString(16).padStart(6, "0")}`] as const,
 )
 
 export function ColorText() {

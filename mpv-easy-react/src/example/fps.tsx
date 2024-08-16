@@ -7,8 +7,8 @@ const high = 60
 const step = 5
 const count = (high - low) / step + 1
 
-const bg = "000000"
-const color = "FFFFFF"
+const bg = "#000000"
+const color = "#FFFFFF"
 const cursorSize = 16
 export function Fps() {
   const osd = { width: 0, height: 0, ...getOsdSize() }

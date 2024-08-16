@@ -87,7 +87,7 @@ function renderNodeToMpv(node: MpDom) {
     let {
       backgroundColor,
       borderSize,
-      borderColor = "FFFFFFFF",
+      borderColor = "#FFFFFFFF",
       padding = 0,
       justifyContent = "start",
       alignItems = "start",
@@ -107,7 +107,7 @@ function renderNodeToMpv(node: MpDom) {
         ? parsePercentage(borderRadius) * layoutNode.width
         : borderRadius
 
-    if (borderColor.length === 6) {
+    if (borderColor.length === 7) {
       borderColor += "00"
     }
 
@@ -256,7 +256,7 @@ function renderNodeToMpv(node: MpDom) {
 
     // bg ovl
     if (typeof backgroundColor !== "undefined") {
-      if (backgroundColor.length === 6) {
+      if (backgroundColor.length === 7) {
         backgroundColor += "00"
       }
 

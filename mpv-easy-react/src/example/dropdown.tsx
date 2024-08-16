@@ -1,17 +1,13 @@
-import { PropertyBool, command, observeProperty } from "@mpv-easy/tool"
-import { Box, Button, Dropdown, render } from "@mpv-easy/react"
+import { Box, Dropdown } from "@mpv-easy/react"
 import * as ICON from "../icon"
-import React, { useEffect, useState } from "react"
+import React, { useState } from "react"
 
-command("set osc no")
-
-const White = "FFFFFF"
-const Gray = "cccccc"
-const Black = "000000"
-const Yellow = "00FFFF"
+const White = "#FFFFFF"
+const Gray = "#cccccc"
+const Black = "#000000"
+const Yellow = "#00FFFF"
 
 const boxSize = 200
-const padding = 10
 export function DropdownBox() {
   const [count, setCount] = useState(0)
 

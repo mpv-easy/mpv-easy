@@ -69,13 +69,13 @@ function Counter() {
           console.log("minus: ", count)
           dispatch({ type: "DECREMENT" })
         }}
-        backgroundColor={"00FFFF"}
-        backgroundColorHover={"FF0000"}
+        backgroundColor={"#00FFFF"}
+        backgroundColorHover={"#FF0000"}
       />
-      <Box text={count.toString()} backgroundColor={"FF00FF"} />
+      <Box text={count.toString()} backgroundColor={"#FF00FF"} />
       <Button
-        backgroundColor={"FFFF00"}
-        backgroundColorHover={"0FFFF0"}
+        backgroundColor={"#FFFF00"}
+        backgroundColorHover={"#0FFFF0"}
         onMouseDown={() => {
           console.log("plus: ", count)
           dispatch({ type: "INCREMENT" })

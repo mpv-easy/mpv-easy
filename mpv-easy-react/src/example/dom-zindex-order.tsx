@@ -13,7 +13,7 @@ export function DomOrder() {
         y={100}
         width={200}
         height={200}
-        backgroundColor="00FF00"
+        backgroundColor="#00FF00"
         onMouseDown={(e) => {
           console.log("======dom")
           // e.stopPropagation()
@@ -31,7 +31,7 @@ export function DomOrder() {
         y={200}
         width={200}
         height={200}
-        backgroundColor="FF0000"
+        backgroundColor="#FF0000"
       />
     </Box>
   )

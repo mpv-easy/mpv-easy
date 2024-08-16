@@ -1,13 +1,6 @@
-import { useOsdDimensions, usePause, usePropertyBool } from "@mpv-easy/react"
-import {
-  PropertyBool,
-  addForcedKeyBinding,
-  addKeyBinding,
-  choice,
-  command,
-  observeProperty,
-} from "@mpv-easy/tool"
-import { Box, render } from "@mpv-easy/react"
+import { useOsdDimensions } from "@mpv-easy/react"
+import { addForcedKeyBinding, choice } from "@mpv-easy/tool"
+import { Box } from "@mpv-easy/react"
 import React, { useEffect, useRef, useState } from "react"
 
 const cellHCount = 4
@@ -15,10 +8,10 @@ const borderSize = 4
 const initSnakeLen = 3
 const speed = 1000
 
-const snakeColor = "FFFFFFC0"
-const snakeHeadColor = "FFFFFF"
-const foodColor = "00FFFF"
-const borderColor = "FFFFFF"
+const snakeColor = "#FFFFFFC0"
+const snakeHeadColor = "#FFFFFF"
+const foodColor = "#00FFFF"
+const borderColor = "#FFFFFF"
 
 const keyMap = [
   ["w", 0],
@@ -170,7 +163,7 @@ export function SnakeGame() {
       position="relative"
       width={"100%"}
       height={"100%"}
-      backgroundColor="000000"
+      backgroundColor="#000000"
       alignItems="center"
     >
       {Array(xCount * yCount)
@@ -178,7 +171,7 @@ export function SnakeGame() {
         .map((_, k) => {
           const x = k % xCount
           const y = (k / xCount) | 0
-          let color = "000000"
+          let color = "#000000"
           let borderRadius = 0
 
           if (body.length) {

@@ -1,10 +1,10 @@
 import { Box } from "@mpv-easy/solid"
 import { createSignal } from "solid-js"
 
-const White = "FFFFFF"
-const Gray = "cccccc"
-const Black = "000000"
-const Yellow = "00FFFF"
+const White = "#FFFFFF"
+const Gray = "#cccccc"
+const Black = "#000000"
+const Yellow = "#00FFFF"
 
 const boxSize = 200
 const padding = 10
@@ -26,8 +26,8 @@ export function CounterUI() {
         flexDirection="column"
         justifyContent="start"
         alignItems="start"
-        color="00FF00"
-        backgroundColor="00FFFF"
+        color="#00FF00"
+        backgroundColor="#00FFFF"
         text={`${count()}`}
       />
       <Box
@@ -37,8 +37,8 @@ export function CounterUI() {
         flexDirection="column"
         justifyContent="start"
         alignItems="start"
-        color="00FF00"
-        backgroundColor="00FFFF"
+        color="#00FF00"
+        backgroundColor="#00FFFF"
         text={`${double()}`}
       />
     </>

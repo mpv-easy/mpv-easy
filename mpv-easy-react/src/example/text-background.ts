@@ -11,7 +11,7 @@ const rect = ovl.update()
 const rectOvl = new OsdOverlay({
   data: drawRect({
     ...rect,
-    color: "000000C0",
+    color: "#000000C0",
   }),
 })
 

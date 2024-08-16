@@ -1,7 +1,6 @@
 import React from "react"
 
-import { Box, AutoHide, render } from "@mpv-easy/react"
-import { Progress } from "./progress"
+import { Box, AutoHide } from "@mpv-easy/react"
 
 export function AutoHideBox() {
   return (
@@ -13,7 +12,7 @@ export function AutoHideBox() {
       display="flex"
       justifyContent="center"
       alignItems="center"
-      backgroundColor="00FF00A0"
+      backgroundColor="#00FF00A0"
     >
       <AutoHide
         showDelay={0}
@@ -23,7 +22,7 @@ export function AutoHideBox() {
         justifyContent="center"
         alignItems="center"
       >
-        <Box width={500} height={500} backgroundColor="00FFFFA0" />
+        <Box width={500} height={500} backgroundColor="#00FFFFA0" />
       </AutoHide>
     </Box>
   )

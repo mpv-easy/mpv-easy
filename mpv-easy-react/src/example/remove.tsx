@@ -15,7 +15,7 @@ export const Remove = () => {
         id="tooltip"
         width={100}
         height={100}
-        backgroundColor={show ? "00FFFF" : "00FF00"}
+        backgroundColor={show ? "#00FFFF" : "#00FF00"}
       />
     )
   )
@@ -31,6 +31,6 @@ render(
     alignItems="center"
   >
     <Remove />
-    <Box id="tooltip" width={100} height={100} backgroundColor={"FFFFFF"} />
+    <Box id="tooltip" width={100} height={100} backgroundColor={"#FFFFFF"} />
   </Box>,
 )

@@ -1,4 +1,4 @@
-import { Box, render } from "@mpv-easy/react"
+import { Box } from "@mpv-easy/react"
 import React from "react"
 
 const size = 200
@@ -11,8 +11,8 @@ export function BorderText() {
       text="ABCD"
       fontBorderSize={8}
       fontSize={48}
-      fontBorderColor={"FF0000C0"}
-      backgroundColor="00FFFFA0"
+      fontBorderColor={"#FF0000C0"}
+      backgroundColor="#00FFFFA0"
     />
   )
 }

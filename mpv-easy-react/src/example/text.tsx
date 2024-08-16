@@ -1,6 +1,4 @@
-import { command } from "@mpv-easy/tool"
-import { Box, render } from "@mpv-easy/react"
-import * as ICON from "../icon"
+import { Box } from "@mpv-easy/react"
 import React from "react"
 
 // const TEXT = [
@@ -119,7 +117,7 @@ export function TextBox() {
             text={TEXT[k]}
             font="JetBrainsMono NFM Regular"
             backgroundColor="FF0000"
-            color="00FF00"
+            color="#00FF00"
             display="flex"
             fontSize={64}
             // height={"100%"}
@@ -128,18 +126,18 @@ export function TextBox() {
         ))}
       </Box>
 
-      {/* <Box fontSize={64} id="-0+1111" backgroundColor="FF00FF">
+      {/* <Box fontSize={64} id="-0+1111" backgroundColor="#FF00FF">
         <Box text="-" id="t1111111111111" />
       </Box>
-      <Box fontSize={64} backgroundColor="FF00FF" id="-0+2222">
+      <Box fontSize={64} backgroundColor="#FF00FF" id="-0+2222">
         <Box text="+" id="t22222222222" />
       </Box>
-      <Box fontSize={64} backgroundColor="FF00FF" id="-0+3333">
+      <Box fontSize={64} backgroundColor="#FF00FF" id="-0+3333">
         <Box text="*" id="t3333333" />
       </Box>
       <Box
         fontSize={64}
-        backgroundColor="FF00FF"
+        backgroundColor="#FF00FF"
         font="JetBrainsMono NFM Regular"
         id="-0+3333"
       >
@@ -148,7 +146,7 @@ export function TextBox() {
       <Box
         fontSize={64}
         font="JetBrainsMono NFM Regular"
-        backgroundColor="FF00FF"
+        backgroundColor="#FF00FF"
         id="-0+3333"
       >
         <Box text={ICON.Play} id="t3333333" />
@@ -156,7 +154,7 @@ export function TextBox() {
       <Box
         fontSize={64}
         font="JetBrainsMono NFM Regular"
-        backgroundColor="FF00FF"
+        backgroundColor="#FF00FF"
         id="-0+3333"
       >
         <Box text={ICON.Stop} id="t3333333" />
@@ -164,7 +162,7 @@ export function TextBox() {
       <Box
         fontSize={64}
         font="JetBrainsMono NFM Regular"
-        backgroundColor="FF00FF"
+        backgroundColor="#FF00FF"
         id="-0+3333"
       >
         <Box text={ICON.Minus} id="t3333333" />
@@ -172,7 +170,7 @@ export function TextBox() {
       <Box
         fontSize={64}
         font="JetBrainsMono NFM Regular"
-        backgroundColor="FF00FF"
+        backgroundColor="#FF00FF"
         id="-0+3333"
       >
         <Box text={ICON.Plus} id="t3333333" />
@@ -182,7 +180,7 @@ export function TextBox() {
         fontSize={16}
         text={TEXT.join("")}
         font="JetBrainsMono NFM Regular"
-        backgroundColor="FF00FF"
+        backgroundColor="#FF00FF"
         id="-0+6555"
       /> */}
     </>

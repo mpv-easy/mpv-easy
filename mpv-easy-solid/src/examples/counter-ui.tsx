@@ -1,17 +1,13 @@
-import { PropertyBool, command, observeProperty } from "@mpv-easy/tool"
 import { Box, Button } from "@mpv-easy/solid"
 import * as ICON from "../icon"
 import { createSignal } from "solid-js"
 
-command("set osc no")
-
-const White = "FFFFFF"
-const Gray = "cccccc"
-const Black = "000000"
-const Yellow = "00FFFF"
+const White = "#FFFFFF"
+const Gray = "#cccccc"
+const Black = "#000000"
+const Yellow = "#00FFFF"
 
 const boxSize = 200
-const padding = 10
 
 export function CounterUI() {
   const [count, setCount] = createSignal(0)

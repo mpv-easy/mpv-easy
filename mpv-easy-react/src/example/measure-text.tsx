@@ -25,7 +25,7 @@ export function MeasureText() {
 
       console.log(JSON.stringify(rect))
 
-      const s = drawRect({ ...rect, color: "00FF00A0" })
+      const s = drawRect({ ...rect, color: "#00FF00A0" })
       const rectOvl = new OsdOverlay()
       rectOvl.data = s.toString()
       rectOvl.hidden = false

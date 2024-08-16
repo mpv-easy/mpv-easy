@@ -1,5 +1,5 @@
 import React from "react"
-import { Box, render } from "@mpv-easy/react"
+import { Box } from "@mpv-easy/react"
 
 const createHandler = (id: string | number) => {
   return {
@@ -36,14 +36,14 @@ export const Wheel = () => {
         justifyContent="space-between"
         alignItems="center"
         {...createHandler(2)}
-        backgroundColor="0000FFA0"
+        backgroundColor="#0000FFA0"
       >
         <Box
           id="3"
           width={"20%"}
           height={"20%"}
           {...createHandler(3)}
-          backgroundColor="00FFFFA0"
+          backgroundColor="#00FFFFA0"
         />
 
         <Box
@@ -51,7 +51,7 @@ export const Wheel = () => {
           width={"20%"}
           height={"20%"}
           {...createHandler(4)}
-          backgroundColor="00FFFFA0"
+          backgroundColor="#00FFFFA0"
         />
       </Box>
     </Box>

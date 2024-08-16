@@ -1,5 +1,5 @@
 import React from "react"
-import { Box, render } from "@mpv-easy/react"
+import { Box } from "@mpv-easy/react"
 
 export function FontSize() {
   return (
@@ -7,9 +7,9 @@ export function FontSize() {
       <Box
         id="box"
         fontSize={"100%"}
-        color="00FF00"
+        color="#00FF00"
         text="ABCD"
-        backgroundColor="00FFFFA0"
+        backgroundColor="#00FFFFA0"
       />
     </>
   )

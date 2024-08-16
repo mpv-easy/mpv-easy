@@ -28,8 +28,8 @@ export function BorderBoxList() {
       position="relative"
       padding={size}
       borderSize={size}
-      backgroundColor="00FF00A0"
-      borderColor="0000FFA0"
+      backgroundColor="#00FF00A0"
+      borderColor="#0000FFA0"
     >
       {Array(6)
         .fill(0)
@@ -40,10 +40,10 @@ export function BorderBoxList() {
               key={k}
               width={size}
               height={size}
-              backgroundColor="00FFFF"
-              borderColor="FF0000A0"
+              backgroundColor="#00FFFF"
+              borderColor="#FF0000A0"
               borderSize={size}
-              fontBorderColor="0000FFA0"
+              fontBorderColor="#0000FFA0"
               padding={size}
               zIndex={100}
             />

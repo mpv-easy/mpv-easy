@@ -130,6 +130,15 @@ export class AssDraw {
       )
     }
 
+    if (color.length === 7) {
+      return this.append(`{\\3c${color.slice(1, 7)}&}`)
+    }
+    if (color.length === 9) {
+      return this.append(`{\\3c&${color.slice(1, 7)}&}`).fontBorderAlpha(
+        color.slice(7, 9),
+      )
+    }
+
     throw new Error(`color error: ${color}`)
   }
   newLine() {
@@ -297,6 +306,13 @@ export class AssDraw {
     if (color.length === 6) {
       return this.append(`{\\c&${color}&}`)
     }
+
+    if (color.length === 9) {
+      return this.append(`{\\c&${color.slice(1, 7)}&}`).alpha(color.slice(7, 9))
+    }
+    if (color.length === 7) {
+      return this.append(`{\\c&${color.slice(1, 7)}&}`)
+    }
     throw new Error(`AssDraw color error: ${color}`)
   }
 
@@ -358,10 +374,10 @@ export function drawRect({
   x,
   y,
   borderSize = 0,
-  color = "00000000",
+  color = "#00000000",
   width,
   height,
-  borderColor = "00000000",
+  borderColor = "#00000000",
   borderRadius = 0,
 }: {
   x: number

@@ -5,8 +5,8 @@ import * as ICON from "../icon"
 import React, { useEffect, useState } from "react"
 
 const pauseProp = new PropertyBool("pause")
-const iconColor = "00FF00"
-const iconHoverColor = "00FFFF"
+const iconColor = "#00FF00"
+const iconHoverColor = "#00FFFF"
 const pauseIcon = ICON.Pause
 const playIcon = ICON.Play
 

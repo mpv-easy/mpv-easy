@@ -6,8 +6,8 @@ const row = 3
 const col = 3
 import { COLORS } from "e-color"
 
-const colorList = Object.values(COLORS).map((i) =>
-  i.toString(16).padStart(6, "0"),
+const colorList = Object.values(COLORS).map(
+  (i) => `#${i.toString(16).padStart(6, "0")}`,
 )
 
 export function BoxClick() {
@@ -23,7 +23,7 @@ export function BoxClick() {
         id={k.toString()}
         width={boxW}
         height={boxH}
-        backgroundColor={select === k ? "000000" : colorList[k]}
+        backgroundColor={select === k ? "#000000" : colorList[k]}
         onClick={() => {
           console.log("k:", k)
           setSelect(k)

@@ -2,7 +2,7 @@ import { Box, render } from "@mpv-easy/react"
 import React from "react"
 
 const size = 400
-const color = "000000A0"
+const color = "#000000A0"
 export function AlphaMix() {
   return (
     <>

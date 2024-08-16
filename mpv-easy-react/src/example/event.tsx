@@ -1,4 +1,4 @@
-import { Box, render } from "@mpv-easy/react"
+import { Box } from "@mpv-easy/react"
 import React from "react"
 
 export function BoxEvent() {
@@ -6,19 +6,19 @@ export function BoxEvent() {
     <Box
       width={"50%"}
       height={"50%"}
-      backgroundColor="FF0000"
+      backgroundColor="#FF0000"
       onMouseDown={() => console.log("1")}
     >
       <Box
         width={"50%"}
         height={"50%"}
-        backgroundColor="00FF00"
+        backgroundColor="#00FF00"
         onMouseDown={() => console.log("2")}
       >
         <Box
           width={"50%"}
           height={"50%"}
-          backgroundColor="0000FF"
+          backgroundColor="#0000FF"
           onMouseDown={() => console.log("3")}
         />
       </Box>

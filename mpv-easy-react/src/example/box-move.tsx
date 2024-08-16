@@ -19,15 +19,15 @@ export function BoxMove() {
         width={"50%"}
         height={"50%"}
         display="flex"
-        backgroundColor="000000A0"
+        backgroundColor="#000000A0"
         justifyContent="center"
         alignItems="center"
       >
         <Box
           position="absolute"
           text="aaaaaaaaaaaaa"
-          color="000000"
-          backgroundColor="00FFFF"
+          color="#000000"
+          backgroundColor="#00FFFF"
           width={200}
           height={200}
           left={x}

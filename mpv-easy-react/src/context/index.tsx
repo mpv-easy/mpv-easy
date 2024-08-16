@@ -16,9 +16,9 @@ export type StoreState = {
 
 export const defaultState: StoreState = {
   count: 0,
-  color: "FF0000",
-  backgroundColor: "00FF00",
-  progressBackgroundColor: "0000FF",
+  color: "#FF0000",
+  backgroundColor: "#00FF00",
+  progressBackgroundColor: "#0000FF",
   controlButtonPadding: 16,
   controlButtonFontSize: 32,
 }
@@ -44,16 +44,16 @@ const storeReducer = (state: StoreState, action: Action): StoreState => {
     case "LIGHT_MODE":
       return {
         ...state,
-        color: "00FF00",
-        backgroundColor: "0000FF",
-        progressBackgroundColor: "00FFFF",
+        color: "#00FF00",
+        backgroundColor: "#0000FF",
+        progressBackgroundColor: "#00FFFF",
       }
     case "DARK_MODE":
       return {
         ...state,
-        color: "FF0000",
-        backgroundColor: "00FF00",
-        progressBackgroundColor: "0000FF",
+        color: "#FF0000",
+        backgroundColor: "#00FF00",
+        progressBackgroundColor: "#0000FF",
       }
     default:
       throw new Error("dispatch action type not found")

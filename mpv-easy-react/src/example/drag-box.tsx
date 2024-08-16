@@ -1,4 +1,4 @@
-import { Box, render } from "@mpv-easy/react"
+import { Box } from "@mpv-easy/react"
 import React, { useRef, useState } from "react"
 
 const size = 200
@@ -44,7 +44,7 @@ export function DragBox() {
         y={pos.y}
         width={size}
         height={size}
-        backgroundColor={move ? "00FFFF" : "00FF00"}
+        backgroundColor={move ? "#00FFFF" : "#00FF00"}
       />
     </Box>
   )

@@ -21,8 +21,8 @@ function CounterA() {
       <Box
         display="flex"
         fontSize={128}
-        color="FFFFFF"
-        backgroundColor="000000A0"
+        color="#FFFFFF"
+        backgroundColor="#000000A0"
       >
         <Box
           text="-"
@@ -53,8 +53,8 @@ function CounterB() {
       <Box
         display="flex"
         fontSize={128}
-        color="FFFFFF"
-        backgroundColor="000000A0"
+        color="#FFFFFF"
+        backgroundColor="#000000A0"
       >
         <Box
           text="-"

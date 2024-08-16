@@ -2,10 +2,10 @@ import { Box, Button } from "@mpv-easy/react"
 import React from "react"
 
 const button = {
-  color: "FFFFFF",
-  backgroundColor: "000000",
-  colorHover: "00FFFF",
-  backgroundColorHover: "233233",
+  color: "#FFFFFF",
+  backgroundColor: "#000000",
+  colorHover: "#00FFFF",
+  backgroundColorHover: "#233233",
   fontSize: 64,
 }
 
@@ -15,7 +15,7 @@ export function ButtonPrefix() {
       id="flex-main"
       width={"50%"}
       height={"50%"}
-      backgroundColor="FF0000"
+      backgroundColor="#FF0000"
       display="flex"
       flexDirection="column"
       justifyContent="center"
@@ -25,7 +25,7 @@ export function ButtonPrefix() {
         id="flex-1"
         width={"50%"}
         height={"50%"}
-        backgroundColor="0000FF"
+        backgroundColor="#0000FF"
         display="flex"
         flexDirection="row"
         justifyContent="start"

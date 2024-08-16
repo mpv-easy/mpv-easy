@@ -2,7 +2,7 @@ import { Box, Tooltip } from "@mpv-easy/react"
 import React from "react"
 
 const size = 400
-const dark = "000000A0"
+const dark = "#000000A0"
 export function TooltipBox() {
   return (
     <Box id="tooltip-main" title="tooltip-main" width={"100%"} height={"100%"}>
@@ -43,7 +43,11 @@ export function TooltipBox() {
         backgroundColor={dark}
       />
 
-      <Tooltip tooltipThrottle={300} color="00FFFF" backgroundColor="00FF00" />
+      <Tooltip
+        tooltipThrottle={300}
+        color="#00FFFF"
+        backgroundColor="#00FF00"
+      />
     </Box>
   )
 }

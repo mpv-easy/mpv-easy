@@ -9,11 +9,11 @@ export function Counter() {
     <>
       <Box
         text={Minus}
-        color="FF0000"
+        color="#FF0000"
         width={100}
         height={100}
         fontSize={64}
-        backgroundColor={"233233A0"}
+        backgroundColor={"#233233A0"}
         display="flex"
         justifyContent="center"
         alignItems="center"
@@ -28,8 +28,8 @@ export function Counter() {
         alignItems="center"
         width={100}
         height={100}
-        backgroundColor={count % 2 ? "000000A0" : "00FFFFA0"}
-        color="00FF00"
+        backgroundColor={count % 2 ? "#000000A0" : "#00FFFFA0"}
+        color="#00FF00"
         fontSize={64}
         text={count.toString()}
       />
@@ -39,11 +39,11 @@ export function Counter() {
         alignItems="center"
         text={Plus}
         font="JetBrainsMono NFM Regular"
-        color="0000FF"
+        color="#0000FF"
         width={100}
         height={100}
         fontSize={64}
-        backgroundColor={"233233A0"}
+        backgroundColor={"#233233A0"}
         onMouseDown={() => {
           console.log("count: ", count)
           setCount((c) => c + 1)

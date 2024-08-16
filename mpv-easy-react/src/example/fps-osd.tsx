@@ -28,7 +28,7 @@ const ovlList = Array(count)
 
 setTimeout(() => {
   for (let i = 0; i < count; i++) {
-    const color = Object.values(COLORS)[i].toString(16).padStart(6, "0")
+    const color = `#${Object.values(COLORS)[i].toString(16).padStart(6, "0")}`
     const scale = getAssScale()
     const ovl = ovlList[i]
     const osd = { width: 0, height: 0, ...getOsdSize() }
@@ -55,7 +55,7 @@ addKeyBinding("space", "space", () => {
   for (let i = 0; i < count; i++) {
     const inv = i * step + low
     const osd = { width: 0, height: 0, ...getOsdSize() }
-    const color = Object.values(COLORS)[i].toString(16).padStart(6, "0")
+    const color = `#${Object.values(COLORS)[i].toString(16).padStart(6, "0")}`
     const ovl = ovlList[i]
     ovl.ovl.update()
     const scale = getAssScale()

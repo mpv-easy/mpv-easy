@@ -1,10 +1,10 @@
 import type { MousePos, VideoParams } from "@mpv-easy/tool"
 import { DefaultFps } from "@mpv-easy/react"
 
-const White = "FFFFFF"
-const Black = "000000"
-const Gray = "D3D3D3"
-const Yellow = "00FFFF"
+const White = "#FFFFFF"
+const Black = "#000000"
+const Gray = "#D3D3D3"
+const Yellow = "#00FFFF"
 
 const AlphaHide = "FF"
 const AlphaHigh = "C0"

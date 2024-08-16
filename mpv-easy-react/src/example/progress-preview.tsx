@@ -5,7 +5,6 @@ import React, { useState, useRef } from "react"
 
 const cursorSize = 100
 const cursorHoverWidth = 100
-const thumbFormat = "bgra"
 const thumbId = 42
 
 let thumb: ThumbFast
@@ -35,7 +34,7 @@ export function ProgressPreview() {
       height={100}
       bottom={0}
       fontSize={100}
-      backgroundColor="FF0000"
+      backgroundColor="#FF0000"
       onMouseDown={(e) => {
         const w = e.target?.layoutNode.width || 0
         const per = e.offsetX / w
@@ -65,7 +64,7 @@ export function ProgressPreview() {
         position="relative"
         left={0}
         top={0}
-        color="FFFFFF"
+        color="#FFFFFF"
         text={left.toFixed(2)}
       />
       <Box
@@ -74,7 +73,7 @@ export function ProgressPreview() {
         width={cursorSize}
         left={`${left * 100}%`}
         height={100}
-        backgroundColor="00FF00"
+        backgroundColor="#00FF00"
       />
       <Box
         ref={hoverCursorRef}
@@ -83,7 +82,7 @@ export function ProgressPreview() {
         width={cursorHoverWidth}
         left={`${leftHover * 100}%`}
         height={100}
-        backgroundColor="0000FF"
+        backgroundColor="#0000FF"
         hide={hoverHide || !hoverCursorRef.current}
       >
         <Box

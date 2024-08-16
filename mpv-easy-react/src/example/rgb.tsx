@@ -23,7 +23,7 @@ export function Rgb() {
     const r = (((x / row) * 255) | 0).toString(16).padStart(2, "0")
     const g = (((y / col) * 255) | 0).toString(16).padStart(2, "0")
     const b = blue.toString(16).padStart(2, "0")
-    const c = `${r}${g}${b}`
+    const c = `#${r}${g}${b}`
     return (
       <Box
         key={k}

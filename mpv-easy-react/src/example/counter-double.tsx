@@ -2,13 +2,7 @@ import React, { useEffect } from "react"
 import { Box } from "@mpv-easy/react"
 import { useState } from "react"
 
-const White = "FFFFFF"
-const Gray = "cccccc"
-const Black = "000000"
-const Yellow = "00FFFF"
-
 const boxSize = 200
-const padding = 10
 
 export function CounterDouble() {
   const [count, setCount] = useState(0)
@@ -28,8 +22,8 @@ export function CounterDouble() {
         flexDirection="column"
         justifyContent="start"
         alignItems="start"
-        color="00FF00"
-        backgroundColor="00FFFF"
+        color="#00FF00"
+        backgroundColor="#00FFFF"
         text={`${count}`}
       />
       <Box
@@ -39,8 +33,8 @@ export function CounterDouble() {
         flexDirection="column"
         justifyContent="start"
         alignItems="start"
-        color="00FF00"
-        backgroundColor="00FFFF"
+        color="#00FF00"
+        backgroundColor="#00FFFF"
         text={`${double}`}
       />
     </>

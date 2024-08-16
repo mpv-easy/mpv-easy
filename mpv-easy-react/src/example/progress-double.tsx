@@ -46,7 +46,7 @@ function Progress({
     >
       <Box
         position="relative"
-        color="FFFFFF"
+        color="#FFFFFF"
         fontSize={100}
         text={left.toFixed(2)}
         display="flex"
@@ -60,7 +60,7 @@ function Progress({
         width={cursorSize}
         left={`${left * 100}%`}
         height={"100%"}
-        backgroundColor="00FF00"
+        backgroundColor="#00FF00"
       />
       <Box
         id={`${id}-hover-cursor`}
@@ -68,7 +68,7 @@ function Progress({
         width={cursorHoverWidth}
         left={`${leftHover * 100}%`}
         height={"100%"}
-        backgroundColor="0000FF"
+        backgroundColor="#0000FF"
       />
     </Box>
   )
@@ -85,19 +85,19 @@ export function ProgressDouble() {
       flexDirection="row"
       justifyContent="end"
       alignItems="center"
-      backgroundColor="0000FFA0"
+      backgroundColor="#0000FFA0"
     >
       <Progress
         id="progress1"
         width="100%"
         height={"45%"}
-        backgroundColor="0FFFFF"
+        backgroundColor="#0FFFFF"
       />
       <Progress
         id="progress2"
         width="100%"
         height={"45%"}
-        backgroundColor="0FFFFF"
+        backgroundColor="#0FFFFF"
       />
     </Box>
   )
