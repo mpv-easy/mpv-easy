@@ -1,41 +1,39 @@
 import { getOsdSize } from "@mpv-easy/tool"
-import { Box, render } from "@mpv-easy/react"
+import { Box } from "@mpv-easy/react"
 import React, { useEffect, useState } from "react"
 
 const row = 10
 const col = 10
-import { COLORS } from "e-color"
 
-const colorList = Object.values(COLORS).map((i) =>
-  i.toString(16).padStart(6, "0"),
-)
-
-export function ColorBox() {
+export function Rgb() {
   const { width, height } = getOsdSize()!
-  const [count, setCount] = useState(0)
-
+  const [blue, setBlue] = useState(0)
   useEffect(() => {
     setInterval(() => {
-      setCount((c) => c + 1)
+      setBlue((c) => (c + 5) % 255)
     }, 100)
   }, [])
 
   const boxW = width / col
   const boxH = height / row
 
-  // console.log(boxW, boxH, colorList.join(","))
   return new Array(row * col).fill(0).map((_, k) => {
+    const x = (k / col) | 0
+    const y = k % col
+    const r = (((x / row) * 255) | 0).toString(16).padStart(2, "0")
+    const g = (((y / col) * 255) | 0).toString(16).padStart(2, "0")
+    const b = blue.toString(16).padStart(2, "0")
+    const c = `${r}${g}${b}`
     return (
       <Box
         key={k}
         id={k.toString()}
         width={boxW}
         height={boxH}
-        backgroundColor={colorList[k]}
-        text={`${count}`}
+        backgroundColor={c}
       />
     )
   })
 }
 
-export default ColorBox
+export default Rgb
