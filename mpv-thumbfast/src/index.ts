@@ -199,14 +199,14 @@ export class ThumbFast {
     ThumbFastSet.add(this)
   }
 
-  seek(time: number) {
+  run(cmd: string) {
     // sync: for waiting image write to file
     commandNative({
       name: "subprocess",
       args: [
         getOs() === "windows" ? "cmd" : "sh",
         getOs() === "windows" ? "/c" : "-c",
-        `echo set time-pos ${time} > \\\\.\\pipe\\${this.ipcId}`,
+        `echo ${cmd} > \\\\.\\pipe\\${this.ipcId}`,
         // `echo async seek ${time} absolute+keyframes > \\\\.\\pipe\\${this.ipcId}`,
         // `echo seek ${time} absolute+keyframes > \\\\.\\pipe\\${this.ipcId}`,
       ],
@@ -216,19 +216,13 @@ export class ThumbFast {
     })
   }
 
+  seek(time: number) {
+    this.run(`set time-pos ${time}`)
+  }
+
   exit() {
     try {
-      commandNative({
-        name: "subprocess",
-        args: [
-          getOs() === "windows" ? "cmd" : "sh",
-          getOs() === "windows" ? "/c" : "-c",
-          `echo quit > \\\\.\\pipe\\${this.ipcId}`,
-        ],
-        playback_only: true,
-        capture_stdout: true,
-        capture_stderr: true,
-      })
+      this.run("quit")
       abortAsyncCommand(this.subprocessId)
     } catch (e) {
       console.log("ThumbFast abortAsyncCommand error: ", e)
