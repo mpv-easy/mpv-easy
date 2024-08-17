@@ -50,7 +50,7 @@ export const OscControl = ({ height, width }: Partial<MpDomProps>) => {
         <PlayMode />
         <History />
       </Box>
-      <Progress width={"60%"} height={height || 0} />
+      <Progress width={"60%"} height={height || 0} id="osc-progress" />
       <Box
         id="osc-control-right"
         display="flex"

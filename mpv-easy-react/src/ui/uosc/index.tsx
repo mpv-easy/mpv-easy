@@ -28,7 +28,7 @@ export const Uosc: ForwardRefExoticComponent<
       onMouseDown={(e) => e.stopPropagation}
     >
       <UoscControl {...props} width={"100%"} height={h} />
-      <Progress {...props} width={"100%"} height={h} />
+      <Progress {...props} width={"100%"} height={h} id="uosc-progress" />
     </Box>
   )
 })

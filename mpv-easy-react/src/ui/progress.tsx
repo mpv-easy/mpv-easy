@@ -96,7 +96,7 @@ export const Progress = ({ width, height, ...props }: MpDomProps) => {
     <Box
       ref={progressRef}
       display="flex"
-      id="uosc-progress"
+      id="progress"
       position="relative"
       width={width}
       height={height}

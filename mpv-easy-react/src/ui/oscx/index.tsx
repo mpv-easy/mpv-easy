@@ -29,7 +29,7 @@ export const Oscx: ForwardRefExoticComponent<
       id="osc"
       onMouseDown={(e) => e.stopPropagation}
     >
-      <Progress width={"100%"} height={h} />
+      <Progress width={"100%"} height={h} id="oscx-progress" />
       <OscInfo {...props} width={"100%"} height={h} />
     </Box>
   )
