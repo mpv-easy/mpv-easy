@@ -44,10 +44,7 @@ export function getAssText(node: MpDom, x: number, y: number) {
     .toString()
 }
 
-const MeasureOverlay: OsdOverlay = new OsdOverlay({
-  computeBounds: true,
-  hidden: true,
-})
+let MeasureOverlay: OsdOverlay
 
 const _measureCache: Record<string, Shape> = {}
 export function measureText(node: MpDom): Shape {
@@ -55,6 +52,14 @@ export function measureText(node: MpDom): Shape {
   const textCache = getAssText(node, 0, 0)
   if (_measureCache[textCache]) {
     return _measureCache[textCache]
+  }
+
+  // TODO: playground  polyfill 
+  if (!MeasureOverlay) {
+    MeasureOverlay = new OsdOverlay({
+      computeBounds: true,
+      hidden: true,
+    })
   }
 
   MeasureOverlay.data = textCache
