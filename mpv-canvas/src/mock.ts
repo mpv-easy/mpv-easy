@@ -378,6 +378,7 @@ export function createMpvMock(
   screenHeight: number,
   fps = 30,
 ) {
+  const frameTime = 1000 / fps
   canvas.width = screenWidth
   canvas.height = screenHeight
 
@@ -419,7 +420,7 @@ export function createMpvMock(
       for (const fn of eventMap[key] || []) {
         fn(mpvEvent)
       }
-    }, 1000 / fps),
+    }, frameTime),
   )
 
   fabricCanvas.on(
@@ -444,7 +445,7 @@ export function createMpvMock(
           fn(mpvEvent)
         }
       }
-    }, 1000 / fps),
+    }, frameTime),
   )
 
   fabricCanvas.on(
@@ -474,7 +475,7 @@ export function createMpvMock(
           return
         }
       }
-    }, 1000 / fps),
+    }, frameTime),
   )
   fabricCanvas.on(
     "mouse:out",
@@ -487,7 +488,7 @@ export function createMpvMock(
       for (const fn of eventMap["mouse-pos"] || []) {
         fn(pos)
       }
-    }, 1000 / fps),
+    }, frameTime),
   )
 
   fabricCanvas.on(
@@ -502,7 +503,7 @@ export function createMpvMock(
       for (const fn of eventMap.MOUSE_BTN0 || []) {
         fn(mpvEvent)
       }
-    }, 1000 / fps),
+    }, frameTime),
   )
 
   fabricCanvas.on(
@@ -518,7 +519,7 @@ export function createMpvMock(
       for (const fn of eventMap["mouse-pos"] || []) {
         fn(pos)
       }
-    }, 1000 / fps),
+    }, frameTime),
   )
 
   const props: Record<string, any> = {

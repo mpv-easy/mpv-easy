@@ -81,6 +81,9 @@ export const videoParamsSelector = (state: RootState) =>
 export const fpsSelector = (state: RootState) =>
   state.context[pluginName].config.fps
 
+export const frameTimeSelector = (state: RootState) =>
+  1000 / state.context[pluginName].config.fps
+
 export const buttonStyleSelector = (state: RootState) =>
   styleSelector(state)[modeSelector(state)].button.default
 

@@ -54,7 +54,7 @@ export function measureText(node: MpDom): Shape {
     return _measureCache[textCache]
   }
 
-  // TODO: playground  polyfill 
+  // TODO: playground  polyfill
   if (!MeasureOverlay) {
     MeasureOverlay = new OsdOverlay({
       computeBounds: true,

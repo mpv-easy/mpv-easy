@@ -23,6 +23,7 @@ import {
   volumeMaxSelector,
   speedListSelector,
   speedSelector,
+  frameTimeSelector,
 } from "../store"
 import {
   PropertyBool,
@@ -110,7 +111,7 @@ export type EasyProps = {
 
 export const Easy = (props: Partial<EasyProps>) => {
   const dispatch = useDispatch<Dispatch>()
-  const fps = useSelector(fpsSelector)
+  const frameTime = useSelector(frameTimeSelector)
   const path = useSelector(pathSelector)
   const autoloadConfig = useSelector(audoloadConfigSelector)
   const protocolHook = useSelector(protocolHookSelector)
@@ -186,9 +187,9 @@ export const Easy = (props: Partial<EasyProps>) => {
 
     const updateTimePos = throttle((v: number) => {
       dispatch.context.setTimePos(v ?? 0)
-    }, 1000 / fps)
+    }, frameTime)
 
-    timePosProp.observe(throttle(updateTimePos, 1000 / fps))
+    timePosProp.observe(throttle(updateTimePos, frameTime))
 
     durationProp.observe((v) => {
       dispatch.context.setDuration(v || 0)
@@ -212,7 +213,7 @@ export const Easy = (props: Partial<EasyProps>) => {
 
     const cb = throttle((v) => {
       dispatch.context.setMousePos(v)
-    }, 1000 / fps)
+    }, frameTime)
 
     muteProp.observe((v) => {
       dispatch.context.setMute(v)
@@ -227,7 +228,7 @@ export const Easy = (props: Partial<EasyProps>) => {
     osdDimensionsProp.observe(
       throttle((v) => {
         dispatch.context.setOsdDimensions(v)
-      }, 1000 / fps),
+      }, frameTime),
       isEqual,
     )
 
@@ -283,24 +284,31 @@ export const Easy = (props: Partial<EasyProps>) => {
   const volumeDomRef = useRef<MpDom>(null)
   const [menuHide, setMenuHide] = useState(true)
 
-  const { x, y } = mousePos
+  const { x, y, hover } = mousePos
   const [hide, setHide] = useState(!!props.initHide)
   const hideHandle = useRef(-1)
-  const mouseInUI = [
-    toolbarRef.current,
-    elementRef.current,
-    volumeDomRef.current,
-  ].some((i) => hasPoint(i, x, y))
+  const mouseInUI =
+    [toolbarRef.current, elementRef.current, volumeDomRef.current].some((i) =>
+      hasPoint(i, x, y),
+    ) && hover
 
-  if (mouseInUI) {
+  const hideUI = () => {
+    clearTimeout(hideHandle.current)
+    hideHandle.current = +setTimeout(() => {
+      setHide(true)
+    }, toolbar.autoHideDelay ?? 5000)
+  }
+  const showUI = () => {
     clearTimeout(hideHandle.current)
     if (hide) {
       setHide(false)
     }
+  }
+
+  if (mouseInUI) {
+    showUI()
   } else {
-    hideHandle.current = +setTimeout(() => {
-      setHide(true)
-    }, toolbar.autoHideDelay ?? 5000)
+    hideUI()
   }
 
   const clickMenuStyle = useSelector(clickMenuStyleSelector)
@@ -335,7 +343,7 @@ export const Easy = (props: Partial<EasyProps>) => {
 
           setTimeout(() => {
             menuRef.current?.setHide(true)
-          }, 1 / DefaultFps)
+          }, frameTime)
 
           if (isEmptyClick) {
             // console.log("click empty")
