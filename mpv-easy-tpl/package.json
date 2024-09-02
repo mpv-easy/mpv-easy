@@ -17,7 +17,7 @@
   "dependencies": {
     "@mpv-easy/tool": "workspace:*",
     "@mpv-easy/react": "workspace:*",
-    "e-color": "^0.1.3"
+    "e-color": "0.1.3"
   },
   "devDependencies": {}
 }

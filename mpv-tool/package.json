@@ -16,7 +16,7 @@
   "devDependencies": {},
   "dependencies": {
     "@mpv-easy/polyfill": "workspace:*",
-    "buffer": "^6.0.3",
-    "decode-uri-component": "^0.4.1"
+    "buffer": "6.0.3",
+    "decode-uri-component": "0.4.1"
   }
 }

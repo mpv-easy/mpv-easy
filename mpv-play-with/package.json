@@ -16,6 +16,6 @@
   "license": "ISC",
   "dependencies": {
     "@mpv-easy/tool": "workspace:*",
-    "react-use": "^17.5.0"
+    "react-use": "17.5.1"
   }
 }
