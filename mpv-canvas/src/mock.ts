@@ -256,6 +256,7 @@ function getText(s: string) {
   return s.split("}").at(-1) ?? ""
 }
 
+let zindex = 0
 function createOsdOverlay(
   fabricCanvas: fabric.Canvas,
 ): MpvOsdOverlay & { fabricNode: any } {
@@ -293,6 +294,7 @@ function createOsdOverlay(
             strokeWidth: dom.rect.strokeWidth,
           })
           fabricCanvas.add(this.fabricNode)
+          this.z = zindex++
         }
         this.fabricNode.set("width", dom.rect.width)
         this.fabricNode.set("height", dom.rect.height)
@@ -303,7 +305,7 @@ function createOsdOverlay(
         this.fabricNode.set("fill", dom.rect.strokeWidth ? "#00000000" : color)
         this.fabricNode.set("stroke", dom.rect.stroke)
         this.fabricNode.set("strokeWidth", dom.rect.strokeWidth)
-
+        fabricCanvas.moveObjectTo(this.fabricNode, zindex - this.z)
         if (dom.fontName) {
           this.fabricNode.set("fontFamily", dom.fontName)
         }
