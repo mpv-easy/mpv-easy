@@ -15,12 +15,15 @@
     "clear": "rm -rf node_modules && pnpm -r exec rm -rf node_modules dist es5",
     "clear-dist": "rm -rf dist es5 && pnpm -r exec rm -rf dist es5 bundle",
     "release": "pnpm publish -r --access public",
-    "release-alpha": "pnpm publish -r --access public --tag alpha"
+    "release-alpha": "pnpm publish -r --access public --tag alpha",
+    "bump": "pnpm --recursive up --latest --force"
   },
   "keywords": ["TS", "React", "mpv", "mpv script"],
   "author": "ahaoboy",
   "license": "MIT",
   "devDependencies": {
+    "@rsbuild/core": "1.0.1-rc.4",
+    "@rsbuild/plugin-react": "1.0.1-rc.4",
     "@babel/cli": "7.25.6",
     "@babel/core": "7.25.2",
     "@babel/preset-env": "7.25.4",
@@ -50,7 +53,6 @@
     "redux": "5.0.1",
     "tsx": "4.19.0",
     "typescript": "5.5.4",
-    "vite": "5.4.2",
     "vitest": "2.0.5"
   },
   "pnpm": {
