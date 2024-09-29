@@ -11,17 +11,28 @@ export type FetchParams = {
 
 export type FetchResponse = {
   status: number
-  text: string
-}
-export function fetch(url: string, exe = getRsExtExePath()): FetchResponse {
-  return JSON.parse(execSync([exe, "fetch", JSON.stringify(url)]))
+  ok: boolean
+  text(): Promise<string>
+  json(): Promise<any>
 }
 
-export async function fetchAsync(
+export async function fetch(
   url: string,
   exe = getRsExtExePath(),
 ): Promise<FetchResponse> {
-  return JSON.parse(await execAsync([exe, "fetch", JSON.stringify(url)]))
+  if (typeof globalThis.fetch === "function") {
+    return globalThis.fetch(url)
+  }
+
+  const { status, text }: { status: number; text: string } = JSON.parse(
+    execSync([exe, "fetch", JSON.stringify(url)]),
+  )
+  return {
+    status,
+    ok: status === 200,
+    text: () => Promise.resolve(text),
+    json: () => Promise.resolve(JSON.parse(text)),
+  }
 }
 
 export function webdavList(url: string, exe = getRsExtExePath()) {

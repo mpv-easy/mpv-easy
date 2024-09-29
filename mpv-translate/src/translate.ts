@@ -17,11 +17,11 @@ import { readFile } from "@mpv-easy/tool"
 import { normalize } from "@mpv-easy/tool"
 
 const MAX_CHARS = 4000
-function translateSrt(
+async function translateSrt(
   srt: string,
   targetaLang: Lang,
   sourceLang: Lang,
-): string {
+): Promise<string> {
   const s = new Srt(srt)
   const blocks = s.blocks
   let textList = []
@@ -38,7 +38,7 @@ function translateSrt(
     const marker = "\n\n\n"
     const text = textList.join(marker)
 
-    const ret = google(text, targetaLang, sourceLang).split(marker)
+    const ret = (await google(text, targetaLang, sourceLang)).split(marker)
     for (let k = 0; k < ret.length; k++) {
       blocks[st + k].text = ret[k]
     }
@@ -60,7 +60,7 @@ export type TranslateOption = {
   sourceLang: Lang
 }
 
-export function translate(option: Partial<TranslateOption> = {}) {
+export async function translate(option: Partial<TranslateOption> = {}) {
   const sub = getSubtitleTracks().find((i) => i.selected)
   if (!sub) {
     return
@@ -94,7 +94,7 @@ export function translate(option: Partial<TranslateOption> = {}) {
   if (!existsSync(srtPath)) {
     saveSrt(videoPath, sub.id, srtOriPath)
     const text = readFile(srtOriPath)
-    const srt = translateSrt(text, targetLang as Lang, sourceLang as Lang)
+    const srt = await translateSrt(text, targetLang as Lang, sourceLang as Lang)
     writeFile(srtPath, srt)
   }
 

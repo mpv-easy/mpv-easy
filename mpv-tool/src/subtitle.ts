@@ -1,5 +1,5 @@
 import { SubtitleTypes, isHttp } from "./common"
-import { fetch, fetchAsync, jellyfin } from "./rs-ext"
+import { fetch } from "./rs-ext"
 import { existsSync } from "./fs"
 import {
   commandv,
@@ -17,7 +17,7 @@ import { getTmpDir } from "./tmp"
 import { isYtdlp } from "./yt-dlp"
 import { runCmdSync } from "./ext"
 
-export function loadRemoteSubtitle(path = getProperty("path")) {
+export async function loadRemoteSubtitle(path = getProperty("path")) {
   if (!path?.length || isYtdlp(path)) {
     return
   }
@@ -42,14 +42,18 @@ export function loadRemoteSubtitle(path = getProperty("path")) {
       }
 
       try {
-        const resp = fetch(url)
+        const resp = await fetch(url)
 
         if (resp.status !== 200 || !resp.text?.length) {
           continue
         }
 
+        const text = await resp.text()
+        if (!text.length) {
+          continue
+        }
         const subPath = joinPath(tmp, name)
-        writeFile(subPath, resp.text)
+        writeFile(subPath, text)
         commandv("sub-add", subPath)
       } catch (e) {
         print("loadRemoteSubtitle error:", e)
@@ -98,14 +102,18 @@ export async function loadRemoteSubtitleAsync(path = getProperty("path")) {
       }
 
       try {
-        const resp = await fetchAsync(url)
+        const resp = await fetch(url)
 
         if (resp.status !== 200 || !resp.text?.length) {
           continue
         }
+        const text = await resp.text()
+        if (!text.length) {
+          continue
+        }
 
         const subPath = joinPath(tmp, name)
-        writeFile(subPath, resp.text)
+        writeFile(subPath, text)
         commandv("sub-add", subPath)
       } catch (e) {
         print("loadRemoteSubtitle error:", e)
