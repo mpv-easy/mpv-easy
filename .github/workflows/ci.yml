@@ -27,3 +27,5 @@ jobs:
         with:
           name: mpv-easy
           path: ./dist/*.js
+  build-artifacts:
+    uses: ./.github/workflows/build-artifacts.yml
