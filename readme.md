@@ -37,11 +37,17 @@ set -x MPV_SCRIPT_DIR /your_mpv_dir/portable_config/scripts ; pnpm run dev
 
 ## short key
 
-ctrl+o: open dialog select file
-
-ctrl+up: Increase font size
-
-ctrl+down: decrease font size
+| key       | command                             |
+| --------- | ---------------------------------- |
+| ENTER     | cycle fullscreen                   |
+| x         | script-message speed-change -0.25  |
+| c         | script-message speed-change +0.25  |
+| UP        | script-message volume-change +10   |
+| DOWN      | script-message volume-change -10   |
+| ctrl+UP   | script-message fontsize-change +12 |
+| ctrl+DOWN | script-message fontsize-change -12 |
+| ctrl+o    | script-message open-dialog         |
+| ctrl+t    | script-message translate           |
 
 ## UI
 

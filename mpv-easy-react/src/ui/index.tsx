@@ -46,6 +46,7 @@ import {
   registerScriptMessage,
   setPropertyNumber,
   printAndOsd,
+  detectCmd,
 } from "@mpv-easy/tool"
 import throttle from "lodash-es/throttle"
 import isEqual from "lodash-es/isEqual"
@@ -264,7 +265,11 @@ export const Easy = (props: Partial<EasyProps>) => {
     })
 
     registerScriptMessage("translate", () => {
-      translate()
+      if (detectCmd("ffmpeg")) {
+        translate()
+      } else {
+        printAndOsd("ffmpeg not found!")
+      }
     })
   }, [])
   const smallFontSize = useSelector(smallFontSizeSelector)
