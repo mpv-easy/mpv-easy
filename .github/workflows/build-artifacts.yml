@@ -3,6 +3,8 @@ on: workflow_call
 
 jobs:
   build-ext-windows:
+    env:
+      RUSTFLAGS: "-C target-feature=+crt-static"
     runs-on: windows-latest
     timeout-minutes: 60
     steps:
@@ -24,13 +26,11 @@ jobs:
       - name: build ext
         shell: powershell
         run: |
-          $env:RUSTFLAGS="-C target-feature=+crt-static"
           cd ./mpv-easy-ext
           cargo build --target x86_64-pc-windows-msvc --release --out-dir=./output -Z unstable-options
           cd ..
           mv ./mpv-easy-ext/output/mpv-easy-ext.exe ./mpv-easy-ext-windows.exe
           mv ./mpv-easy-ext/output/mpv-easy-play-with.exe ./mpv-easy-play-with-windows.exe
-
 
       # - name: build deno
       #   run: |

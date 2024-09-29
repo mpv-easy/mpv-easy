@@ -4,7 +4,7 @@ on: [push]
 
 jobs:
   build:
-    name: build
+    name: build-js
     runs-on: ubuntu-latest
     permissions:
       contents: write
