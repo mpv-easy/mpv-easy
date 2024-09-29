@@ -8,7 +8,6 @@ import { useSelector, useDispatch } from "react-redux"
 import {
   type Dispatch,
   audoloadConfigSelector,
-  fpsSelector,
   modeSelector,
   mousePosSelector,
   pathSelector,
@@ -57,7 +56,6 @@ import { getPlayableList } from "@mpv-easy/autoload"
 import { VoiceControl } from "./voice-control"
 import { History } from "./history"
 import { Speed } from "./speed"
-import { translate } from "@mpv-easy/translate"
 
 export * from "./progress"
 export * from "./toolbar"
@@ -266,7 +264,7 @@ export const Easy = (props: Partial<EasyProps>) => {
 
     registerScriptMessage("translate", () => {
       if (detectCmd("ffmpeg")) {
-        translate()
+        dispatch.context.translate()
       } else {
         printAndOsd("ffmpeg not found!")
       }

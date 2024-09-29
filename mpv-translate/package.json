@@ -16,6 +16,7 @@
   "license": "MIT",
   "devDependencies": {},
   "dependencies": {
-    "@mpv-easy/tool": "workspace:*"
+    "@mpv-easy/tool": "workspace:*",
+    "@mpv-easy/plugin": "workspace:*"
   }
 }

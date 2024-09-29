@@ -24,6 +24,11 @@ import {
   pluginName as anime4kName,
   type Anime4kConfig,
 } from "@mpv-easy/anime4k"
+import {
+  translate,
+  pluginName as translateName,
+  type TranslateConfig,
+} from "@mpv-easy/translate"
 import { createDefaultContext } from "../context"
 import { getVideoName } from "../common"
 
@@ -248,6 +253,12 @@ export const context = createModel<RootModel>()({
       state[pluginName].style.light.button.default.padding = padding
 
       return { ...state }
+    },
+
+    translate(state) {
+      const config = state[translateName]
+      translate(config)
+      return state
     },
   },
 

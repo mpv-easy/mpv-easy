@@ -1,4 +1,3 @@
-import "@mpv-easy/tool"
 import { getConfig, plugins, saveConfig } from "./context"
 import type { EnablePlugin } from "./context"
 import { print, registerEvent } from "@mpv-easy/tool"

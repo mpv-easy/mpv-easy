@@ -49,6 +49,12 @@ import jellyfinPlugin, {
   defaultConfig as jellyfinConfig,
   pluginName as jellyfinName,
 } from "@mpv-easy/jellyfin"
+
+import translatePlugin, {
+  defaultConfig as translateConfig,
+  pluginName as translateName,
+} from "@mpv-easy/translate"
+
 import { type PluginContext, SystemApi } from "@mpv-easy/plugin"
 import {
   ConfigDir,
@@ -77,6 +83,7 @@ export const plugins = [
   thumbfastPlugin,
   copyScreenPlugin,
   jellyfinPlugin,
+  translatePlugin,
 ]
 
 export interface EnablePlugin {
@@ -123,6 +130,7 @@ export function createDefaultContext() {
     [thumbfastName]: thumbfastConfig,
     [copyScreenName]: copyScreenConfig,
     [jellyfinName]: jellyfinConfig,
+    [translateName]: translateConfig,
     enablePlugins: {
       [i18nName]: true,
       [easyName]: true,
@@ -133,6 +141,7 @@ export function createDefaultContext() {
       [thumbfastName]: true,
       [copyScreenName]: false,
       [jellyfinName]: true,
+      [translateName]: true,
     },
     version,
     experimental,

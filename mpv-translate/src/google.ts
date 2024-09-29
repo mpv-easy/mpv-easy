@@ -1,4 +1,4 @@
-import { fetch, Lang } from "@mpv-easy/tool"
+import { fetch, Lang, LangList } from "@mpv-easy/tool"
 
 const headers = {
   "sec-ch-ua":
@@ -17,14 +17,17 @@ export async function google(
   sourceLang: Lang,
 ): Promise<string> {
   if (text.trim().length === 0) return ""
-  const sl = sourceLang.split("-")[0]
-  const tl = targetaLang.split("-")[0]
-  const resp = await fetch(
-    `https://translate.googleapis.com/translate_a/single?client=gtx&sl=${sl}&tl=${tl}&dt=t&q=${encodeURIComponent(text)}`,
-    {
-      headers,
-    },
-  ).then((r) => r.text())
+  const sl = sourceLang.split("-")[0].toLowerCase()
+  const tl = targetaLang.split("-")[0].toLowerCase()
+
+  const url = LangList.map((i) => i.split("-")[0]).includes(tl)
+    ? `https://translate.googleapis.com/translate_a/single?client=gtx&sl=${sl}&tl=${tl}&dt=t&q=${encodeURIComponent(text)}`
+    : `https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl=${tl}&dt=t&q=${encodeURIComponent(text)}`
+
+  const resp = await fetch(url, {
+    headers,
+  }).then((r) => r.text())
+
   try {
     const cn = JSON.parse(resp)[0]
       .map((v: any) => v[0])

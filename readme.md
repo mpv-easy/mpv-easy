@@ -34,6 +34,7 @@ set -x MPV_SCRIPT_DIR /your_mpv_dir/portable_config/scripts ; pnpm run dev
 - [mpv-copy-time](./mpv-copy-time/readme.md)
 - [mpv-thumbfast](./mpv-thumbfast/readme.md)
 - [mpv-play-with](./mpv-play-with/readme.md)
+- [mpv-translate](./mpv-translate/readme.md)
 
 ## short key
 

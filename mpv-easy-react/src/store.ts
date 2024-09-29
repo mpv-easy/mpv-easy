@@ -10,7 +10,6 @@ import { pluginName as anime4kName } from "@mpv-easy/anime4k"
 import { pluginName as autoloadName } from "@mpv-easy/autoload"
 import { pluginName as thumbfastName } from "@mpv-easy/thumbfast"
 import { normalize } from "@mpv-easy/tool"
-import { getVideoName, getVideoTitle } from "./common"
 
 export function createStore() {
   return init<RootModel>({

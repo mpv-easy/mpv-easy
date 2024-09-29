@@ -56,8 +56,8 @@ export type TrackInfo = {
 let TrackInfoBackup: TrackInfo | undefined
 
 export type TranslateOption = {
-  targetLang: Lang
-  sourceLang: Lang
+  targetLang: string
+  sourceLang: string
 }
 
 export async function translate(option: Partial<TranslateOption> = {}) {
@@ -70,8 +70,8 @@ export async function translate(option: Partial<TranslateOption> = {}) {
   if (!existsSync(videoPath)) {
     return
   }
-  const targetLang = option.targetLang ?? getLang()
-  const sourceLang = option.sourceLang ?? sub.lang
+  const targetLang = option.targetLang?.length ? option.targetLang : getLang()
+  const sourceLang = option.sourceLang?.length ? option.sourceLang : sub.lang
 
   if (TrackInfoBackup && sub.title === targetLang) {
     setPropertyNative("sid", TrackInfoBackup.sid)

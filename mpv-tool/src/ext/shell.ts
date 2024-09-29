@@ -20,18 +20,18 @@ export function pwshExecCode(
 }
 
 export function cmdExecString(cmd: string) {
-  execSync(["cmd", cmd])
+  execSync(["cmd", "/c", cmd])
 }
 export function shellExecString(cmd: string) {
-  execSync(["bash", cmd])
+  execSync(["sh", "-c", cmd])
 }
 
 export function detectCmd(cmdName: string): boolean {
   const os = getOs()
-  const [sh, shArg] = os === "windows" ? ["cmd", "/c"] : ["sh", "-c"]
+  const cmd = os === "windows" ? `get-command ${cmdName}` : `where ${cmdName}`
   try {
-    const s = execSync([sh, shArg, `where ${cmdName}`])
-    return s.length > 0
+    const s = runCmdSync(cmd)
+    return s.stdout.length > 0 && s.ok === true
   } catch {
     return false
   }
