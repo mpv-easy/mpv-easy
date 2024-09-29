@@ -1,6 +1,7 @@
 {
   "name": "@mpv-easy/mock",
   "version": "0.1.10",
+  "homepage": "https://github.com/mpv-easy/mpv-easy#readme",
   "files": ["dist", "readme.md", "package.json"],
   "description": "",
   "main": "dist/index.js",
@@ -10,6 +11,6 @@
     "dev": "tsc -p ./tsconfig.build.json -w"
   },
   "keywords": [],
-  "author": "",
+  "author": "ahaoboy <504595380@qq.com> (https://github.com/ahaoboy)",
   "license": "ISC"
 }

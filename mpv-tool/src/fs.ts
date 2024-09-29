@@ -2,7 +2,11 @@ import { getOs, execSync } from "./common"
 import { error, fileInfo, getPropertyBool, setPropertyBool } from "./mpv"
 
 export function existsSync(path: string): boolean {
-  return !!fileInfo(path)
+  try {
+    return !!fileInfo(path)
+  } catch (e) {
+    return false
+  }
 }
 
 export function isDir(path: string): boolean {

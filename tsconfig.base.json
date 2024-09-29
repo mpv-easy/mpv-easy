@@ -44,7 +44,8 @@
       "@mpv-easy/playground": ["./mpv-playground/src"],
       "@mpv-easy/js-plugin-init": ["./mpv-js-plugin-init/src"],
       "@mpv-easy/mpsm": ["./mpv-mpsm/src"],
-      "@mpv-easy/play-with": ["./mpv-play-with/src"]
+      "@mpv-easy/play-with": ["./mpv-play-with/src"],
+      "@mpv-easy/translate": ["./mpv-translate/src"]
     }
   },
   "include": ["**/src", "**/test", "**/example"],

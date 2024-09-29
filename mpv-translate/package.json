@@ -1,9 +1,9 @@
 {
-  "name": "@mpv-easy/thumbfast",
+  "name": "@mpv-easy/translate",
   "version": "0.1.10",
   "homepage": "https://github.com/mpv-easy/mpv-easy#readme",
   "files": ["dist", "readme.md", "package.json"],
-  "description": "",
+  "description": "@mpv-easy/translate",
   "main": "dist/index.js",
   "types": "./dist/index.d.ts",
   "scripts": {
@@ -14,8 +14,8 @@
   "keywords": [],
   "author": "ahaoboy <504595380@qq.com> (https://github.com/ahaoboy)",
   "license": "MIT",
+  "devDependencies": {},
   "dependencies": {
-    "@mpv-easy/tool": "workspace:*",
-    "@mpv-easy/plugin": "workspace:*"
+    "@mpv-easy/tool": "workspace:*"
   }
 }

@@ -16,11 +16,11 @@ canvas {
 }
 
 @font-face {
-  font-family: 'JetBrainsMono NFM Regular';
-  src: url('../../mpv-easy-react/fonts/JetBrainsMonoNerdFontMono-Regular.ttf');
+  font-family: "JetBrainsMono NFM Regular";
+  src: url("../../mpv-easy-react/fonts/JetBrainsMonoNerdFontMono-Regular.ttf");
 }
 
 body,
 canvas {
-  font-family: 'JetBrainsMono NFM Regular';
+  font-family: "JetBrainsMono NFM Regular";
 }

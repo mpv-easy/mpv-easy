@@ -1,13 +1,14 @@
 {
   "name": "@mpv-easy/js-plugin-init",
   "version": "0.1.10",
+  "homepage": "https://github.com/mpv-easy/mpv-easy#readme",
   "private": true,
   "description": "",
   "main": "./dist/index.js",
   "types": "./dist/index.d.js",
   "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "author": "ahaoboy <504595380@qq.com> (https://github.com/ahaoboy)",
+  "license": "MIT",
   "scripts": {
     "build": "esbuild ./src/*.(ts|tsx) --bundle --outdir=./dist --charset=utf8 --format=iife && pnpm run copy",
     "build-minify": "esbuild ./src/*.(ts|tsx) --bundle --outdir=./dist --charset=utf8 --format=iife --minify",

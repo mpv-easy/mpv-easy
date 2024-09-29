@@ -13,18 +13,18 @@
     "dev": "tsc -p ./tsconfig.build.json -w"
   },
   "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "author": "ahaoboy <504595380@qq.com> (https://github.com/ahaoboy)",
+  "license": "MIT",
   "dependencies": {
     "@mpv-easy/assdraw": "workspace:*",
     "@mpv-easy/flex": "workspace:*",
     "@mpv-easy/solid": "workspace:*",
     "@mpv-easy/tool": "workspace:*",
-    "e-color": "0.1.3",
+    "e-color": "0.1.5",
     "lodash-es": "4.17.21"
   },
   "devDependencies": {
-    "solid-js": "1.8.22"
+    "solid-js": "1.9.1"
   },
   "peerDependencies": {
     "solid-js": "1.8.19"

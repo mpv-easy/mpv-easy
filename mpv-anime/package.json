@@ -1,6 +1,7 @@
 {
   "name": "@mpv-easy/anime",
   "version": "0.1.10",
+  "homepage": "https://github.com/mpv-easy/mpv-easy#readme",
   "files": ["dist", "readme.md", "package.json"],
   "description": "@mpv-easy/tool",
   "main": "dist/index.js",
@@ -11,8 +12,8 @@
     "dev": "tsc -p ./tsconfig.build.json -w"
   },
   "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "author": "ahaoboy <504595380@qq.com> (https://github.com/ahaoboy)",
+  "license": "MIT",
   "dependencies": {
     "react": "18.3.1",
     "react-dom": "18.3.1",
