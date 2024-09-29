@@ -382,8 +382,9 @@ export function readFile(fname: string, max?: number): string {
   return getMPV().utils.read_file(fname, max)
 }
 
-export function writeFile(fname: string, str: string, prefix = "file://") {
-  return getMPV().utils.write_file(prefix + fname, str)
+export function writeFile(filePath: string, str: string, prefix = "file://") {
+  const p = prefix + normalize(filePath)
+  return getMPV().utils.write_file(p, str)
 }
 
 export function compileJs(

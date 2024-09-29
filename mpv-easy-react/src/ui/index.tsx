@@ -3,7 +3,7 @@ import { Uosc } from "./uosc"
 import { Osc } from "./osc"
 import { Oscx } from "./oscx"
 import { Toolbar } from "./toolbar"
-import { Box, DefaultFps, type MpDom, Tooltip } from "@mpv-easy/react"
+import { Box, type MpDom, Tooltip } from "@mpv-easy/react"
 import { useSelector, useDispatch } from "react-redux"
 import {
   type Dispatch,
@@ -56,6 +56,7 @@ import { getPlayableList } from "@mpv-easy/autoload"
 import { VoiceControl } from "./voice-control"
 import { History } from "./history"
 import { Speed } from "./speed"
+import { translate } from "@mpv-easy/translate"
 
 export * from "./progress"
 export * from "./toolbar"
@@ -260,6 +261,10 @@ export const Easy = (props: Partial<EasyProps>) => {
       dispatch.context.setSpeed(s)
       setPropertyNumber("speed", s)
       printAndOsd(`speed: ${s}`, 2)
+    })
+
+    registerScriptMessage("translate", () => {
+      translate()
     })
   }, [])
   const smallFontSize = useSelector(smallFontSizeSelector)

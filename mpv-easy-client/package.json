@@ -1,11 +1,12 @@
 {
   "name": "@mpv-easy/deno",
   "version": "0.1.10",
+  "homepage": "https://github.com/mpv-easy/mpv-easy#readme",
   "private": true,
   "description": "",
   "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "author": "ahaoboy <504595380@qq.com> (https://github.com/ahaoboy)",
+  "license": "MIT",
   "scripts": {},
   "devDependencies": {},
   "dependencies": {}

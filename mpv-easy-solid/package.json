@@ -1,6 +1,7 @@
 {
   "name": "@mpv-easy/easy-solid",
   "version": "0.1.10",
+  "homepage": "https://github.com/mpv-easy/mpv-easy#readme",
   "files": ["dist", "readme.md", "package.json"],
   "description": "@mpv-easy/easy-solid",
   "main": "./dist/index.js",
@@ -19,8 +20,8 @@
     "babel": "minify ./dist/mpv-easy.js --out-file ./dist/input.min.js"
   },
   "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "author": "ahaoboy <504595380@qq.com> (https://github.com/ahaoboy)",
+  "license": "MIT",
   "dependencies": {
     "@mpv-easy/anime": "workspace:*",
     "@mpv-easy/anime4k": "workspace:*",
@@ -37,12 +38,12 @@
     "@mpv-easy/solid": "workspace:*",
     "@mpv-easy/thumbfast": "workspace:*",
     "@mpv-easy/tool": "workspace:*",
-    "e-color": "0.1.3",
+    "e-color": "0.1.5",
     "lodash-es": "4.17.21"
   },
   "devDependencies": {
     "esbuild-plugin-solid": "0.6.0",
-    "solid-js": "1.8.22"
+    "solid-js": "1.9.1"
   },
   "browserslist": [
     "iOS >= 9",

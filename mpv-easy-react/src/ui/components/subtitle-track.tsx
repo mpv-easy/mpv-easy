@@ -2,14 +2,7 @@ import { Dropdown, type DropdownItem } from "@mpv-easy/react"
 import React from "react"
 import { useDispatch, useSelector } from "react-redux"
 import * as ICON from "../../icon"
-import {
-  SubtitleTypes,
-  existsSync,
-  getPropertyBool,
-  getPropertyNumber,
-  getPropertyString,
-  setPropertyNative,
-} from "@mpv-easy/tool"
+import { setPropertyNative, getSubtitleTracks } from "@mpv-easy/tool"
 import {
   buttonStyleSelector,
   type Dispatch,
@@ -19,36 +12,6 @@ import {
   sidSelector,
 } from "../../store"
 
-type SubtitleTrack = {
-  title?: string
-  lang?: string
-  selected: boolean
-  id: number
-  external: boolean
-}
-function getSubtitleTracks(): SubtitleTrack[] {
-  const tracks: SubtitleTrack[] = []
-  const trackCount = getPropertyNumber("track-list/count") || 0
-  for (let i = 0; i < trackCount; i++) {
-    const type = getPropertyString(`track-list/${i}/type`)
-    if (type === "sub") {
-      const title = getPropertyString(`track-list/${i}/title`)
-      const lang = getPropertyString(`track-list/${i}/lang`)
-      const selected = getPropertyBool(`track-list/${i}/selected`)
-      const external = getPropertyBool(`track-list/${i}/external`)
-      const id = getPropertyNumber(`track-list/${i}/id`) || 0
-      tracks.push({
-        title,
-        lang,
-        selected,
-        id,
-        external,
-      })
-    }
-  }
-
-  return tracks
-}
 export const SubtitleTrack = () => {
   const button = useSelector(buttonStyleSelector)
   const i18n = useSelector(i18nSelector)

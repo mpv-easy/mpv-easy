@@ -1,6 +1,7 @@
 {
   "name": "@mpv-easy/anime4k",
   "version": "0.1.10",
+  "homepage": "https://github.com/mpv-easy/mpv-easy#readme",
   "description": "",
   "main": "dist/index.js",
   "types": "./dist/index.d.ts",
@@ -10,8 +11,8 @@
     "dev": "tsc -p ./tsconfig.build.json -w"
   },
   "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "author": "ahaoboy <504595380@qq.com> (https://github.com/ahaoboy)",
+  "license": "MIT",
   "dependencies": {
     "@mpv-easy/tool": "workspace:*",
     "@mpv-easy/plugin": "workspace:*"

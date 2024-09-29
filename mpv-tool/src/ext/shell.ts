@@ -36,3 +36,18 @@ export function detectCmd(cmdName: string): boolean {
     return false
   }
 }
+
+export function runCmdSync(cmd: string): {
+  ok: boolean
+  stdout: string
+  stderr: string
+} {
+  const os = getOs()
+  const [sh, shArg] = os === "windows" ? ["powershell", "-c"] : ["sh", "-c"]
+  try {
+    const stdout = execSync([sh, shArg, cmd])
+    return { ok: true, stdout, stderr: "" }
+  } catch (e) {
+    return { ok: false, stderr: String(e), stdout: "" }
+  }
+}
