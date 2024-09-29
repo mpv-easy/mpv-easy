@@ -18,14 +18,19 @@ export type FetchResponse = {
 
 export async function fetch(
   url: string,
+  options?: { headers: Record<string, string> },
   exe = getRsExtExePath(),
 ): Promise<FetchResponse> {
   if (typeof globalThis.fetch === "function") {
-    return globalThis.fetch(url)
+    return options ? globalThis.fetch(url, options) : globalThis.fetch(url)
   }
 
+  const cmd = options
+    ? [exe, "fetch", JSON.stringify(url), JSON.stringify(options)]
+    : [exe, "fetch", JSON.stringify(url)]
+
   const { status, text }: { status: number; text: string } = JSON.parse(
-    execSync([exe, "fetch", JSON.stringify(url)]),
+    execSync(cmd),
   )
   return {
     status,
