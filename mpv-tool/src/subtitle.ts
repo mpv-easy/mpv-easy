@@ -16,6 +16,7 @@ import type { TrackItem } from "./type"
 import { getTmpDir } from "./tmp"
 import { isYtdlp } from "./yt-dlp"
 import { runCmdSync } from "./ext"
+import { getFfmpegPath } from "./ffmpeg"
 
 export async function loadRemoteSubtitle(path = getProperty("path")) {
   if (!path?.length || isYtdlp(path)) {
@@ -181,7 +182,8 @@ export function saveSrt(
   if (!subTrack) {
     return false
   }
-  const cmd = `ffmpeg -y -hide_banner -loglevel error -i "${videoPath}" -map 0:s:${subTrack.id - 1} "${ouptutPath}"`
+  const ffmpeg = getFfmpegPath()
+  const cmd = `${ffmpeg} -y -hide_banner -loglevel error -i "${videoPath}" -map 0:s:${subTrack.id - 1} "${ouptutPath}"`
   try {
     runCmdSync(cmd)
   } catch (e) {
