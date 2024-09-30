@@ -7,6 +7,7 @@ import {
   getSubtitleTracks,
   getTmpDir,
   Lang,
+  printAndOsd,
   saveSrt,
   setPropertyNative,
   Srt,
@@ -63,11 +64,13 @@ export type TranslateOption = {
 export async function translate(option: Partial<TranslateOption> = {}) {
   const sub = getSubtitleTracks().find((i) => i.selected)
   if (!sub) {
+    printAndOsd("subtitle not found")
     return
   }
   const videoPath = getPropertyString("path")!
 
   if (!existsSync(videoPath)) {
+    printAndOsd("not support remote video")
     return
   }
   const targetLang = option.targetLang?.length ? option.targetLang : getLang()

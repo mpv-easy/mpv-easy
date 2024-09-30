@@ -263,11 +263,7 @@ export const Easy = (props: Partial<EasyProps>) => {
     })
 
     registerScriptMessage("translate", () => {
-      if (detectCmd("ffmpeg")) {
-        dispatch.context.translate()
-      } else {
-        printAndOsd("ffmpeg not found!")
-      }
+      dispatch.context.translate()
     })
   }, [])
   const smallFontSize = useSelector(smallFontSizeSelector)
