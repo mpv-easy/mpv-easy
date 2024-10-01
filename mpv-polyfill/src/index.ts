@@ -33,6 +33,7 @@ import Symbol from "es-symbol"
 import { getGlobal } from "./global"
 import { TextEncoder } from "@polkadot/x-textencoder"
 import { TextDecoder } from "@polkadot/x-textdecoder"
+import { encodeURIComponent, decodeURIComponent } from "uri-component"
 
 const g = getGlobal()
 // g.Buffer = Buffer
@@ -87,70 +88,5 @@ Object.setPrototypeOf =
   { __proto__: [] } instanceof Array ? setProtoOf : mixinProperties
 
 export { Map, Set, Symbol }
-
-const unescapedSet = new Set(
-  "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_.!~*'()",
-)
-
-function encodeURIComponent(str: string): string {
-  let result = ""
-  for (let i = 0; i < str.length; i++) {
-    const c = str.charAt(i)
-    if (unescapedSet.has(c)) {
-      result += c
-    } else {
-      const code = str.charCodeAt(i)
-      if (code < 128) {
-        result += `%${code.toString(16).padStart(2, "0").toUpperCase()}`
-      } else if (code < 2048) {
-        result += `%${(192 | (code >> 6)).toString(16).padStart(2, "0").toUpperCase()}`
-        result += `%${(128 | (code & 63)).toString(16).padStart(2, "0").toUpperCase()}`
-      } else if (code < 65536) {
-        result += `%${(224 | (code >> 12)).toString(16).padStart(2, "0").toUpperCase()}`
-        result += `%${(128 | ((code >> 6) & 63)).toString(16).padStart(2, "0").toUpperCase()}`
-        result += `%${(128 | (code & 63)).toString(16).padStart(2, "0").toUpperCase()}`
-      } else {
-        result += `%${(240 | (code >> 18)).toString(16).padStart(2, "0").toUpperCase()}`
-        result += `%${(128 | ((code >> 12) & 63))
-          .toString(16)
-          .padStart(2, "0")
-          .toUpperCase()}`
-        result += `%${(128 | ((code >> 6) & 63)).toString(16).padStart(2, "0").toUpperCase()}`
-        result += `%${(128 | (code & 63)).toString(16).padStart(2, "0").toUpperCase()}`
-      }
-    }
-  }
-  return result
-}
-
-function decodeURIComponent(str: string): string {
-  return str.replace(/%([0-9A-Fa-f]{2})/g, (_, hex) => {
-    const code = Number.parseInt(hex, 16)
-    if (code < 128) {
-      return String.fromCharCode(code)
-    }
-    if (code >= 192 && code < 224) {
-      const next = Number.parseInt(str.substr(str.indexOf(hex) + 3, 2), 16)
-      return String.fromCharCode(((code & 31) << 6) | (next & 63))
-    }
-    if (code >= 224 && code < 240) {
-      const next1 = Number.parseInt(str.substr(str.indexOf(hex) + 3, 2), 16)
-      const next2 = Number.parseInt(str.substr(str.indexOf(hex) + 6, 2), 16)
-      return String.fromCharCode(
-        ((code & 15) << 12) | ((next1 & 63) << 6) | (next2 & 63),
-      )
-    }
-    const next1 = Number.parseInt(str.substr(str.indexOf(hex) + 3, 2), 16)
-    const next2 = Number.parseInt(str.substr(str.indexOf(hex) + 6, 2), 16)
-    const next3 = Number.parseInt(str.substr(str.indexOf(hex) + 9, 2), 16)
-    return String.fromCodePoint(
-      ((code & 7) << 18) |
-        ((next1 & 63) << 12) |
-        ((next2 & 63) << 6) |
-        (next3 & 63),
-    )
-  })
-}
-
 g.encodeURIComponent = encodeURIComponent
 g.decodeURIComponent = decodeURIComponent

@@ -1,4 +1,3 @@
-import decodeUriComponent from "decode-uri-component"
 import { execAsync, execSync } from "../common"
 import { getFileName } from "../path"
 import { getRsExtExePath } from "./share"
@@ -45,7 +44,7 @@ export function webdavList(url: string, exe = getRsExtExePath()) {
   const status = JSON.parse(s)
   const response = status.response as { href: string }[]
   const list = response
-    .map((i) => decodeUriComponent(i.href))
+    .map((i) => decodeURIComponent(i.href))
     .filter((i) => !!getFileName(i)?.length)
   return list
 }
@@ -58,7 +57,7 @@ export async function webdavListAsync(
   const status = JSON.parse(s)
   const response = status.response as { href: string }[]
   const list = response
-    .map((i) => decodeUriComponent(i.href))
+    .map((i) => decodeURIComponent(i.href))
     .filter((i) => !!getFileName(i)?.length)
   return list
 }

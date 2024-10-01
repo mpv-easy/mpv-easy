@@ -19,7 +19,7 @@
     "@polkadot/x-textencoder": "13.1.1",
     "buffer": "6.0.3",
     "core-js": "3.38.1",
-    "decode-uri-component": "0.4.1",
-    "es-symbol": "1.1.2"
+    "es-symbol": "1.1.2",
+    "uri-component": "0.1.1"
   }
 }

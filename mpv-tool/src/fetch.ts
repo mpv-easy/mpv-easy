@@ -1,5 +1,4 @@
 import { execSync } from "./common"
-import decodeUriComponent from "decode-uri-component"
 
 const type = {
   GET: "GET",
@@ -87,6 +86,6 @@ const fetchToCurl = (url: string, options: FetchOption = {}): string[] => {
 
 export function fetch(url: string, options: FetchOption = {}) {
   const cmd = fetchToCurl(url, options)
-  const s = decodeUriComponent(execSync(cmd))
+  const s = decodeURIComponent(execSync(cmd))
   return s
 }

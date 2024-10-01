@@ -16,6 +16,7 @@ import {
 import { google } from "./google"
 import { readFile } from "@mpv-easy/tool"
 import { normalize } from "@mpv-easy/tool"
+import { md5 } from "js-md5"
 
 const MAX_CHARS = 4000
 async function translateSrt(
@@ -89,11 +90,16 @@ export async function translate(option: Partial<TranslateOption> = {}) {
 
   const tmpDir = getTmpDir()
   const videoName = getFileName(videoPath)
-  const srtOriPath = normalize(`${tmpDir}/${videoName}.${sourceLang}.srt`)
-  const srtPath = normalize(
-    `${tmpDir}/${videoName}.${sourceLang}.${targetLang}.srt`,
+  const hash = md5
+    .create()
+    .update([videoPath, sourceLang, targetLang, sub.id].join("-"))
+    .hex()
+  const srtOriPath = normalize(
+    `${tmpDir}/${hash}.${videoName}.${sourceLang}.srt`,
   )
-
+  const srtPath = normalize(
+    `${tmpDir}/${hash}.${videoName}.${sourceLang}.${targetLang}.srt`,
+  )
   if (!existsSync(srtPath)) {
     saveSrt(videoPath, sub.id, srtOriPath)
     const text = readFile(srtOriPath)
