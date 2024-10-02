@@ -1,4 +1,4 @@
-import { execSync, getOs } from "../common"
+import { execAsync, execSync, getOs } from "../common"
 import { readFile, writeFile } from "../mpv"
 
 export function readFileBase64() {}
@@ -46,6 +46,21 @@ export function runCmdSync(cmd: string): {
   const [sh, shArg] = os === "windows" ? ["powershell", "-c"] : ["sh", "-c"]
   try {
     const stdout = execSync([sh, shArg, cmd])
+    return { ok: true, stdout, stderr: "" }
+  } catch (e) {
+    return { ok: false, stderr: String(e), stdout: "" }
+  }
+}
+
+export async function runCmdAsync(cmd: string): Promise<{
+  ok: boolean
+  stdout: string
+  stderr: string
+}> {
+  const os = getOs()
+  const [sh, shArg] = os === "windows" ? ["powershell", "-c"] : ["sh", "-c"]
+  try {
+    const stdout = await execAsync([sh, shArg, cmd])
     return { ok: true, stdout, stderr: "" }
   } catch (e) {
     return { ok: false, stderr: String(e), stdout: "" }
