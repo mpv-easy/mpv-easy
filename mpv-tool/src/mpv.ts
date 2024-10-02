@@ -127,6 +127,7 @@ export type KeyEvent = {
     | "WHEEL_UP"
     | "MBTN_LEFT"
     | "MBTN_RIGHT"
+    | "MBTN_MID"
     | (string & {})
 }
 

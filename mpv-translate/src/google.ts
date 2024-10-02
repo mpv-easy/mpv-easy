@@ -14,10 +14,10 @@ const headers = {
 export async function google(
   text: string,
   targetaLang: Lang,
-  sourceLang: Lang,
+  sourceLang?: Lang,
 ): Promise<string> {
   if (text.trim().length === 0) return ""
-  const sl = sourceLang.split("-")[0].toLowerCase()
+  const sl = sourceLang?.split("-")[0].toLowerCase()
   const tl = targetaLang.split("-")[0].toLowerCase()
 
   const url = LangList.map((i) => i.split("-")[0]).includes(tl)

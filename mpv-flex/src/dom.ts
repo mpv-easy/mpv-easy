@@ -18,6 +18,7 @@ export interface MpAttrs {
   backgroundColor: string
   color: string
   hide: boolean
+  maxWidth: number
 }
 
 export interface MpProps {

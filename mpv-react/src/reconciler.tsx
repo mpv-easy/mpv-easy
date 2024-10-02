@@ -249,7 +249,7 @@ export function createRender({
 
     addKeyBinding(
       "MOUSE_BTN0",
-      "MPV_EASY_MOUSE_BTN0",
+      "MPV_EASY_MOUSE_LEFT",
       (event) => {
         customDispatch(flex.rootNode, lastMousePos, event)
       },
@@ -261,8 +261,34 @@ export function createRender({
     )
 
     addKeyBinding(
+      "MOUSE_BTN1",
+      "MPV_EASY_MOUSE_MID",
+      (event) => {
+        customDispatch(flex.rootNode, lastMousePos, event)
+      },
+      {
+        complex: true,
+        repeatable: true,
+        forced: false,
+      },
+    )
+
+    // addKeyBinding(
+    //   "MOUSE_BTN2",
+    //   "MPV_EASY_MOUSE_RIGHT",
+    //   (event) => {
+    //     customDispatch(flex.rootNode, lastMousePos, event)
+    //   },
+    //   {
+    //     complex: true,
+    //     repeatable: true,
+    //     forced: false,
+    //   },
+    // )
+
+    addKeyBinding(
       "MOUSE_BTN3",
-      "MPV_EASY_MOUSE_BTN3",
+      "MPV_EASY_WHEEL_UP",
       (event) => {
         customDispatch(flex.rootNode, lastMousePos, event)
       },
@@ -275,7 +301,7 @@ export function createRender({
 
     addKeyBinding(
       "MOUSE_BTN4",
-      "MPV_EASY_MOUSE_BTN4",
+      "MPV_EASY_WHEEL_DOWN",
       (event) => {
         customDispatch(flex.rootNode, lastMousePos, event)
       },

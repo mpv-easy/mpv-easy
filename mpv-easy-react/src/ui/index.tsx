@@ -45,7 +45,6 @@ import {
   registerScriptMessage,
   setPropertyNumber,
   printAndOsd,
-  detectCmd,
 } from "@mpv-easy/tool"
 import throttle from "lodash-es/throttle"
 import isEqual from "lodash-es/isEqual"
@@ -56,6 +55,7 @@ import { getPlayableList } from "@mpv-easy/autoload"
 import { VoiceControl } from "./voice-control"
 import { History } from "./history"
 import { Speed } from "./speed"
+import { Translation } from "./translate"
 
 export * from "./progress"
 export * from "./toolbar"
@@ -261,10 +261,6 @@ export const Easy = (props: Partial<EasyProps>) => {
       setPropertyNumber("speed", s)
       printAndOsd(`speed: ${s}`, 2)
     })
-
-    registerScriptMessage("translate", () => {
-      dispatch.context.translate()
-    })
   }, [])
   const smallFontSize = useSelector(smallFontSizeSelector)
   const style = useSelector(styleSelector)
@@ -328,6 +324,7 @@ export const Easy = (props: Partial<EasyProps>) => {
         justifyContent="center"
         alignItems="center"
         zIndex={style[mode].tooltip.zIndex}
+        maxWidth={style[mode].tooltip.maxWidth}
       />
 
       <Box
@@ -363,6 +360,7 @@ export const Easy = (props: Partial<EasyProps>) => {
         <Playlist />
         <History />
         <Speed />
+        <Translation />
       </Box>
     </>
   )

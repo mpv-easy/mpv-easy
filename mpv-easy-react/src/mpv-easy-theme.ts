@@ -74,6 +74,8 @@ export type ThemeStyle = {
     autoHideDelay: number
     zIndex: number
     step: number
+    fontSize: number
+    previewCursorColor: string
   }
   speed: {
     showText: boolean
@@ -100,8 +102,8 @@ export type ThemeStyle = {
     padding: number
     color: string
     backgroundColor: string
-    colorHover: string
-    backgroundColorHover: string
+    fontSize: number
+    maxWidth: number
   }
   dropdown: {
     list: {
@@ -112,6 +114,7 @@ export type ThemeStyle = {
       backgroundColor: string
       colorHover: string
       backgroundColorHover: string
+      fontSize: number
     }
     button: {
       zIndex: number
@@ -121,6 +124,7 @@ export type ThemeStyle = {
       backgroundColor: string
       colorHover: string
       backgroundColorHover: string
+      fontSize: number
     }
     item: {
       zIndex: number
@@ -131,6 +135,7 @@ export type ThemeStyle = {
       colorHover: string
       backgroundColorHover: string
       height: number
+      fontSize: number
     }
   }
   clickMenu: {
@@ -188,6 +193,8 @@ export type EasyConfig = {
     protocolHook: string
   }
 }
+
+export const defaultTooltipMaxWidth = 48
 export const defaultTooltipZIndex = 1024
 export const defaultDropdownZIndex = 512
 export const defaultToolbarZIndex = 256
@@ -312,11 +319,10 @@ export function createDefaultThemeConfig(): EasyConfig {
           zIndex: defaultTooltipZIndex,
           padding: defaultPadding,
           color: White + AlphaShow,
-          backgroundColor: Black + AlphaLow,
-          colorHover: Yellow + AlphaShow,
-          backgroundColorHover: White + AlphaMedium,
+          backgroundColor: Black + AlphaShow,
           fontSize: defaultFontSize * 0.75,
           font: defaultFont,
+          maxWidth: defaultTooltipMaxWidth,
         },
         dropdown: {
           list: {
@@ -448,11 +454,10 @@ export function createDefaultThemeConfig(): EasyConfig {
           zIndex: defaultTooltipZIndex,
           padding: defaultPadding,
           color: Black + AlphaShow,
-          backgroundColor: White + AlphaLow,
-          colorHover: Yellow + AlphaShow,
-          backgroundColorHover: Black + AlphaMedium,
+          backgroundColor: White + AlphaShow,
           fontSize: defaultFontSize * 0.75,
           font: defaultFont,
+          maxWidth: defaultTooltipMaxWidth,
         },
         dropdown: {
           list: {
@@ -506,7 +511,7 @@ export function createDefaultThemeConfig(): EasyConfig {
       saveConfigThrottle: defaultSaveConfigThrottle,
       protocolHook: "",
     },
-  } as const)
+  } satisfies EasyConfig)
 }
 export const defaultState: EasyConfig["state"] = {
   hide: false,

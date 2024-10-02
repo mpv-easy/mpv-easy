@@ -29,7 +29,7 @@ export async function fetch(
     : [exe, "fetch", JSON.stringify(url)]
 
   const { status, text }: { status: number; text: string } = JSON.parse(
-    execSync(cmd),
+    await execAsync(cmd),
   )
   return {
     status,
