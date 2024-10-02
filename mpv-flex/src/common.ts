@@ -32,7 +32,8 @@ export function getAssText(node: MpDom, x: number, y: number) {
     alpha = color.slice(-2)
     color = color.slice(0, -2)
   }
-  return GetAssTextAssdraw.clear()
+
+  const s = GetAssTextAssdraw.clear()
     .pos(x, y)
     .font(font)
     .fontSize(lenToNumber(node, fontSize, false, 32) * assScale)
@@ -40,8 +41,9 @@ export function getAssText(node: MpDom, x: number, y: number) {
     .fontBorderSize(lenToNumber(node, fontBorderSize, false, 0) * assScale)
     .color(color)
     .alpha(alpha)
-    .append(text)
+    .append(text.replaceAll("\r\n", "\\N").replaceAll("\n", "\\N"))
     .toString()
+  return s
 }
 
 let MeasureOverlay: OsdOverlay
