@@ -133,6 +133,8 @@ export const Tooltip = ({
         setTooltipPos(pos)
         setShow(true)
         setText(title)
+      } else {
+        setShow(false)
       }
     }, tooltipThrottle)
     mousePosProp.observe(update, isEqual)
