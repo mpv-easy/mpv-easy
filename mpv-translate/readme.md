@@ -20,7 +20,7 @@ https://cloud.google.com/translate/docs/languages
 ## translate (ctrl+t)
 
 <div style="display: flex;">
-  <img src="../assets/img/interactive.gif" alt="interactive"/>
+  <img src="../assets/img/translate.gif" alt="translate"/>
 </div>
 
 ## interactive-translate (ctrl+i)
