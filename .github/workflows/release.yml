@@ -77,6 +77,10 @@ jobs:
           # cp -r ./dist ./mpy-easy-qjs-windows
           # cp -r ./dist ./mpy-easy-boa-windows
 
+          rwget -o ./ffmpeg.7z https://github.com/shinchiro/mpv-winbuild-cmake/releases/download/20240930/ffmpeg-x86_64-v3-git-9d3cdf8fa.7z
+          7z x ./ffmpeg.7z -o./ffmpeg -y
+          cp ./ffmpeg/ffmpeg.exe ./mpy-easy-windows/scripts/mpv-easy-config/mpv-easy-ext/ffmpeg.exe
+
           cp ./mpv-easy-ext-dist/mpv-easy-ext-macos ./mpy-easy-macos/scripts/mpv-easy-config/mpv-easy-ext/mpv-easy-ext-macos
           cp ./mpv-easy-ext-dist/mpv-easy-ext-linux ./mpy-easy-linux/scripts/mpv-easy-config/mpv-easy-ext/mpv-easy-ext-linux
           cp ./mpv-easy-ext-dist/mpv-easy-ext-android ./mpy-easy-android/scripts/mpv-easy-config/mpv-easy-ext/mpv-easy-ext-android
@@ -118,12 +122,8 @@ jobs:
 
           # https://github.com/shinchiro/mpv-winbuild-cmake/releases
           rwget -o ./mpv-win.7z https://github.com/shinchiro/mpv-winbuild-cmake/releases/download/20240930/mpv-x86_64-v3-20240930-git-ffb40ab.7z
-          rwget -o ./ffmpeg.7z https://github.com/shinchiro/mpv-winbuild-cmake/releases/download/20240930/ffmpeg-x86_64-v3-git-9d3cdf8fa.7z
-
           7z x ./mpv-win.7z -o./mpy-easy-windows-full -y
-          7z x ./ffmpeg.7z -o./ffmpeg -y
           cp -r ./mpy-easy-windows ./mpy-easy-windows-full/portable_config
-          cp ./ffmpeg/ffmpeg.exe ./mpy-easy-windows-full/portable_config/scripts/mpv-easy-config/mpv-easy-ext/ffmpeg.exe
 
           cd ./mpy-easy-macos
           zip -r -q ./mpy-easy-macos.zip .
