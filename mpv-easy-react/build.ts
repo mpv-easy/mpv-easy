@@ -7,8 +7,6 @@ build({
   outdir: "bundle",
   minify: true,
 
-  // TODO: solid not support node platform?
-  // platform:"node",
   charset: "utf8",
   define: {
     "globalThis.version": '"0.1.9"',

@@ -22,11 +22,5 @@
     "@r-tui/share": "0.1.7",
     "e-color": "0.1.5",
     "lodash-es": "4.17.21"
-  },
-  "devDependencies": {
-    "solid-js": "1.9.1"
-  },
-  "peerDependencies": {
-    "solid-js": "1.8.19"
   }
 }
