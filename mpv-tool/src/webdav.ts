@@ -1,12 +1,13 @@
-import { url } from "node:inspector"
 import { fetch } from "./fetch"
-import { print } from "./mpv"
 export type WebdavItem = {
   href: string
   contentLength: number
   lastModified: string
 }
-export function webdavList(url: string, depth = 1): WebdavItem[] {
+export async function webdavList(
+  url: string,
+  depth = 1,
+): Promise<WebdavItem[]> {
   const body = `<?xml version="1.0" encoding="utf-8" ?>
             <D:propfind xmlns:D="DAV:">
                 <D:allprop/>
@@ -15,13 +16,13 @@ export function webdavList(url: string, depth = 1): WebdavItem[] {
     .trim()
     .replaceAll("\n", " ")
 
-  const xmlString = fetch(url, {
+  const xmlString = await fetch(url, {
     method: "PROPFIND",
     headers: {
       depth: depth.toString(),
     },
     body,
-  })
+  }).then((r) => r.text())
 
   const regex =
     /<D:href>(.*?)<\/D:href>[\s\S]*?<D:getcontentlength>(.*?)<\/D:getcontentlength>[\s\S]*?<D:getlastmodified>(.*?)<\/D:getlastmodified>/g

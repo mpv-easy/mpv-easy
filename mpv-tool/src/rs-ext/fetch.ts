@@ -1,29 +1,13 @@
 import { execAsync, execSync } from "../common"
+import { FetchOption, FetchResponse } from "../const"
 import { getFileName } from "../path"
 import { getRsExtExePath } from "./share"
 
-export type FetchParams = {
-  url: string
-  headers: Record<string, string>
-  body: string
-}
-
-export type FetchResponse = {
-  status: number
-  ok: boolean
-  text(): Promise<string>
-  json(): Promise<any>
-}
-
-export async function fetch(
+export async function fetchByExt(
   url: string,
-  options?: { headers: Record<string, string> },
+  options?: FetchOption,
   exe = getRsExtExePath(),
 ): Promise<FetchResponse> {
-  if (typeof globalThis.fetch === "function") {
-    return options ? globalThis.fetch(url, options) : globalThis.fetch(url)
-  }
-
   const cmd = options
     ? [exe, "fetch", JSON.stringify(url), JSON.stringify(options)]
     : [exe, "fetch", JSON.stringify(url)]

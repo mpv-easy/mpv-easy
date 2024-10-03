@@ -1,5 +1,7 @@
 import { execAsync, execSync, getOs } from "../common"
+import { existsSync } from "../fs"
 import { readFile, writeFile } from "../mpv"
+import { normalize } from "../path"
 
 export function readFileBase64() {}
 
@@ -26,12 +28,13 @@ export function shellExecString(cmd: string) {
   execSync(["sh", "-c", cmd])
 }
 
-export function detectCmd(cmdName: string): boolean {
+export function detectCmd(cmdName: string): false | string {
   const os = getOs()
-  const cmd = os === "windows" ? `get-command ${cmdName}` : `where ${cmdName}`
+  const cmd = os === "windows" ? `where ${cmdName}` : `where ${cmdName}`
   try {
-    const s = runCmdSync(cmd)
-    return s.stdout.length > 0 && s.ok === true
+    const s = runCmdSync(cmd).stdout
+    const p = s.trim().split("\n")[0]
+    return existsSync(p) ? p : false
   } catch {
     return false
   }
@@ -43,12 +46,12 @@ export function runCmdSync(cmd: string): {
   stderr: string
 } {
   const os = getOs()
-  const [sh, shArg] = os === "windows" ? ["powershell", "-c"] : ["sh", "-c"]
+  const [sh, shArg] = os === "windows" ? ["cmd", "/c"] : ["sh", "-c"]
   try {
-    const stdout = execSync([sh, shArg, cmd])
+    const stdout = execSync([sh, shArg, cmd]).replaceAll("\r\n", "\n")
     return { ok: true, stdout, stderr: "" }
   } catch (e) {
-    return { ok: false, stderr: String(e), stdout: "" }
+    return { ok: false, stderr: String(e).replaceAll("\r\n", "\n"), stdout: "" }
   }
 }
 
@@ -58,7 +61,7 @@ export async function runCmdAsync(cmd: string): Promise<{
   stderr: string
 }> {
   const os = getOs()
-  const [sh, shArg] = os === "windows" ? ["powershell", "-c"] : ["sh", "-c"]
+  const [sh, shArg] = os === "windows" ? ["cmd", "/c"] : ["sh", "-c"]
   try {
     const stdout = await execAsync([sh, shArg, cmd])
     return { ok: true, stdout, stderr: "" }

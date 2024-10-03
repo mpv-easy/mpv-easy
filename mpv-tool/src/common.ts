@@ -124,7 +124,7 @@ export function execSync(
   if (r.status < 0) {
     throw new Error(`subprocess error status:${r.status} stderr:${r.stderr}`)
   }
-  return r.stdout
+  return r.stdout.replaceAll("\r\n", "\n")
 }
 
 export function execAsync(
@@ -145,9 +145,9 @@ export function execAsync(
       (success, result, error) => {
         if (success) {
           if (result.status < 0) {
-            reject(result.stderr)
+            reject(result.stderr.replaceAll("\r\n", "\n"))
           } else {
-            resolve(result.stdout)
+            resolve(result.stdout.replaceAll("\r\n", "\n"))
           }
         } else {
           reject(error)

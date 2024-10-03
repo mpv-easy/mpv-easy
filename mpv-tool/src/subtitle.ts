@@ -1,5 +1,5 @@
 import { SubtitleTypes, isHttp, printAndOsd } from "./common"
-import { fetch } from "./rs-ext"
+import { fetch } from "./fetch"
 import { existsSync } from "./fs"
 import {
   commandv,

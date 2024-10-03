@@ -1,34 +1,21 @@
-import { execSync } from "./common"
-
-const type = {
-  GET: "GET",
-  POST: "POST",
-  PUT: "PUT",
-  PATCH: "PATCH",
-  DELETE: "DELETE",
-  HEAD: "HEAD",
-  OPTIONS: "OPTIONS",
-} as const
-export type FetchOption = Partial<{
-  method: FetchMethod
-  headers: Record<string, string>
-  url: string
-  body: string | Object
-}>
-
-export type FetchMethod = keyof typeof type | string
+import { execAsync, execSync } from "./common"
+import { FetchMethod, FetchOption, FetchResponse } from "./const"
+import { detectCmd } from "./ext"
+import { existsSync } from "./fs"
+import { fetchByExt, getRsExtExePath } from "./rs-ext"
 
 function generateMethod(options: FetchOption): string[] {
   const method = options.method
   if (!method) return ["-X", "GET"]
   return [
     "-X",
-    type[method.toUpperCase() as keyof typeof type] || method.toUpperCase(),
+    FetchMethod[method.toUpperCase() as keyof typeof FetchMethod] ||
+      method.toUpperCase(),
   ]
 }
 
 const getHeaderString = (name: string, val: string) =>
-  `${name}: ${`${val}`.replace(/(\\|")/g, "\\$1")}`
+  `"${name}: ${`${val}`.replace(/(\\|")/g, "\\$1")}"`
 
 function generateHeader(options: FetchOption = {}): {
   params: string[]
@@ -36,7 +23,11 @@ function generateHeader(options: FetchOption = {}): {
 } {
   const { headers = {} } = options
   let isEncode = false
-  const headerParam: string[] = []
+  const headerParam: string[] = ["-s"]
+
+  if (options.redirect === "follow") {
+    headerParam.push("-L")
+  }
 
   Object.keys(headers).map((name) => {
     if (name.toLocaleLowerCase() !== "content-length") {
@@ -53,12 +44,12 @@ function generateHeader(options: FetchOption = {}): {
   }
 }
 
-export function escapeBody(body: Object): string {
+function escapeBody(body: Object): string {
   if (typeof body !== "string") return JSON.stringify(body)
   return body.replace(/'/g, `'\\''`)
 }
 
-export function generateBody(body: Object): string[] {
+function generateBody(body: Object): string[] {
   if (!body) return []
 
   const s =
@@ -68,15 +59,16 @@ export function generateBody(body: Object): string[] {
   return ["--data-binary", `${s}`]
 }
 
-export function generateCompress(isEncode: boolean): string {
+function generateCompress(isEncode: boolean): string {
   return isEncode ? " --compressed" : ""
 }
+
 const fetchToCurl = (url: string, options: FetchOption = {}): string[] => {
   const { body = "" } = options
   const headers = generateHeader(options)
   return [
     "curl",
-    url,
+    `${url}`,
     ...generateMethod(options),
     ...headers.params,
     ...generateBody(body),
@@ -84,8 +76,39 @@ const fetchToCurl = (url: string, options: FetchOption = {}): string[] => {
   ].filter((i) => !!i.length)
 }
 
-export function fetch(url: string, options: FetchOption = {}) {
+export function fetchByCurlSync(url: string, options: FetchOption = {}) {
   const cmd = fetchToCurl(url, options)
   const s = decodeURIComponent(execSync(cmd))
   return s
+}
+
+export async function fetchByCurl(url: string, options: FetchOption = {}) {
+  const cmd = fetchToCurl(url, options)
+  const text = await execAsync(cmd)
+  const status = 200
+  return {
+    status,
+    ok: status === 200,
+    text: () => Promise.resolve(text),
+    json: () => Promise.resolve(JSON.parse(text)),
+  }
+}
+
+export async function fetch(
+  url: string,
+  options: FetchOption = {},
+): Promise<FetchResponse> {
+  if (typeof globalThis.fetch === "function") {
+    return options ? globalThis.fetch(url, options) : globalThis.fetch(url)
+  }
+
+  if (existsSync(getRsExtExePath())) {
+    return fetchByExt(url, options)
+  }
+
+  if (detectCmd("curl")) {
+    return fetchByCurl(url, options)
+  }
+
+  throw new Error("fetch command not found")
 }
