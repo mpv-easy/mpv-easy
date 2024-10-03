@@ -1,4 +1,4 @@
-import { SubtitleTypes, isHttp, printAndOsd } from "./common"
+import { SubtitleTypes, execAsync, isHttp, printAndOsd } from "./common"
 import { fetch } from "./fetch"
 import { existsSync } from "./fs"
 import {
@@ -15,7 +15,7 @@ import { getFileName } from "./path"
 import type { TrackItem } from "./type"
 import { getTmpDir } from "./tmp"
 import { isYtdlp } from "./yt-dlp"
-import { detectCmd, runCmdSync } from "./ext"
+import { detectCmd } from "./ext"
 import { getFfmpegPath } from "./ffmpeg"
 
 export async function loadRemoteSubtitle(path = getProperty("path")) {
@@ -170,11 +170,11 @@ export function getSubtitleTracks(): SubtitleTrack[] {
   return tracks
 }
 
-export function saveSrt(
+export async function saveSrt(
   videoPath: string,
   trackId: number,
   ouptutPath: string,
-): boolean {
+): Promise<boolean> {
   if (!videoPath) {
     return false
   }
@@ -192,9 +192,20 @@ export function saveSrt(
     }
   }
 
-  const cmd = `${ffmpeg} -y -hide_banner -loglevel error -i "${videoPath}" -map 0:s:${subTrack.id - 1} "${ouptutPath}"`
+  const cmd = [
+    ffmpeg,
+    "-y",
+    "-hide_banner",
+    "-loglevel",
+    "error",
+    "-i",
+    videoPath,
+    "-map",
+    `0:s:${subTrack.id - 1}`,
+    ouptutPath,
+  ]
   try {
-    runCmdSync(cmd)
+    await execAsync(cmd)
   } catch (e) {
     return false
   }

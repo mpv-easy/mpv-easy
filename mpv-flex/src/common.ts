@@ -17,7 +17,10 @@ export function applyAttributes<
   const oldAttrs = node.attributes
   for (const name in oldAttrs) {
     // @ts-ignore
-    if (typeof oldAttrs[name] !== 'undefined' && typeof attributes[name] === "undefined") {
+    if (
+      typeof oldAttrs[name] !== "undefined" &&
+      typeof attributes[name] === "undefined"
+    ) {
       // @ts-ignore
       setAttribute(node, name, undefined)
     }
