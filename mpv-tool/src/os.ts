@@ -1,4 +1,4 @@
-import { runCmdSync } from "./ext"
+import { execSync } from "./common"
 
 export const LangList = [
   "en-US",
@@ -36,5 +36,5 @@ export const LangList = [
 export type Lang = (typeof LangList)[number]
 
 export function getLang(): Lang {
-  return runCmdSync("(Get-Culture).Name").stdout.trim() as Lang
+  return execSync(["powershell", "-c", "(Get-Culture).Name"]).trim() as Lang
 }

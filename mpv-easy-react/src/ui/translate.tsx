@@ -4,6 +4,7 @@ import {
   observeProperty,
   registerScriptMessage,
   setPropertyBool,
+  playAuido,
 } from "@mpv-easy/tool"
 import React, { useEffect, useRef, useState } from "react"
 import { useDispatch } from "react-redux"
@@ -14,10 +15,8 @@ import {
   IconButtonSizeSelector,
 } from "../store"
 import { Box, Button } from "@mpv-easy/react"
-import { bingClientSearch } from "@mpv-easy/translate"
-import { playAuido } from "../../../mpv-tool/src/audio"
+import { bingClientSearch, google } from "@mpv-easy/translate"
 import { useSelector } from "react-redux"
-import { google } from "../../../mpv-translate/src/google"
 
 type WordInfo = {
   word: string
@@ -27,9 +26,7 @@ type WordInfo = {
 
 async function getWordInfo(w: string): Promise<WordInfo> {
   const text = await bingClientSearch(w)
-  const detail = (text.match(/data-detailinition="(.*?)"/)?.[1] || "").split(
-    ";",
-  )
+  const detail = (text.match(/data-definition="(.*?)"/)?.[1] || "").split(";")
   const word = text.match(/data-word="(.*?)"/)?.[1] || w
   const audio = text.match(/audiomd5="(.*?)"/)?.[1] || ""
 
@@ -82,7 +79,7 @@ function Word({ word, showTitle }: { word: string; showTitle: boolean }) {
       fontSize={fontSize}
       color={style.color}
       colorHover={style.colorHover}
-      // backgroundColorHover={style.backgroundColorHover}
+      backgroundColorHover={style.backgroundColorHover}
       title={showTitle ? info.detail.join("\n").trim() : ""}
       text={word}
     />
