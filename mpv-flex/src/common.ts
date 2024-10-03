@@ -14,6 +14,14 @@ export function applyAttributes<
   D extends BaseDom<any, any, any>,
   K extends keyof D["attributes"],
 >(node: D, attributes: Record<K, any>) {
+  const oldAttrs = node.attributes
+  for (const name in oldAttrs) {
+    // @ts-ignore
+    if (typeof oldAttrs[name] !== 'undefined' && typeof attributes[name] === "undefined") {
+      // @ts-ignore
+      setAttribute(node, name, undefined)
+    }
+  }
   for (const name in attributes) {
     if (!attributesToSkip[name as keyof typeof attributesToSkip])
       setAttribute(node, name, attributes[name])

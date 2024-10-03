@@ -286,6 +286,10 @@ function renderNodeToMpv(node: MpDom) {
       }
       bgOverlay.hidden = false
       bgOverlay.update()
+    } else {
+      bgOverlay.data = ""
+      bgOverlay.hidden = true
+      bgOverlay.update()
     }
 
     // image
