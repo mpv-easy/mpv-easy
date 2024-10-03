@@ -5,22 +5,14 @@
   "description": "@mpv-easy/flex",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
+  "homepage": "https://github.com/mpv-easy/mpv-easy#readme",
   "scripts": {
-    "es5": "babel ./es5 -d ./bundle",
     "build": "tsc -p ./tsconfig.build.json",
-    "app": "esbuild ./src/app.tsx --outfile=./es5/button.js --bundle && pnpm run es5 && esbuild --bundle ./bundle/button.js --outfile=./es5/button.es5.js",
-    "tsx": "esbuild ./src/app.tsx --outfile=./es5/button.js --bundle && pnpm run es5",
-    "dev": "tsc -p ./tsconfig.build.json -w"
+    "dev": "tsc -p ./tsconfig.build.json -w",
+    "test": "vitest"
   },
-  "keywords": [],
+  "keywords": ["flex"],
   "author": "ahaoboy <504595380@qq.com> (https://github.com/ahaoboy)",
   "license": "MIT",
-  "dependencies": {
-    "@mpv-easy/assdraw": "workspace:*",
-    "@mpv-easy/tool": "workspace:*",
-    "@r-tui/flex": "0.1.11",
-    "@r-tui/share": "0.1.7",
-    "e-color": "0.1.5",
-    "lodash-es": "4.17.21"
-  }
+  "dependencies": {}
 }

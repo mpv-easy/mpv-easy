@@ -1,10 +1,4 @@
-import {
-  getPropertyNumber,
-  createOsdOverlay,
-  print,
-  JSONStringify,
-  Rect,
-} from "@mpv-easy/tool"
+import { getPropertyNumber, createOsdOverlay, Rect } from "@mpv-easy/tool"
 
 export function scaleText(text: string, maxWidth: number, maxHeight: number) {
   const fontSize = getPropertyNumber("options/osd-font-size")!

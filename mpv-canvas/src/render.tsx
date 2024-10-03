@@ -2,7 +2,7 @@ import React from "react"
 
 // @ts-ignore
 import FontFaceObserver from "fontfaceobserver"
-import { getRootFlex } from "@mpv-easy/flex"
+import { getRootFlex } from "@mpv-easy/react"
 import { createRender } from "@mpv-easy/react"
 
 import { createMpvMock } from "./mock"

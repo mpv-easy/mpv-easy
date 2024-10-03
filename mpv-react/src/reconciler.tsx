@@ -10,21 +10,25 @@ import type { MousePos } from "@mpv-easy/tool"
 import createReconciler from "react-reconciler"
 import { DefaultEventPriority } from "react-reconciler/constants"
 import {
-  type MpDom,
-  type RenderConfig,
-  dispatchEvent,
-  getRootFlex,
-  renderNode,
-  RootName,
   appendChildNode,
   insertBeforeNode,
   removeChildNode,
   setAttribute,
   setLayoutNode,
   applyAttributes,
+} from "@mpv-easy/flex"
+
+import {
   createNode,
   DefaultFps,
-} from "@mpv-easy/flex"
+  type MpDom,
+  type RenderConfig,
+  dispatchEvent,
+  getRootFlex,
+  renderNode,
+  RootName,
+} from "./flex"
+
 import throttle from "lodash-es/throttle"
 const NO_CONTEXT = {}
 

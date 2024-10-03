@@ -4,7 +4,7 @@ import React, {
   RefAttributes,
 } from "react"
 import { forwardRef } from "react"
-import type { MpDom, MpDomProps } from "@mpv-easy/flex"
+import type { MpDom, MpDomProps } from "../flex"
 
 export const Box: ForwardRefExoticComponent<
   PropsWithoutRef<Partial<MpDomProps & { children: React.ReactNode }>> &
