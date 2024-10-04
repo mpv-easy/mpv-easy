@@ -87,6 +87,10 @@ export class AssDraw {
     return this.append(`{\\q${size}}`)
   }
 
+  bold(enable: boolean) {
+    return this.append(`{\\b${+enable}}`)
+  }
+
   borderSize(size: number) {
     return this.append(`{\\bord${size}}`)
   }

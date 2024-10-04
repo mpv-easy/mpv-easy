@@ -49,6 +49,7 @@ export function getAssText(node: MpDom, x: number, y: number) {
   const font = getFirstValidAttribute(node, "font") ?? ""
   let color = getFirstValidAttribute(node, "color") ?? "#FFFFFFFF"
   const fontSize = getFirstValidAttribute(node, "fontSize") ?? "5%"
+  const bold = getFirstValidAttribute(node, 'fontWeight') === 'bold'
   const fontBorderSize = getFirstValidAttribute(node, "fontBorderSize") ?? 0
   const fontBorderColor =
     getFirstValidAttribute(node, "fontBorderColor") ?? "#000000"
@@ -69,6 +70,7 @@ export function getAssText(node: MpDom, x: number, y: number) {
     .fontBorderSize(lenToNumber(node, fontBorderSize, false, 0) * assScale)
     .color(color)
     .alpha(alpha)
+    .bold(bold)
     .append(t.replaceAll("\r\n", "\\N").replaceAll("\n", "\\N"))
     .toString()
   return s

@@ -19,6 +19,7 @@ export interface MpAttrs {
   color: string
   hide: boolean
   maxWidth: number
+  fontWeight: "bold" | "normal"
 }
 
 export interface MpProps {
