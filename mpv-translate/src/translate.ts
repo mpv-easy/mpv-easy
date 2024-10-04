@@ -101,8 +101,11 @@ export async function translate(option: Partial<TranslateOption> = {}) {
     `${tmpDir}/${hash}.${videoName}.${sourceLang}.${targetLang}.srt`,
   )
   if (!existsSync(srtPath)) {
-    if (!(await saveSrt(videoPath, sub.id, srtOriPath))) {
-      printAndOsd("ffmpeg export srt failed")
+    if (
+      !(await saveSrt(videoPath, sub.id, srtOriPath)) ||
+      !existsSync(srtOriPath)
+    ) {
+      printAndOsd("save subtitle error")
       return
     }
     const text = readFile(srtOriPath)
