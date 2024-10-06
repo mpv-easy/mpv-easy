@@ -15,11 +15,10 @@
   "author": "ahaoboy <504595380@qq.com> (https://github.com/ahaoboy)",
   "license": "MIT",
   "dependencies": {
-    "@polkadot/x-textdecoder": "13.1.1",
-    "@polkadot/x-textencoder": "13.1.1",
     "buffer": "6.0.3",
     "core-js": "3.38.1",
     "es-symbol": "1.1.2",
-    "uri-component": "0.1.1"
+    "uri-component": "0.1.1",
+    "textcodec": "0.1.0"
   }
 }

@@ -31,42 +31,32 @@ import Map from "core-js/stable/map"
 // @ts-ignore
 import Symbol from "es-symbol"
 import { getGlobal } from "./global"
-import { TextEncoder } from "@polkadot/x-textencoder"
-import { TextDecoder } from "@polkadot/x-textdecoder"
+import { TextDecoder, TextEncoder } from "textcodec"
 import { encodeURIComponent, decodeURIComponent } from "uri-component"
 
 const g = getGlobal()
-// g.Buffer = Buffer
-g.TextEncoder = TextEncoder
-g.TextDecoder = TextDecoder
-g.Map = Map
-g.WeakMap = Map
-g.Set = Set
-g.WeakSet = Set
-g.Symbol = Symbol
-g.Promise = Promise
+for (const [name, value] of Object.entries({
+  TextEncoder,
+  TextDecoder,
+  Map,
+  WeakMap: Map,
+  Set,
+  WeakSet: Set,
+  Symbol,
+  Promise,
+  encodeURIComponent,
+  decodeURIComponent,
+})) {
+  // @ts-ignore
+  if (!globalThis[name]) {
+    // @ts-ignore
+    globalThis[name] = value
+  }
+}
 
 if (!g.performance) {
   g.performance = {
     now: () => +new Date(),
-  }
-}
-
-if (!Array.prototype.fill) {
-  Array.prototype.fill = function (value, start, end) {
-    // 处理参数缺失的情况
-    if (start === undefined) start = 0
-    if (end === undefined) end = this.length
-
-    // 处理负数索引的情况
-    start = start >= 0 ? start : Math.max(0, this.length + start)
-    end = end >= 0 ? end : Math.max(0, this.length + end)
-
-    // 开始填充数组
-    for (let i = start; i < end; i++) {
-      this[i] = value
-    }
-    return this
   }
 }
 
@@ -86,7 +76,3 @@ function mixinProperties(obj: any, proto: any) {
 Object.setPrototypeOf =
   // biome-ignore lint/suspicious/useIsArray: <explanation>
   { __proto__: [] } instanceof Array ? setProtoOf : mixinProperties
-
-export { Map, Set, Symbol }
-g.encodeURIComponent = encodeURIComponent
-g.decodeURIComponent = decodeURIComponent
