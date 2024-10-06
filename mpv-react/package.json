@@ -20,7 +20,7 @@
     "@mpv-easy/assdraw": "workspace:*",
     "@mpv-easy/flex": "workspace:*",
     "@mpv-easy/tool": "workspace:*",
-    "e-color": "0.1.5",
+    "e-color": "0.1.6",
     "lodash-es": "4.17.21",
     "react-use": "17.5.1"
   },

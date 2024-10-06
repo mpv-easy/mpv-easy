@@ -1,7 +1,8 @@
 import { getOs } from "./common"
 import { ConfigDir } from "./const"
 import { normalize } from "./path"
-import { getDefaultBinDirPath } from "./rs-ext"
+import { Argb } from "e-color"
+
 import type {
   AddKeyBindingFlags,
   FileInfo,
@@ -466,4 +467,9 @@ export function getMpvExePath() {
     return exePath.replaceAll("/", "\\\\")
   }
   return exePath
+}
+export function getColor(name: string): string | undefined {
+  const prop = getPropertyString(name)
+  if (!prop) return
+  return new Argb(prop, true).toBgra().toHex("#")
 }

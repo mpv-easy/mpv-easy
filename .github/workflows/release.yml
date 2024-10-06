@@ -158,4 +158,4 @@ jobs:
           cd ..
       - uses: ncipollo/release-action@v1
         with:
-          artifacts: "./mpy-easy-*/*.zip,./mpv-easy-react/es5/mpv-easy-es5.js,./mpv-easy-react/bundle/mpv-easy-es6.js,./mpv-easy-ext-dist/*,./mpv-play-with/dist/*.user.js,./mpv-easy-play-with-dist/*"
+          artifacts: "./mpy-easy-*/*.zip,./mpv-translate/es5/mpv-translate.js,./mpv-easy-react/es5/mpv-easy-es5.js,./mpv-easy-react/bundle/mpv-easy-es6.js,./mpv-easy-ext-dist/*,./mpv-play-with/dist/*.user.js,./mpv-easy-play-with-dist/*"

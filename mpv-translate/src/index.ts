@@ -2,6 +2,7 @@ import { definePlugin } from "@mpv-easy/plugin"
 export * from "./translate"
 export * from "./bing"
 export * from "./google"
+export * from "./ui"
 
 export const pluginName = "@mpv-easy/translate"
 

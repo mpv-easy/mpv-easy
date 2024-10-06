@@ -14,9 +14,9 @@
   "keywords": [],
   "author": "ahaoboy <504595380@qq.com> (https://github.com/ahaoboy)",
   "license": "MIT",
-  "devDependencies": {},
   "dependencies": {
     "@mpv-easy/polyfill": "workspace:*",
-    "buffer": "6.0.3"
+    "buffer": "6.0.3",
+    "e-color": "0.1.6"
   }
 }

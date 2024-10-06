@@ -2,21 +2,35 @@
   "name": "@mpv-easy/translate",
   "version": "0.1.10",
   "homepage": "https://github.com/mpv-easy/mpv-easy#readme",
-  "files": ["dist", "readme.md", "package.json"],
+  "files": [
+    "dist",
+    "readme.md",
+    "package.json"
+  ],
   "description": "@mpv-easy/translate",
   "main": "dist/index.js",
   "types": "./dist/index.d.ts",
   "scripts": {
-    "es5": "babel ./dist -d es5",
-    "build": "tsc -p ./tsconfig.build.json",
+    "es6": "esbuild ./src/mpv-translate.tsx --bundle --outdir=bundle --charset=utf8",
+    "es5": "babel --presets  @babel/preset-env ./bundle -d es5",
+    "build": "tsc -p ./tsconfig.build.json && npm run es6 && npm run es5",
     "dev": "tsc -p ./tsconfig.build.json -w"
   },
   "keywords": [],
   "author": "ahaoboy <504595380@qq.com> (https://github.com/ahaoboy)",
   "license": "MIT",
   "dependencies": {
+    "@mpv-easy/polyfill": "workspace:*",
     "@mpv-easy/plugin": "workspace:*",
     "@mpv-easy/tool": "workspace:*",
     "js-md5": "^0.8.3"
+  },
+  "devDependencies": {
+    "react": "18.3.1",
+    "@mpv-easy/react": "workspace:*"
+  },
+  "peerDependencies": {
+    "react": "18.3.1",
+    "@mpv-easy/react": "workspace:*"
   }
 }

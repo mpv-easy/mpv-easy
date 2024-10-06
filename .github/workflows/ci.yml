@@ -20,6 +20,7 @@ jobs:
           mkdir ./dist -p
           cp ./mpv-easy-react/es5/mpv-easy-es5.js ./dist/mpv-easy-es5.js
           cp ./mpv-easy-react/bundle/mpv-easy-es6.js ./dist/mpv-easy-es6.js
+          cp ./mpv-translate/es5/mpv-translate.js ./dist/mpv-translate.js
           cp ./mpv-play-with/dist/mpv-easy-play-with.user.js ./dist/mpv-easy-play-with.user.js
 
       - name: Upload

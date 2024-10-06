@@ -23,6 +23,7 @@ import {
   speedListSelector,
   speedSelector,
   frameTimeSelector,
+  translateSelector,
 } from "../store"
 import {
   PropertyBool,
@@ -45,6 +46,9 @@ import {
   registerScriptMessage,
   setPropertyNumber,
   printAndOsd,
+  getPropertyNumber,
+  getPropertyBool,
+  getColor,
 } from "@mpv-easy/tool"
 import throttle from "lodash-es/throttle"
 import isEqual from "lodash-es/isEqual"
@@ -55,7 +59,7 @@ import { getPlayableList } from "@mpv-easy/autoload"
 import { VoiceControl } from "./voice-control"
 import { History } from "./history"
 import { Speed } from "./speed"
-import { Translation } from "./translate"
+import { Translation } from "@mpv-easy/translate"
 
 export * from "./progress"
 export * from "./toolbar"
@@ -312,6 +316,14 @@ export const Easy = (props: Partial<EasyProps>) => {
   }
 
   const clickMenuStyle = useSelector(clickMenuStyleSelector)
+  const subFontScale = getPropertyNumber("sub-scale") || 1
+  const subFontSize =
+    (getPropertyNumber("sub-font-size") || fontSize) * subFontScale
+  const subColor = getColor("sub-color") || "#FFFFFFFF"
+  const subBold = getPropertyBool("sub-bold")
+  const subOutlineSize = getPropertyNumber("sub-outline-size")
+  const subOutlineColor = getColor("sub-outline-color")
+  const { sourceLang, targetLang } = useSelector(translateSelector)
   return (
     <>
       <Tooltip
@@ -360,7 +372,15 @@ export const Easy = (props: Partial<EasyProps>) => {
         <Playlist />
         <History />
         <Speed />
-        <Translation />
+        <Translation
+          subFontSize={subFontSize}
+          subColor={subColor}
+          subBold={subBold}
+          subOutlineSize={subOutlineSize}
+          subOutlineColor={subOutlineColor}
+          sourceLang={sourceLang}
+          targetLang={targetLang}
+        />
       </Box>
     </>
   )

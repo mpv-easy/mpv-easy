@@ -9,6 +9,8 @@ import { pluginName as i18nName } from "@mpv-easy/i18n"
 import { pluginName as anime4kName } from "@mpv-easy/anime4k"
 import { pluginName as autoloadName } from "@mpv-easy/autoload"
 import { pluginName as thumbfastName } from "@mpv-easy/thumbfast"
+import { pluginName as translateName } from "@mpv-easy/translate"
+
 import { normalize } from "@mpv-easy/tool"
 
 export function createStore() {
@@ -161,3 +163,6 @@ export const protocolHookSelector = (state: RootState) =>
 
 export const thumbfastSelector = (state: RootState) =>
   state.context[thumbfastName]
+
+export const translateSelector = (state: RootState) =>
+  state.context[translateName]
