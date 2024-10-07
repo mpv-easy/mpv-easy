@@ -36,6 +36,7 @@ Click left mouse button to play the audio, and click the wheel to display the fu
 
 
 ## todo
+- auto detect source language
 - remove ffmpeg dependency
 - support more languages
 - support ass

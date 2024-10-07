@@ -20,10 +20,10 @@ export async function google(
   let sl = sourceLang?.split("-")[0].toLowerCase()
   let tl = targetaLang.split("-")[0].toLowerCase()
   const prefixList = LangList.map((i) => i.split("-")[0])
-  if (tl && !prefixList.includes(tl)) {
+  if (!tl || !prefixList.includes(tl)) {
     tl = getLang().split("-")[0].toLowerCase()
   }
-  if (sl && !prefixList.includes(sl)) {
+  if (!sl || !prefixList.includes(sl)) {
     sl = "auto"
   }
   const url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=${sl}&tl=${tl}&dt=t&q=${encodeURIComponent(text)}`

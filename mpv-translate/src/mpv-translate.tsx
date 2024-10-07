@@ -88,6 +88,8 @@ const {
     "tooltip-zindex": { type: "number", key: "tooltipZIndex" },
     "tooltip-left": { type: "number", key: "tooltipLeft" },
     "tooltip-bottom": { type: "number", key: "tooltipBottom" },
+    "target-lang": { type: "string", key: "targetLang" },
+    "source-lang": { type: "string", key: "sourceLang" },
   }),
 }
 

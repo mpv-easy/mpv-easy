@@ -39,7 +39,7 @@ export function getOptions<
   config: T,
   update?: (changelist: Record<keyof R, boolean | undefined>) => void,
 ): R {
-  const rawOption: any = {}
+  const rawOption: Record<string, string> = {}
   for (const i in config) {
     rawOption[i] = ""
   }
@@ -48,7 +48,7 @@ export function getOptions<
   const ret: any = {}
   for (const k in rawOption) {
     const key = config[k].key || k
-    const v = rawOption[k]
+    let v = rawOption[k]
     if (v.length) {
       switch (config[k].type) {
         case "number": {
@@ -64,6 +64,12 @@ export function getOptions<
           break
         }
         case "color": {
+          if (
+            (v.startsWith(`"`) && v.endsWith('"')) ||
+            (v.startsWith(`'`) && v.endsWith(`'`))
+          ) {
+            v = v.slice(1, -1)
+          }
           const bgra = new Argb(v.length === 7 ? v : `#FF${v.slice(1)}`, true)
             .toBgra()
             .toHex("#")
