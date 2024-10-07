@@ -46,7 +46,7 @@ export const defaultSubConfig: SubConfig = {
 export const defaultTooltipConfig: TooltipConfig = {
   tooltioFontSize: 32,
   tooltipColor: "#FFFFFF00",
-  tooltipBackColor: "#FF000000",
+  tooltipBackColor: "#00000000",
   tooltipScale: 1,
   tooltipBold: false,
   tooltipOutlineSize: 0,
