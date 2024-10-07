@@ -1,8 +1,6 @@
 import {
   existsSync,
-  getLang,
   getTmpDir,
-  Lang,
   normalize,
   readFile,
   writeFile,
@@ -14,7 +12,7 @@ export async function bingClientSearch(word: string): Promise<string> {
   const q = encodeURIComponent(word)
   const url = `https://cn.bing.com/dict/clientsearch?mkt=zh-CN&setLang=zh&form=BDVEHC&ClientVer=BDDTV3.5.1.4320&q=${q}`
   const tmpDir = getTmpDir()
-  const hash = md5.create().update([q].join("-")).hex()
+  const hash = md5.create().update(url).hex()
   const cachePath = normalize(`${tmpDir}/${hash}.${q}.txt`)
   if (existsSync(cachePath)) {
     return readFile(cachePath)

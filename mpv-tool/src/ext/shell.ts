@@ -30,7 +30,7 @@ export function shellExecString(cmd: string) {
 
 export function detectCmd(cmdName: string): false | string {
   const os = getOs()
-  const cmd = os === "windows" ? `where ${cmdName}` : `where ${cmdName}`
+  const cmd = `where ${cmdName}`
   try {
     const s = runCmdSync(cmd).stdout
     const p = s.trim().split("\n")[0]

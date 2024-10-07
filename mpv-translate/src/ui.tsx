@@ -5,31 +5,32 @@ import {
   registerScriptMessage,
   setPropertyBool,
   playAuido,
+  detectCmd,
+  printAndOsd,
 } from "@mpv-easy/tool"
 import React, { useEffect, useRef, useState } from "react"
-import { Box, Button, MpDom, MpDomProps } from "@mpv-easy/react"
-import { bingClientSearch } from "./bing"
+import { Box, Button, MpDomProps } from "@mpv-easy/react"
 import { google } from "./google"
 import { translate } from "./translate"
 import { defaultSubConfig, SubConfig } from "./const"
+import { de2en, en2zh, WordInfo } from "./interactive-translate"
 
-export type WordInfo = {
-  word: string
-  detail: string[]
-  audio?: string
-}
-
-async function getWordInfo(w: string): Promise<WordInfo> {
-  const text = await bingClientSearch(w)
-  const detail = (text.match(/data-definition="(.*?)"/)?.[1] || "").split(";")
-  const word = text.match(/data-word="(.*?)"/)?.[1] || w
-  const audio = text.match(/audiomd5="(.*?)"/)?.[1] || ""
-
-  return {
-    word,
-    detail,
-    audio,
+async function getWordInfo(
+  word: string,
+  targetLang: string,
+  sourceLang: string,
+): Promise<WordInfo> {
+  if (targetLang.startsWith("zh") && sourceLang.startsWith("en")) {
+    return en2zh(word)
   }
+  if (targetLang.startsWith("en") && sourceLang.startsWith("de")) {
+    return de2en(word)
+  }
+  const text = await google(word, targetLang, sourceLang)
+  return Promise.resolve({
+    word,
+    detail: [text],
+  })
 }
 
 function split(str: string): string[] {
@@ -44,11 +45,11 @@ function cleanWord(w: string): string {
 export function Word({
   word,
   showTitle,
-  SubConfig,
+  subConfig,
 }: {
   word: string
   showTitle: boolean
-  SubConfig: SubConfig
+  subConfig: SubConfig
 }) {
   const [info, setInfo] = useState<WordInfo>({
     word: "",
@@ -59,7 +60,11 @@ export function Word({
   useEffect(() => {
     if (loading.current || !word.length) return
     loading.current = true
-    getWordInfo(cleanWord(word)).then((info) => {
+    getWordInfo(
+      cleanWord(word),
+      subConfig.targetLang,
+      subConfig.sourceLang,
+    ).then((info) => {
       setInfo(info)
       loading.current = false
     })
@@ -77,26 +82,26 @@ export function Word({
       }}
       display="flex"
       position="relative"
-      fontSize={SubConfig.subFontSize}
-      color={SubConfig.subColor}
-      fontBorderSize={SubConfig.subOutlineSize}
-      fontBorderColor={SubConfig.subOutlineColor}
-      fontWeight={SubConfig.subBold ? "bold" : "normal"}
-      colorHover={SubConfig.subColorHover}
-      backgroundColorHover={SubConfig.subBackColorHover}
-      backgroundColor={SubConfig.subBackColor}
+      fontSize={subConfig.subFontSize}
+      color={subConfig.subColor}
+      fontBorderSize={subConfig.subOutlineSize}
+      fontBorderColor={subConfig.subOutlineColor}
+      fontWeight={subConfig.subBold ? "bold" : "normal"}
+      colorHover={subConfig.subColorHover}
+      backgroundColorHover={subConfig.subBackColorHover}
+      backgroundColor={subConfig.subBackColor}
       title={showTitle ? info.detail.join("\n").trim() : ""}
       text={word}
     />
   ) : (
     <Box
-      width={word === "" ? SubConfig.subFontSize / 2 : undefined}
-      height={word === "" ? SubConfig.subFontSize / 2 : undefined}
+      width={word === "" ? subConfig.subFontSize / 2 : undefined}
+      height={word === "" ? subConfig.subFontSize / 2 : undefined}
     />
   )
 }
 
-function Line({ line, SubConfig }: { line: string; SubConfig: SubConfig }) {
+function Line({ line, subConfig }: { line: string; subConfig: SubConfig }) {
   const words = split(line)
   const [showTitle, setShowTitle] = useState(true)
   const loading = useRef(false)
@@ -130,7 +135,7 @@ function Line({ line, SubConfig }: { line: string; SubConfig: SubConfig }) {
           showTitle={showTitle}
           key={[i, k].join(",")}
           word={i.trim()}
-          SubConfig={SubConfig}
+          subConfig={subConfig}
         />
       ))}
     </Box>
@@ -168,10 +173,22 @@ export function Translation(props: Partial<TranslationProps>) {
   }
   useEffect(() => {
     registerScriptMessage("translate", () => {
+      if (!detectCmd("ffmpeg")) {
+        printAndOsd("ffmpeg not found")
+        return
+      }
+      if (!detectCmd("curl")) {
+        printAndOsd("curl not found")
+        return
+      }
       translate({ targetLang, sourceLang })
     })
 
     registerScriptMessage("interactive-translate", async () => {
+      if (!detectCmd("curl")) {
+        printAndOsd("curl not found")
+        return
+      }
       setActive((v) => !v)
       setPropertyBool("sub-visibility", !getPropertyBool("sub-visibility"))
     })
@@ -201,7 +218,7 @@ export function Translation(props: Partial<TranslationProps>) {
           <Line
             key={[i, k].join()}
             line={i}
-            SubConfig={{
+            subConfig={{
               subFontSize,
               subColor,
               subBackColor,
