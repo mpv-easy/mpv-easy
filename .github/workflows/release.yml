@@ -60,12 +60,14 @@ jobs:
           node ./.github/download.js
 
           mkdir ./dist/scripts/mpv-easy-config/mpv-easy-ext -p
+          mkdir ./dist/script-opts -p
 
           cp ./mpv-easy-react/es5/mpv-easy-es5.js ./dist/scripts/mpv-easy-es5.js
           cp -r ./mpv-easy-react/fonts ./dist
           cp -r ./mpv-anime4k/shaders ./dist
           cp ./mpv-easy-react/mpv-conf/mpv.conf ./dist/mpv.conf
           cp ./mpv-easy-react/mpv-conf/input.conf ./dist/input.conf
+          cp ./mpv-translate/mpv-translate.conf ./dist/script-opts/mpv-translate.conf
           cp ./mpv-easy-react/mpv-conf/cookies.txt ./dist/cookies.txt
 
           chmod 777 ./mpv-easy-ext-dist/*
