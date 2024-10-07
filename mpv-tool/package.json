@@ -17,6 +17,7 @@
   "dependencies": {
     "@mpv-easy/polyfill": "workspace:*",
     "buffer": "6.0.3",
-    "e-color": "0.1.6"
+    "e-color": "0.1.6",
+    "type-fest": "^4.26.1"
   }
 }

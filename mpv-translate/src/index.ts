@@ -1,4 +1,10 @@
 import { definePlugin } from "@mpv-easy/plugin"
+import {
+  defaultSubConfig,
+  defaultTooltipConfig,
+  SubConfig,
+  TooltipConfig,
+} from "./const"
 export * from "./translate"
 export * from "./bing"
 export * from "./google"
@@ -7,14 +13,11 @@ export * from "./ui"
 export const pluginName = "@mpv-easy/translate"
 
 export const defaultConfig: TranslateConfig = {
-  sourceLang: "",
-  targetLang: "",
+  ...defaultSubConfig,
+  ...defaultTooltipConfig,
 }
 
-export type TranslateConfig = {
-  sourceLang: string
-  targetLang: string
-}
+export type TranslateConfig = SubConfig & TooltipConfig
 
 declare module "@mpv-easy/plugin" {
   interface PluginContext {

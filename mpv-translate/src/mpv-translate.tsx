@@ -1,45 +1,130 @@
-import "@mpv-easy/polyfill";
-import "@mpv-easy/tool";
-import { render, Tooltip } from "@mpv-easy/react";
-import { Translation } from "./ui";
-import React from "react";
-import { getColor, getPropertyBool, getPropertyNumber } from "@mpv-easy/tool";
+import "@mpv-easy/polyfill"
+import "@mpv-easy/tool"
+import { render, Tooltip } from "@mpv-easy/react"
+import { Translation } from "./ui"
+import React from "react"
+import { getOptions } from "@mpv-easy/tool"
+import { defaultSubConfig, defaultTooltipConfig } from "./const"
+
+const {
+  subFontSize,
+  subColor,
+  subBackColor,
+  subBackColorHover,
+  subColorHover,
+  subBold,
+  subScale,
+  subOutlineSize,
+  subOutlineColor,
+  subZIndex,
+  targetLang,
+  sourceLang,
+  tooltioFontSize,
+  tooltipColor,
+  tooltipBackColor,
+  tooltipScale,
+  tooltipBold,
+  tooltipOutlineSize,
+  tooltipOutlineColor,
+  tooltipMaxWidth,
+  tooltipZIndex,
+  tooltipLeft,
+  tooltipBottom,
+} = {
+  ...defaultSubConfig,
+  ...defaultTooltipConfig,
+  ...getOptions("mpv-translate", {
+    "sub-font-size": {
+      type: "number",
+      key: "subFontSize",
+    },
+    "sub-color": { type: "color", key: "subColor" },
+    "sub-back-color": {
+      type: "color",
+      key: "subBackColor",
+    },
+    "sub-back-color-hover": {
+      type: "color",
+      key: "subBackColorHover",
+    },
+    "sub-color-hover": {
+      type: "color",
+      key: "subColorHover",
+    },
+    "sub-bold": { type: "boolean", key: "subBold" },
+    "sub-scale": { type: "number", key: "subScale" },
+    "sub-outline-size": { type: "number", key: "subOutlineSize" },
+    "sub-outline-color": {
+      type: "color",
+      key: "subOutlineColor",
+    },
+    "sub-zindex": { type: "number", key: "subZIndex" },
+    "tooltip-font-size": {
+      type: "number",
+      key: "tooltioFontSize",
+    },
+    "tooltip-color": {
+      type: "color",
+      key: "tooltipColor",
+    },
+    "tooltip-back-color": {
+      type: "color",
+      key: "tooltipBackColor",
+    },
+    "tooltip-scale": { type: "number", key: "tooltipScale" },
+    "tooltip-bold": { type: "boolean", key: "tooltipBold" },
+    "tooltip-outline-size": {
+      type: "number",
+      key: "tooltipOutlineSize",
+    },
+    "tooltip-outline-color": {
+      type: "color",
+      key: "tooltipOutlineColor",
+    },
+    "tooltip-max-width": {
+      type: "number",
+      key: "tooltipMaxWidth",
+    },
+    "tooltip-zindex": { type: "number", key: "tooltipZIndex" },
+    "tooltip-left": { type: "number", key: "tooltipLeft" },
+    "tooltip-bottom": { type: "number", key: "tooltipBottom" },
+  }),
+}
 
 function App() {
-  const subFontScale = getPropertyNumber("sub-scale") || 1;
-  const subFontSize = (getPropertyNumber("sub-font-size") || 55) * subFontScale;
-  const subColor = getColor("sub-color") || "#FFFFFFFF";
-  const subBold = getPropertyBool("sub-bold");
-  const subOutlineSize = getPropertyNumber("sub-outline-size");
-  const subOutlineColor = getColor("sub-outline-color");
-  const subBackColor = getColor("sub-back-color");
-
   return (
     <>
       <Tooltip
-        backgroundColor={"#00000000"}
-        fontSize={subFontSize / 2}
-        color={subColor}
+        zIndex={tooltipZIndex}
+        maxWidth={tooltipMaxWidth}
+        backgroundColor={tooltipBackColor}
+        fontSize={tooltioFontSize * tooltipScale}
+        color={tooltipColor}
+        fontWeight={tooltipBold ? "bold" : "normal"}
+        borderColor={tooltipOutlineColor}
+        borderSize={tooltipOutlineSize}
         display="flex"
         justifyContent="center"
         alignItems="center"
-        maxWidth={48}
-        zIndex={1024}
       />
       <Translation
+        zIndex={subZIndex}
         subFontSize={subFontSize}
+        subScale={subScale}
         subColor={subColor}
         subBold={subBold}
         subOutlineSize={subOutlineSize}
         subOutlineColor={subOutlineColor}
-        zIndex={512}
-        subBackCOlorHover="#00FFFF"
-        subColorHover="#00FF00"
-        // sourceLang={sourceLang}
-        // targetLang={targetLang}
+        sourceLang={sourceLang}
+        targetLang={targetLang}
+        subBackColor={subBackColor}
+        subBackColorHover={subBackColorHover}
+        subColorHover={subColorHover}
+        left={tooltipLeft}
+        bottom={tooltipBottom}
       />
     </>
-  );
+  )
 }
 
-render(<App />);
+render(<App />)
