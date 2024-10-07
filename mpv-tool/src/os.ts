@@ -35,6 +35,12 @@ export const LangList = [
 
 export type Lang = (typeof LangList)[number]
 
+let _lang: Lang
 export function getLang(): Lang {
-  return execSync(["powershell", "-c", "(Get-Culture).Name"]).trim() as Lang
+  if (_lang) return _lang
+  return (_lang = execSync([
+    "powershell",
+    "-c",
+    "(Get-Culture).Name",
+  ]).trim() as Lang)
 }
