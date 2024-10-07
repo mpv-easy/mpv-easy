@@ -336,9 +336,11 @@ export function trace(...msg: unknown[]) {
 export function readOptions(
   table: Record<string, string | boolean | number>,
   identifier?: string,
-  on_update?: (list: Record<string, boolean | undefined>) => void,
+  onUpdate?: (changelist: Record<string, boolean | undefined>) => void,
 ) {
-  return getMPV().options.read_options(table, identifier, on_update)
+  if (typeof onUpdate === "function")
+    return getMPV().options.read_options(table, identifier, onUpdate)
+  return getMPV().options.read_options(table, identifier)
 }
 
 export function getcwd(): string | undefined {
@@ -434,9 +436,9 @@ export function clearTimeout(id: number) {
 //   return JSON.parse(str)
 // }
 
-export function getOptions() {
-  return getMPV().options
-}
+// export function getOptions() {
+//   return getMPV().options
+// }
 
 export function getMousePos(): MousePos {
   return getMPV().get_mouse_pos()
