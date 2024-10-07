@@ -45,6 +45,9 @@ function maxWidth(text: string, maxLength = 0): string {
 export function getAssText(node: MpDom, x: number, y: number) {
   const { text = "" } = node.attributes
   const t = maxWidth(text, node.attributes.maxWidth)
+    .replaceAll("\r\n", "\\N")
+    .replaceAll("\n", "\\N")
+    .replaceAll("\t", "    ")
   const assScale = getAssScale()
   const font = getFirstValidAttribute(node, "font") ?? ""
   let color = getFirstValidAttribute(node, "color") ?? "#FFFFFFFF"
@@ -71,7 +74,7 @@ export function getAssText(node: MpDom, x: number, y: number) {
     .color(color)
     .alpha(alpha)
     .bold(bold)
-    .append(t.replaceAll("\r\n", "\\N").replaceAll("\n", "\\N"))
+    .append(t)
     .toString()
   return s
 }
