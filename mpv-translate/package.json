@@ -8,9 +8,9 @@
   "types": "./dist/index.d.ts",
   "scripts": {
     "dev": "chokidar '../mpv-*/src/**/*' -c 'pnpm run build' -d 2000 --initial",
-    "es6": "esbuild ./src/mpv-translate.tsx --bundle --outdir=bundle --charset=utf8",
+    "bundle": "tsx build.ts",
     "es5": "babel --presets  @babel/preset-env ./bundle -d es5",
-    "build": "tsc -p ./tsconfig.build.json && npm run es6 && npm run es5",
+    "build": "tsc -p ./tsconfig.build.json && npm run bundle && npm run es5",
     "dev-ts": "tsc -p ./tsconfig.build.json -w"
   },
   "keywords": [],
