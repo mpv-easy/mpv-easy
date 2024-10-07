@@ -175,10 +175,10 @@ export function Translation(props: Partial<TranslationProps>) {
   const targetLang = defTargetLang.toLocaleLowerCase()
   let sourceLang = defSourceLang.toLocaleLowerCase()
   if (!sourceLang.length) {
-    sourceLang =
-      getSubtitleTracks()
-        .find((i) => i.selected)
-        ?.lang?.toLocaleLowerCase() || ""
+    const sub = getSubtitleTracks().find((i) => i.selected)
+    if (sub) {
+      sourceLang = (sub.lang || sub.title || "").toLocaleLowerCase()
+    }
   }
 
   useEffect(() => {
