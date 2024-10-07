@@ -102,20 +102,20 @@ jobs:
           # cp ./deno-dll/mpv-deno-windows.dll ./mpy-easy-deno-windows/scripts/mpv-deno-windows.dll
           # rm ./mpy-easy-deno-windows/scripts/mpv-easy-es5.js
           # mkdir ./mpy-easy-deno-windows/scripts-deno
-          # cp ./mpv-easy/bundle/mpv-easy-es6.js ./mpy-easy-deno-windows/scripts-deno/mpv-easy-es6.js
+          # cp ./mpv-easy-react/bundle/mpv-easy-es6.js ./mpy-easy-deno-windows/scripts-deno/mpv-easy-es6.js
           # mv ./mpy-easy-deno-windows/scripts/mpv-easy-config ./mpy-easy-deno-windows/scripts-deno/mpv-easy-config
 
 
           # cp ./qjs-dll/mpv-qjs-windows.dll ./mpy-easy-qjs-windows/scripts/mpv-qjs-windows.dll
           # rm ./mpy-easy-qjs-windows/scripts/mpv-easy-es5.js
           # mkdir ./mpy-easy-qjs-windows/scripts-qjs
-          # cp ./mpv-easy/bundle/mpv-easy-es6.js ./mpy-easy-qjs-windows/scripts-qjs/mpv-easy-es6.js
+          # cp ./mpv-easy-react/bundle/mpv-easy-es6.js ./mpy-easy-qjs-windows/scripts-qjs/mpv-easy-es6.js
           # mv ./mpy-easy-qjs-windows/scripts/mpv-easy-config ./mpy-easy-qjs-windows/scripts-qjs/mpv-easy-config
 
           # cp ./boa-dll/mpv-boa-windows.dll ./mpy-easy-boa-windows/scripts/mpv-boa-windows.dll
           # rm ./mpy-easy-boa-windows/scripts/mpv-easy-es5.js
           # mkdir ./mpy-easy-boa-windows/scripts-boa
-          # cp ./mpv-easy/bundle/mpv-easy-es6.js ./mpy-easy-boa-windows/scripts-boa/mpv-easy-es6.js
+          # cp ./mpv-easy-react/bundle/mpv-easy-es6.js ./mpy-easy-boa-windows/scripts-boa/mpv-easy-es6.js
           # mv ./mpy-easy-boa-windows/scripts/mpv-easy-config ./mpy-easy-boa-windows/scripts-boa/mpv-easy-config
 
           # https://github.com/yt-dlp/yt-dlp/releases

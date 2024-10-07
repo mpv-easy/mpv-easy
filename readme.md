@@ -5,11 +5,11 @@ TS and React toolkit for mpv script
 
 ## install
 
-[install](./mpv-easy/install.md)
+[install](./mpv-easy-react/install.md)
 
 ## CONTRIBUTING
 
-[CONTRIBUTING](./mpv-easy/CONTRIBUTING.md)
+[CONTRIBUTING](./mpv-easy-react/CONTRIBUTING.md)
 
 ## dev
 
@@ -108,13 +108,13 @@ set-executionpolicy remotesigned
 
 [mpv-easy-demo](https://github.com/ahaoboy/mpv-easy-demo)
 
-[more example](./mpv-easy/src/example/)
+[more example](./mpv-easy-react/src/example/)
 
 ## Q&A
 
 ### mujs stack overflow
 
-If your code throw a stack overflow error with mujs, you need to use the babel plugin [hack.js](./mpv-easy/src//babel//hack.js)
+If your code throw a stack overflow error with mujs, you need to use the babel plugin [hack.js](./mpv-easy-react/src//babel//hack.js)
 . It adds a function variable at the beginning of all functions to expand the stack size. Alternatively, you can use a custom compiled version of mujs and mpv, change mujs JS_STACKSIZE
 
 fixed: [Increase default stack sizes.](https://github.com/ccxvii/mujs/commit/7e27931468a7c0f41b2c8a64c9cb6b069f47a5ac)
