@@ -1,10 +1,10 @@
 import {
   command,
   existsSync,
+  getCurrentSubtitle,
   getFileName,
   getLang,
   getPropertyString,
-  getSubtitleTracks,
   getTmpDir,
   Lang,
   printAndOsd,
@@ -63,7 +63,7 @@ export type TranslateOption = {
 }
 
 export async function translate(option: Partial<TranslateOption> = {}) {
-  const sub = getSubtitleTracks().find((i) => i.selected)
+  const sub = getCurrentSubtitle()
   if (!sub) {
     printAndOsd("subtitle not found")
     return

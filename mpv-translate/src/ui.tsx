@@ -7,7 +7,7 @@ import {
   playAuido,
   detectCmd,
   printAndOsd,
-  getSubtitleTracks,
+  getCurrentSubtitle,
 } from "@mpv-easy/tool"
 import React, { useEffect, useRef, useState } from "react"
 import { Box, Button, MpDomProps } from "@mpv-easy/react"
@@ -175,7 +175,7 @@ export function Translation(props: Partial<TranslationProps>) {
   const targetLang = defTargetLang.toLocaleLowerCase()
   let sourceLang = defSourceLang.toLocaleLowerCase()
   if (!sourceLang.length) {
-    const sub = getSubtitleTracks().find((i) => i.selected)
+    const sub = getCurrentSubtitle()
     if (sub) {
       sourceLang = (sub.lang || sub.title || "").toLocaleLowerCase()
     }
@@ -183,6 +183,10 @@ export function Translation(props: Partial<TranslationProps>) {
 
   useEffect(() => {
     registerScriptMessage("translate", () => {
+      const sub = getCurrentSubtitle
+      if (!sub) {
+        printAndOsd("subtitle not found")
+      }
       if (!detectCmd("ffmpeg")) {
         printAndOsd("ffmpeg not found")
         return
@@ -195,6 +199,10 @@ export function Translation(props: Partial<TranslationProps>) {
     })
 
     registerScriptMessage("interactive-translate", () => {
+      const sub = getCurrentSubtitle
+      if (!sub) {
+        printAndOsd("subtitle not found")
+      }
       if (!detectCmd("curl")) {
         printAndOsd("curl not found")
         return

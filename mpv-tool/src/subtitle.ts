@@ -170,6 +170,10 @@ export function getSubtitleTracks(): SubtitleTrack[] {
   return tracks
 }
 
+export function getCurrentSubtitle() {
+  return getSubtitleTracks().find((i) => i.selected)
+}
+
 export async function saveSrt(
   videoPath: string,
   trackId: number,
