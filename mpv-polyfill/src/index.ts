@@ -21,6 +21,8 @@ import "core-js/stable/string/at"
 import "core-js/stable/string"
 import "core-js/stable/structured-clone"
 import "core-js/stable/typed-array"
+import "core-js/stable/escape"
+import "core-js/stable/unescape"
 
 // @ts-ignore
 import Promise from "core-js/stable/promise"
@@ -46,8 +48,6 @@ for (const [name, value] of Object.entries({
   Promise,
   encodeURIComponent,
   decodeURIComponent,
-  escape: decodeURIComponent,
-  unescape: encodeURIComponent,
 })) {
   // @ts-ignore
   if (!globalThis[name]) {
