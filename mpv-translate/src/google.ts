@@ -1,4 +1,4 @@
-import { fetch, getLang, LangList } from "@mpv-easy/tool"
+import { cacheAsync, fetch, getLang, LangList } from "@mpv-easy/tool"
 
 const headers = {
   "sec-ch-ua":
@@ -26,13 +26,14 @@ export async function google(
   if (!sl || !prefixList.includes(sl)) {
     sl = "auto"
   }
-  const url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=${sl}&tl=${tl}&dt=t&q=${encodeURIComponent(text)}`
-
-  const resp = await fetch(url, {
-    headers,
-  }).then((r) => r.text())
 
   try {
+    const url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=${sl}&tl=${tl}&dt=t&q=${encodeURIComponent(text)}`
+    const resp = await cacheAsync(url, () =>
+      fetch(url, {
+        headers,
+      }).then((r) => r.text()),
+    )
     const cn = JSON.parse(resp)[0]
       .map((v: any) => v[0])
       .join("")

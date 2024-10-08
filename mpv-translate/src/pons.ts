@@ -1,13 +1,4 @@
-import {
-  existsSync,
-  getTmpDir,
-  normalize,
-  printAndOsd,
-  readFile,
-  writeFile,
-  fetch,
-} from "@mpv-easy/tool"
-import { md5 } from "js-md5"
+import { printAndOsd, fetch, cacheAsync } from "@mpv-easy/tool"
 
 const ponsCombos = [
   "enes",
@@ -62,13 +53,8 @@ export async function pons(s: string, targetaLang: string, sourceLang: string) {
     return ""
   }
   const url = `http://en.pons.com/translate?q=${q}&l=${lang}&in=${sourceLang}`
-  const tmpDir = getTmpDir()
-  const hash = md5.create().update(url).hex()
-  const cachePath = normalize(`${tmpDir}/${hash}.${q}.txt`)
-  if (existsSync(cachePath)) {
-    return readFile(cachePath)
-  }
-  const text = await fetch(url, { redirect: "follow" }).then((r) => r.text())
-  writeFile(cachePath, text)
+  const text = await cacheAsync(url, () =>
+    fetch(url, { redirect: "follow" }).then((r) => r.text()),
+  )
   return text
 }

@@ -38,9 +38,17 @@ function split(str: string): string[] {
   return str.trim().replaceAll(/\s+/g, " ").replaceAll(" ", "  ").split(" ")
 }
 
-const PunctuationRegex = /[!"#$%&()*+,./:;<=>?@\[\]\^\{\|\}~]/g
+// FIXME: regex doesn't work
+// const PunctuationRegex = /[!"#$%&()*+,./:;<=>?@\[\]\^\{\|\}~]/g
+// function cleanWord(w: string): string {
+//   return w.replaceAll(PunctuationRegex, "")
+// }
+const PunctuationList = `!"#$%&()*+,./:;<=>?@[]^{|}~`.split("")
 function cleanWord(w: string): string {
-  return w.replaceAll(PunctuationRegex, "")
+  for (const i of PunctuationList) {
+    w = w.replaceAll(i, "")
+  }
+  return w
 }
 
 export function Word({
