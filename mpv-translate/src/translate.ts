@@ -1,4 +1,5 @@
 import {
+  cacheSync,
   command,
   existsSync,
   getCurrentSubtitle,
@@ -12,11 +13,11 @@ import {
   setPropertyNative,
   Srt,
   writeFile,
+  md5,
 } from "@mpv-easy/tool"
 import { google } from "./google"
 import { readFile } from "@mpv-easy/tool"
 import { normalize } from "@mpv-easy/tool"
-import { md5 } from "js-md5"
 
 const MAX_CHARS = 4000
 async function translateSrt(
@@ -90,10 +91,7 @@ export async function translate(option: Partial<TranslateOption> = {}) {
 
   const tmpDir = getTmpDir()
   const videoName = getFileName(videoPath)
-  const hash = md5
-    .create()
-    .update([videoPath, sourceLang, targetLang, sub.id].join("-"))
-    .hex()
+  const hash = md5([videoPath, sourceLang, targetLang, sub.id].join("-"))
   const srtOriPath = normalize(
     `${tmpDir}/${hash}.${videoName}.${sourceLang}.srt`,
   )

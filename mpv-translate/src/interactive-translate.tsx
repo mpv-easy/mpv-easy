@@ -1,3 +1,4 @@
+import { unescapeHtml } from "@mpv-easy/tool"
 import { bingClientSearch } from "./bing"
 import { pons } from "./pons"
 
@@ -9,11 +10,12 @@ export type WordInfo = {
 
 export async function en2zh(s: string): Promise<WordInfo> {
   const text = await bingClientSearch(s)
-  const detail = (text.match(/data-definition="(.*?)"/)?.[1] || "")
+  const definition = text.match(/data-definition="(.*?)"/)?.[1] || ""
+  const detail = unescapeHtml(definition)
     .split(";")
     .map((i) => i.trim())
-  const word = (text.match(/data-word="(.*?)"/)?.[1] || s).trim()
-  const audio = (text.match(/audiomd5="(.*?)"/)?.[1] || "").trim()
+  const word = unescapeHtml(text.match(/data-word="(.*?)"/)?.[1] || s).trim()
+  const audio = unescapeHtml(text.match(/audiomd5="(.*?)"/)?.[1] || "").trim()
   return {
     word,
     detail,

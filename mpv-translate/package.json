@@ -20,8 +20,7 @@
     "@mpv-easy/plugin": "workspace:*",
     "@mpv-easy/polyfill": "workspace:*",
     "@mpv-easy/tool": "workspace:*",
-    "e-color": "0.1.6",
-    "js-md5": "^0.8.3"
+    "e-color": "0.1.6"
   },
   "devDependencies": {
     "@mpv-easy/react": "workspace:*",

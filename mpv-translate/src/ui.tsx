@@ -69,12 +69,15 @@ export function Word({
   useEffect(() => {
     if (loading.current || !word.length) return
     loading.current = true
+    const currentWord = word
     getWordInfo(
       cleanWord(word),
       subConfig.targetLang,
       subConfig.sourceLang,
     ).then((info) => {
-      setInfo(info)
+      if (currentWord === word) {
+        setInfo(info)
+      }
       loading.current = false
     })
   }, [word])
@@ -118,8 +121,11 @@ function Line({ line, subConfig }: { line: string; subConfig: SubConfig }) {
   useEffect(() => {
     if (loading.current || !line.length) return
     loading.current = true
+    const currentLine = line
     google(line, getLang()).then((info) => {
-      setTitle(info.trim())
+      if (currentLine === line) {
+        setTitle(info.trim())
+      }
       loading.current = false
     })
   }, [line])

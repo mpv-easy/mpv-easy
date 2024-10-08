@@ -46,6 +46,8 @@ for (const [name, value] of Object.entries({
   Promise,
   encodeURIComponent,
   decodeURIComponent,
+  escape: decodeURIComponent,
+  unescape: encodeURIComponent,
 })) {
   // @ts-ignore
   if (!globalThis[name]) {
