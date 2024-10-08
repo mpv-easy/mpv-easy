@@ -1,6 +1,6 @@
 import { Box } from "../index"
 import React, { useEffect, useRef, useState } from "react"
-import { type MousePos, PropertyNative } from "@mpv-easy/tool"
+import { getOsdSize, type MousePos, PropertyNative } from "@mpv-easy/tool"
 import isEqual from "lodash-es/isEqual"
 import throttle from "lodash-es/throttle"
 import { getRootNode } from "../flex"
@@ -41,31 +41,73 @@ export function computeTooltipPosition(
   mouseY: number,
   direction: TooltipDirection,
 ): { x: number; y: number } {
+  const { width: W = 0, height: H = 0 } = getOsdSize() || {}
   const pos = { x: 0, y: 0 }
   if (!node) {
     return pos
   }
   const { height, width } = node.layoutNode
-  switch (direction) {
-    case "left-bottom": {
-      pos.x = mouseX
-      pos.y = mouseY - height
-      break
+  if (!W && !H) {
+    switch (direction) {
+      case "left-bottom": {
+        pos.x = mouseX
+        pos.y = mouseY - height
+        break
+      }
+      case "left-top": {
+        pos.x = mouseX
+        pos.y = mouseY
+        break
+      }
+      case "right-bottom": {
+        pos.x = mouseX - width
+        pos.y = mouseY - height
+        break
+      }
+      case "right-top": {
+        pos.x = mouseX - width
+        pos.y = mouseY
+        break
+      }
     }
-    case "left-top": {
-      pos.x = mouseX
-      pos.y = mouseY
-      break
-    }
-    case "right-bottom": {
-      pos.x = mouseX - width
-      pos.y = mouseY - height
-      break
-    }
-    case "right-top": {
-      pos.x = mouseX - width
-      pos.y = mouseY
-      break
+  } else {
+    switch (direction) {
+      case "left-bottom": {
+        if (mouseX >= width / 2) {
+          pos.x = mouseX - width / 2
+        } else {
+          pos.x = 0
+        }
+        pos.y = mouseY - height
+        break
+      }
+      case "left-top": {
+        if (mouseX >= width / 2) {
+          pos.x = mouseX - width / 2
+        } else {
+          pos.x = 0
+        }
+        pos.y = mouseY
+        break
+      }
+      case "right-bottom": {
+        if (W - mouseX >= width / 2) {
+          pos.x = mouseX - width / 2
+        } else {
+          pos.x = W - width
+        }
+        pos.y = mouseY - height
+        break
+      }
+      case "right-top": {
+        if (W - mouseX >= width / 2) {
+          pos.x = mouseX - width / 2
+        } else {
+          pos.x = W - width
+        }
+        pos.y = mouseY
+        break
+      }
     }
   }
 
