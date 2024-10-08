@@ -51,7 +51,7 @@ export const defaultTooltipConfig: TooltipConfig = {
   tooltipBold: false,
   tooltipOutlineSize: 0,
   tooltipOutlineColor: "#00000000",
-  tooltipMaxWidth: 48,
+  tooltipMaxWidth: 64,
   tooltipZIndex: 1024,
   tooltipLeft: 0,
   tooltipBottom: 0,

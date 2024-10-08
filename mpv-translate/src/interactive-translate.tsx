@@ -9,9 +9,11 @@ export type WordInfo = {
 
 export async function en2zh(s: string): Promise<WordInfo> {
   const text = await bingClientSearch(s)
-  const detail = (text.match(/data-definition="(.*?)"/)?.[1] || "").split(";")
-  const word = text.match(/data-word="(.*?)"/)?.[1] || s
-  const audio = text.match(/audiomd5="(.*?)"/)?.[1] || ""
+  const detail = (text.match(/data-definition="(.*?)"/)?.[1] || "")
+    .split(";")
+    .map((i) => i.trim())
+  const word = (text.match(/data-word="(.*?)"/)?.[1] || s).trim()
+  const audio = (text.match(/audiomd5="(.*?)"/)?.[1] || "").trim()
   return {
     word,
     detail,

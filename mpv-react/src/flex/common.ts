@@ -21,22 +21,25 @@ function maxWidth(text: string, maxLength = 0): string {
   }
 
   const lines: string[] = []
-  let currentLine = ""
+  let currentLine: string[] = []
 
   for (const word of text.split("")) {
-    if (currentLine.length + 1 <= maxLength) {
-      currentLine += word
+    if (word === "\n") {
+      lines.push(currentLine.join(""))
+      currentLine = []
+    } else if (currentLine.length + 1 <= maxLength) {
+      currentLine.push(word)
     } else {
-      if (currentLine) {
-        lines.push(currentLine)
-        currentLine = ""
+      if (currentLine.length) {
+        lines.push(currentLine.join(""))
+        currentLine = []
       }
     }
   }
 
-  if (currentLine) {
-    lines.push(currentLine)
-    currentLine = ""
+  if (currentLine.length) {
+    lines.push(currentLine.join(""))
+    currentLine = []
   }
 
   return lines.join("\n")
@@ -44,8 +47,7 @@ function maxWidth(text: string, maxLength = 0): string {
 
 export function getAssText(node: MpDom, x: number, y: number) {
   const { text = "" } = node.attributes
-  const t = maxWidth(text, node.attributes.maxWidth)
-    .replaceAll("\r\n", "\\N")
+  const t = maxWidth(text.replaceAll("\r\n", "\n"), node.attributes.maxWidth)
     .replaceAll("\n", "\\N")
     .replaceAll("\t", "    ")
   const assScale = getAssScale()

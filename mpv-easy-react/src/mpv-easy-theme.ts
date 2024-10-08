@@ -194,7 +194,7 @@ export type EasyConfig = {
   }
 }
 
-export const defaultTooltipMaxWidth = 48
+export const defaultTooltipMaxWidth = 64
 export const defaultTooltipZIndex = 1024
 export const defaultDropdownZIndex = 512
 export const defaultToolbarZIndex = 256
