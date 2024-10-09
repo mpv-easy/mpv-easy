@@ -27,10 +27,9 @@ function maxWidth(text: string, maxLength = 0): string {
     if (word === "\n") {
       lines.push(currentLine.join(""))
       currentLine = []
-    } else if (currentLine.length + 1 <= maxLength) {
-      currentLine.push(word)
     } else {
-      if (currentLine.length) {
+      currentLine.push(word)
+      if (currentLine.length === maxLength) {
         lines.push(currentLine.join(""))
         currentLine = []
       }
