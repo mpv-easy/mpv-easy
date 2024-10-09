@@ -288,7 +288,7 @@ export function createDefaultThemeConfig(): EasyConfig {
         toolbar: {
           backgroundColor: Black + AlphaLow,
           autoHideDelay: defaultHideUIDelay,
-          maxTitleLength: 32,
+          maxTitleLength: 48,
         },
         volume: {
           backgroundColor: Black + AlphaLow,
@@ -306,12 +306,12 @@ export function createDefaultThemeConfig(): EasyConfig {
         playlist: {
           backgroundColor: Black + AlphaLow,
           zIndex: defaultPlaylistZIndex,
-          maxTitleLength: 32,
+          maxTitleLength: 48,
         },
         history: {
           backgroundColor: Black + AlphaLow,
           zIndex: defaultPlaylistZIndex,
-          maxTitleLength: 32,
+          maxTitleLength: 48,
           stackSize: 32,
         },
         tooltip: {
@@ -420,7 +420,7 @@ export function createDefaultThemeConfig(): EasyConfig {
         toolbar: {
           backgroundColor: White + AlphaLow,
           autoHideDelay: defaultHideUIDelay,
-          maxTitleLength: 32,
+          maxTitleLength: 48,
         },
         scrollList: {
           maxItemCount: defaultMaxItemCount,
@@ -441,12 +441,12 @@ export function createDefaultThemeConfig(): EasyConfig {
         playlist: {
           backgroundColor: White + AlphaLow,
           zIndex: defaultPlaylistZIndex,
-          maxTitleLength: 32,
+          maxTitleLength: 48,
         },
         history: {
           backgroundColor: White + AlphaLow,
           zIndex: defaultPlaylistZIndex,
-          maxTitleLength: 32,
+          maxTitleLength: 48,
           stackSize: 32,
         },
         tooltip: {

@@ -61,11 +61,13 @@ export const History = () => {
           items={history.map((i) => {
             const prefix =
               i.path === path ? ICON.Ok : ICON.CheckboxBlankCircleOutline
-            const name = textEllipsis(i.name, historyStyle.maxTitleLength)
-            const label = `${prefix} ${name}`
+            const s = `${prefix} ${i.name}`
+            const label = textEllipsis(s, historyStyle.maxTitleLength)
+            const showTitle = s !== label
             return {
               key: i.path,
               label,
+              showTitle,
               onClick: (e) => {
                 const index = history.indexOf(i)
                 if (index >= 0) {

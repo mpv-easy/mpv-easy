@@ -22,6 +22,7 @@ export type ScrollListProps = {
     key: string
     label: string
     onClick: (e: MouseEvent) => void
+    showTitle: boolean
   }[]
 }
 
@@ -122,10 +123,11 @@ export const ScrollList = ({
           backgroundColor={button.color}
         />
       )}
-      {visibleList.map(({ key, label, onClick }) => {
+      {visibleList.map(({ key, label, onClick, showTitle }) => {
         return (
           <Button
             id={`scroll-list-${key}`}
+            title={showTitle ? key : ""}
             key={key}
             text={label}
             width={max + button.padding * 2}

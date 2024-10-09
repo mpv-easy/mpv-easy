@@ -5,6 +5,7 @@ import isEqual from "lodash-es/isEqual"
 import throttle from "lodash-es/throttle"
 import { getRootNode } from "../flex"
 import type { MpDom, MpDomProps } from "../flex"
+import { getAttribute } from "@mpv-easy/flex"
 
 export type TooltipProps = {
   tooltipThrottle: number
@@ -119,6 +120,9 @@ function getTooltipElement(
   x: number,
   y: number,
 ): MpDom | undefined {
+  if (getAttribute(node, "hide")) {
+    return
+  }
   for (const c of node.childNodes) {
     const el = getTooltipElement(c, x, y)
     if (el) {

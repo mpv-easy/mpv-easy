@@ -22,10 +22,11 @@ export const Filename = () => {
   // TODO: text-overflow: ellipsis;
   const maxLen = useSelector(toolbarStyleSelector).maxTitleLength
   const text = textEllipsis(title, maxLen)
+  const showTitle = text !== title
   return (
     (text?.length ?? 0) > 0 && (
       <Button
-        title={title}
+        title={showTitle ? title : ""}
         id="mpv-easy-button-filename"
         height={button.height}
         display="flex"
