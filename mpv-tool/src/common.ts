@@ -463,7 +463,7 @@ export function loadfile(
     | "insert-at"
     | "insert-at-play" = "replace",
 ) {
-  command(`loadfile ${path} ${flag}`)
+  command(`loadfile "${path}" ${flag}`)
 }
 
 export function printAndOsd(s: string, seconds = 1) {
