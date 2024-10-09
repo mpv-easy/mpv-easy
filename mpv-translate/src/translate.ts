@@ -93,7 +93,7 @@ function mixSrt(first: string, second: string, output: string) {
 
 export async function translate(option: Partial<TranslateOption> = {}) {
   const { mix } = option
-  const sub = getCurrentSubtitle()
+  let sub = getCurrentSubtitle()
   if (!sub) {
     printAndOsd("subtitle not found")
     return
@@ -123,12 +123,18 @@ export async function translate(option: Partial<TranslateOption> = {}) {
     setPropertyNative("sid", TrackInfoBackup.id)
     command(`sub-remove ${sub.id}`)
     TrackInfoBackup = undefined
-    return
+    // return
   }
   if (!mix && TrackInfoBackupMix) {
     setPropertyNative("sid", TrackInfoBackupMix.id)
     command(`sub-remove ${sub.id}`)
     TrackInfoBackupMix = undefined
+    // return
+  }
+
+  sub = getCurrentSubtitle()
+  if (!sub) {
+    printAndOsd("subtitle not found")
     return
   }
 

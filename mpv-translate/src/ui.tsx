@@ -222,7 +222,7 @@ export function Translation(props: Partial<TranslationProps>) {
       }
       translate({ targetLang, sourceLang, mix: false })
     })
-    registerScriptMessage("translate-mix", () => {
+    registerScriptMessage("mix-translate", () => {
       const sub = getCurrentSubtitle
       if (!sub) {
         printAndOsd("subtitle not found")

@@ -23,8 +23,25 @@ https://cloud.google.com/translate/docs/languages
 
 ## translate (ctrl+t)
 
+Default subtitle is English
+
 <div style="display: flex;">
-  <img src="../assets/img/translate.gif" alt="translate"/>
+  <img src="../assets/img/translate-en.png" alt="English subtitle"/>
+</div>
+
+Translate to Chinese
+
+<div style="display: flex;">
+  <img src="../assets/img/translate-en-cn.png" alt="Chinese subtitle"/>
+</div>
+
+
+## mix-translate (ctrl+shif+t or ctrl+T)
+
+Display Chinese and English
+
+<div style="display: flex;">
+  <img src="../assets/img/translate-en-cn-mix.png" alt="mix-translate"/>
 </div>
 
 ## interactive-translate (ctrl+i)
