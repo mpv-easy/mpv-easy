@@ -25,6 +25,7 @@ export const Filename = () => {
   return (
     (text?.length ?? 0) > 0 && (
       <Button
+        title={title}
         id="mpv-easy-button-filename"
         height={button.height}
         display="flex"
