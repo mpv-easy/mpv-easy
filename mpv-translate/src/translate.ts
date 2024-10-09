@@ -14,6 +14,8 @@ import {
   Srt,
   writeFile,
   md5,
+  getPropertyNumber,
+  SubtitleTrack,
 } from "@mpv-easy/tool"
 import { google } from "./google"
 import { readFile } from "@mpv-easy/tool"
@@ -52,18 +54,45 @@ async function translateSrt(
   return str
 }
 
-export type TrackInfo = {
-  sid: number
-}
-
-let TrackInfoBackup: TrackInfo | undefined
+export let TrackInfoBackup: SubtitleTrack | undefined
+export let TrackInfoBackupMix: SubtitleTrack | undefined
 
 export type TranslateOption = {
   targetLang: string
   sourceLang: string
+  mix: boolean
+}
+
+function mixSrt(first: string, second: string, output: string) {
+  const firstString = readFile(first)
+  const secondString = readFile(second)
+  const firstSrt = new Srt(firstString)
+  const secondSrt = new Srt(secondString)
+  const subFontSize = getPropertyNumber("sub-font-size") || 55
+
+  // FIXME: why div 2.5?
+  const firstSize = Math.round(subFontSize / 2.5)
+  const secondSize = Math.round(firstSize / 2)
+  const outputSrt = new Srt(firstString)
+
+  for (let i = 0; i < outputSrt.blocks.length; i++) {
+    const a = firstSrt.blocks[i].text.split("\n")
+    const b = secondSrt.blocks[i].text.split("\n")
+    const c: string[] = []
+    for (let k = 0; k < a.length; k++) {
+      c.push(
+        `<font size="${firstSize}">${a[k] || ""}</font>\n<font size="${secondSize}">${b[k] || ""}</font>`,
+      )
+    }
+
+    outputSrt.blocks[i].text = c.join("\n")
+  }
+  const outputString = outputSrt.toString()
+  writeFile(output, outputString)
 }
 
 export async function translate(option: Partial<TranslateOption> = {}) {
+  const { mix } = option
   const sub = getCurrentSubtitle()
   if (!sub) {
     printAndOsd("subtitle not found")
@@ -77,16 +106,36 @@ export async function translate(option: Partial<TranslateOption> = {}) {
   }
   const targetLang = option.targetLang?.length ? option.targetLang : getLang()
   const sourceLang = option.sourceLang?.length ? option.sourceLang : sub.lang
-
-  if (TrackInfoBackup && sub.title === targetLang) {
-    setPropertyNative("sid", TrackInfoBackup.sid)
+  if (mix && TrackInfoBackupMix && sub.title === `${targetLang}-mix`) {
+    setPropertyNative("sid", TrackInfoBackupMix.id)
+    command(`sub-remove ${sub.id}`)
+    TrackInfoBackupMix = undefined
+    return
+  }
+  if (!mix && TrackInfoBackup && sub.title === targetLang) {
+    setPropertyNative("sid", TrackInfoBackup.id)
     command(`sub-remove ${sub.id}`)
     TrackInfoBackup = undefined
     return
   }
 
-  TrackInfoBackup = {
-    sid: sub.id,
+  if (mix && TrackInfoBackup) {
+    setPropertyNative("sid", TrackInfoBackup.id)
+    command(`sub-remove ${sub.id}`)
+    TrackInfoBackup = undefined
+    return
+  }
+  if (!mix && TrackInfoBackupMix) {
+    setPropertyNative("sid", TrackInfoBackupMix.id)
+    command(`sub-remove ${sub.id}`)
+    TrackInfoBackupMix = undefined
+    return
+  }
+
+  if (mix) {
+    TrackInfoBackupMix = sub
+  } else {
+    TrackInfoBackup = sub
   }
 
   const tmpDir = getTmpDir()
@@ -95,9 +144,11 @@ export async function translate(option: Partial<TranslateOption> = {}) {
   const srtOriPath = normalize(
     `${tmpDir}/${hash}.${videoName}.${sourceLang}.srt`,
   )
-  const srtPath = normalize(
-    `${tmpDir}/${hash}.${videoName}.${sourceLang}.${targetLang}.srt`,
-  )
+  const srtPath = sub.external
+    ? sub.externalFilename!
+    : normalize(
+        `${tmpDir}/${hash}.${videoName}.${sourceLang}.${targetLang}.srt`,
+      )
   if (!existsSync(srtPath)) {
     if (
       !(await saveSrt(videoPath, sub.id, srtOriPath)) ||
@@ -110,6 +161,15 @@ export async function translate(option: Partial<TranslateOption> = {}) {
     const srt = await translateSrt(text, targetLang as Lang, sourceLang as Lang)
     writeFile(srtPath, srt)
   }
-
-  command(`sub-add "${srtPath}" select ${targetLang} ${targetLang}`)
+  const srtMixPath = normalize(
+    `${tmpDir}/${hash}.${videoName}.${sourceLang}.${targetLang}.mix.srt`,
+  )
+  if (mix) {
+    if (!existsSync(srtMixPath)) {
+      mixSrt(srtPath, srtOriPath, srtMixPath)
+    }
+    command(`sub-add "${srtMixPath}" select ${targetLang}-mix ${targetLang}`)
+  } else {
+    command(`sub-add "${srtPath}" select ${targetLang} ${targetLang}`)
+  }
 }

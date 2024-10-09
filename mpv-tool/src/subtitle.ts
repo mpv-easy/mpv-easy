@@ -144,6 +144,7 @@ export type SubtitleTrack = {
   selected: boolean
   id: number
   external: boolean
+  externalFilename?: string
 }
 
 export function getSubtitleTracks(): SubtitleTrack[] {
@@ -157,12 +158,16 @@ export function getSubtitleTracks(): SubtitleTrack[] {
       const selected = getPropertyBool(`track-list/${i}/selected`)
       const external = getPropertyBool(`track-list/${i}/external`)
       const id = getPropertyNumber(`track-list/${i}/id`) || 0
+      const externalFilename = getPropertyString(
+        `track-list/${i}/external-filename`,
+      )
       tracks.push({
         title,
         lang,
         selected,
         id,
         external,
+        externalFilename,
       })
     }
   }

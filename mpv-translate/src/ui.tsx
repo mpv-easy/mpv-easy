@@ -12,7 +12,7 @@ import {
 import React, { useEffect, useRef, useState } from "react"
 import { Box, Button, MpDomProps } from "@mpv-easy/react"
 import { google } from "./google"
-import { translate } from "./translate"
+import { TrackInfoBackup, TrackInfoBackupMix, translate } from "./translate"
 import { defaultSubConfig, SubConfig } from "./const"
 import { de2en, en2zh, WordInfo } from "./interactive-translate"
 
@@ -188,10 +188,21 @@ export function Translation(props: Partial<TranslationProps>) {
   }
   const targetLang = defTargetLang.toLocaleLowerCase()
   let sourceLang = defSourceLang.toLocaleLowerCase()
+
   if (!sourceLang.length) {
-    const sub = getCurrentSubtitle()
-    if (sub) {
-      sourceLang = (sub.lang || sub.title || "").toLocaleLowerCase()
+    if (TrackInfoBackup) {
+      sourceLang = TrackInfoBackup.lang || TrackInfoBackup.title || ""
+    }
+
+    if (TrackInfoBackupMix) {
+      sourceLang = TrackInfoBackupMix.lang || TrackInfoBackupMix.title || ""
+    }
+
+    if (!sourceLang.length) {
+      const sub = getCurrentSubtitle()
+      if (sub) {
+        sourceLang = (sub.lang || sub.title || "").toLocaleLowerCase()
+      }
     }
   }
 
@@ -209,9 +220,23 @@ export function Translation(props: Partial<TranslationProps>) {
         printAndOsd("curl not found")
         return
       }
-      translate({ targetLang, sourceLang })
+      translate({ targetLang, sourceLang, mix: false })
     })
-
+    registerScriptMessage("translate-mix", () => {
+      const sub = getCurrentSubtitle
+      if (!sub) {
+        printAndOsd("subtitle not found")
+      }
+      if (!detectCmd("ffmpeg")) {
+        printAndOsd("ffmpeg not found")
+        return
+      }
+      if (!detectCmd("curl")) {
+        printAndOsd("curl not found")
+        return
+      }
+      translate({ targetLang, sourceLang, mix: true })
+    })
     registerScriptMessage("interactive-translate", () => {
       const sub = getCurrentSubtitle
       if (!sub) {
