@@ -354,7 +354,8 @@ export function createRender({
     )
     renderRootNode(dim.value)
     dim.observe((value) => {
-      renderRootNode(value)
+      // HACK: delay render
+      setTimeout(() => renderRootNode(value))
     })
   }
 }
