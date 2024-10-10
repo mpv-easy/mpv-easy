@@ -90,6 +90,7 @@ const {
     "tooltip-bottom": { type: "number", key: "tooltipBottom" },
     "target-lang": { type: "string", key: "targetLang" },
     "source-lang": { type: "string", key: "sourceLang" },
+    "sub-srt-scale": { type: "number", key: "subSrtScale" },
   }),
 }
 

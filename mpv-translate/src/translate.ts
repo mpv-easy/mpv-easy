@@ -61,18 +61,21 @@ export type TranslateOption = {
   targetLang: string
   sourceLang: string
   mix: boolean
+  firstFontSize: number
+  secondFontSize: number
 }
 
-function mixSrt(first: string, second: string, output: string) {
+function mixSrt(
+  first: string,
+  second: string,
+  output: string,
+  firstFontSize: number,
+  secondFontSize: number,
+) {
   const firstString = readFile(first)
   const secondString = readFile(second)
   const firstSrt = new Srt(firstString)
   const secondSrt = new Srt(secondString)
-  const subFontSize = getPropertyNumber("sub-font-size") || 55
-
-  // FIXME: why div 2.5?
-  const firstSize = Math.round(subFontSize / 2.5)
-  const secondSize = Math.round(firstSize / 2)
   const outputSrt = new Srt(firstString)
 
   for (let i = 0; i < outputSrt.blocks.length; i++) {
@@ -81,7 +84,7 @@ function mixSrt(first: string, second: string, output: string) {
     const c: string[] = []
     for (let k = 0; k < a.length; k++) {
       c.push(
-        `<font size="${firstSize}">${a[k] || ""}</font>\n<font size="${secondSize}">${b[k] || ""}</font>`,
+        `<font size="${firstFontSize}">${a[k] || ""}</font>\n<font size="${secondFontSize}">${b[k] || ""}</font>`,
       )
     }
 
@@ -92,7 +95,7 @@ function mixSrt(first: string, second: string, output: string) {
 }
 
 export async function translate(option: Partial<TranslateOption> = {}) {
-  const { mix } = option
+  const { mix, firstFontSize = 22, secondFontSize = 11 } = option
   let sub = getCurrentSubtitle()
   if (!sub) {
     printAndOsd("subtitle not found")
@@ -172,7 +175,7 @@ export async function translate(option: Partial<TranslateOption> = {}) {
   )
   if (mix) {
     if (!existsSync(srtMixPath)) {
-      mixSrt(srtPath, srtOriPath, srtMixPath)
+      mixSrt(srtPath, srtOriPath, srtMixPath, firstFontSize, secondFontSize)
     }
     command(`sub-add "${srtMixPath}" select ${targetLang}-mix ${targetLang}`)
   } else {

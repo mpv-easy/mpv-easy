@@ -187,6 +187,7 @@ export function Translation(props: Partial<TranslationProps>) {
     subZIndex,
     targetLang: defTargetLang,
     sourceLang: defSourceLang,
+    subSrtScale,
   } = {
     ...defaultSubConfig,
     ...props,
@@ -219,10 +220,12 @@ export function Translation(props: Partial<TranslationProps>) {
       }
     }
   }
+  const firstFontSize = Math.round(subSrtScale * subFontSize)
+  const secondFontSize = Math.round(firstFontSize / 2)
 
   useEffect(() => {
     registerScriptMessage("translate", () => {
-      const sub = getCurrentSubtitle
+      const sub = getCurrentSubtitle()
       if (!sub) {
         printAndOsd("subtitle not found")
       }
@@ -234,10 +237,16 @@ export function Translation(props: Partial<TranslationProps>) {
         printAndOsd("curl not found")
         return
       }
-      translate({ targetLang, sourceLang, mix: false })
+      translate({
+        targetLang,
+        sourceLang,
+        mix: false,
+        firstFontSize,
+        secondFontSize,
+      })
     })
     registerScriptMessage("mix-translate", () => {
-      const sub = getCurrentSubtitle
+      const sub = getCurrentSubtitle()
       if (!sub) {
         printAndOsd("subtitle not found")
       }
@@ -249,7 +258,13 @@ export function Translation(props: Partial<TranslationProps>) {
         printAndOsd("curl not found")
         return
       }
-      translate({ targetLang, sourceLang, mix: true })
+      translate({
+        targetLang,
+        sourceLang,
+        mix: true,
+        firstFontSize,
+        secondFontSize,
+      })
     })
     registerScriptMessage("interactive-translate", () => {
       const sub = getCurrentSubtitle
@@ -304,6 +319,7 @@ export function Translation(props: Partial<TranslationProps>) {
               targetLang,
               sourceLang,
               subZIndex,
+              subSrtScale,
             }}
           />
         ))}

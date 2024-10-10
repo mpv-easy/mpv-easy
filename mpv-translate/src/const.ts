@@ -13,6 +13,7 @@ export type SubConfig = {
   subZIndex: number
   targetLang: string
   sourceLang: string
+  subSrtScale: number
 }
 export type TooltipConfig = {
   tooltioFontSize: number
@@ -41,6 +42,7 @@ export const defaultSubConfig: SubConfig = {
   subZIndex: 512,
   targetLang: getLang(),
   sourceLang: "",
+  subSrtScale: 2.5,
 }
 
 export const defaultTooltipConfig: TooltipConfig = {
