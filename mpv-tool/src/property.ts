@@ -11,7 +11,7 @@ import {
 } from "./mpv"
 
 export type MpvPropertyBoolName = "pause" | (string & {})
-export type MpvPropertyNumberName = "osc-width" | (string & {})
+export type MpvPropertyNumberName = "osd-width" | (string & {})
 export type MpvPropertyStringName = "path" | (string & {})
 
 export type MpvPropertyTypeMap = {
@@ -21,7 +21,7 @@ export type MpvPropertyTypeMap = {
   }
 }
 
-export type MpvPropertyNativeName = "osc" | "osd-dimensions" | (string & {})
+export type MpvPropertyNativeName = "osd" | "osd-dimensions" | (string & {})
 export class Property<T> {
   constructor(public name: string) {}
 }
