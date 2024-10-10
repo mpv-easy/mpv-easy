@@ -55,10 +55,12 @@ export function Word({
   word,
   showTitle,
   subConfig,
+  skipTranslate,
 }: {
   word: string
   showTitle: boolean
   subConfig: SubConfig
+  skipTranslate: boolean
 }) {
   const [info, setInfo] = useState<WordInfo>({
     word: "",
@@ -67,7 +69,7 @@ export function Word({
   const loading = useRef(false)
 
   useEffect(() => {
-    if (loading.current || !word.length) return
+    if (loading.current || !word.length || skipTranslate) return
     loading.current = true
     const currentWord = word
     getWordInfo(
@@ -99,10 +101,14 @@ export function Word({
       fontBorderSize={subConfig.subOutlineSize}
       fontBorderColor={subConfig.subOutlineColor}
       fontWeight={subConfig.subBold ? "bold" : "normal"}
-      colorHover={subConfig.subColorHover}
-      backgroundColorHover={subConfig.subBackColorHover}
+      colorHover={skipTranslate ? subConfig.subColor : subConfig.subColorHover}
+      backgroundColorHover={
+        skipTranslate ? subConfig.subBackColor : subConfig.subBackColorHover
+      }
       backgroundColor={subConfig.subBackColor}
-      title={showTitle ? info.detail.join("\n").trim() : ""}
+      title={
+        showTitle ? (skipTranslate ? "" : info.detail.join("\n").trim()) : ""
+      }
       text={word}
     />
   ) : (
@@ -113,13 +119,20 @@ export function Word({
   )
 }
 
-function Line({ line, subConfig }: { line: string; subConfig: SubConfig }) {
+function Line({
+  line,
+  subConfig,
+  lineIndex,
+  isMix,
+}: { line: string; subConfig: SubConfig; lineIndex: number; isMix: boolean }) {
   const words = split(line)
   const [showTitle, setShowTitle] = useState(true)
   const loading = useRef(false)
   const [title, setTitle] = useState("")
+
+  const skipTranslate = isMix && !(lineIndex & 1)
   useEffect(() => {
-    if (loading.current || !line.length) return
+    if (loading.current || !line.length || skipTranslate) return
     loading.current = true
     const currentLine = line
     google(line, getLang()).then((info) => {
@@ -151,6 +164,7 @@ function Line({ line, subConfig }: { line: string; subConfig: SubConfig }) {
           key={[i, k].join(",")}
           word={i.trim()}
           subConfig={subConfig}
+          skipTranslate={skipTranslate}
         />
       ))}
     </Box>
@@ -254,7 +268,7 @@ export function Translation(props: Partial<TranslationProps>) {
       update.current?.(value)
     })
   }, [])
-
+  const isMix = !!TrackInfoBackupMix
   return (
     <Box
       display="flex"
@@ -273,8 +287,10 @@ export function Translation(props: Partial<TranslationProps>) {
         .split("\n")
         .map((i, k) => (
           <Line
+            isMix={isMix}
             key={[i, k].join()}
             line={i}
+            lineIndex={k}
             subConfig={{
               subFontSize,
               subColor,
