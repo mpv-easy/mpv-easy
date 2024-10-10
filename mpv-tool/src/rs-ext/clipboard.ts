@@ -1,19 +1,22 @@
 // biome-ignore lint/style/useNodejsImportProtocol: <explanation>
 import { Buffer } from "buffer"
-import { execSync } from "../common"
+import { execAsync } from "../common"
 import { error } from "../mpv"
 import { getRsExtExePath } from "./share"
 
-export function getClipboard(exe = getRsExtExePath()): string {
-  const s = execSync([exe, "clipboard", "get"])
+export async function getClipboard(exe = getRsExtExePath()): Promise<string> {
+  const s = await execAsync([exe, "clipboard", "get"])
   const text = JSON.parse(s)
   return text
 }
 
-export function setClipboard(text: string, exe = getRsExtExePath()) {
+export async function setClipboard(
+  text: string,
+  exe = getRsExtExePath(),
+): Promise<boolean> {
   try {
     const base64 = Buffer.from(text).toString("base64")
-    execSync([exe, "clipboard", "set", JSON.stringify(base64)])
+    await execAsync([exe, "clipboard", "set", base64])
     return true
   } catch (e) {
     error(e)
@@ -21,12 +24,14 @@ export function setClipboard(text: string, exe = getRsExtExePath()) {
   }
 }
 
-export function setClipboardImage(
+export async function setClipboardImage(
   path: string,
   exe = getRsExtExePath(),
-): boolean {
+): Promise<boolean> {
   try {
-    execSync([exe, "clipboard", "set-image", JSON.stringify(path)])
+    const base64 = Buffer.from(path).toString("base64")
+    const cmd = [exe, "clipboard", "set-image", base64]
+    await execAsync(cmd)
     return true
   } catch (e) {
     error(e)

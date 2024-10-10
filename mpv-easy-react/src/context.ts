@@ -120,6 +120,7 @@ const experimental: Experimental = {
 }
 
 export function createDefaultContext() {
+  const isWin = getOs() === "windows"
   return structuredClone({
     [clipPlayName]: clipPlayConfig,
     [anime4kName]: anime4kConfig,
@@ -134,12 +135,12 @@ export function createDefaultContext() {
     enablePlugins: {
       [i18nName]: true,
       [easyName]: true,
-      [clipPlayName]: getOs() === "windows",
+      [clipPlayName]: isWin,
       [anime4kName]: true,
       [copyTimeName]: false,
       [autoloadName]: true,
       [thumbfastName]: true,
-      [copyScreenName]: false,
+      [copyScreenName]: isWin,
       [jellyfinName]: true,
       [translateName]: true,
     },

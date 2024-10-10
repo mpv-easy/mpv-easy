@@ -1,16 +1,9 @@
 import {
   addKeyBinding,
-  detectCmd,
-  getClipboard,
   getPropertyNumber,
-  isHttp,
-  isVideo,
   osdMessage,
-  readdir,
   removeKeyBinding,
-  replacePlaylist,
   setClipboard,
-  webdavList,
 } from "@mpv-easy/tool"
 
 import { definePlugin } from "@mpv-easy/plugin"
@@ -24,7 +17,7 @@ function divmod(a: number, b: number) {
   return [a / b, a % b] as const
 }
 
-function copyTime() {
+async function copyTime() {
   const time_pos = getPropertyNumber("time-pos") || 0
   const [minutes, remainder] = divmod(time_pos, 60)
   const [hours, mins] = divmod(minutes, 60)
@@ -36,7 +29,7 @@ function copyTime() {
     .toString()
     .padStart(3, "0")}`
 
-  if (setClipboard(time)) {
+  if (await setClipboard(time)) {
     osdMessage(`Copied to Clipboard: ${time}`)
   } else {
     osdMessage("Failed to copy time to clipboard")

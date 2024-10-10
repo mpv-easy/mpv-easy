@@ -198,9 +198,9 @@ export const ClickMenu: ForwardRefExoticComponent<
           {
             key: i18n.copyPath,
             label: i18n.copyPath,
-            onSelect() {
+            async onSelect() {
               const path = getPropertyString("path")
-              if (path && setClipboard(path)) {
+              if (path && (await setClipboard(path))) {
                 osdMessage("copy path to clipboard", 5)
               }
             },

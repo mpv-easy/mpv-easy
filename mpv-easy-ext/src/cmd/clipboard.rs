@@ -55,8 +55,7 @@ impl Cmd for Clipboard {
 
         match cmd {
             "set" => {
-                let b64: String = serde_json::from_str(self.text.as_str()).unwrap();
-                let bin = BASE64_STANDARD.decode(b64).unwrap();
+                let bin: Vec<u8> = BASE64_STANDARD.decode(&self.text).unwrap();
                 let text = String::from_utf8_lossy(&bin);
                 clip::set_text(&text)
             }
@@ -65,8 +64,9 @@ impl Cmd for Clipboard {
                 println!("{}", serde_json::to_string(&s).unwrap());
             }
             "set-image" => {
-                let text = serde_json::from_str(self.text.as_str()).unwrap();
-                clip::set_image(text);
+                let bin: Vec<u8> = BASE64_STANDARD.decode(&self.text).unwrap();
+                let text = String::from_utf8_lossy(&bin).to_string();
+                clip::set_image(&text);
             }
             "get-image" => {
                 get_image();

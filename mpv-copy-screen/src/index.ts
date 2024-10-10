@@ -1,7 +1,6 @@
 import {
   addKeyBinding,
   command,
-  detectCmd,
   getScriptConfigDir,
   joinPath,
   osdMessage,
@@ -19,12 +18,12 @@ export type copyTimeConfig = {
 
 export const defaultConfig: copyTimeConfig = {
   key: "ctrl+c",
-  path: joinPath(getScriptConfigDir(), "copy_screen.tmp"),
+  path: joinPath(getScriptConfigDir(), "mpv-easy-copy-screen.tmp.png"),
 }
 
-function copyScreen(path: string) {
+async function copyScreen(path: string) {
   command(`no-osd screenshot-to-file ${path}`)
-  const result = setClipboardImage(path)
+  const result = await setClipboardImage(path)
   if (result) {
     osdMessage("Copied to Clipboard", 5)
   } else {
@@ -42,11 +41,6 @@ export default definePlugin((context) => ({
   name: pluginName,
   defaultConfig: defaultConfig,
   create: () => {
-    if (!detectCmd("pwsh")) {
-      osdMessage(`${pluginName} need pwsh`, 10)
-      return
-    }
-
     const key = context[pluginName]?.key ?? defaultConfig.key
     const path = context[pluginName]?.path ?? defaultConfig.path
     addKeyBinding(key, pluginName, () => {
