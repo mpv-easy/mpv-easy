@@ -36,7 +36,7 @@ export function configDetect() {
   if (!existsSync(ConfigPath)) {
     console.log(
       `You must first execute "${chalk.green(
-        "mpsm set-script-dir '<your-mpv-dir>/portable_config/scripts",
+        "mpsm set-script-dir '<your-mpv-dir>/portable_config/scripts'",
       )}" and make sure the directory is correct`,
     )
     process.exit()

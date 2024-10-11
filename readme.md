@@ -138,6 +138,10 @@ Maybe should use GitHub action to automatically update this
 | deno+minify |    464 ms    |  0.23ms |         306K |
 | boa+es6     |    400 ms    | 21.88ms |         1.2M |
 
+## changlog
+
+- [0.1.12](./assets/changelog/0.1.12.md)
+
 ## todo
 
 - [ ] flex (30%)

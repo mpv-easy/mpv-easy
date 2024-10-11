@@ -1,7 +1,7 @@
 ## install
 You need to install [ffmpeg](https://www.ffmpeg.org/download.html) and curl and add them to ```PATH```, curl is usually installed by default on all systems including windows11, if you only use interactive translation, you don't need to install ffmpeg
 
-- Download the latest version of [mpv-translate.js](https://github.com/mpv-easy/mpv-easy/releases) and copy it to the mpv script directory
+- Download the latest version of [mpv-translate.js](https://github.com/mpv-easy/mpv-easy/releases) and copy it to the mpv script directory, or use [mpsm](../mpv-mpsm/readme.md) `mpsm install mpv-translate`
 - Add shortcut keys  ```ctrl+t    script-message translate``` and  ```ctrl+i    script-message interactive-translate``` to your ```input.conf```
 - If everything goes well, you can use ```ctrl+t``` to start global translation (requires ffmpeg and curl and only supports local videos), ```ctrl+i``` to start interactive translation (requires curl)
 - You can customize the styles of subtitles and tooltips, see [mpv-translate.conf](./mpv-translate.conf)
@@ -51,12 +51,12 @@ Click left mouse button to play the audio, and click the wheel to display the fu
   <img src="../assets/img/translate-en-interactive.png" alt="interactive-translate"/>
 </div>
 
-## interactive-translate-mix (ctrl+T then ctrl+i)
+## mix-translate and interactive-translate  (ctrl+T then ctrl+i)
 
-Mixed translation and interactive translation can be used at the same time
+Mix translation and interactive translation can be used at the same time
 
 <div style="display: flex;">
-  <img src="../assets/img/translate-en-interactive-mix.png" alt="interactive-translate-mix"/>
+  <img src="../assets/img/translate-en-interactive-mix.png" alt="mix-translate and interactive-translate"/>
 </div>
 
 
