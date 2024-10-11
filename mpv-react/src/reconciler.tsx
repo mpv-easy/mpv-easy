@@ -255,6 +255,7 @@ export function createRender({
       "MOUSE_BTN0",
       "MPV_EASY_MOUSE_LEFT",
       (event) => {
+        // console.log("MPV_EASY_MOUSE_LEFT", JSON.stringify(event))
         customDispatch(flex.rootNode, lastMousePos, event)
       },
       {
@@ -302,6 +303,20 @@ export function createRender({
         forced: false,
       },
     )
+
+    // addKeyBinding(
+    //   "MBTN_LEFT_DBL",
+    //   "MPV_EASY_LEFT_DBL",
+    //   (event) => {
+    //     console.log("MPV_EASY_LEFT_DBL", JSON.stringify(event))
+    //     customDispatch(flex.rootNode, lastMousePos, event)
+    //   },
+    //   {
+    //     complex: true,
+    //     repeatable: true,
+    //     forced: false,
+    //   },
+    // )
 
     addKeyBinding(
       "MOUSE_BTN4",

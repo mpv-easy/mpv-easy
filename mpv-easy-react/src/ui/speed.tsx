@@ -12,13 +12,16 @@ export function Speed() {
   const font = useSelector(fontSelector)
   const handleList = useRef<number[]>([])
   const initSpeed = useRef(speed)
+  const lastClickRef = useRef(0)
 
   const clear = () => {
     for (const hd of handleList.current) {
       clearTimeout(hd)
     }
     setPress(false)
-    setSpeed(initSpeed.current)
+    if (speed !== initSpeed.current) {
+      setSpeed(initSpeed.current)
+    }
   }
   return (
     <Box
@@ -32,7 +35,12 @@ export function Speed() {
       font={font}
       onMouseDown={() => {
         clear()
-        if (!press) {
+        const now = Date.now()
+        const dur = now - lastClickRef.current
+        const doubleClickDuration = 500
+        // FIXME: avoid double click
+        if (!press && dur > doubleClickDuration) {
+          lastClickRef.current = now
           initSpeed.current = speed
           handleList.current = style.steps.map(
             (i) =>
