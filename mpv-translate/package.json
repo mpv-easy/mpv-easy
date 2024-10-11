@@ -9,8 +9,9 @@
   "scripts": {
     "dev": "chokidar '../mpv-*/src/**/*' -c 'pnpm run build' -d 2000 --initial",
     "bundle": "tsx build.ts",
+    "meta": "tsx ./meta/build.ts",
     "es5": "babel --presets  @babel/preset-env ./bundle -d es5",
-    "build": "tsc -p ./tsconfig.build.json && npm run bundle && npm run es5",
+    "build": "tsc -p ./tsconfig.build.json && npm run bundle && npm run es5 && npm run meta",
     "dev-ts": "tsc -p ./tsconfig.build.json -w"
   },
   "keywords": [],
