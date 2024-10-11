@@ -101,8 +101,8 @@ function getList(s: string | undefined, context: PluginContext): string[] {
   return []
 }
 
-function fn(context: PluginContext, api: SystemApi) {
-  const s = getClipboard().trim().replace(/\\/g, "/")
+async function fn(context: PluginContext, api: SystemApi) {
+  const s = (await getClipboard()).trim().replace(/\\/g, "/")
   const v = getList(s, context)
 
   if (v?.length) {
