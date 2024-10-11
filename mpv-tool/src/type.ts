@@ -111,18 +111,23 @@ export type MPV = {
   abort_async_command(t: number): void
 
   get_property(name: string, def: string): string
-  get_property(name: string, def?: string): string | undefined
+  get_property(name: string): string | undefined
 
   get_property_osd(name: string, def?: string): string
 
   get_property_bool(name: string, def: boolean): boolean
-  get_property_bool(name: string, def?: boolean): boolean | undefined
+  get_property_bool(name: string): boolean | undefined
 
   get_property_number(name: string, def: number): number
-  get_property_number(name: string, def?: number): number | undefined
+  get_property_number(name: string): number | undefined
 
-  get_property_native<T = unknown, Def = unknown>(name: string, def?: Def): T
-  get_property_string(name: string, def?: unknown): string | undefined
+  get_property_native<T = string | undefined | boolean | number>(
+    name: string,
+  ): T
+  get_property_native<T = unknown>(name: string, def?: T): T
+
+  get_property_string(name: string): string | undefined
+  get_property_string(name: string, def: string): string
 
   set_property(name: string, value: string): true | undefined
 

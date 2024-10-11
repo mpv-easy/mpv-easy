@@ -603,21 +603,21 @@ export function createMpvMock(
     abort_async_command: (t: number): void => {
       // console.log("Function not implemented.")
     },
-    get_property: (name: string, def: string): string => {
+    get_property: (name: string, def?: string): string => {
       // console.log("get_property: ", name, def)
-      return props[name]
+      return props[name] ?? def
     },
     get_property_osd: (name: string, def?: string | undefined): string => {
       // console.log("get_property_osd: ", name, def)
-      return props[name]
+      return props[name] ?? def
     },
-    get_property_bool: (name: string, def: boolean): boolean => {
+    get_property_bool: (name: string, def?: boolean): boolean => {
       // console.log("get_property_bool", name, def)
-      return !!props[name]
+      return props[name] ?? def
     },
-    get_property_number: (name: string, def: number): number => {
+    get_property_number: (name: string, def?: number): number => {
       // console.log("get_property_number", name, def)
-      return +props[name]
+      return props[name] ?? def
     },
     get_property_native: <T = unknown, Def = unknown>(
       name: string,
@@ -626,9 +626,9 @@ export function createMpvMock(
       // console.log("get_property_native", name, def)
       return props[name]
     },
-    get_property_string: (name: string, def?: unknown): string | undefined => {
+    get_property_string: (name: string, def?: string): string => {
       // console.log("get_property_string", name, def)
-      return props[name]
+      return props[name] ?? def
     },
     set_property: (name: string, value: string): true | undefined => {
       // console.log("set_property:", name, value)

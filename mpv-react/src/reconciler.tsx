@@ -367,7 +367,7 @@ export function createRender({
     const dim = new PropertyNative<MpvPropertyTypeMap["osd-dimensions"]>(
       "osd-dimensions",
     )
-    renderRootNode(dim.value)
+    renderRootNode(dim.value!)
     dim.observe((value) => {
       // HACK: delay render
       setTimeout(() => renderRootNode(value))

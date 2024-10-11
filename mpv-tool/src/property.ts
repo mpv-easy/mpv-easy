@@ -118,7 +118,7 @@ export class PropertyString {
 }
 export class PropertyNative<T> {
   constructor(public name: MpvPropertyNativeName | (string & {})) {}
-  get value(): T {
+  get value(): T | undefined {
     return getPropertyNative(this.name)
   }
   set value(v: T) {

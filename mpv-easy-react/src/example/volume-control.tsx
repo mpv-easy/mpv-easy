@@ -22,7 +22,7 @@ export function VolumeControl() {
       "__MOUSE_BTN3_UP__",
       (event) => {
         console.log("volume up")
-        dispatchEvent(getRootNode(), mousePosProp.value, event)
+        dispatchEvent(getRootNode(), mousePosProp.value!, event)
         h.current?.(10)
       },
       {
@@ -37,7 +37,7 @@ export function VolumeControl() {
       "__MOUSE_BTN3_DOWN__",
       (event) => {
         console.log("volume down")
-        dispatchEvent(getRootNode(), mousePosProp.value, event)
+        dispatchEvent(getRootNode(), mousePosProp.value!, event)
         h.current?.(-10)
       },
       {

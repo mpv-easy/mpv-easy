@@ -144,7 +144,7 @@ export const Tooltip = ({
 }: Partial<TooltipProps & MpDomProps>) => {
   const [show, setShow] = useState(true)
   const [text, setText] = useState("")
-  const mousePos = mousePosProp.value
+  const mousePos = mousePosProp.value!
   const [tooltipPos, setTooltipPos] = useState<{ x: number; y: number }>(
     mousePos,
   )

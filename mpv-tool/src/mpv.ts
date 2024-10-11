@@ -55,33 +55,54 @@ export function abortAsyncCommand(t: number) {
   return getMPV().abort_async_command(t)
 }
 
+// export const getProperty = getMPV().get_property
+export function getProperty(name: string): string | undefined
+export function getProperty(name: string, def: string): string
 export function getProperty(name: string, def?: string): string | undefined {
-  return getMPV().get_property(name, def)
+  return getMPV().get_property(name) ?? def
 }
 
-export function getPropertyOsd(name: string, def?: string): string {
+// export const getPropertyOsd = getMPV().get_property_osd
+export function getPropertyOsd(name: string): string | undefined
+export function getPropertyOsd(name: string, def: string): string
+export function getPropertyOsd(name: string, def?: string): string | undefined {
   return getMPV().get_property_osd(name, def)
 }
 
-export function getPropertyBool(name: string, def?: boolean): boolean {
-  return !!getMPV().get_property_bool(name, def)
+// export const getPropertyBool = getMPV().get_property_bool
+export function getPropertyBool(name: string): boolean | undefined
+export function getPropertyBool(name: string, def: boolean): boolean
+export function getPropertyBool(
+  name: string,
+  def?: boolean,
+): boolean | undefined {
+  return getMPV().get_property_bool(name) ?? def
 }
+
+// export const getPropertyString = getMPV().get_property_string
+export function getPropertyString(name: string): string | undefined
+export function getPropertyString(name: string, def: string): string
 export function getPropertyString(
   name: string,
   def?: string,
 ): string | undefined {
-  return getMPV().get_property_native<string>(name, def)
+  return getMPV().get_property_native<string>(name) ?? def
 }
 
+// export const getPropertyNumber = getMPV().get_property_number
+export function getPropertyNumber(name: string): number | undefined
+export function getPropertyNumber(name: string, def: number): number
 export function getPropertyNumber(
   name: string,
   def?: number,
 ): number | undefined {
-  return getMPV().get_property_number(name, def)
+  return getMPV().get_property_number(name) ?? def
 }
-
-export function getPropertyNative<T>(name: string, def?: unknown): T {
-  return getMPV().get_property_native<T>(name, def)
+// export const getPropertyNative = getMPV().get_property_native
+export function getPropertyNative<T>(name: string): T | undefined
+export function getPropertyNative<T>(name: string, def: T): T
+export function getPropertyNative<T>(name: string, def?: T): T | undefined {
+  return getMPV().get_property_native<T>(name) ?? def
 }
 
 export function setProperty(name: string, value: string): true | undefined {
@@ -412,11 +433,11 @@ export function exit() {
   return globalThis.exit()
 }
 
-export function setTimeout(fn: () => void, dur = 1000): number {
+export function setTimeout(fn: () => void, dur = 16): number {
   return +globalThis.setTimeout(fn, dur)
 }
 
-export function setInterval(fn: () => void, dur = 1000): number {
+export function setInterval(fn: () => void, dur = 16): number {
   return +globalThis.setInterval(fn, dur)
 }
 

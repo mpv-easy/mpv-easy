@@ -141,9 +141,9 @@ export async function loadRemoteSubtitleAsync(path = getProperty("path")) {
 export type SubtitleTrack = {
   title?: string
   lang?: string
-  selected: boolean
+  selected?: boolean
   id: number
-  external: boolean
+  external?: boolean
   externalFilename?: string
 }
 

@@ -332,7 +332,7 @@ export const ClickMenu: ForwardRefExoticComponent<
           return
         }
 
-        const mousePos = mousePosProp.value
+        const mousePos = mousePosProp.value!
         const direction = getDirection(
           mousePos.x,
           mousePos.y,
