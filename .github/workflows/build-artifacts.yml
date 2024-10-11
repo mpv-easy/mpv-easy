@@ -15,7 +15,7 @@ jobs:
           pnpm setup
           pnpm i
 
-          cd ./mpv-js-plugin-init
+          cd mpv-js-plugin-init
           pnpm run build
 
       - uses: actions-rust-lang/setup-rust-toolchain@v1
@@ -26,11 +26,11 @@ jobs:
       - name: build ext
         shell: powershell
         run: |
-          cd ./mpv-easy-ext
-          cargo build --target x86_64-pc-windows-msvc --release --out-dir=./output -Z unstable-options
+          cd mpv-easy-ext
+          cargo build --target x86_64-pc-windows-msvc --release --out-dir=output -Z unstable-options
           cd ..
-          mv ./mpv-easy-ext/output/mpv-easy-ext.exe ./mpv-easy-ext-windows.exe
-          mv ./mpv-easy-ext/output/mpv-easy-play-with.exe ./mpv-easy-play-with-windows.exe
+          mv mpv-easy-ext/output/mpv-easy-ext.exe mpv-easy-ext-windows.exe
+          mv mpv-easy-ext/output/mpv-easy-play-with.exe mpv-easy-play-with-windows.exe
 
       # - name: build deno
       #   run: |
@@ -43,10 +43,10 @@ jobs:
 
       #     rustc --version
 
-      #     cd ./mpv-deno
-      #     cargo build --release --out-dir=./output -Z unstable-options
+      #     cd mpv-deno
+      #     cargo build --release --out-dir=output -Z unstable-options
       #     cd ..
-      #     mv ./mpv-deno/output/mpv_deno.dll ./mpv-deno-windows.dll
+      #     mv mpv-deno/output/mpv_deno.dll mpv-deno-windows.dll
       # - uses: msys2/setup-msys2@v2
       # - shell: msys2 {0}
       #   run: |
@@ -61,10 +61,10 @@ jobs:
       #     rustup override set nightly-x86_64-pc-windows-gnu
       #     rustc --version
 
-      #     cd ./mpv-qjs
-      #     cargo build --release --out-dir=./output -Z unstable-options
+      #     cd mpv-qjs
+      #     cargo build --release --out-dir=output -Z unstable-options
       #     cd ..
-      #     mv ./mpv-qjs/output/mpv_qjs.dll ./mpv-qjs-windows.dll
+      #     mv mpv-qjs/output/mpv_qjs.dll mpv-qjs-windows.dll
 
       # - name: build boa
       #   run: |
@@ -75,38 +75,38 @@ jobs:
       #     rustup override set nightly-x86_64-pc-windows-gnu
       #     rustc --version
 
-      #     cd ./mpv-boa
-      #     cargo build --release --out-dir=./output -Z unstable-options
+      #     cd mpv-boa
+      #     cargo build --release --out-dir=output -Z unstable-options
       #     cd ..
-      #     mv ./mpv-boa/output/mpv_boa.dll ./mpv-boa-windows.dll
+      #     mv mpv-boa/output/mpv_boa.dll mpv-boa-windows.dll
 
       - name: Upload windows Artifact ext
         uses: actions/upload-artifact@v4
         with:
           name: mpv-easy-ext-windows
-          path: ./mpv-easy-ext-windows.exe
+          path: mpv-easy-ext-windows.exe
       - name: Upload windows Artifact play-with
         uses: actions/upload-artifact@v4
         with:
           name: mpv-easy-play-with-windows
-          path: ./mpv-easy-play-with-windows.exe
+          path: mpv-easy-play-with-windows.exe
 
       # - name: Upload windows Artifact deno
       #   uses: actions/upload-artifact@v4
       #   with:
       #     name: mpv-deno-windows
-      #     path: ./mpv-deno-windows.dll
+      #     path: mpv-deno-windows.dll
 
       # - name: Upload windows Artifact qjs
       #   uses: actions/upload-artifact@v4
       #   with:
       #     name: mpv-qjs-windows
-      #     path: ./mpv-qjs-windows.dll
+      #     path: mpv-qjs-windows.dll
       # - name: Upload windows Artifact boa
       #   uses: actions/upload-artifact@v4
       #   with:
       #     name: mpv-boa-windows
-      #     path: ./mpv-boa-windows.dll
+      #     path: mpv-boa-windows.dll
 
   build-ext-macos:
     runs-on: macos-latest
@@ -120,23 +120,23 @@ jobs:
 
       - name: build macos-latest
         run: |
-          cd ./mpv-easy-ext
-          cargo build --release --out-dir=./output -Z unstable-options
+          cd mpv-easy-ext
+          cargo build --release --out-dir=output -Z unstable-options
           cd ..
 
-          mv ./mpv-easy-ext/output/mpv-easy-ext ./mpv-easy-ext-macos
-          mv ./mpv-easy-ext/output/mpv-easy-play-with ./mpv-easy-play-with-macos
+          mv mpv-easy-ext/output/mpv-easy-ext mpv-easy-ext-macos
+          mv mpv-easy-ext/output/mpv-easy-play-with mpv-easy-play-with-macos
 
       - name: Upload macos Artifact ext
         uses: actions/upload-artifact@v4
         with:
           name: mpv-easy-ext-macos
-          path: ./mpv-easy-ext-macos
+          path: mpv-easy-ext-macos
       - name: Upload macos Artifact play-with
         uses: actions/upload-artifact@v4
         with:
           name: mpv-easy-play-with-macos
-          path: ./mpv-easy-play-with-macos
+          path: mpv-easy-play-with-macos
 
   build-ext-ubuntu:
     runs-on: ubuntu-latest
@@ -150,22 +150,22 @@ jobs:
 
       - name: build ubuntu-latest
         run: |
-          cd ./mpv-easy-ext
-          cargo build --release --out-dir=./output -Z unstable-options
+          cd mpv-easy-ext
+          cargo build --release --out-dir=output -Z unstable-options
           cd ..
 
-          mv ./mpv-easy-ext/output/mpv-easy-ext ./mpv-easy-ext-linux
-          mv ./mpv-easy-ext/output/mpv-easy-play-with ./mpv-easy-play-with-linux
+          mv mpv-easy-ext/output/mpv-easy-ext mpv-easy-ext-linux
+          mv mpv-easy-ext/output/mpv-easy-play-with mpv-easy-play-with-linux
       - name: Upload ubuntu Artifact ext
         uses: actions/upload-artifact@v4
         with:
           name: mpv-easy-ext-linux
-          path: ./mpv-easy-ext-linux
+          path: mpv-easy-ext-linux
       - name: Upload ubuntu Artifact play-with
         uses: actions/upload-artifact@v4
         with:
           name: mpv-easy-play-with-linux
-          path: ./mpv-easy-play-with-linux
+          path: mpv-easy-play-with-linux
 
   build-ext-android:
     runs-on: ubuntu-latest
@@ -180,21 +180,227 @@ jobs:
       - name: build ubuntu-latest
         run: |
 
-          cd ./mpv-easy-ext
+          cd mpv-easy-ext
 
           cargo install cross --git https://github.com/cross-rs/cross
-          cross build --release --target aarch64-linux-android --out-dir=./output -Z unstable-options
+          cross build --release --target aarch64-linux-android --out-dir=output -Z unstable-options
           cd ..
 
-          mv ./mpv-easy-ext/output/mpv-easy-ext ./mpv-easy-ext-android
-          mv ./mpv-easy-ext/output/mpv-easy-play-with ./mpv-easy-play-with-android
+          mv mpv-easy-ext/output/mpv-easy-ext mpv-easy-ext-android
+          mv mpv-easy-ext/output/mpv-easy-play-with mpv-easy-play-with-android
       - name: Upload android Artifact ext
         uses: actions/upload-artifact@v4
         with:
           name: mpv-easy-ext-android
-          path: ./mpv-easy-ext-android
+          path: mpv-easy-ext-android
       - name: Upload android Artifact play-with
         uses: actions/upload-artifact@v4
         with:
           name: mpv-easy-play-with-android
-          path: ./mpv-easy-play-with-android
+          path: mpv-easy-play-with-android
+
+  build-release:
+    needs:
+      [
+        build-ext-windows,
+        build-ext-macos,
+        build-ext-ubuntu,
+        build-ext-android,
+      ]
+    name: release
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          path: mpv-easy-ext-dist
+          pattern: mpv-easy-ext-*
+          merge-multiple: true
+      - uses: actions/download-artifact@v4
+        with:
+          path: mpv-easy-play-with-dist
+          pattern: mpv-easy-play-with-*
+          merge-multiple: true
+
+      # - uses: actions/download-artifact@v4
+      #   with:
+      #     path: deno-dll
+      #     pattern: mpv-deno-*
+      #     merge-multiple: true
+
+      # - uses: actions/download-artifact@v4
+      #   with:
+      #     path: qjs-dll
+      #     pattern: mpv-qjs-*
+      #     merge-multiple: true
+
+      # - uses: actions/download-artifact@v4
+      #   with:
+      #     path: boa-dll
+      #     pattern: mpv-boa-*
+      #     merge-multiple: true
+
+      - name: "build ts"
+        run: |
+          npm i pnpm @rwget/rwget -g
+          pnpm i
+          pnpm run build
+
+      - name: "create dist"
+        run: |
+          sudo apt install p7zip-full tree -y
+
+          node .github/download.js
+
+          mkdir dist/scripts/mpv-easy-config/mpv-easy-ext -p
+          # mkdir dist/script-opts -p
+
+          cp mpv-easy-react/es5/mpv-easy-es5.js dist/scripts/mpv-easy-es5.js
+          cp -r mpv-easy-react/fonts dist
+          cp -r mpv-anime4k/shaders dist
+          cp mpv-easy-react/mpv-conf/mpv.conf dist/mpv.conf
+          cp mpv-easy-react/mpv-conf/input.conf dist/input.conf
+          # cp mpv-translate/mpv-translate.conf dist/script-opts/mpv-translate.conf
+          cp mpv-easy-react/mpv-conf/cookies.txt dist/cookies.txt
+
+          chmod 777 mpv-easy-ext-dist/*
+          chmod 777 mpv-easy-play-with-dist/*
+
+          cp -r dist mpy-easy-macos
+          cp -r dist mpy-easy-linux
+          cp -r dist mpy-easy-android
+          cp -r dist mpy-easy-windows
+          # cp -r dist mpy-easy-deno-windows
+          # cp -r dist mpy-easy-qjs-windows
+          # cp -r dist mpy-easy-boa-windows
+
+          7z x ffmpeg.7z -offmpeg -y
+          cp ffmpeg/ffmpeg.exe mpy-easy-windows/scripts/mpv-easy-config/mpv-easy-ext/ffmpeg.exe
+
+          cp mpv-easy-ext-dist/mpv-easy-ext-macos mpy-easy-macos/scripts/mpv-easy-config/mpv-easy-ext/mpv-easy-ext-macos
+          cp mpv-easy-ext-dist/mpv-easy-ext-linux mpy-easy-linux/scripts/mpv-easy-config/mpv-easy-ext/mpv-easy-ext-linux
+          cp mpv-easy-ext-dist/mpv-easy-ext-android mpy-easy-android/scripts/mpv-easy-config/mpv-easy-ext/mpv-easy-ext-android
+          cp mpv-easy-ext-dist/mpv-easy-ext-windows.exe mpy-easy-windows/scripts/mpv-easy-config/mpv-easy-ext/mpv-easy-ext-windows.exe
+          # cp mpv-easy-ext-dist/mpv-easy-ext-windows.exe mpy-easy-deno-windows/scripts/mpv-easy-config/mpv-easy-ext/mpv-easy-ext-windows.exe
+          # cp mpv-easy-ext-dist/mpv-easy-ext-windows.exe mpy-easy-qjs-windows/scripts/mpv-easy-config/mpv-easy-ext/mpv-easy-ext-windows.exe
+          # cp mpv-easy-ext-dist/mpv-easy-ext-windows.exe mpy-easy-boa-windows/scripts/mpv-easy-config/mpv-easy-ext/mpv-easy-ext-windows.exe
+
+          cp mpv-easy-play-with-dist/mpv-easy-play-with-macos mpy-easy-macos/scripts/mpv-easy-config/mpv-easy-ext/mpv-easy-play-with-macos
+          cp mpv-easy-play-with-dist/mpv-easy-play-with-linux mpy-easy-linux/scripts/mpv-easy-config/mpv-easy-ext/mpv-easy-play-with-linux
+          cp mpv-easy-play-with-dist/mpv-easy-play-with-android mpy-easy-android/scripts/mpv-easy-config/mpv-easy-ext/mpv-easy-play-with-android
+          cp mpv-easy-play-with-dist/mpv-easy-play-with-windows.exe mpy-easy-windows/scripts/mpv-easy-config/mpv-easy-ext/mpv-easy-play-with-windows.exe
+          # cp mpv-easy-play-with-dist/mpv-easy-play-with-windows.exe mpy-easy-deno-windows/scripts/mpv-easy-config/mpv-easy-ext/mpv-easy-play-with-windows.exe
+          # cp mpv-easy-play-with-dist/mpv-easy-play-with-windows.exe mpy-easy-qjs-windows/scripts/mpv-easy-config/mpv-easy-ext/mpv-easy-play-with-windows.exe
+          # cp mpv-easy-play-with-dist/mpv-easy-play-with-windows.exe mpy-easy-boa-windows/scripts/mpv-easy-config/mpv-easy-ext/mpv-easy-play-with-windows.exe
+
+
+          # cp deno-dll/mpv-deno-windows.dll mpy-easy-deno-windows/scripts/mpv-deno-windows.dll
+          # rm mpy-easy-deno-windows/scripts/mpv-easy-es5.js
+          # mkdir mpy-easy-deno-windows/scripts-deno
+          # cp mpv-easy-react/bundle/mpv-easy-es6.js mpy-easy-deno-windows/scripts-deno/mpv-easy-es6.js
+          # mv mpy-easy-deno-windows/scripts/mpv-easy-config mpy-easy-deno-windows/scripts-deno/mpv-easy-config
+
+
+          # cp qjs-dll/mpv-qjs-windows.dll mpy-easy-qjs-windows/scripts/mpv-qjs-windows.dll
+          # rm mpy-easy-qjs-windows/scripts/mpv-easy-es5.js
+          # mkdir mpy-easy-qjs-windows/scripts-qjs
+          # cp mpv-easy-react/bundle/mpv-easy-es6.js mpy-easy-qjs-windows/scripts-qjs/mpv-easy-es6.js
+          # mv mpy-easy-qjs-windows/scripts/mpv-easy-config mpy-easy-qjs-windows/scripts-qjs/mpv-easy-config
+
+          # cp boa-dll/mpv-boa-windows.dll mpy-easy-boa-windows/scripts/mpv-boa-windows.dll
+          # rm mpy-easy-boa-windows/scripts/mpv-easy-es5.js
+          # mkdir mpy-easy-boa-windows/scripts-boa
+          # cp mpv-easy-react/bundle/mpv-easy-es6.js mpy-easy-boa-windows/scripts-boa/mpv-easy-es6.js
+          # mv mpy-easy-boa-windows/scripts/mpv-easy-config mpy-easy-boa-windows/scripts-boa/mpv-easy-config
+
+          # https://github.com/yt-dlp/yt-dlp/releases
+          # rwget -o mpy-easy-windows/yt-dlp.exe https://github.com/yt-dlp/yt-dlp/releases/download/2024.09.27/yt-dlp.exe
+          cp yt-dlp.exe mpy-easy-windows/yt-dlp.exe
+          7z x mpv-win.7z -ompy-easy-windows-full -y
+          cp -r mpy-easy-windows mpy-easy-windows-full/portable_config
+
+          cd mpy-easy-macos
+          zip -r -q mpy-easy-macos.zip .
+          cd ..
+
+          cd mpy-easy-linux
+          zip -r -q mpy-easy-linux.zip .
+          cd ..
+
+          cd mpy-easy-android
+          zip -r -q mpy-easy-android.zip .
+          cd ..
+
+          cd mpy-easy-windows
+          zip -r -q mpy-easy-windows.zip .
+          cd ..
+
+          # cd mpy-easy-deno-windows
+          # zip -r -q mpy-easy-deno-windows.zip .
+          # cd ..
+
+          # cd mpy-easy-qjs-windows
+          # zip -r -q mpy-easy-qjs-windows.zip .
+          # cd ..
+
+          # cd mpy-easy-boa-windows
+          # zip -r -q mpy-easy-boa-windows.zip .
+          # cd ..
+
+          cd mpy-easy-windows-full
+          zip -r -q mpy-easy-windows-full.zip .
+          cd ..
+
+          mkdir release
+          cp mpy-easy-macos/mpy-easy-macos.zip release/mpy-easy-macos.zip
+          cp mpy-easy-linux/mpy-easy-linux.zip release/mpy-easy-linux.zip
+          cp mpy-easy-android/mpy-easy-android.zip release/mpy-easy-android.zip
+          cp mpy-easy-windows/mpy-easy-windows.zip release/mpy-easy-windows.zip
+          cp mpy-easy-windows-full/mpy-easy-windows-full.zip release/mpy-easy-windows-full.zip
+          cp mpv-translate/es5/mpv-translate.js release/mpv-translate.js
+          cp mpv-easy-react/es5/mpv-easy-es5.js release/mpv-easy-es5.js
+          cp mpv-easy-react/es5/mpv-easy-es6.js release/mpv-easy-es6.js
+
+          cp mpv-easy-ext-dist/mpv-easy-ext-macos release/mpv-easy-ext-macos
+          cp mpv-easy-ext-dist/mpv-easy-ext-linux release/mpv-easy-ext-linux
+          cp mpv-easy-ext-dist/mpv-easy-ext-android release/mpv-easy-ext-android
+          cp mpv-easy-ext-dist/mpv-easy-ext-windows.exe release/mpv-easy-ext-windows.exe
+          cp mpv-play-with/dist/mpv-easy-play-with.user.js release/mpv-easy-play-with.user.js
+          cp mpv-easy-play-with-dist/mpv-easy-play-with-macos release/mpv-easy-play-with-macos
+          cp mpv-easy-play-with-dist/mpv-easy-play-with-linux release/mpv-easy-play-with-linux
+          cp mpv-easy-play-with-dist/mpv-easy-play-with-android release/mpv-easy-play-with-android
+          cp mpv-easy-play-with-dist/mpv-easy-play-with-windows.exe release/mpv-easy-play-with-windows.exe
+          cd release
+          zip -r -q release.zip .
+          cd ..
+
+      - name: Upload mpy-easy-macos
+        uses: actions/upload-artifact@v4
+        with:
+          name: mpy-easy-macos
+          path: mpy-easy-macos/mpy-easy-macos.zip
+      - name: Upload mpy-easy-linux
+        uses: actions/upload-artifact@v4
+        with:
+          name: mpy-easy-linux
+          path: mpy-easy-linux/mpy-easy-linux.zip
+      - name: Upload mpy-easy-android
+        uses: actions/upload-artifact@v4
+        with:
+          name: mpy-easy-android
+          path: mpy-easy-android/mpy-easy-android.zip
+      - name: Upload mpy-easy-windows
+        uses: actions/upload-artifact@v4
+        with:
+          name: mpy-easy-windows
+          path: mpy-easy-windows/mpy-easy-windows.zip
+      - name: Upload mpy-easy-windows-full
+        uses: actions/upload-artifact@v4
+        with:
+          name: mpy-easy-windows-full
+          path: mpy-easy-windows-full/mpy-easy-windows-full.zip
+      - name: Upload release
+        uses: actions/upload-artifact@v4
+        with:
+          name: release
+          path: release/release.zip
