@@ -21,7 +21,7 @@
     "@mpv-easy/plugin": "workspace:*",
     "@mpv-easy/polyfill": "workspace:*",
     "@mpv-easy/tool": "workspace:*",
-    "e-color": "0.1.6"
+    "e-color": "0.1.7"
   },
   "devDependencies": {
     "@mpv-easy/react": "workspace:*",

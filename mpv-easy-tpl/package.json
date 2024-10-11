@@ -19,6 +19,6 @@
     "@mpv-easy/polyfill": "workspace:*",
     "@mpv-easy/react": "workspace:*",
     "@mpv-easy/tool": "workspace:*",
-    "e-color": "0.1.6"
+    "e-color": "0.1.7"
   }
 }

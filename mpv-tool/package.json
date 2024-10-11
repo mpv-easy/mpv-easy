@@ -18,7 +18,7 @@
     "@mpv-easy/polyfill": "workspace:*",
     "buffer": "6.0.3",
     "crypto-js": "^4.2.0",
-    "e-color": "0.1.6",
+    "e-color": "0.1.7",
     "type-fest": "^4.26.1"
   },
   "devDependencies": {
