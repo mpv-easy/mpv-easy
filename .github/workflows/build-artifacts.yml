@@ -359,7 +359,7 @@ jobs:
           cp mpy-easy-windows-full/mpy-easy-windows-full.zip release/mpy-easy-windows-full.zip
           cp mpv-translate/es5/mpv-translate.js release/mpv-translate.js
           cp mpv-easy-react/es5/mpv-easy-es5.js release/mpv-easy-es5.js
-          cp mpv-easy-react/es5/mpv-easy-es6.js release/mpv-easy-es6.js
+          cp mpv-easy-react/bundle/mpv-easy-es6.js release/mpv-easy-es6.js
 
           cp mpv-easy-ext-dist/mpv-easy-ext-macos release/mpv-easy-ext-macos
           cp mpv-easy-ext-dist/mpv-easy-ext-linux release/mpv-easy-ext-linux
