@@ -35,14 +35,14 @@ export const defaultSubConfig: SubConfig = {
   subBackColor: "#FFFFFFFF",
   subBackColorHover: "#000000BF",
   subColorHover: "#00FFFF00",
-  subBold: true,
+  subBold: false,
   subScale: 1,
   subOutlineSize: 0,
   subOutlineColor: "#FF000000",
   subZIndex: 512,
   targetLang: getLang(),
   sourceLang: "",
-  subSrtScale: 2.5,
+  subSrtScale: 0.4,
 }
 
 export const defaultTooltipConfig: TooltipConfig = {
@@ -56,5 +56,5 @@ export const defaultTooltipConfig: TooltipConfig = {
   tooltipMaxWidth: 64,
   tooltipZIndex: 1024,
   tooltipLeft: 0,
-  tooltipBottom: 0,
+  tooltipBottom: 32,
 }

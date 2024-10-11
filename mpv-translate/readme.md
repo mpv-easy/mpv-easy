@@ -48,7 +48,15 @@ Display Chinese and English
 
 Click left mouse button to play the audio, and click the wheel to display the full sentence translation
 <div style="display: flex;">
-  <img src="../assets/img/interactive-translate.gif" alt="interactive-translate"/>
+  <img src="../assets/img/translate-en-interactive.png" alt="interactive-translate"/>
+</div>
+
+## interactive-translate-mix (ctrl+T then ctrl+i)
+
+Mixed translation and interactive translation can be used at the same time
+
+<div style="display: flex;">
+  <img src="../assets/img/translate-en-interactive-mix.png" alt="interactive-translate-mix"/>
 </div>
 
 
