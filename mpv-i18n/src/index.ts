@@ -1,4 +1,3 @@
-import "@mpv-easy/tool"
 import { osdMessage } from "@mpv-easy/tool"
 import { useState } from "react"
 import cn from "./i18n/cn"

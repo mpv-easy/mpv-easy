@@ -1,5 +1,5 @@
 import "@mpv-easy/polyfill"
-import "@mpv-easy/tool"
+
 import { render, Tooltip } from "@mpv-easy/react"
 import { Translation } from "./ui"
 import React from "react"

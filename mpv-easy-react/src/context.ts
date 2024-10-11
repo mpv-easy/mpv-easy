@@ -5,7 +5,6 @@ declare namespace globalThis {
 
 const version = globalThis.version ?? (+Date.now()).toString()
 
-import "@mpv-easy/tool"
 import clipPlayPlugin, {
   defaultConfig as clipPlayConfig,
   pluginName as clipPlayName,

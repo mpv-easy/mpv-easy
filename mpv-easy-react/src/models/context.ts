@@ -1,6 +1,6 @@
 import { createModel } from "@rematch/core"
 import type { RootModel } from "."
-import "@mpv-easy/tool"
+
 import type { PluginContext } from "@mpv-easy/plugin"
 import { pluginName } from "../main"
 import {

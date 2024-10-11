@@ -3,7 +3,7 @@
   "version": "0.1.12",
   "homepage": "https://github.com/mpv-easy/mpv-easy#readme",
   "files": ["dist", "readme.md", "package.json"],
-  "description": "",
+  "description": "mpv-easy-tpl",
   "main": "./dist/index.js",
   "scripts": {
     "bundle": "esbuild ./src/index.tsx --bundle --outdir=dist",
@@ -16,6 +16,7 @@
   "author": "ahaoboy <504595380@qq.com> (https://github.com/ahaoboy)",
   "license": "MIT",
   "dependencies": {
+    "@mpv-easy/polyfill": "workspace:*",
     "@mpv-easy/react": "workspace:*",
     "@mpv-easy/tool": "workspace:*",
     "e-color": "0.1.6"
