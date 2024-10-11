@@ -23,7 +23,11 @@ jobs:
           path: release
           pattern: release
           merge-multiple: true
-
+      - name: unzip
+        run: |
+          sudo apt install unzip -y
+          cd release
+          unzip release.zip -d dist
       - uses: ncipollo/release-action@v1
         with:
-          artifacts: "release/*"
+          artifacts: "release/dist/*"
