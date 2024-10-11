@@ -1,5 +1,5 @@
 import "@mpv-easy/tool"
-import { render, DefaultFps, createRender } from "@mpv-easy/react"
+import { DefaultFps, createRender } from "@mpv-easy/react"
 import React from "react"
 import { definePlugin } from "@mpv-easy/plugin"
 import { Easy } from "./ui"
