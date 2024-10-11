@@ -1,6 +1,6 @@
 {
   "name": "@mpv-easy/play-with",
-  "version": "0.1.1",
+  "version": "0.1.12",
   "files": ["dist", "readme.md", "package.json"],
   "description": "",
   "main": "dist/index.js",

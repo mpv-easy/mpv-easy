@@ -1,6 +1,6 @@
 {
   "name": "@mpv-easy/anime",
-  "version": "0.1.10",
+  "version": "0.1.12",
   "homepage": "https://github.com/mpv-easy/mpv-easy#readme",
   "files": ["dist", "readme.md", "package.json"],
   "description": "@mpv-easy/tool",

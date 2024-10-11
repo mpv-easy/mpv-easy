@@ -1,6 +1,6 @@
 {
   "name": "mpv-easy",
-  "version": "0.1.10",
+  "version": "0.1.12",
   "homepage": "https://github.com/mpv-easy/mpv-easy#readme",
   "files": ["dist", "readme.md", "package.json"],
   "description": "TS and React toolkit for mpv script",
@@ -13,8 +13,8 @@
     "format": "biome format --write  ./",
     "lint:fix": "biome lint ./ --write --unsafe",
     "test": "pnpm run --parallel test",
-    "clear": "rm -rf node_modules && pnpm -r exec rm -rf node_modules dist es5 bundle",
-    "clear-dist": "rm -rf dist es5 && pnpm -r exec rm -rf dist es5 bundle",
+    "clean": "rm -rf node_modules && pnpm -r exec rm -rf node_modules dist es5 bundle",
+    "clean-dist": "rm -rf dist es5 && pnpm -r exec rm -rf dist es5 bundle",
     "release": "pnpm publish -r --access public",
     "release-alpha": "pnpm publish -r --access public --tag alpha",
     "bump": "pnpm --recursive up --latest --force"
