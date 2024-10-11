@@ -188,6 +188,10 @@ export function Translation(props: Partial<TranslationProps>) {
     targetLang: defTargetLang,
     sourceLang: defSourceLang,
     subSrtScale,
+    firstSubColor,
+    firstSubFontface,
+    secondSubFontface,
+    secondSubColor,
   } = {
     ...defaultSubConfig,
     ...props,
@@ -243,6 +247,10 @@ export function Translation(props: Partial<TranslationProps>) {
         mix: false,
         firstFontSize,
         secondFontSize,
+        firstSubColor,
+        firstSubFontface,
+        secondSubFontface,
+        secondSubColor,
       })
     })
     registerScriptMessage("mix-translate", () => {
@@ -264,6 +272,10 @@ export function Translation(props: Partial<TranslationProps>) {
         mix: true,
         firstFontSize,
         secondFontSize,
+        firstSubColor,
+        firstSubFontface,
+        secondSubFontface,
+        secondSubColor,
       })
     })
     registerScriptMessage("interactive-translate", () => {
@@ -320,6 +332,10 @@ export function Translation(props: Partial<TranslationProps>) {
               sourceLang,
               subZIndex,
               subSrtScale,
+              firstSubColor,
+              firstSubFontface,
+              secondSubFontface,
+              secondSubColor,
             }}
           />
         ))}

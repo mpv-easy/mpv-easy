@@ -14,7 +14,6 @@ import {
   Srt,
   writeFile,
   md5,
-  getPropertyNumber,
   SubtitleTrack,
 } from "@mpv-easy/tool"
 import { google } from "./google"
@@ -63,6 +62,10 @@ export type TranslateOption = {
   mix: boolean
   firstFontSize: number
   secondFontSize: number
+  firstSubColor: string
+  secondSubColor: string
+  firstSubFontface: string
+  secondSubFontface: string
 }
 
 function mixSrt(
@@ -71,6 +74,10 @@ function mixSrt(
   output: string,
   firstFontSize: number,
   secondFontSize: number,
+  firstSubColor: string,
+  secondSubColor: string,
+  firstSubFontface: string,
+  secondSubFontface: string,
 ) {
   const firstString = readFile(first)
   const secondString = readFile(second)
@@ -78,13 +85,32 @@ function mixSrt(
   const secondSrt = new Srt(secondString)
   const outputSrt = new Srt(firstString)
 
+  const firstAttr: string[] = [`size="${firstFontSize}"`]
+  const secondAttr: string[] = [`size="${secondFontSize}"`]
+
+  if (firstSubColor.length) {
+    firstAttr.push(`color="${firstSubColor}"`)
+  }
+  if (firstSubFontface.length) {
+    firstAttr.push(`face="${firstSubFontface}"`)
+  }
+
+  if (secondSubColor.length) {
+    secondAttr.push(`color="${secondSubColor}"`)
+  }
+  if (secondSubFontface.length) {
+    secondAttr.push(`face="${secondSubFontface}"`)
+  }
+
+  const firstAttrStr = firstAttr.join(" ")
+  const secondAttrStr = secondAttr.join(" ")
   for (let i = 0; i < outputSrt.blocks.length; i++) {
     const a = firstSrt.blocks[i].text.split("\n")
     const b = secondSrt.blocks[i].text.split("\n")
     const c: string[] = []
     for (let k = 0; k < a.length; k++) {
       c.push(
-        `<font size="${firstFontSize}">${a[k] || ""}</font>\n<font size="${secondFontSize}">${b[k] || ""}</font>`,
+        `<font ${firstAttrStr} >${a[k] || ""}</font>\n<font ${secondAttrStr} >${b[k] || ""}</font>`,
       )
     }
 
@@ -95,7 +121,15 @@ function mixSrt(
 }
 
 export async function translate(option: Partial<TranslateOption> = {}) {
-  const { mix, firstFontSize = 22, secondFontSize = 11 } = option
+  const {
+    mix,
+    firstFontSize = 22,
+    secondFontSize = 11,
+    firstSubColor = "",
+    secondSubColor = "",
+    firstSubFontface = "",
+    secondSubFontface = "",
+  } = option
   let sub = getCurrentSubtitle()
   if (!sub) {
     printAndOsd("subtitle not found")
@@ -175,7 +209,17 @@ export async function translate(option: Partial<TranslateOption> = {}) {
   )
   if (mix) {
     if (!existsSync(srtMixPath)) {
-      mixSrt(srtPath, srtOriPath, srtMixPath, firstFontSize, secondFontSize)
+      mixSrt(
+        srtPath,
+        srtOriPath,
+        srtMixPath,
+        firstFontSize,
+        secondFontSize,
+        firstSubColor,
+        secondSubColor,
+        firstSubFontface,
+        secondSubFontface,
+      )
     }
     command(`sub-add "${srtMixPath}" select ${targetLang}-mix ${targetLang}`)
   } else {

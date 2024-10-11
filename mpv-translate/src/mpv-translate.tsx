@@ -1,5 +1,4 @@
 import "@mpv-easy/polyfill"
-
 import { render, Tooltip } from "@mpv-easy/react"
 import { Translation } from "./ui"
 import React from "react"
@@ -30,6 +29,10 @@ const {
   tooltipZIndex,
   tooltipLeft,
   tooltipBottom,
+  firstSubColor,
+  secondSubColor,
+  firstSubFontface,
+  secondSubFontface,
 } = {
   ...defaultSubConfig,
   ...defaultTooltipConfig,
@@ -91,6 +94,10 @@ const {
     "target-lang": { type: "string", key: "targetLang" },
     "source-lang": { type: "string", key: "sourceLang" },
     "sub-srt-scale": { type: "number", key: "subSrtScale" },
+    "first-sub-color": { type: "string", key: "firstSubColor" },
+    "second-sub-color": { type: "string", key: "secondSubColor" },
+    "first-sub-fontface": { type: "string", key: "firstSubFontface" },
+    "second-sub-fontface": { type: "string", key: "secondSubFontface" },
   }),
 }
 
@@ -125,6 +132,10 @@ function App() {
         subColorHover={subColorHover}
         left={tooltipLeft}
         bottom={tooltipBottom}
+        firstSubColor={firstSubColor}
+        secondSubColor={secondSubColor}
+        firstSubFontface={firstSubFontface}
+        secondSubFontface={secondSubFontface}
       />
     </>
   )

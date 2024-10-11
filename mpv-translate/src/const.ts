@@ -14,6 +14,10 @@ export type SubConfig = {
   targetLang: string
   sourceLang: string
   subSrtScale: number
+  firstSubColor: string
+  secondSubColor: string
+  firstSubFontface: string
+  secondSubFontface: string
 }
 export type TooltipConfig = {
   tooltioFontSize: number
@@ -43,6 +47,10 @@ export const defaultSubConfig: SubConfig = {
   targetLang: getLang(),
   sourceLang: "",
   subSrtScale: 0.4,
+  firstSubColor: "",
+  secondSubColor: "",
+  firstSubFontface: "",
+  secondSubFontface: "",
 }
 
 export const defaultTooltipConfig: TooltipConfig = {

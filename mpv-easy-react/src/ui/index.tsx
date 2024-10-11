@@ -323,6 +323,10 @@ export const Easy = (props: Partial<EasyProps>) => {
     subBackColor,
     subBackColorHover,
     subColorHover,
+    firstSubColor,
+    secondSubColor,
+    firstSubFontface,
+    secondSubFontface,
   } = translateStyle
 
   const clickMenuStyle = useSelector(clickMenuStyleSelector)
@@ -402,6 +406,10 @@ export const Easy = (props: Partial<EasyProps>) => {
           subBackColorHover={subBackColorHover}
           subColorHover={subColorHover}
           bottom={2 * h}
+          firstSubColor={firstSubColor}
+          firstSubFontface={firstSubFontface}
+          secondSubFontface={secondSubFontface}
+          secondSubColor={secondSubColor}
         />
       </Box>
     </>

@@ -48,7 +48,13 @@ export function getOptions<
   const ret: any = {}
   for (const k in rawOption) {
     const key = config[k].key || k
-    let v = rawOption[k]
+    let v = rawOption[k].trim()
+    if (
+      (v.startsWith(`"`) && v.endsWith('"')) ||
+      (v.startsWith(`'`) && v.endsWith(`'`))
+    ) {
+      v = v.slice(1, -1)
+    }
     if (v.length) {
       switch (config[k].type) {
         case "number": {
@@ -64,12 +70,6 @@ export function getOptions<
           break
         }
         case "color": {
-          if (
-            (v.startsWith(`"`) && v.endsWith('"')) ||
-            (v.startsWith(`'`) && v.endsWith(`'`))
-          ) {
-            v = v.slice(1, -1)
-          }
           const bgra = new Argb(v.length === 7 ? v : `#FF${v.slice(1)}`, true)
             .toBgra()
             .toHex("#")
