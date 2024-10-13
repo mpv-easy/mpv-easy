@@ -183,7 +183,20 @@ export async function translate(option: Partial<TranslateOption> = {}) {
 
   const tmpDir = getTmpDir()
   const videoName = getFileName(videoPath)
-  const hash = md5([videoPath, sourceLang, targetLang, sub.id].join("-"))
+  const hash = md5(
+    [
+      videoPath,
+      sourceLang,
+      targetLang,
+      sub.id,
+      firstFontSize,
+      secondFontSize,
+      firstSubColor,
+      secondSubColor,
+      firstSubFontface,
+      secondSubFontface,
+    ].join("-"),
+  )
   const srtOriPath = normalize(
     `${tmpDir}/${hash}.${videoName}.${sourceLang}.srt`,
   )
