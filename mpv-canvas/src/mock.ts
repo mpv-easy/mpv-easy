@@ -4,7 +4,7 @@ import type {
   FileInfo,
   KeyEvent,
   LogLevel,
-  MPV,
+  MP,
   MousePos,
   MpvOsdOverlay,
   OSDMargins,
@@ -562,7 +562,7 @@ export function createMpvMock(
     "time-pos/full": 0,
     "playlist/count": 1,
   }
-  const mp: MPV & { renderAll: () => void } = {
+  const mp: MP & { renderAll: () => void } = {
     command: (command: string): true | undefined => {
       // console.log("cmd: ", command)
       return true

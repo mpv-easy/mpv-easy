@@ -1,4 +1,4 @@
-import type { MpvC, MpvWaitEvent } from "./type"
+import type { MpApi, MpvWaitEvent } from "./type"
 
 if (!Array.prototype.at) {
   Array.prototype.at = function (index) {
@@ -41,7 +41,7 @@ declare global {
   }
 }
 
-const __mp: MpvC = {
+const __mp: MpApi = {
   __commandv: (args) => {
     const cmd = args.map((i) => (typeof i === "string" ? i : i.toString()))
     ops.op_commandv(cmd)

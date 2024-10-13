@@ -1,10 +1,10 @@
-import type { MPV } from "@mpv-easy/tool"
+import type { MP } from "@mpv-easy/tool"
 
 export type MpvWaitEvent = {
   event: string
 }
 
-export type MpvC = {
+export type MpApi = {
   __command_native: (table: any) => any
   __get_property_native: (name: string) => any
   __get_property_string: (name: string) => string
@@ -36,7 +36,7 @@ export type MpvC = {
   __write_file: (name: string, text: string) => void
 }
 
-export type InnerMpvC = {
+export type InnerMp = {
   _legacy_overlay: MpvOsdOverlay
   _keep_running: boolean
 }
@@ -45,11 +45,11 @@ declare global {
   var __print: (s: string) => void
   var __mp_main: () => void
   var __mp_tick: () => void
-  var __mp: MpvC
+  var __mp: MpApi
   var __script_name: string
   var __script_path: string
 
-  var mp: MPV & InnerMpvC
+  var mp: MP & InnerMp
   var exit: () => void
   var setTimeout: (fn: (v?: unknown) => void, delay?: number) => number
   var setInterval: (fn: (v?: unknown) => void, delay?: number) => number

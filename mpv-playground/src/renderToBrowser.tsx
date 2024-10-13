@@ -1,7 +1,7 @@
 import "./polyfill"
 import "./main.css"
 import { createRender, renderNode } from "@mpv-easy/react"
-import type { MPV } from "@mpv-easy/tool"
+import type { MP } from "@mpv-easy/tool"
 // @ts-ignore
 import FontFaceObserver from "fontfaceobserver"
 
@@ -10,7 +10,7 @@ declare module globalThis {
   // biome-ignore lint/style/noVar: <explanation>
   var isBrowser: boolean
   // biome-ignore lint/style/noVar: <explanation>
-  var mp: MPV & { renderAll: () => void }
+  var mp: MP & { renderAll: () => void }
   // biome-ignore lint/style/noVar: <explanation>
   var print: (...args: any[]) => void
 }

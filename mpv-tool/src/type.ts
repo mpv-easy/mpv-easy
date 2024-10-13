@@ -2,7 +2,7 @@ import type { KeyEvent } from "./mpv"
 
 declare global {
   // @ts-ignore
-  var mp: MPV
+  var mp: MP
   // @ts-ignore
   function print(...args: any[]): void
   function dump(...args: any[]): void
@@ -86,7 +86,7 @@ export type CommandResult = {
   stdout: string
 }
 
-export type MPV = {
+export type MP = {
   command(command: string): true | undefined
 
   commandv(...args: string[]): true | undefined

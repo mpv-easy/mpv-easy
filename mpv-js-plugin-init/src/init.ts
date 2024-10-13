@@ -1,12 +1,12 @@
 // @ts-nocheck
 
-import type { MPV } from "@mpv-easy/tool"
+import type { MP } from "@mpv-easy/tool"
 
 const log = globalThis.print
 
 const mp = globalThis.mp || {}
 globalThis.mp = mp
-mp.msg = { log } as MPV["msg"]
+mp.msg = { log } as MP["msg"]
 mp.msg.verbose = log.bind(null, "v")
 
 if (!globalThis.console) {

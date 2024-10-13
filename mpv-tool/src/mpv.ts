@@ -7,7 +7,7 @@ import type {
   AddKeyBindingFlags,
   FileInfo,
   LogLevel,
-  MPV,
+  MP,
   MousePos,
   MpvType,
   OSDMargins,
@@ -17,21 +17,21 @@ import type {
   CommandResult,
 } from "./type"
 
-export function getMPV(): MPV {
+export function getMP(): MP {
   // @ts-ignore
   return globalThis.mp
 }
 
 export function command(command: string): true | undefined {
-  return getMPV().command(command)
+  return getMP().command(command)
 }
 
 export function commandv(...args: string[]): true | undefined {
-  return getMPV().commandv(...args)
+  return getMP().commandv(...args)
 }
 
 export function commandNative(table: unknown): CommandResult {
-  return getMPV().command_native(table)
+  return getMP().command_native(table)
 }
 
 export function commandNativeAsync(
@@ -48,96 +48,96 @@ export function commandNativeAsync(
     error: string | undefined,
   ) => void,
 ): number {
-  return getMPV().command_native_async(table, fn)
+  return getMP().command_native_async(table, fn)
 }
 
 export function abortAsyncCommand(t: number) {
-  return getMPV().abort_async_command(t)
+  return getMP().abort_async_command(t)
 }
 
-// export const getProperty = getMPV().get_property
+// export const getProperty = getMP().get_property
 export function getProperty(name: string): string | undefined
 export function getProperty(name: string, def: string): string
 export function getProperty(name: string, def?: string): string | undefined {
-  return getMPV().get_property(name) ?? def
+  return getMP().get_property(name) ?? def
 }
 
-// export const getPropertyOsd = getMPV().get_property_osd
+// export const getPropertyOsd = getMP().get_property_osd
 export function getPropertyOsd(name: string): string | undefined
 export function getPropertyOsd(name: string, def: string): string
 export function getPropertyOsd(name: string, def?: string): string | undefined {
-  return getMPV().get_property_osd(name, def)
+  return getMP().get_property_osd(name, def)
 }
 
-// export const getPropertyBool = getMPV().get_property_bool
+// export const getPropertyBool = getMP().get_property_bool
 export function getPropertyBool(name: string): boolean | undefined
 export function getPropertyBool(name: string, def: boolean): boolean
 export function getPropertyBool(
   name: string,
   def?: boolean,
 ): boolean | undefined {
-  return getMPV().get_property_bool(name) ?? def
+  return getMP().get_property_bool(name) ?? def
 }
 
-// export const getPropertyString = getMPV().get_property_string
+// export const getPropertyString = getMP().get_property_string
 export function getPropertyString(name: string): string | undefined
 export function getPropertyString(name: string, def: string): string
 export function getPropertyString(
   name: string,
   def?: string,
 ): string | undefined {
-  return getMPV().get_property_native<string>(name) ?? def
+  return getMP().get_property_native<string>(name) ?? def
 }
 
-// export const getPropertyNumber = getMPV().get_property_number
+// export const getPropertyNumber = getMP().get_property_number
 export function getPropertyNumber(name: string): number | undefined
 export function getPropertyNumber(name: string, def: number): number
 export function getPropertyNumber(
   name: string,
   def?: number,
 ): number | undefined {
-  return getMPV().get_property_number(name) ?? def
+  return getMP().get_property_number(name) ?? def
 }
-// export const getPropertyNative = getMPV().get_property_native
+// export const getPropertyNative = getMP().get_property_native
 export function getPropertyNative<T>(name: string): T | undefined
 export function getPropertyNative<T>(name: string, def: T): T
 export function getPropertyNative<T>(name: string, def?: T): T | undefined {
-  return getMPV().get_property_native<T>(name) ?? def
+  return getMP().get_property_native<T>(name) ?? def
 }
 
 export function setProperty(name: string, value: string): true | undefined {
-  return getMPV().set_property(name, value)
+  return getMP().set_property(name, value)
 }
 
 export function setPropertyBool(
   name: string,
   value: boolean,
 ): true | undefined {
-  return getMPV().set_property_bool(name, value)
+  return getMP().set_property_bool(name, value)
 }
 export function setPropertyString(
   name: string,
   value: string,
 ): true | undefined {
-  return getMPV().set_property(name, value)
+  return getMP().set_property(name, value)
 }
 
 export function setPropertyNumber(
   name: string,
   value: number,
 ): true | undefined {
-  return getMPV().set_property_number(name, value)
+  return getMP().set_property_number(name, value)
 }
 
 export function setPropertyNative(
   name: string,
   value: unknown,
 ): true | undefined {
-  return getMPV().set_property_native(name, value)
+  return getMP().set_property_native(name, value)
 }
 
 export function getTime(): number {
-  return getMPV().get_time()
+  return getMP().get_time()
 }
 
 export type KeyEvent = {
@@ -159,7 +159,7 @@ export function addKeyBinding(
   fn?: (event: KeyEvent) => void,
   flags?: AddKeyBindingFlags,
 ) {
-  return getMPV().add_key_binding(key, name, fn, flags)
+  return getMP().add_key_binding(key, name, fn, flags)
 }
 
 export function addForcedKeyBinding(
@@ -168,22 +168,22 @@ export function addForcedKeyBinding(
   fn?: (event: KeyEvent) => void,
   flags?: AddKeyBindingFlags,
 ) {
-  return getMPV().add_forced_key_binding(key, name, fn, flags)
+  return getMP().add_forced_key_binding(key, name, fn, flags)
 }
 
 export function removeKeyBinding(name: string) {
-  return getMPV().remove_key_binding(name)
+  return getMP().remove_key_binding(name)
 }
 
 export function registerEvent(
   name: string,
   fn: (event: Record<string, unknown>) => void,
 ) {
-  return getMPV().register_event(name, fn)
+  return getMP().register_event(name, fn)
 }
 
 export function unregisterEvent(fn: (...args: unknown[]) => void) {
-  return getMPV().unregister_event(fn)
+  return getMP().unregister_event(fn)
 }
 
 export function observeProperty<T extends keyof MpvType, P = StrToType<T>>(
@@ -191,7 +191,7 @@ export function observeProperty<T extends keyof MpvType, P = StrToType<T>>(
   type: T,
   fn: (name: string, value: P) => void,
 ) {
-  return getMPV().observe_property(name, type as any, fn as any)
+  return getMP().observe_property(name, type as any, fn as any)
 }
 
 export function observePropertyNumber(
@@ -202,42 +202,42 @@ export function observePropertyNumber(
 }
 
 export function unobserveProperty(fn: (...args: unknown[]) => void) {
-  return getMPV().unobserve_property(fn)
+  return getMP().unobserve_property(fn)
 }
 
 export function getOpt(key: string): string {
-  return getMPV().get_opt(key)
+  return getMP().get_opt(key)
 }
 
 export function getScriptName(): string {
-  return getMPV().get_script_name()
+  return getMP().get_script_name()
 }
 
 export function osdMessage(text: string, seconds?: number) {
-  return getMPV().osd_message(text, seconds)
+  return getMP().osd_message(text, seconds)
 }
 
 export function registerIdle(fn: () => void) {
-  return getMPV().register_idle(fn)
+  return getMP().register_idle(fn)
 }
 
 export function unregisterIdle(fn: () => void) {
-  return getMPV().unregister_idle(fn)
+  return getMP().unregister_idle(fn)
 }
 
 export function enableMessages(level: LogLevel) {
-  return getMPV().enable_messages(level)
+  return getMP().enable_messages(level)
 }
 
 export function registerScriptMessage(
   name: string,
   fn: (...args: unknown[]) => void,
 ) {
-  return getMPV().register_script_message(name, fn)
+  return getMP().register_script_message(name, fn)
 }
 
 export function unregisterScriptMessage(name: string) {
-  return getMPV().unregister_script_message(name)
+  return getMP().unregister_script_message(name)
 }
 
 export type VideoParams = {
@@ -270,42 +270,42 @@ export type VideoParams = {
 export function createOsdOverlay(
   format: "ass-events" = "ass-events",
 ): MpvOsdOverlay {
-  return getMPV().create_osd_overlay(format)
+  return getMP().create_osd_overlay(format)
 }
 
 export function setOsdAss(res_x: number, res_y: number, data: string) {
-  getMPV().set_osd_ass(res_x, res_y, data)
+  getMP().set_osd_ass(res_x, res_y, data)
 }
 
 export function getOsdSize(): OSDSize | undefined {
-  return getMPV().get_osd_size()
+  return getMP().get_osd_size()
 }
 
 export function getOsdMargins(): OSDMargins | undefined {
-  return getMPV().get_osd_margins()
+  return getMP().get_osd_margins()
 }
 
 export function addHook(name: string, priority: number, fn: () => void) {
-  return getMPV().add_hook(name, priority, fn)
+  return getMP().add_hook(name, priority, fn)
 }
 
 export function lastError(): string {
-  return getMPV().last_error()
+  return getMP().last_error()
 }
 
 export function getTimeMs(): number {
-  return getMPV().get_time_ms()
+  return getMP().get_time_ms()
 }
 
 export function getScriptFile(): string {
-  return getMPV().get_script_file()
+  return getMP().get_script_file()
 }
 
 let _scriptDirCache: string
 export function getScriptDir(): string {
   if (_scriptDirCache) return _scriptDirCache
   _scriptDirCache = normalize(
-    getMPV().get_script_file().split("/").slice(0, -1).join("/"),
+    getMP().get_script_file().split("/").slice(0, -1).join("/"),
   )
   return _scriptDirCache
 }
@@ -319,39 +319,39 @@ export function getScriptConfigDir(): string {
   return _scriptConfigDirCache
 }
 export function getModulePaths(): string[] {
-  return getMPV().module_paths
+  return getMP().module_paths
 }
 
 export function log(level: LogLevel, ...msg: unknown[]) {
-  return getMPV().msg.log(level, ...msg)
+  return getMP().msg.log(level, ...msg)
 }
 
 export function fatal(...msg: unknown[]) {
-  return getMPV().msg.fatal(...msg)
+  return getMP().msg.fatal(...msg)
 }
 
 export function error(...msg: unknown[]) {
-  return getMPV().msg.error(...msg)
+  return getMP().msg.error(...msg)
 }
 
 export function warn(...msg: unknown[]) {
-  return getMPV().msg.warn(...msg)
+  return getMP().msg.warn(...msg)
 }
 
 export function info(...msg: unknown[]) {
-  return getMPV().msg.info(...msg)
+  return getMP().msg.info(...msg)
 }
 
 export function verbose(...msg: unknown[]) {
-  return getMPV().msg.verbose(...msg)
+  return getMP().msg.verbose(...msg)
 }
 
 export function debug(...msg: unknown[]) {
-  return getMPV().msg.debug(...msg)
+  return getMP().msg.debug(...msg)
 }
 
 export function trace(...msg: unknown[]) {
-  return getMPV().msg.trace(...msg)
+  return getMP().msg.trace(...msg)
 }
 
 export function readOptions(
@@ -360,63 +360,63 @@ export function readOptions(
   onUpdate?: (changelist: Record<string, boolean | undefined>) => void,
 ) {
   if (typeof onUpdate === "function")
-    return getMPV().options.read_options(table, identifier, onUpdate)
-  return getMPV().options.read_options(table, identifier)
+    return getMP().options.read_options(table, identifier, onUpdate)
+  return getMP().options.read_options(table, identifier)
 }
 
 export function getcwd(): string | undefined {
-  return getMPV().utils.getcwd()
+  return getMP().utils.getcwd()
 }
 
 export function readdir(
   path: string,
   filter?: "files" | "dirs" | "normal" | "all",
 ): string[] | undefined {
-  return getMPV().utils.readdir(path, filter)
+  return getMP().utils.readdir(path, filter)
 }
 
 export function fileInfo(path: string): FileInfo | undefined {
-  return getMPV().utils.file_info(path)
+  return getMP().utils.file_info(path)
 }
 
 export function splitPath(path: string): [string, string] {
-  return getMPV().utils.split_path(path)
+  return getMP().utils.split_path(path)
 }
 
 export function joinPath(...paths: string[]): string {
   return normalize(
-    paths.reduce((cur, pre) => getMPV().utils.join_path(cur, pre)),
+    paths.reduce((cur, pre) => getMP().utils.join_path(cur, pre)),
   )
 }
 
 export function getpid(): number {
-  return getMPV().utils.getpid()
+  return getMP().utils.getpid()
 }
 
 export function getenv(name: string): string | undefined {
-  return getMPV().utils.getenv(name)
+  return getMP().utils.getenv(name)
 }
 
 export function getUserPath(path: string): string {
-  return getMPV().utils.get_user_path(path)
+  return getMP().utils.get_user_path(path)
 }
 
 // export function getSc
 
 export function readFile(fname: string, max?: number): string {
-  return getMPV().utils.read_file(fname, max)
+  return getMP().utils.read_file(fname, max)
 }
 
 export function writeFile(filePath: string, str: string, prefix = "file://") {
   const p = prefix + normalize(filePath)
-  return getMPV().utils.write_file(p, str)
+  return getMP().utils.write_file(p, str)
 }
 
 export function compileJs(
   fname: string,
   content_str: string,
 ): (...args: unknown[]) => unknown {
-  return getMPV().utils.compile_js(fname, content_str)
+  return getMP().utils.compile_js(fname, content_str)
 }
 
 export function print(...msg: any[]) {
@@ -458,11 +458,11 @@ export function clearTimeout(id: number) {
 // }
 
 // export function getOptions() {
-//   return getMPV().options
+//   return getMP().options
 // }
 
 export function getMousePos(): MousePos {
-  return getMPV().get_mouse_pos()
+  return getMP().get_mouse_pos()
 }
 
 export function getGeometry() {
