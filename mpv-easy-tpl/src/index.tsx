@@ -9,11 +9,18 @@ function Play() {
   const [pause, setPause] = usePropertyBool("pause", false)
   return (
     <Box
-      x={0}
-      y={0}
-      text={pause ? pauseIcon : playIcon}
-      onClick={() => setPause((c) => !c)}
-    />
+      display="flex"
+      justifyContent="center"
+      alignItems="center"
+      width={"100%"}
+      height={"100%"}
+      fontSize={100}
+    >
+      <Box
+        text={pause ? pauseIcon : playIcon}
+        onClick={() => setPause((c) => !c)}
+      />
+    </Box>
   )
 }
 

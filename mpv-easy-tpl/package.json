@@ -6,11 +6,11 @@
   "description": "mpv-easy-tpl",
   "main": "./dist/index.js",
   "scripts": {
-    "bundle": "esbuild ./src/index.tsx --bundle --outdir=dist",
-    "es5": "babel --presets  @babel/preset-env ./dist -d es5",
-    "dev": "chokidar 'src/**/*.{ts,tsx,json}' -c \"pnpm run build && pnpm run copy\" -d 2000  --initial",
+    "bundle": "tsx build.ts",
+    "es5": "babel --presets  @babel/preset-env ./bundle -d es5",
+    "dev": "chokidar '../mpv-*/src/**/*' -c 'pnpm run build && pnpm run copy' -d 2000 --initial",
     "build": "pnpm run bundle && pnpm run es5",
-    "copy": "cp es5/index.js $MPV_SCRIPT_DIR"
+    "copy": "cp es5/mpv-easy-tpl.js $MPV_SCRIPT_DIR"
   },
   "keywords": [],
   "author": "ahaoboy <504595380@qq.com> (https://github.com/ahaoboy)",

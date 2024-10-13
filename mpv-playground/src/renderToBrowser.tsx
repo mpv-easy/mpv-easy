@@ -5,8 +5,7 @@ import type { MP } from "@mpv-easy/tool"
 // @ts-ignore
 import FontFaceObserver from "fontfaceobserver"
 
-// biome-ignore lint/suspicious/useNamespaceKeyword: <explanation>
-declare module globalThis {
+declare namespace globalThis {
   // biome-ignore lint/style/noVar: <explanation>
   var isBrowser: boolean
   // biome-ignore lint/style/noVar: <explanation>

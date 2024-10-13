@@ -36,7 +36,7 @@ function useProp<T>(name: string, type: keyof MpvType, defaultValue: T) {
   const [prop, setProp] = useState(defaultValue)
 
   observeProperty(name, type, (_, value) => {
-    if (defaultValue !== value) setProp(value)
+    if (prop !== value) setProp(value)
   })
 
   return [
@@ -45,8 +45,10 @@ function useProp<T>(name: string, type: keyof MpvType, defaultValue: T) {
       // TODO: https://github.com/microsoft/TypeScript/issues/37663#issuecomment-1827885694
       // @ts-ignore
       const v = typeof fn === "function" ? fn(prop) : fn
-      setProp(v)
-      setMpvProp(name, type, v)
+      if (prop !== v) {
+        setProp(v)
+        setMpvProp(name, type, v)
+      }
     },
   ] as const
 }
