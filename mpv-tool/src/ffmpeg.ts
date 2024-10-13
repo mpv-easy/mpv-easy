@@ -1,6 +1,8 @@
 import { getOs } from "./common"
 import { joinPath } from "./mpv"
 import { getDefaultBinDirPath } from "./rs-ext"
+import { existsSync } from "./fs"
+import { detectCmd } from "./ext"
 
 const defaultMacExeName = "ffmpeg"
 const defaultWindowsExeName = "ffmpeg.exe"
@@ -26,4 +28,14 @@ export function getFfmpegPath() {
       throw new Error(`mpv-easy-ext not support os: ${os}`)
     }
   }
+}
+
+export function detectFfmpeg(): false | string {
+  const ffmpegExt = getFfmpegPath()
+
+  if (existsSync(ffmpegExt)) {
+    return ffmpegExt
+  }
+
+  return detectCmd("ffmpeg")
 }

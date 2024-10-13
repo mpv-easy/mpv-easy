@@ -2,7 +2,7 @@ import "@mpv-easy/polyfill"
 import { render, Tooltip } from "@mpv-easy/react"
 import { Translation } from "./ui"
 import React from "react"
-import { getOptions } from "@mpv-easy/tool"
+import { getOptions, getPropertyNumber } from "@mpv-easy/tool"
 import { defaultSubConfig, defaultTooltipConfig } from "./const"
 
 const {
@@ -55,7 +55,6 @@ const {
       key: "subColorHover",
     },
     "sub-bold": { type: "boolean", key: "subBold" },
-    "sub-scale": { type: "number", key: "subScale" },
     "sub-outline-size": { type: "number", key: "subOutlineSize" },
     "sub-outline-color": {
       type: "color",
@@ -99,6 +98,7 @@ const {
     "first-sub-fontface": { type: "string", key: "firstSubFontface" },
     "second-sub-fontface": { type: "string", key: "secondSubFontface" },
   }),
+  subScale: getPropertyNumber("sub-scale", 1),
 }
 
 function App() {

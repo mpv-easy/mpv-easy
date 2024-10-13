@@ -8,6 +8,7 @@ import {
   detectCmd,
   printAndOsd,
   getCurrentSubtitle,
+  detectFfmpeg,
 } from "@mpv-easy/tool"
 import React, { useEffect, useRef, useState } from "react"
 import { Box, Button, MpDomProps } from "@mpv-easy/react"
@@ -224,7 +225,7 @@ export function Translation(props: Partial<TranslationProps>) {
       }
     }
   }
-  const firstFontSize = Math.round(subSrtScale * subFontSize)
+  const firstFontSize = Math.round(subSrtScale * subFontSize * subScale)
   const secondFontSize = Math.round(firstFontSize / 2)
 
   useEffect(() => {
@@ -233,7 +234,7 @@ export function Translation(props: Partial<TranslationProps>) {
       if (!sub) {
         printAndOsd("subtitle not found")
       }
-      if (!detectCmd("ffmpeg")) {
+      if (!detectFfmpeg()) {
         printAndOsd("ffmpeg not found")
         return
       }
@@ -258,7 +259,7 @@ export function Translation(props: Partial<TranslationProps>) {
       if (!sub) {
         printAndOsd("subtitle not found")
       }
-      if (!detectCmd("ffmpeg")) {
+      if (!detectFfmpeg()) {
         printAndOsd("ffmpeg not found")
         return
       }

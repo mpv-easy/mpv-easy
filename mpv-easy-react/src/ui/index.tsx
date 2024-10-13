@@ -316,10 +316,11 @@ export const Easy = (props: Partial<EasyProps>) => {
     hideUI()
   }
   const translateStyle = useSelector(translateSelector)
+  const subScale = getPropertyNumber("sub-sclae", 1)
+
   const {
     sourceLang,
     targetLang,
-    subScale,
     subBackColor,
     subBackColorHover,
     subColorHover,
@@ -330,10 +331,9 @@ export const Easy = (props: Partial<EasyProps>) => {
   } = translateStyle
 
   const clickMenuStyle = useSelector(clickMenuStyleSelector)
-  const subFontScale = getPropertyNumber("sub-scale") ?? (subScale || 1)
   const subFontSize =
     (getPropertyNumber("sub-font-size") ??
-      (translateStyle.subFontSize || fontSize)) * subFontScale
+      (translateStyle.subFontSize || fontSize)) * subScale
 
   const subColor =
     getColor("sub-color") ?? (translateStyle.subColor || "#FFFFFFFF")

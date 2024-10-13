@@ -15,8 +15,7 @@ import { getFileName } from "./path"
 import type { TrackItem } from "./type"
 import { getTmpDir } from "./tmp"
 import { isYtdlp } from "./yt-dlp"
-import { detectCmd } from "./ext"
-import { getFfmpegPath } from "./ffmpeg"
+import { detectFfmpeg } from "./ffmpeg"
 
 export async function loadRemoteSubtitle(path = getProperty("path")) {
   if (!path?.length || isYtdlp(path)) {
@@ -191,14 +190,10 @@ export async function saveSrt(
   if (!subTrack) {
     return false
   }
-  let ffmpeg = getFfmpegPath()
-
-  if (!existsSync(ffmpeg)) {
-    ffmpeg = "ffmpeg"
-    if (!detectCmd(ffmpeg)) {
-      printAndOsd("ffmpeg not found")
-      return false
-    }
+  const ffmpeg = detectFfmpeg()
+  if (!ffmpeg) {
+    printAndOsd("ffmpeg not found")
+    return false
   }
 
   const cmd = [
