@@ -111,6 +111,8 @@ set-executionpolicy remotesigned
 
 [more example](./mpv-easy-react/src/example/)
 
+[mpv-easy-tpl](https://github.com/mpv-easy/mpv-easy-tpl)
+
 ## Q&A
 
 ### mujs stack overflow
