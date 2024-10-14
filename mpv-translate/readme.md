@@ -20,6 +20,13 @@ https://cloud.google.com/translate/docs/languages
 }
 ```
 
+## short key
+
+| key    | command                              |
+| ------ | ------------------------------------ |
+| ctrl+t | script-message translate             |
+| ctrl+T | script-message mix-translate         |
+| ctrl+i | script-message interactive-translate |
 
 ## translate (ctrl+t)
 
