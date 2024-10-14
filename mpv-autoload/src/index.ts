@@ -1,6 +1,7 @@
 import { SystemApi, definePlugin } from "@mpv-easy/plugin"
 import {
   AudioTypes,
+  compareString,
   dir,
   getExtName,
   getMpvPlaylist,
@@ -85,7 +86,7 @@ export function getPlayableList(
           )),
     )
     .map((i) => joinPath(searchDir, i))
-    .sort((a, b) => a.localeCompare(b))
+    .sort((a, b) => compareString(a, b))
   if (videoList.length > config.maxSize) {
     print(`load too many videos(${videoList.length})`)
   }

@@ -88,9 +88,11 @@ export const frameTimeSelector = (state: RootState) =>
 export const buttonStyleSelector = (state: RootState) =>
   styleSelector(state)[modeSelector(state)].button.default
 
+export const controlSelector = (state: RootState) =>
+  styleSelector(state)[modeSelector(state)].control
+
 export const fontSelector = (state: RootState) =>
   styleSelector(state)[modeSelector(state)].font
-
 export const IconButtonSizeSelector = (state: RootState) => {
   const button = styleSelector(state)[modeSelector(state)].button.default
   return button.width + button.padding * 2

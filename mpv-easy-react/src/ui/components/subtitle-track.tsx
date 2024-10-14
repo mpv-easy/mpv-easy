@@ -20,32 +20,30 @@ export const SubtitleTrack = () => {
   const dropdown = useSelector(dropdownStyleSelector)
   const sid = useSelector(sidSelector)
   const tracks = getSubtitleTracks()
-  const items = tracks.map(
-    ({ title, lang, external, selected, id }, k): DropdownItem => {
-      const key = [title, lang, external, k].join("-")
-      const prefix = sid === id ? ICON.Ok : ICON.CheckboxBlankCircleOutline
-      const label = `${prefix} ${title ?? lang ?? "default"}`
-      return {
-        label,
-        key: key,
-        onSelect: (_, e) => {
-          if (sid === id) {
-            dispatch.context.setSid(-1)
-            setPropertyNative("sid", "no")
-          } else {
-            dispatch.context.setSid(id)
-            setPropertyNative("sid", "yes")
-            setPropertyNative("sid", id)
-          }
-          e.stopPropagation()
-        },
-        style: {
-          ...dropdown.item,
-          justifyContent: "start",
-        },
-      }
-    },
-  )
+  const items = tracks.map(({ title, lang, external, id }, k): DropdownItem => {
+    const key = [title, lang, external, k].join("-")
+    const prefix = sid === id ? ICON.Ok : ICON.CheckboxBlankCircleOutline
+    const label = `${prefix} ${title ?? lang ?? "default"}`
+    return {
+      label,
+      key: key,
+      onSelect: (_, e) => {
+        if (sid === id) {
+          dispatch.context.setSid(-1)
+          setPropertyNative("sid", "no")
+        } else {
+          dispatch.context.setSid(id)
+          setPropertyNative("sid", "yes")
+          setPropertyNative("sid", id)
+        }
+        e.stopPropagation()
+      },
+      style: {
+        ...dropdown.item,
+        justifyContent: "start",
+      },
+    }
+  })
   return (
     <Dropdown
       id="mpv-easy-button-subtitle-track"

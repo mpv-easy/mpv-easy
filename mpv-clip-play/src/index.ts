@@ -11,6 +11,7 @@ import {
   webdavList,
   twitch,
   getExtName,
+  compareString,
 } from "@mpv-easy/tool"
 
 import { type SystemApi, definePlugin } from "@mpv-easy/plugin"
@@ -59,7 +60,7 @@ function getList(s: string | undefined, context: PluginContext): string[] {
         try {
           const list = jellyfin
             .getPlayableListFromUrl(s, cfg.apiKey, cfg.userName)
-            .sort((a, b) => a.name.localeCompare(b.name))
+            .sort((a, b) => compareString(a.name, b.name))
             .map((i) => i.path)
           osdDuration && printAndOsd(`play jellyfin: ${s}`, osdDuration)
           return list

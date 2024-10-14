@@ -1,8 +1,11 @@
 import { type MpDomProps, Box } from "@mpv-easy/react"
 import React from "react"
-import { pluginName } from "../../main"
 import { useSelector } from "react-redux"
-import { type RootState, fullscreenSelector } from "../../store"
+import {
+  buttonStyleSelector,
+  controlSelector,
+  fullscreenSelector,
+} from "../../store"
 import { Play } from "../components/play"
 import { Stop } from "../components/stop"
 import { Screenshot } from "../components/screenshot"
@@ -20,13 +23,8 @@ import { History } from "../components/history"
 
 export const UoscControl = (props: Partial<MpDomProps>) => {
   const { width, height } = props
-  const mode = useSelector((store: RootState) => store.context[pluginName].mode)
-  const button = useSelector(
-    (store: RootState) => store.context[pluginName].style[mode].button.default,
-  )
-  const control = useSelector(
-    (store: RootState) => store.context[pluginName].style[mode].control,
-  )
+  const button = useSelector(buttonStyleSelector)
+  const control = useSelector(controlSelector)
 
   const fullscreen = useSelector(fullscreenSelector)
   return (

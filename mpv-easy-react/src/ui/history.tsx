@@ -4,7 +4,6 @@ import React, { useRef } from "react"
 import { useSelector, useDispatch } from "react-redux"
 import * as ICON from "../icon"
 import {
-  buttonStyleSelector,
   type Dispatch,
   pathSelector,
   historyHideSelector,

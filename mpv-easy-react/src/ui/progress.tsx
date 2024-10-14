@@ -4,7 +4,6 @@ import {
   formatTime,
   getPropertyBool,
   getTimeFormat,
-  isYtdlp,
   randomId,
   setPropertyNumber,
 } from "@mpv-easy/tool"

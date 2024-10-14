@@ -4,7 +4,6 @@ import { useDispatch, useSelector } from "react-redux"
 import * as ICON from "../../icon"
 import {
   buttonStyleSelector,
-  pauseSelector,
   type Dispatch,
   i18nSelector,
   mouseHoverStyleSelector,
