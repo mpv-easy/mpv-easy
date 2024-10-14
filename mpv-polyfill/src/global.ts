@@ -5,18 +5,20 @@ export function getGlobal() {
   return g
 }
 g = getGlobal()
-g.globalThis = g
-g.global = g
-g.Uint8Array = Array
-g.self = g
-// g.__global__ = undefined
+
+for (const i of ["globalThis", "global", "self"]) {
+  if (typeof g[i] !== "object") {
+    g[i] = g
+  }
+}
 
 const oldLog = g.console?.log
-
-g.console = {
-  log: oldLog ?? g.print,
-  error: oldLog ?? g.print,
-  info: oldLog ?? g.print,
-  debug: oldLog ?? g.print,
-  warn: oldLog ?? g.print,
+if (typeof oldLog !== "function") {
+  g.console = {
+    log: g.print,
+    error: g.print,
+    info: g.print,
+    debug: g.print,
+    warn: g.print,
+  }
 }
