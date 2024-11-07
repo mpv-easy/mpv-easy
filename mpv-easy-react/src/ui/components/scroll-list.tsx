@@ -127,7 +127,7 @@ export const ScrollList = ({
         return (
           <Button
             id={`scroll-list-${key}`}
-            title={showTitle ? key : ""}
+            title={showTitle ? label : ""}
             key={key}
             text={label}
             width={max + button.padding * 2}
