@@ -1,6 +1,8 @@
 import {
   fileInfo,
   getFileName,
+  getPlaylist,
+  getPlaylistPath,
   getPropertyNumber,
   getPropertyString,
   jellyfin,
@@ -29,7 +31,19 @@ export function getVideoTitle(p: string) {
   }
 }
 
+function getNameFromPlaylist(p: string): string | undefined {
+  const list = getPlaylist()
+  return list.find((i) => i.filename === p)?.title
+}
+
 export function getVideoName(p: string): string {
+  if (getPlaylistPath()?.length) {
+    const name = getNameFromPlaylist(p)
+    if (name?.length) {
+      return name
+    }
+  }
+
   // Some video files contain a title field. For consistency reasons
   // we use the file name first in the playlist and history component,
   // and the title first in the title component.
