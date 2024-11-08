@@ -66,6 +66,7 @@ export const History = () => {
             return {
               key: i.path,
               label,
+              title: i.name,
               showTitle,
               onClick: (e) => {
                 const index = history.indexOf(i)

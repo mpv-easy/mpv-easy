@@ -60,13 +60,15 @@ export const Playlist = () => {
           items={playlist.map((i) => {
             const prefix =
               i === path ? ICON.Ok : ICON.CheckboxBlankCircleOutline
-            const s = `${prefix} ${getVideoName(i) || ""}`
+            const title = getVideoName(i) || ""
+            const s = `${prefix} ${title}`
             const label = textEllipsis(s, playlistStyle.maxTitleLength)
             const showTitle = s !== label
             return {
               key: i,
               label,
               showTitle,
+              title,
               onClick: (e) => {
                 const index = playlist.indexOf(i)
                 if (index >= 0) {
