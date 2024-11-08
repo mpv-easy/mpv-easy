@@ -101,12 +101,12 @@ export class ThumbFast {
       videoHeight: number
     } = { ...defaultConfig, videoHeight: 0, videoWidth: 0 },
   ) {
-    const mpvPath = getMpvExePath()
+    const mpvPath = normalize(getMpvExePath())
 
     if (existsSync(path)) {
       removeFile(path)
     }
-    this.path = path
+    this.path = normalize(path)
 
     this.format = format
     this.maxWidth = maxWidth
@@ -134,15 +134,16 @@ export class ThumbFast {
 
     const args = [
       mpvPath,
+      videoPath,
       "--no-config",
       "--msg-level=all=no",
       "--idle",
       "--keep-open=always",
       "--pause",
       "--really-quiet",
-      "--terminal=no",
+      "--no-terminal",
       "--ao=null",
-      "--vo=null",
+      // "--vo=null",
       "--load-auto-profiles=no",
       "--load-osd-console=no",
       "--load-scripts=no",
@@ -175,16 +176,16 @@ export class ThumbFast {
       "--sws-scaler=fast-bilinear",
       "--audio-pitch-correction=no",
       "--ovc=rawvideo",
+      "--video-rotate=0",
       "--of=image2",
       "--ofopts=update=1",
       "--ocopy-metadata=no",
       "--sws-allow-zimg=no",
+      "--media-controls=no",
       "--demuxer-max-bytes=512KiB",
       `--vf=scale=w=${this.thumbWidth}:h=${this.thumbHeight}:force_original_aspect_ratio=decrease,pad=w=${this.thumbWidth}:h=${this.thumbHeight}:x=-1:y=-1,format=${this.format}`,
       `--o=${this.path}`,
       `--input-ipc-server=${this.ipcId}`,
-      "--",
-      videoPath,
     ]
 
     // async: this cmd run forever
