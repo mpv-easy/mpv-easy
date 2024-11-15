@@ -37,6 +37,8 @@ import Symbol from "es-symbol"
 import { getGlobal } from "./global"
 import { TextDecoder, TextEncoder } from "textcodec"
 import { encodeURIComponent, decodeURIComponent } from "uri-component"
+// biome-ignore lint/style/useNodejsImportProtocol: <explanation>
+import { Buffer } from "buffer"
 
 const g = getGlobal()
 for (const [name, value] of Object.entries({
@@ -45,6 +47,7 @@ for (const [name, value] of Object.entries({
   Symbol,
   encodeURIComponent,
   decodeURIComponent,
+  Buffer,
 })) {
   // @ts-ignore
   if (!globalThis[name]) {

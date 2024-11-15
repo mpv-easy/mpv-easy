@@ -1,5 +1,3 @@
-// biome-ignore lint/style/useNodejsImportProtocol: <explanation>
-import { Buffer } from "buffer"
 import { execAsync } from "../common"
 import { error } from "../mpv"
 import { getRsExtExePath } from "./share"
