@@ -4,12 +4,15 @@ on:
   push:
     tags:
       - "v*"
+  schedule:
+    - cron: "0 0 * * *"
 
 jobs:
   build-artifacts:
     uses: ./.github/workflows/build-artifacts.yml
 
   release:
+    if: startsWith(github.ref, 'refs/tags/')
     needs: [build-artifacts]
     name: release
     runs-on: ubuntu-latest
