@@ -2,7 +2,7 @@
 
 You can download and install mpv player from the official website https://mpv.io/installation/
 
-If you are a Windows user, you can download the [mpy-easy-windows-full](https://github.com/mpv-easy/mpv-easy/releases/latest/download/mpy-easy-windows-full.zip) directly
+If you are a Windows user, you can download `mpy-easy-windows-full.zip` from  [stable](https://github.com/mpv-easy/mpv-easy/releases/latest) or [nightly](https://github.com/mpv-easy/mpv-easy/actions?query=event%3Aschedule) directly
 
 ## install script
 
