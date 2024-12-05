@@ -16,9 +16,9 @@
   "license": "MIT",
   "dependencies": {
     "buffer": "6.0.3",
-    "core-js": "3.38.1",
+    "core-js": "3.39.0",
     "es-symbol": "1.1.2",
-    "uri-component": "0.1.1",
-    "textcodec": "0.1.0"
+    "textcodec": "0.1.0",
+    "uri-component": "0.1.1"
   }
 }
