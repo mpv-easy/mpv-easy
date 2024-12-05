@@ -42,3 +42,8 @@ c         script-message cut
 o         script-message cut-output
 ESC       script-message cancel
 ```
+
+
+## todo
+
+- support remote video
