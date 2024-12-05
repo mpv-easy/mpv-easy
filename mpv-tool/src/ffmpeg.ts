@@ -1,4 +1,4 @@
-import { getOs } from "./common"
+import { execAsync, getOs } from "./common"
 import { joinPath } from "./mpv"
 import { getDefaultBinDirPath } from "./rs-ext"
 import { existsSync } from "./fs"
@@ -38,4 +38,41 @@ export function detectFfmpeg(): false | string {
   }
 
   return detectCmd("ffmpeg")
+}
+
+export async function cutVideo(
+  area: [number, number],
+  videoPath: string,
+  outputPath: string,
+  ffmpeg: string,
+) {
+  const [ss, to] = area.map((i) => i.toString())
+  const cmd = [
+    ffmpeg,
+    "-nostdin",
+    "-i",
+    videoPath,
+    "-ss",
+    ss,
+    "-to",
+    to,
+    "-c",
+    "copy",
+    "-map",
+    "0",
+    "-avoid_negative_ts",
+    "make_zero",
+
+    // only video and audio
+    // "-dn",
+
+    "-y",
+    outputPath,
+  ]
+  try {
+    await execAsync(cmd)
+  } catch (e) {
+    return false
+  }
+  return true
 }

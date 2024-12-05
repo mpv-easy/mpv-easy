@@ -9,7 +9,7 @@ import {
 import { getVideoName, getVideoTitle, textEllipsis } from "../../common"
 import {
   existsSync,
-  isHttp,
+  isRemote,
   isYtdlp,
   openBrowser,
   openExplorer,
@@ -41,7 +41,7 @@ export const Filename = () => {
         color={button.color}
         colorHover={button.colorHover}
         onMouseUp={() => {
-          if (isYtdlp(path) || isHttp(path)) {
+          if (isYtdlp(path) || isRemote(path)) {
             openBrowser(path)
             return
           }

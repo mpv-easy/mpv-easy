@@ -1,6 +1,6 @@
 import { definePlugin } from "@mpv-easy/plugin"
 import {
-  dir,
+  dirname,
   existsSync,
   getMpvExePath,
   getOs,
@@ -234,7 +234,7 @@ export class ThumbFast {
 export default definePlugin((context, api) => ({
   name: pluginName,
   create() {
-    const d = dir(context[pluginName].path)
+    const d = dirname(context[pluginName].path)
     if (d && !existsSync(d)) {
       mkdir(d)
     }

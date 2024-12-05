@@ -10,6 +10,7 @@ import { pluginName as anime4kName } from "@mpv-easy/anime4k"
 import { pluginName as autoloadName } from "@mpv-easy/autoload"
 import { pluginName as thumbfastName } from "@mpv-easy/thumbfast"
 import { pluginName as translateName } from "@mpv-easy/translate"
+import { pluginName as cutName } from "@mpv-easy/cut"
 
 import { normalize } from "@mpv-easy/tool"
 
@@ -168,3 +169,5 @@ export const thumbfastSelector = (state: RootState) =>
 
 export const translateSelector = (state: RootState) =>
   state.context[translateName]
+
+export const cutSelector = (state: RootState) => state.context[cutName]

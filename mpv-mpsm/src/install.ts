@@ -2,16 +2,11 @@ import { join } from "node:path"
 import { getMpsmDir } from "./config"
 import { outputFileSync } from "fs-extra"
 import { type Meta, addMeta, getMeta } from "./meta"
-import {
-  downloadJson,
-  downloadText,
-  getFileNameFromUrl,
-  isMeta,
-  isRemote,
-} from "./share"
+import { downloadJson, downloadText, getFileNameFromUrl, isMeta } from "./share"
 import chalk from "chalk"
 import { existsSync, readFileSync } from "fs-extra"
 import { ScriptRemoteUrl } from "./const"
+import { isRemote } from "@mpv-easy/tool"
 
 export async function installFromUrl(
   url: string,

@@ -1,10 +1,10 @@
 import {
   addKeyBinding,
-  dir,
+  dirname,
   getClipboard,
   printAndOsd,
   isDir,
-  isHttp,
+  isRemote,
   isVideo,
   youtube,
   bilibili,
@@ -26,7 +26,7 @@ function getList(s: string | undefined, context: PluginContext): string[] {
     return v
   }
   const osdDuration = context[pluginName].osdDuration
-  if (isHttp(s)) {
+  if (isRemote(s)) {
     if (isVideo(s)) {
       return [normalize(s)]
     }
@@ -87,7 +87,7 @@ function getList(s: string | undefined, context: PluginContext): string[] {
 
   if (isVideo(s)) {
     const c = context[autoloadName]
-    const d = dir(s)
+    const d = dirname(s)
     if (!d) {
       return []
     }

@@ -53,6 +53,11 @@ import translatePlugin, {
   pluginName as translateName,
 } from "@mpv-easy/translate"
 
+import cutPlugin, {
+  defaultConfig as cutConfig,
+  pluginName as cutName,
+} from "@mpv-easy/cut"
+
 import { type PluginContext, SystemApi } from "@mpv-easy/plugin"
 import {
   ConfigDir,
@@ -82,6 +87,7 @@ export const plugins = [
   copyScreenPlugin,
   jellyfinPlugin,
   translatePlugin,
+  cutPlugin,
 ]
 
 export interface EnablePlugin {
@@ -94,6 +100,7 @@ export interface EnablePlugin {
   [thumbfastName]: boolean
   [copyScreenName]: boolean
   [jellyfinName]: boolean
+  [cutName]: boolean
 }
 
 declare module "@mpv-easy/plugin" {
@@ -130,6 +137,7 @@ export function createDefaultContext() {
     [copyScreenName]: copyScreenConfig,
     [jellyfinName]: jellyfinConfig,
     [translateName]: translateConfig,
+    [cutName]: cutConfig,
     enablePlugins: {
       [i18nName]: true,
       [easyName]: true,
@@ -141,6 +149,7 @@ export function createDefaultContext() {
       [copyScreenName]: isWin,
       [jellyfinName]: true,
       [translateName]: true,
+      [cutName]: true,
     },
     version,
     experimental,

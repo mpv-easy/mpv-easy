@@ -2,7 +2,7 @@ import { SystemApi, definePlugin } from "@mpv-easy/plugin"
 import {
   AudioTypes,
   compareString,
-  dir,
+  dirname,
   getExtName,
   getMpvPlaylist,
   ImageTypes,
@@ -13,7 +13,7 @@ import { normalize } from "@mpv-easy/tool"
 import {
   getPropertyString,
   isAudio,
-  isHttp,
+  isRemote,
   isImage,
   isVideo,
   joinPath,
@@ -62,7 +62,7 @@ export function getPlayableList(
   searchDir: string,
   extName: string | undefined = undefined,
 ) {
-  if (isHttp(searchDir)) {
+  if (isRemote(searchDir)) {
     return []
   }
   const list = readdir(searchDir, "files") || []
@@ -108,7 +108,7 @@ export function autoload(
 ) {
   const path = normalize(getPropertyString("path") || "")
 
-  if (isHttp(path)) {
+  if (isRemote(path)) {
     if (isYtdlp(path)) {
       return
     }
@@ -120,7 +120,7 @@ export function autoload(
     return
   }
 
-  const d = dir(path)
+  const d = dirname(path)
   if (!d) {
     return
   }
