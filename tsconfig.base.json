@@ -44,7 +44,8 @@
       "@mpv-easy/mpsm": ["./mpv-mpsm/src"],
       "@mpv-easy/play-with": ["./mpv-play-with/src"],
       "@mpv-easy/translate": ["./mpv-translate/src"],
-      "@mpv-easy/easy-react-tpl": ["./mpv-easy-tpl/src"]
+      "@mpv-easy/easy-react-tpl": ["./mpv-easy-tpl/src"],
+      "@mpv-easy/cut": ["./mpv-cut/src"]
     }
   },
   "include": ["**/src", "**/test", "**/example"],

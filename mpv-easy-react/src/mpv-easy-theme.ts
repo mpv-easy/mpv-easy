@@ -5,6 +5,7 @@ const White = "#FFFFFF"
 const Black = "#000000"
 const Gray = "#D3D3D3"
 const Yellow = "#00FFFF"
+const Green = "#00FF00"
 
 const AlphaHide = "FF"
 const AlphaHigh = "C0"
@@ -54,6 +55,8 @@ export type ThemeStyle = {
     timeTextColor: string
     font: string
     previewZIndex: number
+    cutCursorColor: string
+    cutAreaColor: string
   }
 
   control: {
@@ -277,6 +280,8 @@ export function createDefaultThemeConfig(): EasyConfig {
           timeTextColor: White + AlphaShow,
           font: defaultFont,
           previewZIndex: defaultPreviewZIndex,
+          cutAreaColor: Green + AlphaLow,
+          cutCursorColor: Green + AlphaShow,
         },
         control: {
           backgroundColor: Black + AlphaLow,
@@ -412,6 +417,8 @@ export function createDefaultThemeConfig(): EasyConfig {
           timeTextColor: Black + AlphaShow,
           font: defaultFont,
           previewZIndex: defaultPreviewZIndex,
+          cutAreaColor: Green + AlphaLow,
+          cutCursorColor: Green + AlphaShow,
         },
         control: {
           backgroundColor: White + AlphaLow,

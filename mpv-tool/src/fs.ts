@@ -13,7 +13,7 @@ export function isDir(path: string): boolean {
   return !!fileInfo(path)?.is_dir
 }
 
-export function dir(path: string | undefined): string | undefined {
+export function dirname(path: string | undefined): string | undefined {
   if (!path?.length) {
     return undefined
   }

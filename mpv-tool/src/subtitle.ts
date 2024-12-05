@@ -1,4 +1,4 @@
-import { SubtitleTypes, execAsync, isHttp, printAndOsd } from "./common"
+import { SubtitleTypes, execAsync, isRemote, printAndOsd } from "./common"
 import { fetch } from "./fetch"
 import { existsSync } from "./fs"
 import {
@@ -24,7 +24,7 @@ export async function loadRemoteSubtitle(path = getProperty("path")) {
   const trackList = (getPropertyNative<TrackItem[]>("track-list") || []).filter(
     (i) => i.type === "sub",
   )
-  if (isHttp(path)) {
+  if (isRemote(path)) {
     const list = SubtitleTypes.map((i) => {
       const s = path.split(".").slice(0, -1)
       s.push(i)
@@ -84,7 +84,7 @@ export async function loadRemoteSubtitleAsync(path = getProperty("path")) {
   const trackList = (getPropertyNative<TrackItem[]>("track-list") || []).filter(
     (i) => i.type === "sub",
   )
-  if (isHttp(path)) {
+  if (isRemote(path)) {
     const list = SubtitleTypes.map((i) => {
       const s = path.split(".").slice(0, -1)
       s.push(i)
@@ -181,7 +181,7 @@ export function getCurrentSubtitle() {
 export async function saveSrt(
   videoPath: string,
   trackId: number,
-  ouptutPath: string,
+  outputPath: string,
 ): Promise<boolean> {
   if (!videoPath) {
     return false
@@ -206,7 +206,7 @@ export async function saveSrt(
     videoPath,
     "-map",
     `0:s:${subTrack.id - 1}`,
-    ouptutPath,
+    outputPath,
   ]
   try {
     await execAsync(cmd)

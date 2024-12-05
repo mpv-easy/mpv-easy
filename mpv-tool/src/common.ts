@@ -62,7 +62,7 @@ export function startsWith(s: string | undefined, exts: string[]) {
   return false
 }
 
-export function isHttp(s: string) {
+export function isRemote(s: string) {
   return startsWith(s, ["http", "webdav", "dav"])
 }
 

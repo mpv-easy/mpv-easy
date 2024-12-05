@@ -260,7 +260,6 @@ jobs:
           cp -r mpv-anime4k/shaders dist
           cp mpv-easy-react/mpv-conf/mpv.conf dist/mpv.conf
           cp mpv-easy-react/mpv-conf/input.conf dist/input.conf
-          # cp mpv-translate/mpv-translate.conf dist/script-opts/mpv-translate.conf
           cp mpv-easy-react/mpv-conf/cookies.txt dist/cookies.txt
 
           chmod 777 mpv-easy-ext-dist/*
@@ -358,6 +357,10 @@ jobs:
           cp mpy-easy-windows/mpy-easy-windows.zip release/mpy-easy-windows.zip
           cp mpy-easy-windows-full/mpy-easy-windows-full.zip release/mpy-easy-windows-full.zip
           cp mpv-translate/es5/mpv-translate.js release/mpv-translate.js
+          cp mpv-translate/mpv-translate.conf release/mpv-translate.conf
+          cp mpv-cut/es5/mpv-cut.js release/mpv-cut.js
+          cp mpv-cut/mpv-cut.conf release/mpv-cut.conf
+
           cp mpv-easy-react/es5/mpv-easy-es5.js release/mpv-easy-es5.js
           cp mpv-easy-react/bundle/mpv-easy-es6.js release/mpv-easy-es6.js
 

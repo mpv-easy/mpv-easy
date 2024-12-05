@@ -13,7 +13,7 @@ import {
   type VideoParams,
   updatePlaylist,
   getPropertyString,
-  isHttp,
+  isRemote,
   existsSync,
   commandv,
 } from "@mpv-easy/tool"
@@ -147,7 +147,7 @@ export const context = createModel<RootModel>()({
       return { ...state }
     },
     addHistory(state, path: string) {
-      if (!isHttp(path) && !existsSync(path)) {
+      if (!isRemote(path) && !existsSync(path)) {
         return state
       }
       const history = state[pluginName].history || []

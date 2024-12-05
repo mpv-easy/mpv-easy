@@ -1,11 +1,19 @@
 import {
   PropertyNative,
   type VideoParams,
+  addKeyBinding,
+  commandNative,
+  cutVideo,
+  detectFfmpeg,
   formatTime,
+  getProperty,
   getPropertyBool,
   getTimeFormat,
+  printAndOsd,
   randomId,
+  registerScriptMessage,
   setPropertyNumber,
+  isRemote,
 } from "@mpv-easy/tool"
 import { Box, type MpDom } from "@mpv-easy/react"
 import React, { useRef, useState, useEffect } from "react"
@@ -20,8 +28,10 @@ import {
   buttonStyleSelector,
   pathSelector,
   thumbfastSelector,
+  cutSelector,
 } from "../store"
 import { ThumbFast } from "@mpv-easy/thumbfast"
+import { getArea, getCutVideoPath } from "@mpv-easy/cut"
 
 export const Progress = ({ width, height, ...props }: MpDomProps) => {
   const [leftPreview, setLeftPreview] = useState(0)
@@ -39,13 +49,79 @@ export const Progress = ({ width, height, ...props }: MpDomProps) => {
   const progressW = progressRef.current?.layoutNode.width
   const cursorLeftOffset = progressW ? progress.cursorSize / 2 / progressW : 0
   const cursorLeft = timePos / duration - cursorLeftOffset
-  // const path = useSelector(pathSelector)
+  const path = useSelector(pathSelector)
   const isSeekable = getPropertyBool("seekable")
   const thumbfast = useSelector(thumbfastSelector)
 
   // TODO: support yt-dlp thumbfast
   // const supportThumbfast = !isYtdlp(path) && isSeekable
   const supportThumbfast = isSeekable && thumbfast.network
+
+  const [cutPoints, setCutPoints] = useState<number[]>([])
+
+  const getCutPoint = () => {
+    if (!previewCursorHide) {
+      const time = duration * leftPreview
+      return time
+    }
+    return timePos
+  }
+
+  const cutRef = useRef<(() => void) | null>(null)
+  cutRef.current = () => {
+    const newPoints = [...cutPoints, getCutPoint()]
+    while (newPoints.length > 2) {
+      newPoints.shift()
+    }
+    setCutPoints(newPoints)
+  }
+
+  const cutCancelRef = useRef<(() => void) | null>(null)
+  cutCancelRef.current = () => {
+    setCutPoints([])
+  }
+
+  const hasArea = cutPoints.length === 2
+  const area = getArea(cutPoints)
+  const cutCursorLeft =
+    cutPoints.length > 0 ? cutPoints[0] / duration : undefined
+  const cutCursorRight =
+    cutPoints.length > 1 ? cutPoints[1] / duration : undefined
+  const areaWidth = hasArea
+    ? (cutPoints[1] - cutPoints[0]) / duration
+    : undefined
+  const cutVideoRef = useRef<(() => void) | null>(null)
+  cutVideoRef.current = async () => {
+    if (!path.length) {
+      printAndOsd("video not found")
+      return
+    }
+    if (isRemote(path)) {
+      printAndOsd("cut not support remote video")
+      return
+    }
+
+    if (!area) {
+      printAndOsd("cut area not found")
+      return
+    }
+    const ffmpeg = detectFfmpeg()
+    if (!ffmpeg) {
+      printAndOsd("ffmpeg not found")
+      return
+    }
+    printAndOsd("cut starting")
+
+    const ok = await cutVideo(area, path, getCutVideoPath(path, area), ffmpeg)
+    setCutPoints([])
+
+    if (!ok) {
+      printAndOsd("failed to cut")
+      return
+    }
+
+    printAndOsd("cut finish")
+  }
 
   useEffect(() => {
     new PropertyNative<VideoParams>("video-params").observe((v) => {
@@ -67,7 +143,18 @@ export const Progress = ({ width, height, ...props }: MpDomProps) => {
         videoHeight: h,
       })
     })
+
+    registerScriptMessage("cut", () => {
+      cutRef.current?.()
+    })
+    registerScriptMessage("cancel", () => {
+      cutCancelRef.current?.()
+    })
+    registerScriptMessage("cut-output", () => {
+      cutVideoRef.current?.()
+    })
   }, [])
+
   const updatePreviewCursor = (e: MouseEvent) => {
     const w = e.target?.layoutNode.width || 0
     const per = (e.offsetX - progress.cursorSize / 2) / w
@@ -170,6 +257,40 @@ export const Progress = ({ width, height, ...props }: MpDomProps) => {
         color={progress.cursorColor}
         pointerEvents="none"
       />
+
+      {cutCursorLeft !== undefined && (
+        <Box
+          id="cut-cursor-left"
+          position="relative"
+          width={progress.cursorSize}
+          left={`${cutCursorLeft * 100}%`}
+          height={"100%"}
+          backgroundColor={progress.cutCursorColor}
+          pointerEvents="none"
+        />
+      )}
+      {cutCursorRight !== undefined && (
+        <Box
+          id="cut-cursor-right"
+          position="relative"
+          width={progress.cursorSize}
+          left={`${cutCursorRight * 100}%`}
+          height={"100%"}
+          backgroundColor={progress.cutCursorColor}
+          pointerEvents="none"
+        />
+      )}
+      {hasArea && (
+        <Box
+          id="cut-cursor-area"
+          position="relative"
+          width={`${areaWidth! * 100}%`}
+          left={`${cutCursorLeft! * 100}%`}
+          height={"100%"}
+          backgroundColor={progress.cutAreaColor}
+          pointerEvents="none"
+        />
+      )}
       {!previewCursorHide && (
         <Box
           ref={hoverCursorRef}

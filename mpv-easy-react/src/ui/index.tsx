@@ -35,7 +35,7 @@ import {
   type MpvPropertyTypeMap,
   type VideoParams,
   normalize,
-  dir,
+  dirname,
   getMpvPlaylist,
   loadRemoteSubtitle,
   loadRemoteSubtitleAsync,
@@ -206,7 +206,7 @@ export const Easy = (props: Partial<EasyProps>) => {
         dispatch.context.addHistory(v)
         loadRemoteSubtitle(v)
         dispatch.context.setPath(v)
-        const d = dir(v)
+        const d = dirname(v)
         if (!d) {
           return
         }

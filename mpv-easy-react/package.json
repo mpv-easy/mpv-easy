@@ -28,6 +28,7 @@
     "@mpv-easy/assdraw": "workspace:*",
     "@mpv-easy/autoload": "workspace:*",
     "@mpv-easy/clip-play": "workspace:*",
+    "@mpv-easy/cut": "workspace:*",
     "@mpv-easy/copy-screen": "workspace:*",
     "@mpv-easy/copy-time": "workspace:*",
     "@mpv-easy/i18n": "workspace:*",
