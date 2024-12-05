@@ -13,6 +13,8 @@ You need to install [ffmpeg](https://www.ffmpeg.org/download.html) and add ffmpe
 
 By default, the shortcut key `c` adds the current time point to the segment, `esc` cancels the selection, and `o` exports the video.
 
+If the video file is `/a/b/c.mp4`, output the 10th to 20th second. Then the output video file is `/a/b/c.10.20.mp4`
+
 ### mpv-cut
 
 mpv-cut will display the currently selected video segment in the video
@@ -38,5 +40,5 @@ Add configuration to input.conf
 ```
 c         script-message cut
 o         script-message cut-output
-esc       script-message cancel
+ESC       script-message cancel
 ```

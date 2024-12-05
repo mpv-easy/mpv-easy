@@ -35,14 +35,18 @@ set -x MPV_SCRIPT_DIR /your_mpv_dir/portable_config/scripts ; pnpm run dev
 - [mpv-thumbfast](./mpv-thumbfast/readme.md)
 - [mpv-play-with](./mpv-play-with/readme.md)
 - [mpv-translate](./mpv-translate/readme.md)
+- [mpv-cut](./mpv-cut/readme.md)
 
 ## short key
 
 | key       | command                              |
 | --------- | ------------------------------------ |
 | ENTER     | cycle fullscreen                     |
-| x         | script-message speed-change -0.25    |
-| c         | script-message speed-change +0.25    |
+| [         | script-message speed-change -0.25    |
+| ]         | script-message speed-change +0.25    |
+| c         | script-message cut                   |
+| o         | script-message cut-output            |
+| ESC       | script-message cancel                |
 | UP        | script-message volume-change +10     |
 | DOWN      | script-message volume-change -10     |
 | ctrl+UP   | script-message fontsize-change +12   |
