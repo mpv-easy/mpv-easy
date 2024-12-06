@@ -31,6 +31,7 @@
     "@mpv-easy/copy-screen": "workspace:*",
     "@mpv-easy/copy-time": "workspace:*",
     "@mpv-easy/cut": "workspace:*",
+    "@mpv-easy/crop": "workspace:*",
     "@mpv-easy/i18n": "workspace:*",
     "@mpv-easy/jellyfin": "workspace:*",
     "@mpv-easy/mock": "workspace:*",

@@ -470,3 +470,10 @@ export function printAndOsd(s: string, seconds = 1) {
   osdMessage(s, seconds)
   print(s)
 }
+
+export class Point {
+  constructor(
+    public x: number,
+    public y: number,
+  ) {}
+}

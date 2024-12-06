@@ -1,4 +1,4 @@
-import type { MousePos, VideoParams } from "@mpv-easy/tool"
+import type { MousePos, Rect, VideoParams } from "@mpv-easy/tool"
 import { DefaultFps } from "@mpv-easy/react"
 
 const White = "#FFFFFF"
@@ -188,6 +188,9 @@ export type EasyConfig = {
     hide: boolean
     playlistHide: boolean
     historyHide: boolean
+    cutPoints: number[]
+    cropPoints: [number, number][]
+    showCrop: boolean
   }
   config: {
     fps: number
@@ -524,6 +527,9 @@ export const defaultState: EasyConfig["state"] = {
   hide: false,
   playlistHide: true,
   historyHide: true,
+  cutPoints: [],
+  cropPoints: [],
+  showCrop: false,
 }
 
 export const defaultPlayer: EasyConfig["player"] = {

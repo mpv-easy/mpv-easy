@@ -1,4 +1,4 @@
-import { execAsync, getOs } from "./common"
+import { execAsync, getOs, Rect } from "./common"
 import { joinPath } from "./mpv"
 import { getDefaultBinDirPath } from "./rs-ext"
 import { existsSync } from "./fs"
@@ -50,10 +50,10 @@ export async function cutVideo(
   const cmd = [
     ffmpeg,
     "-nostdin",
-    "-i",
-    videoPath,
     "-ss",
     ss,
+    "-i",
+    videoPath,
     "-to",
     to,
     "-c",
@@ -65,6 +65,70 @@ export async function cutVideo(
 
     // only video and audio
     // "-dn",
+
+    "-y",
+    outputPath,
+  ]
+  try {
+    await execAsync(cmd)
+  } catch (e) {
+    return false
+  }
+  return true
+}
+
+export async function cropImage(
+  videoPath: string,
+  time: number,
+  rect: Rect,
+  outputPath: string,
+  ffmpeg: string,
+) {
+  const { x, y, width, height } = rect
+  const cmd = [
+    ffmpeg,
+    "-nostdin",
+    "-ss",
+    time.toString(),
+    "-i",
+    videoPath,
+    "-vf",
+    `crop=${width}:${height}:${x}:${y}`,
+    "-vframes",
+    "1",
+    "-y",
+    outputPath,
+  ]
+  try {
+    await execAsync(cmd)
+  } catch (e) {
+    return false
+  }
+  return true
+}
+
+export async function cropVideo(
+  videoPath: string,
+  area: [number, number],
+  rect: Rect,
+  outputPath: string,
+  ffmpeg: string,
+) {
+  const [ss, to] = area
+  const { width, height, x, y } = rect
+  const cmd = [
+    ffmpeg,
+    "-nostdin",
+    "-ss",
+    ss.toString(),
+    "-to",
+    to.toString(),
+
+    "-i",
+    videoPath,
+    "-vf",
+
+    `crop=${width}:${height}:${x}:${y}`,
 
     "-y",
     outputPath,

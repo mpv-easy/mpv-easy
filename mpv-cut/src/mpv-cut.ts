@@ -7,9 +7,7 @@ import {
   getOptions,
   getOsdSize,
   getProperty,
-  getPropertyString,
   OsdOverlay,
-  Overlay,
   printAndOsd,
   PropertyNumber,
   Rect,
@@ -18,7 +16,7 @@ import {
 import { AssDraw } from "@mpv-easy/assdraw"
 import { isRemote } from "@mpv-easy/tool"
 
-const { outputFormat, outputEventName, cutEventName, cancelEventName } = {
+const { outputEventName, cutEventName, cancelEventName, outputDirectory } = {
   ...defaultConfig,
   ...getOptions("mpv-cut", {
     "cut-event-name": {
@@ -33,6 +31,10 @@ const { outputFormat, outputEventName, cutEventName, cancelEventName } = {
       type: "string",
       key: "cancelEventName",
     },
+    "output-directory": {
+      type: "string",
+      key: "outputDirectory",
+    },
   }),
 }
 let points: number[] = []
@@ -43,7 +45,7 @@ function renderLabel() {
   const text = [
     points[0]?.toFixed(2) ?? "?",
     points[1]?.toFixed(2) ?? "?",
-  ].join(" ==> ")
+  ].join(" => ")
   ovl.data = text
   ovl.computeBounds = true
   ovl.hidden = true
@@ -100,8 +102,8 @@ async function output() {
     return
   }
 
-  const outputPath = getCutVideoPath(path, area)
-  const ok = await cutVideo(area, path, outputPath, outputFormat)
+  const outputPath = getCutVideoPath(path, area, outputDirectory)
+  const ok = await cutVideo(area, path, outputPath, ffmpeg)
   removeLabel()
   if (!ok) {
     printAndOsd("failed to cut")

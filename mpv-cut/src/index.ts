@@ -1,26 +1,26 @@
 import { type SystemApi, definePlugin } from "@mpv-easy/plugin"
 import type { PluginContext } from "@mpv-easy/plugin"
-import { dirname, getFileName } from "@mpv-easy/tool"
+import { dirname, existsSync, getFileName } from "@mpv-easy/tool"
 
 export const pluginName = "@mpv-easy/cut"
 
-export const defaultConfig: ClipPlayConfig = {
-  outputFormat: "",
+export const defaultConfig: CutConfig = {
   cutEventName: "cut",
-  outputEventName: "cut-output",
+  outputEventName: "output",
   cancelEventName: "cancel",
+  outputDirectory: "",
 }
 
-export type ClipPlayConfig = {
-  outputFormat: string
+export type CutConfig = {
   cutEventName: string
   outputEventName: string
   cancelEventName: string
+  outputDirectory: string
 }
 
 declare module "@mpv-easy/plugin" {
   interface PluginContext {
-    [pluginName]: ClipPlayConfig
+    [pluginName]: CutConfig
   }
 }
 
@@ -42,17 +42,19 @@ export function appendPoint(points: number[], n: number): number[] {
 export function getCutVideoPath(
   videoPath: string,
   area: [number, number],
+  outputDirectory: string,
 ): string {
-  const dir = dirname(videoPath)
+  const dir = existsSync(outputDirectory) ? outputDirectory : dirname(videoPath)
   const name = getFileName(videoPath)!
   const list = name.split(".")
 
   const prefix = list.slice(0, -1).join(".")
   const ext = list.at(-1)
 
-  const [ss, to] = area
+  const [ss, to] = area.map((i) => i | 0)
   return `${dir}/${prefix}.${ss}.${to}.${ext}`
 }
+
 export default definePlugin((context, api) => ({
   name: pluginName,
   defaultConfig: defaultConfig,

@@ -58,6 +58,11 @@ import cutPlugin, {
   pluginName as cutName,
 } from "@mpv-easy/cut"
 
+import cropPlugin, {
+  defaultConfig as cropConfig,
+  pluginName as cropName,
+} from "@mpv-easy/crop"
+
 import { type PluginContext, SystemApi } from "@mpv-easy/plugin"
 import {
   ConfigDir,
@@ -88,6 +93,7 @@ export const plugins = [
   jellyfinPlugin,
   translatePlugin,
   cutPlugin,
+  cropPlugin,
 ]
 
 export interface EnablePlugin {
@@ -101,6 +107,7 @@ export interface EnablePlugin {
   [copyScreenName]: boolean
   [jellyfinName]: boolean
   [cutName]: boolean
+  [cropName]: boolean
 }
 
 declare module "@mpv-easy/plugin" {
@@ -138,6 +145,7 @@ export function createDefaultContext() {
     [jellyfinName]: jellyfinConfig,
     [translateName]: translateConfig,
     [cutName]: cutConfig,
+    [cropName]: cropConfig,
     enablePlugins: {
       [i18nName]: true,
       [easyName]: true,
@@ -150,6 +158,7 @@ export function createDefaultContext() {
       [jellyfinName]: true,
       [translateName]: true,
       [cutName]: true,
+      [cropName]: true,
     },
     version,
     experimental,

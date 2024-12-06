@@ -1,0 +1,1 @@
+crop script for mpv

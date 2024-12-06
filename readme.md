@@ -45,7 +45,8 @@ set -x MPV_SCRIPT_DIR /your_mpv_dir/portable_config/scripts ; pnpm run dev
 | [         | script-message speed-change -0.25    |
 | ]         | script-message speed-change +0.25    |
 | c         | script-message cut                   |
-| o         | script-message cut-output            |
+| C         | script-message crop                  |
+| o         | script-message output                |
 | ESC       | script-message cancel                |
 | UP        | script-message volume-change +10     |
 | DOWN      | script-message volume-change -10     |

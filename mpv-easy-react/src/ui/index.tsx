@@ -25,6 +25,8 @@ import {
   frameTimeSelector,
   translateSelector,
   IconButtonSizeSelector,
+  playerStateSelector,
+  cropSelector,
 } from "../store"
 import {
   PropertyBool,
@@ -61,6 +63,7 @@ import { VoiceControl } from "./voice-control"
 import { History } from "./history"
 import { Speed } from "./speed"
 import { Translation } from "@mpv-easy/translate"
+import { Crop } from "@mpv-easy/crop"
 
 export * from "./progress"
 export * from "./toolbar"
@@ -266,7 +269,15 @@ export const Easy = (props: Partial<EasyProps>) => {
       setPropertyNumber("speed", s)
       printAndOsd(`speed: ${s}`, 2)
     })
+    registerScriptMessage("crop", () => {
+      dispatch.context.setShowCrop(true)
+    })
+    registerScriptMessage("cancel", () => {
+      dispatch.context.setShowCrop(false)
+      dispatch.context.setCropPoints([])
+    })
   }, [])
+
   const smallFontSize = useSelector(smallFontSizeSelector)
   const style = useSelector(styleSelector)
   const mode = useSelector(modeSelector)
@@ -288,6 +299,10 @@ export const Easy = (props: Partial<EasyProps>) => {
   const menuRef = useRef<{ setHide: (v: boolean) => void }>(null)
   const volumeDomRef = useRef<MpDom>(null)
   const [menuHide, setMenuHide] = useState(true)
+  const playerState = useSelector(playerStateSelector)
+  const showCrop = playerState.showCrop
+  const cropPoints = playerState.cropPoints
+  const cropConfig = useSelector(cropSelector)
 
   const { x, y, hover } = mousePos
   const [hide, setHide] = useState(!!props.initHide)
@@ -345,6 +360,7 @@ export const Easy = (props: Partial<EasyProps>) => {
   const subOutlineColor =
     getColor("sub-outline-color") ?? translateStyle.subOutlineColor
   const h = useSelector(IconButtonSizeSelector)
+
   return (
     <>
       <Tooltip
@@ -370,6 +386,24 @@ export const Easy = (props: Partial<EasyProps>) => {
         alignItems="start"
         position="relative"
         onMouseDown={(e) => {
+          if (showCrop) {
+            console.log(
+              "showCrop",
+              e.clientX,
+              e.clientY,
+              mousePos.x,
+              mousePos.y,
+            )
+            if (cropPoints.length < 2) {
+              dispatch.context.setCropPoints([
+                ...cropPoints,
+                [mousePos.x, mousePos.y],
+              ])
+            } else {
+              console.log("crop point too large")
+            }
+          }
+
           const isEmptyClick =
             e.target?.attributes.id === "mpv-easy-main" ||
             e.target?.attributes.id === "mpv-easy-speed" ||
@@ -386,13 +420,25 @@ export const Easy = (props: Partial<EasyProps>) => {
           }
         }}
       >
-        <Toolbar ref={toolbarRef} hide={hide} />
-        <Element ref={elementRef} hide={hide} />
-        <VoiceControl ref={volumeDomRef} hide={hide} />
+        <Toolbar ref={toolbarRef} hide={hide || showCrop} />
+        <Element ref={elementRef} hide={hide || showCrop} />
+        <VoiceControl ref={volumeDomRef} hide={hide || showCrop} />
         {!clickMenuStyle.disable && <ClickMenu ref={menuRef} hide={menuHide} />}
         <Playlist />
         <History />
         <Speed />
+        {showCrop && (
+          <Crop
+            mouseX={mousePos.x}
+            mouseY={mousePos.y}
+            lineColor={cropConfig.lineColor}
+            lineWidth={cropConfig.lineWidth}
+            osdHeight={osdDimensionsProp.value?.h || 0}
+            osdWidth={osdDimensionsProp.value?.w || 0}
+            points={cropPoints}
+            maskColor={cropConfig.maskColor}
+          />
+        )}
         <Translation
           subFontSize={subFontSize}
           subScale={subScale}
