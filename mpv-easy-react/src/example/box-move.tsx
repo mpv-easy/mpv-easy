@@ -4,7 +4,7 @@ import React, { useEffect, useRef, useState } from "react"
 export function BoxMove() {
   const [x, setX] = useState(0)
 
-  const h = useRef<() => void>()
+  const h = useRef<null | (() => void)>(null)
   h.current = () => {
     setX(x + 100)
   }

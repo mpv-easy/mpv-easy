@@ -200,7 +200,7 @@ export function Translation(props: Partial<TranslationProps>) {
   const [active, setActive] = useState(false)
   const [text, setText] = useState("")
 
-  const update = useRef<(s: string) => void>()
+  const update = useRef<((s: string) => void) | null>(null)
   update.current = (s: string) => {
     if (active) {
       setText(s || "")

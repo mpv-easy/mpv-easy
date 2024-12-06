@@ -47,7 +47,7 @@ export const Progress = ({ width, height, ...props }: MpDomProps) => {
   const duration = useSelector(durationSelector)
   const dispatch = useDispatch<Dispatch>()
   const format = getTimeFormat(duration)
-  const thumbRef = useRef<ThumbFast>()
+  const thumbRef = useRef<ThumbFast | null>(null)
   const cursorTextStartRef = useRef<MpDom>(null)
   const previewTextRef = useRef<MpDom>(null)
   const progressRef = useRef<MpDom>(null)

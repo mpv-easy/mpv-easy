@@ -12,7 +12,7 @@ const mousePosProp = new PropertyNative<MousePos>("mouse-pos")
 
 export function VolumeControl() {
   const [volume, setVolume] = usePropertyNumber("volume", 100)
-  const h = useRef<(x: number) => void>()
+  const h = useRef<((x: number) => void) | null>(null)
   h.current = (x) => {
     setVolume(volume + x)
   }
