@@ -50,25 +50,25 @@ export async function cutVideo(
   const cmd = [
     ffmpeg,
     "-nostdin",
+    "-accurate_seek",
     "-ss",
     ss,
-    "-i",
-    videoPath,
     "-to",
     to,
-    "-c",
-    "copy",
-    "-map",
-    "0",
-    "-avoid_negative_ts",
-    "make_zero",
-
+    "-i",
+    videoPath,
+    // "-c",
+    // "copy",
+    // "-map",
+    // "0",
+    // "-avoid_negative_ts",
+    // "make_zero",
     // only video and audio
     // "-dn",
-
     "-y",
     outputPath,
   ]
+  // console.log("cmd", cmd.join(" "))
   try {
     await execAsync(cmd)
   } catch (e) {
@@ -88,6 +88,7 @@ export async function cropImage(
   const cmd = [
     ffmpeg,
     "-nostdin",
+    "-accurate_seek",
     "-ss",
     time.toString(),
     "-i",
@@ -99,6 +100,7 @@ export async function cropImage(
     "-y",
     outputPath,
   ]
+  // console.log("cmd", cmd.join(" "))
   try {
     await execAsync(cmd)
   } catch (e) {

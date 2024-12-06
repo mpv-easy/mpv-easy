@@ -42,6 +42,7 @@ type CropProps = {
   osdHeight: number
   points: [number, number][]
   maskColor: string
+  zIndex: number
 }
 
 function getMask(
@@ -116,6 +117,7 @@ export function Crop({
   osdWidth,
   maskColor,
   points,
+  zIndex,
 }: CropProps) {
   const labelRef = useRef<MpDom | null>(null)
   const labelPos = getLabelPos(
@@ -144,6 +146,7 @@ export function Crop({
             backgroundColor={maskColor}
             width={v.width}
             height={v.height}
+            zIndex={zIndex}
           />
         ),
       )}
@@ -156,6 +159,7 @@ export function Crop({
           width={osdWidth}
           height={lineWidth}
           backgroundColor={lineColor}
+          zIndex={zIndex + 1}
         />
       )}
       {!done && (
@@ -165,6 +169,7 @@ export function Crop({
           width={lineWidth}
           height={osdHeight}
           backgroundColor={lineColor}
+          zIndex={zIndex + 1}
         />
       )}
 
@@ -175,7 +180,14 @@ export function Crop({
           position="absolute"
           left={labelPos.x}
           top={labelPos.y}
+          zIndex={zIndex + 2}
           text={label}
+          // backgroundColor={maskColor}
+          // display="flex"
+          // justifyContent="center"
+          // alignContent="stretch"
+          // textAlign="center"
+          // alignItems="center"
         />
       )}
     </Box>

@@ -29,7 +29,7 @@ const {
   maskColor,
 } = {
   ...defaultConfig,
-  ...getOptions("mpv-cut", {
+  ...getOptions("mpv-crop", {
     "crop-event-name": {
       type: "string",
       key: "cropEventName",
@@ -145,7 +145,6 @@ function App() {
         }
         setPoints(newPoints)
       }}
-      zIndex={1024}
     >
       {showCrop && (
         <Crop
@@ -157,6 +156,7 @@ function App() {
           osdHeight={h}
           points={points}
           maskColor={maskColor}
+          zIndex={1024}
         />
       )}
     </Box>

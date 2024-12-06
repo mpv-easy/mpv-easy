@@ -43,6 +43,15 @@ o         script-message output
 ESC       script-message cancel
 ```
 
+## config
+
+config file: `mpv-cut.conf`
+```conf
+cut-event-name="cut"
+output-event-name="output"
+cancel-event-name="cancel"
+output-directory=""
+```
 
 ## todo
 

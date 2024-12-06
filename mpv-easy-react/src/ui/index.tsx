@@ -437,6 +437,7 @@ export const Easy = (props: Partial<EasyProps>) => {
             osdWidth={osdDimensionsProp.value?.w || 0}
             points={cropPoints}
             maskColor={cropConfig.maskColor}
+            zIndex={1024}
           />
         )}
         <Translation
