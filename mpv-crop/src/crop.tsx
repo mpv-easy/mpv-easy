@@ -10,7 +10,7 @@ function getLabelPos(
   height: number,
   padding = 16,
 ) {
-  if (!node) return { x: 0, y: 0 }
+  if (!node) return { x: width, y: height }
 
   const d = getDirection(x, y, width, height)
 
