@@ -360,6 +360,8 @@ jobs:
           cp mpv-translate/mpv-translate.conf release/mpv-translate.conf
           cp mpv-cut/es5/mpv-cut.js release/mpv-cut.js
           cp mpv-cut/mpv-cut.conf release/mpv-cut.conf
+          cp mpv-crop/es5/mpv-crop.js release/mpv-crop.js
+          cp mpv-crop/mpv-crop.conf release/mpv-crop.conf
 
           cp mpv-easy-react/es5/mpv-easy-es5.js release/mpv-easy-es5.js
           cp mpv-easy-react/bundle/mpv-easy-es6.js release/mpv-easy-es6.js
