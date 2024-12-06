@@ -231,6 +231,27 @@ export const context = createModel<RootModel>()({
       state[pluginName].player = { ...state[pluginName].player, volumeMax }
       return { ...state }
     },
+    setCutPoints(state, cutPoints: number[]) {
+      state[pluginName].state = {
+        ...state[pluginName].state,
+        cutPoints,
+      }
+      return { ...state }
+    },
+    setCropPoints(state, cropArea: [number, number][]) {
+      state[pluginName].state = {
+        ...state[pluginName].state,
+        cropPoints: cropArea,
+      }
+      return { ...state }
+    },
+    setShowCrop(state, showCrop: boolean) {
+      state[pluginName].state = {
+        ...state[pluginName].state,
+        showCrop,
+      }
+      return { ...state }
+    },
     resetConfig(state) {
       return createDefaultContext()
     },

@@ -14,6 +14,8 @@ import {
   registerScriptMessage,
   setPropertyNumber,
   isRemote,
+  cropImage,
+  cropVideo,
 } from "@mpv-easy/tool"
 import { Box, type MpDom } from "@mpv-easy/react"
 import React, { useRef, useState, useEffect } from "react"
@@ -29,13 +31,16 @@ import {
   pathSelector,
   thumbfastSelector,
   cutSelector,
+  playerStateSelector,
+  cropSelector,
 } from "../store"
 import { ThumbFast } from "@mpv-easy/thumbfast"
 import { getArea, getCutVideoPath } from "@mpv-easy/cut"
+import { getCropImagePath, getCropRect } from "@mpv-easy/crop"
 
 export const Progress = ({ width, height, ...props }: MpDomProps) => {
   const [leftPreview, setLeftPreview] = useState(0)
-  const [previewCursorHide, setPreviewCursorHide] = useState(true)
+  const [mouseIn, setMouseIn] = useState(true)
   const progress = useSelector(progressStyleSelector)
   const button = useSelector(buttonStyleSelector)
   const timePos = useSelector(timePosSelector)
@@ -52,33 +57,30 @@ export const Progress = ({ width, height, ...props }: MpDomProps) => {
   const path = useSelector(pathSelector)
   const isSeekable = getPropertyBool("seekable")
   const thumbfast = useSelector(thumbfastSelector)
+  const cropPoints = useSelector(playerStateSelector).cropPoints
+  const cutConfig = useSelector(cutSelector)
+  const cropConfig = useSelector(cropSelector)
 
   // TODO: support yt-dlp thumbfast
   // const supportThumbfast = !isYtdlp(path) && isSeekable
   const supportThumbfast = isSeekable && thumbfast.network
 
-  const [cutPoints, setCutPoints] = useState<number[]>([])
+  const cutPoints = useSelector(playerStateSelector).cutPoints
 
-  const getCutPoint = () => {
-    if (!previewCursorHide) {
-      const time = duration * leftPreview
-      return time
-    }
-    return timePos
-  }
+  const curCutPoint = mouseIn ? timePos : duration * leftPreview
 
   const cutRef = useRef<(() => void) | null>(null)
   cutRef.current = () => {
-    const newPoints = [...cutPoints, getCutPoint()]
+    const newPoints = [...cutPoints, curCutPoint]
     while (newPoints.length > 2) {
       newPoints.shift()
     }
-    setCutPoints(newPoints)
+    dispatch.context.setCutPoints(newPoints)
   }
 
   const cutCancelRef = useRef<(() => void) | null>(null)
   cutCancelRef.current = () => {
-    setCutPoints([])
+    dispatch.context.setCutPoints([])
   }
 
   const hasArea = cutPoints.length === 2
@@ -96,6 +98,46 @@ export const Progress = ({ width, height, ...props }: MpDomProps) => {
       printAndOsd("video not found")
       return
     }
+    const ffmpeg = detectFfmpeg()
+    if (!ffmpeg) {
+      printAndOsd("ffmpeg not found")
+      return
+    }
+    if (cropPoints.length === 2) {
+      const rect = getCropRect(cropPoints)
+      if (area) {
+        // cut crop video
+        const outputPath = getCutVideoPath(
+          path,
+          area,
+          cropConfig.outputDirectory,
+        )
+        const ok = await cropVideo(path, area, rect, outputPath, ffmpeg)
+        if (!ok) {
+          printAndOsd("failed to crop video")
+        } else {
+          printAndOsd("crop video finish")
+        }
+      } else {
+        // crop image
+        const outputPath = getCropImagePath(
+          path,
+          timePos,
+          cropConfig.cropImageFormat,
+          cropConfig.outputDirectory,
+        )
+        const ok = await cropImage(path, timePos, rect, outputPath, ffmpeg)
+        if (!ok) {
+          printAndOsd("failed to crop image")
+        } else {
+          printAndOsd("crop image finish")
+        }
+      }
+      dispatch.context.setShowCrop(false)
+      dispatch.context.setCropPoints([])
+      return
+    }
+
     if (isRemote(path)) {
       printAndOsd("cut not support remote video")
       return
@@ -105,15 +147,15 @@ export const Progress = ({ width, height, ...props }: MpDomProps) => {
       printAndOsd("cut area not found")
       return
     }
-    const ffmpeg = detectFfmpeg()
-    if (!ffmpeg) {
-      printAndOsd("ffmpeg not found")
-      return
-    }
     printAndOsd("cut starting")
 
-    const ok = await cutVideo(area, path, getCutVideoPath(path, area), ffmpeg)
-    setCutPoints([])
+    const ok = await cutVideo(
+      area,
+      path,
+      getCutVideoPath(path, area, cutConfig.outputDirectory),
+      ffmpeg,
+    )
+    dispatch.context.setCutPoints([])
 
     if (!ok) {
       printAndOsd("failed to cut")
@@ -150,7 +192,7 @@ export const Progress = ({ width, height, ...props }: MpDomProps) => {
     registerScriptMessage("cancel", () => {
       cutCancelRef.current?.()
     })
-    registerScriptMessage("cut-output", () => {
+    registerScriptMessage("output", () => {
       cutVideoRef.current?.()
     })
   }, [])
@@ -204,18 +246,18 @@ export const Progress = ({ width, height, ...props }: MpDomProps) => {
         e.preventDefault()
       }}
       onMouseMove={(e) => {
-        setPreviewCursorHide(false)
+        setMouseIn(false)
         updatePreviewCursor(e)
         // e.stopPropagation()
       }}
       onMouseEnter={(e) => {
         updatePreviewCursor(e)
-        setPreviewCursorHide(false)
+        setMouseIn(false)
         // e.stopPropagation()
       }}
       onMouseLeave={(e) => {
         updatePreviewCursor(e)
-        setPreviewCursorHide(true)
+        setMouseIn(true)
         // e.stopPropagation()
       }}
       {...props}
@@ -291,7 +333,7 @@ export const Progress = ({ width, height, ...props }: MpDomProps) => {
           pointerEvents="none"
         />
       )}
-      {!previewCursorHide && (
+      {!mouseIn && (
         <Box
           ref={hoverCursorRef}
           id="preview-cursor"
@@ -306,7 +348,7 @@ export const Progress = ({ width, height, ...props }: MpDomProps) => {
           display="flex"
           alignContent="stretch"
         >
-          {!previewCursorHide && (
+          {!mouseIn && (
             <Box
               id="preview-cursor-time"
               position="absolute"
@@ -325,7 +367,7 @@ export const Progress = ({ width, height, ...props }: MpDomProps) => {
           )}
 
           {thumbRef.current &&
-            !previewCursorHide &&
+            !mouseIn &&
             !!thumbX &&
             !!thumbY &&
             supportThumbfast && (

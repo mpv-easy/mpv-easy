@@ -1,0 +1,26 @@
+{
+  "name": "@mpv-easy/crop",
+  "version": "0.1.12",
+  "homepage": "https://github.com/mpv-easy/mpv-easy#readme",
+  "files": ["dist", "readme.md", "package.json"],
+  "description": "",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "bundle": "tsx build.ts",
+    "meta": "tsx ./meta/build.ts",
+    "es5": "babel --presets  @babel/preset-env ./bundle -d es5",
+    "build": "tsc -p ./tsconfig.build.json && npm run bundle && npm run es5 && npm run meta",
+    "dev-ts": "tsc -p ./tsconfig.build.json -w"
+  },
+  "keywords": [],
+  "author": "ahaoboy <504595380@qq.com> (https://github.com/ahaoboy)",
+  "license": "MIT",
+  "dependencies": {
+    "@mpv-easy/assdraw": "workspace:*",
+    "@mpv-easy/react": "workspace:*",
+    "@mpv-easy/tool": "workspace:*",
+    "@mpv-easy/plugin": "workspace:*"
+  },
+  "devDependencies": {}
+}

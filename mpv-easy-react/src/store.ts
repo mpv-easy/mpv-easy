@@ -11,6 +11,7 @@ import { pluginName as autoloadName } from "@mpv-easy/autoload"
 import { pluginName as thumbfastName } from "@mpv-easy/thumbfast"
 import { pluginName as translateName } from "@mpv-easy/translate"
 import { pluginName as cutName } from "@mpv-easy/cut"
+import { pluginName as cropName } from "@mpv-easy/crop"
 
 import { normalize } from "@mpv-easy/tool"
 
@@ -43,6 +44,10 @@ export const anime4kSelector = (state: RootState) => state.context[anime4kName]
 
 export const playerSelector = (state: RootState) =>
   state.context[pluginName].player
+
+export const playerStateSelector = (state: RootState) =>
+  state.context[pluginName].state
+
 export const pauseSelector = (state: RootState) =>
   state.context[pluginName].player.pause
 export const fullscreenSelector = (state: RootState) =>
@@ -171,3 +176,5 @@ export const translateSelector = (state: RootState) =>
   state.context[translateName]
 
 export const cutSelector = (state: RootState) => state.context[cutName]
+
+export const cropSelector = (state: RootState) => state.context[cropName]
