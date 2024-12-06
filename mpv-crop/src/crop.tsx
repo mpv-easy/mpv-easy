@@ -182,6 +182,8 @@ export function Crop({
           top={labelPos.y}
           zIndex={zIndex + 2}
           text={label}
+          hide={!labelRef.current}
+          pointerEvents="none"
           // backgroundColor={maskColor}
           // display="flex"
           // justifyContent="center"

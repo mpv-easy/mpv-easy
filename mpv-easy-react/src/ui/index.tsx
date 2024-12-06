@@ -387,20 +387,13 @@ export const Easy = (props: Partial<EasyProps>) => {
         position="relative"
         onMouseDown={(e) => {
           if (showCrop) {
-            console.log(
-              "showCrop",
-              e.clientX,
-              e.clientY,
-              mousePos.x,
-              mousePos.y,
-            )
             if (cropPoints.length < 2) {
               dispatch.context.setCropPoints([
                 ...cropPoints,
                 [mousePos.x, mousePos.y],
               ])
             } else {
-              console.log("crop point too large")
+              printAndOsd("crop points must be 2")
             }
           }
 
