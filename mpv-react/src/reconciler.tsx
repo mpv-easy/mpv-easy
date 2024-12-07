@@ -8,7 +8,7 @@ import {
 } from "@mpv-easy/tool"
 import type { MousePos } from "@mpv-easy/tool"
 import createReconciler from "react-reconciler"
-import { DefaultEventPriority } from "react-reconciler/constants"
+import { DiscreteEventPriority } from "react-reconciler/constants"
 import {
   appendChildNode,
   insertBeforeNode,
@@ -55,15 +55,15 @@ export function createCustomReconciler(customRender: () => void) {
     supportsMicrotasks: false,
     // @ts-ignore
     resolveUpdatePriority() {
-      return DefaultEventPriority
+      return DiscreteEventPriority
     },
     // @ts-ignore
     getCurrentUpdatePriority() {
-      return DefaultEventPriority
+      return DiscreteEventPriority
     },
     // @ts-ignore
     setCurrentUpdatePriority() {
-      return DefaultEventPriority
+      return DiscreteEventPriority
     },
     // @ts-ignore
     maySuspendCommit() {
@@ -74,8 +74,8 @@ export function createCustomReconciler(customRender: () => void) {
       customRender()
     },
     insertInContainerBefore: insertBeforeNode,
-    commitUpdate(node: MpDom, tag: string, props: any) {
-      applyAttributes(node, props)
+    commitUpdate(node: MpDom, tag: string, oldProps: any, newProps: any) {
+      applyAttributes(node, newProps)
       customRender()
     },
     commitTextUpdate(node, _oldText, newText) {
@@ -134,16 +134,6 @@ export function createCustomReconciler(customRender: () => void) {
     ): boolean => {
       return false
     },
-    prepareUpdate: (
-      instance: unknown,
-      type: unknown,
-      oldProps: unknown,
-      newProps: unknown,
-      rootContainer: unknown,
-      hostContext: unknown,
-    ): unknown => {
-      return newProps
-    },
     shouldSetTextContent: (type: unknown, props: unknown): boolean => {
       return false
     },
@@ -184,7 +174,7 @@ export function createCustomReconciler(customRender: () => void) {
     isPrimaryRenderer: true,
     // warnsIfNotActing: true,
     getCurrentEventPriority: (): number => {
-      return DefaultEventPriority
+      return DiscreteEventPriority
     },
     getInstanceFromNode: (node: any): null => {
       return null
