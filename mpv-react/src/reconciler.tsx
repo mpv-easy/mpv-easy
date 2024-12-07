@@ -53,12 +53,28 @@ export function createCustomReconciler(customRender: () => void) {
     supportsMutation: true,
     supportsPersistence: false,
     supportsMicrotasks: false,
+    // @ts-ignore
+    resolveUpdatePriority() {
+      return DefaultEventPriority
+    },
+    // @ts-ignore
+    getCurrentUpdatePriority() {
+      return DefaultEventPriority
+    },
+    // @ts-ignore
+    setCurrentUpdatePriority() {
+      return DefaultEventPriority
+    },
+    // @ts-ignore
+    maySuspendCommit() {
+      return false
+    },
     appendChildToContainer(root: MpDom, node: MpDom) {
       appendChildNode(root, node)
       customRender()
     },
     insertInContainerBefore: insertBeforeNode,
-    commitUpdate(node: MpDom, props: any) {
+    commitUpdate(node: MpDom, tag: string, props: any) {
       applyAttributes(node, props)
       customRender()
     },
