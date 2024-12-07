@@ -21,7 +21,7 @@
     "lodash-es": "4.17.21"
   },
   "peerDependencies": {
-    "react": "18.3.1",
-    "react-reconciler": "0.29.2"
+    "react": "19.0.0",
+    "react-reconciler": "0.31.0"
   }
 }
