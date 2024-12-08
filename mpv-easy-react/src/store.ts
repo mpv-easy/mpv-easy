@@ -6,13 +6,10 @@ import { pluginName as thumbfastName } from "@mpv-easy/thumbfast"
 import { pluginName as translateName } from "@mpv-easy/translate"
 import { pluginName as cutName } from "@mpv-easy/cut"
 import { pluginName as cropName } from "@mpv-easy/crop"
-
 import { normalize } from "@mpv-easy/tool"
-import { dispatch, store } from "./models"
 import { PluginContext } from "@mpv-easy/plugin"
-export { dispatch, store }
 
-export type Dispatch = typeof dispatch
+export * from "./models"
 
 export const modeSelector = (state: PluginContext) => state[pluginName].mode
 export const styleSelector = (state: PluginContext) => state[pluginName].style

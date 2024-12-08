@@ -286,10 +286,12 @@ const store = defineStore({
 export const {
   subscribe,
   useSelector,
-  // useStore,
   getSnapshot,
   dispatch,
   setStore,
+  unsubscribe,
 } = store
+
 export { store }
 export type Store = typeof store
+export type Dispatch = typeof dispatch
