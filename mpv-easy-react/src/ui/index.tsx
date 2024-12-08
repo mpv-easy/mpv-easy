@@ -46,10 +46,10 @@ import {
   getExtName,
   registerScriptMessage,
   setPropertyNumber,
-  printAndOsd,
   getPropertyNumber,
   getPropertyBool,
   getColor,
+  showNotification,
 } from "@mpv-easy/tool"
 import throttle from "lodash-es/throttle"
 import isEqual from "lodash-es/isEqual"
@@ -250,14 +250,14 @@ export const Easy = (props: Partial<EasyProps>) => {
       const s = clamp(volumeRef.current + v, 0, volumeMax)
       dispatch.setVolume(s)
       setPropertyNumber("volume", s)
-      printAndOsd(`volume: ${s}`, 2)
+      showNotification(`volume: ${s}`, 2)
     })
 
     registerScriptMessage("fontsize-change", (e) => {
       const v = Number.parseFloat(`${e}`)
       const s = clamp(fontSizeRef.current + v, minFontSize, maxFontSize)
       dispatch.setFontSize(s)
-      printAndOsd(`fontsize: ${s}`, 2)
+      showNotification(`fontsize: ${s}`, 2)
     })
 
     registerScriptMessage("speed-change", (e) => {
@@ -265,7 +265,7 @@ export const Easy = (props: Partial<EasyProps>) => {
       const s = clamp(speedRef.current + v, speedMin, speedMax)
       dispatch.setSpeed(s)
       setPropertyNumber("speed", s)
-      printAndOsd(`speed: ${s}`, 2)
+      showNotification(`speed: ${s}`, 2)
     })
     registerScriptMessage("crop", () => {
       dispatch.setShowCrop(true)
@@ -388,7 +388,7 @@ export const Easy = (props: Partial<EasyProps>) => {
             if (cropPoints.length < 2) {
               dispatch.setCropPoints([...cropPoints, [mousePos.x, mousePos.y]])
             } else {
-              printAndOsd("crop points must be 2")
+              showNotification("crop points must be 2")
             }
           }
 
