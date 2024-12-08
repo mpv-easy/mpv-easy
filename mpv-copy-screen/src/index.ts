@@ -1,9 +1,9 @@
 import {
-  addKeyBinding,
   command,
   getScriptConfigDir,
   joinPath,
   osdMessage,
+  registerScriptMessage,
   setClipboardImage,
 } from "@mpv-easy/tool"
 
@@ -11,13 +11,13 @@ import { definePlugin } from "@mpv-easy/plugin"
 
 export const pluginName = "@mpv-easy/copy-screen"
 
-export type copyTimeConfig = {
-  key: string
+export type copyScreenConfig = {
+  eventName: string
   path: string
 }
 
-export const defaultConfig: copyTimeConfig = {
-  key: "ctrl+c",
+export const defaultConfig: copyScreenConfig = {
+  eventName: "copy-screen",
   path: joinPath(getScriptConfigDir(), "mpv-easy-copy-screen.tmp.png"),
 }
 
@@ -33,7 +33,7 @@ async function copyScreen(path: string) {
 
 declare module "@mpv-easy/plugin" {
   interface PluginContext {
-    [pluginName]: copyTimeConfig
+    [pluginName]: copyScreenConfig
   }
 }
 
@@ -41,9 +41,9 @@ export default definePlugin((context) => ({
   name: pluginName,
   defaultConfig: defaultConfig,
   create: () => {
-    const key = context[pluginName]?.key ?? defaultConfig.key
+    const key = context[pluginName]?.eventName ?? defaultConfig.eventName
     const path = context[pluginName]?.path ?? defaultConfig.path
-    addKeyBinding(key, pluginName, () => {
+    registerScriptMessage(key, () => {
       copyScreen(path)
     })
   },

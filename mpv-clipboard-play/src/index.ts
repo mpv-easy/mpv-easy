@@ -1,5 +1,4 @@
 import {
-  addKeyBinding,
   dirname,
   getClipboard,
   printAndOsd,
@@ -12,6 +11,7 @@ import {
   twitch,
   getExtName,
   compareString,
+  registerScriptMessage,
 } from "@mpv-easy/tool"
 
 import { type SystemApi, definePlugin } from "@mpv-easy/plugin"
@@ -118,21 +118,21 @@ async function fn(context: PluginContext, api: SystemApi) {
   }
 }
 
-export const pluginName = "@mpv-easy/clip-play"
+export const pluginName = "@mpv-easy/clipboard-play"
 
-export const defaultConfig: ClipPlayConfig = {
-  key: "ctrl+v",
+export const defaultConfig: CClipboardPlayConfig = {
+  eventName: "clipboard-play",
   osdDuration: 3,
 }
 
-export type ClipPlayConfig = {
-  key: string
+export type CClipboardPlayConfig = {
+  eventName: string
   osdDuration: number
 }
 
 declare module "@mpv-easy/plugin" {
   interface PluginContext {
-    [pluginName]: ClipPlayConfig
+    [pluginName]: CClipboardPlayConfig
   }
 }
 
@@ -140,8 +140,8 @@ export default definePlugin((context, api) => ({
   name: pluginName,
   defaultConfig: defaultConfig,
   create: () => {
-    const key = context[pluginName].key
-    addKeyBinding(key, pluginName, () => {
+    const key = context[pluginName].eventName
+    registerScriptMessage(key, () => {
       fn(context, api)
     })
   },

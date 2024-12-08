@@ -1,12 +1,9 @@
 import {
   PropertyNative,
   type VideoParams,
-  addKeyBinding,
-  commandNative,
   cutVideo,
   detectFfmpeg,
   formatTime,
-  getProperty,
   getPropertyBool,
   getTimeFormat,
   printAndOsd,

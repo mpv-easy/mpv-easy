@@ -1,15 +1,15 @@
 import { definePlugin } from "@mpv-easy/plugin"
 import {
-  addKeyBinding,
   command,
   osdMessage,
+  registerScriptMessage,
   removeKeyBinding,
 } from "@mpv-easy/tool"
 
 export const pluginName = "@mpv-easy/anime4k"
 
 export type ShaderItem = {
-  key: string
+  eventName: string
   value: string
   title: string
 }
@@ -30,44 +30,45 @@ export const defaultConfig: Anime4kConfig = {
   current: 0,
   osdDuration: 2,
   shaders: [
+    // https://github.com/bloc97/Anime4K/blob/master/md/GLSL_Instructions_Windows_MPV.md
+    // https://github.com/bloc97/Anime4K/blob/master/md/Template/GLSL_Windows_High-end/input.conf
     {
-      key: "CTRL+0",
+      eventName: "Anime4K-Clear",
       value: "",
       title: "Anime4K: Clear",
     },
     {
-      key: "CTRL+1",
-      value:
-        "~~/shaders/Anime4K_Clamp_Highlights.glsl;~~/shaders/Anime4K_Restore_CNN_VL.glsl;~~/shaders/Anime4K_Upscale_CNN_x2_VL.glsl;~~/shaders/Anime4K_Restore_CNN_M.glsl;~~/shaders/Anime4K_AutoDownscalePre_x2.glsl;~~/shaders/Anime4K_AutoDownscalePre_x4.glsl;~~/shaders/Anime4K_Upscale_CNN_x2_M.glsl",
-      title: "Anime4K: Mode A+A (HQ)",
-    },
-    {
-      key: "CTRL+2",
-      value:
-        "~~/shaders/Anime4K_Clamp_Highlights.glsl;~~/shaders/Anime4K_Restore_CNN_Soft_VL.glsl;~~/shaders/Anime4K_Upscale_CNN_x2_VL.glsl;~~/shaders/Anime4K_AutoDownscalePre_x2.glsl;~~/shaders/Anime4K_AutoDownscalePre_x4.glsl;~~/shaders/Anime4K_Upscale_CNN_x2_M.glsl",
-      title: "Anime4K: Mode B (HQ)",
-    },
-
-    {
-      key: "CTRL+3",
-      value:
-        "~~/shaders/Anime4K_Clamp_Highlights.glsl;~~/shaders/Anime4K_Upscale_Denoise_CNN_x2_VL.glsl;~~/shaders/Anime4K_AutoDownscalePre_x2.glsl;~~/shaders/Anime4K_AutoDownscalePre_x4.glsl;~~/shaders/Anime4K_Upscale_CNN_x2_M.glsl",
-      title: "Anime4K: Mode C (HQ)",
-    },
-    {
-      key: "CTRL+4",
+      eventName: "Anime4K-A-HQ",
       value:
         "~~/shaders/Anime4K_Clamp_Highlights.glsl;~~/shaders/Anime4K_Restore_CNN_VL.glsl;~~/shaders/Anime4K_Upscale_CNN_x2_VL.glsl;~~/shaders/Anime4K_AutoDownscalePre_x2.glsl;~~/shaders/Anime4K_AutoDownscalePre_x4.glsl;~~/shaders/Anime4K_Upscale_CNN_x2_M.glsl",
       title: "Anime4K: Mode A (HQ)",
     },
     {
-      key: "CTRL+5",
+      eventName: "Anime4K-B-HQ",
+      value:
+        "~~/shaders/Anime4K_Clamp_Highlights.glsl;~~/shaders/Anime4K_Restore_CNN_Soft_VL.glsl;~~/shaders/Anime4K_Upscale_CNN_x2_VL.glsl;~~/shaders/Anime4K_AutoDownscalePre_x2.glsl;~~/shaders/Anime4K_AutoDownscalePre_x4.glsl;~~/shaders/Anime4K_Upscale_CNN_x2_M.glsl",
+      title: "Anime4K: Mode B (HQ)",
+    },
+    {
+      eventName: "Anime4K-C-HQ",
+      value:
+        "~~/shaders/Anime4K_Clamp_Highlights.glsl;~~/shaders/Anime4K_Upscale_Denoise_CNN_x2_VL.glsl;~~/shaders/Anime4K_AutoDownscalePre_x2.glsl;~~/shaders/Anime4K_AutoDownscalePre_x4.glsl;~~/shaders/Anime4K_Upscale_CNN_x2_M.glsl",
+      title: "Anime4K: Mode C (HQ)",
+    },
+    {
+      eventName: "Anime4K-AA-HQ",
+      value:
+        "~~/shaders/Anime4K_Clamp_Highlights.glsl;~~/shaders/Anime4K_Restore_CNN_VL.glsl;~~/shaders/Anime4K_Upscale_CNN_x2_VL.glsl;~~/shaders/Anime4K_Restore_CNN_M.glsl;~~/shaders/Anime4K_AutoDownscalePre_x2.glsl;~~/shaders/Anime4K_AutoDownscalePre_x4.glsl;~~/shaders/Anime4K_Upscale_CNN_x2_M.glsl",
+      title: "Anime4K: Mode A+A (HQ)",
+    },
+    {
+      eventName: "Anime4K-BB-HQ",
       value:
         "~~/shaders/Anime4K_Clamp_Highlights.glsl;~~/shaders/Anime4K_Restore_CNN_Soft_VL.glsl;~~/shaders/Anime4K_Upscale_CNN_x2_VL.glsl;~~/shaders/Anime4K_AutoDownscalePre_x2.glsl;~~/shaders/Anime4K_AutoDownscalePre_x4.glsl;~~/shaders/Anime4K_Restore_CNN_Soft_M.glsl;~~/shaders/Anime4K_Upscale_CNN_x2_M.glsl",
       title: "Anime4K: Mode B+B (HQ)",
     },
     {
-      key: "CTRL+6",
+      eventName: "Anime4K-CA-HQ",
       value:
         "~~/shaders/Anime4K_Clamp_Highlights.glsl;~~/shaders/Anime4K_Upscale_Denoise_CNN_x2_VL.glsl;~~/shaders/Anime4K_AutoDownscalePre_x2.glsl;~~/shaders/Anime4K_AutoDownscalePre_x4.glsl;~~/shaders/Anime4K_Restore_CNN_M.glsl;~~/shaders/Anime4K_Upscale_CNN_x2_M.glsl",
       title: "Anime4K: Mode C+A (HQ)",
@@ -94,8 +95,8 @@ export default definePlugin((context, api) => ({
       command(`no-osd change-list glsl-shaders clr "";`)
     }
     for (let i = 0; i < config.shaders.length; i++) {
-      const { key, value, title } = config.shaders[i]
-      addKeyBinding(key, `${pluginName}/${key}`, () => {
+      const { eventName: key, value, title } = config.shaders[i]
+      registerScriptMessage(key, () => {
         if (value.length) {
           toggle(value)
         } else {
@@ -110,7 +111,7 @@ export default definePlugin((context, api) => ({
     }
   },
   destroy() {
-    for (const { key } of context[pluginName].shaders) {
+    for (const { eventName: key } of context[pluginName].shaders) {
       removeKeyBinding(`${pluginName}/${key}`)
     }
   },

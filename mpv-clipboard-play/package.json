@@ -1,5 +1,5 @@
 {
-  "name": "@mpv-easy/clip-play",
+  "name": "@mpv-easy/clipboard-play",
   "version": "0.1.12",
   "homepage": "https://github.com/mpv-easy/mpv-easy#readme",
   "files": ["dist", "readme.md", "package.json"],

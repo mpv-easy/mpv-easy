@@ -1,7 +1,7 @@
 import {
-  addKeyBinding,
   getPropertyNumber,
   osdMessage,
+  registerScriptMessage,
   removeKeyBinding,
   setClipboard,
 } from "@mpv-easy/tool"
@@ -10,7 +10,7 @@ import { definePlugin } from "@mpv-easy/plugin"
 export const pluginName = "@mpv-easy/copy-time"
 
 export const defaultConfig: copyTimeConfig = {
-  key: "ctrl+c",
+  eventName: "copy-time",
 }
 
 function divmod(a: number, b: number) {
@@ -37,7 +37,7 @@ async function copyTime() {
 }
 
 export type copyTimeConfig = {
-  key: string
+  eventName: string
 }
 
 declare module "@mpv-easy/plugin" {
@@ -50,8 +50,8 @@ export default definePlugin((context) => ({
   name: pluginName,
   defaultConfig: defaultConfig,
   create: () => {
-    const key = context[pluginName]?.key ?? defaultConfig.key
-    addKeyBinding(key, pluginName, copyTime)
+    const key = context[pluginName]?.eventName ?? defaultConfig.eventName
+    registerScriptMessage(key, copyTime)
   },
   destroy: () => {
     removeKeyBinding(pluginName)
