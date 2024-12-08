@@ -358,6 +358,7 @@ export const Progress = ({ width, height, ...props }: MpDomProps) => {
               ref={previewTextRef}
               justifyContent="center"
               alignItems="center"
+              zIndex={progress.previewZIndex}
             />
           )}
 
