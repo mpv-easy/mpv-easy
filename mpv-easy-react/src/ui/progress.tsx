@@ -6,7 +6,7 @@ import {
   formatTime,
   getPropertyBool,
   getTimeFormat,
-  printAndOsd,
+  showNotification,
   randomId,
   registerScriptMessage,
   setPropertyNumber,
@@ -90,12 +90,12 @@ export const Progress = ({ width, height, ...props }: MpDomProps) => {
   const cutVideoRef = useRef<(() => void) | null>(null)
   cutVideoRef.current = async () => {
     if (!path.length) {
-      printAndOsd("video not found")
+      showNotification("video not found")
       return
     }
     const ffmpeg = detectFfmpeg()
     if (!ffmpeg) {
-      printAndOsd("ffmpeg not found")
+      showNotification("ffmpeg not found")
       return
     }
     if (cropPoints.length === 2) {
@@ -109,9 +109,9 @@ export const Progress = ({ width, height, ...props }: MpDomProps) => {
         )
         const ok = await cropVideo(path, area, rect, outputPath, ffmpeg)
         if (!ok) {
-          printAndOsd("failed to crop video")
+          showNotification("failed to crop video")
         } else {
-          printAndOsd("crop video finish")
+          showNotification("crop video finish")
         }
       } else {
         // crop image
@@ -123,9 +123,9 @@ export const Progress = ({ width, height, ...props }: MpDomProps) => {
         )
         const ok = await cropImage(path, timePos, rect, outputPath, ffmpeg)
         if (!ok) {
-          printAndOsd("failed to crop image")
+          showNotification("failed to crop image")
         } else {
-          printAndOsd("crop image finish")
+          showNotification("crop image finish")
         }
       }
       dispatch.setShowCrop(false)
@@ -134,15 +134,15 @@ export const Progress = ({ width, height, ...props }: MpDomProps) => {
     }
 
     if (isRemote(path)) {
-      printAndOsd("cut not support remote video")
+      showNotification("cut not support remote video")
       return
     }
 
     if (!area) {
-      printAndOsd("cut area not found")
+      showNotification("cut area not found")
       return
     }
-    printAndOsd("cut starting")
+    showNotification("cut starting")
 
     const ok = await cutVideo(
       area,
@@ -153,11 +153,11 @@ export const Progress = ({ width, height, ...props }: MpDomProps) => {
     dispatch.setCutPoints([])
 
     if (!ok) {
-      printAndOsd("failed to cut")
+      showNotification("failed to cut")
       return
     }
 
-    printAndOsd("cut finish")
+    showNotification("cut finish")
   }
 
   useEffect(() => {

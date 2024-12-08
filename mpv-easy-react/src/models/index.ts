@@ -21,11 +21,7 @@ import {
   pluginName as anime4kName,
   type Anime4kConfig,
 } from "@mpv-easy/anime4k"
-import {
-  translate,
-  pluginName as translateName,
-  type TranslateConfig,
-} from "@mpv-easy/translate"
+import { translate, pluginName as translateName } from "@mpv-easy/translate"
 import { createDefaultContext } from "../context"
 import { getVideoName } from "../common"
 import { defineStore } from "./easy-store"
