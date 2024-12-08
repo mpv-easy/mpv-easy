@@ -7,8 +7,8 @@ import React, {
 import { Progress } from "../progress"
 import { Box, type MpDom, type MpDomProps } from "@mpv-easy/react"
 import { UoscControl } from "./control"
-import { useSelector } from "react-redux"
 import { IconButtonSizeSelector } from "../../store"
+import { useSelector } from "../../models"
 export * from "./control"
 
 export const Uosc: ForwardRefExoticComponent<

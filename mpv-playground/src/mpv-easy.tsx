@@ -1,17 +1,13 @@
 import "./polyfill"
 import React from "react"
 import { renderToBrowser } from "./renderToBrowser"
-import { Easy, createStore, getConfig } from "@mpv-easy/easy-react"
-import { Provider } from "react-redux"
+import { Easy, store, getConfig } from "@mpv-easy/easy-react"
 
 setTimeout(() => {
-  const store = createStore()
   const config = getConfig()
-  store.getState().context = config
+  store.setStore(config)
   renderToBrowser(
-    <Provider store={store}>
-      <Easy fontSize={24} initHide={false} />
-    </Provider>,
+    <Easy fontSize={24} initHide={false} />,
     "JetBrainsMono NFM Regular",
   )
   console.log("render: ", store)

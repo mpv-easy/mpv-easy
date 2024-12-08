@@ -1,10 +1,8 @@
 import { loadfile } from "@mpv-easy/tool"
 import { Box, type MpDom } from "@mpv-easy/react"
 import React, { useRef } from "react"
-import { useSelector, useDispatch } from "react-redux"
 import * as ICON from "../icon"
 import {
-  type Dispatch,
   pathSelector,
   historyHideSelector,
   historySelector,
@@ -13,6 +11,7 @@ import {
 import { getRootNode } from "@mpv-easy/react"
 import { ScrollList } from "./components/scroll-list"
 import { textEllipsis } from "../common"
+import { dispatch, useSelector } from "../models"
 
 export type PlaylistProps = {
   list: string[]
@@ -21,7 +20,6 @@ export type PlaylistProps = {
 
 export const History = () => {
   const historyStyle = useSelector(historyStyleSelector)
-  const dispatch = useDispatch<Dispatch>()
   const history = useSelector(historySelector)
   const historyRef = useRef<MpDom>(null)
   const historyHide = useSelector(historyHideSelector)
@@ -71,10 +69,10 @@ export const History = () => {
               onClick: (e) => {
                 const index = history.indexOf(i)
                 if (index >= 0) {
-                  dispatch.context.setPath(history[index].path)
+                  dispatch.setPath(history[index].path)
                   loadfile(history[index].path)
                 }
-                dispatch.context.setHistoryHide(true)
+                dispatch.setHistoryHide(true)
                 e.stopPropagation()
               },
             }

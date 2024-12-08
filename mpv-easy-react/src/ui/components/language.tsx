@@ -1,10 +1,8 @@
 import { Dropdown, DropdownItem } from "@mpv-easy/react"
 import React from "react"
-import { useDispatch, useSelector } from "react-redux"
 import * as ICON from "../../icon"
 import {
   buttonStyleSelector,
-  type Dispatch,
   i18nSelector,
   mouseHoverStyleSelector,
   dropdownStyleSelector,
@@ -13,11 +11,11 @@ import {
 import { LanguageList } from "@mpv-easy/i18n"
 import { getMaxStringLength } from "../../common"
 import { ThemeModeList } from "../../mpv-easy-theme"
+import { dispatch, useSelector } from "../../models"
 
 export const Language = () => {
   const button = useSelector(buttonStyleSelector)
   const i18n = useSelector(i18nSelector)
-  const dispatch = useDispatch<Dispatch>()
   const mouseHoverStyle = useSelector(mouseHoverStyleSelector)
   const dropdown = useSelector(dropdownStyleSelector)
   const language = useSelector(languageSelector)
@@ -28,7 +26,7 @@ export const Language = () => {
       key: i,
       label: `${prefix} ${i18n[i].padEnd(maxLen)}`,
       onSelect: () => {
-        dispatch.context.setLanguage(i)
+        dispatch.setLanguage(i)
       },
       style: dropdown.item,
     }

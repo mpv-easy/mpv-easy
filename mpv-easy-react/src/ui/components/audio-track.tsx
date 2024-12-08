@@ -1,6 +1,5 @@
 import { Dropdown, type DropdownItem } from "@mpv-easy/react"
 import React from "react"
-import { useSelector, useDispatch } from "react-redux"
 import * as ICON from "../../icon"
 import {
   buttonStyleSelector,
@@ -8,13 +7,13 @@ import {
   mouseHoverStyleSelector,
   dropdownStyleSelector,
   aidSelector,
-  type Dispatch,
 } from "../../store"
 import {
   type TrackItem,
   getPropertyNative,
   setPropertyNative,
 } from "@mpv-easy/tool"
+import { dispatch, useSelector } from "../../models"
 
 function getAudioTracks() {
   const trackList = getPropertyNative<TrackItem[]>("track-list") || []
@@ -27,7 +26,6 @@ export const AudioTrack = () => {
   const mouseHoverStyle = useSelector(mouseHoverStyleSelector)
   const tracks = getAudioTracks()
   const aid = useSelector(aidSelector)
-  const dispatch = useDispatch<Dispatch>()
 
   const items = tracks.map(
     ({ title, lang, external, selected, id }, k): DropdownItem => {
@@ -40,7 +38,7 @@ export const AudioTrack = () => {
         key: key,
         onSelect: (_, e) => {
           setPropertyNative("aid", id)
-          dispatch.context.setAid(id)
+          dispatch.setAid(id)
           e.stopPropagation()
         },
         style: {

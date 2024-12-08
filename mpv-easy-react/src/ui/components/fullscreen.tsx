@@ -1,18 +1,16 @@
 import { Button } from "@mpv-easy/react"
 import React from "react"
-import { useDispatch, useSelector } from "react-redux"
 import * as ICON from "../../icon"
 import {
   buttonStyleSelector,
-  type Dispatch,
   i18nSelector,
   mouseHoverStyleSelector,
 } from "../../store"
+import { dispatch, useSelector } from "../../models"
 
 export const Fullscreen = () => {
   const button = useSelector(buttonStyleSelector)
   const i18n = useSelector(i18nSelector)
-  const dispatch = useDispatch<Dispatch>()
   const mouseHoverStyle = useSelector(mouseHoverStyleSelector)
 
   return (
@@ -34,7 +32,7 @@ export const Fullscreen = () => {
       fontSize={button.fontSize}
       color={button.color}
       onMouseDown={(e) => {
-        dispatch.context.setFullscreen(true)
+        dispatch.setFullscreen(true)
       }}
     />
   )

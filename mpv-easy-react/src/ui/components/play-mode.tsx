@@ -1,6 +1,5 @@
 import { Dropdown, type DropdownItem } from "@mpv-easy/react"
 import React from "react"
-import { useDispatch, useSelector } from "react-redux"
 import * as ICON from "../../icon"
 import {
   buttonStyleSelector,
@@ -8,10 +7,10 @@ import {
   i18nSelector,
   mouseHoverStyleSelector,
   playModeSelector,
-  type Dispatch,
 } from "../../store"
 import { setPropertyBool } from "@mpv-easy/tool"
 import { PlayModeList } from "../../mpv-easy-theme"
+import { dispatch, useSelector } from "../../models"
 
 export const PlayMode = () => {
   const button = useSelector(buttonStyleSelector)
@@ -24,13 +23,12 @@ export const PlayMode = () => {
     loopAll: ICON.Refresh,
     shuffle: ICON.Shuffle,
   }
-  const dispatch = useDispatch<Dispatch>()
   const items: DropdownItem[] = PlayModeList.map((i): DropdownItem => {
     return {
       label: `${playMode === i ? ICON.Ok : ICON.CheckboxBlankCircleOutline} ${i18n[i]}`,
       key: i,
       onSelect: (_, e) => {
-        dispatch.context.setPlayMode(i)
+        dispatch.setPlayMode(i)
         if (i === i18n.loopOne) {
           setPropertyBool("loop-playlist", false)
           setPropertyBool("loop-file", true)

@@ -4,9 +4,7 @@ import { Osc } from "./osc"
 import { Oscx } from "./oscx"
 import { Toolbar } from "./toolbar"
 import { Box, type MpDom, Tooltip } from "@mpv-easy/react"
-import { useSelector, useDispatch } from "react-redux"
 import {
-  type Dispatch,
   audoloadConfigSelector,
   modeSelector,
   mousePosSelector,
@@ -64,6 +62,7 @@ import { History } from "./history"
 import { Speed } from "./speed"
 import { Translation } from "@mpv-easy/translate"
 import { Crop } from "@mpv-easy/crop"
+import { dispatch, useSelector } from "../models"
 
 export * from "./progress"
 export * from "./toolbar"
@@ -118,7 +117,6 @@ export type EasyProps = {
 }
 
 export const Easy = (props: Partial<EasyProps>) => {
-  const dispatch = useDispatch<Dispatch>()
   const frameTime = useSelector(frameTimeSelector)
   const path = useSelector(pathSelector)
   const autoloadConfig = useSelector(audoloadConfigSelector)
@@ -144,15 +142,15 @@ export const Easy = (props: Partial<EasyProps>) => {
     if (protocolHook !== mpvExe) {
       const playPath = getPlayWithExePath()
       if (setProtocolHook(mpvExe, playPath)) {
-        dispatch.context.setProtocolHook(mpvExe)
+        dispatch.setProtocolHook(mpvExe)
       }
     }
 
     if (props.fontSize) {
-      dispatch.context.setFontSize(props.fontSize)
+      dispatch.setFontSize(props.fontSize)
     }
 
-    dispatch.context.addHistory(path)
+    dispatch.addHistory(path)
     loadRemoteSubtitleAsync(path)
 
     playlistCount.observe((v) => {
@@ -160,82 +158,82 @@ export const Easy = (props: Partial<EasyProps>) => {
       if (path !== p) {
         const list = getMpvPlaylist()
         const i = list.indexOf(p)
-        dispatch.context.setPlaylist(list, i === -1 ? 0 : i)
+        dispatch.setPlaylist(list, i === -1 ? 0 : i)
       }
     })
 
     aidProp.observe((v) => {
-      dispatch.context.setAid(v)
+      dispatch.setAid(v)
     })
     vidProp.observe((v) => {
-      dispatch.context.setVid(v)
+      dispatch.setVid(v)
     })
     sidProp.observe((v) => {
-      dispatch.context.setSid(v)
+      dispatch.setSid(v)
     })
     speedProp.observe((v) => {
-      dispatch.context.setSpeed(v)
+      dispatch.setSpeed(v)
     })
     volumeProp.observe((v) => {
-      dispatch.context.setVolume(v)
+      dispatch.setVolume(v)
     })
     volumeMaxProp.observe((v) => {
-      dispatch.context.setVolumeMax(v)
+      dispatch.setVolumeMax(v)
     })
     videoParamsProp.observe((v) => {
-      dispatch.context.setVideoParams(v ?? {})
+      dispatch.setVideoParams(v ?? {})
     })
     windowMaximizedProp.observe((v) => {
-      dispatch.context.setWindowMaximized(v)
+      dispatch.setWindowMaximized(v)
     })
 
     fullscreenProp.observe((v) => {
-      dispatch.context.setFullscreen(v)
+      dispatch.setFullscreen(v)
     })
 
     const updateTimePos = throttle((v: number) => {
-      dispatch.context.setTimePos(v ?? 0)
+      dispatch.setTimePos(v ?? 0)
     }, frameTime)
 
     timePosProp.observe(throttle(updateTimePos, frameTime))
 
     durationProp.observe((v) => {
-      dispatch.context.setDuration(v || 0)
+      dispatch.setDuration(v || 0)
     })
 
     pathProp.observe((v) => {
       v = normalize(v ?? "")
       if (v?.length && v !== path) {
-        dispatch.context.addHistory(v)
+        dispatch.addHistory(v)
         loadRemoteSubtitle(v)
-        dispatch.context.setPath(v)
+        dispatch.setPath(v)
         const d = dirname(v)
         if (!d) {
           return
         }
         const list = getPlayableList(autoloadConfig, v, d, getExtName(v) || "")
         const playIndex = list.indexOf(v)
-        dispatch.context.setPlaylist(list, playIndex === -1 ? 0 : playIndex)
+        dispatch.setPlaylist(list, playIndex === -1 ? 0 : playIndex)
       }
     })
 
     const cb = throttle((v) => {
-      dispatch.context.setMousePos(v)
+      dispatch.setMousePos(v)
     }, frameTime)
 
     muteProp.observe((v) => {
-      dispatch.context.setMute(v)
+      dispatch.setMute(v)
     })
 
     pauseProp.observe((v) => {
-      dispatch.context.setPause(v)
+      dispatch.setPause(v)
     })
 
     mousePosProp.observe(cb, isEqual)
 
     osdDimensionsProp.observe(
       throttle((v) => {
-        dispatch.context.setOsdDimensions(v)
+        dispatch.setOsdDimensions(v)
       }, frameTime),
       isEqual,
     )
@@ -243,14 +241,14 @@ export const Easy = (props: Partial<EasyProps>) => {
     registerScriptMessage("open-dialog", () => {
       const v = openDialog()[0]
       if (v) {
-        dispatch.context.playVideo(v)
+        dispatch.playVideo(v)
       }
     })
 
     registerScriptMessage("volume-change", (e) => {
       const v = Number.parseFloat(`${e}`)
       const s = clamp(volumeRef.current + v, 0, volumeMax)
-      dispatch.context.setVolume(s)
+      dispatch.setVolume(s)
       setPropertyNumber("volume", s)
       printAndOsd(`volume: ${s}`, 2)
     })
@@ -258,23 +256,23 @@ export const Easy = (props: Partial<EasyProps>) => {
     registerScriptMessage("fontsize-change", (e) => {
       const v = Number.parseFloat(`${e}`)
       const s = clamp(fontSizeRef.current + v, minFontSize, maxFontSize)
-      dispatch.context.setFontSize(s)
+      dispatch.setFontSize(s)
       printAndOsd(`fontsize: ${s}`, 2)
     })
 
     registerScriptMessage("speed-change", (e) => {
       const v = Number.parseFloat(`${e}`)
       const s = clamp(speedRef.current + v, speedMin, speedMax)
-      dispatch.context.setSpeed(s)
+      dispatch.setSpeed(s)
       setPropertyNumber("speed", s)
       printAndOsd(`speed: ${s}`, 2)
     })
     registerScriptMessage("crop", () => {
-      dispatch.context.setShowCrop(true)
+      dispatch.setShowCrop(true)
     })
     registerScriptMessage("cancel", () => {
-      dispatch.context.setShowCrop(false)
-      dispatch.context.setCropPoints([])
+      dispatch.setShowCrop(false)
+      dispatch.setCropPoints([])
     })
   }, [])
 
@@ -388,10 +386,7 @@ export const Easy = (props: Partial<EasyProps>) => {
         onMouseDown={(e) => {
           if (showCrop) {
             if (cropPoints.length < 2) {
-              dispatch.context.setCropPoints([
-                ...cropPoints,
-                [mousePos.x, mousePos.y],
-              ])
+              dispatch.setCropPoints([...cropPoints, [mousePos.x, mousePos.y]])
             } else {
               printAndOsd("crop points must be 2")
             }
@@ -408,8 +403,8 @@ export const Easy = (props: Partial<EasyProps>) => {
 
           if (isEmptyClick) {
             // console.log("click empty")
-            dispatch.context.setPlaylistHide(true)
-            dispatch.context.setHistoryHide(true)
+            dispatch.setPlaylistHide(true)
+            dispatch.setHistoryHide(true)
           }
         }}
       >

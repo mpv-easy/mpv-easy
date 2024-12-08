@@ -1,6 +1,5 @@
 import { type MpDomProps, Box } from "@mpv-easy/react"
 import React from "react"
-import { useSelector } from "react-redux"
 import {
   buttonStyleSelector,
   controlSelector,
@@ -20,6 +19,7 @@ import { PlayMode } from "../components/play-mode"
 import { PreviousFrame } from "../components/previous-frame"
 import { NextFrame } from "../components/next-frame"
 import { History } from "../components/history"
+import { useSelector } from "../../models"
 
 export const UoscControl = (props: Partial<MpDomProps>) => {
   const { width, height } = props

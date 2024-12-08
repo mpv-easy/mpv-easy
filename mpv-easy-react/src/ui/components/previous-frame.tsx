@@ -1,6 +1,5 @@
 import { Button } from "@mpv-easy/react"
 import React from "react"
-import { useSelector } from "react-redux"
 import * as ICON from "../../icon"
 import {
   buttonStyleSelector,
@@ -8,6 +7,7 @@ import {
   mouseHoverStyleSelector,
 } from "../../store"
 import { command } from "@mpv-easy/tool"
+import { useSelector } from "../../models"
 
 export const PreviousFrame = () => {
   const button = useSelector(buttonStyleSelector)

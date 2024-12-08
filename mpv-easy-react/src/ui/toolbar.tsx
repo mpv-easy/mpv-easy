@@ -5,7 +5,6 @@ import React, {
   type RefAttributes,
   forwardRef,
 } from "react"
-import { useSelector } from "react-redux"
 import {
   buttonStyleSelector,
   toolbarStyleSelector,
@@ -19,6 +18,7 @@ import { Restore } from "./components/restore"
 import { Close } from "./components/close"
 import { Minimize } from "./components/minimize"
 import { Filename } from "./components/filename"
+import { useSelector } from "../models"
 
 export const Toolbar: ForwardRefExoticComponent<
   PropsWithoutRef<Partial<MpDomProps>> & RefAttributes<MpDom>

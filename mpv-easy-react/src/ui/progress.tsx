@@ -20,9 +20,7 @@ import {
 import { Box, type MpDom } from "@mpv-easy/react"
 import React, { useRef, useState, useEffect } from "react"
 import type { MouseEvent, MpDomProps } from "@mpv-easy/react"
-import { useSelector, useDispatch } from "react-redux"
 import {
-  type Dispatch,
   progressStyleSelector,
   durationSelector,
   timePosSelector,
@@ -37,6 +35,7 @@ import {
 import { ThumbFast } from "@mpv-easy/thumbfast"
 import { getArea, getCutVideoPath } from "@mpv-easy/cut"
 import { getCropImagePath, getCropRect } from "@mpv-easy/crop"
+import { dispatch, useSelector } from "../models"
 
 export const Progress = ({ width, height, ...props }: MpDomProps) => {
   const [leftPreview, setLeftPreview] = useState(0)
@@ -45,7 +44,6 @@ export const Progress = ({ width, height, ...props }: MpDomProps) => {
   const button = useSelector(buttonStyleSelector)
   const timePos = useSelector(timePosSelector)
   const duration = useSelector(durationSelector)
-  const dispatch = useDispatch<Dispatch>()
   const format = getTimeFormat(duration)
   const thumbRef = useRef<ThumbFast | null>(null)
   const cursorTextStartRef = useRef<MpDom>(null)
@@ -75,12 +73,12 @@ export const Progress = ({ width, height, ...props }: MpDomProps) => {
     while (newPoints.length > 2) {
       newPoints.shift()
     }
-    dispatch.context.setCutPoints(newPoints)
+    dispatch.setCutPoints(newPoints)
   }
 
   const cutCancelRef = useRef<(() => void) | null>(null)
   cutCancelRef.current = () => {
-    dispatch.context.setCutPoints([])
+    dispatch.setCutPoints([])
   }
 
   const hasArea = cutPoints.length === 2
@@ -133,8 +131,8 @@ export const Progress = ({ width, height, ...props }: MpDomProps) => {
           printAndOsd("crop image finish")
         }
       }
-      dispatch.context.setShowCrop(false)
-      dispatch.context.setCropPoints([])
+      dispatch.setShowCrop(false)
+      dispatch.setCropPoints([])
       return
     }
 
@@ -155,7 +153,7 @@ export const Progress = ({ width, height, ...props }: MpDomProps) => {
       getCutVideoPath(path, area, cutConfig.outputDirectory),
       ffmpeg,
     )
-    dispatch.context.setCutPoints([])
+    dispatch.setCutPoints([])
 
     if (!ok) {
       printAndOsd("failed to cut")
@@ -236,7 +234,7 @@ export const Progress = ({ width, height, ...props }: MpDomProps) => {
         const w = e.target?.layoutNode.width || 0
         const per = e.offsetX / w
         const timePos = per * duration
-        dispatch.context.setTimePos(timePos)
+        dispatch.setTimePos(timePos)
         updatePreviewCursor(e)
 
         // TODO: same seek function as thumbfast

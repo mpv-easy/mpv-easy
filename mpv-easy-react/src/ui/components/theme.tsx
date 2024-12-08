@@ -1,21 +1,19 @@
 import { Dropdown, DropdownItem } from "@mpv-easy/react"
 import React from "react"
-import { useDispatch, useSelector } from "react-redux"
 import * as ICON from "../../icon"
 import {
   buttonStyleSelector,
-  type Dispatch,
   i18nSelector,
   mouseHoverStyleSelector,
   dropdownStyleSelector,
   modeSelector,
 } from "../../store"
 import { ThemeModeList } from "../../mpv-easy-theme"
+import { dispatch, useSelector } from "../../models"
 
 export const Theme = () => {
   const button = useSelector(buttonStyleSelector)
   const i18n = useSelector(i18nSelector)
-  const dispatch = useDispatch<Dispatch>()
   const mouseHoverStyle = useSelector(mouseHoverStyleSelector)
   const dropdown = useSelector(dropdownStyleSelector)
   const mode = useSelector(modeSelector)
@@ -30,7 +28,7 @@ export const Theme = () => {
       key: i,
       label: text,
       onSelect: () => {
-        dispatch.context.setMode(i)
+        dispatch.setMode(i)
       },
       style: {
         ...dropdown.item,

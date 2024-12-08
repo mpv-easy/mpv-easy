@@ -1,9 +1,3 @@
-import {
-  type RematchDispatch,
-  type RematchRootState,
-  init,
-} from "@rematch/core"
-import { type RootModel, models } from "./models"
 import { pluginName } from "./main"
 import { pluginName as i18nName } from "@mpv-easy/i18n"
 import { pluginName as anime4kName } from "@mpv-easy/anime4k"
@@ -14,167 +8,157 @@ import { pluginName as cutName } from "@mpv-easy/cut"
 import { pluginName as cropName } from "@mpv-easy/crop"
 
 import { normalize } from "@mpv-easy/tool"
+import { dispatch, store } from "./models"
+import { PluginContext } from "@mpv-easy/plugin"
+export { dispatch, store }
 
-export function createStore() {
-  return init<RootModel>({
-    models,
-  })
-}
+export type Dispatch = typeof dispatch
 
-export type Store = ReturnType<typeof createStore>
-export type Dispatch = RematchDispatch<RootModel>
-export type RootState = RematchRootState<RootModel>
+export const modeSelector = (state: PluginContext) => state[pluginName].mode
+export const styleSelector = (state: PluginContext) => state[pluginName].style
 
-export const modeSelector = (state: RootState) => state.context[pluginName].mode
-export const styleSelector = (state: RootState) =>
-  state.context[pluginName].style
+export const uiNameSelector = (state: PluginContext) => state[pluginName].uiName
 
-export const uiNameSelector = (state: RootState) =>
-  state.context[pluginName].uiName
+export const audoloadConfigSelector = (state: PluginContext) =>
+  state[autoloadName]
 
-export const audoloadConfigSelector = (state: RootState) =>
-  state.context[autoloadName]
+export const languageSelector = (state: PluginContext) =>
+  state[i18nName].default
+export const i18nSelector = (state: PluginContext) =>
+  state[i18nName].lang[languageSelector(state)]
 
-export const languageSelector = (state: RootState) =>
-  state.context[i18nName].default
-export const i18nSelector = (state: RootState) =>
-  state.context[i18nName].lang[languageSelector(state)]
+export const anime4kSelector = (state: PluginContext) => state[anime4kName]
 
-export const anime4kSelector = (state: RootState) => state.context[anime4kName]
+export const playerSelector = (state: PluginContext) => state[pluginName].player
 
-export const playerSelector = (state: RootState) =>
-  state.context[pluginName].player
+export const playerStateSelector = (state: PluginContext) =>
+  state[pluginName].state
 
-export const playerStateSelector = (state: RootState) =>
-  state.context[pluginName].state
+export const pauseSelector = (state: PluginContext) =>
+  state[pluginName].player.pause
+export const fullscreenSelector = (state: PluginContext) =>
+  state[pluginName].player.fullscreen
+export const muteSelector = (state: PluginContext) =>
+  state[pluginName].player.mute
+export const mousePosSelector = (state: PluginContext) =>
+  state[pluginName].player.mousePos
+export const pathSelector = (state: PluginContext) =>
+  normalize(state[pluginName].player.path ?? "")
 
-export const pauseSelector = (state: RootState) =>
-  state.context[pluginName].player.pause
-export const fullscreenSelector = (state: RootState) =>
-  state.context[pluginName].player.fullscreen
-export const muteSelector = (state: RootState) =>
-  state.context[pluginName].player.mute
-export const mousePosSelector = (state: RootState) =>
-  state.context[pluginName].player.mousePos
-export const pathSelector = (state: RootState) =>
-  normalize(state.context[pluginName].player.path ?? "")
+export const playlistPosSelector = (state: PluginContext) =>
+  state[pluginName].player.playlistPos
 
-export const playlistPosSelector = (state: RootState) =>
-  state.context[pluginName].player.playlistPos
+export const durationSelector = (state: PluginContext) =>
+  state[pluginName].player.duration
+export const timePosSelector = (state: PluginContext) =>
+  state[pluginName].player.timePos
 
-export const durationSelector = (state: RootState) =>
-  state.context[pluginName].player.duration
-export const timePosSelector = (state: RootState) =>
-  state.context[pluginName].player.timePos
+export const aidSelector = (state: PluginContext) =>
+  state[pluginName].player.aid
 
-export const aidSelector = (state: RootState) =>
-  state.context[pluginName].player.aid
+export const vidSelector = (state: PluginContext) =>
+  state[pluginName].player.vid
 
-export const vidSelector = (state: RootState) =>
-  state.context[pluginName].player.vid
+export const sidSelector = (state: PluginContext) =>
+  state[pluginName].player.sid
 
-export const sidSelector = (state: RootState) =>
-  state.context[pluginName].player.sid
+export const volumeSelector = (state: PluginContext) =>
+  state[pluginName].player.volume
 
-export const volumeSelector = (state: RootState) =>
-  state.context[pluginName].player.volume
+export const volumeMaxSelector = (state: PluginContext) =>
+  state[pluginName].player.volumeMax
 
-export const volumeMaxSelector = (state: RootState) =>
-  state.context[pluginName].player.volumeMax
+export const videoParamsSelector = (state: PluginContext) =>
+  state[pluginName].player.videoParams
 
-export const videoParamsSelector = (state: RootState) =>
-  state.context[pluginName].player.videoParams
+export const fpsSelector = (state: PluginContext) =>
+  state[pluginName].config.fps
 
-export const fpsSelector = (state: RootState) =>
-  state.context[pluginName].config.fps
+export const frameTimeSelector = (state: PluginContext) =>
+  1000 / state[pluginName].config.fps
 
-export const frameTimeSelector = (state: RootState) =>
-  1000 / state.context[pluginName].config.fps
-
-export const buttonStyleSelector = (state: RootState) =>
+export const buttonStyleSelector = (state: PluginContext) =>
   styleSelector(state)[modeSelector(state)].button.default
 
-export const controlSelector = (state: RootState) =>
+export const controlSelector = (state: PluginContext) =>
   styleSelector(state)[modeSelector(state)].control
 
-export const fontSelector = (state: RootState) =>
+export const fontSelector = (state: PluginContext) =>
   styleSelector(state)[modeSelector(state)].font
-export const IconButtonSizeSelector = (state: RootState) => {
+export const IconButtonSizeSelector = (state: PluginContext) => {
   const button = styleSelector(state)[modeSelector(state)].button.default
   return button.width + button.padding * 2
 }
 
-export const fontSizeSelector = (state: RootState) =>
+export const fontSizeSelector = (state: PluginContext) =>
   styleSelector(state)[modeSelector(state)].button.default.fontSize
 
-export const smallFontSizeSelector = (state: RootState) =>
+export const smallFontSizeSelector = (state: PluginContext) =>
   styleSelector(state)[modeSelector(state)].button.default.fontSize * 0.75
 
-export const largeFontSizeSelector = (state: RootState) =>
+export const largeFontSizeSelector = (state: PluginContext) =>
   styleSelector(state)[modeSelector(state)].button.default.fontSize * 1.25
 
-export const scrollListStyleSelector = (state: RootState) =>
+export const scrollListStyleSelector = (state: PluginContext) =>
   styleSelector(state)[modeSelector(state)].scrollList
 
-export const volumeStyleSelector = (state: RootState) =>
+export const volumeStyleSelector = (state: PluginContext) =>
   styleSelector(state)[modeSelector(state)].volume
 
-export const dropdownStyleSelector = (state: RootState) =>
+export const dropdownStyleSelector = (state: PluginContext) =>
   styleSelector(state)[modeSelector(state)].dropdown
 
-export const clickMenuStyleSelector = (state: RootState) =>
+export const clickMenuStyleSelector = (state: PluginContext) =>
   styleSelector(state)[modeSelector(state)].clickMenu
 
-export const controlStyleSelector = (state: RootState) =>
+export const controlStyleSelector = (state: PluginContext) =>
   styleSelector(state)[modeSelector(state)].control
-export const progressStyleSelector = (state: RootState) =>
+export const progressStyleSelector = (state: PluginContext) =>
   styleSelector(state)[modeSelector(state)].progress
-export const toolbarStyleSelector = (state: RootState) =>
+export const toolbarStyleSelector = (state: PluginContext) =>
   styleSelector(state)[modeSelector(state)].toolbar
-export const tooltipStyleSelector = (state: RootState) =>
+export const tooltipStyleSelector = (state: PluginContext) =>
   styleSelector(state)[modeSelector(state)].tooltip
 
-export const playlistStyleSelector = (state: RootState) =>
+export const playlistStyleSelector = (state: PluginContext) =>
   styleSelector(state)[modeSelector(state)].playlist
-export const historyStyleSelector = (state: RootState) =>
+export const historyStyleSelector = (state: PluginContext) =>
   styleSelector(state)[modeSelector(state)].history
-export const speedStyleSelector = (state: RootState) =>
+export const speedStyleSelector = (state: PluginContext) =>
   styleSelector(state)[modeSelector(state)].speed
 
-export const playlistSelector = (state: RootState) =>
-  state.context[pluginName].player.playlist
-export const osdDimensionsSelector = (state: RootState) =>
-  state.context[pluginName].player.osdDimensions
-export const speedSelector = (state: RootState) =>
-  state.context[pluginName].player.speed
-export const speedListSelector = (state: RootState) =>
-  state.context[pluginName].player.speedList
-export const historySelector = (state: RootState) =>
-  state.context[pluginName].history
-export const playModeSelector = (state: RootState) =>
-  state.context[pluginName].player.playMode
+export const playlistSelector = (state: PluginContext) =>
+  state[pluginName].player.playlist
+export const osdDimensionsSelector = (state: PluginContext) =>
+  state[pluginName].player.osdDimensions
+export const speedSelector = (state: PluginContext) =>
+  state[pluginName].player.speed
+export const speedListSelector = (state: PluginContext) =>
+  state[pluginName].player.speedList
+export const historySelector = (state: PluginContext) =>
+  state[pluginName].history
+export const playModeSelector = (state: PluginContext) =>
+  state[pluginName].player.playMode
 
-export const playlistHideSelector = (state: RootState) =>
-  state.context[pluginName].state.playlistHide
+export const playlistHideSelector = (state: PluginContext) =>
+  state[pluginName].state.playlistHide
 
-export const historyHideSelector = (state: RootState) =>
-  state.context[pluginName].state.historyHide
+export const historyHideSelector = (state: PluginContext) =>
+  state[pluginName].state.historyHide
 
-export const mouseHoverStyleSelector = (state: RootState) =>
-  state.context.experimental.mouseHoverStyle
+export const mouseHoverStyleSelector = (state: PluginContext) =>
+  state.experimental.mouseHoverStyle
 
-export const enablePluginsStyleSelector = (state: RootState) =>
-  state.context.enablePlugins
+export const enablePluginsStyleSelector = (state: PluginContext) =>
+  state.enablePlugins
 
-export const protocolHookSelector = (state: RootState) =>
-  state.context[pluginName].config.protocolHook
+export const protocolHookSelector = (state: PluginContext) =>
+  state[pluginName].config.protocolHook
 
-export const thumbfastSelector = (state: RootState) =>
-  state.context[thumbfastName]
+export const thumbfastSelector = (state: PluginContext) => state[thumbfastName]
 
-export const translateSelector = (state: RootState) =>
-  state.context[translateName]
+export const translateSelector = (state: PluginContext) => state[translateName]
 
-export const cutSelector = (state: RootState) => state.context[cutName]
+export const cutSelector = (state: PluginContext) => state[cutName]
 
-export const cropSelector = (state: RootState) => state.context[cropName]
+export const cropSelector = (state: PluginContext) => state[cropName]

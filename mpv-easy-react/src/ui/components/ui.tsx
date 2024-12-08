@@ -1,10 +1,8 @@
 import { Dropdown, DropdownItem } from "@mpv-easy/react"
 import React from "react"
-import { useDispatch, useSelector } from "react-redux"
 import * as ICON from "../../icon"
 import {
   buttonStyleSelector,
-  type Dispatch,
   i18nSelector,
   mouseHoverStyleSelector,
   dropdownStyleSelector,
@@ -12,10 +10,10 @@ import {
 } from "../../store"
 import { UINameList } from "../../mpv-easy-theme"
 import { getMaxStringLength } from "../../common"
+import { dispatch, useSelector } from "../../models"
 export const UI = () => {
   const button = useSelector(buttonStyleSelector)
   const i18n = useSelector(i18nSelector)
-  const dispatch = useDispatch<Dispatch>()
   const mouseHoverStyle = useSelector(mouseHoverStyleSelector)
   const dropdown = useSelector(dropdownStyleSelector)
   const uiName = useSelector(uiNameSelector)
@@ -27,7 +25,7 @@ export const UI = () => {
       key: i,
       label: `${prefix} ${i18n[i].padEnd(maxLen, " ")}`,
       onSelect: () => {
-        dispatch.context.setUI(i)
+        dispatch.setUI(i)
       },
       style: {
         ...dropdown.item,
