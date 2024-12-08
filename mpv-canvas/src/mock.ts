@@ -17,11 +17,10 @@ const { Canvas, Rect, FabricText } = fabric
 
 function getColor(s: string) {
   const regex = /\\c&(.*?)&/
-  const match = s.match(regex)
-  if (match) {
-    const bgr = match[1]
-    const rgb = new Bgr(Number.parseInt(bgr, 16)).toRgb().toHex()
-    return rgb
+  const color = s.match(regex)?.[1]
+  if (color) {
+    const hex = new Bgr(Number.parseInt(color, 16)).toHex()
+    return hex
   }
   return undefined
 }
