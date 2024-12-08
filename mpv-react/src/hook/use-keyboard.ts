@@ -4,10 +4,7 @@ import {
   type InputKey,
   NumberKeys,
   PunctuationKeys,
-  addForcedKeyBinding,
   addKeyBinding,
-  osdMessage,
-  print,
 } from "@mpv-easy/tool"
 import { useState } from "react"
 const keys = ([] as string[]).concat(

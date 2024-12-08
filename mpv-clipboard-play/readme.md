@@ -12,11 +12,12 @@ Folders do not support recursive scanning
 - youtube: https://www.youtube.com/watch?v=<id>
 
 
-## config
+## usage
+
+Add config to `input.conf`
 
 ```
-key: "ctrl+v",
-osdDuration: 2000
+CTRL+v clipboard-play
 ```
 
 ## todo

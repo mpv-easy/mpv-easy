@@ -29,13 +29,14 @@ set -x MPV_SCRIPT_DIR /your_mpv_dir/portable_config/scripts ; pnpm run dev
 
 - [mpv-anime4k](./mpv-anime4k/readme.md)
 - [mpv-autoload](./mpv-autoload/readme.md)
-- [mpv-clip-play](./mpv-clip-play/readme.md)
+- [mpv-clipboard-play](./mpv-clipboard-play/readme.md)
 - [mpv-copy-screen](./mpv-copy-screen/readme.md)
 - [mpv-copy-time](./mpv-copy-time/readme.md)
 - [mpv-thumbfast](./mpv-thumbfast/readme.md)
 - [mpv-play-with](./mpv-play-with/readme.md)
 - [mpv-translate](./mpv-translate/readme.md)
 - [mpv-cut](./mpv-cut/readme.md)
+- [mpv-crop](./mpv-crop/readme.md)
 
 ## short key
 
@@ -54,8 +55,18 @@ set -x MPV_SCRIPT_DIR /your_mpv_dir/portable_config/scripts ; pnpm run dev
 | ctrl+DOWN | script-message fontsize-change -12   |
 | ctrl+o    | script-message open-dialog           |
 | ctrl+t    | script-message translate             |
-| ctrl+T    | script-message mix-translate         |
 | ctrl+i    | script-message interactive-translate |
+| ctrl+T    | script-message mix-translate         |
+| CTRL+0    | script-message Anime4K-Clear         |
+| CTRL+1    | script-message Anime4K-AA-HQ         |
+| CTRL+2    | script-message Anime4K-B-HQ          |
+| CTRL+3    | script-message Anime4K-C-HQ          |
+| CTRL+4    | script-message Anime4K-A-HQ          |
+| CTRL+5    | script-message Anime4K-BB-HQ         |
+| CTRL+6    | script-message Anime4K-CA-HQ         |
+| CTRL+v    | script-message clipboard-play        |
+| CTRL+c    | script-message copy-screen           |
+| CTRL+C    | script-message copy-time             |
 
 ## UI
 

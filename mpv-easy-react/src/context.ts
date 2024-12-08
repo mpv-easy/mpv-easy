@@ -5,10 +5,10 @@ declare namespace globalThis {
 
 const version = globalThis.version ?? (+Date.now()).toString()
 
-import clipPlayPlugin, {
-  defaultConfig as clipPlayConfig,
-  pluginName as clipPlayName,
-} from "@mpv-easy/clip-play"
+import clipboardPlayPlugin, {
+  defaultConfig as clipboardPlayConfig,
+  pluginName as clipboardPlayName,
+} from "@mpv-easy/clipboard-play"
 
 import easyPlugin, {
   defaultConfig as easyConfig,
@@ -82,7 +82,7 @@ export type Experimental = {
 }
 
 export const plugins = [
-  clipPlayPlugin,
+  clipboardPlayPlugin,
   anime4kPlugin,
   copyTimePlugin,
   i18nPlugin,
@@ -97,7 +97,7 @@ export const plugins = [
 ]
 
 export interface EnablePlugin {
-  [clipPlayName]: boolean
+  [clipboardPlayName]: boolean
   [anime4kName]: boolean
   [copyTimeName]: boolean
   [i18nName]: boolean
@@ -134,7 +134,7 @@ const experimental: Experimental = {
 export function createDefaultContext() {
   const isWin = getOs() === "windows"
   return structuredClone({
-    [clipPlayName]: clipPlayConfig,
+    [clipboardPlayName]: clipboardPlayConfig,
     [anime4kName]: anime4kConfig,
     [copyTimeName]: copyTimeConfig,
     [i18nName]: i18nConfig,
@@ -149,9 +149,9 @@ export function createDefaultContext() {
     enablePlugins: {
       [i18nName]: true,
       [easyName]: true,
-      [clipPlayName]: isWin,
+      [clipboardPlayName]: isWin,
       [anime4kName]: true,
-      [copyTimeName]: false,
+      [copyTimeName]: true,
       [autoloadName]: true,
       [thumbfastName]: true,
       [copyScreenName]: isWin,

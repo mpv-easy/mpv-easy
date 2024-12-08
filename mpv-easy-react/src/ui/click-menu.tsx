@@ -120,7 +120,7 @@ export const ClickMenu: ForwardRefExoticComponent<
           const prefix =
             k === anime4k.current ? ICON.Ok : ICON.CheckboxBlankCircleOutline
           return {
-            key: i.key,
+            key: i.eventName,
             label: `${prefix} ${i.title}`,
             onSelect: () => {
               const { value, title } = i
