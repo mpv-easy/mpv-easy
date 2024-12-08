@@ -7,7 +7,6 @@ import {
   type MpDomProps,
 } from "@mpv-easy/react"
 import React, { useRef, useState } from "react"
-import { useSelector } from "react-redux"
 import {
   buttonStyleSelector,
   fontSizeSelector,
@@ -16,6 +15,7 @@ import {
 } from "../../store"
 import { measureText, type MouseEvent } from "@mpv-easy/react"
 import { getOsdSize } from "@mpv-easy/tool"
+import { useSelector } from "../../models"
 
 export type ScrollListProps = {
   items: {

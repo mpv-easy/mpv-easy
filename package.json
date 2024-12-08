@@ -23,6 +23,8 @@
   "author": "ahaoboy <504595380@qq.com> (https://github.com/ahaoboy)",
   "license": "MIT",
   "devDependencies": {
+    "use-sync-external-store": "1.4.0",
+    "@types/use-sync-external-store": "0.0.6",
     "@babel/cli": "7.25.9",
     "@babel/core": "7.26.0",
     "@babel/preset-env": "7.26.0",

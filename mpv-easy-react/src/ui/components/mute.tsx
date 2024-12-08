@@ -1,19 +1,17 @@
 import { Button, type ButtonProps } from "@mpv-easy/react"
 import React from "react"
-import { useDispatch, useSelector } from "react-redux"
 import * as ICON from "../../icon"
 import {
   buttonStyleSelector,
-  type Dispatch,
   i18nSelector,
   mouseHoverStyleSelector,
   muteSelector,
 } from "../../store"
+import { dispatch, useSelector } from "../../models"
 
 export const Mute = (props: Partial<ButtonProps> = {}) => {
   const button = useSelector(buttonStyleSelector)
   const mute = useSelector(muteSelector)
-  const dispatch = useDispatch<Dispatch>()
   const mouseHoverStyle = useSelector(mouseHoverStyleSelector)
   const i18n = useSelector(i18nSelector)
   return (
@@ -35,7 +33,7 @@ export const Mute = (props: Partial<ButtonProps> = {}) => {
       fontSize={button.fontSize}
       color={button.color}
       onMouseDown={(e) => {
-        dispatch.context.setMute(!mute)
+        dispatch.setMute(!mute)
       }}
       {...props}
     />

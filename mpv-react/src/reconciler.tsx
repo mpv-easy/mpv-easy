@@ -86,6 +86,13 @@ export function createCustomReconciler(customRender: () => void) {
       removeChildNode(root, node)
       customRender()
     },
+    // export function createInstance(
+    //   type: string,
+    //   props: Props,
+    //   rootContainerInstance: Container,
+    //   hostContext: Object,
+    //   internalInstanceHandle: Object,
+    // ): Instance {
     createInstance: (
       originalType: unknown,
       props: any,

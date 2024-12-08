@@ -23,6 +23,8 @@
   "author": "ahaoboy <504595380@qq.com> (https://github.com/ahaoboy)",
   "license": "MIT",
   "dependencies": {
+    "use-sync-external-store": "1.4.0",
+    "@types/use-sync-external-store": "0.0.6",
     "@mpv-easy/anime": "workspace:*",
     "@mpv-easy/anime4k": "workspace:*",
     "@mpv-easy/assdraw": "workspace:*",

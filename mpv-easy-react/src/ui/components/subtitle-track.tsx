@@ -1,21 +1,19 @@
 import { Dropdown, type DropdownItem } from "@mpv-easy/react"
 import React from "react"
-import { useDispatch, useSelector } from "react-redux"
 import * as ICON from "../../icon"
 import { setPropertyNative, getSubtitleTracks } from "@mpv-easy/tool"
 import {
   buttonStyleSelector,
-  type Dispatch,
   i18nSelector,
   mouseHoverStyleSelector,
   dropdownStyleSelector,
   sidSelector,
 } from "../../store"
+import { dispatch, useSelector } from "../../models"
 
 export const SubtitleTrack = () => {
   const button = useSelector(buttonStyleSelector)
   const i18n = useSelector(i18nSelector)
-  const dispatch = useDispatch<Dispatch>()
   const mouseHoverStyle = useSelector(mouseHoverStyleSelector)
   const dropdown = useSelector(dropdownStyleSelector)
   const sid = useSelector(sidSelector)
@@ -29,10 +27,10 @@ export const SubtitleTrack = () => {
       key: key,
       onSelect: (_, e) => {
         if (sid === id) {
-          dispatch.context.setSid(-1)
+          dispatch.setSid(-1)
           setPropertyNative("sid", "no")
         } else {
-          dispatch.context.setSid(id)
+          dispatch.setSid(id)
           setPropertyNative("sid", "yes")
           setPropertyNative("sid", id)
         }

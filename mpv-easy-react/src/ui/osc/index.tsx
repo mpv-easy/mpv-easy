@@ -7,8 +7,8 @@ import React, {
 import { Box, type MpDomProps, type MpDom } from "@mpv-easy/react"
 import { OscControl } from "./control"
 import { OscInfo } from "./info"
-import { useSelector } from "react-redux"
 import { IconButtonSizeSelector } from "../../store"
+import { useSelector } from "../../models"
 export * from "./control"
 export * from "./info"
 

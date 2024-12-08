@@ -29,12 +29,10 @@ import React, {
   useRef,
   useState,
 } from "react"
-import { useDispatch, useSelector } from "react-redux"
 import {
   buttonStyleSelector,
   clickMenuStyleSelector,
   mouseHoverStyleSelector,
-  type Dispatch,
   i18nSelector,
   pauseSelector,
   anime4kSelector,
@@ -51,6 +49,7 @@ import { pluginName as anime4kName } from "@mpv-easy/anime4k"
 import { ThemeModeList, UINameList } from "../mpv-easy-theme"
 import { getMaxStringLength } from "../common"
 import { LanguageList } from "@mpv-easy/i18n"
+import { dispatch, useSelector } from "../models"
 export interface MenuItem {
   key: string
   label: string
@@ -75,7 +74,6 @@ export const ClickMenu: ForwardRefExoticComponent<
   const [menuPos, setMenuPos] = useState({ x: 0, y: 0 })
   const [childMenuPos, setChildMenuPos] = useState({ x: 0, y: 0 })
   const [hide, setHide] = useState(true)
-  const dispatch = useDispatch<Dispatch>()
   const pause = useSelector(pauseSelector)
   const i18n = useSelector(i18nSelector)
   const anime4k = useSelector(anime4kSelector)
@@ -106,7 +104,7 @@ export const ClickMenu: ForwardRefExoticComponent<
         onSelect: () => {
           const v = openDialog()[0]
           if (v) {
-            dispatch.context.playVideo(v)
+            dispatch.playVideo(v)
           }
         },
       })
@@ -138,7 +136,7 @@ export const ClickMenu: ForwardRefExoticComponent<
                 }
               }
               anime4k.current = k
-              dispatch.context.setAnime4k(anime4k)
+              dispatch.setAnime4k(anime4k)
             },
           }
         }),
@@ -155,7 +153,7 @@ export const ClickMenu: ForwardRefExoticComponent<
             label: i18n.enlargeFontSize,
             onSelect() {
               const s = clamp(fontSize + fontStep, minFontSize, maxFontSize)
-              dispatch.context.setFontSize(s)
+              dispatch.setFontSize(s)
             },
           },
           {
@@ -163,7 +161,7 @@ export const ClickMenu: ForwardRefExoticComponent<
             label: i18n.reduceFontSize,
             onSelect() {
               const s = clamp(fontSize - fontStep, minFontSize, maxFontSize)
-              dispatch.context.setFontSize(s)
+              dispatch.setFontSize(s)
             },
           },
         ],
@@ -179,7 +177,7 @@ export const ClickMenu: ForwardRefExoticComponent<
             key: i18n.languageChinese,
             label: `${prefix} ${i18n[i].padEnd(maxLen)}`,
             onSelect: () => {
-              dispatch.context.setLanguage(i)
+              dispatch.setLanguage(i)
             },
           }
         }),
@@ -209,7 +207,7 @@ export const ClickMenu: ForwardRefExoticComponent<
             key: i18n.resetConfig,
             label: i18n.resetConfig,
             onSelect() {
-              dispatch.context.resetConfig()
+              dispatch.resetConfig()
             },
           },
         ],
@@ -218,7 +216,7 @@ export const ClickMenu: ForwardRefExoticComponent<
         key: i18n.exit,
         label: i18n.exit,
         onSelect: () => {
-          dispatch.context.exit()
+          dispatch.exit()
         },
       },
     ]
@@ -227,14 +225,14 @@ export const ClickMenu: ForwardRefExoticComponent<
         key: pause ? i18n.play : i18n.pause,
         label: pause ? i18n.play : i18n.pause,
         onSelect: () => {
-          dispatch.context.setPause(!pause)
+          dispatch.setPause(!pause)
         },
       },
       {
         key: i18n.playlist,
         label: i18n.playlist,
         onSelect: () => {
-          dispatch.context.setPlaylistHide(false)
+          dispatch.setPlaylistHide(false)
         },
       },
       {
@@ -249,7 +247,7 @@ export const ClickMenu: ForwardRefExoticComponent<
             key: i,
             label: label,
             onSelect: () => {
-              dispatch.context.setMode(i)
+              dispatch.setMode(i)
             },
             style: {
               display: "flex",
@@ -271,7 +269,7 @@ export const ClickMenu: ForwardRefExoticComponent<
             key: i,
             label,
             onSelect: () => {
-              dispatch.context.setUI(i)
+              dispatch.setUI(i)
             },
             style: {
               justifyContent: "space-between",
@@ -290,7 +288,7 @@ export const ClickMenu: ForwardRefExoticComponent<
             label: `${prefix} ${i.toString()}`,
             onSelect: () => {
               if (speed !== i) {
-                dispatch.context.setSpeed(i)
+                dispatch.setSpeed(i)
                 setPropertyNumber("speed", i)
               }
             },

@@ -5,10 +5,10 @@ import React, {
   forwardRef,
 } from "react"
 import { Box, type MpDomProps, type MpDom } from "@mpv-easy/react"
-import { useSelector } from "react-redux"
 import { IconButtonSizeSelector } from "../../store"
 import { Progress } from "../progress"
 import { OscInfo } from "./info"
+import { useSelector } from "../../models"
 export * from "./info"
 
 export const Oscx: ForwardRefExoticComponent<

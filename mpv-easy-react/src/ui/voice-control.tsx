@@ -5,11 +5,9 @@ import React, {
   type RefAttributes,
   useState,
 } from "react"
-import { useDispatch, useSelector } from "react-redux"
 import {
   volumeMaxSelector,
   volumeSelector,
-  type Dispatch,
   buttonStyleSelector,
   volumeStyleSelector,
   osdDimensionsSelector,
@@ -18,13 +16,13 @@ import {
 } from "../store"
 import { clamp, setPropertyNumber } from "@mpv-easy/tool"
 import { Mute } from "./components/mute"
+import { dispatch, useSelector } from "../models"
 
 export const VoiceControl: ForwardRefExoticComponent<
   PropsWithoutRef<Partial<MpDomProps>> & RefAttributes<MpDom>
 > = React.forwardRef<MpDom, Partial<MpDomProps>>((props, ref) => {
   const volume = useSelector(volumeSelector)
   const volumeMax = useSelector(volumeMaxSelector)
-  const dispatch = useDispatch<Dispatch>()
   const button = useSelector(buttonStyleSelector)
   const volumeStyle = useSelector(volumeStyleSelector)
   const volumeHeight = volume / volumeMax
@@ -55,12 +53,12 @@ export const VoiceControl: ForwardRefExoticComponent<
         height={wrapHeight}
         onWheelDown={() => {
           const v = clamp(volume - volumeStyle.step, 0, volumeMax)
-          dispatch.context.setVolume(v)
+          dispatch.setVolume(v)
           setPropertyNumber("volume", v)
         }}
         onWheelUp={() => {
           const v = clamp(volume + volumeStyle.step, 0, volumeMax)
-          dispatch.context.setVolume(v)
+          dispatch.setVolume(v)
           setPropertyNumber("volume", v)
         }}
         position="relative"
@@ -106,7 +104,7 @@ export const VoiceControl: ForwardRefExoticComponent<
                 volumeMax) |
               0
             const newVolume = clamp(v, 0, volumeMax)
-            dispatch.context.setVolume(newVolume)
+            dispatch.setVolume(newVolume)
             setPropertyNumber("volume", newVolume)
           }}
           onMouseEnter={() => {

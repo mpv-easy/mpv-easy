@@ -1,6 +1,5 @@
 import { Button } from "@mpv-easy/react"
 import React from "react"
-import { useSelector } from "react-redux"
 import {
   buttonStyleSelector,
   pathSelector,
@@ -14,6 +13,7 @@ import {
   openBrowser,
   openExplorer,
 } from "@mpv-easy/tool"
+import { useSelector } from "../../models"
 
 export const Filename = () => {
   const button = useSelector(buttonStyleSelector)

@@ -1,11 +1,11 @@
 import { type MpDomProps, Box } from "@mpv-easy/react"
 import React from "react"
-import { useSelector } from "react-redux"
 import { buttonStyleSelector, controlStyleSelector } from "../../store"
 import { Previous } from "../components/previous"
 import { Next } from "../components/next"
 import { NextFrame } from "../components/next-frame"
 import { PreviousFrame } from "../components/previous-frame"
+import { useSelector } from "../../models"
 
 export const OscInfo = ({ height }: Partial<MpDomProps>) => {
   const button = useSelector(buttonStyleSelector)

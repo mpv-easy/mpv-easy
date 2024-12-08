@@ -1,7 +1,6 @@
 import { type MpDomProps, Box } from "@mpv-easy/react"
 import React from "react"
 import { Progress } from "../progress"
-import { useSelector } from "react-redux"
 import {
   buttonStyleSelector,
   controlStyleSelector,
@@ -17,6 +16,7 @@ import { AudioTrack } from "../components/audio-track"
 import { SubtitleTrack } from "../components/subtitle-track"
 import { PlayMode } from "../components/play-mode"
 import { History } from "../components/history"
+import { useSelector } from "../../models"
 export const OscControl = ({ height, width }: Partial<MpDomProps>) => {
   const button = useSelector(buttonStyleSelector)
   const control = useSelector(controlStyleSelector)

@@ -1,10 +1,8 @@
 import { command } from "@mpv-easy/tool"
 import { Box, type MpDom } from "@mpv-easy/react"
 import React, { useRef } from "react"
-import { useSelector, useDispatch } from "react-redux"
 import * as ICON from "../icon"
 import {
-  type Dispatch,
   playlistStyleSelector,
   playlistSelector,
   playlistHideSelector,
@@ -13,6 +11,7 @@ import {
 import { getRootNode } from "@mpv-easy/react"
 import { ScrollList } from "./components/scroll-list"
 import { getVideoName, textEllipsis } from "../common"
+import { dispatch, useSelector } from "../models"
 
 export type PlaylistProps = {
   list: string[]
@@ -21,7 +20,6 @@ export type PlaylistProps = {
 
 export const Playlist = () => {
   const playlistStyle = useSelector(playlistStyleSelector)
-  const dispatch = useDispatch<Dispatch>()
   const playlist = useSelector(playlistSelector)
   const playlistRef = useRef<MpDom>(null)
   const playlistHide = useSelector(playlistHideSelector)
@@ -73,9 +71,9 @@ export const Playlist = () => {
                 const index = playlist.indexOf(i)
                 if (index >= 0) {
                   command(`playlist-play-index ${index}`)
-                  dispatch.context.setPath(playlist[index])
+                  dispatch.setPath(playlist[index])
                 }
-                dispatch.context.setPlaylistHide(true)
+                dispatch.setPlaylistHide(true)
                 e.stopPropagation()
               },
             }

@@ -1,6 +1,6 @@
 import React from "react"
 import { getConfig } from "../context"
-import { createStore } from "../store"
+import { store } from "../store"
 import { Easy } from "../ui"
 
 interface RecursiveDivProps {
@@ -31,18 +31,12 @@ const RecursiveDiv: React.FC<RecursiveDivProps> = ({ deep, count }) => {
 }
 
 import("react-dom/server").then((v) => {
-  const store = createStore()
   const customConfig = getConfig()
-  store.getState().context = customConfig
+  store.setStore(customConfig)
   const { renderToString } = v
   const st = +Date.now()
-  // const s = renderToString(<Provider store={store}>
-  //   <Easy />
-  // </Provider>)
-
   const s = renderToString(<RecursiveDiv count={5} deep={4} />)
-
   const ed = +Date.now()
-  // console.log("ssr text: ", s)
+  console.log("ssr text: ", s)
   console.log("ssr time: ", ed - st)
 })
