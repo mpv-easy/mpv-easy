@@ -1,5 +1,10 @@
 import "@mpv-easy/polyfill"
-import { appendPoint, defaultConfig, getArea, getCutVideoPath } from "./index"
+import {
+  appendPoint,
+  defaultConfig,
+  getVideoSegment,
+  getCutVideoPath,
+} from "./index"
 import {
   cutVideo,
   detectFfmpeg,
@@ -66,9 +71,9 @@ async function output() {
     printAndOsd("cut not support remote video")
     return
   }
-  const area = getArea(points)
-  if (!area) {
-    printAndOsd("cut area not found")
+  const segment = getVideoSegment(points)
+  if (!segment) {
+    printAndOsd("cut segment not found")
     return
   }
   const ffmpeg = detectFfmpeg()
@@ -77,8 +82,8 @@ async function output() {
     return
   }
 
-  const outputPath = getCutVideoPath(path, area, outputDirectory)
-  const ok = await cutVideo(area, path, outputPath, ffmpeg)
+  const outputPath = getCutVideoPath(path, segment, undefined, outputDirectory)
+  const ok = await cutVideo(segment, path, outputPath, ffmpeg)
   hideNotification()
   if (!ok) {
     printAndOsd("failed to cut")

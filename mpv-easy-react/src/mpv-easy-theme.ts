@@ -56,7 +56,7 @@ export type ThemeStyle = {
     font: string
     previewZIndex: number
     cutCursorColor: string
-    cutAreaColor: string
+    cutSegmentColor: string
   }
 
   control: {
@@ -283,7 +283,7 @@ export function createDefaultThemeConfig(): EasyConfig {
           timeTextColor: White + AlphaShow,
           font: defaultFont,
           previewZIndex: defaultPreviewZIndex,
-          cutAreaColor: Green + AlphaLow,
+          cutSegmentColor: Green + AlphaLow,
           cutCursorColor: Green + AlphaShow,
         },
         control: {
@@ -420,7 +420,7 @@ export function createDefaultThemeConfig(): EasyConfig {
           timeTextColor: Black + AlphaShow,
           font: defaultFont,
           previewZIndex: defaultPreviewZIndex,
-          cutAreaColor: Green + AlphaLow,
+          cutSegmentColor: Green + AlphaLow,
           cutCursorColor: Green + AlphaShow,
         },
         control: {

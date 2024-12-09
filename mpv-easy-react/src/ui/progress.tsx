@@ -30,9 +30,9 @@ import {
   cropSelector,
 } from "../store"
 import { ThumbFast } from "@mpv-easy/thumbfast"
-import { getArea, getCutVideoPath } from "@mpv-easy/cut"
-import { getCropImagePath, getCropRect } from "@mpv-easy/crop"
+import { getCutVideoPath, getVideoSegment } from "@mpv-easy/cut"
 import { dispatch, useSelector } from "../models"
+import { getCropImagePath, getCropRect } from "@mpv-easy/crop"
 
 export const Progress = ({ width, height, ...props }: MpDomProps) => {
   const [leftPreview, setLeftPreview] = useState(0)
@@ -52,15 +52,13 @@ export const Progress = ({ width, height, ...props }: MpDomProps) => {
   const path = useSelector(pathSelector)
   const isSeekable = getPropertyBool("seekable")
   const thumbfast = useSelector(thumbfastSelector)
-  const cropPoints = useSelector(playerStateSelector).cropPoints
+  const { cutPoints, cropPoints, showCrop } = useSelector(playerStateSelector)
   const cutConfig = useSelector(cutSelector)
   const cropConfig = useSelector(cropSelector)
 
   // TODO: support yt-dlp thumbfast
   // const supportThumbfast = !isYtdlp(path) && isSeekable
   const supportThumbfast = isSeekable && thumbfast.network
-
-  const cutPoints = useSelector(playerStateSelector).cutPoints
 
   const curCutPoint = mouseIn ? timePos : duration * leftPreview
 
@@ -77,20 +75,34 @@ export const Progress = ({ width, height, ...props }: MpDomProps) => {
   cutCancelRef.current = () => {
     dispatch.setCutPoints([])
   }
-
-  const hasArea = cutPoints.length === 2
-  const area = getArea(cutPoints)
+  const cancelRef = useRef<() => void>(null)
+  const hasSegment = cutPoints.length === 2
+  const segment = getVideoSegment(cutPoints)
   const cutCursorLeft =
     cutPoints.length > 0 ? cutPoints[0] / duration : undefined
   const cutCursorRight =
     cutPoints.length > 1 ? cutPoints[1] / duration : undefined
-  const areaWidth = hasArea
+  const areaWidth = hasSegment
     ? (cutPoints[1] - cutPoints[0]) / duration
     : undefined
-  const cutVideoRef = useRef<(() => void) | null>(null)
-  cutVideoRef.current = async () => {
+
+  cancelRef.current = () => {
+    if (showCrop) {
+      dispatch.setCropPoints([])
+      dispatch.setShowCrop(false)
+    } else {
+      dispatch.setCutPoints([])
+    }
+  }
+
+  const outputRef = useRef<() => Promise<void>>(null)
+  outputRef.current = async () => {
     if (!path.length) {
       showNotification("video not found")
+      return
+    }
+    if (isRemote(path)) {
+      showNotification("cut not support remote video")
       return
     }
     const ffmpeg = detectFfmpeg()
@@ -100,14 +112,18 @@ export const Progress = ({ width, height, ...props }: MpDomProps) => {
     }
     if (cropPoints.length === 2) {
       const rect = getCropRect(cropPoints)
-      if (area) {
+      const segment = getVideoSegment(cutPoints)
+      if (segment) {
         // cut crop video
         const outputPath = getCutVideoPath(
           path,
-          area,
+          segment,
+          rect,
           cropConfig.outputDirectory,
         )
-        const ok = await cropVideo(path, area, rect, outputPath, ffmpeg)
+        const ok = await cropVideo(path, segment, rect, outputPath, ffmpeg)
+        // TODO: To reuse fragments, don't remove cutPoints, should use esc to remove
+        // dispatch.setCutPoints([])
         if (!ok) {
           showNotification("failed to crop video")
         } else {
@@ -133,30 +149,23 @@ export const Progress = ({ width, height, ...props }: MpDomProps) => {
       return
     }
 
-    if (isRemote(path)) {
-      showNotification("cut not support remote video")
-      return
-    }
-
-    if (!area) {
-      showNotification("cut area not found")
+    if (!segment) {
+      showNotification("cut segment not found")
       return
     }
     showNotification("cut starting")
 
     const ok = await cutVideo(
-      area,
+      segment,
       path,
-      getCutVideoPath(path, area, cutConfig.outputDirectory),
+      getCutVideoPath(path, segment, undefined, cutConfig.outputDirectory),
       ffmpeg,
     )
     dispatch.setCutPoints([])
-
     if (!ok) {
       showNotification("failed to cut")
       return
     }
-
     showNotification("cut finish")
   }
 
@@ -185,10 +194,10 @@ export const Progress = ({ width, height, ...props }: MpDomProps) => {
       cutRef.current?.()
     })
     registerScriptMessage("cancel", () => {
-      cutCancelRef.current?.()
+      cancelRef.current?.()
     })
     registerScriptMessage("output", () => {
-      cutVideoRef.current?.()
+      outputRef.current?.()
     })
   }, [])
 
@@ -317,14 +326,14 @@ export const Progress = ({ width, height, ...props }: MpDomProps) => {
           pointerEvents="none"
         />
       )}
-      {hasArea && (
+      {hasSegment && (
         <Box
-          id="cut-cursor-area"
+          id="cut-cursor-segment"
           position="relative"
           width={`${areaWidth! * 100}%`}
           left={`${cutCursorLeft! * 100}%`}
           height={"100%"}
-          backgroundColor={progress.cutAreaColor}
+          backgroundColor={progress.cutSegmentColor}
           pointerEvents="none"
         />
       )}

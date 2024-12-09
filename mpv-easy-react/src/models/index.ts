@@ -233,10 +233,10 @@ const store = defineStore({
       }
       return { ...state }
     },
-    setCropPoints(state, cropArea: [number, number][]) {
+    setCropPoints(state, cropSegment: [number, number][]) {
       state[pluginName].state = {
         ...state[pluginName].state,
-        cropPoints: cropArea,
+        cropPoints: cropSegment,
       }
       return { ...state }
     },

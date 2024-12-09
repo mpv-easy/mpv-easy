@@ -135,6 +135,7 @@ export async function cropVideo(
     "-y",
     outputPath,
   ]
+  // console.log("cmd: ", cmd.join(' '))
   try {
     await execAsync(cmd)
   } catch (e) {

@@ -1,6 +1,6 @@
 import { type SystemApi, definePlugin } from "@mpv-easy/plugin"
 import type { PluginContext } from "@mpv-easy/plugin"
-import { dirname, existsSync, getFileName } from "@mpv-easy/tool"
+import { dirname, existsSync, getFileName, Rect } from "@mpv-easy/tool"
 
 export const pluginName = "@mpv-easy/cut"
 
@@ -24,7 +24,7 @@ declare module "@mpv-easy/plugin" {
   }
 }
 
-export function getArea(points: number[]) {
+export function getVideoSegment(points: number[]) {
   if (points.length !== 2) {
     return undefined
   }
@@ -41,7 +41,8 @@ export function appendPoint(points: number[], n: number): number[] {
 
 export function getCutVideoPath(
   videoPath: string,
-  area: [number, number],
+  segment: [number, number],
+  rect: undefined | Rect,
   outputDirectory: string,
 ): string {
   const dir = existsSync(outputDirectory) ? outputDirectory : dirname(videoPath)
@@ -49,10 +50,19 @@ export function getCutVideoPath(
   const list = name.split(".")
 
   const prefix = list.slice(0, -1).join(".")
-  const ext = list.at(-1)
+  const ext = list.length > 1 ? list.at(-1)! : "mp4"
 
-  const [ss, to] = area.map((i) => i | 0)
-  return `${dir}/${prefix}.${ss}.${to}.${ext}`
+  const [ss, to] = segment.map((i) => i | 0)
+  const nameList = [prefix, ss, to]
+  if (rect) {
+    nameList.push(rect.x | 0)
+    nameList.push(rect.y | 0)
+    nameList.push(rect.width | 0)
+    nameList.push(rect.height | 0)
+  }
+
+  nameList.push(ext)
+  return `${dir}/${nameList.join(".")}`
 }
 
 export default definePlugin((context, api) => ({
