@@ -101,13 +101,14 @@ function App() {
       return
     }
     if (points.length === 2) {
+      const rect = getCropRect(points)
       const outputPath = getCropImagePath(
         path,
         timePos,
         cropImageFormat,
+        rect,
         outputDirectory,
       )
-      const rect = getCropRect(points)
       const ok = await cropImage(path, timePos, rect, outputPath, ffmpeg)
       if (!ok) {
         printAndOsd("failed to crop image")

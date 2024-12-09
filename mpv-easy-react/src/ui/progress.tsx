@@ -135,6 +135,7 @@ export const Progress = ({ width, height, ...props }: MpDomProps) => {
           path,
           timePos,
           cropConfig.cropImageFormat,
+          rect,
           cropConfig.outputDirectory,
         )
         const ok = await cropImage(path, timePos, rect, outputPath, ffmpeg)

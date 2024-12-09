@@ -14,7 +14,7 @@ You need to install [ffmpeg](https://www.ffmpeg.org/download.html) and add ffmpe
 
 By default, the shortcut key `C` adds the current time point to the segment, `esc` cancels the selection, and `o` exports the video.
 
-If the video file is `/a/b/c.mp4`, output the 10th second. Then the output image file is `/a/b/c.10.webp`
+If the video file is `/a/b/c.mp4`, the output image file is `/a/b/c.time.x.y.w.h.webp`
 
 ### mpv-crop
 

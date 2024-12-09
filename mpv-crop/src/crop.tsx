@@ -200,13 +200,24 @@ export function getCropImagePath(
   videoPath: string,
   time: number,
   imageFormat: string,
+  rect: Rect,
   outputDirectory: string,
 ) {
   const dir = existsSync(outputDirectory) ? outputDirectory : dirname(videoPath)
   const name = getFileName(videoPath)!
   const list = name.split(".")
+  const ext = imageFormat || "webp"
   const prefix = list.slice(0, -1).join(".")
-  return `${dir}/${prefix}.${time | 0}.${imageFormat || "webp"}`
+  const nameList = [
+    prefix,
+    time | 0,
+    rect.x | 0,
+    rect.y | 0,
+    rect.width | 0,
+    rect.height | 0,
+    ext,
+  ]
+  return `${dir}/${nameList.join(".")}`
 }
 
 export function getCropRect(points: [number, number][]): Rect {
