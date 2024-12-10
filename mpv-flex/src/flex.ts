@@ -897,27 +897,16 @@ export abstract class Flex<A extends {}, P extends {}, E extends {} = {}> {
         continue
       }
 
-      if (nodes.length === 1) {
-        nodes[0].attributes[name]?.(event)
-        continue
-      }
-
       const sorted = nodes.sort(
         (a, b) => (b.attributes.zIndex || 0) - (a.attributes.zIndex || 0),
       )
       for (const n of sorted) {
-        // if (!event.bubbles && name!=='onMouseLeave') {
-        // console.log(
-        //   "name:",
-        //   name,
-        //   event.x,
-        //   event.y,
-        //   n.layoutNode.hasPoint(event.x, event.y),
-        // )
         if (!event.bubbles) {
-          // if (!event.bubbles && n.layoutNode.hasPoint(event.x, event.y)) {
-          // console.log("name continue:", name)
           continue
+        }
+        if (name === "onMouseLeave" || name === "onMouseEnter") {
+          // https://github.com/mpv-easy/mpv-easy/issues/40
+          event.target = n
         }
         n.attributes[name]?.(event)
       }
