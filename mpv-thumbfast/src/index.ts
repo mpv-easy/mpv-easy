@@ -116,11 +116,15 @@ export class ThumbFast {
     this.maxHeight = maxHeight
     this.startTime = startTime
     this.lifetime = lifetime
-    const w = videoWidth
-    const h = videoHeight
-    const [thumbWidth, thumbHeight] = scaleToFit(w, h, maxWidth, maxHeight)
-    this.thumbWidth = thumbWidth
-    this.thumbHeight = thumbHeight
+    const [thumbWidth, thumbHeight] = scaleToFit(
+      videoWidth,
+      videoHeight,
+      maxWidth,
+      maxHeight,
+    )
+    // resize image size to 4x
+    this.thumbWidth = thumbWidth & ~3
+    this.thumbHeight = thumbHeight & ~3
     this.network = network
     this.mpvPath = normalize(getMpvExePath())
     this.subprocessId = this.startIpc()
