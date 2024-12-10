@@ -10,10 +10,12 @@ import {
   mkdir,
   normalize,
   removeFile,
-  commandNative,
   commandNativeAsync,
   getPropertyBool,
   abortAsyncCommand,
+  randomId,
+  execSync,
+  execAsync,
 } from "@mpv-easy/tool"
 export const pluginName = "@mpv-easy/thumbfast"
 
@@ -22,10 +24,10 @@ export type ThumbFastConfig = {
   format: "rgba" | "bgra"
   maxWidth: number
   maxHeight: number
-  ipcId: string
   startTime: number
   hrSeek: boolean
   network: boolean
+  lifetime: number
 }
 
 declare module "@mpv-easy/plugin" {
@@ -43,17 +45,17 @@ export const defaultThumbPath = joinPath(
   getScriptConfigDir(),
   "mpv-easy-thumbfast.tmp",
 )
-export const defaultThumbIpcId = "mpv-easy-thumbfast"
 export const defaultThumbStartTime = 0
+export const defaultLifetime = 10000
 export const defaultConfig: ThumbFastConfig = {
   path: defaultThumbPath,
   format: defaultThumbFormat,
   maxWidth: defaultThumbMaxWidth,
   maxHeight: defaultThumbMaxHeight,
-  ipcId: defaultThumbIpcId,
   startTime: defaultThumbStartTime,
   hrSeek: defaultHrSeek,
   network: defaultNetwork,
+  lifetime: defaultLifetime,
 }
 
 function scaleToFit(
@@ -77,63 +79,70 @@ export class ThumbFast {
   public format: "rgba" | "bgra"
   public maxWidth: number
   public maxHeight: number
-  public ipcId: string
+  public ipcId = ""
   public startTime: number
-
   public thumbWidth: number
   public thumbHeight: number
   public network: boolean
   public subprocessId: number
+  private prevRun = 0
+  private lifetime = 0
+  public hrSeek: boolean
+  private mpvPath: string
   constructor(
     {
       path = defaultThumbPath,
       format = defaultThumbFormat,
       maxWidth = defaultThumbMaxWidth,
       maxHeight = defaultThumbMaxHeight,
-      ipcId = defaultThumbIpcId,
       startTime = 0,
       videoWidth = 0,
       videoHeight = 0,
       hrSeek = defaultHrSeek,
       network = defaultNetwork,
+      lifetime = defaultLifetime,
     }: Partial<ThumbFastConfig> & {
       videoWidth: number
       videoHeight: number
     } = { ...defaultConfig, videoHeight: 0, videoWidth: 0 },
   ) {
-    const mpvPath = normalize(getMpvExePath())
-
     if (existsSync(path)) {
       removeFile(path)
     }
     this.path = normalize(path)
-
+    this.hrSeek = hrSeek
     this.format = format
     this.maxWidth = maxWidth
     this.maxHeight = maxHeight
-    this.ipcId = ipcId
     this.startTime = startTime
-    let videoPath = normalize(getPropertyString("path") || "")
+    this.lifetime = lifetime
     const w = videoWidth
     const h = videoHeight
     const [thumbWidth, thumbHeight] = scaleToFit(w, h, maxWidth, maxHeight)
-    // resize 4x
-    this.thumbWidth = thumbWidth & ~3
-    this.thumbHeight = thumbHeight & ~3
+    this.thumbWidth = thumbWidth
+    this.thumbHeight = thumbHeight
     this.network = network
+    this.subprocessId = this.startIpc()
+    this.mpvPath = normalize(getMpvExePath())
+    ThumbFastSet.add(this)
+  }
+
+  private startIpc() {
+    this.ipcId = `ipc_${randomId()}`
     const streamPath = getPropertyString("stream-open-filename")
+    let videoPath = normalize(getPropertyString("path") || "")
     if (
       getPropertyBool("demuxer-via-network") &&
       streamPath?.length &&
-      network &&
-      streamPath !== path
+      this.network &&
+      streamPath !== videoPath
     ) {
       // remove description, it's too long
       videoPath = streamPath.replace(/,ytdl_description.*/, "")
     }
 
     const args = [
-      mpvPath,
+      this.mpvPath,
       videoPath,
       "--no-config",
       "--msg-level=all=no",
@@ -158,7 +167,7 @@ export class ThumbFast {
       "--edition=auto",
       "--vid=1",
       "--sub=no",
-      `--hr-seek=${hrSeek ? "yes" : "no"}`,
+      `--hr-seek=${this.hrSeek ? "yes" : "no"}`,
       "--no-sub",
       "--no-audio",
       "--audio=no",
@@ -189,42 +198,55 @@ export class ThumbFast {
     ]
 
     // async: this cmd run forever
-    this.subprocessId = commandNativeAsync({
+    return commandNativeAsync({
       name: "subprocess",
       args,
       playback_only: true,
       capture_stdout: true,
       capture_stderr: true,
     })
-
-    ThumbFastSet.add(this)
   }
 
   run(cmd: string) {
-    // sync: for waiting image write to file
-    commandNative({
-      name: "subprocess",
-      args: [
-        getOs() === "windows" ? "cmd" : "sh",
-        getOs() === "windows" ? "/c" : "-c",
-        `echo ${cmd} > \\\\.\\pipe\\${this.ipcId}`,
-        // `echo async seek ${time} absolute+keyframes > \\\\.\\pipe\\${this.ipcId}`,
-        // `echo seek ${time} absolute+keyframes > \\\\.\\pipe\\${this.ipcId}`,
-      ],
-      playback_only: true,
-      capture_stdout: true,
-      capture_stderr: true,
-    })
+    // sync: waiting for image write to file
+    const args = [
+      getOs() === "windows" ? "cmd" : "sh",
+      getOs() === "windows" ? "/c" : "-c",
+      `echo ${cmd} > \\\\.\\pipe\\${this.ipcId}`,
+      // `echo async seek ${time} absolute+keyframes > \\\\.\\pipe\\${this.ipcId}`,
+      // `echo seek ${time} absolute+keyframes > \\\\.\\pipe\\${this.ipcId}`,
+    ]
+    return execSync(args, true, true, true)
+  }
+
+  runAsync(cmd: string) {
+    const args = [
+      getOs() === "windows" ? "cmd" : "sh",
+      getOs() === "windows" ? "/c" : "-c",
+      `echo ${cmd} > \\\\.\\pipe\\${this.ipcId}`,
+      // `echo async seek ${time} absolute+keyframes > \\\\.\\pipe\\${this.ipcId}`,
+      // `echo seek ${time} absolute+keyframes > \\\\.\\pipe\\${this.ipcId}`,
+    ]
+    return execAsync(args, true, true, true)
   }
 
   seek(time: number) {
-    this.run(`set time-pos ${time}`)
+    const now = Date.now()
+    if (!this.prevRun) {
+      this.prevRun = now
+    }
+    if (now - this.prevRun > this.lifetime) {
+      this.prevRun = now
+      this.exit()
+      this.subprocessId = this.startIpc()
+    }
+    return this.run(`set time-pos ${time}`)
   }
 
-  exit() {
+  async exit() {
     try {
-      this.run("quit")
-      abortAsyncCommand(this.subprocessId)
+      // await this.runAsync("quit")
+      await abortAsyncCommand(this.subprocessId)
     } catch (e) {
       console.log("ThumbFast abortAsyncCommand error: ", e)
     }

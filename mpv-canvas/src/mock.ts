@@ -684,7 +684,7 @@ export function createMpvMock(
       }
       return true
     },
-    get_time: (): number => +new Date(),
+    get_time: (): number => Date.now(),
     set_osd_ass: (res_x: number, res_y: number, data: string): unknown => {
       // console.log("set_osd_ass not implemented.")
       return true
@@ -794,7 +794,7 @@ export function createMpvMock(
       // console.log("last_error not implemented.")
       return ""
     },
-    get_time_ms: (): number => +new Date(),
+    get_time_ms: (): number => Date.now(),
     get_script_file: (): string => props["script-file"],
     module_paths: [],
     msg: {

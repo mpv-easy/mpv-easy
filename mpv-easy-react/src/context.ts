@@ -3,7 +3,7 @@ declare namespace globalThis {
   var version: string
 }
 
-const version = globalThis.version ?? (+Date.now()).toString()
+const version = globalThis.version ?? Date.now().toString()
 
 import clipboardPlayPlugin, {
   defaultConfig as clipboardPlayConfig,

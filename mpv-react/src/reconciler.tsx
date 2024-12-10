@@ -215,9 +215,9 @@ export function createRender({
   customRender = throttle(
     () => {
       frame++
-      const st = +Date.now()
+      const st = Date.now()
       renderNode()
-      const ed = +Date.now()
+      const ed = Date.now()
       const t = ed - st
       max = Math.max(max, t)
       fpsList.push(t)

@@ -7,7 +7,6 @@ import {
   getPropertyBool,
   getTimeFormat,
   showNotification,
-  randomId,
   registerScriptMessage,
   setPropertyNumber,
   isRemote,
@@ -182,10 +181,8 @@ export const Progress = ({ width, height, ...props }: MpDomProps) => {
       if (thumbRef.current) {
         thumbRef.current.exit()
       }
-      const ipcId = `ipc_${randomId()}`
       thumbRef.current = new ThumbFast({
         ...thumbfast,
-        ipcId,
         videoWidth: w,
         videoHeight: h,
       })

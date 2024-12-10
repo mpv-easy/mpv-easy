@@ -111,14 +111,14 @@ export abstract class Flex<A extends {}, P extends {}, E extends {} = {}> {
   }
 
   renderRoot() {
-    // const t1 = +Date.now()
+    // const t1 = Date.now()
     this.computeNodeSize(this.rootNode)
 
-    // const t2 = +Date.now()
+    // const t2 = Date.now()
     this.computeNodeLayout(this.rootNode)
-    // const t3 = +Date.now()
+    // const t3 = Date.now()
     this.customRenderRoot(this.rootNode)
-    // const t4 = +Date.now()
+    // const t4 = Date.now()
     // console.log('renderRoot: ', t2 - t1, t3 - t2, t4 - t3)
   }
   private computedNodeTLBR(node: BaseDom<A, P, E>) {
@@ -271,9 +271,9 @@ export abstract class Flex<A extends {}, P extends {}, E extends {} = {}> {
 
     const isX = attributes.flexDirection !== "row"
 
-    // const st1 = +Date.now()
+    // const st1 = Date.now()
     const zIndex = this.computeZIndex(node)
-    // const st2 = +Date.now()
+    // const st2 = Date.now()
     // console.log('computeZIndex', node.attributes.id, st2 - st1)
 
     this.customComputeZIndex(node, zIndex)
