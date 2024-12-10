@@ -122,8 +122,8 @@ export class ThumbFast {
     this.thumbWidth = thumbWidth
     this.thumbHeight = thumbHeight
     this.network = network
-    this.subprocessId = this.startIpc()
     this.mpvPath = normalize(getMpvExePath())
+    this.subprocessId = this.startIpc()
     ThumbFastSet.add(this)
   }
 
@@ -207,7 +207,7 @@ export class ThumbFast {
     })
   }
 
-  run(cmd: string) {
+  private run(cmd: string) {
     // sync: waiting for image write to file
     const args = [
       getOs() === "windows" ? "cmd" : "sh",
@@ -219,7 +219,7 @@ export class ThumbFast {
     return execSync(args, true, true, true)
   }
 
-  runAsync(cmd: string) {
+  private runAsync(cmd: string) {
     const args = [
       getOs() === "windows" ? "cmd" : "sh",
       getOs() === "windows" ? "/c" : "-c",
@@ -243,10 +243,10 @@ export class ThumbFast {
     return this.run(`set time-pos ${time}`)
   }
 
-  async exit() {
+  exit() {
     try {
       // await this.runAsync("quit")
-      await abortAsyncCommand(this.subprocessId)
+      abortAsyncCommand(this.subprocessId)
     } catch (e) {
       console.log("ThumbFast abortAsyncCommand error: ", e)
     }
