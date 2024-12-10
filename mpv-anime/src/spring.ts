@@ -44,10 +44,10 @@ export function useSpring(
     if (handleRef.current) {
       return
     }
-    const startTime = +new Date()
+    const startTime = Date.now()
     setPlaying(true)
     handleRef.current = +setInterval(() => {
-      const now = +new Date()
+      const now = Date.now()
       const percent = (now - startTime) / duration
       const newValue = percent >= 1 ? to : percent * (to - from) + from
       setValue(newValue)

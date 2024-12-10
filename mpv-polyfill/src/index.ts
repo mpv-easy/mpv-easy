@@ -58,6 +58,6 @@ for (const [name, value] of Object.entries({
 
 if (!g.performance) {
   g.performance = {
-    now: () => +new Date(),
+    now: () => Date.now(),
   }
 }

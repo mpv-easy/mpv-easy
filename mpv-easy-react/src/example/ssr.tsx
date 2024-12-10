@@ -34,9 +34,9 @@ import("react-dom/server").then((v) => {
   const customConfig = getConfig()
   store.setStore(customConfig)
   const { renderToString } = v
-  const st = +Date.now()
+  const st = Date.now()
   const s = renderToString(<RecursiveDiv count={5} deep={4} />)
-  const ed = +Date.now()
+  const ed = Date.now()
   console.log("ssr text: ", s)
   console.log("ssr time: ", ed - st)
 })
