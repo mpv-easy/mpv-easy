@@ -40,7 +40,7 @@ export default definePlugin((context, api) => ({
     const fps = context[pluginName].config.fps || DefaultFps
     const render = createRender({
       fps,
-      // showFps: true,
+      showFps: true,
       enableMouseMoveEvent:
         context[pluginName].config.enableMouseMoveEvent ?? true,
     })

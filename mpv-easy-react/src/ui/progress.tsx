@@ -12,6 +12,7 @@ import {
   isRemote,
   cropImage,
   cropVideo,
+  randomId,
 } from "@mpv-easy/tool"
 import { Box, type MpDom } from "@mpv-easy/react"
 import React, { useRef, useState, useEffect } from "react"
@@ -54,7 +55,7 @@ export const Progress = ({ width, height, ...props }: MpDomProps) => {
   const { cutPoints, cropPoints, showCrop } = useSelector(playerStateSelector)
   const cutConfig = useSelector(cutSelector)
   const cropConfig = useSelector(cropSelector)
-
+  const [thumbfastUpdateId, setThumbfastUpdateId] = useState(randomId())
   // TODO: support yt-dlp thumbfast
   // const supportThumbfast = !isYtdlp(path) && isSeekable
   const supportThumbfast = isSeekable && thumbfast.network
@@ -205,6 +206,7 @@ export const Progress = ({ width, height, ...props }: MpDomProps) => {
     setLeftPreview(per)
     const time = duration * (e.offsetX / w)
     thumbRef.current?.seek(time)
+    setThumbfastUpdateId(randomId())
     return per
   }
   const hoverCursorRef = useRef<MpDom>(null)
@@ -381,7 +383,7 @@ export const Progress = ({ width, height, ...props }: MpDomProps) => {
                 y={thumbY}
                 width={thumbRef.current?.thumbWidth}
                 height={thumbRef.current?.thumbHeight}
-                backgroundImage={`${thumbRef.current?.path}?ts=${Date.now()}`}
+                backgroundImage={`${thumbRef.current?.path}?id=${thumbfastUpdateId}`}
                 backgroundImageFormat={thumbRef.current?.format}
                 pointerEvents="none"
               />
