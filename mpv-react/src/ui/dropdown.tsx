@@ -1,7 +1,13 @@
 import React, { useRef, useState } from "react"
 import { Button, type ButtonProps } from "./button"
 import { Box } from "./box"
-import { type MpAttrs, type MpDom, type MpEvent, type MpProps } from "../flex"
+import {
+  MpDomProps,
+  type MpAttrs,
+  type MpDom,
+  type MpEvent,
+  type MpProps,
+} from "../flex"
 import { type BaseMouseEvent, EventNameList } from "@mpv-easy/flex"
 
 export type DropdownItem = {
@@ -19,19 +25,19 @@ export type DropdownDirection = "top" | "bottom"
 
 export type DropdownProps = {
   items: DropdownItem[]
-  direction: DropdownDirection
-  dropdownStyle: Partial<ButtonProps>
-  dropdownListStyle: Partial<ButtonProps>
-  maxItemCount: number
-  pageDown: {
+  direction?: DropdownDirection
+  dropdownStyle?: Partial<ButtonProps>
+  dropdownListStyle?: Partial<ButtonProps>
+  maxItemCount?: number
+  pageDown?: {
     style: Partial<ButtonProps>
     text: string
   }
-  pageUp: {
+  pageUp?: {
     style: Partial<ButtonProps>
     text: string
   }
-}
+} & ButtonProps
 
 function getProps(props: any) {
   const newProps: any = {}
@@ -112,6 +118,7 @@ export const Dropdown = (props: Partial<ButtonProps & DropdownProps>) => {
           >
             {showPage && (
               <Button
+                id="dropdown-list-page-up"
                 position="relative"
                 {...newProps}
                 {...dropdownStyle}
@@ -146,6 +153,7 @@ export const Dropdown = (props: Partial<ButtonProps & DropdownProps>) => {
             })}
             {showPage && (
               <Button
+                id="dropdown-list-page-down"
                 position="relative"
                 {...newProps}
                 {...dropdownStyle}

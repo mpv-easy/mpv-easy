@@ -5,7 +5,6 @@ import { Oscx } from "./oscx"
 import { Toolbar } from "./toolbar"
 import { Box, type MpDom, Tooltip } from "@mpv-easy/react"
 import {
-  audoloadConfigSelector,
   modeSelector,
   mousePosSelector,
   pathSelector,
@@ -15,35 +14,26 @@ import {
   uiNameSelector,
   clickMenuStyleSelector,
   protocolHookSelector,
-  fontSizeSelector,
   volumeSelector,
   volumeMaxSelector,
   speedListSelector,
   speedSelector,
   frameTimeSelector,
   translateSelector,
-  IconButtonSizeSelector,
+  cellSizeSelector,
   playerStateSelector,
   cropSelector,
+  fontSelector,
+  normalFontSizeSelector,
+  osdDimensionsSelector,
+  subScaleSelector,
 } from "../store"
 import {
-  PropertyBool,
-  PropertyNumber,
-  PropertyString,
-  PropertyNative,
-  type MousePos,
-  type MpvPropertyTypeMap,
-  type VideoParams,
-  normalize,
-  dirname,
-  getMpvPlaylist,
-  loadRemoteSubtitle,
   loadRemoteSubtitleAsync,
   getMpvExePath,
   setProtocolHook,
   getPlayWithExePath,
   openDialog,
-  getExtName,
   registerScriptMessage,
   setPropertyNumber,
   getPropertyNumber,
@@ -51,19 +41,14 @@ import {
   getColor,
   showNotification,
 } from "@mpv-easy/tool"
-import throttle from "lodash-es/throttle"
-import isEqual from "lodash-es/isEqual"
 import clamp from "lodash-es/clamp"
-import { ClickMenu } from "./click-menu"
 import { Playlist } from "./playlist"
-import { getPlayableList } from "@mpv-easy/autoload"
 import { VoiceControl } from "./voice-control"
 import { History } from "./history"
 import { Speed } from "./speed"
 import { Translation } from "@mpv-easy/translate"
 import { Crop } from "@mpv-easy/crop"
 import { dispatch, useSelector } from "../models"
-
 export * from "./progress"
 export * from "./toolbar"
 export * from "./voice-control"
@@ -71,30 +56,6 @@ export * from "./playlist"
 export * from "./click-menu"
 export * from "./osc"
 export * from "./uosc"
-
-const windowMaximizedProp = new PropertyBool("window-maximized")
-const fullscreenProp = new PropertyBool("fullscreen")
-const timePosProp = new PropertyNumber("time-pos")
-const durationProp = new PropertyNumber("duration")
-const pauseProp = new PropertyBool("pause")
-const pathProp = new PropertyString("path")
-const mousePosProp = new PropertyNative<MousePos>("mouse-pos")
-const videoParamsProp = new PropertyNative<VideoParams>("video-params")
-const muteProp = new PropertyBool("mute")
-
-const aidProp = new PropertyNumber("aid")
-const vidProp = new PropertyNumber("vid")
-const sidProp = new PropertyNumber("sid")
-const volumeProp = new PropertyNumber("volume")
-const volumeMaxProp = new PropertyNumber("volume-max")
-const speedProp = new PropertyNumber("speed")
-const playlistCount = new PropertyNumber("playlist/count")
-const osdDimensionsProp = new PropertyNative<
-  MpvPropertyTypeMap["osd-dimensions"]
->("osd-dimensions")
-const minFontSize = 12
-const maxFontSize = 120
-const fontStep = 12
 export function hasPoint(node: MpDom | null, x: number, y: number): boolean {
   if (!node) {
     return false
@@ -119,11 +80,10 @@ export type EasyProps = {
 export const Easy = (props: Partial<EasyProps>) => {
   const frameTime = useSelector(frameTimeSelector)
   const path = useSelector(pathSelector)
-  const autoloadConfig = useSelector(audoloadConfigSelector)
   const protocolHook = useSelector(protocolHookSelector)
-  const fontSize = useSelector(fontSizeSelector)
-  const fontSizeRef = useRef(fontSize)
-  fontSizeRef.current = fontSize
+  const fontSize = useSelector(normalFontSizeSelector)
+  const fontSizeRef = useRef(fontSize.fontSize)
+  fontSizeRef.current = fontSize.fontSize
 
   const volume = useSelector(volumeSelector)
   const volumeRef = useRef(volume)
@@ -136,6 +96,7 @@ export const Easy = (props: Partial<EasyProps>) => {
   const speedList = useSelector(speedListSelector)
   const speedMax = Math.max(...speedList)
   const speedMin = Math.min(...speedList)
+  const osdDimensions = useSelector(osdDimensionsSelector)
 
   useEffect(() => {
     const mpvExe = getMpvExePath()
@@ -146,97 +107,8 @@ export const Easy = (props: Partial<EasyProps>) => {
       }
     }
 
-    if (props.fontSize) {
-      dispatch.setFontSize(props.fontSize)
-    }
-
     dispatch.addHistory(path)
     loadRemoteSubtitleAsync(path)
-
-    playlistCount.observe((v) => {
-      const p = pathProp.value
-      if (path !== p) {
-        const list = getMpvPlaylist()
-        const i = list.indexOf(p)
-        dispatch.setPlaylist(list, i === -1 ? 0 : i)
-      }
-    })
-
-    aidProp.observe((v) => {
-      dispatch.setAid(v)
-    })
-    vidProp.observe((v) => {
-      dispatch.setVid(v)
-    })
-    sidProp.observe((v) => {
-      dispatch.setSid(v)
-    })
-    speedProp.observe((v) => {
-      dispatch.setSpeed(v)
-    })
-    volumeProp.observe((v) => {
-      dispatch.setVolume(v)
-    })
-    volumeMaxProp.observe((v) => {
-      dispatch.setVolumeMax(v)
-    })
-    videoParamsProp.observe((v) => {
-      dispatch.setVideoParams(v ?? {})
-    })
-    windowMaximizedProp.observe((v) => {
-      dispatch.setWindowMaximized(v)
-    })
-
-    fullscreenProp.observe((v) => {
-      dispatch.setFullscreen(v)
-    })
-
-    const updateTimePos = throttle((v: number) => {
-      dispatch.setTimePos(v ?? 0)
-    }, frameTime)
-
-    timePosProp.observe(throttle(updateTimePos, frameTime))
-
-    durationProp.observe((v) => {
-      dispatch.setDuration(v || 0)
-    })
-
-    pathProp.observe((v) => {
-      v = normalize(v ?? "")
-      if (v?.length && v !== path) {
-        dispatch.addHistory(v)
-        loadRemoteSubtitle(v)
-        dispatch.setPath(v)
-        const d = dirname(v)
-        if (!d) {
-          return
-        }
-        const list = getPlayableList(autoloadConfig, v, d, getExtName(v) || "")
-        const playIndex = list.indexOf(v)
-        dispatch.setPlaylist(list, playIndex === -1 ? 0 : playIndex)
-      }
-    })
-
-    const cb = throttle((v) => {
-      dispatch.setMousePos(v)
-    }, frameTime)
-
-    muteProp.observe((v) => {
-      dispatch.setMute(v)
-    })
-
-    pauseProp.observe((v) => {
-      dispatch.setPause(v)
-    })
-
-    mousePosProp.observe(cb, isEqual)
-
-    osdDimensionsProp.observe(
-      throttle((v) => {
-        dispatch.setOsdDimensions(v)
-      }, frameTime),
-      isEqual,
-    )
 
     registerScriptMessage("open-dialog", () => {
       const v = openDialog()[0]
@@ -253,11 +125,11 @@ export const Easy = (props: Partial<EasyProps>) => {
       showNotification(`volume: ${s}`, 2)
     })
 
-    registerScriptMessage("fontsize-change", (e) => {
-      const v = Number.parseFloat(`${e}`)
-      const s = clamp(fontSizeRef.current + v, minFontSize, maxFontSize)
-      dispatch.setFontSize(s)
-      showNotification(`fontsize: ${s}`, 2)
+    registerScriptMessage("increase-fontSize", () => {
+      dispatch.increaseFontSize()
+    })
+    registerScriptMessage("decrease-fontSize", () => {
+      dispatch.decreaseFontSize()
     })
 
     registerScriptMessage("speed-change", (e) => {
@@ -265,7 +137,6 @@ export const Easy = (props: Partial<EasyProps>) => {
       const s = clamp(speedRef.current + v, speedMin, speedMax)
       dispatch.setSpeed(s)
       setPropertyNumber("speed", s)
-      showNotification(`speed: ${s}`, 2)
     })
     registerScriptMessage("crop", () => {
       dispatch.setShowCrop(true)
@@ -329,7 +200,7 @@ export const Easy = (props: Partial<EasyProps>) => {
     hideUI()
   }
   const translateStyle = useSelector(translateSelector)
-  const subScale = getPropertyNumber("sub-sclae", 1)
+  const subScale = useSelector(subScaleSelector)
 
   const {
     sourceLang,
@@ -346,7 +217,7 @@ export const Easy = (props: Partial<EasyProps>) => {
   const clickMenuStyle = useSelector(clickMenuStyleSelector)
   const subFontSize =
     (getPropertyNumber("sub-font-size") ??
-      (translateStyle.subFontSize || fontSize)) * subScale
+      (translateStyle.subFontSize || fontSize.fontSize)) * subScale
 
   const subColor =
     getColor("sub-color") ?? (translateStyle.subColor || "#FFFFFFFF")
@@ -357,16 +228,18 @@ export const Easy = (props: Partial<EasyProps>) => {
     (translateStyle.subOutlineSize || 0)
   const subOutlineColor =
     getColor("sub-outline-color") ?? translateStyle.subOutlineColor
-  const h = useSelector(IconButtonSizeSelector)
+  const h = useSelector(cellSizeSelector)
+  const font = useSelector(fontSelector)
 
   return (
     <>
       <Tooltip
+        id="tooltip"
         backgroundColor={tooltip.backgroundColor}
-        font={tooltip.font}
-        fontSize={smallFontSize}
+        font={font}
+        fontSize={smallFontSize.fontSize}
         color={tooltip.color}
-        padding={tooltip.padding}
+        padding={smallFontSize.padding}
         display="flex"
         justifyContent="center"
         alignItems="center"
@@ -377,12 +250,13 @@ export const Easy = (props: Partial<EasyProps>) => {
       <Box
         id="mpv-easy-main"
         display="flex"
-        width="100%"
-        height="100%"
+        width={osdDimensions.w}
+        height={osdDimensions.h}
         flexDirection="row"
         justifyContent="space-between"
         alignItems="start"
         position="relative"
+        // position="absolute"
         onMouseDown={(e) => {
           if (showCrop) {
             if (cropPoints.length < 2) {
@@ -409,9 +283,13 @@ export const Easy = (props: Partial<EasyProps>) => {
         }}
       >
         <Toolbar ref={toolbarRef} hide={hide || showCrop} />
-        <Element ref={elementRef} hide={hide || showCrop} />
+        <Element
+          ref={elementRef}
+          hide={hide || showCrop}
+          width={osdDimensions.w}
+        />
         <VoiceControl ref={volumeDomRef} hide={hide || showCrop} />
-        {!clickMenuStyle.disable && <ClickMenu ref={menuRef} hide={menuHide} />}
+        {/* {!clickMenuStyle.disable && <ClickMenu ref={menuRef} hide={menuHide} />} */}
         <Playlist />
         <History />
         <Speed />
@@ -421,8 +299,8 @@ export const Easy = (props: Partial<EasyProps>) => {
             mouseY={mousePos.y}
             lineColor={cropConfig.lineColor}
             lineWidth={cropConfig.lineWidth}
-            osdHeight={osdDimensionsProp.value?.h || 0}
-            osdWidth={osdDimensionsProp.value?.w || 0}
+            osdHeight={osdDimensions.h}
+            osdWidth={osdDimensions.w}
             points={cropPoints}
             maskColor={cropConfig.maskColor}
             zIndex={1024}

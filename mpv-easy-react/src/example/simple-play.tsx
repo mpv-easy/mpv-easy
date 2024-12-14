@@ -6,7 +6,7 @@ command("set osc no")
 command("set window-dragging no")
 
 const overlay = new OsdOverlay()
-new PropertyBool("pause").observe((v) => {
+new PropertyBool("pause").observe((_, v) => {
   console.log("pause: ", v)
   overlay.data = new AssDraw()
     .font("JetBrainsMono NFM Regular")

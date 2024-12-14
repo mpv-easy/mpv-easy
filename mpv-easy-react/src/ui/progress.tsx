@@ -28,6 +28,8 @@ import {
   cutSelector,
   playerStateSelector,
   cropSelector,
+  fontSelector,
+  seekableSelector,
 } from "../store"
 import { ThumbFast } from "@mpv-easy/thumbfast"
 import { getCutVideoPath, getVideoSegment } from "@mpv-easy/cut"
@@ -38,7 +40,6 @@ export const Progress = ({ width, height, ...props }: MpDomProps) => {
   const [leftPreview, setLeftPreview] = useState(0)
   const [mouseIn, setMouseIn] = useState(true)
   const progress = useSelector(progressStyleSelector)
-  const button = useSelector(buttonStyleSelector)
   const timePos = useSelector(timePosSelector)
   const duration = useSelector(durationSelector)
   const format = getTimeFormat(duration)
@@ -50,7 +51,7 @@ export const Progress = ({ width, height, ...props }: MpDomProps) => {
   const cursorLeftOffset = progressW ? progress.cursorSize / 2 / progressW : 0
   const cursorLeft = timePos / duration - cursorLeftOffset
   const path = useSelector(pathSelector)
-  const isSeekable = getPropertyBool("seekable")
+  const isSeekable = useSelector(seekableSelector)
   const thumbfast = useSelector(thumbfastSelector)
   const { cutPoints, cropPoints, showCrop } = useSelector(playerStateSelector)
   const cutConfig = useSelector(cutSelector)
@@ -171,7 +172,7 @@ export const Progress = ({ width, height, ...props }: MpDomProps) => {
   }
 
   useEffect(() => {
-    new PropertyNative<VideoParams>("video-params").observe((v) => {
+    new PropertyNative<VideoParams>("video-params").observe((_, v) => {
       if (!v || !supportThumbfast) {
         return
       }
@@ -223,6 +224,7 @@ export const Progress = ({ width, height, ...props }: MpDomProps) => {
   }
 
   const fontSize = useSelector(smallFontSizeSelector)
+  const font = useSelector(fontSelector)
 
   return (
     <Box
@@ -233,8 +235,8 @@ export const Progress = ({ width, height, ...props }: MpDomProps) => {
       width={width}
       height={height}
       color={progress.backgroundColor}
-      fontSize={fontSize}
-      font={progress.font}
+      fontSize={fontSize.fontSize}
+      font={font}
       backgroundColor={progress.backgroundColor}
       onMouseDown={(e) => {
         const w = e.target?.layoutNode.width || 0
@@ -277,7 +279,7 @@ export const Progress = ({ width, height, ...props }: MpDomProps) => {
         backgroundColor={progress.timeTextBackgroundColor}
         color={progress.timeTextColor}
         text={formatTime(timePos, format)}
-        padding={button.padding}
+        padding={fontSize.padding}
         pointerEvents="none"
       />
       <Box
@@ -290,7 +292,7 @@ export const Progress = ({ width, height, ...props }: MpDomProps) => {
         backgroundColor={progress.timeTextBackgroundColor}
         color={progress.timeTextColor}
         text={formatTime(duration, format)}
-        padding={button.padding}
+        padding={fontSize.padding}
         pointerEvents="none"
       />
       <Box

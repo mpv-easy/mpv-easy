@@ -5,7 +5,7 @@ import React, {
   forwardRef,
 } from "react"
 import { Box, type MpDomProps, type MpDom } from "@mpv-easy/react"
-import { IconButtonSizeSelector } from "../../store"
+import { cellSizeSelector } from "../../store"
 import { Progress } from "../progress"
 import { OscInfo } from "./info"
 import { useSelector } from "../../models"
@@ -14,7 +14,7 @@ export * from "./info"
 export const Oscx: ForwardRefExoticComponent<
   PropsWithoutRef<Partial<MpDomProps>> & RefAttributes<MpDom>
 > = forwardRef<MpDom, MpDomProps>((props, ref) => {
-  const h = useSelector(IconButtonSizeSelector)
+  const h = useSelector(cellSizeSelector)
 
   return (
     <Box
@@ -27,7 +27,7 @@ export const Oscx: ForwardRefExoticComponent<
       justifyContent="end"
       alignItems="end"
       id="osc"
-      onMouseDown={(e) => e.stopPropagation}
+      onMouseDown={(e) => e.stopPropagation()}
     >
       <Progress width={"100%"} height={h} id="oscx-progress" />
       <OscInfo {...props} width={"100%"} height={h} />

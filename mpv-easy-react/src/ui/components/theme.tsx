@@ -1,22 +1,22 @@
-import { Dropdown, DropdownItem } from "@mpv-easy/react"
+import { type DropdownItem } from "@mpv-easy/react"
 import React from "react"
+import { Dropdown } from "@mpv-easy/react"
 import * as ICON from "../../icon"
 import {
-  buttonStyleSelector,
   i18nSelector,
-  mouseHoverStyleSelector,
-  dropdownStyleSelector,
   modeSelector,
+  commonDropdownStyleSelector,
+  commonDropdownItemStyleSelector,
 } from "../../store"
 import { ThemeModeList } from "../../mpv-easy-theme"
 import { dispatch, useSelector } from "../../models"
 
 export const Theme = () => {
-  const button = useSelector(buttonStyleSelector)
   const i18n = useSelector(i18nSelector)
-  const mouseHoverStyle = useSelector(mouseHoverStyleSelector)
-  const dropdown = useSelector(dropdownStyleSelector)
+  const itemStyle = useSelector(commonDropdownItemStyleSelector)
   const mode = useSelector(modeSelector)
+  const style = useSelector(commonDropdownStyleSelector)
+
   const maxLen = ThemeModeList.map((i) => i18n[i].length).reduce(
     (a, b) => Math.max(a, b),
     0,
@@ -30,38 +30,18 @@ export const Theme = () => {
       onSelect: () => {
         dispatch.setMode(i)
       },
-      style: {
-        ...dropdown.item,
-        justifyContent: "space-between",
-        alignItems: "center",
-      },
+      style: itemStyle,
     }
   })
   return (
     <Dropdown
+      {...style}
       id="mpv-easy-button-theme"
       // text={mode === 'dark' ? ICON.Sun : ICON.Moon}
       text={ICON.ThemeLightDark}
       title={i18n.theme}
       items={items}
-      dropdownStyle={dropdown.button}
       direction="bottom"
-      width={button.width}
-      height={button.height}
-      display="flex"
-      justifyContent="center"
-      alignItems="center"
-      enableMouseStyle={mouseHoverStyle}
-      padding={dropdown.button.padding}
-      colorHover={dropdown.button.colorHover}
-      backgroundColorHover={dropdown.button.backgroundColorHover}
-      backgroundColor={dropdown.button.backgroundColor}
-      font={dropdown.button.font}
-      fontSize={button.fontSize}
-      color={dropdown.button.color}
-      dropdownListStyle={dropdown.list}
-      pageDown={{ style: dropdown.item, text: ICON.TriangleDown }}
-      pageUp={{ style: dropdown.item, text: ICON.TriangleUp }}
     />
   )
 }

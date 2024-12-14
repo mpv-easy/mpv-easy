@@ -5,7 +5,7 @@ import { Easy, store, getConfig } from "@mpv-easy/easy-react"
 
 setTimeout(() => {
   const config = getConfig()
-  store.setStore(config)
+  store.setState(config)
   renderToBrowser(
     <Easy fontSize={24} initHide={false} />,
     "JetBrainsMono NFM Regular",

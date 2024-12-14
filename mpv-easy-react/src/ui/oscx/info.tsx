@@ -3,7 +3,9 @@ import React from "react"
 import {
   buttonStyleSelector,
   controlStyleSelector,
+  fontSelector,
   fullscreenSelector,
+  normalFontSizeSelector,
 } from "../../store"
 import { Play } from "../components/play"
 import { Screenshot } from "../components/screenshot"
@@ -23,14 +25,16 @@ import { useSelector } from "../../models"
 
 export const OscInfo = ({ height }: Partial<MpDomProps>) => {
   const button = useSelector(buttonStyleSelector)
+  const fontSize = useSelector(normalFontSizeSelector)
   const control = useSelector(controlStyleSelector)
   const fullscreen = useSelector(fullscreenSelector)
+  const font = useSelector(fontSelector)
   return (
     <Box
       id="oscx-info"
       display="flex"
-      font={button.font}
-      fontSize={button.fontSize}
+      font={font}
+      fontSize={fontSize.fontSize}
       color={button.color}
       height={height}
       width={"100%"}

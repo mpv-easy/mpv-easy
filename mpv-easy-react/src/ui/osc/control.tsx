@@ -4,7 +4,9 @@ import { Progress } from "../progress"
 import {
   buttonStyleSelector,
   controlStyleSelector,
+  fontSelector,
   fullscreenSelector,
+  normalFontSizeSelector,
 } from "../../store"
 import { Play } from "../components/play"
 import { Stop } from "../components/stop"
@@ -21,12 +23,15 @@ export const OscControl = ({ height, width }: Partial<MpDomProps>) => {
   const button = useSelector(buttonStyleSelector)
   const control = useSelector(controlStyleSelector)
   const fullscreen = useSelector(fullscreenSelector)
+  const fontSize = useSelector(normalFontSizeSelector)
+  const font = useSelector(fontSelector)
+
   return (
     <Box
       id="osc-control"
       display="flex"
-      font={button.font}
-      fontSize={button.fontSize}
+      font={font}
+      fontSize={fontSize.fontSize}
       color={button.color}
       height={height}
       width={width}

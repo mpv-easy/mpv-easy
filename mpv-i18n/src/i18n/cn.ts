@@ -62,7 +62,7 @@ export default {
   videoSpeed: "播放速度",
   copyPath: "复制路径",
   style: "样式",
-  enlargeFontSize: "+字体",
-  reduceFontSize: "-字体",
+  increaseFontSize: "+字体",
+  decreaseFontSize: "-字体",
   history: "历史",
 }

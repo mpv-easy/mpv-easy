@@ -23,20 +23,16 @@ export const UINameList = ["osc", "uosc", "oscx"] as const
 export type UIName = (typeof UINameList)[number]
 export const DefaultPlayMode: PlayMode = "loopAll"
 export const DefaultClickMenuDisable = true
-
+export const DefaultFontSizeScale = 1
 export type ButtonStyle = {
-  padding: number
   color: string
   backgroundColor: string
   colorHover: string
   backgroundColorHover: string
-  fontSize: number
-  font: string
-  width: number
-  height: number
 }
 export type ThemeStyle = {
   font: string
+  fontSizeScale: number
   button: {
     default: ButtonStyle
     active: ButtonStyle
@@ -44,7 +40,6 @@ export type ThemeStyle = {
   }
 
   progress: {
-    height: number
     color: string
     backgroundColor: string
     cursorColor: string
@@ -53,14 +48,12 @@ export type ThemeStyle = {
     previewCursorColor: string
     timeTextBackgroundColor: string
     timeTextColor: string
-    font: string
     previewZIndex: number
     cutCursorColor: string
     cutSegmentColor: string
   }
 
   control: {
-    height: number
     backgroundColor: string
   }
   toolbar: {
@@ -77,7 +70,6 @@ export type ThemeStyle = {
     autoHideDelay: number
     zIndex: number
     step: number
-    fontSize: number
     previewCursorColor: string
   }
   speed: {
@@ -101,44 +93,31 @@ export type ThemeStyle = {
   tooltip: {
     enable: boolean
     zIndex: number
-    font: string
-    padding: number
     color: string
     backgroundColor: string
-    fontSize: number
     maxWidth: number
   }
   dropdown: {
     list: {
       zIndex: number
-      font: string
-      padding: number
       color: string
       backgroundColor: string
       colorHover: string
       backgroundColorHover: string
-      fontSize: number
     }
     button: {
       zIndex: number
-      font: string
-      padding: number
       color: string
       backgroundColor: string
       colorHover: string
       backgroundColorHover: string
-      fontSize: number
     }
     item: {
       zIndex: number
-      font: string
-      padding: number
       color: string
       backgroundColor: string
       colorHover: string
       backgroundColorHover: string
-      height: number
-      fontSize: number
     }
   }
   clickMenu: {
@@ -159,27 +138,35 @@ export type EasyConfig = {
   }
   history: { path: string; name: string }[]
   player: {
+    seekable: boolean
+    "sub-scale": number
     pause: boolean
-    timePos: number
-    playlistPos: number
+    "time-pos": number
+    "playlist-pos": number
     duration: number
-    windowMaximized: boolean
+    "window-maximized": boolean
     fullscreen: boolean
-    windowMinimized: boolean
+    "window-minimized": boolean
     path: string
-    mousePos: MousePos
+    "mouse-pos": MousePos
     mute: boolean
-    osdDimensions: {
+    "osd-dimensions": {
       w: number
       h: number
+      aspect: number
+      mb: number
+      ml: number
+      mr: number
+      mt: number
+      par: number
     }
     playlist: string[]
     aid: number
     vid: number
     sid: number
-    videoParams: VideoParams
+    "video-params": VideoParams
     volume: number
-    volumeMax: number
+    "volume-max": number
     speed: number
     speedList: number[]
     playMode: PlayMode
@@ -209,10 +196,7 @@ export const defaultClickMenuZIndex = 256
 export const defaultVolumeZIndex = 128
 export const defaultPlaylistZIndex = 512
 export const defaultFont = "JetBrainsMono NFM Regular"
-export const defaultFontSize = 48
 export const defaultName = "uosc"
-export const defaultPadding = 6
-export const defaultButtonSize = defaultFontSize * 1.25
 export const defaultCursorSize = 4
 export const defaultMaxItemCount = 8
 export const defaultVolumeStep = 10
@@ -235,44 +219,29 @@ export function createDefaultThemeConfig(): EasyConfig {
     history: [],
     style: {
       dark: {
+        fontSizeScale: DefaultFontSizeScale,
         font: defaultFont,
         button: {
           default: {
-            padding: defaultPadding,
             color: White + AlphaShow,
             backgroundColor: Black + AlphaHide,
             colorHover: Yellow + AlphaShow,
             backgroundColorHover: White + AlphaMedium,
-            fontSize: defaultFontSize,
-            font: defaultFont,
-            width: defaultButtonSize,
-            height: defaultButtonSize,
           },
           active: {
-            padding: defaultPadding,
             color: White + AlphaShow,
             backgroundColor: Black + AlphaLow,
             colorHover: Yellow + AlphaShow,
             backgroundColorHover: White + AlphaMedium,
-            fontSize: defaultFontSize,
-            font: defaultFont,
-            width: defaultButtonSize,
-            height: defaultButtonSize,
           },
           hover: {
-            padding: defaultPadding,
             color: White + AlphaShow,
             backgroundColor: Black + AlphaLow,
             colorHover: Yellow + AlphaShow,
             backgroundColorHover: White + AlphaMedium,
-            fontSize: defaultFontSize,
-            font: defaultFont,
-            width: defaultButtonSize,
-            height: defaultButtonSize,
           },
         },
         progress: {
-          height: defaultButtonSize,
           color: White + AlphaShow,
           backgroundColor: Black + AlphaLow,
           cursorColor: White + AlphaShow,
@@ -281,14 +250,12 @@ export function createDefaultThemeConfig(): EasyConfig {
           previewCursorColor: White + AlphaMedium,
           timeTextBackgroundColor: White + AlphaHide,
           timeTextColor: White + AlphaShow,
-          font: defaultFont,
           previewZIndex: defaultPreviewZIndex,
           cutSegmentColor: Green + AlphaLow,
           cutCursorColor: Green + AlphaShow,
         },
         control: {
           backgroundColor: Black + AlphaLow,
-          height: defaultButtonSize,
         },
         scrollList: {
           maxItemCount: defaultMaxItemCount,
@@ -301,7 +268,6 @@ export function createDefaultThemeConfig(): EasyConfig {
         volume: {
           backgroundColor: Black + AlphaLow,
           autoHideDelay: defaultHideUIDelay,
-          fontSize: defaultFontSize * 0.75,
           zIndex: defaultVolumeZIndex,
           step: defaultVolumeStep,
           previewCursorSize: defaultCursorSize,
@@ -325,44 +291,31 @@ export function createDefaultThemeConfig(): EasyConfig {
         tooltip: {
           enable: true,
           zIndex: defaultTooltipZIndex,
-          padding: defaultPadding,
           color: White + AlphaShow,
           backgroundColor: Black + AlphaShow,
-          fontSize: defaultFontSize * 0.75,
-          font: defaultFont,
           maxWidth: defaultTooltipMaxWidth,
         },
         dropdown: {
           list: {
-            padding: 0,
             color: White + AlphaShow,
             backgroundColor: Black + AlphaLow,
             colorHover: Yellow + AlphaShow,
             backgroundColorHover: White + AlphaMedium,
-            fontSize: defaultFontSize,
-            font: defaultFont,
             zIndex: defaultDropdownZIndex + 1,
           },
           button: {
-            padding: defaultPadding,
             color: White + AlphaShow,
             backgroundColor: Black + AlphaHide,
             colorHover: Yellow + AlphaShow,
             backgroundColorHover: White + AlphaMedium,
-            fontSize: defaultFontSize,
-            font: defaultFont,
             zIndex: defaultDropdownZIndex,
           },
           item: {
-            padding: defaultPadding,
             color: White + AlphaShow,
             backgroundColor: Black + AlphaHide,
             colorHover: Yellow + AlphaShow,
             backgroundColorHover: White + AlphaMedium,
-            fontSize: defaultFontSize * 0.75,
-            font: defaultFont,
             zIndex: defaultDropdownZIndex + 2,
-            height: defaultFontSize * 0.75,
           },
         },
         clickMenu: {
@@ -372,44 +325,29 @@ export function createDefaultThemeConfig(): EasyConfig {
         },
       },
       light: {
+        fontSizeScale: DefaultFontSizeScale,
         font: defaultFont,
         button: {
           default: {
-            padding: defaultPadding,
             color: Black + AlphaShow,
             backgroundColor: White + AlphaHide,
             colorHover: Yellow + AlphaShow,
             backgroundColorHover: Black + AlphaMedium,
-            fontSize: defaultFontSize,
-            font: defaultFont,
-            width: defaultButtonSize,
-            height: defaultButtonSize,
           },
           active: {
-            padding: defaultPadding,
             color: Black + AlphaShow,
             backgroundColor: White + AlphaLow,
             colorHover: Yellow + AlphaShow,
             backgroundColorHover: Black + AlphaMedium,
-            fontSize: defaultFontSize,
-            font: defaultFont,
-            width: defaultButtonSize,
-            height: defaultButtonSize,
           },
           hover: {
-            padding: defaultPadding,
             color: Black + AlphaShow,
             backgroundColor: White + AlphaLow,
             colorHover: Yellow + AlphaShow,
             backgroundColorHover: Black + AlphaMedium,
-            fontSize: defaultFontSize,
-            font: defaultFont,
-            width: defaultButtonSize,
-            height: defaultButtonSize,
           },
         },
         progress: {
-          height: defaultButtonSize,
           color: Black + AlphaShow,
           backgroundColor: White + AlphaLow,
           cursorColor: Black + AlphaShow,
@@ -418,14 +356,12 @@ export function createDefaultThemeConfig(): EasyConfig {
           previewCursorColor: Black + AlphaMedium,
           timeTextBackgroundColor: Black + AlphaHide,
           timeTextColor: Black + AlphaShow,
-          font: defaultFont,
           previewZIndex: defaultPreviewZIndex,
           cutSegmentColor: Green + AlphaLow,
           cutCursorColor: Green + AlphaShow,
         },
         control: {
           backgroundColor: White + AlphaLow,
-          height: defaultButtonSize,
         },
         toolbar: {
           backgroundColor: White + AlphaLow,
@@ -437,7 +373,6 @@ export function createDefaultThemeConfig(): EasyConfig {
         },
         volume: {
           backgroundColor: White + AlphaLow,
-          fontSize: defaultFontSize * 0.75,
           autoHideDelay: defaultHideUIDelay,
           step: defaultVolumeStep,
           zIndex: defaultVolumeZIndex,
@@ -462,44 +397,31 @@ export function createDefaultThemeConfig(): EasyConfig {
         tooltip: {
           enable: true,
           zIndex: defaultTooltipZIndex,
-          padding: defaultPadding,
           color: Black + AlphaShow,
           backgroundColor: White + AlphaShow,
-          fontSize: defaultFontSize * 0.75,
-          font: defaultFont,
           maxWidth: defaultTooltipMaxWidth,
         },
         dropdown: {
           list: {
-            padding: 0,
             color: Black + AlphaShow,
             backgroundColor: White + AlphaLow,
             colorHover: Yellow + AlphaShow,
             backgroundColorHover: Black + AlphaMedium,
-            fontSize: defaultFontSize,
-            font: defaultFont,
             zIndex: defaultDropdownZIndex + 1,
           },
           button: {
-            padding: defaultPadding,
             color: Black + AlphaShow,
             backgroundColor: White + AlphaHide,
             colorHover: Yellow + AlphaShow,
             backgroundColorHover: Black + AlphaMedium,
-            fontSize: defaultFontSize,
-            font: defaultFont,
             zIndex: defaultDropdownZIndex,
           },
           item: {
-            padding: defaultPadding,
             color: Black + AlphaShow,
             backgroundColor: White + AlphaHide,
             colorHover: Yellow + AlphaShow,
             backgroundColorHover: Black + AlphaMedium,
-            fontSize: defaultFontSize * 0.75,
-            font: defaultFont,
             zIndex: defaultDropdownZIndex + 2,
-            height: defaultFontSize * 0.75,
           },
         },
         clickMenu: {
@@ -534,30 +456,38 @@ export const defaultState: EasyConfig["state"] = {
 
 export const defaultPlayer: EasyConfig["player"] = {
   pause: false,
-  timePos: 0,
+  seekable: false,
+  "sub-scale": 1,
+  "time-pos": 0,
   duration: 0,
-  windowMaximized: false,
+  "window-maximized": false,
   fullscreen: false,
-  windowMinimized: false,
+  "window-minimized": false,
   path: "",
   mute: false,
-  playlistPos: 0,
-  mousePos: {
+  "playlist-pos": 0,
+  "mouse-pos": {
     x: 0,
     y: 0,
     hover: false,
   },
-  osdDimensions: {
+  "osd-dimensions": {
     w: 0,
     h: 0,
+    aspect: 0,
+    mb: 0,
+    ml: 0,
+    mr: 0,
+    mt: 0,
+    par: 0,
   },
   aid: 0,
   vid: 0,
   sid: 0,
   playlist: [],
-  videoParams: {} as any,
+  "video-params": {} as any,
   volume: 100,
-  volumeMax: 130,
+  "volume-max": 130,
   speed: 1,
   speedList: [0.25, 0.5, 0.75, 1, 1.25, 1.5, 2, 4],
   playMode: DefaultPlayMode,

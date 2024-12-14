@@ -14,7 +14,7 @@ export function SimplePlay() {
   const [pause, setPause] = usePropertyBool("pause", pauseProp.value)
   const [color, setColor] = useState(iconColor)
   useEffect(() => {
-    pauseProp.observe((v) => {
+    pauseProp.observe((_, v) => {
       console.log("pause change: ", v)
     })
   }, [])

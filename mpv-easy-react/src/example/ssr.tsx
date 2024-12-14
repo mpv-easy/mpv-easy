@@ -32,7 +32,7 @@ const RecursiveDiv: React.FC<RecursiveDivProps> = ({ deep, count }) => {
 
 import("react-dom/server").then((v) => {
   const customConfig = getConfig()
-  store.setStore(customConfig)
+  store.setState(customConfig)
   const { renderToString } = v
   const st = Date.now()
   const s = renderToString(<RecursiveDiv count={5} deep={4} />)
