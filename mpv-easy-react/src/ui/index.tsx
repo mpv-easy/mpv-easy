@@ -53,7 +53,6 @@ export * from "./progress"
 export * from "./toolbar"
 export * from "./voice-control"
 export * from "./playlist"
-export * from "./click-menu"
 export * from "./osc"
 export * from "./uosc"
 export function hasPoint(node: MpDom | null, x: number, y: number): boolean {

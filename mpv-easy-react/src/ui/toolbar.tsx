@@ -51,6 +51,7 @@ export const Toolbar: ForwardRefExoticComponent<
         justifyContent="start"
         alignItems="center"
         backgroundColor={toolbar.backgroundColor}
+        height={h}
         color={button.color}
         id="toolbar-left"
       >
@@ -67,6 +68,7 @@ export const Toolbar: ForwardRefExoticComponent<
           font={font}
           justifyContent="start"
           alignItems="center"
+          height={h}
           backgroundColor={toolbar.backgroundColor}
         >
           <Minimize />

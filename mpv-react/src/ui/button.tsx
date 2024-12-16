@@ -18,11 +18,6 @@ export type ButtonProps = {
     | ButtonCustomPropHover
     | ButtonCustomPropDisable]: string
 } & {
-  // borderSizeHover: Len
-  // widthHover: Len
-  // heightHover: Len
-  // textHover: string
-
   disable: boolean
   active: boolean
 
@@ -31,9 +26,6 @@ export type ButtonProps = {
   tooltip: string
   tooltipDelay: number
   enableMouseStyle: boolean
-
-  prefix: string
-  postfix: string
 } & MpDomProps
 
 export const ButtonState = ["hover", "active", "disable"] as const
@@ -59,13 +51,12 @@ function getHoverProps(props: any) {
 }
 
 export const Button = React.forwardRef<MpDom, Partial<ButtonProps>>(
-  ({ prefix, postfix, text, ...props }, ref) => {
+  ({ text, ...props }, ref) => {
     const hoverProps = getHoverProps(props)
     const [hover, setHover] = useState(false)
 
     return (
       <Box
-        display="flex"
         {...props}
         {...(hover ? hoverProps : {})}
         ref={ref}
@@ -86,30 +77,8 @@ export const Button = React.forwardRef<MpDom, Partial<ButtonProps>>(
           }
           props.onMouseLeave?.(e)
         }}
-      >
-        {prefix && (
-          <Box
-            id={`button-prefix-${props.id}`}
-            pointerEvents="none"
-            text={prefix}
-          />
-        )}
-        {text && (
-          <Box
-            id={`button-text-${props.id}`}
-            pointerEvents="none"
-            text={text}
-          />
-        )}
-        {postfix && (
-          <Box
-            id={`button-postfix-${props.id}`}
-            pointerEvents="none"
-            text={postfix}
-          />
-        )}
-        {props.children}
-      </Box>
+        text={text}
+      />
     )
   },
 )

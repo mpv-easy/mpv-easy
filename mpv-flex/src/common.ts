@@ -14,17 +14,18 @@ export function applyAttributes<
   D extends BaseDom<any, any, any>,
   K extends keyof D["attributes"],
 >(node: D, attributes: Record<K, any>) {
-  const oldAttrs = node.attributes
-  for (const name in oldAttrs) {
-    if (name in oldAttrs && !(name in attributes)) {
-      // @ts-ignore
-      setAttribute(node, name, undefined)
-    }
-  }
-  for (const name in attributes) {
-    if (!attributesToSkip[name as keyof typeof attributesToSkip])
-      setAttribute(node, name, attributes[name])
-  }
+  node.attributes = attributes
+  // const oldAttrs = node.attributes
+  // for (const name in oldAttrs) {
+  //   if (name in oldAttrs && !(name in attributes)) {
+  //     // @ts-ignore
+  //     setAttribute(node, name, undefined)
+  //   }
+  // }
+  // for (const name in attributes) {
+  //   if (!attributesToSkip[name as keyof typeof attributesToSkip])
+  //     setAttribute(node, name, attributes[name])
+  // }
 }
 
 export function applyProps<

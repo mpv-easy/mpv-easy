@@ -36,7 +36,7 @@ export function ButtonPrefix() {
           id="play"
           text="play"
           {...button}
-          postfix={">"}
+          // postfix={">"}
           display="flex"
           justifyContent="space-between"
           onMouseDown={(e) => {

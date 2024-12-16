@@ -1,6 +1,6 @@
 import { Box } from "@mpv-easy/react"
 import React, { useRef, useState } from "react"
-import { fontSelector, speedStyleSelector } from "../store"
+import { fontSelector, fontSizeSelector, speedStyleSelector } from "../store"
 import * as ICON from "../icon"
 import { usePropertyNumber } from "@mpv-easy/react"
 import { useSelector } from "../models"
@@ -13,6 +13,7 @@ export function Speed() {
   const handleList = useRef<number[]>([])
   const initSpeed = useRef(speed)
   const lastClickRef = useRef(0)
+  const fontSize = useSelector(fontSizeSelector)
 
   const clear = () => {
     for (const hd of handleList.current) {
@@ -33,6 +34,7 @@ export function Speed() {
       justifyContent="center"
       alignItems="center"
       font={font}
+      fontSize={fontSize.fontSize}
       onMouseDown={() => {
         clear()
         const now = Date.now()
