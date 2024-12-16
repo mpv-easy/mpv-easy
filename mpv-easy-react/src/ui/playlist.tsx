@@ -63,6 +63,7 @@ export const Playlist = () => {
             const label = textEllipsis(s, playlistStyle.maxTitleLength)
             const showTitle = s !== label
             return {
+              id: i,
               key: i,
               label,
               showTitle,

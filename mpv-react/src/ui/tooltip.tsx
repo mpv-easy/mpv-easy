@@ -183,7 +183,7 @@ export const Tooltip = ({
         setShow(false)
       }
     }, tooltipThrottle)
-    mousePosProp.observe(update, isEqual)
+    mousePosProp.observe((_, v) => update(v), isEqual)
   }, [])
 
   return (

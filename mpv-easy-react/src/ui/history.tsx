@@ -62,6 +62,7 @@ export const History = () => {
             const label = textEllipsis(s, historyStyle.maxTitleLength)
             const showTitle = s !== label
             return {
+              id: i.path,
               key: i.path,
               label,
               title: i.name,

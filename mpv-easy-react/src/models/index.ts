@@ -13,6 +13,16 @@ import {
   isRemote,
   existsSync,
   commandv,
+  clamp,
+  PropertyNumber,
+  PropertyNative,
+  MpvPropertyTypeMap,
+  getMpvPlaylist,
+  normalize,
+  loadRemoteSubtitle,
+  dirname,
+  getExtName,
+  setPropertyNumber,
 } from "@mpv-easy/tool"
 import type { Language } from "@mpv-easy/i18n"
 import { type ThemeMode, type UIName, PlayMode } from "../mpv-easy-theme"
@@ -25,6 +35,8 @@ import { translate, pluginName as translateName } from "@mpv-easy/translate"
 import { createDefaultContext } from "../context"
 import { getVideoName } from "../common"
 import { defineStore } from "./easy-store"
+import isEqual from "lodash-es/isEqual"
+import { getPlayableList } from "@mpv-easy/autoload"
 
 const pauseProp = new PropertyBool("pause")
 const pathProp = new PropertyString("path")
@@ -37,10 +49,13 @@ const store = defineStore({
       state[pluginName].mode = mode
       return { ...state }
     },
-    setOsdDimensions(state, dim) {
-      state[pluginName].player.osdDimensions = dim
-      return { ...state }
-    },
+    // setOsdDimensions(state, dim) {
+    //   state[pluginName].player = {
+    //     ...state[pluginName].player,
+    //     "osd-dimensions": dim,
+    //   }
+    //   return { ...state }
+    // },
     setTheme(state, name: UIName) {
       state[pluginName].uiName = name
       return { ...state }
@@ -55,21 +70,23 @@ const store = defineStore({
       return { ...state }
     },
     setPause(state, pause: boolean) {
+      setPropertyBool("pause", pause)
       state[pluginName].player.pause = pause
-      pauseProp.value = pause
       return { ...state }
     },
     setMute(state, mute: boolean) {
+      setPropertyBool("mute", mute)
       state[pluginName].player.mute = mute
-      muteProp.value = mute
+      // muteProp.value = mute
       return { ...state }
     },
-    setTimePos(state, pos: number) {
-      state[pluginName].player.timePos = pos
+    setTimePos(state, timePos: number) {
+      state[pluginName].player["time-pos"] = timePos
+      setPropertyNumber("time-pos", timePos)
       return { ...state }
     },
     setWindowMaximized(state, value: boolean) {
-      state[pluginName].player.windowMaximized = value
+      state[pluginName].player["window-maximized"] = value
       setPropertyBool("window-maximized", value)
       return { ...state }
     },
@@ -78,14 +95,14 @@ const store = defineStore({
       setPropertyBool("fullscreen", value)
       return { ...state }
     },
-    setDuration(state, value: number) {
-      state[pluginName].player.duration = value
-      // setPropertyNumber("duration", value)
-      return { ...state }
-    },
+    // setDuration(state, value: number) {
+    //   state[pluginName].player.duration = value
+    //   // setPropertyNumber("duration", value)
+    //   return { ...state }
+    // },
 
     setWindowMinimized(state, value: boolean) {
-      state[pluginName].player.windowMinimized = value
+      state[pluginName].player["window-minimized"] = value
       setPropertyBool("window-minimized", value)
       return { ...state }
     },
@@ -104,10 +121,10 @@ const store = defineStore({
       command("screenshot video")
       return { ...state }
     },
-    setMousePos(state, pos: MousePos) {
-      state[pluginName].player.mousePos = pos
-      return { ...state }
-    },
+    // setMousePos(state, pos: MousePos) {
+    //   state[pluginName].player["mouse-pos"] = pos
+    //   return { ...state }
+    // },
     setHide(state, hide: boolean) {
       state[pluginName].state = {
         ...state[pluginName].state,
@@ -132,7 +149,6 @@ const store = defineStore({
       return { ...state }
     },
     setPlaylist(state: PluginContext, playlist: string[], playIndex: number) {
-      // setPlaylist(state, playlist: string[], playIndex: number) {
       state[pluginName].player = {
         ...state[pluginName].player,
         playlist,
@@ -177,7 +193,7 @@ const store = defineStore({
       if (newPos === pos) {
         return state
       }
-      state[pluginName].player.playlistPos = newPos
+      state[pluginName].player["playlist-play-index"] = newPos
       state[pluginName].player.path = list[newPos]
       pathProp.value = list[newPos]
       command(`playlist-play-index ${newPos}`)
@@ -192,7 +208,7 @@ const store = defineStore({
       if (newPos === pos) {
         return state
       }
-      state[pluginName].player.playlistPos = newPos
+      state[pluginName].player["playlist-play-index"] = newPos
       state[pluginName].player.path = list[newPos]
       pathProp.value = list[newPos]
       command(`playlist-play-index ${newPos}`)
@@ -214,16 +230,23 @@ const store = defineStore({
       state[anime4kName] = { ...config }
       return { ...state }
     },
-    setVideoParams(state, videoParams: VideoParams) {
-      state[pluginName].player = { ...state[pluginName].player, videoParams }
-      return { ...state }
-    },
+    // setVideoParams(state, videoParams: VideoParams) {
+    //   state[pluginName].player = {
+    //     ...state[pluginName].player,
+    //     "video-params": videoParams,
+    //   }
+    //   return { ...state }
+    // },
     setVolume(state, volume: number) {
+      setPropertyNumber("volume", volume)
       state[pluginName].player = { ...state[pluginName].player, volume }
       return { ...state }
     },
     setVolumeMax(state, volumeMax: number) {
-      state[pluginName].player = { ...state[pluginName].player, volumeMax }
+      state[pluginName].player = {
+        ...state[pluginName].player,
+        "volume-max": volumeMax,
+      }
       return { ...state }
     },
     setCutPoints(state, cutPoints: number[]) {
@@ -254,23 +277,18 @@ const store = defineStore({
       state[pluginName].config.protocolHook = exePath
       return { ...state }
     },
-    setFontSize(state, fontSize: number) {
-      const size = fontSize + 16
-      const padding = fontSize / 8
-      // TODO: color config vs size config
-      state[pluginName].style.dark.button.default.fontSize = fontSize
-      state[pluginName].style.dark.button.default.width = size
-      state[pluginName].style.dark.button.default.height = size
-      state[pluginName].style.dark.button.default.padding = padding
-
-      state[pluginName].style.light.button.default.fontSize = fontSize
-      state[pluginName].style.light.button.default.width = size
-      state[pluginName].style.light.button.default.height = size
-      state[pluginName].style.light.button.default.padding = padding
-
+    increaseFontSize(state) {
+      const { dark, light } = state[pluginName].style
+      dark.fontSizeScale = clamp(dark.fontSizeScale + 0.2, 0.2, 4)
+      light.fontSizeScale = clamp(dark.fontSizeScale + 0.2, 0.2, 4)
       return { ...state }
     },
-
+    decreaseFontSize(state) {
+      const { dark, light } = state[pluginName].style
+      dark.fontSizeScale = clamp(dark.fontSizeScale - 0.2, 0.2, 4)
+      light.fontSizeScale = clamp(dark.fontSizeScale - 0.2, 0.2, 4)
+      return { ...state }
+    },
     translate(state) {
       const config = state[translateName]
       translate(config)
@@ -282,12 +300,123 @@ const store = defineStore({
 export const {
   subscribe,
   useSelector,
-  getSnapshot,
+  getState,
   dispatch,
-  setStore,
+  setState,
   unsubscribe,
+  rerender,
 } = store
 
 export { store }
 export type Store = typeof store
+import { pluginName as autoloadName } from "@mpv-easy/autoload"
+import throttle from "lodash-es/throttle"
 export type Dispatch = typeof dispatch
+
+export function syncPlayer(store: Store) {
+  const state = store.getState()
+  const windowMaximizedProp = new PropertyBool("window-maximized")
+  const fullscreenProp = new PropertyBool("fullscreen")
+  const timePosProp = new PropertyNumber("time-pos")
+  const durationProp = new PropertyNumber("duration")
+  const pauseProp = new PropertyBool("pause")
+  const pathProp = new PropertyString("path")
+  const mousePosProp = new PropertyNative<MousePos>("mouse-pos")
+  const videoParamsProp = new PropertyNative<VideoParams>("video-params")
+  const muteProp = new PropertyBool("mute")
+  const seekableProp = new PropertyBool("seekable")
+
+  const aidProp = new PropertyNumber("aid")
+  const vidProp = new PropertyNumber("vid")
+  const sidProp = new PropertyNumber("sid")
+  const volumeProp = new PropertyNumber("volume")
+  const volumeMaxProp = new PropertyNumber("volume-max")
+  const speedProp = new PropertyNumber("speed")
+  const subScaleProp = new PropertyNumber("sub-scale")
+  const playlistCountProp = new PropertyNumber("playlist/count")
+  const playlistIndexProp = new PropertyNumber("playlist-play-index")
+  const osdDimensionsProp = new PropertyNative<
+    MpvPropertyTypeMap["osd-dimensions"]
+  >("osd-dimensions")
+
+  const frameTime = 1000 / state[pluginName].config.fps
+  const rerender = throttle(store.rerender, frameTime)
+  // const rerender = store.rerender
+
+  function updateProp(name: string, value: any) {
+    // @ts-ignore
+    const oldValue = state[pluginName].player[name]
+    // console.log(
+    //   "updateProp",
+    //   name,
+    //   isEqual(oldValue, value),
+    //   JSON.stringify(value),
+    //   JSON.stringify(oldValue),
+    // )
+    if (isEqual(oldValue, value)) {
+      return
+    }
+    // @ts-ignore
+    // state[pluginName].player[name] = value
+    state[pluginName].player = {
+      ...state[pluginName].player,
+      [name]: value,
+    }
+
+    store.setState({ ...state })
+    rerender()
+  }
+
+  for (const i of [
+    aidProp,
+    vidProp,
+    sidProp,
+    speedProp,
+    volumeProp,
+    volumeMaxProp,
+    videoParamsProp,
+    windowMaximizedProp,
+    fullscreenProp,
+    timePosProp,
+    durationProp,
+    muteProp,
+    pauseProp,
+    mousePosProp,
+    osdDimensionsProp,
+    subScaleProp,
+    seekableProp,
+    playlistIndexProp,
+  ]) {
+    i.observe(updateProp)
+  }
+
+  playlistCountProp.observe((_, v) => {
+    const p = pathProp.value
+    const list = getMpvPlaylist()
+    const i = list.indexOf(p)
+    dispatch.setPlaylist(list, i === -1 ? 0 : i)
+    rerender()
+  })
+
+  pathProp.observe((_, v) => {
+    v = normalize(v ?? "")
+    if (v?.length && v !== pathProp.value) {
+      dispatch.addHistory(v)
+      loadRemoteSubtitle(v)
+      dispatch.setPath(v)
+      const d = dirname(v)
+      if (!d) {
+        return
+      }
+      const list = getPlayableList(
+        state[autoloadName],
+        v,
+        d,
+        getExtName(v) || "",
+      )
+      const playIndex = list.indexOf(v)
+      dispatch.setPlaylist(list, playIndex === -1 ? 0 : playIndex)
+      rerender()
+    }
+  })
+}

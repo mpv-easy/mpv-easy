@@ -346,10 +346,15 @@ export function createRender({
 
     let lastW = 0
     let lastH = 0
-    function renderRootNode({ w, h }: MpvPropertyTypeMap["osd-dimensions"]) {
+    const dim = new PropertyNative<MpvPropertyTypeMap["osd-dimensions"]>(
+      "osd-dimensions",
+    )
+    function renderRootNode() {
+      const { w, h } = dim.value || { w: 0, h: 0 }
       if (!w || !h || (lastW === w && lastH === h)) {
         return
       }
+      // console.log("===renderRootNode", w, h)
       lastW = w
       lastH = h
       setAttribute(flex.rootNode, "id", RootName)
@@ -365,6 +370,7 @@ export function createRender({
       setAttribute(flex.rootNode, "y", 0)
       setAttribute(flex.rootNode, "zIndex", 0)
       setAttribute(flex.rootNode, "alignContent", "stretch")
+      setAttribute(flex.rootNode, "fontSize", 16)
 
       setLayoutNode(flex.rootNode, "x", 0)
       setLayoutNode(flex.rootNode, "y", 0)
@@ -377,13 +383,13 @@ export function createRender({
 
       customRender()
     }
-    const dim = new PropertyNative<MpvPropertyTypeMap["osd-dimensions"]>(
-      "osd-dimensions",
-    )
-    renderRootNode(dim.value!)
-    dim.observe((value) => {
+
+    renderRootNode()
+    dim.observe(() => {
       // HACK: delay render
-      setTimeout(() => renderRootNode(value))
+      // setTimeout(() => renderRootNode(value))
+      // setTimeout(() => )
+      renderRootNode()
     })
   }
 }

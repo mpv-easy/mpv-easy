@@ -1,7 +1,7 @@
-import { Button } from "@mpv-easy/react"
 import React from "react"
+import { Button } from "@mpv-easy/react"
 import {
-  buttonStyleSelector,
+  iconButtonStyle,
   pathSelector,
   toolbarStyleSelector,
 } from "../../store"
@@ -16,30 +16,21 @@ import {
 import { useSelector } from "../../models"
 
 export const Filename = () => {
-  const button = useSelector(buttonStyleSelector)
   const path = useSelector(pathSelector)
   const title = getVideoTitle(path) || getVideoName(path) || ""
   // TODO: text-overflow: ellipsis;
   const maxLen = useSelector(toolbarStyleSelector).maxTitleLength
   const text = textEllipsis(title, maxLen)
   const showTitle = text !== title
+  const style = useSelector(iconButtonStyle)
   return (
     (text?.length ?? 0) > 0 && (
       <Button
+        {...style}
         title={showTitle ? title : ""}
         id="mpv-easy-button-filename"
-        height={button.height}
-        display="flex"
-        flexDirection="column"
-        justifyContent="center"
-        alignItems="center"
         text={text}
-        padding={button.padding}
-        backgroundColor={button.backgroundColor}
-        font={button.font}
-        fontSize={button.fontSize}
-        color={button.color}
-        colorHover={button.colorHover}
+        width="auto"
         onMouseUp={() => {
           if (isYtdlp(path) || isRemote(path)) {
             openBrowser(path)

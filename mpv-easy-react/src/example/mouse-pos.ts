@@ -3,7 +3,7 @@ import { PropertyNative, type MousePos } from "@mpv-easy/tool"
 
 const time = 500
 const mousePosProp = new PropertyNative<MousePos>("mouse-pos")
-const cb = throttle((v) => {
+const cb = throttle((_, v) => {
   console.log("mouse pos: ", v.x, v.y, v.hover)
 }, time)
 

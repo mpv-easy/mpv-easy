@@ -7,17 +7,17 @@ import React, {
 import { Progress } from "../progress"
 import { Box, type MpDom, type MpDomProps } from "@mpv-easy/react"
 import { UoscControl } from "./control"
-import { IconButtonSizeSelector } from "../../store"
+import { cellSizeSelector } from "../../store"
 import { useSelector } from "../../models"
 export * from "./control"
 
 export const Uosc: ForwardRefExoticComponent<
   PropsWithoutRef<Partial<MpDomProps>> & RefAttributes<MpDom>
 > = forwardRef<MpDom, Partial<MpDomProps>>((props, ref) => {
-  const h = useSelector(IconButtonSizeSelector)
+  const h = useSelector(cellSizeSelector)
   return (
     <Box
-      width={"100%"}
+      width={props.width}
       height={h * 2}
       display="flex"
       flexDirection="row"
@@ -25,10 +25,10 @@ export const Uosc: ForwardRefExoticComponent<
       ref={ref}
       id="uosc"
       justifyContent="end"
-      onMouseDown={(e) => e.stopPropagation}
+      onMouseDown={(e) => e.stopPropagation()}
     >
-      <UoscControl {...props} width={"100%"} height={h} />
-      <Progress {...props} width={"100%"} height={h} id="uosc-progress" />
+      <UoscControl {...props} height={h} />
+      <Progress {...props} height={h} id="uosc-progress" />
     </Box>
   )
 })

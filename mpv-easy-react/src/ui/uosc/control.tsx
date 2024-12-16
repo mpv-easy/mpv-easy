@@ -3,7 +3,10 @@ import React from "react"
 import {
   buttonStyleSelector,
   controlSelector,
+  fontSelector,
   fullscreenSelector,
+  cellSizeSelector,
+  normalFontSizeSelector,
 } from "../../store"
 import { Play } from "../components/play"
 import { Stop } from "../components/stop"
@@ -25,14 +28,15 @@ export const UoscControl = (props: Partial<MpDomProps>) => {
   const { width, height } = props
   const button = useSelector(buttonStyleSelector)
   const control = useSelector(controlSelector)
-
+  const fontSize = useSelector(normalFontSizeSelector)
+  const font = useSelector(fontSelector)
   const fullscreen = useSelector(fullscreenSelector)
   return (
     <Box
       id="uosc-control"
       display="flex"
-      font={button.font}
-      fontSize={button.fontSize}
+      font={font}
+      fontSize={fontSize.fontSize}
       color={button.color}
       width={width}
       height={height}
@@ -60,16 +64,16 @@ export const UoscControl = (props: Partial<MpDomProps>) => {
         id="uosc-control-right"
         display="flex"
         height={height}
-        justifyContent="end"
+        justifyContent="start"
         alignItems="center"
         backgroundColor={control.backgroundColor}
       >
         <PlayMode />
-        <PreviousFrame />
+        {/* <PreviousFrame /> */}
         <Previous />
         <Playlist />
         <Next />
-        <NextFrame />
+        {/* <NextFrame /> */}
         {fullscreen ? <Restore /> : <Fullscreen />}
       </Box>
     </Box>

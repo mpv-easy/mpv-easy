@@ -43,6 +43,8 @@ import {
   speedSelector,
   speedListSelector,
   fontSizeSelector,
+  normalFontSizeSelector,
+  fontSelector,
 } from "../store"
 import * as ICON from "../icon"
 import { pluginName as anime4kName } from "@mpv-easy/anime4k"
@@ -79,19 +81,12 @@ export const ClickMenu: ForwardRefExoticComponent<
   const anime4k = useSelector(anime4kSelector)
   const speed = useSelector(speedSelector)
   const speedList = useSelector(speedListSelector)
-
+  const font = useSelector(fontSelector)
   const language = useSelector(languageSelector)
-
   const mode = useSelector(modeSelector)
-
   const uiName = useSelector(uiNameSelector)
-
   const enablePlugins = useSelector(enablePluginsStyleSelector)
-
-  const minFontSize = 12
-  const maxFontSize = 120
-  const fontStep = 12
-  const fontSize = useSelector(fontSizeSelector)
+  const fontSize = useSelector(normalFontSizeSelector)
 
   function getClickMenuItems(): MenuItem[] {
     const os = getOs()
@@ -149,19 +144,17 @@ export const ClickMenu: ForwardRefExoticComponent<
         label: i18n.style,
         children: [
           {
-            key: i18n.enlargeFontSize,
-            label: i18n.enlargeFontSize,
+            key: i18n.increaseFontSize,
+            label: i18n.increaseFontSize,
             onSelect() {
-              const s = clamp(fontSize + fontStep, minFontSize, maxFontSize)
-              dispatch.setFontSize(s)
+              dispatch.increaseFontSize()
             },
           },
           {
-            key: i18n.reduceFontSize,
-            label: i18n.reduceFontSize,
+            key: i18n.decreaseFontSize,
+            label: i18n.decreaseFontSize,
             onSelect() {
-              const s = clamp(fontSize - fontStep, minFontSize, maxFontSize)
-              dispatch.setFontSize(s)
+              dispatch.decreaseFontSize()
             },
           },
         ],
@@ -258,8 +251,8 @@ export const ClickMenu: ForwardRefExoticComponent<
         }),
       },
       {
-        key: i18n.skin,
-        label: i18n.skin,
+        key: i18n.ui,
+        label: i18n.ui,
         children: UINameList.map((i): MenuItem => {
           const maxLen = getMaxStringLength(UINameList)
           const prefix =
@@ -376,14 +369,14 @@ export const ClickMenu: ForwardRefExoticComponent<
               key={i.key}
               text={i.label}
               enableMouseStyle={mouseHoverStyle}
-              padding={button.padding}
+              padding={fontSize.padding}
               colorHover={button.colorHover}
               backgroundColorHover={button.backgroundColorHover}
               backgroundColor={button.backgroundColor}
-              font={button.font}
-              fontSize={button.fontSize}
+              font={font}
+              fontSize={fontSize.fontSize}
               color={button.color}
-              height={button.fontSize}
+              height={fontSize.fontSize}
               onMouseDown={(e) => {
                 e.stopPropagation()
                 i.onSelect?.(i)
@@ -423,8 +416,8 @@ export const ClickMenu: ForwardRefExoticComponent<
           x={childMenuPos.x}
           y={childMenuPos.y}
           // padding={button.padding}
-          font={button.font}
-          fontSize={button.fontSize}
+          font={font}
+          fontSize={fontSize.fontSize}
           color={button.color}
           display="flex"
           flexDirection="row"
@@ -443,14 +436,14 @@ export const ClickMenu: ForwardRefExoticComponent<
                 key={i.key}
                 text={i.label}
                 enableMouseStyle={mouseHoverStyle}
-                padding={button.padding}
+                padding={fontSize.padding}
                 colorHover={button.colorHover}
                 backgroundColorHover={button.backgroundColorHover}
                 backgroundColor={button.backgroundColor}
-                font={button.font}
-                fontSize={button.fontSize}
+                font={font}
+                fontSize={fontSize.fontSize}
                 color={button.color}
-                height={button.fontSize}
+                height={fontSize.fontSize}
                 onMouseDown={(e) => {
                   e.stopPropagation()
                   i.onSelect?.(i)

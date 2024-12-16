@@ -9,8 +9,10 @@ import {
 import React, { useRef, useState } from "react"
 import {
   buttonStyleSelector,
-  fontSizeSelector,
+  cellSizeSelector,
+  fontSelector,
   mouseHoverStyleSelector,
+  normalFontSizeSelector,
   scrollListStyleSelector,
 } from "../../store"
 import { measureText, type MouseEvent } from "@mpv-easy/react"
@@ -38,9 +40,9 @@ function getMaxWidth(
   const size = getOsdSize()
   const cacheKey = `${JSON.stringify(size)}\n${textList.join("\n")}`
 
-  if (MaxWidthCache[cacheKey]) {
-    return MaxWidthCache[cacheKey]
-  }
+  // if (MaxWidthCache[cacheKey]) {
+  //   return MaxWidthCache[cacheKey]
+  // }
 
   while (MaxWidthDomCache.length < textList.length) {
     MaxWidthDomCache.push(createNode("@mpv-easy/box"))
@@ -70,25 +72,38 @@ export const ScrollList = ({
   const maxItemCount = scrollListStyle.maxItemCount
   const [startIndex, setStartIndex] = useState(0)
   const mouseHoverStyle = useSelector(mouseHoverStyleSelector)
+  const normalFontSize = useSelector(normalFontSizeSelector)
+  const cellSize = useSelector(cellSizeSelector)
+  const font = useSelector(fontSelector)
   const showScrollBar = maxItemCount < items.length
-  const scrollListHeight = maxItemCount * (button.height + button.padding * 2)
+  const scrollListHeight =
+    maxItemCount * (normalFontSize.fontSize + normalFontSize.padding * 2)
   const scrollBarHeight = showScrollBar
     ? (maxItemCount / items.length) * scrollListHeight
     : 0
   const scrollBarSpace = scrollListHeight - scrollBarHeight
   const scrollBarTop =
-    button.padding * 2 +
+    normalFontSize.padding * 2 +
     (startIndex / (items.length - maxItemCount)) * scrollBarSpace
   const visibleList = items.slice(startIndex, startIndex + maxItemCount)
   const ref = useRef<MpDom | null>(null)
 
-  const max = getMaxWidth(
-    items.map((i) => i.label),
-    button,
-    ref.current,
-  )
+  const max =
+    getMaxWidth(
+      items.map((i) => i.label),
+      {
+        fontSize: normalFontSize.fontSize,
+        // padding: normalFontSize.padding,
+        padding: 0,
+        font,
+        height: cellSize,
+        ...button,
+      },
+      ref.current,
+    ) +
+    // hack: allow some measurement error to ensure that the width can accommodate all the text
+    normalFontSize.padding * 2
 
-  const fontSize = useSelector(fontSizeSelector)
   return (
     <Box
       id="scroll-list"
@@ -97,8 +112,8 @@ export const ScrollList = ({
       position="relative"
       flexDirection="row"
       alignItems="start"
-      padding={button.padding}
-      borderSize={button.padding}
+      padding={normalFontSize.padding}
+      borderSize={normalFontSize.padding}
       borderColor={button.backgroundColorHover}
       onWheelDown={(e) => {
         if (startIndex + maxItemCount < items.length) {
@@ -119,7 +134,7 @@ export const ScrollList = ({
           id={"scroll-bar"}
           top={scrollBarTop}
           right={0}
-          width={button.padding}
+          width={normalFontSize.padding}
           height={scrollBarHeight}
           backgroundColor={button.color}
         />
@@ -131,15 +146,15 @@ export const ScrollList = ({
             title={showTitle ? title : ""}
             key={key}
             text={label}
-            width={max + button.padding * 2}
-            height={button.height}
+            width={max + normalFontSize.padding * 2}
+            height={cellSize}
             enableMouseStyle={mouseHoverStyle}
-            padding={button.padding}
+            padding={normalFontSize.padding}
             colorHover={button.colorHover}
             backgroundColorHover={button.backgroundColorHover}
             backgroundColor={button.backgroundColor}
-            font={button.font}
-            fontSize={fontSize}
+            font={font}
+            fontSize={normalFontSize.fontSize}
             color={button.color}
             onClick={onClick}
           />

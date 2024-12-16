@@ -7,7 +7,7 @@ import {
   defaultState,
   type EasyConfig,
 } from "./mpv-easy-theme"
-import type { Store } from "./models"
+import { syncPlayer, type Store } from "./models"
 import throttle from "lodash-es/throttle"
 export const pluginName = "@mpv-easy/easy-react"
 
@@ -27,23 +27,24 @@ export default definePlugin((context, api) => ({
   name: pluginName,
   create() {
     const store = api.store
-    store.setStore(context)
+    store.setState(context)
 
     // TODO: Temporary attributes should not be saved
     context[pluginName].state = defaultState
     store.subscribe(
       throttle(() => {
-        const state = store.getSnapshot()
+        const state = store.getState()
         api.saveConfig(state)
       }, defaultSaveConfigThrottle),
     )
     const fps = context[pluginName].config.fps || DefaultFps
     const render = createRender({
       fps,
-      showFps: true,
+      // showFps: true,
       enableMouseMoveEvent:
         context[pluginName].config.enableMouseMoveEvent ?? true,
     })
     render(<Easy />)
+    syncPlayer(store)
   },
 }))

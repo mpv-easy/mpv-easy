@@ -12,7 +12,9 @@ import {
   volumeStyleSelector,
   osdDimensionsSelector,
   smallFontSizeSelector,
-  IconButtonSizeSelector,
+  cellSizeSelector,
+  fontSelector,
+  normalFontSizeSelector,
 } from "../store"
 import { clamp, setPropertyNumber } from "@mpv-easy/tool"
 import { Mute } from "./components/mute"
@@ -27,16 +29,18 @@ export const VoiceControl: ForwardRefExoticComponent<
   const volumeStyle = useSelector(volumeStyleSelector)
   const volumeHeight = volume / volumeMax
   const osdH = useSelector(osdDimensionsSelector).h
-  const iconSize = useSelector(IconButtonSizeSelector)
+  const iconSize = useSelector(cellSizeSelector)
   const boxCount = 5
-  const boxHeight = button.height * boxCount
-
-  const wrapHeight = boxHeight + 2 * iconSize + 2 * button.padding
+  const smallFontSize = useSelector(normalFontSizeSelector)
+  const boxHeight = iconSize * boxCount
+  const fontSize = useSelector(normalFontSizeSelector)
+  const wrapHeight =
+    boxHeight + 2 * iconSize + 2 * fontSize.padding + fontSize.fontSize
 
   const wrapTop = (osdH - wrapHeight) / 2
   const [previewHide, setPreviewHide] = useState(true)
   const [previewBottom, setPreviewBottom] = useState(0)
-  const fontSize = useSelector(smallFontSizeSelector)
+  const font = useSelector(fontSelector)
 
   const previewColor =
     previewBottom + volumeStyle.previewCursorSize / 2 / boxHeight > volumeHeight
@@ -49,38 +53,39 @@ export const VoiceControl: ForwardRefExoticComponent<
         id="voice-control"
         top={wrapTop}
         right={0}
-        width={iconSize + 2 * button.padding}
+        width={iconSize + 2 * fontSize.padding}
         height={wrapHeight}
         onWheelDown={() => {
           const v = clamp(volume - volumeStyle.step, 0, volumeMax)
           dispatch.setVolume(v)
-          setPropertyNumber("volume", v)
+          // setPropertyNumber("volume", v)
         }}
         onWheelUp={() => {
           const v = clamp(volume + volumeStyle.step, 0, volumeMax)
           dispatch.setVolume(v)
-          setPropertyNumber("volume", v)
+          // setPropertyNumber("volume", v)
         }}
         position="relative"
         display="flex"
         flexDirection="row"
         alignItems="center"
         justifyContent="center"
-        padding={button.padding}
+        padding={fontSize.padding}
         backgroundColor={volumeStyle.backgroundColor}
         {...props}
         ref={ref}
         hide={props.hide}
         zIndex={volumeStyle.zIndex}
+        font={font}
       >
         <Box
           id="voice-control-volume"
-          fontSize={fontSize}
+          fontSize={fontSize.fontSize}
           text={volume.toFixed(0).toString()}
-          width={button.width}
-          height={button.height}
+          width={iconSize}
+          height={iconSize}
           color={button.color}
-          padding={button.padding}
+          padding={fontSize.padding}
           display="flex"
           justifyContent="center"
           alignItems="center"
@@ -88,13 +93,13 @@ export const VoiceControl: ForwardRefExoticComponent<
         <Box
           id="voice-control-box"
           height={boxHeight}
-          width={button.width - 2 * button.padding}
+          width={fontSize.fontSize}
           display="flex"
           position="relative"
           flexDirection="row"
           justifyContent="center"
           alignItems="center"
-          borderSize={button.padding}
+          borderSize={fontSize.padding}
           borderColor={button.color}
           zIndex={volumeStyle.zIndex + 2}
           onMouseDown={(e) => {
@@ -105,7 +110,7 @@ export const VoiceControl: ForwardRefExoticComponent<
               0
             const newVolume = clamp(v, 0, volumeMax)
             dispatch.setVolume(newVolume)
-            setPropertyNumber("volume", newVolume)
+            // setPropertyNumber("volume", newVolume)
           }}
           onMouseEnter={() => {
             setPreviewHide(false)
@@ -130,7 +135,7 @@ export const VoiceControl: ForwardRefExoticComponent<
             height={`${volumeHeight * 100}%`}
             bottom={0}
             left={0}
-            width={button.width}
+            width={iconSize}
             backgroundColor={button.color}
             position="absolute"
             zIndex={volumeStyle.zIndex + 1}
@@ -143,7 +148,7 @@ export const VoiceControl: ForwardRefExoticComponent<
               height={volumeStyle.previewCursorSize}
               left={0}
               bottom={`${previewBottom * 100}%`}
-              width={button.width}
+              width={iconSize}
               position="absolute"
               backgroundColor={previewColor}
               zIndex={volumeStyle.zIndex + 16}

@@ -1,36 +1,19 @@
-import { Button } from "@mpv-easy/react"
 import React from "react"
+import { Button } from "@mpv-easy/react"
 import * as ICON from "../../icon"
-import {
-  buttonStyleSelector,
-  i18nSelector,
-  mouseHoverStyleSelector,
-} from "../../store"
+import { i18nSelector, iconButtonStyle } from "../../store"
 import { command } from "@mpv-easy/tool"
 import { useSelector } from "../../models"
 
 export const PreviousFrame = () => {
-  const button = useSelector(buttonStyleSelector)
   const i18n = useSelector(i18nSelector)
-  const mouseHoverStyle = useSelector(mouseHoverStyleSelector)
+  const style = useSelector(iconButtonStyle)
   return (
     <Button
+      {...style}
       id="mpv-easy-button-previous-frame"
       title={i18n.previousFrame}
       text={ICON.FastBackward}
-      width={button.width}
-      height={button.height}
-      display="flex"
-      justifyContent="center"
-      alignItems="center"
-      enableMouseStyle={mouseHoverStyle}
-      colorHover={button.colorHover}
-      backgroundColorHover={button.backgroundColorHover}
-      padding={button.padding}
-      backgroundColor={button.backgroundColor}
-      font={button.font}
-      fontSize={button.fontSize}
-      color={button.color}
       onMouseDown={() => {
         command("no-osd frame-back-step")
       }}

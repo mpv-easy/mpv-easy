@@ -6,8 +6,10 @@ import { pluginName as thumbfastName } from "@mpv-easy/thumbfast"
 import { pluginName as translateName } from "@mpv-easy/translate"
 import { pluginName as cutName } from "@mpv-easy/cut"
 import { pluginName as cropName } from "@mpv-easy/crop"
-import { normalize } from "@mpv-easy/tool"
+import { clamp, normalize } from "@mpv-easy/tool"
 import { PluginContext } from "@mpv-easy/plugin"
+import * as ICON from "./icon"
+import { ButtonProps, DropdownProps } from "@mpv-easy/react"
 
 export * from "./models"
 
@@ -38,17 +40,17 @@ export const fullscreenSelector = (state: PluginContext) =>
 export const muteSelector = (state: PluginContext) =>
   state[pluginName].player.mute
 export const mousePosSelector = (state: PluginContext) =>
-  state[pluginName].player.mousePos
+  state[pluginName].player["mouse-pos"]
 export const pathSelector = (state: PluginContext) =>
   normalize(state[pluginName].player.path ?? "")
 
-export const playlistPosSelector = (state: PluginContext) =>
-  state[pluginName].player.playlistPos
+export const playlistPlayIndexSelector = (state: PluginContext) =>
+  state[pluginName].player["playlist-play-index"]
 
 export const durationSelector = (state: PluginContext) =>
   state[pluginName].player.duration
 export const timePosSelector = (state: PluginContext) =>
-  state[pluginName].player.timePos
+  state[pluginName].player["time-pos"]
 
 export const aidSelector = (state: PluginContext) =>
   state[pluginName].player.aid
@@ -63,10 +65,10 @@ export const volumeSelector = (state: PluginContext) =>
   state[pluginName].player.volume
 
 export const volumeMaxSelector = (state: PluginContext) =>
-  state[pluginName].player.volumeMax
+  state[pluginName].player["volume-max"]
 
 export const videoParamsSelector = (state: PluginContext) =>
-  state[pluginName].player.videoParams
+  state[pluginName].player["video-params"]
 
 export const fpsSelector = (state: PluginContext) =>
   state[pluginName].config.fps
@@ -80,21 +82,34 @@ export const buttonStyleSelector = (state: PluginContext) =>
 export const controlSelector = (state: PluginContext) =>
   styleSelector(state)[modeSelector(state)].control
 
+export const fontSizeScaleSelector = (state: PluginContext) =>
+  styleSelector(state)[modeSelector(state)].fontSizeScale
+
 export const fontSelector = (state: PluginContext) =>
   styleSelector(state)[modeSelector(state)].font
-export const IconButtonSizeSelector = (state: PluginContext) => {
-  const button = styleSelector(state)[modeSelector(state)].button.default
-  return button.width + button.padding * 2
+
+export const cellSizeSelector = (state: PluginContext) => {
+  const scale = fontSizeScaleSelector(state)
+  const osd = osdDimensionsSelector(state)
+  const cell = clamp(((osd.w * scale) / 32) & ~7, 16, 128)
+  return cell
 }
 
-export const fontSizeSelector = (state: PluginContext) =>
-  styleSelector(state)[modeSelector(state)].button.default.fontSize
+export const fontSizeSelector = (state: PluginContext) => {
+  const cell = cellSizeSelector(state)
+  const fontSize = (cell / 4) * 3
+  const padding = cell / 8
+  return { fontSize, padding }
+}
+export const normalFontSizeSelector = (state: PluginContext) =>
+  fontSizeSelector(state)
 
-export const smallFontSizeSelector = (state: PluginContext) =>
-  styleSelector(state)[modeSelector(state)].button.default.fontSize * 0.75
-
-export const largeFontSizeSelector = (state: PluginContext) =>
-  styleSelector(state)[modeSelector(state)].button.default.fontSize * 1.25
+export const smallFontSizeSelector = (state: PluginContext) => {
+  const cell = fontSizeSelector(state).fontSize & ~7
+  const fontSize = (cell / 4) * 3
+  const padding = cell / 8
+  return { fontSize, padding }
+}
 
 export const scrollListStyleSelector = (state: PluginContext) =>
   styleSelector(state)[modeSelector(state)].scrollList
@@ -127,7 +142,9 @@ export const speedStyleSelector = (state: PluginContext) =>
 export const playlistSelector = (state: PluginContext) =>
   state[pluginName].player.playlist
 export const osdDimensionsSelector = (state: PluginContext) =>
-  state[pluginName].player.osdDimensions
+  state[pluginName].player["osd-dimensions"]
+// getPropertyNative<MpvPropertyTypeMap["osd-dimensions"]>("osd-dimensions")!
+
 export const speedSelector = (state: PluginContext) =>
   state[pluginName].player.speed
 export const speedListSelector = (state: PluginContext) =>
@@ -159,3 +176,87 @@ export const translateSelector = (state: PluginContext) => state[translateName]
 export const cutSelector = (state: PluginContext) => state[cutName]
 
 export const cropSelector = (state: PluginContext) => state[cropName]
+
+export const iconButtonStyle = (state: PluginContext): Partial<ButtonProps> => {
+  const button = buttonStyleSelector(state)
+  const fontSize = normalFontSizeSelector(state)
+  const font = fontSelector(state)
+  const mouseHoverStyle = mouseHoverStyleSelector(state)
+  const size = cellSizeSelector(state)
+
+  return {
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    // alignContent: 'stretch',
+    // textAlign: 'center',
+    width: size,
+    height: size,
+    enableMouseStyle: mouseHoverStyle,
+    // padding: fontSize.padding,
+    colorHover: button.colorHover,
+    backgroundColorHover: button.backgroundColorHover,
+    backgroundColor: button.backgroundColor,
+    fontSize: fontSize.fontSize,
+    color: button.color,
+    font,
+  }
+}
+
+export const commonDropdownStyleSelector = (
+  state: PluginContext,
+): Partial<DropdownProps> => {
+  const font = fontSelector(state)
+  const mouseHoverStyle = mouseHoverStyleSelector(state)
+  const dropdown = dropdownStyleSelector(state)
+  const normalFontSize = normalFontSizeSelector(state)
+  const cell = cellSizeSelector(state)
+
+  return {
+    dropdownStyle: dropdown.button,
+    width: cell,
+    height: cell,
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    // alignContent: 'stretch',
+    // textAlign: 'center',
+    enableMouseStyle: mouseHoverStyle,
+    padding: normalFontSize.padding,
+    colorHover: dropdown.button.colorHover,
+    backgroundColorHover: dropdown.button.backgroundColorHover,
+    backgroundColor: dropdown.button.backgroundColor,
+    font: font,
+    fontSize: normalFontSize.fontSize,
+    color: dropdown.button.color,
+    dropdownListStyle: dropdown.list,
+    pageDown: { style: dropdown.item, text: ICON.TriangleDown },
+    pageUp: { style: dropdown.item, text: ICON.TriangleUp },
+  }
+}
+
+export const commonDropdownItemStyleSelector = (
+  state: PluginContext,
+): Partial<DropdownProps> => {
+  const { item } = dropdownStyleSelector(state)
+  const font = fontSelector(state)
+  const smallFontSize = smallFontSizeSelector(state)
+  return {
+    ...item,
+    font,
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "start",
+    padding: 0,
+    // padding: smallFontSize.padding,
+    fontSize: smallFontSize.fontSize,
+    // height: smallFontSize.fontSize + smallFontSize.padding * 2,
+    height: smallFontSize.fontSize,
+  }
+}
+
+export const subScaleSelector = (state: PluginContext) =>
+  state[pluginName].player["sub-scale"]
+
+export const seekableSelector = (state: PluginContext) =>
+  state[pluginName].player.seekable

@@ -1,11 +1,11 @@
-import { Dropdown, type DropdownItem } from "@mpv-easy/react"
+import { type DropdownItem } from "@mpv-easy/react"
 import React from "react"
+import { Dropdown } from "@mpv-easy/react"
 import * as ICON from "../../icon"
 import {
-  buttonStyleSelector,
-  dropdownStyleSelector,
+  commonDropdownItemStyleSelector,
+  commonDropdownStyleSelector,
   i18nSelector,
-  mouseHoverStyleSelector,
   playModeSelector,
 } from "../../store"
 import { setPropertyBool } from "@mpv-easy/tool"
@@ -13,16 +13,15 @@ import { PlayModeList } from "../../mpv-easy-theme"
 import { dispatch, useSelector } from "../../models"
 
 export const PlayMode = () => {
-  const button = useSelector(buttonStyleSelector)
   const i18n = useSelector(i18nSelector)
-  const mouseHoverStyle = useSelector(mouseHoverStyleSelector)
   const playMode = useSelector(playModeSelector)
-  const dropdown = useSelector(dropdownStyleSelector)
+  const itemStyle = useSelector(commonDropdownItemStyleSelector)
   const LoopIcon = {
     loopOne: ICON.Sync,
     loopAll: ICON.Refresh,
     shuffle: ICON.Shuffle,
   }
+  const style = useSelector(commonDropdownStyleSelector)
   const items: DropdownItem[] = PlayModeList.map((i): DropdownItem => {
     return {
       label: `${playMode === i ? ICON.Ok : ICON.CheckboxBlankCircleOutline} ${i18n[i]}`,
@@ -44,36 +43,17 @@ export const PlayMode = () => {
         }
         e.stopPropagation()
       },
-      style: {
-        ...dropdown.item,
-        justifyContent: "start",
-      },
+      style: itemStyle,
     }
   })
   return (
     <Dropdown
+      {...style}
       id="mpv-easy-button-play-mode"
       items={items}
       title={i18n.playMode}
       text={LoopIcon[playMode]}
-      width={button.width}
-      height={button.height}
-      display="flex"
-      justifyContent="center"
-      alignItems="center"
       direction="top"
-      dropdownStyle={dropdown.button}
-      colorHover={dropdown.button.colorHover}
-      backgroundColorHover={dropdown.button.backgroundColorHover}
-      padding={dropdown.button.padding}
-      backgroundColor={dropdown.button.backgroundColor}
-      font={dropdown.button.font}
-      fontSize={button.fontSize}
-      color={dropdown.button.color}
-      enableMouseStyle={mouseHoverStyle}
-      dropdownListStyle={dropdown.list}
-      pageDown={{ style: dropdown.item, text: ICON.TriangleDown }}
-      pageUp={{ style: dropdown.item, text: ICON.TriangleUp }}
     />
   )
 }

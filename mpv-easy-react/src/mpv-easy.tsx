@@ -4,7 +4,7 @@ import { print, registerEvent } from "@mpv-easy/tool"
 import type { SystemApi } from "@mpv-easy/plugin"
 import { pluginName } from "./main"
 import { createDefaultThemeConfig } from "./mpv-easy-theme"
-import { getSnapshot, dispatch, store } from "./models"
+import { getState, dispatch, store } from "./models"
 
 function main() {
   const customConfig = getConfig()
@@ -15,10 +15,10 @@ function main() {
   const api: SystemApi = {
     saveConfig,
     updatePlaylist: (list, index) => dispatch.setPlaylist(list, index),
-    getPlaylist: () => getSnapshot()[pluginName].player.playlist,
+    getPlaylist: () => getState()[pluginName].player.playlist,
     setPath: (path: string) => dispatch.setPath(path),
     setPause: (pause: boolean) => dispatch.setPause(pause),
-    getPath: () => getSnapshot()[pluginName].player.path,
+    getPath: () => getState()[pluginName].player.path,
     store,
   }
   for (const definePlugin of plugins) {

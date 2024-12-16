@@ -1,30 +1,30 @@
-import { Dropdown, type DropdownItem } from "@mpv-easy/react"
+import { type DropdownItem } from "@mpv-easy/react"
 import React from "react"
+import { Dropdown } from "@mpv-easy/react"
 import * as ICON from "../../icon"
 import { setPropertyNative, getSubtitleTracks } from "@mpv-easy/tool"
 import {
-  buttonStyleSelector,
   i18nSelector,
-  mouseHoverStyleSelector,
-  dropdownStyleSelector,
   sidSelector,
+  commonDropdownStyleSelector,
+  commonDropdownItemStyleSelector,
 } from "../../store"
 import { dispatch, useSelector } from "../../models"
 
 export const SubtitleTrack = () => {
-  const button = useSelector(buttonStyleSelector)
   const i18n = useSelector(i18nSelector)
-  const mouseHoverStyle = useSelector(mouseHoverStyleSelector)
-  const dropdown = useSelector(dropdownStyleSelector)
+  const itemStyle = useSelector(commonDropdownItemStyleSelector)
   const sid = useSelector(sidSelector)
   const tracks = getSubtitleTracks()
+  const style = useSelector(commonDropdownStyleSelector)
+
   const items = tracks.map(({ title, lang, external, id }, k): DropdownItem => {
     const key = [title, lang, external, k].join("-")
     const prefix = sid === id ? ICON.Ok : ICON.CheckboxBlankCircleOutline
     const label = `${prefix} ${title ?? lang ?? "default"}`
     return {
       label,
-      key: key,
+      key,
       onSelect: (_, e) => {
         if (sid === id) {
           dispatch.setSid(-1)
@@ -36,36 +36,17 @@ export const SubtitleTrack = () => {
         }
         e.stopPropagation()
       },
-      style: {
-        ...dropdown.item,
-        justifyContent: "start",
-      },
+      style: itemStyle,
     }
   })
   return (
     <Dropdown
+      {...style}
       id="mpv-easy-button-subtitle-track"
       direction="top"
       title={i18n.subtitleTrack}
       items={items}
       text={ICON.Subtitles}
-      dropdownStyle={dropdown.button}
-      width={button.width}
-      height={button.height}
-      display="flex"
-      justifyContent="center"
-      alignItems="center"
-      enableMouseStyle={mouseHoverStyle}
-      colorHover={dropdown.button.colorHover}
-      backgroundColorHover={dropdown.button.backgroundColorHover}
-      padding={dropdown.button.padding}
-      backgroundColor={dropdown.button.backgroundColor}
-      font={dropdown.button.font}
-      fontSize={button.fontSize}
-      color={dropdown.button.color}
-      dropdownListStyle={dropdown.list}
-      pageDown={{ style: dropdown.item, text: ICON.TriangleDown }}
-      pageUp={{ style: dropdown.item, text: ICON.TriangleUp }}
     />
   )
 }

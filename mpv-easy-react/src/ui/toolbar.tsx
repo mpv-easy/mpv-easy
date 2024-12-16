@@ -9,7 +9,9 @@ import {
   buttonStyleSelector,
   toolbarStyleSelector,
   fullscreenSelector,
-  fontSizeSelector,
+  normalFontSizeSelector,
+  fontSelector,
+  cellSizeSelector,
 } from "../store"
 import { Language } from "./components/language"
 import { Theme } from "./components/theme"
@@ -26,7 +28,9 @@ export const Toolbar: ForwardRefExoticComponent<
   const fullscreen = useSelector(fullscreenSelector)
   const button = useSelector(buttonStyleSelector)
   const toolbar = useSelector(toolbarStyleSelector)
-  const fontSize = useSelector(fontSizeSelector)
+  const fontSize = useSelector(normalFontSizeSelector)
+  const font = useSelector(fontSelector)
+  const h = useSelector(cellSizeSelector)
   return (
     <Box
       id="toolbar"
@@ -34,11 +38,12 @@ export const Toolbar: ForwardRefExoticComponent<
       display="flex"
       justifyContent="space-between"
       alignItems="center"
-      font={button.font}
-      fontSize={fontSize}
+      font={font}
+      fontSize={fontSize.fontSize}
       color={button.color}
       width={"100%"}
       hide={hide}
+      height={h}
     >
       <Box
         position="relative"
@@ -59,8 +64,8 @@ export const Toolbar: ForwardRefExoticComponent<
         <Box
           id="toolbar-right"
           display="flex"
-          font={button.font}
-          justifyContent="end"
+          font={font}
+          justifyContent="start"
           alignItems="center"
           backgroundColor={toolbar.backgroundColor}
         >

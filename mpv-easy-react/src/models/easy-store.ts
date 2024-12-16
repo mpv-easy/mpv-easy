@@ -1,3 +1,4 @@
+import { isEqual } from "lodash-es"
 import { useSyncExternalStoreWithSelector } from "use-sync-external-store/shim/with-selector"
 
 type StoreOption<
@@ -39,7 +40,7 @@ export function defineStore<
 
   const storeListeners = new Set<StoreListener<S>>()
 
-  const notify = () => {
+  const rerender = () => {
     for (const i of notifyListeners) {
       i()
     }
@@ -55,7 +56,7 @@ export function defineStore<
     storeListeners.delete(cb)
   }
 
-  const getSnapshot = () => {
+  const getState = () => {
     return state
   }
 
@@ -64,28 +65,30 @@ export function defineStore<
     // @ts-ignore
     dispatch[i] = (...payload: any[]) => {
       state = store.reducers[i](state, ...payload)
-      notify()
+      rerender()
     }
   }
 
   function useSelector<R>(selector: (s: S) => R): R {
     return useSyncExternalStoreWithSelector(
       subscribeListener,
-      getSnapshot,
-      getSnapshot,
+      getState,
+      getState,
       selector,
+      isEqual,
     )
   }
 
-  function setStore(s: S) {
+  function setState(s: S) {
     state = s
   }
   return {
     dispatch,
-    getSnapshot,
+    getState,
     subscribe,
     useSelector,
-    setStore,
+    setState,
     unsubscribe,
+    rerender,
   }
 }

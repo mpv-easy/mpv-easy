@@ -43,11 +43,11 @@ export class PropertyNumber {
     return this.value
   }
 
-  observe(fn: (value: number) => void) {
+  observe(fn: (name: string, value: number) => void) {
     let last: number
-    observeProperty(this.name, "number", (_, value: number) => {
+    observeProperty(this.name, "number", (name: string, value: number) => {
       if (last !== value || typeof last === "undefined") {
-        fn(value)
+        fn(name, value)
         last = value
       }
     })
@@ -79,11 +79,11 @@ export class PropertyBool {
     return this.value
   }
 
-  observe(fn: (value: boolean) => void) {
+  observe(fn: (name: string, value: boolean) => void) {
     let last: boolean
-    observeProperty(this.name, "bool", (_, value) => {
+    observeProperty(this.name, "bool", (name, value) => {
       if (last !== value || typeof last === "undefined") {
-        fn(value)
+        fn(name, value)
         last = value
       }
     })
@@ -106,11 +106,11 @@ export class PropertyString {
     return this.value
   }
 
-  observe(fn: (value: string) => void) {
+  observe(fn: (name: string, value: string) => void) {
     let last: string
-    observeProperty(this.name, "string", (_, value) => {
+    observeProperty(this.name, "string", (name, value) => {
       if (last !== value || typeof last === "undefined") {
-        fn(value)
+        fn(name, value)
         last = value
       }
     })
@@ -134,12 +134,12 @@ export class PropertyNative<T> {
     return this.value
   }
 
-  observe(fn: (value: T) => void, isEqual = Object.is) {
+  observe(fn: (name: string, value: T) => void, isEqual = Object.is) {
     let lastValue: T
-    observeProperty(this.name, "native", (_, value: T) => {
+    observeProperty(this.name, "native", (name: string, value: T) => {
       if (typeof lastValue === "undefined" || !isEqual(value, lastValue)) {
         lastValue = value
-        fn(value)
+        fn(name, value)
       }
     })
   }
