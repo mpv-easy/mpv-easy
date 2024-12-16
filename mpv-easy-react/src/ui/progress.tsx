@@ -260,11 +260,11 @@ export const Progress = ({ width, height, ...props }: MpDomProps) => {
         // e.stopPropagation()
       }}
       onMouseEnter={(e) => {
-        console.log(
-          "onMouseEnter",
-          e.target?.attributes.id?.toString(),
-          !e.target?.attributes.id?.toString().endsWith("progress"),
-        )
+        // console.log(
+        //   "onMouseEnter",
+        //   e.target?.attributes.id?.toString(),
+        //   !e.target?.attributes.id?.toString().endsWith("progress"),
+        // )
         if (!e.target?.attributes.id?.toString().endsWith("progress")) {
           return
         }
@@ -273,11 +273,11 @@ export const Progress = ({ width, height, ...props }: MpDomProps) => {
         // e.stopPropagation()
       }}
       onMouseLeave={(e) => {
-        console.log(
-          "onMouseLeave",
-          e.target?.attributes.id?.toString(),
-          !e.target?.attributes.id?.toString().endsWith("progress"),
-        )
+        // console.log(
+        //   "onMouseLeave",
+        //   e.target?.attributes.id?.toString(),
+        //   !e.target?.attributes.id?.toString().endsWith("progress"),
+        // )
         if (!e.target?.attributes.id?.toString().endsWith("progress")) {
           return
         }

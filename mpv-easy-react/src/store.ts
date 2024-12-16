@@ -44,8 +44,8 @@ export const mousePosSelector = (state: PluginContext) =>
 export const pathSelector = (state: PluginContext) =>
   normalize(state[pluginName].player.path ?? "")
 
-export const playlistPosSelector = (state: PluginContext) =>
-  state[pluginName].player["playlist-pos"]
+export const playlistPlayIndexSelector = (state: PluginContext) =>
+  state[pluginName].player["playlist-play-index"]
 
 export const durationSelector = (state: PluginContext) =>
   state[pluginName].player.duration

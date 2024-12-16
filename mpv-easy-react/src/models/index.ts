@@ -70,29 +70,28 @@ const store = defineStore({
       return { ...state }
     },
     setPause(state, pause: boolean) {
-      // state[pluginName].player.pause = pause
-      // pauseProp.value = pause
       setPropertyBool("pause", pause)
+      state[pluginName].player.pause = pause
       return { ...state }
     },
     setMute(state, mute: boolean) {
       setPropertyBool("mute", mute)
-      // state[pluginName].player.mute = mute
+      state[pluginName].player.mute = mute
       // muteProp.value = mute
       return { ...state }
     },
     setTimePos(state, timePos: number) {
-      // state[pluginName].player["time-pos"] = timePos
+      state[pluginName].player["time-pos"] = timePos
       setPropertyNumber("time-pos", timePos)
       return { ...state }
     },
     setWindowMaximized(state, value: boolean) {
-      // state[pluginName].player["window-maximized"] = value
+      state[pluginName].player["window-maximized"] = value
       setPropertyBool("window-maximized", value)
       return { ...state }
     },
     setFullscreen(state, value: boolean) {
-      // state[pluginName].player.fullscreen = value
+      state[pluginName].player.fullscreen = value
       setPropertyBool("fullscreen", value)
       return { ...state }
     },
@@ -103,15 +102,15 @@ const store = defineStore({
     // },
 
     setWindowMinimized(state, value: boolean) {
-      // state[pluginName].player["window-minimized"] = value
+      state[pluginName].player["window-minimized"] = value
       setPropertyBool("window-minimized", value)
       return { ...state }
     },
     setPath(state, value: string) {
-      // state[pluginName].player.path = value
-      // if (value !== getPropertyString("path")) {
-      setPropertyString("path", value)
-      // }
+      state[pluginName].player.path = value
+      if (value !== getPropertyString("path")) {
+        setPropertyString("path", value)
+      }
       return { ...state }
     },
     playVideo(state, path: string) {
@@ -150,7 +149,6 @@ const store = defineStore({
       return { ...state }
     },
     setPlaylist(state: PluginContext, playlist: string[], playIndex: number) {
-      // setPlaylist(state, playlist: string[], playIndex: number) {
       state[pluginName].player = {
         ...state[pluginName].player,
         playlist,
@@ -195,7 +193,7 @@ const store = defineStore({
       if (newPos === pos) {
         return state
       }
-      state[pluginName].player["playlist-pos"] = newPos
+      state[pluginName].player["playlist-play-index"] = newPos
       state[pluginName].player.path = list[newPos]
       pathProp.value = list[newPos]
       command(`playlist-play-index ${newPos}`)
@@ -210,7 +208,7 @@ const store = defineStore({
       if (newPos === pos) {
         return state
       }
-      state[pluginName].player["playlist-pos"] = newPos
+      state[pluginName].player["playlist-play-index"] = newPos
       state[pluginName].player.path = list[newPos]
       pathProp.value = list[newPos]
       command(`playlist-play-index ${newPos}`)
@@ -241,7 +239,7 @@ const store = defineStore({
     // },
     setVolume(state, volume: number) {
       setPropertyNumber("volume", volume)
-      // state[pluginName].player = { ...state[pluginName].player, volume }
+      state[pluginName].player = { ...state[pluginName].player, volume }
       return { ...state }
     },
     setVolumeMax(state, volumeMax: number) {
@@ -335,7 +333,8 @@ export function syncPlayer(store: Store) {
   const volumeMaxProp = new PropertyNumber("volume-max")
   const speedProp = new PropertyNumber("speed")
   const subScaleProp = new PropertyNumber("sub-scale")
-  const playlistCount = new PropertyNumber("playlist/count")
+  const playlistCountProp = new PropertyNumber("playlist/count")
+  const playlistIndexProp = new PropertyNumber("playlist-play-index")
   const osdDimensionsProp = new PropertyNative<
     MpvPropertyTypeMap["osd-dimensions"]
   >("osd-dimensions")
@@ -386,11 +385,12 @@ export function syncPlayer(store: Store) {
     osdDimensionsProp,
     subScaleProp,
     seekableProp,
+    playlistIndexProp,
   ]) {
     i.observe(updateProp)
   }
 
-  playlistCount.observe((_, v) => {
+  playlistCountProp.observe((_, v) => {
     const p = pathProp.value
     const list = getMpvPlaylist()
     const i = list.indexOf(p)

@@ -138,11 +138,11 @@ export type EasyConfig = {
   }
   history: { path: string; name: string }[]
   player: {
+    "playlist-play-index": number
     seekable: boolean
     "sub-scale": number
     pause: boolean
     "time-pos": number
-    "playlist-pos": number
     duration: number
     "window-maximized": boolean
     fullscreen: boolean
@@ -455,6 +455,7 @@ export const defaultState: EasyConfig["state"] = {
 }
 
 export const defaultPlayer: EasyConfig["player"] = {
+  "playlist-play-index": 0,
   pause: false,
   seekable: false,
   "sub-scale": 1,
@@ -465,7 +466,6 @@ export const defaultPlayer: EasyConfig["player"] = {
   "window-minimized": false,
   path: "",
   mute: false,
-  "playlist-pos": 0,
   "mouse-pos": {
     x: 0,
     y: 0,
