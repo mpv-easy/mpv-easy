@@ -34,7 +34,8 @@ export const VoiceControl: ForwardRefExoticComponent<
   const smallFontSize = useSelector(normalFontSizeSelector)
   const boxHeight = iconSize * boxCount
   const fontSize = useSelector(normalFontSizeSelector)
-  const wrapHeight = boxHeight + 2 * iconSize + 2 * fontSize.padding + iconSize
+  const wrapHeight =
+    boxHeight + 2 * iconSize + 2 * fontSize.padding + fontSize.fontSize
 
   const wrapTop = (osdH - wrapHeight) / 2
   const [previewHide, setPreviewHide] = useState(true)
@@ -57,12 +58,12 @@ export const VoiceControl: ForwardRefExoticComponent<
         onWheelDown={() => {
           const v = clamp(volume - volumeStyle.step, 0, volumeMax)
           dispatch.setVolume(v)
-          setPropertyNumber("volume", v)
+          // setPropertyNumber("volume", v)
         }}
         onWheelUp={() => {
           const v = clamp(volume + volumeStyle.step, 0, volumeMax)
           dispatch.setVolume(v)
-          setPropertyNumber("volume", v)
+          // setPropertyNumber("volume", v)
         }}
         position="relative"
         display="flex"
@@ -109,7 +110,7 @@ export const VoiceControl: ForwardRefExoticComponent<
               0
             const newVolume = clamp(v, 0, volumeMax)
             dispatch.setVolume(newVolume)
-            setPropertyNumber("volume", newVolume)
+            // setPropertyNumber("volume", newVolume)
           }}
           onMouseEnter={() => {
             setPreviewHide(false)

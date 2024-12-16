@@ -65,7 +65,7 @@ export const Toolbar: ForwardRefExoticComponent<
           id="toolbar-right"
           display="flex"
           font={font}
-          justifyContent="end"
+          justifyContent="start"
           alignItems="center"
           backgroundColor={toolbar.backgroundColor}
         >

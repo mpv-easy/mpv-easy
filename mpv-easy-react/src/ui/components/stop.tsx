@@ -17,7 +17,7 @@ export const Stop = () => {
       onMouseDown={() => {
         dispatch.setPause(true)
         dispatch.setTimePos(0)
-        setPropertyNumber("time-pos", 0)
+        // setPropertyNumber("time-pos", 0)
       }}
     />
   )

@@ -121,7 +121,7 @@ export const Easy = (props: Partial<EasyProps>) => {
       const v = Number.parseFloat(`${e}`)
       const s = clamp(volumeRef.current + v, 0, volumeMax)
       dispatch.setVolume(s)
-      setPropertyNumber("volume", s)
+      // setPropertyNumber("volume", s)
       showNotification(`volume: ${s}`, 2)
     })
 

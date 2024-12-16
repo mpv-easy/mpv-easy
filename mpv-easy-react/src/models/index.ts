@@ -22,6 +22,7 @@ import {
   loadRemoteSubtitle,
   dirname,
   getExtName,
+  setPropertyNumber,
 } from "@mpv-easy/tool"
 import type { Language } from "@mpv-easy/i18n"
 import { type ThemeMode, type UIName, PlayMode } from "../mpv-easy-theme"
@@ -48,13 +49,13 @@ const store = defineStore({
       state[pluginName].mode = mode
       return { ...state }
     },
-    setOsdDimensions(state, dim) {
-      state[pluginName].player = {
-        ...state[pluginName].player,
-        "osd-dimensions": dim,
-      }
-      return { ...state }
-    },
+    // setOsdDimensions(state, dim) {
+    //   state[pluginName].player = {
+    //     ...state[pluginName].player,
+    //     "osd-dimensions": dim,
+    //   }
+    //   return { ...state }
+    // },
     setTheme(state, name: UIName) {
       state[pluginName].uiName = name
       return { ...state }
@@ -69,45 +70,48 @@ const store = defineStore({
       return { ...state }
     },
     setPause(state, pause: boolean) {
-      state[pluginName].player.pause = pause
-      pauseProp.value = pause
+      // state[pluginName].player.pause = pause
+      // pauseProp.value = pause
+      setPropertyBool("pause", pause)
       return { ...state }
     },
     setMute(state, mute: boolean) {
-      state[pluginName].player.mute = mute
-      muteProp.value = mute
+      setPropertyBool("mute", mute)
+      // state[pluginName].player.mute = mute
+      // muteProp.value = mute
       return { ...state }
     },
-    setTimePos(state, pos: number) {
-      state[pluginName].player["time-pos"] = pos
+    setTimePos(state, timePos: number) {
+      // state[pluginName].player["time-pos"] = timePos
+      setPropertyNumber("time-pos", timePos)
       return { ...state }
     },
     setWindowMaximized(state, value: boolean) {
-      state[pluginName].player["window-maximized"] = value
+      // state[pluginName].player["window-maximized"] = value
       setPropertyBool("window-maximized", value)
       return { ...state }
     },
     setFullscreen(state, value: boolean) {
-      state[pluginName].player.fullscreen = value
+      // state[pluginName].player.fullscreen = value
       setPropertyBool("fullscreen", value)
       return { ...state }
     },
-    setDuration(state, value: number) {
-      state[pluginName].player.duration = value
-      // setPropertyNumber("duration", value)
-      return { ...state }
-    },
+    // setDuration(state, value: number) {
+    //   state[pluginName].player.duration = value
+    //   // setPropertyNumber("duration", value)
+    //   return { ...state }
+    // },
 
     setWindowMinimized(state, value: boolean) {
-      state[pluginName].player["window-minimized"] = value
+      // state[pluginName].player["window-minimized"] = value
       setPropertyBool("window-minimized", value)
       return { ...state }
     },
     setPath(state, value: string) {
-      state[pluginName].player.path = value
-      if (value !== getPropertyString("path")) {
-        setPropertyString("path", value)
-      }
+      // state[pluginName].player.path = value
+      // if (value !== getPropertyString("path")) {
+      setPropertyString("path", value)
+      // }
       return { ...state }
     },
     playVideo(state, path: string) {
@@ -118,10 +122,10 @@ const store = defineStore({
       command("screenshot video")
       return { ...state }
     },
-    setMousePos(state, pos: MousePos) {
-      state[pluginName].player["mouse-pos"] = pos
-      return { ...state }
-    },
+    // setMousePos(state, pos: MousePos) {
+    //   state[pluginName].player["mouse-pos"] = pos
+    //   return { ...state }
+    // },
     setHide(state, hide: boolean) {
       state[pluginName].state = {
         ...state[pluginName].state,
@@ -228,15 +232,16 @@ const store = defineStore({
       state[anime4kName] = { ...config }
       return { ...state }
     },
-    setVideoParams(state, videoParams: VideoParams) {
-      state[pluginName].player = {
-        ...state[pluginName].player,
-        "video-params": videoParams,
-      }
-      return { ...state }
-    },
+    // setVideoParams(state, videoParams: VideoParams) {
+    //   state[pluginName].player = {
+    //     ...state[pluginName].player,
+    //     "video-params": videoParams,
+    //   }
+    //   return { ...state }
+    // },
     setVolume(state, volume: number) {
-      state[pluginName].player = { ...state[pluginName].player, volume }
+      setPropertyNumber("volume", volume)
+      // state[pluginName].player = { ...state[pluginName].player, volume }
       return { ...state }
     },
     setVolumeMax(state, volumeMax: number) {
@@ -307,6 +312,7 @@ export const {
 export { store }
 export type Store = typeof store
 import { pluginName as autoloadName } from "@mpv-easy/autoload"
+import throttle from "lodash-es/throttle"
 export type Dispatch = typeof dispatch
 
 export function syncPlayer(store: Store) {
@@ -335,8 +341,8 @@ export function syncPlayer(store: Store) {
   >("osd-dimensions")
 
   const frameTime = 1000 / state[pluginName].config.fps
-  // const rerender = throttle(store.rerender, frameTime)
-  const rerender = store.rerender
+  const rerender = throttle(store.rerender, frameTime)
+  // const rerender = store.rerender
 
   function updateProp(name: string, value: any) {
     // @ts-ignore
@@ -352,7 +358,12 @@ export function syncPlayer(store: Store) {
       return
     }
     // @ts-ignore
-    state[pluginName].player[name] = value
+    // state[pluginName].player[name] = value
+    state[pluginName].player = {
+      ...state[pluginName].player,
+      [name]: value,
+    }
+
     store.setState({ ...state })
     rerender()
   }

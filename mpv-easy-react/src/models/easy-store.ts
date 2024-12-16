@@ -1,3 +1,4 @@
+import { isEqual } from "lodash-es"
 import { useSyncExternalStoreWithSelector } from "use-sync-external-store/shim/with-selector"
 
 type StoreOption<
@@ -74,6 +75,7 @@ export function defineStore<
       getState,
       getState,
       selector,
+      isEqual,
     )
   }
 

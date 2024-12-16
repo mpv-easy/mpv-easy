@@ -64,7 +64,7 @@ export const UoscControl = (props: Partial<MpDomProps>) => {
         id="uosc-control-right"
         display="flex"
         height={height}
-        justifyContent="end"
+        justifyContent="start"
         alignItems="center"
         backgroundColor={control.backgroundColor}
       >

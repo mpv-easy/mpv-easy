@@ -38,7 +38,7 @@ import { getCropImagePath, getCropRect } from "@mpv-easy/crop"
 
 export const Progress = ({ width, height, ...props }: MpDomProps) => {
   const [leftPreview, setLeftPreview] = useState(0)
-  const [mouseIn, setMouseIn] = useState(true)
+  const [mouseOut, setMouseOut] = useState(true)
   const progress = useSelector(progressStyleSelector)
   const timePos = useSelector(timePosSelector)
   const duration = useSelector(durationSelector)
@@ -61,7 +61,7 @@ export const Progress = ({ width, height, ...props }: MpDomProps) => {
   // const supportThumbfast = !isYtdlp(path) && isSeekable
   const supportThumbfast = isSeekable && thumbfast.network
 
-  const curCutPoint = mouseIn ? timePos : duration * leftPreview
+  const curCutPoint = mouseOut ? timePos : duration * leftPreview
 
   const cutRef = useRef<(() => void) | null>(null)
   cutRef.current = () => {
@@ -246,24 +246,43 @@ export const Progress = ({ width, height, ...props }: MpDomProps) => {
         updatePreviewCursor(e)
 
         // TODO: same seek function as thumbfast
-        setPropertyNumber("time-pos", timePos)
+        // setPropertyNumber("time-pos", timePos)
         // command(`no-osd seek ${timePos} absolute+keyframes`)
         // command(`no-osd async seek ${timePos} absolute+keyframes`)
         e.preventDefault()
       }}
       onMouseMove={(e) => {
-        setMouseIn(false)
+        if (!e.target?.attributes.id?.toString().endsWith("progress")) {
+          return
+        }
+        setMouseOut(false)
         updatePreviewCursor(e)
         // e.stopPropagation()
       }}
       onMouseEnter={(e) => {
+        console.log(
+          "onMouseEnter",
+          e.target?.attributes.id?.toString(),
+          !e.target?.attributes.id?.toString().endsWith("progress"),
+        )
+        if (!e.target?.attributes.id?.toString().endsWith("progress")) {
+          return
+        }
         updatePreviewCursor(e)
-        setMouseIn(false)
+        setMouseOut(false)
         // e.stopPropagation()
       }}
       onMouseLeave={(e) => {
+        console.log(
+          "onMouseLeave",
+          e.target?.attributes.id?.toString(),
+          !e.target?.attributes.id?.toString().endsWith("progress"),
+        )
+        if (!e.target?.attributes.id?.toString().endsWith("progress")) {
+          return
+        }
         updatePreviewCursor(e)
-        setMouseIn(true)
+        setMouseOut(true)
         // e.stopPropagation()
       }}
       {...props}
@@ -339,7 +358,7 @@ export const Progress = ({ width, height, ...props }: MpDomProps) => {
           pointerEvents="none"
         />
       )}
-      {!mouseIn && (
+      {!mouseOut && (
         <Box
           ref={hoverCursorRef}
           id="preview-cursor"
@@ -354,7 +373,7 @@ export const Progress = ({ width, height, ...props }: MpDomProps) => {
           display="flex"
           alignContent="stretch"
         >
-          {!mouseIn && (
+          {!mouseOut && (
             <Box
               id="preview-cursor-time"
               position="absolute"
@@ -374,7 +393,7 @@ export const Progress = ({ width, height, ...props }: MpDomProps) => {
           )}
 
           {thumbRef.current &&
-            !mouseIn &&
+            !mouseOut &&
             !!thumbX &&
             !!thumbY &&
             supportThumbfast && (

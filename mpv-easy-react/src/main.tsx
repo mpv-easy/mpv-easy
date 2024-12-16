@@ -31,7 +31,6 @@ export default definePlugin((context, api) => ({
 
     // TODO: Temporary attributes should not be saved
     context[pluginName].state = defaultState
-    syncPlayer(store)
     store.subscribe(
       throttle(() => {
         const state = store.getState()
@@ -46,5 +45,6 @@ export default definePlugin((context, api) => ({
         context[pluginName].config.enableMouseMoveEvent ?? true,
     })
     render(<Easy />)
+    syncPlayer(store)
   },
 }))
