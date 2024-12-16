@@ -280,13 +280,13 @@ const store = defineStore({
     increaseFontSize(state) {
       const { dark, light } = state[pluginName].style
       dark.fontSizeScale = clamp(dark.fontSizeScale + 0.2, 0.2, 4)
-      light.fontSizeScale = clamp(dark.fontSizeScale + 0.2, 0.2, 4)
+      light.fontSizeScale = clamp(light.fontSizeScale + 0.2, 0.2, 4)
       return { ...state }
     },
     decreaseFontSize(state) {
       const { dark, light } = state[pluginName].style
       dark.fontSizeScale = clamp(dark.fontSizeScale - 0.2, 0.2, 4)
-      light.fontSizeScale = clamp(dark.fontSizeScale - 0.2, 0.2, 4)
+      light.fontSizeScale = clamp(light.fontSizeScale - 0.2, 0.2, 4)
       return { ...state }
     },
     translate(state) {

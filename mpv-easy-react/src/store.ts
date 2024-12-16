@@ -91,7 +91,7 @@ export const fontSelector = (state: PluginContext) =>
 export const cellSizeSelector = (state: PluginContext) => {
   const scale = fontSizeScaleSelector(state)
   const osd = osdDimensionsSelector(state)
-  const cell = clamp(((osd.w * scale) / 32) & ~7, 16, 128)
+  const cell = clamp(((osd.w * scale) / 32) & ~15, 16, 256)
   return cell
 }
 
@@ -105,7 +105,7 @@ export const normalFontSizeSelector = (state: PluginContext) =>
   fontSizeSelector(state)
 
 export const smallFontSizeSelector = (state: PluginContext) => {
-  const cell = fontSizeSelector(state).fontSize & ~7
+  const cell = fontSizeSelector(state).fontSize & ~15
   const fontSize = (cell / 4) * 3
   const padding = cell / 8
   return { fontSize, padding }
@@ -193,6 +193,7 @@ export const iconButtonStyle = (state: PluginContext): Partial<ButtonProps> => {
     width: size,
     height: size,
     enableMouseStyle: mouseHoverStyle,
+    padding: 0,
     // padding: fontSize.padding,
     colorHover: button.colorHover,
     backgroundColorHover: button.backgroundColorHover,
@@ -219,10 +220,11 @@ export const commonDropdownStyleSelector = (
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
+    padding: 0,
     // alignContent: 'stretch',
     // textAlign: 'center',
     enableMouseStyle: mouseHoverStyle,
-    padding: normalFontSize.padding,
+    // padding: normalFontSize.padding,
     colorHover: dropdown.button.colorHover,
     backgroundColorHover: dropdown.button.backgroundColorHover,
     backgroundColor: dropdown.button.backgroundColor,

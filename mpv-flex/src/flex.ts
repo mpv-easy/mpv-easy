@@ -1,10 +1,4 @@
-import {
-  BaseDom,
-  BaseMouseEvent,
-  EventName,
-  EventNameList,
-  isDirty,
-} from "./dom"
+import { BaseDom, BaseMouseEvent, EventName, EventNameList } from "./dom"
 import { type Shape } from "./shape"
 import { assert } from "./assert"
 import { isPercentage, parsePercentage } from "./number"
@@ -261,12 +255,6 @@ export abstract class Flex<A extends {}, P extends {}, E extends {} = {}> {
 
   private computeNodeSize(node: BaseDom<A, P, E>) {
     // console.log('computeNodeSize', node.attributes.id, node.dirty, isDirty(node))
-    if (!isDirty(node)) {
-      for (const c of node.childNodes) {
-        this.computeNodeSize(c)
-      }
-      return
-    }
     const { attributes, layoutNode } = node
 
     const isX = attributes.flexDirection !== "row"
@@ -820,13 +808,6 @@ export abstract class Flex<A extends {}, P extends {}, E extends {} = {}> {
   }
   private computeNodeLayout(node: BaseDom<A, P, E>) {
     // console.log('computeNodeLayout', node.attributes.id, node.dirty, isDirty(node))
-    if (!isDirty(node)) {
-      for (const c of node.childNodes) {
-        this.computeNodeLayout(c)
-      }
-      return
-    }
-
     const { layoutNode, attributes } = node
 
     if (hasTLBR(node)) {

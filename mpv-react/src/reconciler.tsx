@@ -349,12 +349,11 @@ export function createRender({
     const dim = new PropertyNative<MpvPropertyTypeMap["osd-dimensions"]>(
       "osd-dimensions",
     )
-    function renderRootNode() {
+    function updateRootNode() {
       const { w, h } = dim.value || { w: 0, h: 0 }
       if (!w || !h || (lastW === w && lastH === h)) {
         return
       }
-      // console.log("===renderRootNode", w, h)
       lastW = w
       lastH = h
       setAttribute(flex.rootNode, "id", RootName)
@@ -380,16 +379,10 @@ export function createRender({
       setLayoutNode(flex.rootNode, "border", 0)
 
       reconciler.updateContainer(reactNode, container, null, null)
-
-      customRender()
     }
 
-    renderRootNode()
     dim.observe(() => {
-      // HACK: delay render
-      // setTimeout(() => renderRootNode(value))
-      // setTimeout(() => )
-      renderRootNode()
+      updateRootNode()
     })
   }
 }

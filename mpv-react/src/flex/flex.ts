@@ -13,8 +13,6 @@ import {
   BaseDom,
   Flex,
   BaseMouseEvent,
-  isDirty,
-  markClean,
   getFirstValidAttribute,
 } from "@mpv-easy/flex"
 import type { Shape } from "@mpv-easy/flex"
@@ -62,8 +60,6 @@ function renderNodeToMpv(node: MpDom) {
     layoutNode,
     attributes,
   } = node
-
-  const dirty = isDirty(node)
 
   if (hide) {
     if (layoutNode._hideCache) {
@@ -120,16 +116,14 @@ function renderNodeToMpv(node: MpDom) {
     // border ovl
 
     if (typeof borderSize !== "undefined") {
-      if (dirty) {
-        borderOverlay.data = drawBorder({
-          x: x * assScale,
-          y: y * assScale,
-          width: width * assScale,
-          height: height * assScale,
-          borderColor,
-          borderSize: borderSize * assScale,
-        })
-      }
+      borderOverlay.data = drawBorder({
+        x: x * assScale,
+        y: y * assScale,
+        width: width * assScale,
+        height: height * assScale,
+        borderColor,
+        borderSize: borderSize * assScale,
+      })
       borderOverlay.hidden = false
       borderOverlay.computeBounds = false
       borderOverlay.hidden = false
@@ -141,114 +135,112 @@ function renderNodeToMpv(node: MpDom) {
     // text ovl
     const hasText = typeof attributes.text !== "undefined"
     if (hasText) {
-      if (dirty) {
-        let textX = 0 + paddingSize + layoutNode.x + borderSize
-        let textY = 0 + paddingSize + layoutNode.y + borderSize
+      let textX = 0 + paddingSize + layoutNode.x + borderSize
+      let textY = 0 + paddingSize + layoutNode.y + borderSize
 
-        const { textRect } = layoutNode
-        switch (flexDirection) {
-          case "column": {
-            switch (justifyContent) {
-              case "start": {
-                break
-              }
-              case "center": {
-                textX +=
-                  (layoutNode.width -
-                    textRect.width -
-                    2 * paddingSize -
-                    2 * borderSize) /
-                  2
-                break
-              }
-              case "end": {
-                textX +=
-                  layoutNode.width -
+      const { textRect } = layoutNode
+      switch (flexDirection) {
+        case "column": {
+          switch (justifyContent) {
+            case "start": {
+              break
+            }
+            case "center": {
+              textX +=
+                (layoutNode.width -
                   textRect.width -
                   2 * paddingSize -
-                  2 * borderSize
-                break
-              }
+                  2 * borderSize) /
+                2
+              break
             }
-            switch (alignItems) {
-              case "start": {
-                break
-              }
-              case "center": {
-                textY +=
-                  (layoutNode.height -
-                    textRect.height -
-                    2 * paddingSize -
-                    2 * borderSize) /
-                  2
-                break
-              }
-              case "end": {
-                textY +=
-                  layoutNode.height -
-                  textRect.height -
-                  2 * paddingSize -
-                  2 * borderSize
-                break
-              }
+            case "end": {
+              textX +=
+                layoutNode.width -
+                textRect.width -
+                2 * paddingSize -
+                2 * borderSize
+              break
             }
-            break
           }
-          case "row": {
-            switch (justifyContent) {
-              case "start": {
-                break
-              }
-              case "center": {
-                textY +=
-                  (layoutNode.height -
-                    textRect.height -
-                    2 * paddingSize -
-                    2 * borderSize) /
-                  2
-                break
-              }
-              case "end": {
-                textY +=
-                  layoutNode.height -
+          switch (alignItems) {
+            case "start": {
+              break
+            }
+            case "center": {
+              textY +=
+                (layoutNode.height -
                   textRect.height -
                   2 * paddingSize -
-                  2 * borderSize
-                break
-              }
+                  2 * borderSize) /
+                2
+              break
             }
+            case "end": {
+              textY +=
+                layoutNode.height -
+                textRect.height -
+                2 * paddingSize -
+                2 * borderSize
+              break
+            }
+          }
+          break
+        }
+        case "row": {
+          switch (justifyContent) {
+            case "start": {
+              break
+            }
+            case "center": {
+              textY +=
+                (layoutNode.height -
+                  textRect.height -
+                  2 * paddingSize -
+                  2 * borderSize) /
+                2
+              break
+            }
+            case "end": {
+              textY +=
+                layoutNode.height -
+                textRect.height -
+                2 * paddingSize -
+                2 * borderSize
+              break
+            }
+          }
 
-            switch (alignItems) {
-              case "start": {
-                break
-              }
-              case "center": {
-                textX +=
-                  (layoutNode.width -
-                    textRect.width -
-                    2 * paddingSize -
-                    2 * borderSize) /
-                  2
-                break
-              }
-              case "end": {
-                textX +=
-                  layoutNode.width -
+          switch (alignItems) {
+            case "start": {
+              break
+            }
+            case "center": {
+              textX +=
+                (layoutNode.width -
                   textRect.width -
                   2 * paddingSize -
-                  2 * borderSize
-                break
-              }
+                  2 * borderSize) /
+                2
+              break
             }
-          }
-          default: {
-            throw new Error(
-              `text layout not support: justifyContent ${justifyContent} alignItems ${alignItems}`,
-            )
+            case "end": {
+              textX +=
+                layoutNode.width -
+                textRect.width -
+                2 * paddingSize -
+                2 * borderSize
+              break
+            }
           }
         }
-        textOverlay.data = getAssText(node, textX * assScale, textY * assScale)
+        default: {
+          throw new Error(
+            `text layout not support: justifyContent ${justifyContent} alignItems ${alignItems}`,
+          )
+        }
       }
+      textOverlay.data = getAssText(node, textX * assScale, textY * assScale)
       textOverlay.hidden = false
       textOverlay.computeBounds = true
     }
@@ -276,14 +268,12 @@ function renderNodeToMpv(node: MpDom) {
         bgW - 2 * borderSize - 2 * paddingSize,
         bgH - 2 * borderSize - 2 * paddingSize,
       )
-      if (dirty) {
-        const bgData = drawRect({
-          ...rect.scale(assScale),
-          color: backgroundColor,
-          borderRadius: borderRadiusSize * assScale,
-        })
-        bgOverlay.data = bgData
-      }
+      const bgData = drawRect({
+        ...rect.scale(assScale),
+        color: backgroundColor,
+        borderRadius: borderRadiusSize * assScale,
+      })
+      bgOverlay.data = bgData
       bgOverlay.hidden = false
       bgOverlay.update()
     } else {
@@ -337,12 +327,10 @@ function renderNodeToMpv(node: MpDom) {
 }
 
 function renderRootToMpv(node: MpDom) {
+  renderNodeToMpv(node)
   for (const c of node.childNodes) {
     renderRootToMpv(c)
-    renderNodeToMpv(c)
   }
-  renderNodeToMpv(node)
-  markClean(node)
 }
 
 export class MpFlex extends Flex<MpAttrs, MpProps, MpEvent> {

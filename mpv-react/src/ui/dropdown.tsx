@@ -86,91 +86,89 @@ export const Dropdown = (props: Partial<ButtonProps & DropdownProps>) => {
   const showItems = items.slice(pageStart, pageEnd)
 
   return (
-    <>
-      <Button
-        {...props}
-        {...dropdownStyle}
-        ref={buttonRef}
-        onMouseDown={(e) => {
-          setShow((c) => !c)
-          props.onMouseDown?.(e)
-        }}
-        onBlur={(e) => {
-          // TODO: hack, ensure children's onSelect exec first
-          setTimeout(() => {
-            setShow(false)
-            props.onBlur?.(e)
-          }, 16)
-        }}
-      >
-        {show && (
-          <Box
-            id="dropdown-list"
-            display="flex"
-            flexDirection="row"
-            justifyContent="start"
-            alignItems="start"
-            {...offsetProps}
-            alignContent="stretch"
-            color={props.color}
-            backgroundColor={props.backgroundColor}
-            {...dropdownListStyle}
-          >
-            {showPage && (
+    <Button
+      {...props}
+      {...dropdownStyle}
+      ref={buttonRef}
+      onMouseDown={(e) => {
+        setShow((c) => !c)
+        props.onMouseDown?.(e)
+      }}
+      onBlur={(e) => {
+        // TODO: hack, ensure children's onSelect exec first
+        setTimeout(() => {
+          setShow(false)
+          props.onBlur?.(e)
+        }, 16)
+      }}
+    >
+      {show && (
+        <Box
+          id="dropdown-list"
+          display="flex"
+          flexDirection="row"
+          justifyContent="start"
+          alignItems="start"
+          {...offsetProps}
+          alignContent="stretch"
+          color={props.color}
+          backgroundColor={props.backgroundColor}
+          {...dropdownListStyle}
+        >
+          {showPage && (
+            <Button
+              id="dropdown-list-page-up"
+              position="relative"
+              {...newProps}
+              {...dropdownStyle}
+              width={undefined}
+              key={"dropdown-up"}
+              text={pageUp?.text}
+              {...pageUp?.style}
+              onMouseDown={(e) => {
+                const p = (page - 1 + pageCount) % pageCount
+                setPage(p)
+                e.stopPropagation()
+              }}
+            />
+          )}
+          {showItems.map((i) => {
+            return (
               <Button
-                id="dropdown-list-page-up"
                 position="relative"
                 {...newProps}
                 {...dropdownStyle}
                 width={undefined}
-                key={"dropdown-up"}
-                text={pageUp?.text}
-                {...pageUp?.style}
+                id={i.key}
+                key={i.key}
+                text={i.label}
                 onMouseDown={(e) => {
-                  const p = (page - 1 + pageCount) % pageCount
-                  setPage(p)
-                  e.stopPropagation()
+                  i.onSelect?.(i, e)
+                  setShow(false)
                 }}
+                {...i.style}
               />
-            )}
-            {showItems.map((i) => {
-              return (
-                <Button
-                  position="relative"
-                  {...newProps}
-                  {...dropdownStyle}
-                  width={undefined}
-                  id={i.key}
-                  key={i.key}
-                  text={i.label}
-                  onMouseDown={(e) => {
-                    i.onSelect?.(i, e)
-                    setShow(false)
-                  }}
-                  {...i.style}
-                />
-              )
-            })}
-            {showPage && (
-              <Button
-                id="dropdown-list-page-down"
-                position="relative"
-                {...newProps}
-                {...dropdownStyle}
-                width={undefined}
-                key={"dropdown-down"}
-                {...pageDown?.style}
-                text={pageDown?.text}
-                onMouseDown={(e) => {
-                  const p = (page + 1) % pageCount
-                  setPage(p)
-                  e.stopPropagation()
-                }}
-              />
-            )}
-          </Box>
-        )}
-      </Button>
-    </>
+            )
+          })}
+          {showPage && (
+            <Button
+              id="dropdown-list-page-down"
+              position="relative"
+              {...newProps}
+              {...dropdownStyle}
+              width={undefined}
+              key={"dropdown-down"}
+              {...pageDown?.style}
+              text={pageDown?.text}
+              onMouseDown={(e) => {
+                const p = (page + 1) % pageCount
+                setPage(p)
+                e.stopPropagation()
+              }}
+            />
+          )}
+        </Box>
+      )}
+    </Button>
   )
 }

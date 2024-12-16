@@ -245,6 +245,8 @@ export const Easy = (props: Partial<EasyProps>) => {
         alignItems="center"
         zIndex={style[mode].tooltip.zIndex}
         maxWidth={style[mode].tooltip.maxWidth}
+        height="auto"
+        width="auto"
       />
 
       <Box
