@@ -5,8 +5,7 @@ edition = "2021"
 
 [dependencies]
 # mpv-client = "0.6.0"
-libloading= "0.8.1"
-serde = { version = "1.0", features = ["derive"] }
-serde_json = "1.0"
-once_cell = "1.3.1"
-
+libloading = { workspace = true }
+serde = { workspace = true }
+serde_json = { workspace = true }
+once_cell = { workspace = true }

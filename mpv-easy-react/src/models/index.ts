@@ -314,8 +314,8 @@ import throttle from "lodash-es/throttle"
 export type Dispatch = typeof dispatch
 
 export function syncPlayer(store: Store) {
-  const state = store.getState()
   const windowMaximizedProp = new PropertyBool("window-maximized")
+  const windowMinimizedProp = new PropertyBool("window-minimized")
   const fullscreenProp = new PropertyBool("fullscreen")
   const timePosProp = new PropertyNumber("time-pos")
   const durationProp = new PropertyNumber("duration")
@@ -339,35 +339,9 @@ export function syncPlayer(store: Store) {
     MpvPropertyTypeMap["osd-dimensions"]
   >("osd-dimensions")
 
-  const frameTime = 1000 / state[pluginName].config.fps
-  const rerender = throttle(store.rerender, frameTime)
-  // const rerender = store.rerender
+  const rerender = store.rerender
 
-  function updateProp(name: string, value: any) {
-    // @ts-ignore
-    const oldValue = state[pluginName].player[name]
-    // console.log(
-    //   "updateProp",
-    //   name,
-    //   isEqual(oldValue, value),
-    //   JSON.stringify(value),
-    //   JSON.stringify(oldValue),
-    // )
-    if (isEqual(oldValue, value)) {
-      return
-    }
-    // @ts-ignore
-    // state[pluginName].player[name] = value
-    state[pluginName].player = {
-      ...state[pluginName].player,
-      [name]: value,
-    }
-
-    store.setState({ ...state })
-    rerender()
-  }
-
-  for (const i of [
+  const propList = [
     aidProp,
     vidProp,
     sidProp,
@@ -386,7 +360,36 @@ export function syncPlayer(store: Store) {
     subScaleProp,
     seekableProp,
     playlistIndexProp,
-  ]) {
+    windowMinimizedProp,
+  ]
+  function updateProp() {
+    const state = store.getState()
+    // @ts-ignore
+    // const oldValue = state[pluginName].player[name]
+    // console.log(
+    //   "updateProp",
+    //   name,
+    //   isEqual(oldValue, value),
+    //   JSON.stringify(value),
+    //   JSON.stringify(oldValue),
+    // )
+    // if (isEqual(oldValue, value)) {
+    //   return
+    // }
+    // @ts-ignore
+    // state[pluginName].player[name] = value
+    state[pluginName].player = {
+      ...state[pluginName].player,
+    }
+
+    for (const i of propList) {
+      // @ts-ignore
+      state[pluginName].player[i.name] = i.value
+    }
+    store.setState({ ...state })
+    rerender()
+  }
+  for (const i of propList) {
     i.observe(updateProp)
   }
 
@@ -395,10 +398,10 @@ export function syncPlayer(store: Store) {
     const list = getMpvPlaylist()
     const i = list.indexOf(p)
     dispatch.setPlaylist(list, i === -1 ? 0 : i)
-    rerender()
   })
 
   pathProp.observe((_, v) => {
+    const state = store.getState()
     v = normalize(v ?? "")
     if (v?.length && v !== pathProp.value) {
       dispatch.addHistory(v)
@@ -416,7 +419,8 @@ export function syncPlayer(store: Store) {
       )
       const playIndex = list.indexOf(v)
       dispatch.setPlaylist(list, playIndex === -1 ? 0 : playIndex)
-      rerender()
     }
   })
+
+  updateProp()
 }

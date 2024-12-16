@@ -44,7 +44,7 @@ export default definePlugin((context, api) => ({
       enableMouseMoveEvent:
         context[pluginName].config.enableMouseMoveEvent ?? true,
     })
-    render(<Easy />)
     syncPlayer(store)
+    render(<Easy />)
   },
 }))

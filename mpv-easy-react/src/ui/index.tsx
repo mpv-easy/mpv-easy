@@ -251,8 +251,8 @@ export const Easy = (props: Partial<EasyProps>) => {
       <Box
         id="mpv-easy-main"
         display="flex"
-        width={osdDimensions.w}
-        height={osdDimensions.h}
+        width={"100%"}
+        height={"100%"}
         flexDirection="row"
         justifyContent="space-between"
         alignItems="start"
@@ -284,11 +284,7 @@ export const Easy = (props: Partial<EasyProps>) => {
         }}
       >
         <Toolbar ref={toolbarRef} hide={hide || showCrop} />
-        <Element
-          ref={elementRef}
-          hide={hide || showCrop}
-          width={osdDimensions.w}
-        />
+        <Element ref={elementRef} hide={hide || showCrop} width={"100%"} />
         <VoiceControl ref={volumeDomRef} hide={hide || showCrop} />
         {/* {!clickMenuStyle.disable && <ClickMenu ref={menuRef} hide={menuHide} />} */}
         <Playlist />

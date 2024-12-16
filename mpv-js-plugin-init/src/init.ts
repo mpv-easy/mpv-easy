@@ -259,6 +259,9 @@ mp.enable_messages = (...args) => {
 mp.unregister_script_message = (...args) => {
   // log("unregister_script_message: " + args.join(", "))
 }
+mp.register_script_message = (...args) => {
+  // log("register_script_message: " + args.join(", "))
+}
 
 let next_osd_overlay_id = 1
 mp.create_osd_overlay = () => {

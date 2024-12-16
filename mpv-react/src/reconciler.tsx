@@ -48,7 +48,9 @@ function detachDeletedInstance(node: MpDom) {
   }
 }
 
-export function createCustomReconciler(customRender: () => void) {
+export function createCustomReconciler(
+  customRender: (immediately?: boolean) => void,
+) {
   return createReconciler({
     supportsMutation: true,
     supportsPersistence: false,
@@ -206,14 +208,19 @@ export function createCustomReconciler(customRender: () => void) {
 let max = 0
 let frame = 0
 const fpsList: number[] = []
+let lastRender = 0
+let renderHandle = 0
 
 export function createRender({
   enableMouseMoveEvent = true,
   fps = DefaultFps,
   flex = getRootFlex(),
   showFps = false,
-  customRender = throttle(
-    () => {
+  customRender = () => {
+    function render() {
+      lastRender = Date.now()
+      clearTimeout(renderHandle)
+      renderHandle = 0
       frame++
       const st = Date.now()
       renderNode()
@@ -228,13 +235,18 @@ export function createRender({
       if (showFps) {
         print("render time(react):", frame, t, max, avg)
       }
-    },
-    1000 / fps,
-    {
-      leading: true,
-      trailing: true,
-    },
-  ),
+    }
+
+    const dur = 1000 / fps
+    const now = Date.now()
+    if (now - lastRender < dur) {
+      const timeout = dur - (now - lastRender)
+      clearTimeout(renderHandle)
+      renderHandle = +setTimeout(render, timeout)
+      return
+    }
+    render()
+  },
   customDispatch = dispatchEvent,
 }: Partial<RenderConfig> = {}) {
   const reconciler = createCustomReconciler(customRender)
@@ -381,9 +393,8 @@ export function createRender({
       reconciler.updateContainer(reactNode, container, null, null)
     }
 
-    dim.observe(() => {
-      updateRootNode()
-    })
+    dim.observe(updateRootNode)
+    setInterval(customRender, 1000 / fps)
   }
 }
 

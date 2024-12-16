@@ -26,7 +26,14 @@ export function OsdFullscreen() {
       justifyContent="center"
       alignItems="center"
     >
-      <Box id="box-text" text={`${osd?.w} ${osd?.w}`} fontSize={128} />
+      <Box
+        id="box-text"
+        text={`${osd?.w} ${osd?.h}`}
+        fontSize={128}
+        color="#00FF00"
+      />
     </Box>
   )
 }
+
+export default OsdFullscreen
