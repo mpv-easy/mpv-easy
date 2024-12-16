@@ -181,20 +181,21 @@ export const iconButtonStyle = (state: PluginContext): Partial<ButtonProps> => {
   const button = buttonStyleSelector(state)
   const fontSize = normalFontSizeSelector(state)
   const font = fontSelector(state)
-  const mouseHoverStyle = mouseHoverStyleSelector(state)
-  const size = cellSizeSelector(state)
+  // const mouseHoverStyle = mouseHoverStyleSelector(state)
+  // const size = cellSizeSelector(state)
+  const size = fontSize.fontSize
 
   return {
     display: "flex",
     justifyContent: "center",
-    alignItems: "center",
+    alignItems: "start",
     // alignContent: 'stretch',
     // textAlign: 'center',
     width: size,
     height: size,
-    enableMouseStyle: mouseHoverStyle,
-    padding: 0,
-    // padding: fontSize.padding,
+    // enableMouseStyle: mouseHoverStyle,
+    // padding: 0,
+    padding: fontSize.padding,
     colorHover: button.colorHover,
     backgroundColorHover: button.backgroundColorHover,
     backgroundColor: button.backgroundColor,
@@ -211,20 +212,21 @@ export const commonDropdownStyleSelector = (
   const mouseHoverStyle = mouseHoverStyleSelector(state)
   const dropdown = dropdownStyleSelector(state)
   const normalFontSize = normalFontSizeSelector(state)
-  const cell = cellSizeSelector(state)
+  // const cell = cellSizeSelector(state)
+  const size = normalFontSize.fontSize
 
   return {
     dropdownStyle: dropdown.button,
-    width: cell,
-    height: cell,
+    width: size,
+    height: size,
     display: "flex",
     justifyContent: "center",
-    alignItems: "center",
-    padding: 0,
+    alignItems: "start",
+    // padding: 0,
     // alignContent: 'stretch',
     // textAlign: 'center',
     enableMouseStyle: mouseHoverStyle,
-    // padding: normalFontSize.padding,
+    padding: normalFontSize.padding,
     colorHover: dropdown.button.colorHover,
     backgroundColorHover: dropdown.button.backgroundColorHover,
     backgroundColor: dropdown.button.backgroundColor,

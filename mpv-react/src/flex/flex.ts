@@ -252,21 +252,27 @@ function renderNodeToMpv(node: MpDom) {
         backgroundColor += "00"
       }
 
-      let bgX = x
-      let bgY = y
-      let bgW = width
-      let bgH = height
-      if (hasText && node.parentNode?.attributes.alignContent !== "stretch") {
-        bgX = textRect.x
-        bgY = textRect.y
-        bgW = textRect.width
-        bgH = textRect.height
-      }
+      // const bgX = x
+      // const bgY = y
+      // const bgW = width
+      // const bgH = height
+      // if (hasText && node.parentNode?.attributes.alignContent === "stretch") {
+      //   bgX = textRect.x
+      //   bgY = textRect.y
+      //   bgW = textRect.width
+      //   bgH = textRect.height
+      // }
+      // const rect = new Rect(
+      //   bgX + borderSize + paddingSize,
+      //   bgY + borderSize + paddingSize,
+      //   bgW - 2 * borderSize - 2 * paddingSize,
+      //   bgH - 2 * borderSize - 2 * paddingSize,
+      // )
       const rect = new Rect(
-        bgX + borderSize + paddingSize,
-        bgY + borderSize + paddingSize,
-        bgW - 2 * borderSize - 2 * paddingSize,
-        bgH - 2 * borderSize - 2 * paddingSize,
+        x + borderSize + paddingSize,
+        y + borderSize + paddingSize,
+        width - 2 * borderSize - 2 * paddingSize,
+        height - 2 * borderSize - 2 * paddingSize,
       )
       const bgData = drawRect({
         ...rect.scale(assScale),

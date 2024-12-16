@@ -29,11 +29,11 @@ export const VoiceControl: ForwardRefExoticComponent<
   const volumeStyle = useSelector(volumeStyleSelector)
   const volumeHeight = volume / volumeMax
   const osdH = useSelector(osdDimensionsSelector).h
-  const iconSize = useSelector(cellSizeSelector)
+  const fontSize = useSelector(normalFontSizeSelector)
+  const iconSize = fontSize.fontSize
   const boxCount = 5
   const smallFontSize = useSelector(normalFontSizeSelector)
   const boxHeight = iconSize * boxCount
-  const fontSize = useSelector(normalFontSizeSelector)
   const wrapHeight =
     boxHeight + 2 * iconSize + 2 * fontSize.padding + fontSize.fontSize
 
@@ -80,7 +80,7 @@ export const VoiceControl: ForwardRefExoticComponent<
       >
         <Box
           id="voice-control-volume"
-          fontSize={fontSize.fontSize}
+          fontSize={smallFontSize.fontSize}
           text={volume.toFixed(0).toString()}
           width={iconSize}
           height={iconSize}
@@ -93,7 +93,7 @@ export const VoiceControl: ForwardRefExoticComponent<
         <Box
           id="voice-control-box"
           height={boxHeight}
-          width={fontSize.fontSize}
+          width={fontSize.fontSize - fontSize.padding * 2}
           display="flex"
           position="relative"
           flexDirection="row"
