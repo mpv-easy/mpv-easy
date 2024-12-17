@@ -102,6 +102,12 @@ function App() {
     }
     if (points.length === 2) {
       const rect = getCropRect(points)
+      if (!rect) {
+        if (!rect) {
+          printAndOsd("invalid video cropping region")
+          return
+        }
+      }
       const outputPath = getCropImagePath(
         path,
         timePos,

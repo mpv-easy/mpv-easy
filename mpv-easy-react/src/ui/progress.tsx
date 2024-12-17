@@ -113,6 +113,10 @@ export const Progress = ({ width, height, ...props }: MpDomProps) => {
     }
     if (cropPoints.length === 2) {
       const rect = getCropRect(cropPoints)
+      if (!rect) {
+        showNotification("invalid video cropping region")
+        return
+      }
       const segment = getVideoSegment(cutPoints)
       if (segment) {
         // cut crop video

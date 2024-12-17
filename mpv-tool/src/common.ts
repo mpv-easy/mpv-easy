@@ -329,6 +329,29 @@ export class Rect {
       this.height * scale,
     )
   }
+  scaleXY(scaleX: number, scaleY: number): Rect {
+    return new Rect(
+      this.x * scaleX,
+      this.y * scaleY,
+      this.width * scaleX,
+      this.height * scaleY,
+    )
+  }
+  intersection(other: Rect): Rect | undefined {
+    const x1 = Math.max(this.x, other.x)
+    const y1 = Math.max(this.y, other.y)
+
+    const x2 = Math.min(this.x + this.width, other.x + other.width)
+    const y2 = Math.min(this.y + this.height, other.y + other.height)
+
+    const w = x2 - x1
+    const h = y2 - y1
+
+    if (w > 0 && h > 0) {
+      return new Rect(x1, y1, w, h)
+    }
+    return undefined
+  }
 }
 
 export type Cycle = {
