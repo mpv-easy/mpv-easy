@@ -1,6 +1,6 @@
 {
   "name": "@mpv-easy/play-with",
-  "version": "0.1.12",
+  "version": "0.1.13",
   "files": ["dist", "readme.md", "package.json"],
   "description": "",
   "main": "dist/index.js",
@@ -16,6 +16,6 @@
   "license": "MIT",
   "dependencies": {
     "@mpv-easy/tool": "workspace:*",
-    "react-use": "17.5.1"
+    "react-use": "17.6.0"
   }
 }

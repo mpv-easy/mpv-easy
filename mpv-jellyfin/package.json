@@ -1,6 +1,6 @@
 {
   "name": "@mpv-easy/jellyfin",
-  "version": "0.1.12",
+  "version": "0.1.13",
   "homepage": "https://github.com/mpv-easy/mpv-easy#readme",
   "files": ["dist", "readme.md", "package.json"],
   "description": "",

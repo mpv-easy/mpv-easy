@@ -19,8 +19,8 @@
     "react": "19.0.0",
     "react-dom": "19.0.0",
     "react-reconciler": "0.31.0",
-    "react-redux": "9.1.2",
-    "react-use": "17.5.1",
+    "react-redux": "9.2.0",
+    "react-use": "17.6.0",
     "redux": "5.0.1"
   }
 }
