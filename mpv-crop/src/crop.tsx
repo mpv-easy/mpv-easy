@@ -1,6 +1,13 @@
 import React, { useRef } from "react"
 import { Box, getDirection, MpDom } from "@mpv-easy/react"
-import { dirname, existsSync, getFileName, Rect } from "@mpv-easy/tool"
+import {
+  dirname,
+  existsSync,
+  getFileName,
+  getOsdSize,
+  getPropertyNative,
+  Rect,
+} from "@mpv-easy/tool"
 
 function getLabelPos(
   node: MpDom | null,
@@ -220,11 +227,35 @@ export function getCropImagePath(
   return `${dir}/${nameList.join(".")}`
 }
 
-export function getCropRect(points: [number, number][]): Rect {
+export function getCropRect(points: [number, number][]): Rect | undefined {
   const [[x1, y1], [x2, y2]] = points
   const top = Math.min(y1, y2)
   const left = Math.min(x1, x2)
   const bottom = Math.max(y1, y2)
   const right = Math.max(x1, x2)
-  return new Rect(left, top, right - left, bottom - top)
+  const osdCropRect = new Rect(left, top, right - left, bottom - top)
+  const osd = getOsdSize()!
+  const videoParams = getPropertyNative<{ w: number; h: number }>(
+    "video-params",
+  )!
+  const videoTargetParams = getPropertyNative<{ w: number; h: number }>(
+    "video-target-params",
+  )!
+  const osdRect = new Rect(0, 0, osd.width, osd.height)
+  const videoTargetRect = new Rect(
+    0,
+    0,
+    videoTargetParams.w,
+    videoTargetParams.h,
+  )
+  const videoCenterRect = osdRect.placeCenter(videoTargetRect)
+  const cropRect = videoCenterRect.intersection(osdCropRect)
+
+  if (!cropRect) {
+    return undefined
+  }
+
+  const videoScaleX = videoParams.w / videoTargetParams.w
+  const videoScaleY = videoParams.h / videoTargetParams.h
+  return cropRect.scaleXY(videoScaleX, videoScaleY)
 }
