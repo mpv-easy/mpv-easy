@@ -394,7 +394,6 @@ export function createRender({
     }
 
     dim.observe(updateRootNode)
-    setInterval(customRender, 1000 / fps)
   }
 }
 
