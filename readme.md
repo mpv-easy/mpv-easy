@@ -43,16 +43,16 @@ set -x MPV_SCRIPT_DIR /your_mpv_dir/portable_config/scripts ; pnpm run dev
 | key       | command                              |
 | --------- | ------------------------------------ |
 | ENTER     | cycle fullscreen                     |
-| [         | script-message speed-change -0.25    |
-| ]         | script-message speed-change +0.25    |
+| [         | script-message change-speed -0.25    |
+| ]         | script-message change-speed +0.25    |
 | c         | script-message cut                   |
 | C         | script-message crop                  |
 | o         | script-message output                |
 | ESC       | script-message cancel                |
-| UP        | script-message volume-change +10     |
-| DOWN      | script-message volume-change -10     |
-| ctrl+UP   | script-message fontsize-change +12   |
-| ctrl+DOWN | script-message fontsize-change -12   |
+| UP        | script-message change-volume +10     |
+| DOWN      | script-message change-volume -10     |
+| ctrl+UP   | script-message change-fontSize +0.2  |
+| ctrl+DOWN | script-message change-fontSize -0.2  |
 | ctrl+o    | script-message open-dialog           |
 | ctrl+t    | script-message translate             |
 | ctrl+i    | script-message interactive-translate |

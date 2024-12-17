@@ -231,7 +231,7 @@ export function enableMessages(level: LogLevel) {
 
 export function registerScriptMessage(
   name: string,
-  fn: (...args: unknown[]) => void,
+  fn: (...args: string[]) => void,
 ) {
   return getMP().register_script_message(name, fn)
 }

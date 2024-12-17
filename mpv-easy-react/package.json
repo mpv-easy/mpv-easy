@@ -25,6 +25,7 @@
   "dependencies": {
     "use-sync-external-store": "1.4.0",
     "@types/use-sync-external-store": "0.0.6",
+    "@mpv-easy/flex": "workspace:*",
     "@mpv-easy/anime": "workspace:*",
     "@mpv-easy/anime4k": "workspace:*",
     "@mpv-easy/assdraw": "workspace:*",

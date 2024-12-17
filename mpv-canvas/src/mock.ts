@@ -763,7 +763,7 @@ export function createMpvMock(
     },
     register_script_message: (
       name: string,
-      fn: (...args: unknown[]) => void,
+      fn: (...args: string[]) => void,
     ): void => {
       // console.log("register_script_message not implemented.")
     },

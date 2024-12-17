@@ -206,7 +206,7 @@ export type MP = {
 
   enable_messages(level: LogLevel): void
 
-  register_script_message(name: string, fn: (...args: unknown[]) => void): void
+  register_script_message(name: string, fn: (...args: string[]) => void): void
 
   unregister_script_message(name: string): void
 

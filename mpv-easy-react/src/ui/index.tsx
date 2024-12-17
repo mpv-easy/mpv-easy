@@ -116,7 +116,7 @@ export const Easy = (props: Partial<EasyProps>) => {
       }
     })
 
-    registerScriptMessage("volume-change", (e) => {
+    registerScriptMessage("change-volume", (e) => {
       const v = Number.parseFloat(`${e}`)
       const s = clamp(volumeRef.current + v, 0, volumeMax)
       dispatch.setVolume(s)
@@ -124,15 +124,12 @@ export const Easy = (props: Partial<EasyProps>) => {
       showNotification(`volume: ${s}`, 2)
     })
 
-    registerScriptMessage("increase-fontSize", () => {
-      dispatch.increaseFontSize()
-    })
-    registerScriptMessage("decrease-fontSize", () => {
-      dispatch.decreaseFontSize()
+    registerScriptMessage("change-fontSize", (n) => {
+      dispatch.changeFontSize(Number.parseFloat(n))
     })
 
-    registerScriptMessage("speed-change", (e) => {
-      const v = Number.parseFloat(`${e}`)
+    registerScriptMessage("change-speed", (e) => {
+      const v = Number.parseFloat(e)
       const s = clamp(speedRef.current + v, speedMin, speedMax)
       dispatch.setSpeed(s)
       setPropertyNumber("speed", s)

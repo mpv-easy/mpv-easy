@@ -90,8 +90,10 @@ export const fontSelector = (state: PluginContext) =>
 
 export const cellSizeSelector = (state: PluginContext) => {
   const scale = fontSizeScaleSelector(state)
-  const osd = osdDimensionsSelector(state)
-  const cell = clamp(((osd.w * scale) / 32) & ~15, 16, 256)
+  // const w = osdDimensionsSelector(state).w
+  // const cell = clamp(((w * scale) / 32) & ~15, 16, 256)
+  // FIXME: dynamic font size
+  const cell = clamp((64 * scale) & ~7, 16, 256)
   return cell
 }
 
@@ -105,7 +107,7 @@ export const normalFontSizeSelector = (state: PluginContext) =>
   fontSizeSelector(state)
 
 export const smallFontSizeSelector = (state: PluginContext) => {
-  const cell = fontSizeSelector(state).fontSize & ~15
+  const cell = fontSizeSelector(state).fontSize & ~7
   const fontSize = (cell / 4) * 3
   const padding = cell / 8
   return { fontSize, padding }
