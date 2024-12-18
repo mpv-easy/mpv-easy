@@ -1,5 +1,7 @@
 crop script for mpv
 
+In order to preserve the filters added by the user, first use the mpv command `screenshot-to-file` to capture the video screen, and then use ffmpeg to crop it
+
 ## install
 
 You need to install [ffmpeg](https://www.ffmpeg.org/download.html) and add ffmpeg to ```PATH```
@@ -14,7 +16,7 @@ You need to install [ffmpeg](https://www.ffmpeg.org/download.html) and add ffmpe
 
 By default, the shortcut key `C` adds the current time point to the segment, `esc` cancels the selection, and `o` exports the video.
 
-If the video file is `/a/b/c.mp4`, the output image file is `/a/b/c.time.x.y.w.h.webp`
+If the video file is `/a/b/c.mp4`, the output image file is `/a/b/c.time.x.y.w.h.webp`. If no output directory is configured, it will be saved to the user's desktop
 
 ### mpv-crop
 

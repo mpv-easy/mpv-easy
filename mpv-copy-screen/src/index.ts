@@ -4,6 +4,7 @@ import {
   joinPath,
   osdMessage,
   registerScriptMessage,
+  screenshotToFile,
   setClipboardImage,
 } from "@mpv-easy/tool"
 
@@ -22,7 +23,7 @@ export const defaultConfig: copyScreenConfig = {
 }
 
 async function copyScreen(path: string) {
-  command(`no-osd screenshot-to-file ${path}`)
+  screenshotToFile(path)
   const result = await setClipboardImage(path)
   if (result) {
     osdMessage("Copied to Clipboard", 5)

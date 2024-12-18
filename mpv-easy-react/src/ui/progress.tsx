@@ -102,10 +102,6 @@ export const Progress = ({ width, height, ...props }: MpDomProps) => {
       showNotification("video not found")
       return
     }
-    if (isRemote(path)) {
-      showNotification("cut not support remote video")
-      return
-    }
     const ffmpeg = detectFfmpeg()
     if (!ffmpeg) {
       showNotification("ffmpeg not found")
@@ -119,6 +115,10 @@ export const Progress = ({ width, height, ...props }: MpDomProps) => {
       }
       const segment = getVideoSegment(cutPoints)
       if (segment) {
+        if (isRemote(path)) {
+          showNotification("cut not support remote video")
+          return
+        }
         // cut crop video
         const outputPath = getCutVideoPath(
           path,
@@ -126,6 +126,7 @@ export const Progress = ({ width, height, ...props }: MpDomProps) => {
           rect,
           cropConfig.outputDirectory,
         )
+        showNotification("crop starting")
         const ok = await cropVideo(path, segment, rect, outputPath, ffmpeg)
         // TODO: To reuse fragments, don't remove cutPoints, should use esc to remove
         // dispatch.setCutPoints([])
@@ -143,7 +144,8 @@ export const Progress = ({ width, height, ...props }: MpDomProps) => {
           rect,
           cropConfig.outputDirectory,
         )
-        const ok = await cropImage(path, timePos, rect, outputPath, ffmpeg)
+        showNotification("crop starting")
+        const ok = await cropImage(rect, outputPath, ffmpeg)
         if (!ok) {
           showNotification("failed to crop image")
         } else {
@@ -159,6 +161,12 @@ export const Progress = ({ width, height, ...props }: MpDomProps) => {
       showNotification("cut segment not found")
       return
     }
+
+    if (isRemote(path)) {
+      showNotification("cut not support remote video")
+      return
+    }
+
     showNotification("cut starting")
 
     const ok = await cutVideo(

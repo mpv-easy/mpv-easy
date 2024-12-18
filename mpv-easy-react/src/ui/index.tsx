@@ -163,7 +163,6 @@ export const Easy = (props: Partial<EasyProps>) => {
   const elementRef = useRef<MpDom>(null)
   const menuRef = useRef<{ setHide: (v: boolean) => void }>(null)
   const volumeDomRef = useRef<MpDom>(null)
-  const [menuHide, setMenuHide] = useState(true)
   const playerState = useSelector(playerStateSelector)
   const showCrop = playerState.showCrop
   const cropPoints = playerState.cropPoints
@@ -210,7 +209,6 @@ export const Easy = (props: Partial<EasyProps>) => {
     secondSubFontface,
   } = translateStyle
 
-  const clickMenuStyle = useSelector(clickMenuStyleSelector)
   const subFontSize =
     (getPropertyNumber("sub-font-size") ??
       (translateStyle.subFontSize || fontSize.fontSize)) * subScale
@@ -297,7 +295,7 @@ export const Easy = (props: Partial<EasyProps>) => {
             osdWidth={osdDimensions.w}
             points={cropPoints}
             maskColor={cropConfig.maskColor}
-            zIndex={1024}
+            zIndex={cropConfig.zIndex}
           />
         )}
         <Translation

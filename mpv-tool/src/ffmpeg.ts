@@ -1,8 +1,10 @@
 import { execAsync, getOs, Rect } from "./common"
-import { joinPath } from "./mpv"
+import { joinPath, screenshotToFile } from "./mpv"
 import { getDefaultBinDirPath } from "./rs-ext"
 import { existsSync } from "./fs"
 import { detectCmd } from "./ext"
+import { getTmpDir } from "./tmp"
+import { randomId } from "./math"
 
 const defaultMacExeName = "ffmpeg"
 const defaultWindowsExeName = "ffmpeg.exe"
@@ -78,25 +80,21 @@ export async function cutVideo(
 }
 
 export async function cropImage(
-  videoPath: string,
-  time: number,
   rect: Rect,
   outputPath: string,
   ffmpeg: string,
 ) {
+  const tmpDir = getTmpDir()
+  const ext = outputPath.split(".").at(-1) || "webp"
+  const tmpPath = joinPath(tmpDir, `${randomId()}.${ext}`)
+  screenshotToFile(tmpPath)
   const { x, y, width, height } = rect
   const cmd = [
     ffmpeg,
-    "-nostdin",
-    "-accurate_seek",
-    "-ss",
-    time.toString(),
     "-i",
-    videoPath,
+    tmpPath,
     "-vf",
     `crop=${width}:${height}:${x}:${y}`,
-    "-vframes",
-    "1",
     "-y",
     outputPath,
   ]

@@ -13,6 +13,7 @@ export const defaultConfig: CropConfig = {
   lineWidth: 2,
   outputDirectory: "",
   cropImageFormat: "webp",
+  zIndex: 2048,
 }
 
 export type CropConfig = {
@@ -24,6 +25,7 @@ export type CropConfig = {
   lineWidth: number
   outputDirectory: string
   cropImageFormat: string
+  zIndex: number
 }
 
 declare module "@mpv-easy/plugin" {

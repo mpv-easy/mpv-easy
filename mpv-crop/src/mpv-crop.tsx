@@ -115,7 +115,7 @@ function App() {
         rect,
         outputDirectory,
       )
-      const ok = await cropImage(path, timePos, rect, outputPath, ffmpeg)
+      const ok = await cropImage(rect, outputPath, ffmpeg)
       if (!ok) {
         printAndOsd("failed to crop image")
       } else {

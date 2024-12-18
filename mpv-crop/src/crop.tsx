@@ -1,8 +1,8 @@
 import React, { useRef } from "react"
 import { Box, getDirection, MpDom } from "@mpv-easy/react"
 import {
-  dirname,
   existsSync,
+  getDesktopDir,
   getFileName,
   getOsdSize,
   getPropertyNative,
@@ -210,7 +210,7 @@ export function getCropImagePath(
   rect: Rect,
   outputDirectory: string,
 ) {
-  const dir = existsSync(outputDirectory) ? outputDirectory : dirname(videoPath)
+  const dir = existsSync(outputDirectory) ? outputDirectory : getDesktopDir()
   const name = getFileName(videoPath)!
   const list = name.split(".")
   const ext = imageFormat || "webp"

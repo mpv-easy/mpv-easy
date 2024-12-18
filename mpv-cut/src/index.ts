@@ -1,6 +1,6 @@
 import { type SystemApi, definePlugin } from "@mpv-easy/plugin"
 import type { PluginContext } from "@mpv-easy/plugin"
-import { dirname, existsSync, getFileName, Rect } from "@mpv-easy/tool"
+import { existsSync, getDesktopDir, getFileName, Rect } from "@mpv-easy/tool"
 
 export const pluginName = "@mpv-easy/cut"
 
@@ -45,7 +45,7 @@ export function getCutVideoPath(
   rect: undefined | Rect,
   outputDirectory: string,
 ): string {
-  const dir = existsSync(outputDirectory) ? outputDirectory : dirname(videoPath)
+  const dir = existsSync(outputDirectory) ? outputDirectory : getDesktopDir()
   const name = getFileName(videoPath)!
   const list = name.split(".")
 

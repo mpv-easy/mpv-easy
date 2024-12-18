@@ -1,4 +1,4 @@
-import { getOs } from "./common"
+import { execSync, getOs } from "./common"
 import { ConfigDir } from "./const"
 import { normalize } from "./path"
 import { Argb } from "e-color"
@@ -495,4 +495,25 @@ export function getColor(name: string): string | undefined {
   const prop = getPropertyString(name)
   if (!prop) return
   return new Argb(prop, true).toBgra().toHex("#")
+}
+
+export function screenshotToFile(path: string) {
+  command(`no-osd screenshot-to-file ${path}`)
+}
+
+export function getDesktopDir() {
+  switch (getOs()) {
+    case "windows":
+      return normalize(
+        execSync([
+          "powershell",
+          "-c",
+          '[Environment]::GetFolderPath("Desktop")',
+        ]).trim(),
+      )
+    case "linux":
+    case "darwin":
+    case "android":
+      return normalize(execSync(["bash", "-c", "echo ~/Desktop"]).trim())
+  }
 }
