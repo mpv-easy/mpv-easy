@@ -6,6 +6,7 @@ import {
   getFileName,
   getOsdSize,
   getPropertyNative,
+  getPropertyNumber,
   Rect,
 } from "@mpv-easy/tool"
 
@@ -233,29 +234,32 @@ export function getCropRect(points: [number, number][]): Rect | undefined {
   const left = Math.min(x1, x2)
   const bottom = Math.max(y1, y2)
   const right = Math.max(x1, x2)
-  const osdCropRect = new Rect(left, top, right - left, bottom - top)
+  const zoom = 2 ** getPropertyNumber("video-zoom", 0)
   const osd = getOsdSize()!
+  const osdRect = new Rect(0, 0, osd.width, osd.height)
+  const osdCropRect = new Rect(left, top, right - left, bottom - top)
   const videoParams = getPropertyNative<{ w: number; h: number }>(
     "video-params",
   )!
   const videoTargetParams = getPropertyNative<{ w: number; h: number }>(
     "video-target-params",
   )!
-  const osdRect = new Rect(0, 0, osd.width, osd.height)
+  const videoScaleX = videoParams.w / videoTargetParams.w
+  const videoScaleY = videoParams.h / videoTargetParams.h
   const videoTargetRect = new Rect(
     0,
     0,
-    videoTargetParams.w,
-    videoTargetParams.h,
-  )
+    videoParams.w,
+    videoParams.h,
+  ).scaleCenterXY(zoom, zoom)
   const videoCenterRect = osdRect.placeCenter(videoTargetRect)
   const cropRect = videoCenterRect.intersection(osdCropRect)
-
   if (!cropRect) {
     return undefined
   }
-
-  const videoScaleX = videoParams.w / videoTargetParams.w
-  const videoScaleY = videoParams.h / videoTargetParams.h
-  return cropRect.scaleXY(videoScaleX, videoScaleY)
+  const sx = zoom < 1 ? videoScaleX : videoScaleX / zoom
+  const sy = zoom < 1 ? videoScaleY : videoScaleY / zoom
+  const cx = zoom < 1 ? osdRect.cx : videoTargetRect.cx
+  const cy = zoom < 1 ? osdRect.cy : videoTargetRect.cy
+  return cropRect.scaleFromPoint(cx, cy, sx, sy)
 }

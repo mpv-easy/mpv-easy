@@ -304,7 +304,6 @@ export const {
 export { store }
 export type Store = typeof store
 import { pluginName as autoloadName } from "@mpv-easy/autoload"
-import throttle from "lodash-es/throttle"
 export type Dispatch = typeof dispatch
 
 export function syncPlayer(store: Store) {
@@ -319,7 +318,7 @@ export function syncPlayer(store: Store) {
   const videoParamsProp = new PropertyNative<VideoParams>("video-params")
   const muteProp = new PropertyBool("mute")
   const seekableProp = new PropertyBool("seekable")
-
+  const videoZoomProp = new PropertyNumber("video-zoom")
   const aidProp = new PropertyNumber("aid")
   const vidProp = new PropertyNumber("vid")
   const sidProp = new PropertyNumber("sid")
@@ -355,27 +354,13 @@ export function syncPlayer(store: Store) {
     seekableProp,
     playlistIndexProp,
     windowMinimizedProp,
+    videoZoomProp,
   ]
   function updateProp() {
     const state = store.getState()
-    // @ts-ignore
-    // const oldValue = state[pluginName].player[name]
-    // console.log(
-    //   "updateProp",
-    //   name,
-    //   isEqual(oldValue, value),
-    //   JSON.stringify(value),
-    //   JSON.stringify(oldValue),
-    // )
-    // if (isEqual(oldValue, value)) {
-    //   return
-    // }
-    // @ts-ignore
-    // state[pluginName].player[name] = value
     state[pluginName].player = {
       ...state[pluginName].player,
     }
-
     for (const i of propList) {
       // @ts-ignore
       state[pluginName].player[i.name] = i.value

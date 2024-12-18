@@ -275,6 +275,12 @@ export class Rect {
     public height: number,
   ) {}
 
+  get cx() {
+    return this.x + this.width / 2
+  }
+  get cy() {
+    return this.y + this.height / 2
+  }
   get x0() {
     return this.x
   }
@@ -328,6 +334,29 @@ export class Rect {
       this.width * scale,
       this.height * scale,
     )
+  }
+  scaleFromPoint(cx: number, cy: number, scaleX: number, scaleY: number) {
+    const w = this.width * scaleX
+    const h = this.height * scaleY
+
+    const offsetX = (this.width - w) * ((cx - this.x) / this.width)
+    const offsetY = (this.height - h) * ((cy - this.y) / this.height)
+
+    const x = this.x + offsetX
+    const y = this.y + offsetY
+    return new Rect(x, y, w, h)
+  }
+  scaleCenterXY(scaleX: number, scaleY: number) {
+    const centerX = this.x + this.width / 2
+    const centerY = this.y + this.height / 2
+    const w = this.width * scaleX
+    const h = this.height * scaleY
+    const x = centerX - w / 2
+    const y = centerY - h / 2
+    return new Rect(x, y, w, h)
+  }
+  offsetXY(offsetX: number, offsetY: number) {
+    return new Rect(this.x + offsetX, this.y + offsetY, this.width, this.height)
   }
   scaleXY(scaleX: number, scaleY: number): Rect {
     return new Rect(
