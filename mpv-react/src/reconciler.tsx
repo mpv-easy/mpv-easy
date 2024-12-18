@@ -48,9 +48,7 @@ function detachDeletedInstance(node: MpDom) {
   }
 }
 
-export function createCustomReconciler(
-  customRender: (immediately?: boolean) => void,
-) {
+export function createCustomReconciler(customRender: () => void) {
   return createReconciler({
     supportsMutation: true,
     supportsPersistence: false,

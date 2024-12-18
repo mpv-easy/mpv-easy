@@ -51,8 +51,8 @@ set -x MPV_SCRIPT_DIR /your_mpv_dir/portable_config/scripts ; pnpm run dev
 | ESC       | script-message cancel                |
 | UP        | script-message change-volume +10     |
 | DOWN      | script-message change-volume -10     |
-| ctrl+UP   | script-message change-fontSize +0.2  |
-| ctrl+DOWN | script-message change-fontSize -0.2  |
+| ctrl+UP   | script-message change-fontSize +0.25 |
+| ctrl+DOWN | script-message change-fontSize -0.25 |
 | ctrl+o    | script-message open-dialog           |
 | ctrl+t    | script-message translate             |
 | ctrl+i    | script-message interactive-translate |

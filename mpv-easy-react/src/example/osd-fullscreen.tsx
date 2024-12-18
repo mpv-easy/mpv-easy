@@ -29,7 +29,7 @@ export function OsdFullscreen() {
       <Box
         id="box-text"
         text={`${osd?.w} ${osd?.h}`}
-        fontSize={128}
+        fontSize={w / 8}
         color="#00FF00"
       />
     </Box>
