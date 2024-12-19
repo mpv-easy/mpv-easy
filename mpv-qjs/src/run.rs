@@ -94,7 +94,7 @@ pub unsafe fn run_mp_scripts() {
                 return;
             }
             Event::ClientMessage(msg) => {
-                for (_, ctx) in GLOBAL_INSTANCE.as_mut().unwrap() {
+                for ctx in GLOBAL_INSTANCE.as_mut().unwrap().values_mut() {
                     ctx.with(|ctx| {
                         let _s: () = ctx
                             .eval(format!(
@@ -112,7 +112,7 @@ pub unsafe fn run_mp_scripts() {
                 }
             }
             _ => {
-                for (_, ctx) in GLOBAL_INSTANCE.as_mut().unwrap() {
+                for ctx in GLOBAL_INSTANCE.as_mut().unwrap().values_mut() {
                     ctx.with(|ctx| {
                         let _s: () = ctx
                             .eval(

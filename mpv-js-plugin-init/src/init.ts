@@ -37,7 +37,7 @@ mp.get_osd_margins = function get_osd_margins() {
 
 mp.command_native = (table) => {
   if (Array.isArray(table)) {
-    const rt = __mp.__command_json(table)
+    const rt = JSON.parse(__mp.__command_json(table))
     return rt
   }
   return __mp.__command_native(table)

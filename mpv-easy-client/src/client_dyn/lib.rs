@@ -259,6 +259,7 @@ impl Handle {
             .into_iter()
             .map(|s| CString::new(s.as_ref()).unwrap())
             .collect();
+        // println!("===commandv: {:?}", args);
         let mut raw_args: Vec<*const c_char> = args.iter().map(|s| s.as_ptr()).collect();
         raw_args.push(std::ptr::null()); // Adding null at the end
 

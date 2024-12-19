@@ -72,7 +72,7 @@ fn op_write_file(
 #[op2(fast)]
 fn op_file_size(#[string] path: String) -> Result<u32, deno_core::error::AnyError> {
     let size = mpv::op_file_size(path);
-    Ok(size as u32)
+    Ok(size)
 }
 
 #[op2(fast)]

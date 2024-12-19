@@ -97,7 +97,7 @@ pub unsafe fn run_mp_scripts() {
                 return;
             }
             Event::ClientMessage(msg) => {
-                for (_, rt) in GLOBAL_INSTANCE.as_mut().unwrap() {
+                for rt in GLOBAL_INSTANCE.as_mut().unwrap().values_mut() {
                     rt.execute_script(
                         "<__mp_dispatch_event>",
                         format!("globalThis.__mp_dispatch_event?.({:?})", msg.args()),
@@ -106,7 +106,7 @@ pub unsafe fn run_mp_scripts() {
                 }
             }
             _ => {
-                for (_, rt) in GLOBAL_INSTANCE.as_mut().unwrap() {
+                for rt in GLOBAL_INSTANCE.as_mut().unwrap().values_mut() {
                     rt.execute_script("<__mp_tick>", "globalThis.__mp_tick?.()")
                         .unwrap();
                 }
