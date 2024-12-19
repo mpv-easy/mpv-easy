@@ -7,7 +7,9 @@ import {
   getOsdSize,
   getPropertyNative,
   getPropertyNumber,
+  printAndOsd,
   Rect,
+  VideoParams,
 } from "@mpv-easy/tool"
 
 function getLabelPos(
@@ -238,28 +240,53 @@ export function getCropRect(points: [number, number][]): Rect | undefined {
   const osd = getOsdSize()!
   const osdRect = new Rect(0, 0, osd.width, osd.height)
   const osdCropRect = new Rect(left, top, right - left, bottom - top)
-  const videoParams = getPropertyNative<{ w: number; h: number }>(
-    "video-params",
-  )!
-  const videoTargetParams = getPropertyNative<{ w: number; h: number }>(
+  const videoParams = getPropertyNative<VideoParams>("video-params")!
+  const videoTargetParams = getPropertyNative<VideoParams>(
     "video-target-params",
   )!
-  const videoScaleX = videoParams.w / videoTargetParams.w
-  const videoScaleY = videoParams.h / videoTargetParams.h
-  const videoTargetRect = new Rect(
-    0,
-    0,
-    videoParams.w,
-    videoParams.h,
-  ).scaleCenterXY(zoom, zoom)
+  if (
+    videoTargetParams.w <= osdRect.width &&
+    videoTargetParams.h <= osdRect.height &&
+    zoom <= 1
+  ) {
+    const videoScaleX = videoParams.w / videoTargetParams.w
+    const videoScaleY = videoParams.h / videoTargetParams.h
+    const videoTargetRect = new Rect(
+      0,
+      0,
+      videoTargetParams.w,
+      videoTargetParams.h,
+    )
+    const videoCenterRect = osdRect.placeCenter(videoTargetRect)
+    const cropRect = videoCenterRect.intersection(osdCropRect)
+    if (!cropRect) {
+      return undefined
+    }
+    const x = (cropRect.x - videoCenterRect.x) * videoScaleX
+    const y = (cropRect.y - videoCenterRect.y) * videoScaleY
+    const w = cropRect.width * videoScaleX
+    const h = cropRect.height * videoScaleY
+    return new Rect(x, y, w, h)
+  }
+  const aspect = videoTargetParams.w / videoTargetParams.h
+  let scaleW = videoTargetParams.w
+  let scaleH = videoTargetParams.h
+  if (aspect <= videoParams.aspect) {
+    scaleH = videoTargetParams.w / videoParams.aspect
+  } else {
+    scaleW = videoTargetParams.w / videoParams.aspect
+  }
+  const sx = zoom * (scaleW / videoParams.w)
+  const sy = zoom * (scaleH / videoParams.h)
+  const videoTargetRect = new Rect(0, 0, videoParams.w * sx, videoParams.h * sy)
   const videoCenterRect = osdRect.placeCenter(videoTargetRect)
   const cropRect = videoCenterRect.intersection(osdCropRect)
   if (!cropRect) {
     return undefined
   }
-  const sx = zoom < 1 ? videoScaleX : videoScaleX / zoom
-  const sy = zoom < 1 ? videoScaleY : videoScaleY / zoom
-  const cx = zoom < 1 ? osdRect.cx : videoTargetRect.cx
-  const cy = zoom < 1 ? osdRect.cy : videoTargetRect.cy
-  return cropRect.scaleFromPoint(cx, cy, sx, sy)
+  const x = (cropRect.x - videoCenterRect.x) / sx
+  const y = (cropRect.y - videoCenterRect.y) / sy
+  const w = cropRect.width / sx
+  const h = cropRect.height / sy
+  return new Rect(x, y, w, h)
 }
