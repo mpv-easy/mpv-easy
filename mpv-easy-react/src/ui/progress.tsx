@@ -237,6 +237,8 @@ export const Progress = ({ width, height, ...props }: MpDomProps) => {
 
   const fontSize = useSelector(smallFontSizeSelector)
   const font = useSelector(fontSelector)
+  const showThumbfast =
+    thumbRef.current && !mouseOut && !!thumbX && !!thumbY && supportThumbfast
 
   return (
     <Box
@@ -370,59 +372,51 @@ export const Progress = ({ width, height, ...props }: MpDomProps) => {
           pointerEvents="none"
         />
       )}
-      {!mouseOut && (
+      <Box
+        hide={mouseOut}
+        ref={hoverCursorRef}
+        id="preview-cursor"
+        position="relative"
+        width={progress.previewCursorSize}
+        left={`${leftPreview * 100}%`}
+        height={"100%"}
+        backgroundColor={progress.previewCursorColor}
+        color={progress.previewCursorColor}
+        pointerEvents="none"
+        zIndex={progress.previewZIndex}
+        display="flex"
+        alignContent="stretch"
+      >
         <Box
-          ref={hoverCursorRef}
-          id="preview-cursor"
-          position="relative"
-          width={progress.previewCursorSize}
-          left={`${leftPreview * 100}%`}
+          id="preview-cursor-time"
+          position="absolute"
           height={"100%"}
-          backgroundColor={progress.previewCursorColor}
-          color={progress.previewCursorColor}
+          hide={mouseOut}
+          top={"-100%"}
+          left={previewTimeTextOffsetX}
+          backgroundColor={progress.backgroundColor}
+          color={progress.color}
+          text={formatTime(leftPreview * duration, format)}
           pointerEvents="none"
-          zIndex={progress.previewZIndex}
           display="flex"
-          alignContent="stretch"
-        >
-          {!mouseOut && (
-            <Box
-              id="preview-cursor-time"
-              position="absolute"
-              height={"100%"}
-              top={"-100%"}
-              left={previewTimeTextOffsetX}
-              backgroundColor={progress.backgroundColor}
-              color={progress.color}
-              text={formatTime(leftPreview * duration, format)}
-              pointerEvents="none"
-              display="flex"
-              ref={previewTextRef}
-              justifyContent="center"
-              alignItems="center"
-              zIndex={progress.previewZIndex}
-            />
-          )}
-
-          {thumbRef.current &&
-            !mouseOut &&
-            !!thumbX &&
-            !!thumbY &&
-            supportThumbfast && (
-              <Box
-                id={42}
-                position="absolute"
-                x={thumbX}
-                y={thumbY}
-                width={thumbRef.current?.thumbWidth}
-                height={thumbRef.current?.thumbHeight}
-                backgroundImage={`${thumbRef.current?.path}?id=${thumbfastUpdateId}`}
-                backgroundImageFormat={thumbRef.current?.format}
-                pointerEvents="none"
-              />
-            )}
-        </Box>
-      )}
+          ref={previewTextRef}
+          justifyContent="center"
+          alignItems="center"
+          zIndex={progress.previewZIndex}
+        />
+        <Box
+          hide={!showThumbfast}
+          id={42}
+          position="absolute"
+          x={thumbX}
+          y={thumbY}
+          width={thumbRef.current?.thumbWidth}
+          height={thumbRef.current?.thumbHeight}
+          backgroundImage={`${thumbRef.current?.path}?id=${thumbfastUpdateId}`}
+          backgroundImageFormat={thumbRef.current?.format}
+          pointerEvents="none"
+        />
+      </Box>
     </Box>
   )
 }

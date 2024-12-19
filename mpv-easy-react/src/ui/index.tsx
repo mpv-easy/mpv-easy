@@ -141,6 +141,10 @@ export const Easy = (props: Partial<EasyProps>) => {
       dispatch.setShowCrop(false)
       dispatch.setCropPoints([])
     })
+
+    registerScriptMessage("mouse-right-click", () => {
+      dispatch.setPause(!getPropertyBool("pause"))
+    })
   }, [])
 
   const smallFontSize = useSelector(smallFontSizeSelector)
