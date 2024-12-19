@@ -66,20 +66,22 @@ pub fn op_read_dir(path: String) -> Vec<String> {
     v
 }
 
-pub fn exec_command(name: String, args: Vec<String>) -> String {
-    let empty_args = vec![String::new()];
-    let (cmd_name, cmd_args) = if name == "subprocess" {
-        if args.len() == 1 {
-            (&args[0], empty_args.as_slice())
-        } else {
-            args.split_first().unwrap()
-        }
-    } else {
-        (&name, args.as_slice())
-    };
-    let output = Command::new(cmd_name).args(cmd_args).output().unwrap();
+fn exec_command(name: String, args: Vec<String>) -> String {
+  let empty_args: Vec<String> = vec![];
+  let (cmd_name, cmd_args) = if name == "subprocess" {
+      if args.len() == 1 {
+          (&args[0], empty_args.as_slice())
+      } else {
+          args.split_first().unwrap()
+      }
+  } else {
+      (&name, args.as_slice())
+  };
 
-    String::from_utf8(output.stdout).unwrap()
+  // println!("cmd_args: {:?} {:?} {:?}", cmd_name, name, cmd_args);
+  let output = Command::new(cmd_name).args(cmd_args).output().unwrap();
+
+  String::from_utf8(output.stdout).unwrap()
 }
 
 pub fn op_command_native(name: String, args: Vec<String>) -> String {

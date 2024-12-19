@@ -443,7 +443,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: mpy-easy-windows-deno-full
-          path: mpy-easy-windows-full/mpy-easy-windows-deno-full.zip
+          path: mpy-easy-windows-deno-full/mpy-easy-windows-deno-full.zip
       - name: Upload release
         uses: actions/upload-artifact@v4
         with:
