@@ -400,7 +400,7 @@ jobs:
           cp mpv-easy-react/es5/mpv-easy-es5.js release/mpv-easy-es5.js
           cp mpv-easy-react/bundle/mpv-easy-es6.js release/mpv-easy-es6.js
 
-          cp deno-dll/mpv-deno-windows.dll release/mpv-deno-windows.dll
+          cp mpv-deno-dist/mpv-deno-windows.dll release/mpv-deno-windows.dll
           cp mpv-easy-ext-dist/mpv-easy-ext-macos release/mpv-easy-ext-macos
           cp mpv-easy-ext-dist/mpv-easy-ext-linux release/mpv-easy-ext-linux
           cp mpv-easy-ext-dist/mpv-easy-ext-android release/mpv-easy-ext-android

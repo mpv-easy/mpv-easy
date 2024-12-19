@@ -41,7 +41,7 @@ fn op_set_property_string(
     #[string] name: String,
     #[string] v: String,
 ) -> Result<(), deno_core::error::AnyError> {
-    // println!("op_set_property_string op11: {} {}", &name, v);
+    // println!("op_set_property_string: {:?} {:?}", &name, v);
     mpv::op_set_property_string(name, v);
     Ok(())
 }
