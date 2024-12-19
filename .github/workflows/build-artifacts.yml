@@ -340,7 +340,7 @@ jobs:
           cp mpv-easy-react/bundle/mpv-easy-es6.js mpy-easy-windows-deno-full/portable_config/scripts/mpv-easy-es6.js
           mv mpy-easy-windows-deno-full/portable_config/scripts mpy-easy-windows-deno-full/portable_config/scripts-deno
           mkdir -p mpy-easy-windows-deno-full/portable_config/scripts
-          cp -r deno-dll/mpv-deno-windows.dll mpy-easy-windows-deno-full/portable_config/scripts/mpv-deno-windows.dll
+          cp -r mpv-deno-windows/mpv-deno-windows.dll mpy-easy-windows-deno-full/portable_config/scripts/mpv-deno-windows.dll
 
           cd mpy-easy-macos
           zip -r -q mpy-easy-macos.zip .
