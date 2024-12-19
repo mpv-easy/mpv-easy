@@ -141,6 +141,9 @@ export function getTime(): number {
 }
 
 export type KeyEvent = {
+  canceled: boolean
+  scale: number
+  arg: string
   key: string
   event: "up" | "down" | "press"
   is_mouse: boolean

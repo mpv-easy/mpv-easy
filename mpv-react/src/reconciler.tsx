@@ -5,6 +5,7 @@ import {
   addKeyBinding,
   observeProperty,
   print,
+  registerScriptMessage,
 } from "@mpv-easy/tool"
 import type { MousePos } from "@mpv-easy/tool"
 import createReconciler from "react-reconciler"
@@ -270,89 +271,40 @@ export function createRender({
           event: "press",
           is_mouse: true,
           key: "",
+          canceled: false,
+          scale: 0,
+          arg: "",
         })
       }
     })
 
-    addKeyBinding(
-      "MOUSE_BTN0",
-      "MPV_EASY_MOUSE_LEFT",
-      (event) => {
-        // console.log("MPV_EASY_MOUSE_LEFT", JSON.stringify(event))
-        customDispatch(flex.rootNode, lastMousePos, event)
-      },
-      {
-        complex: true,
-        repeatable: true,
-        forced: false,
-      },
-    )
+    function dispatchEvent(name: string, arg = "") {
+      customDispatch(flex.rootNode, lastMousePos, {
+        key_name: name,
+        key: name,
+        event: "down",
+        is_mouse: true,
+        canceled: false,
+        scale: 0,
+        arg,
+      })
+    }
 
-    addKeyBinding(
-      "MOUSE_BTN1",
-      "MPV_EASY_MOUSE_MID",
-      (event) => {
-        customDispatch(flex.rootNode, lastMousePos, event)
-      },
-      {
-        complex: true,
-        repeatable: true,
-        forced: false,
-      },
-    )
-
-    // addKeyBinding(
-    //   "MOUSE_BTN2",
-    //   "MPV_EASY_MOUSE_RIGHT",
-    //   (event) => {
-    //     customDispatch(flex.rootNode, lastMousePos, event)
-    //   },
-    //   {
-    //     complex: true,
-    //     repeatable: true,
-    //     forced: false,
-    //   },
-    // )
-
-    addKeyBinding(
-      "MOUSE_BTN3",
-      "MPV_EASY_WHEEL_UP",
-      (event) => {
-        customDispatch(flex.rootNode, lastMousePos, event)
-      },
-      {
-        complex: true,
-        repeatable: true,
-        forced: false,
-      },
-    )
-
-    // addKeyBinding(
-    //   "MBTN_LEFT_DBL",
-    //   "MPV_EASY_LEFT_DBL",
-    //   (event) => {
-    //     console.log("MPV_EASY_LEFT_DBL", JSON.stringify(event))
-    //     customDispatch(flex.rootNode, lastMousePos, event)
-    //   },
-    //   {
-    //     complex: true,
-    //     repeatable: true,
-    //     forced: false,
-    //   },
-    // )
-
-    addKeyBinding(
-      "MOUSE_BTN4",
-      "MPV_EASY_WHEEL_DOWN",
-      (event) => {
-        customDispatch(flex.rootNode, lastMousePos, event)
-      },
-      {
-        complex: true,
-        repeatable: true,
-        forced: false,
-      },
-    )
+    registerScriptMessage("mouse-left-click", () => {
+      dispatchEvent("MOUSE_BTN0", "click")
+    })
+    registerScriptMessage("mouse-mid-click", () => {
+      dispatchEvent("MOUSE_BTN1", "click")
+    })
+    registerScriptMessage("mouse-right-click", () => {
+      dispatchEvent("MOUSE_BTN2", "click")
+    })
+    registerScriptMessage("mouse-wheel-up", () => {
+      dispatchEvent("WHEEL_UP")
+    })
+    registerScriptMessage("mouse-wheel-down", () => {
+      dispatchEvent("WHEEL_DOWN")
+    })
 
     let lastW = 0
     let lastH = 0

@@ -364,6 +364,10 @@ export class MpFlex extends Flex<MpAttrs, MpProps, MpEvent> {
   customIsMouseUp(e: BaseMouseEvent<MpAttrs, MpProps, MpEvent>): boolean {
     return e.event.event === "up"
   }
+  customIsMouseClick(e: BaseMouseEvent<MpAttrs, MpProps, MpEvent>): boolean {
+    // FIXME: custom mouse click event
+    return e.event.arg === "click"
+  }
   constructor(config: Partial<RenderConfig> = {}) {
     super()
     // TODO: abstract method not work?
