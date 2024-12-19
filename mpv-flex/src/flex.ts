@@ -82,7 +82,6 @@ export abstract class Flex<A extends {}, P extends {}, E extends {} = {}> {
   abstract customIsRootNode(node: BaseDom<A, P, E>): boolean
   abstract customCreateRootNode(): BaseDom<A, P, E>
   abstract customRenderRoot(node: BaseDom<A, P, E>): void
-
   abstract customMeasureNode(node: BaseDom<A, P, E>): Shape
   abstract customComputeZIndex(node: BaseDom<A, P, E>, zIndex: number): void
 
@@ -99,6 +98,7 @@ export abstract class Flex<A extends {}, P extends {}, E extends {} = {}> {
   abstract customIsMousePress(e: BaseMouseEvent<A, P, E>): boolean
   abstract customIsMouseDown(e: BaseMouseEvent<A, P, E>): boolean
   abstract customIsMouseUp(e: BaseMouseEvent<A, P, E>): boolean
+  abstract customIsMouseClick(e: BaseMouseEvent<A, P, E>): boolean
 
   constructor() {
     this.rootNode = this.customCreateRootNode()
@@ -934,7 +934,10 @@ export abstract class Flex<A extends {}, P extends {}, E extends {} = {}> {
           } else {
             dispatchMap.onMouseMove.push(node)
           }
-        } else if (!layoutNode._mouseDown && this.customIsMouseDown(event)) {
+        } else if (
+          !layoutNode._mouseDown &&
+          (this.customIsMouseDown(event) || this.customIsMouseClick(event))
+        ) {
           if (!layoutNode._mouseDown) {
             dispatchMap.onMouseDown.push(node)
             dispatchMap.onClick.push(node)
@@ -943,6 +946,10 @@ export abstract class Flex<A extends {}, P extends {}, E extends {} = {}> {
             if (!layoutNode._focus) {
               layoutNode._focus = true
               dispatchMap.onFocus.push(node)
+            }
+            if (this.customIsMouseClick(event)) {
+              layoutNode._mouseDown = false
+              dispatchMap.onMouseUp.push(node)
             }
           }
         } else if (this.customIsMouseUp(event)) {

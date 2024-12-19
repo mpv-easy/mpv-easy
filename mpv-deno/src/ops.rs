@@ -1,34 +1,29 @@
-use api::{commandv, get_property};
 use deno_core::*;
-use mpv_easy_client::api::{
-    self, command_json, get_property_string, set_property_bool, set_property_number,
-    set_property_string,
-};
-use std::process::Command;
+use mpv_easy_client::mpv;
 
 #[op2]
 fn op_commandv(#[serde] cmd: Vec<String>) -> Result<(), deno_core::error::AnyError> {
-    commandv(cmd);
+    mpv::op_commandv(cmd);
     Ok(())
 }
 
 #[op2]
 #[string]
 fn op_get_property_string(#[string] name: String) -> Result<String, deno_core::error::AnyError> {
-    let v = get_property_string(name);
+    let v = mpv::op_get_property_string(name);
     Ok(v)
 }
 
 #[op2(fast)]
 fn op_command_string(#[string] cmd: String) -> Result<(), deno_core::error::AnyError> {
-    commandv(cmd.split(' '));
+    mpv::op_command_string(cmd);
     Ok(())
 }
 
 #[op2(fast)]
 fn op_set_property_bool(#[string] name: String, v: bool) -> Result<(), deno_core::error::AnyError> {
     // println!("op_set_property_bool op11: {} {}", &name, v);
-    set_property_bool(name, v);
+    mpv::op_set_property_bool(name, v);
     Ok(())
 }
 
@@ -38,7 +33,7 @@ fn op_set_property_number(
     v: f64,
 ) -> Result<(), deno_core::error::AnyError> {
     // println!("op_set_property_number op11: {} {}", &name, v);
-    set_property_number(name, v);
+    mpv::op_set_property_number(name, v);
     Ok(())
 }
 #[op2(fast)]
@@ -46,22 +41,22 @@ fn op_set_property_string(
     #[string] name: String,
     #[string] v: String,
 ) -> Result<(), deno_core::error::AnyError> {
-    // println!("op_set_property_string op11: {} {}", &name, v);
-    set_property_string(name, v);
+    // println!("op_set_property_string: {:?} {:?}", &name, v);
+    mpv::op_set_property_string(name, v);
     Ok(())
 }
 
 #[op2]
 #[string]
 fn op_get_cwd() -> Result<String, deno_core::error::AnyError> {
-    let dir: String = get_property("working-directory");
+    let dir: String = mpv::op_get_cwd();
     Ok(dir)
 }
 
 #[op2]
 #[string]
 fn op_read_file(#[string] path: String) -> Result<String, deno_core::error::AnyError> {
-    let text: String = std::fs::read_to_string(path).unwrap();
+    let text: String = mpv::op_read_file(path);
     Ok(text)
 }
 
@@ -70,55 +65,35 @@ fn op_write_file(
     #[string] path: String,
     #[string] contents: String,
 ) -> Result<(), deno_core::error::AnyError> {
-    std::fs::write(path, contents).unwrap();
+    mpv::op_write_file(path, contents);
     Ok(())
 }
 
 #[op2(fast)]
 fn op_file_size(#[string] path: String) -> Result<u32, deno_core::error::AnyError> {
-    let size = std::fs::read(path).unwrap_or_default().len();
-    Ok(size as u32)
+    let size = mpv::op_file_size(path);
+    Ok(size)
 }
 
 #[op2(fast)]
 fn op_file_exists(#[string] path: String) -> Result<bool, deno_core::error::AnyError> {
-    let p = std::path::PathBuf::from(&path);
-    Ok(p.exists())
+    let p = mpv::op_file_exists(path);
+    Ok(p)
 }
 
 #[op2(fast)]
 fn op_is_file(#[string] path: String) -> Result<bool, deno_core::error::AnyError> {
-    let p = std::path::PathBuf::from(&path);
-    Ok(p.is_file())
+    let p = mpv::op_is_file(path);
+    Ok(p)
 }
 
 #[op2]
 #[serde]
 fn op_read_dir(#[string] path: String) -> Result<Vec<String>, deno_core::error::AnyError> {
-    let p = std::path::PathBuf::from(&path);
-    let v: Vec<String> = p
-        .read_dir()
-        .unwrap()
-        .filter_map(|i| i.ok().map(|k| k.path().to_string_lossy().to_string()))
-        .collect();
+    let v: Vec<String> = mpv::op_read_dir(path);
     Ok(v)
 }
 
-fn exec_command(name: String, args: Vec<String>) -> String {
-    let empty_args = vec![String::new()];
-    let (cmd_name, cmd_args) = if name == "subprocess" {
-        if args.len() == 1 {
-            (&args[0], empty_args.as_slice())
-        } else {
-            args.split_first().unwrap()
-        }
-    } else {
-        (&name, args.as_slice())
-    };
-    let output = Command::new(cmd_name).args(cmd_args).output().unwrap();
-
-    String::from_utf8(output.stdout).unwrap()
-}
 
 #[op2]
 #[string]
@@ -126,14 +101,14 @@ fn op_command_native(
     #[string] name: String,
     #[serde] args: Vec<String>,
 ) -> Result<String, deno_core::error::AnyError> {
-    let stdout = exec_command(name, args);
+    let stdout = mpv::op_command_native(name, args);
     Ok(stdout)
 }
 
 #[op2]
 #[string]
 fn op_command_json(#[serde] args: Vec<String>) -> Result<String, deno_core::error::AnyError> {
-    let js = command_json(args);
+    let js = mpv::op_command_json(args);
     let s = js.to_string();
     Ok(s)
 }
@@ -144,7 +119,7 @@ fn op_command_native_async(
     #[serde] args: Vec<String>,
 ) -> Result<(), deno_core::error::AnyError> {
     std::thread::spawn(move || {
-        exec_command(name, args);
+        mpv::op_command_native_async(name, args);
     });
     Ok(())
 }

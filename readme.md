@@ -40,33 +40,39 @@ set -x MPV_SCRIPT_DIR /your_mpv_dir/portable_config/scripts ; pnpm run dev
 
 ## short key
 
-| key       | command                              |
-| --------- | ------------------------------------ |
-| ENTER     | cycle fullscreen                     |
-| [         | script-message change-speed -0.25    |
-| ]         | script-message change-speed +0.25    |
-| c         | script-message cut                   |
-| C         | script-message crop                  |
-| o         | script-message output                |
-| ESC       | script-message cancel                |
-| UP        | script-message change-volume +10     |
-| DOWN      | script-message change-volume -10     |
-| ctrl+UP   | script-message change-fontSize +0.25 |
-| ctrl+DOWN | script-message change-fontSize -0.25 |
-| ctrl+o    | script-message open-dialog           |
-| ctrl+t    | script-message translate             |
-| ctrl+i    | script-message interactive-translate |
-| ctrl+T    | script-message mix-translate         |
-| CTRL+0    | script-message Anime4K-Clear         |
-| CTRL+1    | script-message Anime4K-AA-HQ         |
-| CTRL+2    | script-message Anime4K-B-HQ          |
-| CTRL+3    | script-message Anime4K-C-HQ          |
-| CTRL+4    | script-message Anime4K-A-HQ          |
-| CTRL+5    | script-message Anime4K-BB-HQ         |
-| CTRL+6    | script-message Anime4K-CA-HQ         |
-| CTRL+v    | script-message clipboard-play        |
-| CTRL+c    | script-message copy-screen           |
-| CTRL+C    | script-message copy-time             |
+| key        | command                              |
+| ---------- | ------------------------------------ |
+| ENTER      | cycle fullscreen                     |
+| [          | script-message change-speed -0.25    |
+| ]          | script-message change-speed +0.25    |
+| c          | script-message cut                   |
+| C          | script-message crop                  |
+| o          | script-message output                |
+| ESC        | script-message cancel                |
+| UP         | script-message change-volume +10     |
+| DOWN       | script-message change-volume -10     |
+| ctrl+UP    | script-message change-fontSize +0.25 |
+| ctrl+DOWN  | script-message change-fontSize -0.25 |
+| ctrl+o     | script-message open-dialog           |
+| ctrl+t     | script-message translate             |
+| ctrl+i     | script-message interactive-translate |
+| ctrl+T     | script-message mix-translate         |
+| CTRL+0     | script-message Anime4K-Clear         |
+| CTRL+1     | script-message Anime4K-AA-HQ         |
+| CTRL+2     | script-message Anime4K-B-HQ          |
+| CTRL+3     | script-message Anime4K-C-HQ          |
+| CTRL+4     | script-message Anime4K-A-HQ          |
+| CTRL+5     | script-message Anime4K-BB-HQ         |
+| CTRL+6     | script-message Anime4K-CA-HQ         |
+| CTRL+v     | script-message clipboard-play        |
+| CTRL+c     | script-message copy-screen           |
+| CTRL+C     | script-message copy-time             |
+| MOUSE_BTN0 | script-message mouse-left-click      |
+| MOUSE_BTN1 | script-message mouse-mid-click       |
+| MOUSE_BTN2 | script-message mouse-right-click     |
+| MOUSE_BTN3 | script-message mouse-wheel-up        |
+| MOUSE_BTN4 | script-message mouse-wheel-down      |
+
 
 ## UI
 

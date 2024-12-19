@@ -96,9 +96,18 @@ pub unsafe fn run_mp_scripts() {
             Event::Shutdown => {
                 return;
             }
+            Event::ClientMessage(msg) => {
+                for rt in GLOBAL_INSTANCE.as_mut().unwrap().values_mut() {
+                    rt.execute_script(
+                        "<__mp_dispatch_event>",
+                        format!("globalThis.__mp_dispatch_event?.({:?})", msg.args()),
+                    )
+                    .unwrap();
+                }
+            }
             _ => {
-                for (_, rt) in GLOBAL_INSTANCE.as_mut().unwrap() {
-                    rt.execute_script("<loop>", "globalThis.__mp_tick?.()")
+                for rt in GLOBAL_INSTANCE.as_mut().unwrap().values_mut() {
+                    rt.execute_script("<__mp_tick>", "globalThis.__mp_tick?.()")
                         .unwrap();
                 }
             }

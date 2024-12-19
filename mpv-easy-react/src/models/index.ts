@@ -23,6 +23,7 @@ import {
   dirname,
   getExtName,
   setPropertyNumber,
+  loadfile,
 } from "@mpv-easy/tool"
 import type { Language } from "@mpv-easy/i18n"
 import { type ThemeMode, type UIName, PlayMode } from "../mpv-easy-theme"
@@ -109,7 +110,8 @@ const store = defineStore({
     setPath(state, value: string) {
       state[pluginName].player.path = value
       if (value !== getPropertyString("path")) {
-        setPropertyString("path", value)
+        // setPropertyString("path", value)
+        loadfile(value)
       }
       return { ...state }
     },
