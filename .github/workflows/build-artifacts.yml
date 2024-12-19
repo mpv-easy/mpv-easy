@@ -32,21 +32,27 @@ jobs:
           mv mpv-easy-ext/output/mpv-easy-ext.exe mpv-easy-ext-windows.exe
           mv mpv-easy-ext/output/mpv-easy-play-with.exe mpv-easy-play-with-windows.exe
 
-      # - name: build deno
-      #   run: |
+      - name: build deno
+        run: |
+          rustup target add nightly-x86_64-pc-windows-msvc
+          rustup toolchain install nightly-x86_64-pc-windows-msvc
+          rustup default nightly-x86_64-pc-windows-msvc
+          rustup set default-host nightly-x86_64-pc-windows-msvc
+          rustup override set nightly-x86_64-pc-windows-msvc
 
-      #     rustup target add nightly-x86_64-pc-windows-msvc
-      #     rustup toolchain install nightly-x86_64-pc-windows-msvc
-      #     rustup default nightly-x86_64-pc-windows-msvc
-      #     rustup set default-host nightly-x86_64-pc-windows-msvc
-      #     rustup override set nightly-x86_64-pc-windows-msvc
+          rustc --version
 
-      #     rustc --version
+          cd mpv-deno
+          cargo build --release --out-dir=output -Z unstable-options
+          cd ..
+          mv mpv-deno/output/mpv_deno.dll mpv-deno-windows.dll
 
-      #     cd mpv-deno
-      #     cargo build --release --out-dir=output -Z unstable-options
-      #     cd ..
-      #     mv mpv-deno/output/mpv_deno.dll mpv-deno-windows.dll
+      - name: Upload windows deno Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: mpv-deno-windows
+          path: mpv-deno-windows.dll
+
       # - uses: msys2/setup-msys2@v2
       # - shell: msys2 {0}
       #   run: |
@@ -324,11 +330,17 @@ jobs:
           # cp mpv-easy-react/bundle/mpv-easy-es6.js mpy-easy-boa-windows/scripts-boa/mpv-easy-es6.js
           # mv mpy-easy-boa-windows/scripts/mpv-easy-config mpy-easy-boa-windows/scripts-boa/mpv-easy-config
 
-          # https://github.com/yt-dlp/yt-dlp/releases
-          # rwget -o mpy-easy-windows/yt-dlp.exe https://github.com/yt-dlp/yt-dlp/releases/download/2024.09.27/yt-dlp.exe
           cp yt-dlp.exe mpy-easy-windows/yt-dlp.exe
           7z x mpv-win.7z -ompy-easy-windows-full -y
           cp -r mpy-easy-windows mpy-easy-windows-full/portable_config
+
+
+          cp -r mpy-easy-windows-full mpy-easy-windows-deno-full
+          rm mpy-easy-windows-deno-full/scripts/mpv-easy-es5.js
+          cp mpv-easy-react/bundle/mpv-easy-es6.js mpy-easy-windows-deno-full/scripts/mpv-easy-es6.js
+          mv mpy-easy-windows-deno-full/scripts mpy-easy-windows-deno-full/scripts-deno
+          mkdir mpy-easy-windows-deno-full/scripts
+          cp -r deno-dll/mpv-deno-windows.dll mpy-easy-windows-deno-full/scripts/mpv-deno-windows.dll
 
           cd mpy-easy-macos
           zip -r -q mpy-easy-macos.zip .
@@ -362,12 +374,17 @@ jobs:
           zip -r -q mpy-easy-windows-full.zip .
           cd ..
 
+          cd mpy-easy-windows-deno-full
+          zip -r -q mpy-easy-windows-deno-full.zip .
+          cd ..
+
           mkdir release
           cp mpy-easy-macos/mpy-easy-macos.zip release/mpy-easy-macos.zip
           cp mpy-easy-linux/mpy-easy-linux.zip release/mpy-easy-linux.zip
           cp mpy-easy-android/mpy-easy-android.zip release/mpy-easy-android.zip
           cp mpy-easy-windows/mpy-easy-windows.zip release/mpy-easy-windows.zip
           cp mpy-easy-windows-full/mpy-easy-windows-full.zip release/mpy-easy-windows-full.zip
+          cp mpy-easy-windows-deno-full/mpy-easy-windows-deno-full.zip release/mpy-easy-windows-deno-full.zip
           cp mpv-translate/es5/mpv-translate.js release/mpv-translate.js
           cp mpv-translate/mpv-translate.conf release/mpv-translate.conf
           cp mpv-cut/es5/mpv-cut.js release/mpv-cut.js
@@ -378,6 +395,7 @@ jobs:
           cp mpv-easy-react/es5/mpv-easy-es5.js release/mpv-easy-es5.js
           cp mpv-easy-react/bundle/mpv-easy-es6.js release/mpv-easy-es6.js
 
+          cp deno-dll/mpv-deno-windows.dll release/mpv-deno-windows.dll
           cp mpv-easy-ext-dist/mpv-easy-ext-macos release/mpv-easy-ext-macos
           cp mpv-easy-ext-dist/mpv-easy-ext-linux release/mpv-easy-ext-linux
           cp mpv-easy-ext-dist/mpv-easy-ext-android release/mpv-easy-ext-android
