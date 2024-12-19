@@ -5,6 +5,8 @@
   "files": ["dist", "readme.md", "package.json"],
   "description": "TS and React toolkit for mpv script",
   "scripts": {
+    "pre-check": "npm run format && npm run lint:fix && npm run clippy",
+    "clippy": "cargo clippy --fix --allow-dirty --allow-staged",
     "dev": "pnpm run --parallel dev",
     "es5": "pnpm run --parallel es5",
     "build": "pnpm run -r build",

@@ -8,30 +8,31 @@ repository = "https://github.com/mpv-easy/mpv-easy"
 description = "mpv-easy rust extension"
 
 [dependencies]
-flate2 = "1.0"
-base64 = "0.22"
-openssl = { version = "0.10", features = ["vendored"] }
-clap = { version = "4", features = ["wrap_help", "derive"] }
-clap_complete = "4"
-anyhow = "1.0.79"
-serde_yaml = "0.9"
-serde = { version = "1.0", features = ["derive"] }
-serde_json = "1.0"
-color-eyre = "0.6.2"
-petgraph = { version = "*", features = ["serde", "serde-1"] }
-crossbeam = "0.8.4"
-tokio = { version = "1.36.0", features = ["full"] }
-colored = "2.1.0"
-once_cell = "1.19.0"
-enum_dispatch = "0.3.12"
-reqwest = { version = "0.12.4", features = ["json", "blocking"] }
-serde-xml-rs = "0.6.0"
-webdav-serde = "0.1.1"
-image = "0.25.1"
-rand = "0.8.5"
-glob = "0.3.1"
-serde-jellyfin = { version = "0.1" }
-serde-m3u = { version = "0.1" }
+flate2 = { workspace = true }
+base64 = { workspace = true }
+clap = { workspace = true }
+clap_complete = { workspace = true }
+anyhow = { workspace = true }
+serde = { workspace = true }
+serde_json = { workspace = true }
+color-eyre = { workspace = true }
+petgraph = { workspace = true }
+crossbeam = { workspace = true }
+tokio = { workspace = true }
+colored = { workspace = true }
+once_cell = { workspace = true }
+enum_dispatch = { workspace = true }
+reqwest = { workspace = true }
+serde-xml-rs = { workspace = true }
+webdav-serde = { workspace = true }
+image = { workspace = true }
+rand = { workspace = true }
+glob = { workspace = true }
+serde-jellyfin = { workspace = true }
+serde-m3u = { workspace = true }
 
 [target.'cfg(not(target_os = "android"))'.dependencies]
-clipboard-rs = "0.1.7"
+clipboard-rs = { workspace = true }
+
+[target.'cfg(not(target_os = "windows"))'.dependencies]
+openssl = { workspace = true }
