@@ -167,6 +167,8 @@ const observePropertyMap: Record<
   }[]
 > = {}
 
+const dispatchEventMap: Record<string, Function> = {}
+
 mp.observe_property = (name, type, fn) => {
   // log("observe_property: " + name)
   if (!observePropertyMap[name]) {
@@ -256,11 +258,13 @@ mp.unregister_idle = (...args) => {
 mp.enable_messages = (...args) => {
   // log("enable_messages: " + args.join(", "))
 }
-mp.unregister_script_message = (...args) => {
-  // log("unregister_script_message: " + args.join(", "))
+mp.unregister_script_message = (name: String) => {
+  // log("unregister_script_message: ", name)
+  delete dispatchEventMap[name]
 }
-mp.register_script_message = (...args) => {
-  // log("register_script_message: " + args.join(", "))
+mp.register_script_message = (name: string, fn: Function) => {
+  // log("register_script_message: ", name, fn)
+  dispatchEventMap[name] = fn
 }
 
 let next_osd_overlay_id = 1
@@ -492,6 +496,21 @@ globalThis.__mp_tick = () => {
   // log("tick st2")
   runObserve()
   // log("tick end")
+}
+
+function runDispatchEvent(args: string[]) {
+  const [name, ...events] = args
+
+  const fn = dispatchEventMap[name]
+  if (fn) {
+    fn(...events)
+  }
+}
+
+globalThis.__mp_dispatch_event = (args: string[]) => {
+  execTimeout()
+
+  runDispatchEvent(args)
 }
 
 globalThis.__mp_main = () => {

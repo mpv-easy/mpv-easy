@@ -93,6 +93,24 @@ pub unsafe fn run_mp_scripts() {
             Event::Shutdown => {
                 return;
             }
+            Event::ClientMessage(msg) => {
+                for (_, ctx) in GLOBAL_INSTANCE.as_mut().unwrap() {
+                    ctx.with(|ctx| {
+                        let _s: () = ctx
+                            .eval(format!(
+                                r#"
+                      try{{
+                        globalThis.__mp_dispatch_event?.({:?})
+                            }}catch(e){{
+                        globalThis.print(e)
+                            }}
+                      "#,
+                                msg.args()
+                            ))
+                            .unwrap();
+                    })
+                }
+            }
             _ => {
                 for (_, ctx) in GLOBAL_INSTANCE.as_mut().unwrap() {
                     ctx.with(|ctx| {
