@@ -215,6 +215,7 @@ export function createRender({
   fps = DefaultFps,
   flex = getRootFlex(),
   showFps = false,
+  throttle = true,
   customRender = () => {
     function render() {
       lastRender = Date.now()
@@ -238,7 +239,7 @@ export function createRender({
 
     const dur = 1000 / fps
     const now = Date.now()
-    if (now - lastRender < dur) {
+    if (throttle && now - lastRender < dur) {
       const timeout = dur - (now - lastRender)
       clearTimeout(renderHandle)
       renderHandle = +setTimeout(render, timeout)

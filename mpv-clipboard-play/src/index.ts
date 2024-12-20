@@ -120,19 +120,19 @@ async function fn(context: PluginContext, api: SystemApi) {
 
 export const pluginName = "@mpv-easy/clipboard-play"
 
-export const defaultConfig: CClipboardPlayConfig = {
+export const defaultConfig: ClipboardPlayConfig = {
   eventName: "clipboard-play",
   osdDuration: 3,
 }
 
-export type CClipboardPlayConfig = {
+export type ClipboardPlayConfig = {
   eventName: string
   osdDuration: number
 }
 
 declare module "@mpv-easy/plugin" {
   interface PluginContext {
-    [pluginName]: CClipboardPlayConfig
+    [pluginName]: ClipboardPlayConfig
   }
 }
 

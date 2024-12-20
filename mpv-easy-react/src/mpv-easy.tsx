@@ -5,8 +5,9 @@ import type { SystemApi } from "@mpv-easy/plugin"
 import { pluginName } from "./main"
 import { createDefaultThemeConfig } from "./mpv-easy-theme"
 import { getState, dispatch, store } from "./models"
+import { render, RenderConfig } from "@mpv-easy/react"
 
-function main() {
+export function runMpvEasy(renderConfig: Partial<RenderConfig> = {}) {
   const customConfig = getConfig()
   const { state, player } = createDefaultThemeConfig()
   // TODO: don't save these props
@@ -21,6 +22,7 @@ function main() {
     getPath: () => getState()[pluginName].player.path,
     store,
   }
+  customConfig.renderConfig = renderConfig
   for (const definePlugin of plugins) {
     const plugin = definePlugin(customConfig, api)
     if (
@@ -45,4 +47,3 @@ function main() {
     }
   })
 }
-main()

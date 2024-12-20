@@ -27,6 +27,7 @@ import { getAssText, measureText } from "./common"
 
 export type RenderConfig = {
   flex: MpFlex
+  throttle: boolean
   enableMouseMoveEvent: boolean
   fps: number
   customRender: () => void

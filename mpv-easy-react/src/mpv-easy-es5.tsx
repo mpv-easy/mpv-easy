@@ -1,6 +1,6 @@
 import "@mpv-easy/polyfill"
-import "./mpv-easy"
-
+import { runMpvEasy } from "./mpv-easy"
+runMpvEasy()
 // import React from "react"
 // import { ColorBoxDirty } from "./example/color-box-dirty"
 // import { createRender } from "@mpv-easy/react"

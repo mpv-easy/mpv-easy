@@ -1,4 +1,4 @@
-import { DefaultFps, createRender } from "@mpv-easy/react"
+import { DefaultFps, RenderConfig, createRender } from "@mpv-easy/react"
 import React from "react"
 import { definePlugin } from "@mpv-easy/plugin"
 import { Easy } from "./ui"
@@ -14,6 +14,8 @@ export const pluginName = "@mpv-easy/easy-react"
 declare module "@mpv-easy/plugin" {
   interface PluginContext {
     [pluginName]: EasyConfig
+
+    renderConfig: Partial<RenderConfig>
   }
 
   interface SystemApi {
@@ -43,6 +45,7 @@ export default definePlugin((context, api) => ({
       // showFps: true,
       enableMouseMoveEvent:
         context[pluginName].config.enableMouseMoveEvent ?? true,
+      ...context.renderConfig,
     })
     syncPlayer(store)
     render(<Easy />)

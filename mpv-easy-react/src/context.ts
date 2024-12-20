@@ -135,6 +135,7 @@ const experimental: Experimental = {
 export function createDefaultContext() {
   const isWin = getOs() === "windows"
   return cloneDeep({
+    renderConfig: {},
     [clipboardPlayName]: clipboardPlayConfig,
     [anime4kName]: anime4kConfig,
     [copyTimeName]: copyTimeConfig,
