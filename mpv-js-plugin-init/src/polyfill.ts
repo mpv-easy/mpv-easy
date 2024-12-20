@@ -35,7 +35,7 @@ declare global {
         op_read_dir: (path: string) => string[]
         op_command_native: (name: string, args: string[]) => string
         op_command_native_async: (name: string, args: string[]) => void
-        op_command_json: (args: string[]) => string
+        op_command_json: (args: string) => string
       }
     }
   }

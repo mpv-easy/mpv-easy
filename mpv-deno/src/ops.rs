@@ -89,11 +89,13 @@ fn op_is_file(#[string] path: String) -> Result<bool, deno_core::error::AnyError
 
 #[op2]
 #[serde]
-fn op_read_dir(#[string] path: String) -> Result<Vec<String>, deno_core::error::AnyError> {
-    let v: Vec<String> = mpv::op_read_dir(path);
+fn op_read_dir(
+    #[string] path: String,
+    #[string] filter: Option<String>,
+) -> Result<Vec<String>, deno_core::error::AnyError> {
+    let v: Vec<String> = mpv::op_read_dir(path, filter);
     Ok(v)
 }
-
 
 #[op2]
 #[string]

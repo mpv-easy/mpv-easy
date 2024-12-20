@@ -56,17 +56,33 @@ pub fn op_is_file(path: String) -> bool {
     p.is_file()
 }
 
-pub fn op_read_dir(path: String) -> Vec<String> {
+pub fn op_read_dir(path: String, filter: Option<String>) -> Vec<String> {
+    let mut files = vec![];
+    let mut dirs = vec![];
+    let mut others = vec![];
+
     let p = std::path::PathBuf::from(&path);
-    let v: Vec<String> = p
-        .read_dir()
-        .unwrap()
-        .filter_map(|i| {
-            i.ok()
-                .map(|k| k.path().file_name().unwrap().to_string_lossy().to_string())
-        })
-        .collect();
-    v
+
+    for i in p.read_dir().unwrap() {
+        if let Ok(k) = i {
+            let meta = k.metadata().unwrap();
+            let name = k.path().file_name().unwrap().to_string_lossy().to_string();
+            if meta.is_dir() {
+                dirs.push(name);
+            } else if meta.is_file() {
+                files.push(name);
+            } else if meta.is_symlink() {
+                others.push(name);
+            }
+        }
+    }
+
+    match filter.unwrap_or_default().as_str() {
+        "files" => files,
+        "dirs" => dirs,
+        "all"  => [files, dirs, others].concat(),
+        "normal" | _ => [files, dirs].concat(),
+    }
 }
 
 fn exec_command(name: String, args: Vec<String>) -> String {

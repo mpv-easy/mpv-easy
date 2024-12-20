@@ -358,13 +358,13 @@ mp.utils = {
     // log("read_options: " + args.join(", "))
     return mp.get_property("working-directory")
   },
-  readdir(path) {
+  readdir(path, filter) {
     // log("readdir: " + path)
     if (!__mp.__file_exists(path)) {
       return undefined
     }
 
-    return __mp.__read_dir(path)
+    return __mp.__read_dir(path, filter)
   },
   file_info(path: string) {
     // log("file_info: " + path)
