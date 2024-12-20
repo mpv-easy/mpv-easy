@@ -12,6 +12,7 @@ import {
 import { Crop, defaultConfig, getCropImagePath, getCropRect } from "./index"
 import {
   Box,
+  DefaultFps,
   render,
   useProperty,
   usePropertyNumber,
@@ -90,6 +91,7 @@ function App() {
   const timePos = usePropertyNumber("time-pos", 0)[0]
   const cropRef = useRef<(() => void) | null>(null)
 
+  const hack = useState(0)[1]
   cropRef.current = async () => {
     if (!path.length) {
       printAndOsd("video not found")
@@ -138,6 +140,11 @@ function App() {
     registerScriptMessage(outputEventName, () => {
       cropRef.current?.()
     })
+
+    setInterval(() => {
+      // FIXME: hot code for better performance
+      hack((i) => (i + 1) % 1000)
+    }, 1000 / DefaultFps)
   }, [])
   return (
     <Box
@@ -170,4 +177,6 @@ function App() {
   )
 }
 
-render(<App />)
+render(<App />, {
+  // showFps: true,
+})

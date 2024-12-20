@@ -307,6 +307,82 @@ export function createRender({
       dispatchEvent("WHEEL_DOWN")
     })
 
+    addKeyBinding(
+      "MOUSE_BTN0",
+      "MPV_EASY_MOUSE_LEFT",
+      (event) => {
+        // console.log("MPV_EASY_MOUSE_LEFT", JSON.stringify(event))
+        customDispatch(flex.rootNode, lastMousePos, event)
+      },
+      {
+        complex: true,
+        repeatable: true,
+        forced: false,
+      },
+    )
+    addKeyBinding(
+      "MOUSE_BTN1",
+      "MPV_EASY_MOUSE_MID",
+      (event) => {
+        customDispatch(flex.rootNode, lastMousePos, event)
+      },
+      {
+        complex: true,
+        repeatable: true,
+        forced: false,
+      },
+    )
+    // addKeyBinding(
+    //   "MOUSE_BTN2",
+    //   "MPV_EASY_MOUSE_RIGHT",
+    //   (event) => {
+    //     customDispatch(flex.rootNode, lastMousePos, event)
+    //   },
+    //   {
+    //     complex: true,
+    //     repeatable: true,
+    //     forced: false,
+    //   },
+    // )
+    addKeyBinding(
+      "MOUSE_BTN3",
+      "MPV_EASY_WHEEL_UP",
+      (event) => {
+        customDispatch(flex.rootNode, lastMousePos, event)
+      },
+      {
+        complex: true,
+        repeatable: true,
+        forced: false,
+      },
+    )
+    // addKeyBinding(
+    //   "MBTN_LEFT_DBL",
+    //   "MPV_EASY_LEFT_DBL",
+    //   (event) => {
+    //     console.log("MPV_EASY_LEFT_DBL", JSON.stringify(event))
+    //     customDispatch(flex.rootNode, lastMousePos, event)
+    //   },
+    //   {
+    //     complex: true,
+    //     repeatable: true,
+    //     forced: false,
+    //   },
+    // )
+
+    addKeyBinding(
+      "MOUSE_BTN4",
+      "MPV_EASY_WHEEL_DOWN",
+      (event) => {
+        customDispatch(flex.rootNode, lastMousePos, event)
+      },
+      {
+        complex: true,
+        repeatable: true,
+        forced: false,
+      },
+    )
+
     let lastW = 0
     let lastH = 0
     const dim = new PropertyNative<MpvPropertyTypeMap["osd-dimensions"]>(
