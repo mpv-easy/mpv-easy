@@ -1,8 +1,8 @@
 use std::ffi::{c_char, c_void, CStr, CString};
+use std::fmt;
 use std::ops::{Deref, DerefMut};
 use std::os::raw::c_int;
 use std::ptr::slice_from_raw_parts_mut;
-use std::fmt;
 
 use crate::api::{mpv_format_MPV_FORMAT_DOUBLE, mpv_format_MPV_FORMAT_FLAG};
 use crate::bindgen::client::{
@@ -260,7 +260,7 @@ impl Handle {
             .into_iter()
             .map(|s| CString::new(s.as_ref()).unwrap())
             .collect();
-        // println!("===commandv: {:?}", args);
+        // println!("commandv: {:?}", args);
         let mut raw_args: Vec<*const c_char> = args.iter().map(|s| s.as_ptr()).collect();
         raw_args.push(std::ptr::null()); // Adding null at the end
 

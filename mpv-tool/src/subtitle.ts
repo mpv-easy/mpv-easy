@@ -1,4 +1,10 @@
-import { SubtitleTypes, execAsync, isRemote, printAndOsd } from "./common"
+import {
+  SubtitleTypes,
+  execAsync,
+  isRemote,
+  isSubtitle,
+  printAndOsd,
+} from "./common"
 import { fetch } from "./fetch"
 import { existsSync } from "./fs"
 import {
@@ -70,7 +76,7 @@ export async function loadRemoteSubtitle(path = getProperty("path")) {
       if (trackList.find((i) => i.title === name)) {
         continue
       }
-      if (existsSync(url)) {
+      if (existsSync(url) && isSubtitle(url)) {
         commandv("sub-add", url)
       }
     }

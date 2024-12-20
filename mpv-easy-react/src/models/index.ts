@@ -384,7 +384,7 @@ export function syncPlayer(store: Store) {
   pathProp.observe((_, v) => {
     const state = store.getState()
     v = normalize(v ?? "")
-    if (v?.length && v !== pathProp.value) {
+    if (v?.length) {
       dispatch.addHistory(v)
       loadRemoteSubtitle(v)
       dispatch.setPath(v)

@@ -3,6 +3,7 @@ use mpv_easy_client::mpv;
 
 #[op2]
 fn op_commandv(#[serde] cmd: Vec<String>) -> Result<(), deno_core::error::AnyError> {
+    // println!("op_commandv {:?}", cmd);
     mpv::op_commandv(cmd);
     Ok(())
 }
