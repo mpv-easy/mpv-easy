@@ -268,6 +268,7 @@ export default definePlugin((context, api) => ({
   destroy() {
     for (const i of ThumbFastSet) {
       i.exit()
+      removeFile(i.path)
     }
   },
 }))
