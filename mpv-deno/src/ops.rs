@@ -107,8 +107,8 @@ fn op_command_native(
 
 #[op2]
 #[string]
-fn op_command_json(#[serde] args: Vec<String>) -> Result<String, deno_core::error::AnyError> {
-    let js = mpv::op_command_json(args);
+fn op_command_json(#[string] json: String) -> Result<String, deno_core::error::AnyError> {
+    let js = mpv::op_command_json(json);
     let s = js.to_string();
     Ok(s)
 }

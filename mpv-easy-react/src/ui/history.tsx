@@ -71,7 +71,6 @@ export const History = () => {
                 const index = history.indexOf(i)
                 if (index >= 0) {
                   dispatch.setPath(history[index].path)
-                  loadfile(history[index].path)
                 }
                 dispatch.setHistoryHide(true)
                 e.stopPropagation()

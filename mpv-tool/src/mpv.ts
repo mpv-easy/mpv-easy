@@ -23,10 +23,12 @@ export function getMP(): MP {
 }
 
 export function command(command: string): true | undefined {
+  // console.log("command: ", command)
   return getMP().command(command)
 }
 
-export function commandv(...args: string[]): true | undefined {
+export function commandv(...args: (string | number)[]): true | undefined {
+  // console.log("commandv: ", args)
   return getMP().commandv(...args)
 }
 
@@ -501,7 +503,7 @@ export function getColor(name: string): string | undefined {
 }
 
 export function screenshotToFile(path: string) {
-  command(`no-osd screenshot-to-file ${path}`)
+  commandv("no-osd", "screenshot-to-file", path)
 }
 
 export function getDesktopDir() {

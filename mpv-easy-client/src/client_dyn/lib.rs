@@ -1,9 +1,10 @@
 use std::ffi::{c_char, c_void, CStr, CString};
-use std::fmt;
 use std::ops::{Deref, DerefMut};
 use std::os::raw::c_int;
 use std::ptr::slice_from_raw_parts_mut;
+use std::fmt;
 
+use crate::api::{mpv_format_MPV_FORMAT_DOUBLE, mpv_format_MPV_FORMAT_FLAG};
 use crate::bindgen::client::{
     mpv_format_MPV_FORMAT_INT64, mpv_format_MPV_FORMAT_NODE_ARRAY, mpv_format_MPV_FORMAT_STRING,
     mpv_node, mpv_node__bindgen_ty_1, mpv_node_list,
@@ -278,29 +279,55 @@ impl Handle {
         unsafe { result!(mpv_command_string(self.as_mut_ptr(), ptr)) }
     }
 
-    pub fn command_json<I, S>(&mut self, args: I) -> Result<serde_json::Value>
-    where
-        I: IntoIterator<Item = S>,
-        S: AsRef<str>,
-    {
-        let args: Vec<String> = args.into_iter().map(|i| i.as_ref().to_string()).collect();
-
-        let cargs: Vec<_> = args
-            .iter()
-            .map(|i| CString::new(i.as_str()).unwrap().clone())
-            .collect();
-
+    pub fn command_json(&mut self, json: Vec<serde_json::Value>) -> Result<serde_json::Value> {
+        // let (mut args_node, mut rt_node) = { json_to_mpv_node(args) };
         let mut args_list_node = vec![];
-        // for (i, p) in args.into_iter().zip(cargs.into_iter()) {
-        for p in cargs.iter() {
-            let node = mpv_node {
-                u: mpv_node__bindgen_ty_1 {
-                    string: p.as_ptr() as *mut i8,
-                },
-                format: mpv_format_MPV_FORMAT_STRING,
-            };
-            args_list_node.push(node);
+        // println!("json_to_mpv_node {:?}", json);
+
+        // FIXME: memory leak
+        let mut hack_vec = vec![];
+        for p in json {
+            match p {
+                serde_json::Value::Null => {
+                    println!("json_to_mpv_node not support Null")
+                }
+                serde_json::Value::Bool(b) => {
+                    let node = mpv_node {
+                        u: mpv_node__bindgen_ty_1 { int64: b as i64 },
+                        format: mpv_format_MPV_FORMAT_FLAG,
+                    };
+                    args_list_node.push(node);
+                }
+                serde_json::Value::Number(n) => {
+                    let node = mpv_node {
+                        u: mpv_node__bindgen_ty_1 {
+                            double_: n.as_f64().unwrap(), // string: s.as_ptr() as *mut i8,
+                        },
+                        format: mpv_format_MPV_FORMAT_DOUBLE,
+                    };
+                    args_list_node.push(node);
+                }
+                serde_json::Value::String(s) => {
+                    let c = CString::new(s.clone()).unwrap();
+                    // println!("{:?} {:?}", s, c);
+                    let node = mpv_node {
+                        u: mpv_node__bindgen_ty_1 {
+                            string: c.as_ptr() as *mut i8,
+                        },
+                        format: mpv_format_MPV_FORMAT_STRING,
+                    };
+                    hack_vec.push(c);
+                    args_list_node.push(node);
+                }
+                serde_json::Value::Array(vec) => {
+                    println!("json_to_mpv_node not support Array")
+                }
+                serde_json::Value::Object(map) => {
+                    println!("json_to_mpv_node not support Object")
+                }
+            }
         }
+
         let args_list_node_ptr = args_list_node.as_ptr() as *mut mpv_node;
 
         let args_list = mpv_node_list {
@@ -326,13 +353,13 @@ impl Handle {
 
         let arg_ptr = &mut args_node as *mut mpv_node;
         let rt_ptr = &mut rt_node as *mut mpv_node;
-
         unsafe {
             let e = mpv_command_node(self.as_mut_ptr(), arg_ptr, rt_ptr);
 
             match e {
                 mpv_error::SUCCESS => {
                     let js = mpv_node_to_json(&mut rt_node);
+                    // println!("mpv_node_to_json {:?}", js);
                     return Ok(js);
                 }
                 _ => {

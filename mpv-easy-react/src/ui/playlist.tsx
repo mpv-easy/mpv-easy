@@ -71,8 +71,8 @@ export const Playlist = () => {
               onClick: (e) => {
                 const index = playlist.indexOf(i)
                 if (index >= 0) {
-                  command(`playlist-play-index ${index}`)
-                  dispatch.setPath(playlist[index])
+                  // dispatch.setPath(playlist[index])
+                  dispatch.setPlaylist(playlist, index)
                 }
                 dispatch.setPlaylistHide(true)
                 e.stopPropagation()

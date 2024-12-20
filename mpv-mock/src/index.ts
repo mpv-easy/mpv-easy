@@ -1,3 +1,4 @@
+// @ts-ignore
 const mp: any = {}
 const g = Function("return this")()
 g.mp = mp

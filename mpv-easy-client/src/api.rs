@@ -26,7 +26,7 @@ pub fn command_string<S: AsRef<str>>(cmd: S) {
     }
 }
 
-pub fn command_json<I: IntoIterator<Item = S>, S: AsRef<str>>(cmd: I) -> serde_json::Value {
+pub fn command_json(cmd: Vec<serde_json::Value>) -> serde_json::Value {
     unsafe {
         let h = GLOBAL_MP_HANDLE.as_deref_mut().unwrap();
         h.command_json(cmd).unwrap()

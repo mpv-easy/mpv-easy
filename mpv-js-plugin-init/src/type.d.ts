@@ -18,7 +18,7 @@ export type MpApi = {
 
   __command_string: (cmd: string) => void
   __commandv: (args: (string | number)[]) => void
-  __command_json: (args: string[]) => string
+  __command_json: (args: string) => string
   __file_size: (path: string) => number
   __file_exists: (path: string) => boolean
   __is_file: (path: string) => boolean

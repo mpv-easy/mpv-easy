@@ -1,4 +1,4 @@
-import { command } from "./mpv"
+import { command, commandv } from "./mpv"
 
 const maxId = 64
 const overlayIdUsed = new Array(maxId).map(() => false)
@@ -24,8 +24,20 @@ export class Overlay {
   }
 
   update() {
-    const cmd = `overlay-add ${this.id} ${this.x} ${this.y} "${this.file}" 0 ${this.fmt} ${this.w} ${this.h} ${this.stride}`
-    command(cmd)
+    commandv(
+      "overlay-add",
+      this.id,
+      this.x,
+      this.y,
+      this.file,
+      0,
+      this.fmt,
+      this.w,
+      this.h,
+      this.stride,
+      this.w,
+      this.h,
+    )
   }
 
   remove() {

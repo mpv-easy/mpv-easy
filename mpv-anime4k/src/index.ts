@@ -1,6 +1,7 @@
 import { definePlugin } from "@mpv-easy/plugin"
 import {
   command,
+  commandv,
   osdMessage,
   registerScriptMessage,
   removeKeyBinding,
@@ -79,11 +80,20 @@ export const defaultConfig: Anime4kConfig = {
 export function toggle(s: string) {
   const cmd = s
     .split(";")
-    .map((i) => `no-osd change-list glsl-shaders toggle "${i}"`)
-    .join(";")
-  command(cmd)
+    .filter((i) => !!i.length)
+    .map((i) => ["no-osd", "change-list", "glsl-shaders", "toggle", i])
+  if (cmd.length) {
+    for (const i of cmd) {
+      commandv(...i)
+    }
+  } else {
+    clearShader()
+  }
 }
-
+function clearShader() {
+  // commandv('no-osd', 'change-list', 'glsl-shaders', 'clr', "''")
+  command(`no-osd change-list glsl-shaders clr ''`)
+}
 export default definePlugin((context, api) => ({
   name: pluginName,
   create() {
@@ -92,7 +102,7 @@ export default definePlugin((context, api) => ({
     if (!config.current) {
       toggle(value)
     } else {
-      command(`no-osd change-list glsl-shaders clr "";`)
+      clearShader()
     }
     for (let i = 0; i < config.shaders.length; i++) {
       const { eventName: key, value, title } = config.shaders[i]
@@ -100,7 +110,7 @@ export default definePlugin((context, api) => ({
         if (value.length) {
           toggle(value)
         } else {
-          command(`no-osd change-list glsl-shaders clr "";`)
+          clearShader()
         }
         if (config.osdDuration) {
           osdMessage(title, config.osdDuration)

@@ -37,7 +37,7 @@ mp.get_osd_margins = function get_osd_margins() {
 
 mp.command_native = (table) => {
   if (Array.isArray(table)) {
-    const rt = JSON.parse(__mp.__command_json(table))
+    const rt = JSON.parse(__mp.__command_json(JSON.stringify(table)))
     return rt
   }
   return __mp.__command_native(table)
@@ -291,7 +291,7 @@ mp.create_osd_overlay = () => {
         this.hidden ? "yes" : "no",
         this.compute_bounds ? "yes" : "no",
       ].map((i) => i.toString())
-      const box = __mp.__command_json(cmd)
+      const box = __mp.__command_json(JSON.stringify(cmd))
       const obj = JSON.parse(box)
       return obj
     },

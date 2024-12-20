@@ -91,9 +91,10 @@ pub fn op_command_native(name: String, args: Vec<String>) -> String {
     exec_command(name, args)
 }
 
-pub fn op_command_json(args: Vec<String>) -> String {
-    let js = command_json(args);
-
+pub fn op_command_json(args: String) -> String {
+    // println!("op_command_json {:?}", args);
+    let v: Vec<serde_json::Value> = serde_json::from_str(&args).unwrap();
+    let js = command_json(v);
     js.to_string()
 }
 

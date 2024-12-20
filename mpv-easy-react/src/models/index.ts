@@ -116,11 +116,11 @@ const store = defineStore({
       return { ...state }
     },
     playVideo(state, path: string) {
-      commandv("loadfile", path, "replace")
+      loadfile(path, "replace")
       return state
     },
     screenshot(state) {
-      command("screenshot video")
+      commandv("screenshot", "video")
       return { ...state }
     },
     // setMousePos(state, pos: MousePos) {
@@ -183,7 +183,7 @@ const store = defineStore({
       return { ...state }
     },
     exit(state) {
-      command("quit")
+      commandv("quit")
       return { ...state }
     },
     next(state) {
@@ -198,7 +198,7 @@ const store = defineStore({
       state[pluginName].player["playlist-play-index"] = newPos
       state[pluginName].player.path = list[newPos]
       pathProp.value = list[newPos]
-      command(`playlist-play-index ${newPos}`)
+      // commandv("playlist-play-index", newPos)
       return { ...state }
     },
     previous(state) {

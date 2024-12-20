@@ -5,6 +5,7 @@ import {
   type NumberKey,
   NumberKeys,
 } from "./const"
+import { existsSync } from "./fs"
 import {
   command,
   commandNative,
@@ -79,18 +80,6 @@ export function isImage(s: string, types = ImageTypes) {
 
 export function isSubtitle(s: string, types = SubtitleTypes) {
   return endsWith(s, types)
-}
-
-export function addToPlaylist(v: string[]) {
-  for (const i of v) {
-    const count = getPropertyNumber("playlist-count") || 0
-    commandv(
-      "loadfile",
-      i,
-      "append",
-      // count === 0 ? 'append-play' : 'append'
-    )
-  }
 }
 
 export function playVideo(n: number) {
@@ -218,7 +207,7 @@ export function replacePlaylist(videoList: string[], play?: number) {
   let count = getPropertyNumber("playlist-count") || 0
 
   for (const i of videoList) {
-    commandv("loadfile", i, "append")
+    loadfile(i, "append")
   }
 
   // commandv("playlist-play-index", count.toString())
@@ -451,7 +440,7 @@ export function updatePlaylist(list: string[], playIndex = 0) {
   if (oldCount === 0) {
     // replace all
     for (const i of list) {
-      command(`loadfile "${i}" append`)
+      loadfile(i, "append")
     }
     command(`playlist-play-index ${playIndex}`)
     return
@@ -461,7 +450,7 @@ export function updatePlaylist(list: string[], playIndex = 0) {
   if (playIndex === -1) {
     // clear and replace
     for (const i of list) {
-      command(`loadfile "${i}" append`)
+      loadfile(i, "append")
     }
     command(`playlist-play-index ${playIndex + oldList.length}`)
     for (let i = 0; i < oldList.length; i++) {
@@ -477,7 +466,7 @@ export function updatePlaylist(list: string[], playIndex = 0) {
   }
   if (oldListIndex === -1) {
     for (const i of list) {
-      command(`loadfile "${i}" append`)
+      loadfile(i, "append")
     }
     command(`playlist-play-index ${playIndex + oldCount}`)
     for (let i = 0; i < oldList.length; i++) {
@@ -492,9 +481,9 @@ export function updatePlaylist(list: string[], playIndex = 0) {
     }
     for (let i = 0; i < list.length; i++) {
       if (i === playIndex) {
-        command(`loadfile "${list[i]}" append-play`)
+        loadfile(list[i], "append-play")
       } else {
-        command(`loadfile "${list[i]}" append`)
+        loadfile(list[i], "append")
       }
     }
     command("playlist-remove 0")
@@ -515,7 +504,12 @@ export function loadfile(
     | "insert-at"
     | "insert-at-play" = "replace",
 ) {
-  command(`loadfile "${path}" ${flag}`)
+  if (!isRemote(path) && existsSync(path)) {
+    // command(`loadfile "${path}" ${flag}`)
+    commandv("loadfile", path, flag)
+  } else {
+    printAndOsd(`loadfile: file ${path} not exist`)
+  }
 }
 
 export function printAndOsd(s: string, seconds = 1) {

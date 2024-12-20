@@ -10,5 +10,13 @@ The performance of deno is about 100 times that of mujs. It takes 10ms for mujs 
 
 https://github.com/ahaoboy/js-engine-benchmark
 
+
+## QA
+
+### command or commandv
+
+If the command contains a path, then you should use commandv, otherwise use command
+
+
 ## todo
 - [ ] mouse and key event

@@ -89,7 +89,7 @@ export type CommandResult = {
 export type MP = {
   command(command: string): true | undefined
 
-  commandv(...args: string[]): true | undefined
+  commandv(...args: (string | number)[]): true | undefined
 
   command_native(table: unknown, def?: unknown): CommandResult
 
