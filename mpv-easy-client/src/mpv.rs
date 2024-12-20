@@ -55,7 +55,9 @@ pub fn op_is_file(path: String) -> bool {
     let p = std::path::PathBuf::from(&path);
     p.is_file()
 }
-
+pub fn op_getenv(name: String) -> Option<String> {
+    std::env::var(name).ok()
+}
 pub fn op_read_dir(path: String, filter: Option<String>) -> Vec<String> {
     let mut files = vec![];
     let mut dirs = vec![];
@@ -80,7 +82,7 @@ pub fn op_read_dir(path: String, filter: Option<String>) -> Vec<String> {
     match filter.unwrap_or_default().as_str() {
         "files" => files,
         "dirs" => dirs,
-        "all"  => [files, dirs, others].concat(),
+        "all" => [files, dirs, others].concat(),
         "normal" | _ => [files, dirs].concat(),
     }
 }

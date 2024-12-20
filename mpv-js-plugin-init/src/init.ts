@@ -308,10 +308,6 @@ mp.create_osd_overlay = () => {
 mp.set_osd_ass = (...args) => {
   // log("set_osd_ass: " + args.join(", "))
 }
-mp.get_osd_size = (...args) => {
-  // log("get_osd_size: " + args.join(", "))
-  return undefined
-}
 
 mp.get_osd_margins = (...args) => {
   // log("get_osd_margins: " + args.join(", "))
@@ -397,9 +393,9 @@ mp.utils = {
     // log("getpid: " + args.join(", "))
     return mp.get_property_number("pid")!
   },
-  getenv(...args) {
+  getenv(name: string) {
     // log("getenv: " + args.join(", "))
-    return undefined
+    return __mp.__getenv(name)
   },
   get_user_path(path) {
     // log("get_user_path: " + path)
@@ -516,3 +512,7 @@ globalThis.__mp_dispatch_event = (args: string[]) => {
 globalThis.__mp_main = () => {
   // log("__mp_main")
 }
+
+// setInterval(() => {
+//   globalThis.__mp_tick()
+// }, 16);

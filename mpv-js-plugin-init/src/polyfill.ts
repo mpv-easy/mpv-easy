@@ -36,6 +36,7 @@ declare global {
         op_command_native: (name: string, args: string[]) => string
         op_command_native_async: (name: string, args: string[]) => void
         op_command_json: (args: string) => string
+        op_getenv: (name: string) => string | undefined
       }
     }
   }
@@ -53,6 +54,7 @@ const __mp: MpApi = {
   __set_property_string: ops.op_set_property_string,
   __command_json: ops.op_command_json,
   __read_file: ops.op_read_file,
+  __getenv: ops.op_getenv,
   __write_file: (path, text) => {
     const prefix = "file://"
     const p = path.startsWith(prefix) ? path.slice(prefix.length) : path

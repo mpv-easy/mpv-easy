@@ -31,7 +31,7 @@ export type MpApi = {
   __abort_async_command: (id: number) => void
   __set_last_error: (s: string) => void
   __wait_event: (wait: number) => MpvWaitEvent
-
+  __getenv: (name: string) => string | undefined
   __read_file: (name: string) => string
   __write_file: (name: string, text: string) => void
 }

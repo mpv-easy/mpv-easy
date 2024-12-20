@@ -127,8 +127,15 @@ fn op_command_native_async(
     Ok(())
 }
 
+#[op2]
+#[string]
+fn op_getenv(#[string] path: String) -> Result<Option<String>, deno_core::error::AnyError> {
+    let env = mpv::op_getenv(path);
+    Ok(env)
+}
+
 pub fn new_runtime() -> JsRuntime {
-    const OPS: [OpDecl; 15] = [
+    const OPS: [OpDecl; 16] = [
         op_commandv(),
         op_command_string(),
         op_get_property_string(),
@@ -144,6 +151,7 @@ pub fn new_runtime() -> JsRuntime {
         op_command_native(),
         op_command_native_async(),
         op_command_json(),
+        op_getenv(),
     ];
     let ext = Extension {
         name: "mpv_ext",
