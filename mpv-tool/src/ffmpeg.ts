@@ -1,6 +1,6 @@
 import { execAsync, getOs, Rect } from "./common"
 import { joinPath, screenshotToFile } from "./mpv"
-import { getDefaultBinDirPath } from "./rs-ext"
+import { getDefaultBinDirPath, removeFile } from "./rs-ext"
 import { existsSync } from "./fs"
 import { detectCmd } from "./ext"
 import { getTmpDir } from "./tmp"
@@ -85,8 +85,10 @@ export async function cropImage(
   ffmpeg: string,
 ) {
   const tmpDir = getTmpDir()
-  const ext = outputPath.split(".").at(-1) || "webp"
-  const tmpPath = joinPath(tmpDir, `${randomId()}.${ext}`)
+  const list = outputPath.split(".")
+  const ext = list.at(-1) || "webp"
+  const name = list.slice(0, -1).join(".")
+  const tmpPath = joinPath(tmpDir, `${name}.${randomId()}.${ext}`)
   screenshotToFile(tmpPath)
   const { x, y, width, height } = rect
   const cmd = [
@@ -101,6 +103,8 @@ export async function cropImage(
   // console.log("cmd", cmd.join(" "))
   try {
     await execAsync(cmd)
+    // TODO: remove tmp file?
+    // removeFile(tmpPath)
   } catch (e) {
     return false
   }

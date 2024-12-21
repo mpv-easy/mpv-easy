@@ -357,6 +357,7 @@ export function syncPlayer(store: Store) {
     playlistIndexProp,
     windowMinimizedProp,
     videoZoomProp,
+    pathProp,
   ]
   function updateProp() {
     const state = store.getState()
