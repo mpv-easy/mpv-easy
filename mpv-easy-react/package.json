@@ -46,7 +46,7 @@
     "@reduxjs/toolkit": "2.5.0",
     "@rematch/core": "2.2.0",
     "@rematch/select": "3.1.2",
-    "@tanstack/react-query": "5.62.7",
+    "@tanstack/react-query": "5.62.8",
     "@types/use-sync-external-store": "0.0.6",
     "e-color": "0.1.7",
     "jotai": "2.10.4",
