@@ -1562,6 +1562,7 @@ dependencies = [
  "mpv-easy-client",
  "serde",
  "serde_json",
+ "tokio",
 ]
 
 [[package]]
@@ -1572,6 +1573,7 @@ dependencies = [
  "once_cell",
  "serde",
  "serde_json",
+ "tokio",
 ]
 
 [[package]]

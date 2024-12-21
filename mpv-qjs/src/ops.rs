@@ -49,7 +49,8 @@ $(
           op_is_file op_read_dir
           op_command_native
           op_command_json
-          op_command_native_async
+          op_getenv
+          // op_command_native_async
         );
 
         let op_str = op_list

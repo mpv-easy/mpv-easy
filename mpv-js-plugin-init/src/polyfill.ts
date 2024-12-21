@@ -34,7 +34,7 @@ declare global {
         op_is_file: (path: string) => boolean
         op_read_dir: (path: string) => string[]
         op_command_native: (name: string, args: string[]) => string
-        op_command_native_async: (name: string, args: string[]) => void
+        op_command_native_async: (name: string, args: string[]) => Promise<any>
         op_command_json: (args: string) => string
         op_getenv: (name: string) => string | undefined
       }
@@ -82,9 +82,15 @@ const __mp: MpApi = {
       stdout,
     }
   },
-  __command_native_async: (id, table: any) => {
+  __command_native_async: async (id, table: any, cb: any) => {
     const { name, args = [] } = table
-    ops.op_command_native_async(name, args)
+    const ret = ops.op_command_native_async(name, args)
+    // FIXME: get return value
+    try {
+      cb(true, { status: 0, stderr: "", stdout: "" }, undefined)
+    } catch (e) {
+      cb(false, { status: -1, stderr: "", stdout: "" }, undefined)
+    }
   },
   __get_property_native: (name: string) => {
     throw new Error("Function not implemented.")

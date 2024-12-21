@@ -60,7 +60,7 @@ mp.command_native_async = (table, fn) => {
   // const s = mp.command_native_async(table)
   // fn?.(true, s, undefined)
   const id = command_native_async_id++
-  __mp.__command_native_async(id, table)
+  return __mp.__command_native_async(id, table, fn)
 }
 
 mp.abort_async_command = (...args) => {

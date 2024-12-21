@@ -116,10 +116,29 @@ pub fn op_command_json(args: String) -> String {
     js.to_string()
 }
 
-pub fn op_command_native_async(name: String, args: Vec<String>) {
-    std::thread::spawn(move || {
-        exec_command(name, args);
-    });
+async fn exec_command_async(name: String, args: Vec<String>) -> Option<String> {
+    let empty_args: Vec<String> = vec![];
+    let (cmd_name, cmd_args) = if name == "subprocess" {
+        if args.len() == 1 {
+            (&args[0], empty_args.as_slice())
+        } else {
+            args.split_first().unwrap()
+        }
+    } else {
+        (&name, args.as_slice())
+    };
+
+    // println!("cmd_args: {:?} {:?} {:?}", cmd_name, name, cmd_args);
+    let output = tokio::process::Command::new(cmd_name)
+        .args(cmd_args)
+        .output()
+        .await
+        .unwrap();
+    String::from_utf8(output.stdout).ok()
+}
+
+pub async fn op_command_native_async(name: String, args: Vec<String>) -> Option<String> {
+    exec_command_async(name, args).await
 }
 
 pub fn op_print(msg: String) -> String {
