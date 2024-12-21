@@ -493,23 +493,22 @@ export function updatePlaylist(list: string[], playIndex = 0) {
   }
 }
 
-export function loadfile(
-  path: string,
-  flag:
-    | "replace"
-    | "append"
-    | "append-play"
-    | "insert-next"
-    | "insert-next-play"
-    | "insert-at"
-    | "insert-at-play" = "replace",
-) {
-  if (!isRemote(path) && existsSync(path)) {
+export type LoadfileFlag =
+  | "replace"
+  | "append"
+  | "append-play"
+  | "insert-next"
+  | "insert-next-play"
+  | "insert-at"
+  | "insert-at-play"
+
+export function loadfile(path: string, flag: LoadfileFlag = "replace") {
+  if (!isRemote(path) && !existsSync(path)) {
     // command(`loadfile "${path}" ${flag}`)
-    commandv("loadfile", path, flag)
-  } else {
     printAndOsd(`loadfile: file ${path} not exist`)
+    return
   }
+  commandv("loadfile", path, flag)
 }
 
 export function printAndOsd(s: string, seconds = 1) {

@@ -290,7 +290,7 @@ function renderNodeToMpv(node: MpDom) {
     }
 
     // image
-    if (typeof backgroundImage === "string") {
+    if (typeof backgroundImage === "string" && !hide) {
       const h = attributes.height
       const w = attributes.width
       const id = attributes.id

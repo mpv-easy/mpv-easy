@@ -257,17 +257,22 @@ jobs:
           pnpm i
           pnpm run build
 
-          mkdir dist -p
-          cp mpv-easy-react/es5/mpv-easy-es5.js dist/mpv-easy-es5.js
-          cp mpv-easy-react/bundle/mpv-easy-es6.js dist/mpv-easy-es6.js
-          cp mpv-translate/es5/mpv-translate.js dist/mpv-translate.js
-          cp mpv-play-with/dist/mpv-easy-play-with.user.js dist/mpv-easy-play-with.user.js
+          mkdir mpv-easy-js -p
+          cp mpv-easy-react/es5/mpv-easy-es5.js mpv-easy-js/mpv-easy-es5.js
+          cp mpv-easy-react/bundle/mpv-easy-es6.js mpv-easy-js/mpv-easy-es6.js
+          cp mpv-play-with/dist/mpv-easy-play-with.user.js mpv-easy-js/mpv-easy-play-with.user.js
+          cp mpv-translate/es5/mpv-translate.js mpv-easy-js/mpv-translate.js
+          cp mpv-translate/mpv-translate.conf mpv-easy-js/mpv-translate.conf
+          cp mpv-cut/es5/mpv-cut.js mpv-easy-js/mpv-cut.js
+          cp mpv-cut/mpv-cut.conf mpv-easy-js/mpv-cut.conf
+          cp mpv-crop/es5/mpv-crop.js mpv-easy-js/mpv-crop.js
+          cp mpv-crop/mpv-crop.conf mpv-easy-js/mpv-crop.conf
 
       - name: Upload
         uses: actions/upload-artifact@v4
         with:
-          name: mpv-easy
-          path: dist/*.js
+          name: mpv-easy-js
+          path: mpv-easy-js/*.js
 
       - name: "create dist"
         run: |
@@ -341,7 +346,7 @@ jobs:
 
 
           cp -r mpy-easy-windows-full mpy-easy-windows-deno-full
-          rm mpy-easy-windows-deno-full/portable_config/scripts/mpv-easy-es5.js
+          rm -rf mpy-easy-windows-deno-full/portable_config/scripts/*.js
           cp mpv-easy-react/bundle/mpv-easy-es6.js mpy-easy-windows-deno-full/portable_config/scripts/mpv-easy-es6.js
           mv mpy-easy-windows-deno-full/portable_config/scripts mpy-easy-windows-deno-full/portable_config/scripts-deno
           mkdir -p mpy-easy-windows-deno-full/portable_config/scripts

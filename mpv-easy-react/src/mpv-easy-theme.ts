@@ -165,7 +165,7 @@ export type EasyConfig = {
     aid: number
     vid: number
     sid: number
-    "video-params": VideoParams
+    "video-params": VideoParams | undefined
     volume: number
     "volume-max": number
     speed: number

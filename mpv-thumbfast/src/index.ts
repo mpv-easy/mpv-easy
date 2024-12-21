@@ -40,7 +40,7 @@ export const defaultThumbMaxWidth = 360
 export const defaultThumbMaxHeight = 360
 export const defaultHrSeek = true
 export const defaultThumbFormat = "bgra"
-export const defaultNetwork = true
+export const defaultNetwork = false
 export const defaultThumbPath = joinPath(
   getScriptConfigDir(),
   "mpv-easy-thumbfast.tmp",

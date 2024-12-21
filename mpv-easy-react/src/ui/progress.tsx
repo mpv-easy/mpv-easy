@@ -189,7 +189,7 @@ export const Progress = ({ width, height, ...props }: MpDomProps) => {
     if (!supportThumbfast) {
       return
     }
-    if (!videoParams.w || !videoParams.h) {
+    if (!videoParams || !videoParams.w || !videoParams.h) {
       return
     }
     if (thumbRef.current) {
@@ -200,7 +200,7 @@ export const Progress = ({ width, height, ...props }: MpDomProps) => {
       videoWidth: videoParams.w,
       videoHeight: videoParams.h,
     })
-  }, [videoParams.w, videoParams.h, supportThumbfast, isSeekable])
+  }, [videoParams?.w, videoParams?.h, supportThumbfast, isSeekable])
 
   useEffect(() => {
     registerScriptMessage("cut", () => {
