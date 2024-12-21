@@ -50,7 +50,7 @@ $(
           op_command_native
           op_command_json
           op_getenv
-          // op_command_native_async
+          op_command_native_async
         );
 
         let op_str = op_list

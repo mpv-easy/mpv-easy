@@ -4,7 +4,7 @@ use crate::api::{
 };
 use std::process::Command;
 
-pub fn op_commandv(cmd: Vec<String>) ->bool{
+pub fn op_commandv(cmd: Vec<String>) -> bool {
     commandv(cmd)
 }
 
@@ -12,7 +12,7 @@ pub fn op_get_property_string(name: String) -> String {
     get_property_string(name)
 }
 
-pub fn op_command_string(cmd: String) ->bool{
+pub fn op_command_string(cmd: String) -> bool {
     commandv(cmd.split(' '))
 }
 
@@ -137,8 +137,15 @@ async fn exec_command_async(name: String, args: Vec<String>) -> Option<String> {
     String::from_utf8(output.stdout).ok()
 }
 
-pub async fn op_command_native_async(name: String, args: Vec<String>) -> Option<String> {
-    exec_command_async(name, args).await
+// TODO
+// pub async fn op_command_native_async(name: String, args: Vec<String>) -> Option<String> {
+//     exec_command_async(name, args).await
+// }
+
+pub fn op_command_native_async(name: String, args: Vec<String>) {
+    std::thread::spawn(move || {
+        op_command_native(name, args);
+    });
 }
 
 pub fn op_print(msg: String) -> String {

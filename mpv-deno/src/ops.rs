@@ -119,9 +119,7 @@ fn op_command_native_async(
     #[string] name: String,
     #[serde] args: Vec<String>,
 ) -> Result<(), deno_core::error::AnyError> {
-    std::thread::spawn(move || {
-        mpv::op_command_native(name, args);
-    });
+    mpv::op_command_native_async(name, args);
     Ok(())
 }
 
