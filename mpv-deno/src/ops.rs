@@ -2,10 +2,9 @@ use deno_core::*;
 use mpv_easy_client::mpv;
 
 #[op2]
-fn op_commandv(#[serde] cmd: Vec<String>) -> Result<(), deno_core::error::AnyError> {
+fn op_commandv(#[serde] cmd: Vec<String>) -> Result<bool, deno_core::error::AnyError> {
     // println!("op_commandv {:?}", cmd);
-    mpv::op_commandv(cmd);
-    Ok(())
+    Ok(mpv::op_commandv(cmd))
 }
 
 #[op2]
@@ -16,35 +15,34 @@ fn op_get_property_string(#[string] name: String) -> Result<String, deno_core::e
 }
 
 #[op2(fast)]
-fn op_command_string(#[string] cmd: String) -> Result<(), deno_core::error::AnyError> {
-    mpv::op_command_string(cmd);
-    Ok(())
+fn op_command_string(#[string] cmd: String) -> Result<bool, deno_core::error::AnyError> {
+    Ok(mpv::op_command_string(cmd))
 }
 
 #[op2(fast)]
-fn op_set_property_bool(#[string] name: String, v: bool) -> Result<(), deno_core::error::AnyError> {
+fn op_set_property_bool(
+    #[string] name: String,
+    v: bool,
+) -> Result<bool, deno_core::error::AnyError> {
     // println!("op_set_property_bool op11: {} {}", &name, v);
-    mpv::op_set_property_bool(name, v);
-    Ok(())
+    Ok(mpv::op_set_property_bool(name, v))
 }
 
 #[op2(fast)]
 fn op_set_property_number(
     #[string] name: String,
     v: f64,
-) -> Result<(), deno_core::error::AnyError> {
+) -> Result<bool, deno_core::error::AnyError> {
     // println!("op_set_property_number op11: {} {}", &name, v);
-    mpv::op_set_property_number(name, v);
-    Ok(())
+    Ok(mpv::op_set_property_number(name, v))
 }
 #[op2(fast)]
 fn op_set_property_string(
     #[string] name: String,
     #[string] v: String,
-) -> Result<(), deno_core::error::AnyError> {
+) -> Result<bool, deno_core::error::AnyError> {
     // println!("op_set_property_string: {:?} {:?}", &name, v);
-    mpv::op_set_property_string(name, v);
-    Ok(())
+    Ok(mpv::op_set_property_string(name, v))
 }
 
 #[op2]
@@ -103,16 +101,16 @@ fn op_read_dir(
 fn op_command_native(
     #[string] name: String,
     #[serde] args: Vec<String>,
-) -> Result<String, deno_core::error::AnyError> {
+) -> Result<Option<String>, deno_core::error::AnyError> {
     let stdout = mpv::op_command_native(name, args);
     Ok(stdout)
 }
 
 #[op2]
 #[string]
-fn op_command_json(#[string] json: String) -> Result<String, deno_core::error::AnyError> {
+fn op_command_json(#[string] json: String) -> Result<Option<String>, deno_core::error::AnyError> {
     let js = mpv::op_command_json(json);
-    let s = js.to_string();
+    let s = js.map(|i| i.to_string());
     Ok(s)
 }
 

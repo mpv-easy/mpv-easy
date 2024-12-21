@@ -11,10 +11,10 @@ export type MpApi = {
   __get_property_number: (name: string) => number
   __get_property_bool: (name: string) => boolean
 
-  __set_property_native: (name: string, v: string) => void
-  __set_property_string: (name: string, v: string) => void
-  __set_property_number: (name: string, v: number) => void
-  __set_property_bool: (name: string, v: boolean) => void
+  __set_property_native: (name: string, v: string) => true | undefined
+  __set_property_string: (name: string, v: string) => true | undefined
+  __set_property_number: (name: string, v: number) => true | undefined
+  __set_property_bool: (name: string, v: boolean) => true | undefined
 
   __command_string: (cmd: string) => void
   __commandv: (args: (string | number)[]) => void
@@ -27,7 +27,7 @@ export type MpApi = {
   __request_event: (name: string, flag: boolean) => any
   __observe_property: (id: number, name: string, format?: string) => any
   __unobserve_property: (id: number) => any
-  __command_native_async: (id: number, node: any, cb: any) => Promise<any>
+  __command_native_async: (id: number, node: any, cb?: any) => number
   __abort_async_command: (id: number) => void
   __set_last_error: (s: string) => void
   __wait_event: (wait: number) => MpvWaitEvent

@@ -90,7 +90,7 @@ pub unsafe fn run_mp_scripts() {
     }
 
     loop {
-        let event = wait_event(0.01);
+        let event = wait_event(0.);
 
         match event {
             Event::Shutdown => {

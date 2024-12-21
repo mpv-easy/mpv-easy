@@ -360,15 +360,14 @@ impl Handle {
                 mpv_error::SUCCESS => {
                     let js = mpv_node_to_json(&mut rt_node);
                     // println!("mpv_node_to_json {:?}", js);
-                    return Ok(js);
+                    Ok(js)
                 }
-                _ => {
+                err => {
                     println!("command_json error: {:?}", e);
+                    Err(Error::new(err))
                 }
             }
         }
-
-        Ok(serde_json::Value::Null)
     }
 
     /// Same as `Handle::command`, but run the command asynchronously.

@@ -12,24 +12,24 @@ pub fn init_mp_api(handle: *mut mpv_handle) {
     unsafe { GLOBAL_MP_HANDLE = Some(Handle::from_ptr(handle)) };
 }
 
-pub fn commandv<I: IntoIterator<Item = S>, S: AsRef<str>>(cmd: I) {
+pub fn commandv<I: IntoIterator<Item = S>, S: AsRef<str>>(cmd: I) -> bool {
     unsafe {
         let h = GLOBAL_MP_HANDLE.as_deref_mut().unwrap();
-        h.commandv(cmd).unwrap();
+        h.commandv(cmd).is_ok()
     }
 }
 
-pub fn command_string<S: AsRef<str>>(cmd: S) {
+pub fn command_string<S: AsRef<str>>(cmd: S) -> bool {
     unsafe {
         let h = GLOBAL_MP_HANDLE.as_deref_mut().unwrap();
-        h.command_string(cmd).unwrap();
+        h.command_string(cmd).is_ok()
     }
 }
 
-pub fn command_json(cmd: Vec<serde_json::Value>) -> serde_json::Value {
+pub fn command_json(cmd: Vec<serde_json::Value>) -> Option<serde_json::Value> {
     unsafe {
         let h = GLOBAL_MP_HANDLE.as_deref_mut().unwrap();
-        h.command_json(cmd).unwrap()
+        h.command_json(cmd).ok()
     }
 }
 
@@ -84,35 +84,35 @@ pub fn request_event(event_id: u32, enable: bool) {
     }
 }
 
-pub fn set_property_number(name: String, v: f64) {
+pub fn set_property_number(name: String, v: f64) -> bool {
     unsafe {
         GLOBAL_MP_HANDLE
             .as_deref_mut()
             .unwrap()
             // TODO: format enum
             .set_property(name, v)
-            .unwrap();
+            .is_ok()
     }
 }
 
-pub fn set_property_string(name: String, v: String) {
+pub fn set_property_string(name: String, v: String) -> bool {
     unsafe {
         GLOBAL_MP_HANDLE
             .as_deref_mut()
             .unwrap()
             // TODO: format enum
             .set_property(name, v)
-            .unwrap();
+            .is_ok()
     }
 }
 
-pub fn set_property_bool(name: String, v: bool) {
+pub fn set_property_bool(name: String, v: bool) -> bool {
     unsafe {
         GLOBAL_MP_HANDLE
             .as_deref_mut()
             .unwrap()
             // TODO: format enum
             .set_property(name, v)
-            .unwrap();
+            .is_ok()
     }
 }

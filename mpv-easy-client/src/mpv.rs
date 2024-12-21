@@ -4,27 +4,27 @@ use crate::api::{
 };
 use std::process::Command;
 
-pub fn op_commandv(cmd: Vec<String>) {
-    commandv(cmd);
+pub fn op_commandv(cmd: Vec<String>) ->bool{
+    commandv(cmd)
 }
 
 pub fn op_get_property_string(name: String) -> String {
     get_property_string(name)
 }
 
-pub fn op_command_string(cmd: String) {
-    commandv(cmd.split(' '));
+pub fn op_command_string(cmd: String) ->bool{
+    commandv(cmd.split(' '))
 }
 
-pub fn op_set_property_bool(name: String, v: bool) {
-    set_property_bool(name, v);
+pub fn op_set_property_bool(name: String, v: bool) -> bool {
+    set_property_bool(name, v)
 }
 
-pub fn op_set_property_number(name: String, v: f64) {
-    set_property_number(name, v);
+pub fn op_set_property_number(name: String, v: f64) -> bool {
+    set_property_number(name, v)
 }
-pub fn op_set_property_string(name: String, v: String) {
-    set_property_string(name, v);
+pub fn op_set_property_string(name: String, v: String) -> bool {
+    set_property_string(name, v)
 }
 
 pub fn op_get_cwd() -> String {
@@ -87,7 +87,7 @@ pub fn op_read_dir(path: String, filter: Option<String>) -> Vec<String> {
     }
 }
 
-fn exec_command(name: String, args: Vec<String>) -> String {
+fn exec_command(name: String, args: Vec<String>) -> Option<String> {
     let empty_args: Vec<String> = vec![];
     let (cmd_name, cmd_args) = if name == "subprocess" {
         if args.len() == 1 {
@@ -100,20 +100,20 @@ fn exec_command(name: String, args: Vec<String>) -> String {
     };
 
     // println!("cmd_args: {:?} {:?} {:?}", cmd_name, name, cmd_args);
-    let output = Command::new(cmd_name).args(cmd_args).output().unwrap();
+    let output = Command::new(cmd_name).args(cmd_args).output().ok()?;
 
-    String::from_utf8(output.stdout).unwrap()
+    String::from_utf8(output.stdout).ok()
 }
 
-pub fn op_command_native(name: String, args: Vec<String>) -> String {
+pub fn op_command_native(name: String, args: Vec<String>) -> Option<String> {
     exec_command(name, args)
 }
 
-pub fn op_command_json(args: String) -> String {
+pub fn op_command_json(args: String) -> Option<String> {
     // println!("op_command_json {:?}", args);
     let v: Vec<serde_json::Value> = serde_json::from_str(&args).unwrap();
     let js = command_json(v);
-    js.to_string()
+    js.map(|i| i.to_string())
 }
 
 async fn exec_command_async(name: String, args: Vec<String>) -> Option<String> {

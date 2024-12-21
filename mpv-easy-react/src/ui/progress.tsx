@@ -30,6 +30,7 @@ import {
   cropSelector,
   fontSelector,
   seekableSelector,
+  videoParamsSelector,
 } from "../store"
 import { ThumbFast } from "@mpv-easy/thumbfast"
 import { getCutVideoPath, getVideoSegment } from "@mpv-easy/cut"
@@ -57,6 +58,7 @@ export const Progress = ({ width, height, ...props }: MpDomProps) => {
   const cutConfig = useSelector(cutSelector)
   const cropConfig = useSelector(cropSelector)
   const [thumbfastUpdateId, setThumbfastUpdateId] = useState(randomId())
+  const videoParams = useSelector(videoParamsSelector)
   // TODO: support yt-dlp thumbfast
   // const supportThumbfast = !isYtdlp(path) && isSeekable
   const supportThumbfast = isSeekable && thumbfast.network
@@ -184,24 +186,23 @@ export const Progress = ({ width, height, ...props }: MpDomProps) => {
   }
 
   useEffect(() => {
-    new PropertyNative<VideoParams>("video-params").observe((_, v) => {
-      if (!v || !supportThumbfast) {
-        return
-      }
-      const { w = 0, h = 0 } = v
-      if (!w || !h) {
-        return
-      }
-      if (thumbRef.current) {
-        thumbRef.current.exit()
-      }
-      thumbRef.current = new ThumbFast({
-        ...thumbfast,
-        videoWidth: w,
-        videoHeight: h,
-      })
+    if (!supportThumbfast) {
+      return
+    }
+    if (!videoParams.w || !videoParams.h) {
+      return
+    }
+    if (thumbRef.current) {
+      thumbRef.current.exit()
+    }
+    thumbRef.current = new ThumbFast({
+      ...thumbfast,
+      videoWidth: videoParams.w,
+      videoHeight: videoParams.h,
     })
+  }, [videoParams.w, videoParams.h, supportThumbfast, isSeekable])
 
+  useEffect(() => {
     registerScriptMessage("cut", () => {
       cutRef.current?.()
     })

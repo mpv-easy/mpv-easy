@@ -44,14 +44,12 @@ mp.command_native = (table) => {
 }
 mp.command = (cmd: string) => {
   // log("command_native: " + cmd)
-  __mp.__command_string(cmd)
-  return undefined
+  return __mp.__command_string(cmd)
 }
 
 mp.commandv = (...args: string[]) => {
   // log("commandv: ")
-  __mp.__commandv(args)
-  return undefined
+  return __mp.__commandv(args)
 }
 
 let command_native_async_id = 1
@@ -111,25 +109,40 @@ mp.get_property_number = (name) => {
 
 mp.set_property_number = (name, v: number) => {
   // log("get_property_number: " + name.toString())
-  __mp.__set_property_number(name, v)
-  return undefined
+  return __mp.__set_property_number(name, v)
 }
 
-mp.set_property = (...args) => {
+mp.set_property = (name, v) => {
   // log("setProperty: " + args.join(", "))
+  switch (typeof v) {
+    case "string": {
+      return mp.set_property_string(v)
+    }
+    case "number": {
+      return mp.set_property_number(v)
+    }
+    case "boolean": {
+      return mp.set_property_bool(v)
+    }
+    case "bigint":
+    case "symbol":
+    case "undefined":
+    case "object":
+    case "function": {
+      throw new Error(`set_property not support v: ${v}`)
+    }
+  }
   return undefined
 }
 
 mp.set_property_string = (name, v) => {
-  // log('set_property_bool: ' + name + v)
-  __mp.__set_property_string(name, v)
-  return undefined
+  // log('set_property_string: ' + name + v)
+  return __mp.__set_property_string(name, v)
 }
 
 mp.set_property_bool = (name, v) => {
   // log('set_property_bool: ' + name + v)
-  __mp.__set_property_bool(name, v)
-  return undefined
+  return __mp.__set_property_bool(name, v)
 }
 
 mp.set_property_native = (...args) => {
@@ -140,21 +153,26 @@ mp.set_property_native = (...args) => {
 mp.get_time = () => Date.now() / 1000
 
 mp.add_key_binding = (...args) => {
+  log("add_key_binding not support yet")
   // log("add_key_binding: " + args.join(", "))
 }
 mp.add_forced_key_binding = (...args) => {
+  log("add_forced_key_binding not support yet")
   // log("add_forced_key_binding: " + args.join(", "))
 }
 
 mp.remove_key_binding = (...args) => {
+  log("remove_key_binding not support yet")
   // log("remove_key_binding: " + args.join(", "))
 }
 
 mp.register_event = (...args) => {
+  log("register_event not support yet")
   // log("register_event: " + args.join(", "))
 }
 
 mp.unregister_event = (...args) => {
+  log("unregister_event not support yet")
   // log("unregister_event: " + args.join(", "))
 }
 
