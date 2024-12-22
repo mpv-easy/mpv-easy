@@ -61,7 +61,7 @@ export const Progress = ({ width, height, ...props }: MpDomProps) => {
   const videoParams = useSelector(videoParamsSelector)
   // TODO: support yt-dlp thumbfast
   // const supportThumbfast = !isYtdlp(path) && isSeekable
-  const supportThumbfast = isSeekable && thumbfast.network
+  const supportThumbfast = isSeekable && (!isRemote(path) || thumbfast.network)
 
   const curCutPoint = mouseOut ? timePos : duration * leftPreview
 
