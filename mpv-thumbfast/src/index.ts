@@ -5,17 +5,15 @@ import {
   getMpvExePath,
   getOs,
   getPropertyString,
-  getScriptConfigDir,
-  joinPath,
   mkdir,
   normalize,
-  removeFile,
   commandNativeAsync,
   getPropertyBool,
   abortAsyncCommand,
   randomId,
   execSync,
   execAsync,
+  getTmpPath,
 } from "@mpv-easy/tool"
 export const pluginName = "@mpv-easy/thumbfast"
 
@@ -28,6 +26,8 @@ export type ThumbFastConfig = {
   hrSeek: boolean
   network: boolean
   lifetime: number
+  overlayId: number
+  scaleFactor: number
 }
 
 declare module "@mpv-easy/plugin" {
@@ -38,13 +38,17 @@ declare module "@mpv-easy/plugin" {
 
 export const defaultThumbMaxWidth = 360
 export const defaultThumbMaxHeight = 360
+export const defaultOverlayId = 42
 export const defaultHrSeek = true
 export const defaultThumbFormat = "bgra"
 export const defaultNetwork = false
-export const defaultThumbPath = joinPath(
-  getScriptConfigDir(),
-  "mpv-easy-thumbfast.tmp",
-)
+export const defaultScaleFactor = 1
+// export const defaultThumbPath = joinPath(
+//   getScriptConfigDir(),
+//   "mpv-easy-thumbfast.tmp",
+// )
+export const defaultThumbPath = getTmpPath("bgra")
+
 export const defaultThumbStartTime = 0
 export const defaultLifetime = 10000
 export const defaultConfig: ThumbFastConfig = {
@@ -55,7 +59,9 @@ export const defaultConfig: ThumbFastConfig = {
   startTime: defaultThumbStartTime,
   hrSeek: defaultHrSeek,
   network: defaultNetwork,
+  overlayId: defaultOverlayId,
   lifetime: defaultLifetime,
+  scaleFactor: defaultScaleFactor,
 }
 
 function scaleToFit(
@@ -74,6 +80,20 @@ function scaleToFit(
 
 const ThumbFastSet = new Set<ThumbFast>()
 
+export function getThumbFastVideoPath(network: boolean) {
+  let videoPath = normalize(getPropertyString("path") || "")
+  const streamPath = getPropertyString("stream-open-filename")
+  if (
+    getPropertyBool("demuxer-via-network") &&
+    streamPath?.length &&
+    network &&
+    streamPath !== videoPath
+  ) {
+    // remove description, it's too long
+    videoPath = streamPath.replace(/,ytdl_description.*/, "")
+  }
+  return videoPath
+}
 export class ThumbFast {
   public path: string
   public format: "rgba" | "bgra"
@@ -89,6 +109,10 @@ export class ThumbFast {
   private lifetime = 0
   public hrSeek: boolean
   private mpvPath: string
+  public videoPath = ""
+  public videoWidth = 0
+  public videoHeight = 0
+  public scaleFactor = 1
   constructor(
     {
       path = defaultThumbPath,
@@ -101,14 +125,19 @@ export class ThumbFast {
       hrSeek = defaultHrSeek,
       network = defaultNetwork,
       lifetime = defaultLifetime,
+      scaleFactor = defaultScaleFactor,
     }: Partial<ThumbFastConfig> & {
       videoWidth: number
       videoHeight: number
     } = { ...defaultConfig, videoHeight: 0, videoWidth: 0 },
   ) {
-    if (existsSync(path)) {
-      removeFile(path)
-    }
+    // if (existsSync(path)) {
+    //   try {
+    //     removeFile(path)
+    //   } catch (e) {
+    //     print(`ThumbFast remove file error: ${path}`)
+    //   }
+    // }
     this.path = normalize(path)
     this.hrSeek = hrSeek
     this.format = format
@@ -116,6 +145,7 @@ export class ThumbFast {
     this.maxHeight = maxHeight
     this.startTime = startTime
     this.lifetime = lifetime
+    this.scaleFactor = scaleFactor
     const [thumbWidth, thumbHeight] = scaleToFit(
       videoWidth,
       videoHeight,
@@ -125,6 +155,12 @@ export class ThumbFast {
     // resize image size to 4x
     this.thumbWidth = thumbWidth & ~3
     this.thumbHeight = thumbHeight & ~3
+    this.videoHeight = videoHeight
+    this.videoWidth = videoWidth
+
+    if (!videoHeight || !videoWidth) {
+      print("ThumbFast video size error:", videoWidth, videoHeight)
+    }
     this.network = network
     this.mpvPath = normalize(getMpvExePath())
     this.subprocessId = this.startIpc()
@@ -133,21 +169,10 @@ export class ThumbFast {
 
   private startIpc() {
     this.ipcId = `ipc_${randomId()}`
-    const streamPath = getPropertyString("stream-open-filename")
-    let videoPath = normalize(getPropertyString("path") || "")
-    if (
-      getPropertyBool("demuxer-via-network") &&
-      streamPath?.length &&
-      this.network &&
-      streamPath !== videoPath
-    ) {
-      // remove description, it's too long
-      videoPath = streamPath.replace(/,ytdl_description.*/, "")
-    }
-
+    this.videoPath = getThumbFastVideoPath(this.network)
     const args = [
       this.mpvPath,
-      videoPath,
+      this.videoPath,
       "--no-config",
       "--msg-level=all=no",
       "--idle",
@@ -268,7 +293,10 @@ export default definePlugin((context, api) => ({
   destroy() {
     for (const i of ThumbFastSet) {
       i.exit()
-      removeFile(i.path)
+      // try{
+      //   removeFile(i.path)
+      // }catch(e){
+      // }
     }
   },
 }))

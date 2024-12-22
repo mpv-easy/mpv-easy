@@ -270,6 +270,8 @@ jobs:
           cp mpv-copy-time/es5/mpv-copy-time.js mpv-easy-js/mpv-copy-time.js
           cp mpv-autoload/mpv-autoload.conf mpv-easy-js/mpv-autoload.conf
           cp mpv-autoload/es5/mpv-autoload.js mpv-easy-js/mpv-autoload.js
+          cp mpv-thumbfast/thumbfast.conf mpv-easy-js/thumbfast.conf
+          cp mpv-thumbfast/es5/thumbfast.js mpv-easy-js/thumbfast.js
 
       - name: Upload
         uses: actions/upload-artifact@v4
