@@ -141,11 +141,16 @@ function App() {
       cropRef.current?.()
     })
 
-    setInterval(() => {
+    const h = +setInterval(() => {
       // FIXME: hot code for better performance
       hack((i) => (i + 1) % 1000)
     }, 1000 / DefaultFps)
+
+    return () => {
+      clearInterval(h)
+    }
   }, [])
+
   return (
     <Box
       position="absolute"
