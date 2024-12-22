@@ -10,14 +10,14 @@ import { definePlugin } from "@mpv-easy/plugin"
 export const pluginName = "@mpv-easy/copy-time"
 
 export const defaultConfig: copyTimeConfig = {
-  eventName: "copy-time",
+  copyTimeEventName: "copy-time",
 }
 
 function divmod(a: number, b: number) {
   return [a / b, a % b] as const
 }
 
-async function copyTime() {
+export async function copyTime() {
   const time_pos = getPropertyNumber("time-pos") || 0
   const [minutes, remainder] = divmod(time_pos, 60)
   const [hours, mins] = divmod(minutes, 60)
@@ -30,14 +30,14 @@ async function copyTime() {
     .padStart(3, "0")}`
 
   if (await setClipboard(time)) {
-    showNotification(`Copied to Clipboard: ${time}`)
+    showNotification("Copied to Clipboard")
   } else {
     showNotification("Failed to copy time to clipboard")
   }
 }
 
 export type copyTimeConfig = {
-  eventName: string
+  copyTimeEventName: string
 }
 
 declare module "@mpv-easy/plugin" {
@@ -50,7 +50,8 @@ export default definePlugin((context) => ({
   name: pluginName,
   defaultConfig: defaultConfig,
   create: () => {
-    const key = context[pluginName]?.eventName ?? defaultConfig.eventName
+    const key =
+      context[pluginName]?.copyTimeEventName ?? defaultConfig.copyTimeEventName
     registerScriptMessage(key, copyTime)
   },
   destroy: () => {

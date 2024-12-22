@@ -1,7 +1,9 @@
 import { execAsync, getOs } from "../common"
 import { existsSync } from "../fs"
-import { error } from "../mpv"
+import { randomId } from "../math"
+import { error, joinPath, writeFile } from "../mpv"
 import { normalize } from "../path"
+import { getTmpDir } from "../tmp"
 import { getRsExtExePath } from "./share"
 
 export async function getClipboard(exe = getRsExtExePath()): Promise<string> {
@@ -37,6 +39,32 @@ export async function setClipboard(
   text: string,
   exe = getRsExtExePath(),
 ): Promise<boolean> {
+  if (!existsSync(exe)) {
+    switch (getOs()) {
+      case "windows": {
+        try {
+          const tmpPath = joinPath(getTmpDir(), `${randomId()}.tmp.txt`)
+          writeFile(tmpPath, text)
+          const cmd = [
+            "powershell",
+            "-c",
+            `Get-Content -Path "${tmpPath}" -Raw | Set-Clipboard`,
+          ]
+          await execAsync(cmd)
+          console.log(cmd.join(" "))
+          return true
+        } catch (e) {
+          error(e)
+          return false
+        }
+      }
+      case "linux":
+      case "darwin":
+      case "android": {
+        return false
+      }
+    }
+  }
   try {
     const base64 = Buffer.from(text).toString("base64")
     await execAsync([exe, "clipboard", "set", base64])

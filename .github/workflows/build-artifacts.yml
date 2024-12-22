@@ -269,6 +269,10 @@ jobs:
           cp mpv-crop/mpv-crop.conf mpv-easy-js/mpv-crop.conf
           cp mpv-clipboard-play/mpv-clipboard-play.conf mpv-easy-js/mpv-clipboard-play.conf
           cp mpv-clipboard-play/es5/mpv-clipboard-play.js mpv-easy-js/mpv-clipboard-play.js
+          cp mpv-copy-screen/mpv-copy-screen.conf mpv-easy-js/mpv-copy-screen.conf
+          cp mpv-copy-screen/es5/mpv-copy-screen.js mpv-easy-js/mpv-copy-screen.js
+          cp mpv-copy-time/mpv-copy-time.conf mpv-easy-js/mpv-copy-time.conf
+          cp mpv-copy-time/es5/mpv-copy-time.js mpv-easy-js/mpv-copy-time.js
 
       - name: Upload
         uses: actions/upload-artifact@v4
