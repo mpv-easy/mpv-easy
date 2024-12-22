@@ -1,6 +1,7 @@
 import { execAsync, getOs } from "../common"
 import { existsSync } from "../fs"
 import { error } from "../mpv"
+import { normalize } from "../path"
 import { getRsExtExePath } from "./share"
 
 export async function getClipboard(exe = getRsExtExePath()): Promise<string> {
@@ -50,6 +51,30 @@ export async function setClipboardImage(
   path: string,
   exe = getRsExtExePath(),
 ): Promise<boolean> {
+  if (!existsSync(exe)) {
+    switch (getOs()) {
+      case "windows": {
+        try {
+          const cmd = [
+            "powershell",
+            "-c",
+            `Get-ChildItem "${normalize(path)}" | Set-Clipboard`,
+          ]
+          const r = await execAsync(cmd)
+          return true
+        } catch (e) {
+          error(e)
+          return false
+        }
+      }
+      case "linux":
+      case "darwin":
+      case "android": {
+        return false
+      }
+    }
+  }
+
   try {
     const base64 = Buffer.from(path).toString("base64")
     const cmd = [exe, "clipboard", "set-image", base64]

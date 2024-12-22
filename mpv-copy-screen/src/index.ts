@@ -1,28 +1,27 @@
 import {
-  command,
-  getScriptConfigDir,
   joinPath,
   showNotification,
   registerScriptMessage,
   screenshotToFile,
   setClipboardImage,
+  getTmpDir,
+  randomId,
 } from "@mpv-easy/tool"
-
 import { definePlugin } from "@mpv-easy/plugin"
-
 export const pluginName = "@mpv-easy/copy-screen"
 
 export type copyScreenConfig = {
-  eventName: string
-  path: string
+  copyScreenEventName: string
+  format: string
 }
 
 export const defaultConfig: copyScreenConfig = {
-  eventName: "copy-screen",
-  path: joinPath(getScriptConfigDir(), "mpv-easy-copy-screen.tmp.png"),
+  copyScreenEventName: "copy-screen",
+  format: "webp",
 }
 
-async function copyScreen(path: string) {
+export async function copyScreen(format: string) {
+  const path = joinPath(getTmpDir(), `${randomId()}.${format}`)
   screenshotToFile(path)
   const result = await setClipboardImage(path)
   if (result) {
@@ -42,10 +41,12 @@ export default definePlugin((context) => ({
   name: pluginName,
   defaultConfig: defaultConfig,
   create: () => {
-    const key = context[pluginName]?.eventName ?? defaultConfig.eventName
-    const path = context[pluginName]?.path ?? defaultConfig.path
+    const key =
+      context[pluginName]?.copyScreenEventName ??
+      defaultConfig.copyScreenEventName
+    const format = context[pluginName]?.format ?? defaultConfig.format
     registerScriptMessage(key, () => {
-      copyScreen(path)
+      copyScreen(format)
     })
   },
   destroy: () => {

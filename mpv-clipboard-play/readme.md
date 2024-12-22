@@ -20,7 +20,7 @@ Folders do not support recursive scanning
 
 
 ## shortkey
-Add configuration to input.conf
+Add configuration to `input.conf`
 
 ```
 CTRL+v     script-message clipboard-play

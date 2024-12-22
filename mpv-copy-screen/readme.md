@@ -1,13 +1,17 @@
 
 Use the shortcut (ctrl+c) to copy the current video content to the clipboard
 
-## usage
+## install
+- Download the latest version of [mpv-copy-screen.js](https://github.com/mpv-easy/mpv-easy/releases) and copy it to the mpv script directory
+- Add configuration to input.conf [shortkey](https://github.com/mpv-easy/mpv-easy/tree/main/mpv-copy-screen#shortkey)
 
-Add config to `input.conf`
+## shortkey
+Add configuration to `input.conf`
 
 ```
-CTRL+c copy-screen
+CTRL+c     script-message copy-screen
 ```
+
 
 ## todo
 - [ ] custom image format
