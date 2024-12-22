@@ -272,7 +272,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: mpv-easy-js
-          path: mpv-easy-js/*.js
+          path: mpv-easy-js/*
 
       - name: "create dist"
         run: |
@@ -382,10 +382,12 @@ jobs:
 
           cd mpy-easy-windows-full
           zip -r -q mpy-easy-windows-full.zip .
+          tree
           cd ..
 
           cd mpy-easy-windows-deno-full
           zip -r -q mpy-easy-windows-deno-full.zip .
+          tree
           cd ..
 
           mkdir release
