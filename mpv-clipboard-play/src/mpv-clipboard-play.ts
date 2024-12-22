@@ -1,13 +1,19 @@
 import "@mpv-easy/polyfill"
 import {
-  getClipboard,
   getOptions,
-  isRemote,
-  loadfile,
   registerScriptMessage,
-  showNotification,
+  updatePlaylist,
 } from "@mpv-easy/tool"
-import { defaultConfig } from "./index"
+import { clipboardPlay, defaultConfig, pluginName } from "./index"
+import {
+  pluginName as autoloadName,
+  getPlayableList,
+  defaultConfig as autoloadConfig,
+} from "@mpv-easy/autoload"
+import {
+  pluginName as jellyfinName,
+  defaultConfig as jellyfinConfig,
+} from "@mpv-easy/jellyfin"
 
 const { clipboardPlayEventName } = {
   ...defaultConfig,
@@ -20,9 +26,10 @@ const { clipboardPlayEventName } = {
 }
 
 registerScriptMessage(clipboardPlayEventName, async () => {
-  const s = (await getClipboard()).trim().replace(/\\/g, "/")
-  if (s.length && isRemote(s)) {
-    showNotification(`play ${s}`)
-    loadfile(s)
+  const context = {
+    [jellyfinName]: jellyfinConfig,
+    [autoloadName]: autoloadConfig,
+    [pluginName]: defaultConfig,
   }
+  clipboardPlay(context, updatePlaylist)
 })

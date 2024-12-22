@@ -20,7 +20,15 @@ import { pluginName as autoloadName, getPlayableList } from "@mpv-easy/autoload"
 import { normalize, jellyfin } from "@mpv-easy/tool"
 import { pluginName as jellyfinName } from "@mpv-easy/jellyfin"
 
-function getList(s: string | undefined, context: PluginContext): string[] {
+export type ClipboardPlayContext = Pick<
+  PluginContext,
+  typeof autoloadName | typeof jellyfinName | typeof pluginName
+>
+
+function getList(
+  s: string | undefined,
+  context: ClipboardPlayContext,
+): string[] {
   const v: string[] = []
   if (!s?.length) {
     return v
@@ -102,17 +110,20 @@ function getList(s: string | undefined, context: PluginContext): string[] {
   return []
 }
 
-export async function clipboardPlay(context: PluginContext, api: SystemApi) {
+export async function clipboardPlay(
+  context: ClipboardPlayContext,
+  updatePlaylist: (list: string[], playIndex: number) => void,
+) {
   const s = (await getClipboard()).trim().replace(/\\/g, "/")
   const v = getList(s, context)
 
   if (v?.length) {
     const index = v.indexOf(s)
     if (index !== -1) {
-      api.updatePlaylist(v, index)
+      updatePlaylist(v, index)
       // command(`playlist-play-index ${index}`)
     } else {
-      api.updatePlaylist(v, 0)
+      updatePlaylist(v, 0)
       // command(`playlist-play-index ${0}`)
     }
   }
@@ -142,7 +153,7 @@ export default definePlugin((context, api) => ({
   create: () => {
     const key = context[pluginName].clipboardPlayEventName
     registerScriptMessage(key, () => {
-      clipboardPlay(context, api)
+      clipboardPlay(context, api.updatePlaylist)
     })
   },
   destroy: () => {
