@@ -15,6 +15,7 @@
   "author": "ahaoboy <504595380@qq.com> (https://github.com/ahaoboy)",
   "license": "MIT",
   "dependencies": {
+    "@mpv-easy/polyfill": "workspace:*",
     "@mpv-easy/tool": "workspace:*",
     "@mpv-easy/plugin": "workspace:*"
   },

@@ -102,7 +102,7 @@ function getList(s: string | undefined, context: PluginContext): string[] {
   return []
 }
 
-async function fn(context: PluginContext, api: SystemApi) {
+export async function clipboardPlay(context: PluginContext, api: SystemApi) {
   const s = (await getClipboard()).trim().replace(/\\/g, "/")
   const v = getList(s, context)
 
@@ -121,12 +121,12 @@ async function fn(context: PluginContext, api: SystemApi) {
 export const pluginName = "@mpv-easy/clipboard-play"
 
 export const defaultConfig: ClipboardPlayConfig = {
-  eventName: "clipboard-play",
+  clipboardPlayEventName: "clipboard-play",
   osdDuration: 3,
 }
 
 export type ClipboardPlayConfig = {
-  eventName: string
+  clipboardPlayEventName: string
   osdDuration: number
 }
 
@@ -140,9 +140,9 @@ export default definePlugin((context, api) => ({
   name: pluginName,
   defaultConfig: defaultConfig,
   create: () => {
-    const key = context[pluginName].eventName
+    const key = context[pluginName].clipboardPlayEventName
     registerScriptMessage(key, () => {
-      fn(context, api)
+      clipboardPlay(context, api)
     })
   },
   destroy: () => {
