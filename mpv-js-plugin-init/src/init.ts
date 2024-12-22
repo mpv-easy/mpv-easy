@@ -62,7 +62,7 @@ mp.command_native_async = (table, fn) => {
 }
 
 mp.abort_async_command = (...args) => {
-  // log("abort_async_command: ")
+  log("abort_async_command: not support yet")
 }
 
 mp.get_property = (name, def) => {
@@ -146,7 +146,7 @@ mp.set_property_bool = (name, v) => {
 }
 
 mp.set_property_native = (...args) => {
-  // log("set_property_native: " + args.join(", "))
+  log("set_property_native not support yet", args.join(", "))
   return undefined
 }
 
@@ -262,10 +262,9 @@ mp.get_script_name = (...args) => {
   return globalThis.__script_name
 }
 
-mp.osd_message = (...args) => {
-  // log("osd_message: " + args.join(", "))
+mp.osd_message = (text: string, duration?: number) => {
+  mp.commandv("show_text", text, Math.round(1000 * (duration || -1)))
 }
-
 mp.register_idle = (...args) => {
   // log("register_idle: " + args.join(", "))
 }
@@ -323,13 +322,24 @@ mp.create_osd_overlay = () => {
   }
   // // log('create_osd_overlay: ', args.join(', '))
 }
-mp.set_osd_ass = (...args) => {
+mp.set_osd_ass = (res_x: number, res_y: number, data: string) => {
   // log("set_osd_ass: " + args.join(", "))
+  if (!mp._legacy_overlay)
+    mp._legacy_overlay = mp.create_osd_overlay("ass-events")
+
+  const lo = mp._legacy_overlay
+  if (lo.res_x === res_x && lo.res_y === res_y && lo.data === data) return true
+
+  mp._legacy_overlay.res_x = res_x
+  mp._legacy_overlay.res_y = res_y
+  mp._legacy_overlay.data = data
+  return mp._legacy_overlay.update()
 }
 
 mp.get_osd_margins = (...args) => {
   // log("get_osd_margins: " + args.join(", "))
-  return undefined
+  const d = mp.get_property_native("osd-dimensions")
+  return d && { left: d.ml, right: d.mr, top: d.mt, bottom: d.mb }
 }
 mp.get_time_ms = () => {
   // log("get_time_ms: ")
@@ -362,8 +372,66 @@ mp.msg = {
 }
 
 mp.options = {
-  read_options(...args) {
+  read_options(opts, id, on_update, conf_override) {
     // log("read_options: " + args.join(", "))
+    const name = String(id ? id : mp.get_script_name())
+    const fname = `~~/script-opts/${id}.conf`
+    let conf: string
+    try {
+      // conf = arguments.length > 3 ? conf_override : mp.utils.read_file(fname);
+      conf = mp.utils.read_file(fname)
+    } catch (e) {
+      mp.msg.verbose(`${fname} not found.`)
+    }
+
+    // data as config file lines array, or empty array
+    const data = conf ? conf.replace(/\r\n/g, "\n").split("\n") : []
+    const conf_len = data.length // before we append script-opts below
+
+    const sopts = mp.get_property_native("options/script-opts")
+    const prefix = `${id}-`
+    for (const key in sopts) {
+      if (key.indexOf(prefix) === 0)
+        data.push(`${key.substring(prefix.length)}=${sopts[key]}`)
+    }
+
+    // Update opts from data
+    data.forEach((line, i) => {
+      if (line[0] === "#" || line.trim() === "") return
+
+      const key = line.substring(0, line.indexOf("="))
+      const val = line.substring(line.indexOf("=") + 1)
+      const type = typeof opts[key]
+      const info =
+        i < conf_len
+          ? `${fname}:${i + 1}` // 1-based line number
+          : `script-opts:${prefix}${key}`
+
+      // biome-ignore lint/suspicious/noPrototypeBuiltins: <explanation>
+      if (!opts.hasOwnProperty(key))
+        mp.msg.warn(info, `Ignoring unknown key '${key}'`)
+      else if (type === "string") opts[key] = val
+      else if (type === "boolean" && (val === "yes" || val === "no"))
+        opts[key] = val === "yes"
+      else if (type === "number" && val.trim() !== "" && !Number.isNaN(val))
+        opts[key] = Number(val)
+      else mp.msg.error(info, `Error: can't convert '${val}' to ${type}`)
+    })
+
+    if (on_update) {
+      mp.observe_property("options/script-opts", "native", (_n, _v) => {
+        const saved = JSON.parse(JSON.stringify(opts)) // clone
+        const changelist = {}
+        let changed = false
+        mp.read_options(opts, id, 0, conf) // re-apply orig-file + script-opts
+        for (const key in opts) {
+          if (opts[key] !== saved[key])
+            // type always stays the same
+            changelist[key] = changed = true
+        }
+        if (changed) on_update(changelist)
+      })
+    }
   },
 }
 
@@ -421,7 +489,8 @@ mp.utils = {
   },
   read_file(path) {
     // log("read_file: " + path)
-    return __mp.__read_file(path)
+    const expandPath = mp.utils.get_user_path(path)
+    return __mp.__read_file(expandPath)
   },
   write_file(path: string, text: string) {
     // log("write_file: " + path + text)

@@ -33,6 +33,7 @@ pub fn op_get_cwd() -> String {
 }
 
 pub fn op_read_file(path: String) -> String {
+    // println!("op_read_file {:?}", path);
     let text: String = std::fs::read_to_string(path).unwrap();
     text
 }
