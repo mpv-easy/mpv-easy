@@ -207,12 +207,7 @@ jobs:
 
   build-release:
     needs:
-      [
-        build-ext-windows,
-        build-ext-macos,
-        build-ext-ubuntu,
-        build-ext-android,
-      ]
+      [build-ext-windows, build-ext-macos, build-ext-ubuntu, build-ext-android]
     name: release
     runs-on: ubuntu-latest
     steps:
@@ -273,6 +268,8 @@ jobs:
           cp mpv-copy-screen/es5/mpv-copy-screen.js mpv-easy-js/mpv-copy-screen.js
           cp mpv-copy-time/mpv-copy-time.conf mpv-easy-js/mpv-copy-time.conf
           cp mpv-copy-time/es5/mpv-copy-time.js mpv-easy-js/mpv-copy-time.js
+          cp mpv-autoload/mpv-autoload.conf mpv-easy-js/mpv-autoload.conf
+          cp mpv-autoload/es5/mpv-autoload.js mpv-easy-js/mpv-autoload.js
 
       - name: Upload
         uses: actions/upload-artifact@v4
