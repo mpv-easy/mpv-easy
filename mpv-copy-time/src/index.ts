@@ -1,6 +1,6 @@
 import {
   getPropertyNumber,
-  osdMessage,
+  showNotification,
   registerScriptMessage,
   removeKeyBinding,
   setClipboard,
@@ -30,9 +30,9 @@ async function copyTime() {
     .padStart(3, "0")}`
 
   if (await setClipboard(time)) {
-    osdMessage(`Copied to Clipboard: ${time}`)
+    showNotification(`Copied to Clipboard: ${time}`)
   } else {
-    osdMessage("Failed to copy time to clipboard")
+    showNotification("Failed to copy time to clipboard")
   }
 }
 

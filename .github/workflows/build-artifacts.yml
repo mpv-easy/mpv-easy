@@ -288,7 +288,6 @@ jobs:
           cp -r mpv-anime4k/shaders dist
           cp mpv-easy-react/mpv-conf/mpv.conf dist/mpv.conf
           cp mpv-easy-react/mpv-conf/input.conf dist/input.conf
-          cp mpv-easy-react/mpv-conf/cookies.txt dist/cookies.txt
 
           chmod 777 mpv-easy-ext-dist/*
           chmod 777 mpv-easy-play-with-dist/*
@@ -297,9 +296,6 @@ jobs:
           cp -r dist mpy-easy-linux
           cp -r dist mpy-easy-android
           cp -r dist mpy-easy-windows
-          # cp -r dist mpy-easy-deno-windows
-          # cp -r dist mpy-easy-qjs-windows
-          # cp -r dist mpy-easy-boa-windows
 
           7z x ffmpeg.7z -offmpeg -y
           cp ffmpeg/ffmpeg.exe mpy-easy-windows/scripts/mpv-easy-config/mpv-easy-ext/ffmpeg.exe
@@ -340,9 +336,10 @@ jobs:
           # cp mpv-easy-react/bundle/mpv-easy-es6.js mpy-easy-boa-windows/scripts-boa/mpv-easy-es6.js
           # mv mpy-easy-boa-windows/scripts/mpv-easy-config mpy-easy-boa-windows/scripts-boa/mpv-easy-config
 
-          cp yt-dlp.exe mpy-easy-windows/yt-dlp.exe
           7z x mpv-win.7z -ompy-easy-windows-full -y
           cp -r mpy-easy-windows mpy-easy-windows-full/portable_config
+          cp yt-dlp.exe mpy-easy-windows-full/yt-dlp.exe
+          cp mpv-easy-react/mpv-conf/cookies.txt mpy-easy-windows-full/cookies.txt
 
 
           cp -r mpy-easy-windows-full mpy-easy-windows-deno-full

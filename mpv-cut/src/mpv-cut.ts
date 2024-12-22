@@ -10,8 +10,6 @@ import {
   detectFfmpeg,
   getOptions,
   getProperty,
-  OsdOverlay,
-  printAndOsd,
   PropertyNumber,
   registerScriptMessage,
 } from "@mpv-easy/tool"
@@ -64,21 +62,21 @@ function cancel() {
 async function output() {
   const path = getProperty("path")
   if (!path) {
-    printAndOsd("video not found")
+    showNotification("video not found")
     return
   }
   if (isRemote(path)) {
-    printAndOsd("cut not support remote video")
+    showNotification("cut not support remote video")
     return
   }
   const segment = getVideoSegment(points)
   if (!segment) {
-    printAndOsd("cut segment not found")
+    showNotification("cut segment not found")
     return
   }
   const ffmpeg = detectFfmpeg()
   if (!ffmpeg) {
-    printAndOsd("ffmpeg not found")
+    showNotification("ffmpeg not found")
     return
   }
 
@@ -86,10 +84,10 @@ async function output() {
   const ok = await cutVideo(segment, path, outputPath, ffmpeg)
   hideNotification()
   if (!ok) {
-    printAndOsd("failed to cut")
+    showNotification("failed to cut")
     return
   }
-  printAndOsd("cut finish")
+  showNotification("cut finish")
 }
 
 registerScriptMessage(cutEventName, () => {

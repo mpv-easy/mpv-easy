@@ -1,7 +1,6 @@
 import {
   dirname,
   getClipboard,
-  printAndOsd,
   isDir,
   isRemote,
   isVideo,
@@ -12,6 +11,7 @@ import {
   getExtName,
   compareString,
   registerScriptMessage,
+  showNotification,
 } from "@mpv-easy/tool"
 
 import { type SystemApi, definePlugin } from "@mpv-easy/plugin"
@@ -32,17 +32,17 @@ function getList(s: string | undefined, context: PluginContext): string[] {
     }
 
     if (youtube.isYoutube(s)) {
-      osdDuration && printAndOsd(`play youtube: ${s}`, osdDuration)
+      osdDuration && showNotification(`play youtube: ${s}`, osdDuration)
       return [s]
     }
 
     if (bilibili.isBilibili(s)) {
-      osdDuration && printAndOsd(`play bilibili: ${s}`, osdDuration)
+      osdDuration && showNotification(`play bilibili: ${s}`, osdDuration)
       return [s]
     }
 
     if (twitch.isTwitch(s)) {
-      osdDuration && printAndOsd(`play twitch: ${s}`, osdDuration)
+      osdDuration && showNotification(`play twitch: ${s}`, osdDuration)
       return [s]
     }
 
@@ -62,20 +62,20 @@ function getList(s: string | undefined, context: PluginContext): string[] {
             .getPlayableListFromUrl(s, cfg.apiKey, cfg.userName)
             .sort((a, b) => compareString(a.name, b.name))
             .map((i) => i.path)
-          osdDuration && printAndOsd(`play jellyfin: ${s}`, osdDuration)
+          osdDuration && showNotification(`play jellyfin: ${s}`, osdDuration)
           return list
         } catch (e) {
           print(e)
           // maybe forget config jellyfin apiKey and username
           osdDuration &&
-            printAndOsd(
+            showNotification(
               "Please add jellyfin apiKey and username first",
               osdDuration,
             )
         }
       } else {
         osdDuration &&
-          printAndOsd(
+          showNotification(
             "Please add jellyfin apiKey and username first",
             osdDuration,
           )

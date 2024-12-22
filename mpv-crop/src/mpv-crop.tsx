@@ -6,7 +6,7 @@ import {
   getOptions,
   MousePos,
   MpvPropertyTypeMap,
-  printAndOsd,
+  showNotification,
   registerScriptMessage,
 } from "@mpv-easy/tool"
 import { Crop, defaultConfig, getCropImagePath, getCropRect } from "./index"
@@ -94,19 +94,19 @@ function App() {
   const hack = useState(0)[1]
   cropRef.current = async () => {
     if (!path.length) {
-      printAndOsd("video not found")
+      showNotification("video not found")
       return
     }
     const ffmpeg = detectFfmpeg()
     if (!ffmpeg) {
-      printAndOsd("ffmpeg not found")
+      showNotification("ffmpeg not found")
       return
     }
     if (points.length === 2) {
       const rect = getCropRect(points)
       if (!rect) {
         if (!rect) {
-          printAndOsd("invalid video cropping region")
+          showNotification("invalid video cropping region")
           return
         }
       }
@@ -119,9 +119,9 @@ function App() {
       )
       const ok = await cropImage(rect, outputPath, ffmpeg)
       if (!ok) {
-        printAndOsd("failed to crop image")
+        showNotification("failed to crop image")
       } else {
-        printAndOsd("crop image finish")
+        showNotification("crop image finish")
       }
     }
     setPoints([])

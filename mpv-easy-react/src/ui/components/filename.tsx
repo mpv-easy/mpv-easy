@@ -17,7 +17,9 @@ import { useSelector } from "../../models"
 
 export const Filename = () => {
   const path = useSelector(pathSelector)
-  const title = getVideoTitle(path) || getVideoName(path) || ""
+  const title =
+    (isRemote(path) ? getVideoTitle(path) : getVideoName(path)) || ""
+
   // TODO: text-overflow: ellipsis;
   const maxLen = useSelector(toolbarStyleSelector).maxTitleLength
   const text = textEllipsis(title, maxLen)

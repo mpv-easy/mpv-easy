@@ -103,6 +103,7 @@ export const Easy = (props: Partial<EasyProps>) => {
       const playPath = getPlayWithExePath()
       if (setProtocolHook(mpvExe, playPath)) {
         dispatch.setProtocolHook(mpvExe)
+        showNotification("protocol install successfully")
       }
     }
 

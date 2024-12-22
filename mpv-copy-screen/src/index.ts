@@ -2,7 +2,7 @@ import {
   command,
   getScriptConfigDir,
   joinPath,
-  osdMessage,
+  showNotification,
   registerScriptMessage,
   screenshotToFile,
   setClipboardImage,
@@ -26,9 +26,9 @@ async function copyScreen(path: string) {
   screenshotToFile(path)
   const result = await setClipboardImage(path)
   if (result) {
-    osdMessage("Copied to Clipboard", 5)
+    showNotification("Copied to Clipboard", 5)
   } else {
-    osdMessage("Failed to copy screen to clipboard", 5)
+    showNotification("Failed to copy screen to clipboard", 5)
   }
 }
 
