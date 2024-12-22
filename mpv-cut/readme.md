@@ -4,7 +4,7 @@ cut videos script for mpv
 
 You need to install [ffmpeg](https://www.ffmpeg.org/download.html) and add ffmpeg to ```PATH```
 
-- Download the latest version of [mpv-cut.js](https://github.com/mpv-easy/mpv-easy/releases) and copy it to the mpv script directory, or use [mpsm](../mpv-mpsm/readme.md) `mpsm install mpv-cut`
+- Download the latest version of [cut.js](https://github.com/mpv-easy/mpv-easy/releases) and copy it to the mpv script directory
 
 - Add configuration to input.conf [shortkey](https://github.com/mpv-easy/mpv-easy/tree/main/mpv-cut#shortkey)
 
@@ -15,12 +15,12 @@ By default, the shortcut key `c` adds the current time point to the segment, `es
 
 If the video file is `/a/b/c.mp4`, the output video file is `/a/b/c.start.end.x.y.w.h.mp4`
 
-### mpv-cut
+### cut
 
-mpv-cut will display the currently selected video segment in the video
+cut will display the currently selected video segment in the video
 
 <div style="display: flex;">
-  <img src="../assets/img/mpv-cut-text.webp" alt="mpv-cut"/>
+  <img src="../assets/img/mpv-cut-text.webp" alt="cut"/>
 </div>
 
 ### mpv-easy
@@ -45,7 +45,7 @@ ESC       script-message cancel
 
 ## config
 
-config file: `mpv-cut.conf`
+config file: `cut.conf`
 ```conf
 cut-event-name="cut"
 output-event-name="output"

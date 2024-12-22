@@ -9,7 +9,7 @@ import {
 
 const { image, video, audio, maxSize } = {
   ...defaultConfig,
-  ...getOptions("mpv-autoload", {
+  ...getOptions("autoload", {
     image: {
       type: "boolean",
       key: "image",

@@ -256,20 +256,20 @@ jobs:
           cp mpv-easy-react/es5/mpv-easy-es5.js mpv-easy-js/mpv-easy-es5.js
           cp mpv-easy-react/bundle/mpv-easy-es6.js mpv-easy-js/mpv-easy-es6.js
           cp mpv-play-with/dist/mpv-easy-play-with.user.js mpv-easy-js/mpv-easy-play-with.user.js
-          cp mpv-translate/es5/mpv-translate.js mpv-easy-js/mpv-translate.js
-          cp mpv-translate/mpv-translate.conf mpv-easy-js/mpv-translate.conf
-          cp mpv-cut/es5/mpv-cut.js mpv-easy-js/mpv-cut.js
-          cp mpv-cut/mpv-cut.conf mpv-easy-js/mpv-cut.conf
-          cp mpv-crop/es5/mpv-crop.js mpv-easy-js/mpv-crop.js
-          cp mpv-crop/mpv-crop.conf mpv-easy-js/mpv-crop.conf
-          cp mpv-clipboard-play/mpv-clipboard-play.conf mpv-easy-js/mpv-clipboard-play.conf
-          cp mpv-clipboard-play/es5/mpv-clipboard-play.js mpv-easy-js/mpv-clipboard-play.js
-          cp mpv-copy-screen/mpv-copy-screen.conf mpv-easy-js/mpv-copy-screen.conf
-          cp mpv-copy-screen/es5/mpv-copy-screen.js mpv-easy-js/mpv-copy-screen.js
-          cp mpv-copy-time/mpv-copy-time.conf mpv-easy-js/mpv-copy-time.conf
-          cp mpv-copy-time/es5/mpv-copy-time.js mpv-easy-js/mpv-copy-time.js
-          cp mpv-autoload/mpv-autoload.conf mpv-easy-js/mpv-autoload.conf
-          cp mpv-autoload/es5/mpv-autoload.js mpv-easy-js/mpv-autoload.js
+          cp mpv-translate/es5/translate.js mpv-easy-js/translate.js
+          cp mpv-translate/translate.conf mpv-easy-js/translate.conf
+          cp mpv-cut/es5/cut.js mpv-easy-js/cut.js
+          cp mpv-cut/cut.conf mpv-easy-js/cut.conf
+          cp mpv-crop/es5/crop.js mpv-easy-js/crop.js
+          cp mpv-crop/crop.conf mpv-easy-js/crop.conf
+          cp mpv-clipboard-play/clipboard-play.conf mpv-easy-js/clipboard-play.conf
+          cp mpv-clipboard-play/es5/clipboard-play.js mpv-easy-js/clipboard-play.js
+          cp mpv-copy-screen/copy-screen.conf mpv-easy-js/copy-screen.conf
+          cp mpv-copy-screen/es5/copy-screen.js mpv-easy-js/copy-screen.js
+          cp mpv-copy-time/copy-time.conf mpv-easy-js/copy-time.conf
+          cp mpv-copy-time/es5/copy-time.js mpv-easy-js/copy-time.js
+          cp mpv-autoload/autoload.conf mpv-easy-js/autoload.conf
+          cp mpv-autoload/es5/autoload.js mpv-easy-js/autoload.js
           cp mpv-thumbfast/thumbfast.conf mpv-easy-js/thumbfast.conf
           cp mpv-thumbfast/es5/thumbfast.js mpv-easy-js/thumbfast.js
 

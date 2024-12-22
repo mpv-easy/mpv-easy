@@ -36,7 +36,7 @@ const {
 } = {
   ...defaultSubConfig,
   ...defaultTooltipConfig,
-  ...getOptions("mpv-translate", {
+  ...getOptions("translate", {
     "sub-font-size": {
       type: "number",
       key: "subFontSize",

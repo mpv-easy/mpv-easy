@@ -27,16 +27,16 @@ set -x MPV_SCRIPT_DIR /your_mpv_dir/portable_config/scripts ; pnpm run dev
 
 ## plugin
 
-- [mpv-anime4k](./mpv-anime4k/readme.md)
-- [mpv-autoload](./mpv-autoload/readme.md)
-- [mpv-clipboard-play](./mpv-clipboard-play/readme.md)
-- [mpv-copy-screen](./mpv-copy-screen/readme.md)
-- [mpv-copy-time](./mpv-copy-time/readme.md)
-- [mpv-thumbfast](./mpv-thumbfast/readme.md)
-- [mpv-play-with](./mpv-play-with/readme.md)
-- [mpv-translate](./mpv-translate/readme.md)
-- [mpv-cut](./mpv-cut/readme.md)
-- [mpv-crop](./mpv-crop/readme.md)
+- [anime4k](./mpv-anime4k/readme.md)
+- [autoload](./mpv-autoload/readme.md)
+- [clipboard-play](./mpv-clipboard-play/readme.md)
+- [copy-screen](./mpv-copy-screen/readme.md)
+- [copy-time](./mpv-copy-time/readme.md)
+- [thumbfast](./mpv-thumbfast/readme.md)
+- [play-with](./mpv-play-with/readme.md)
+- [translate](./mpv-translate/readme.md)
+- [cut](./mpv-cut/readme.md)
+- [crop](./mpv-crop/readme.md)
 
 ## short key
 

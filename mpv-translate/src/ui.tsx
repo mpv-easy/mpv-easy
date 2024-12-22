@@ -13,7 +13,7 @@ import {
 import React, { useEffect, useRef, useState } from "react"
 import { Box, Button, MpDomProps } from "@mpv-easy/react"
 import { google } from "./google"
-import { TrackInfoBackup, TrackInfoBackupMix, translate } from "./translate"
+import { TrackInfoBackup, TrackInfoBackupMix, translate } from "./tool"
 import { defaultSubConfig, SubConfig } from "./const"
 import { de2en, en2zh, WordInfo } from "./interactive-translate"
 

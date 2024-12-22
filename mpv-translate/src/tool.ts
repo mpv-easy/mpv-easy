@@ -1,5 +1,4 @@
 import {
-  cacheSync,
   command,
   existsSync,
   getCurrentSubtitle,

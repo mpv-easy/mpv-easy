@@ -2,7 +2,7 @@ import { build } from "esbuild"
 import fs from "node:fs"
 
 build({
-  entryPoints: ["./src/mpv-autoload.ts"],
+  entryPoints: ["./src/autoload.ts"],
   bundle: true,
   outdir: "bundle",
   minify: true,

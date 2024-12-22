@@ -6,7 +6,7 @@ In order to preserve the filters added by the user, first use the mpv command `s
 
 You need to install [ffmpeg](https://www.ffmpeg.org/download.html) and add ffmpeg to ```PATH```
 
-- Download the latest version of [mpv-crop.js](https://github.com/mpv-easy/mpv-easy/releases) and copy it to the mpv script directory, or use [mpsm](../mpv-mpsm/readme.md) `mpsm install mpv-crop`
+- Download the latest version of [crop.js](https://github.com/mpv-easy/mpv-easy/releases) and copy it to the mpv script directory, or use [mpsm](../mpv-mpsm/readme.md) `mpsm install mpv-crop`
 
 - Add configuration to input.conf [shortkey](https://github.com/mpv-easy/mpv-easy/tree/main/mpv-crop#shortkey)
 
@@ -18,15 +18,15 @@ By default, the shortcut key `C` adds the current time point to the segment, `es
 
 If the video file is `/a/b/c.mp4`, the output image file is `/a/b/c.time.x.y.w.h.webp`. If no output directory is configured, it will be saved to the user's desktop
 
-### mpv-crop
+### crop
 
 <div style="display: flex;">
-  <img src="../assets/img/mpv-crop-image.webp" alt="mpv-crop-image"/>
+  <img src="../assets/img/mpv-crop-image.webp" alt="crop-image"/>
 </div>
 
 ### mpv-easy
 
-Use mpv-cut to select the video segment, and then use mpv-crop to crop it.
+Use cut to select the video segment, and then use crop to crop it.
 
 
 ## shortkey
@@ -41,7 +41,7 @@ ESC       script-message cancel
 
 ## config
 
-config file: `mpv-crop.conf`
+config file: `crop.conf`
 
 
 ```conf

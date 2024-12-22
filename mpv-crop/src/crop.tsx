@@ -1,292 +1,187 @@
-import React, { useRef } from "react"
-import { Box, getDirection, MpDom } from "@mpv-easy/react"
+import "@mpv-easy/polyfill"
+import React, { useEffect, useRef, useState } from "react"
 import {
-  existsSync,
-  getDesktopDir,
-  getFileName,
-  getOsdSize,
-  getPropertyNative,
-  getPropertyNumber,
-  printAndOsd,
-  Rect,
-  VideoParams,
+  cropImage,
+  detectFfmpeg,
+  getOptions,
+  MousePos,
+  MpvPropertyTypeMap,
+  showNotification,
+  registerScriptMessage,
 } from "@mpv-easy/tool"
+import { Crop, defaultConfig, getCropImagePath, getCropRect } from "./index"
+import {
+  Box,
+  DefaultFps,
+  render,
+  useProperty,
+  usePropertyNumber,
+  usePropertyString,
+} from "@mpv-easy/react"
 
-function getLabelPos(
-  node: MpDom | null,
-  x: number,
-  y: number,
-  width: number,
-  height: number,
-  padding = 16,
-) {
-  if (!node) return { x: width, y: height }
-
-  const d = getDirection(x, y, width, height)
-
-  switch (d) {
-    case "left-bottom": {
-      return { x: x + padding, y: y - node.layoutNode.height - padding }
-    }
-    case "left-top": {
-      return { x: x + padding, y: y + padding }
-    }
-    case "right-top": {
-      return { x: x - node.layoutNode.width - padding, y: y + padding }
-    }
-    case "right-bottom": {
-      return {
-        x: x - node.layoutNode.width - padding,
-        y: y - node.layoutNode.height - padding,
-      }
-    }
-  }
-}
-
-type CropProps = {
-  mouseX: number
-  mouseY: number
-  lineWidth: number
-  lineColor: string
-  osdWidth: number
-  osdHeight: number
-  points: [number, number][]
-  maskColor: string
-  zIndex: number
-}
-
-function getMask(
-  points: [number, number][],
-  width: number,
-  height: number,
-  lineWidth: number,
-  mouseX: number,
-  mouseY: number,
-): Rect[] {
-  if (points.length === 0) {
-    return [new Rect(0, 0, width, height)]
-  }
-  const [[x1, y1]] = points
-  let x2 = x1
-  let y2 = y1
-  if (points.length === 1) {
-    x2 = mouseX
-    y2 = mouseY
-  }
-
-  if (points.length === 2) {
-    x2 = points[1][0]
-    y2 = points[1][1]
-  }
-
-  const top = Math.min(y1, y2)
-  const left = Math.min(x1, x2)
-  const bottom = Math.max(y1, y2)
-  const right = Math.max(x1, x2)
-
-  const topRect = new Rect(0, 0, width, top)
-  const leftRect = new Rect(0, top, left, bottom - top)
-  const rightRect = new Rect(right, top, width, bottom - top)
-  const bottomRect = new Rect(0, bottom, width, height)
-  return [topRect, leftRect, rightRect, bottomRect]
-}
-
-function getLabelText(
-  points: [number, number][],
-  mouseX: number,
-  mouseY: number,
-) {
-  if (points.length === 0) {
-    return `${mouseX | 0},${mouseY | 0}`
-  }
-  const [[x1, y1]] = points
-  let x2 = x1
-  let y2 = y1
-  if (points.length === 1) {
-    x2 = mouseX
-    y2 = mouseY
-  }
-
-  if (points.length === 2) {
-    x2 = points[1][0]
-    y2 = points[1][1]
-  }
-
-  const w = Math.abs(x2 - x1) | 0
-  const h = Math.abs(y2 - y1) | 0
-
-  return `${mouseX | 0},${mouseY | 0} ${w}x${h}`
-}
-
-export function Crop({
-  mouseX,
-  mouseY,
+const {
+  outputEventName,
+  cropEventName,
+  cancelEventName,
+  outputDirectory,
+  cropImageFormat,
   lineWidth,
   lineColor,
-  osdHeight,
-  osdWidth,
   maskColor,
-  points,
-  zIndex,
-}: CropProps) {
-  const labelRef = useRef<MpDom | null>(null)
-  const labelPos = getLabelPos(
-    labelRef.current,
-    mouseX,
-    mouseY,
-    osdWidth,
-    osdHeight,
-  )
+} = {
+  ...defaultConfig,
+  ...getOptions("crop", {
+    "crop-event-name": {
+      type: "string",
+      key: "cropEventName",
+    },
+    "output-event-name": {
+      type: "string",
+      key: "outputEventName",
+    },
+    "cancel-event-name": {
+      type: "string",
+      key: "cancelEventName",
+    },
+    "line-color": {
+      type: "color",
+      key: "lineColor",
+    },
+    "mask-color": {
+      type: "color",
+      key: "maskColor",
+    },
+    "line-width": {
+      type: "number",
+      key: "lineWidth",
+    },
+    "output-directory": {
+      type: "string",
+      key: "outputDirectory",
+    },
+    "crop-image-format": {
+      type: "string",
+      key: "cropImageFormat",
+    },
+  }),
+}
 
-  const label = getLabelText(points, mouseX, mouseY)
+function App() {
+  const [showCrop, setShowCrop] = useState(false)
+  const [points, setPoints] = useState<[number, number][]>([])
+  const osd = useProperty<MpvPropertyTypeMap["osd-dimensions"]>(
+    "osd-dimensions",
+    {
+      w: 0,
+      h: 0,
+    },
+  )[0]
 
-  const done = points.length === 2
+  const w = osd.w || 0
+  const h = osd.h || 0
+
+  const mousePos = useProperty<MousePos>("mouse-pos", {
+    x: 0,
+    y: 0,
+    hover: false,
+  })[0]
+  const x = mousePos.x || 0
+  const y = mousePos.y || 0
+  const path = usePropertyString("path", "")[0]
+  const timePos = usePropertyNumber("time-pos", 0)[0]
+  const cropRef = useRef<(() => void) | null>(null)
+
+  const hack = useState(0)[1]
+  cropRef.current = async () => {
+    if (!path.length) {
+      showNotification("video not found")
+      return
+    }
+    const ffmpeg = detectFfmpeg()
+    if (!ffmpeg) {
+      showNotification("ffmpeg not found")
+      return
+    }
+    if (points.length === 2) {
+      const rect = getCropRect(points)
+      if (!rect) {
+        if (!rect) {
+          showNotification("invalid video cropping region")
+          return
+        }
+      }
+      const outputPath = getCropImagePath(
+        path,
+        timePos,
+        cropImageFormat,
+        rect,
+        outputDirectory,
+      )
+      const ok = await cropImage(rect, outputPath, ffmpeg)
+      if (!ok) {
+        showNotification("failed to crop image")
+      } else {
+        showNotification("crop image finish")
+      }
+    }
+    setPoints([])
+    setShowCrop(false)
+  }
+
+  useEffect(() => {
+    registerScriptMessage(cropEventName, () => {
+      setPoints([])
+      setShowCrop(true)
+    })
+    registerScriptMessage(cancelEventName, () => {
+      setShowCrop(false)
+      setPoints([])
+    })
+    registerScriptMessage(outputEventName, () => {
+      cropRef.current?.()
+    })
+
+    const h = +setInterval(() => {
+      // FIXME: hot code for better performance
+      hack((i) => (i + 1) % 1000)
+    }, 1000 / DefaultFps)
+
+    return () => {
+      clearInterval(h)
+    }
+  }, [])
 
   return (
-    <Box position="absolute" width={osdWidth} height={osdHeight}>
-      {/* mask */}
-      {getMask(points, osdWidth, osdHeight, lineWidth, mouseX, mouseY).map(
-        (v, k) => (
-          <Box
-            key={k}
-            top={v.y}
-            left={v.x}
-            position="absolute"
-            pointerEvents="none"
-            backgroundColor={maskColor}
-            width={v.width}
-            height={v.height}
-            zIndex={zIndex}
-          />
-        ),
-      )}
-
-      {/* line */}
-      {!done && (
-        <Box
-          position="absolute"
-          top={mouseY}
-          width={osdWidth}
-          height={lineWidth}
-          backgroundColor={lineColor}
-          zIndex={zIndex + 1}
-        />
-      )}
-      {!done && (
-        <Box
-          position="absolute"
-          left={mouseX}
-          width={lineWidth}
-          height={osdHeight}
-          backgroundColor={lineColor}
-          zIndex={zIndex + 1}
-        />
-      )}
-
-      {/* label */}
-      {!done && (
-        <Box
-          ref={labelRef}
-          position="absolute"
-          left={labelPos.x}
-          top={labelPos.y}
-          zIndex={zIndex + 2}
-          text={label}
-          hide={!labelRef.current}
-          pointerEvents="none"
-          // backgroundColor={maskColor}
-          // display="flex"
-          // justifyContent="center"
-          // alignContent="stretch"
-          // textAlign="center"
-          // alignItems="center"
+    <Box
+      position="absolute"
+      width={w}
+      height={h}
+      onClick={() => {
+        const newPoints = [...points]
+        newPoints.push([x, y])
+        while (newPoints.length > 2) {
+          newPoints.shift()
+        }
+        setPoints(newPoints)
+      }}
+    >
+      {showCrop && (
+        <Crop
+          mouseX={x}
+          mouseY={y}
+          lineWidth={lineWidth}
+          lineColor={lineColor}
+          osdWidth={w}
+          osdHeight={h}
+          points={points}
+          maskColor={maskColor}
+          zIndex={1024}
         />
       )}
     </Box>
   )
 }
 
-export function getCropImagePath(
-  videoPath: string,
-  time: number,
-  imageFormat: string,
-  rect: Rect,
-  outputDirectory: string,
-) {
-  const dir = existsSync(outputDirectory) ? outputDirectory : getDesktopDir()
-  const name = getFileName(videoPath)!
-  const list = name.split(".")
-  const ext = imageFormat || "webp"
-  const prefix = list.slice(0, -1).join(".")
-  const nameList = [
-    prefix,
-    time | 0,
-    rect.x | 0,
-    rect.y | 0,
-    rect.width | 0,
-    rect.height | 0,
-    ext,
-  ]
-  return `${dir}/${nameList.join(".")}`
-}
-
-export function getCropRect(points: [number, number][]): Rect | undefined {
-  const [[x1, y1], [x2, y2]] = points
-  const top = Math.min(y1, y2)
-  const left = Math.min(x1, x2)
-  const bottom = Math.max(y1, y2)
-  const right = Math.max(x1, x2)
-  const zoom = 2 ** getPropertyNumber("video-zoom", 0)
-  const osd = getOsdSize()!
-  const osdRect = new Rect(0, 0, osd.width, osd.height)
-  const osdCropRect = new Rect(left, top, right - left, bottom - top)
-  const videoParams = getPropertyNative<VideoParams>("video-params")!
-  const videoTargetParams = getPropertyNative<VideoParams>(
-    "video-target-params",
-  )!
-  if (
-    videoTargetParams.w <= osdRect.width &&
-    videoTargetParams.h <= osdRect.height &&
-    zoom <= 1
-  ) {
-    const videoScaleX = videoParams.w / videoTargetParams.w
-    const videoScaleY = videoParams.h / videoTargetParams.h
-    const videoTargetRect = new Rect(
-      0,
-      0,
-      videoTargetParams.w,
-      videoTargetParams.h,
-    )
-    const videoCenterRect = osdRect.placeCenter(videoTargetRect)
-    const cropRect = videoCenterRect.intersection(osdCropRect)
-    if (!cropRect) {
-      return undefined
-    }
-    const x = (cropRect.x - videoCenterRect.x) * videoScaleX
-    const y = (cropRect.y - videoCenterRect.y) * videoScaleY
-    const w = cropRect.width * videoScaleX
-    const h = cropRect.height * videoScaleY
-    return new Rect(x, y, w, h)
-  }
-  const aspect = videoTargetParams.w / videoTargetParams.h
-  let scaleW = videoTargetParams.w
-  let scaleH = videoTargetParams.h
-  if (aspect <= videoParams.aspect) {
-    scaleH = videoTargetParams.w / videoParams.aspect
-  } else {
-    scaleW = videoTargetParams.w / videoParams.aspect
-  }
-  const sx = zoom * (scaleW / videoParams.w)
-  const sy = zoom * (scaleH / videoParams.h)
-  const videoTargetRect = new Rect(0, 0, videoParams.w * sx, videoParams.h * sy)
-  const videoCenterRect = osdRect.placeCenter(videoTargetRect)
-  const cropRect = videoCenterRect.intersection(osdCropRect)
-  if (!cropRect) {
-    return undefined
-  }
-  const x = (cropRect.x - videoCenterRect.x) / sx
-  const y = (cropRect.y - videoCenterRect.y) / sy
-  const w = cropRect.width / sx
-  const h = cropRect.height / sy
-  return new Rect(x, y, w, h)
-}
+render(<App />, {
+  // showFps: true,
+})

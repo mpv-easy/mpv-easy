@@ -5,7 +5,7 @@ import {
   SubConfig,
   TooltipConfig,
 } from "./const"
-export * from "./translate"
+export * from "./tool"
 export * from "./bing"
 export * from "./google"
 export * from "./ui"

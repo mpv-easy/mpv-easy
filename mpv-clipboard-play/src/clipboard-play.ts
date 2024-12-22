@@ -7,7 +7,6 @@ import {
 import { clipboardPlay, defaultConfig, pluginName } from "./index"
 import {
   pluginName as autoloadName,
-  getPlayableList,
   defaultConfig as autoloadConfig,
 } from "@mpv-easy/autoload"
 import {
@@ -17,7 +16,7 @@ import {
 
 const { clipboardPlayEventName } = {
   ...defaultConfig,
-  ...getOptions("mpv-clipboard-play", {
+  ...getOptions("clipboard-play", {
     "clipboard-play-event-name": {
       type: "string",
       key: "clipboardPlayEventName",

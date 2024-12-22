@@ -2,7 +2,7 @@ import { build } from "esbuild"
 import fs from "node:fs"
 
 build({
-  entryPoints: ["./src/mpv-crop.tsx"],
+  entryPoints: ["./src/crop.tsx"],
   bundle: true,
   outdir: "bundle",
   minify: true,

@@ -2,7 +2,7 @@ import { build } from "esbuild"
 import fs from "node:fs"
 
 build({
-  entryPoints: ["./src/mpv-copy-time.ts"],
+  entryPoints: ["./src/copy-time.ts"],
   bundle: true,
   outdir: "bundle",
   minify: true,

@@ -5,7 +5,7 @@ import type { SystemApi } from "@mpv-easy/plugin"
 import { pluginName } from "./main"
 import { createDefaultThemeConfig } from "./mpv-easy-theme"
 import { getState, dispatch, store } from "./models"
-import { render, RenderConfig } from "@mpv-easy/react"
+import { RenderConfig } from "@mpv-easy/react"
 
 export function runMpvEasy(renderConfig: Partial<RenderConfig> = {}) {
   const customConfig = getConfig()
