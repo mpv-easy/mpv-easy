@@ -395,22 +395,12 @@ jobs:
           cp mpy-easy-windows/mpy-easy-windows.zip release/mpy-easy-windows.zip
           cp mpy-easy-windows-full/mpy-easy-windows-full.zip release/mpy-easy-windows-full.zip
           cp mpy-easy-windows-deno-full/mpy-easy-windows-deno-full.zip release/mpy-easy-windows-deno-full.zip
-          cp mpv-translate/es5/mpv-translate.js release/mpv-translate.js
-          cp mpv-translate/mpv-translate.conf release/mpv-translate.conf
-          cp mpv-cut/es5/mpv-cut.js release/mpv-cut.js
-          cp mpv-cut/mpv-cut.conf release/mpv-cut.conf
-          cp mpv-crop/es5/mpv-crop.js release/mpv-crop.js
-          cp mpv-crop/mpv-crop.conf release/mpv-crop.conf
-
-          cp mpv-easy-react/es5/mpv-easy-es5.js release/mpv-easy-es5.js
-          cp mpv-easy-react/bundle/mpv-easy-es6.js release/mpv-easy-es6.js
-
+          cp mpv-easy-js/* release/
           cp mpv-deno-dist/mpv-deno-windows.dll release/mpv-deno-windows.dll
           cp mpv-easy-ext-dist/mpv-easy-ext-macos release/mpv-easy-ext-macos
           cp mpv-easy-ext-dist/mpv-easy-ext-linux release/mpv-easy-ext-linux
           cp mpv-easy-ext-dist/mpv-easy-ext-android release/mpv-easy-ext-android
           cp mpv-easy-ext-dist/mpv-easy-ext-windows.exe release/mpv-easy-ext-windows.exe
-          cp mpv-play-with/dist/mpv-easy-play-with.user.js release/mpv-easy-play-with.user.js
           cp mpv-easy-play-with-dist/mpv-easy-play-with-macos release/mpv-easy-play-with-macos
           cp mpv-easy-play-with-dist/mpv-easy-play-with-linux release/mpv-easy-play-with-linux
           cp mpv-easy-play-with-dist/mpv-easy-play-with-android release/mpv-easy-play-with-android
