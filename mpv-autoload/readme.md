@@ -5,7 +5,7 @@ https://github.dev/gaesa/mpv-autoload
 
 
 ## install
-- Download the latest version of [mpv-autoload.js](https://github.com/mpv-easy/mpv-easy/releases) and copy it to the mpv script directory
+- Download the latest version of [autoload.js](https://github.com/mpv-easy/mpv-easy/releases) and copy it to the mpv script directory
 
 ## todo
 - [ ] load similar video/audio

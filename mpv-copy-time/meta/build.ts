@@ -1,7 +1,7 @@
 import { writeFileSync, readFileSync } from "node:fs"
 
-const meta = "./meta/mpv-copy-time.meta.js"
-const files = ["./bundle/mpv-copy-time.js", "./es5/mpv-copy-time.js"]
+const meta = "./meta/copy-time.meta.js"
+const files = ["./bundle/copy-time.js", "./es5/copy-time.js"]
 
 const metaStr = readFileSync(meta)
 for (const p of files) {

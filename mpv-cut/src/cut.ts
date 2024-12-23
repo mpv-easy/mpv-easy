@@ -18,7 +18,7 @@ import { hideNotification, showNotification } from "@mpv-easy/tool"
 
 const { outputEventName, cutEventName, cancelEventName, outputDirectory } = {
   ...defaultConfig,
-  ...getOptions("mpv-cut", {
+  ...getOptions("cut", {
     "cut-event-name": {
       type: "string",
       key: "cutEventName",

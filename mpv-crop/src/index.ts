@@ -1,6 +1,6 @@
 import { type SystemApi, definePlugin } from "@mpv-easy/plugin"
 import type { PluginContext } from "@mpv-easy/plugin"
-export * from "./crop"
+export * from "./ui"
 
 export const pluginName = "@mpv-easy/crop"
 

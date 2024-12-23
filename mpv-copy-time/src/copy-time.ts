@@ -4,7 +4,7 @@ import { copyTime, defaultConfig } from "./index"
 
 const { copyTimeEventName } = {
   ...defaultConfig,
-  ...getOptions("mpv-copy-time", {
+  ...getOptions("copy-time", {
     "copy-time-event-name": {
       type: "string",
       key: "copyTimeEventName",

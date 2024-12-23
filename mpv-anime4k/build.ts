@@ -2,11 +2,13 @@ import { build } from "esbuild"
 import fs from "node:fs"
 
 build({
-  entryPoints: ["./src/translate.tsx"],
+  entryPoints: ["./src/anime4k.ts"],
   bundle: true,
   outdir: "bundle",
   minify: true,
-
+  loader: {
+    ".glsl": "text",
+  },
   charset: "utf8",
   define: {
     "process.env.NODE_ENV": '"production"',

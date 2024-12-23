@@ -4,7 +4,7 @@ Use shortcut key(default ctrl+v) to play video from clipboard, supports file, we
 ## install
 You need to install [yt-dlp](https://github.com/yt-dlp/yt-dlp?tab=readme-ov-file#installation) and add yt-dlp to ```PATH``` or put yt-dlp in the same directory as mpv.exe
 
-- Download the latest version of [mpv-clipboard-play.js](https://github.com/mpv-easy/mpv-easy/releases) and copy it to the mpv script directory
+- Download the latest version of [clipboard-play.js](https://github.com/mpv-easy/mpv-easy/releases) and copy it to the mpv script directory
 - Add configuration to input.conf [shortkey](https://github.com/mpv-easy/mpv-easy/tree/main/mpv-clipboard-play#shortkey)
 
 ## Supported link formats
