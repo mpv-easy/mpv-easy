@@ -17,3 +17,9 @@ export function getExtName(path: string): string | undefined {
 export function windowsPath(path: string) {
   return path.replaceAll("//", "\\").replaceAll("/", "\\")
 }
+
+export function replaceExt(path: string, ext: string) {
+  const list = path.split(".").slice(0, -1)
+  list.push(ext)
+  return list.join(".")
+}

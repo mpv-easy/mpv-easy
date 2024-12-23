@@ -31,7 +31,10 @@ export const SubtitleTrack = () => {
           setPropertyNative("sid", "no")
         } else {
           dispatch.setSid(id)
-          setPropertyNative("sid", "yes")
+
+          // FIXME: no need to set yes in 0.39
+          // setPropertyNative("sid", "yes")
+
           setPropertyNative("sid", id)
         }
         e.stopPropagation()

@@ -10,86 +10,85 @@ import { existsSync } from "./fs"
 import {
   commandv,
   getProperty,
-  getPropertyBool,
   getPropertyNative,
-  getPropertyNumber,
-  getPropertyString,
   joinPath,
   writeFile,
 } from "./mpv"
-import { getFileName } from "./path"
+import { getFileName, replaceExt } from "./path"
 import type { TrackItem } from "./type"
 import { getTmpDir } from "./tmp"
 import { isYtdlp } from "./yt-dlp"
 import { detectFfmpeg } from "./ffmpeg"
 
-export async function loadRemoteSubtitle(path = getProperty("path")) {
-  if (!path?.length || isYtdlp(path)) {
-    return
-  }
-  const trackList = (getPropertyNative<TrackItem[]>("track-list") || []).filter(
-    (i) => i.type === "sub",
-  )
-  if (isRemote(path)) {
-    const list = SubtitleTypes.map((i) => {
-      const s = path.split(".").slice(0, -1)
-      s.push(i)
-      return s.join(".")
-    })
-    const tmp = getTmpDir()
-    for (const url of list) {
-      const name = getFileName(url)
-      if (!name?.length) {
-        continue
-      }
-
-      if (trackList.find((i) => i.title === name)) {
-        continue
-      }
-
-      try {
-        const resp = await fetch(url)
-
-        if (resp.status !== 200 || !resp.text?.length) {
-          continue
-        }
-
-        const text = await resp.text()
-        if (!text.length) {
-          continue
-        }
-        const subPath = joinPath(tmp, name)
-        writeFile(subPath, text)
-        commandv("sub-add", subPath)
-      } catch (e) {
-        print("loadRemoteSubtitle error:", e)
-      }
+export function loadLocalSubtitle(path: string) {
+  const list = SubtitleTypes.map((i) => {
+    return replaceExt(path, i)
+  })
+  const trackList = getSubtitleTracks()
+  for (const url of list) {
+    const name = getFileName(url)
+    if (trackList.find((i) => i.title === name)) {
+      continue
     }
-  } else {
-    const list = SubtitleTypes.map((i) => {
-      const s = path.split(".").slice(0, -1)
-      s.push(i)
-      return s.join(".")
-    })
-    for (const url of list) {
-      const name = getFileName(url)
-      if (trackList.find((i) => i.title === name)) {
+    if (existsSync(url) && isSubtitle(url)) {
+      if (trackList.find((i) => i.externalFilename === url)) {
         continue
       }
-      if (existsSync(url) && isSubtitle(url)) {
-        commandv("sub-add", url)
-      }
+
+      commandv("sub-add", url)
     }
   }
 }
+
+// FIXME: remove the synchronous version to prevent blocking UI rendering when loading remote subtitles
+// export async function loadRemoteSubtitle(path = getProperty("path")) {
+//   if (!path?.length || isYtdlp(path)) {
+//     return
+//   }
+//   if (isRemote(path)) {
+//     const list = SubtitleTypes.map((i) => {
+//       const s = path.split(".").slice(0, -1)
+//       s.push(i)
+//       return s.join(".")
+//     })
+//     const tmp = getTmpDir()
+//     for (const url of list) {
+//       const name = getFileName(url)
+//       if (!name?.length) {
+//         continue
+//       }
+//       const trackList = getSubtitleTracks()
+//       if (trackList.find((i) => i.title === name)) {
+//         continue
+//       }
+
+//       try {
+//         const resp = await fetch(url)
+
+//         if (resp.status !== 200 || !resp.text?.length) {
+//           continue
+//         }
+
+//         const text = await resp.text()
+//         if (!text.length) {
+//           continue
+//         }
+//         const subPath = joinPath(tmp, name)
+//         writeFile(subPath, text)
+//         commandv("sub-add", subPath)
+//       } catch (e) {
+//         print("loadRemoteSubtitle error:", e)
+//       }
+//     }
+//   } else {
+//     loadLocalSubtitle(path)
+//   }
+// }
 
 export async function loadRemoteSubtitleAsync(path = getProperty("path")) {
   if (!path?.length || isYtdlp(path)) {
     return
   }
-  const trackList = (getPropertyNative<TrackItem[]>("track-list") || []).filter(
-    (i) => i.type === "sub",
-  )
   if (isRemote(path)) {
     const list = SubtitleTypes.map((i) => {
       const s = path.split(".").slice(0, -1)
@@ -103,6 +102,7 @@ export async function loadRemoteSubtitleAsync(path = getProperty("path")) {
         continue
       }
 
+      const trackList = getSubtitleTracks()
       if (trackList.find((i) => i.title === name)) {
         continue
       }
@@ -126,20 +126,7 @@ export async function loadRemoteSubtitleAsync(path = getProperty("path")) {
       }
     }
   } else {
-    const list = SubtitleTypes.map((i) => {
-      const s = path.split(".").slice(0, -1)
-      s.push(i)
-      return s.join(".")
-    })
-    for (const url of list) {
-      const name = getFileName(url)
-      if (trackList.find((i) => i.title === name)) {
-        continue
-      }
-      if (existsSync(url)) {
-        commandv("sub-add", url)
-      }
-    }
+    loadLocalSubtitle(path)
   }
 }
 
@@ -154,27 +141,25 @@ export type SubtitleTrack = {
 
 export function getSubtitleTracks(): SubtitleTrack[] {
   const tracks: SubtitleTrack[] = []
-  const trackCount = getPropertyNumber("track-list/count") || 0
-  for (let i = 0; i < trackCount; i++) {
-    const type = getPropertyString(`track-list/${i}/type`)
-    if (type === "sub") {
-      const title = getPropertyString(`track-list/${i}/title`)
-      const lang = getPropertyString(`track-list/${i}/lang`)
-      const selected = getPropertyBool(`track-list/${i}/selected`)
-      const external = getPropertyBool(`track-list/${i}/external`)
-      const id = getPropertyNumber(`track-list/${i}/id`) || 0
-      const externalFilename = getPropertyString(
-        `track-list/${i}/external-filename`,
-      )
-      tracks.push({
-        title,
-        lang,
-        selected,
-        id,
-        external,
-        externalFilename,
-      })
-    }
+  const list = getPropertyNative<TrackItem[]>("track-list", []).filter(
+    (i) => i.type === "sub",
+  )
+  for (let i = 0; i < list.length; i++) {
+    const item = list[i]
+    const title = item.title
+    const lang = item.lang
+    const selected = item.selected
+    const external = item.external
+    const id = item.id
+    const externalFilename = item["external-filename"]
+    tracks.push({
+      title,
+      lang,
+      selected,
+      id,
+      external,
+      externalFilename,
+    })
   }
 
   return tracks

@@ -107,9 +107,6 @@ export const Easy = (props: Partial<EasyProps>) => {
       }
     }
 
-    dispatch.addHistory(path)
-    loadRemoteSubtitleAsync(path)
-
     registerScriptMessage("open-dialog", () => {
       const v = openDialog()[0]
       if (v) {

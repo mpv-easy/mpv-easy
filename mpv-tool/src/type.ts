@@ -315,6 +315,7 @@ export type TrackItem = {
   "src-id": number
   type: "video" | "audio" | "image" | "sub" | (string & {})
   "visual-impaired": boolean
+  "external-filename"?: string
 }
 
 export type Geometry = {

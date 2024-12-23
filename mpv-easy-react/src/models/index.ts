@@ -6,7 +6,6 @@ import {
   type MousePos,
   command,
   setPropertyBool,
-  setPropertyString,
   type VideoParams,
   updatePlaylist,
   getPropertyString,
@@ -19,11 +18,11 @@ import {
   MpvPropertyTypeMap,
   getMpvPlaylist,
   normalize,
-  loadRemoteSubtitle,
   dirname,
   getExtName,
   setPropertyNumber,
   loadfile,
+  loadRemoteSubtitleAsync,
 } from "@mpv-easy/tool"
 import type { Language } from "@mpv-easy/i18n"
 import { type ThemeMode, type UIName, PlayMode } from "../mpv-easy-theme"
@@ -387,7 +386,7 @@ export function syncPlayer(store: Store) {
     v = normalize(v ?? "")
     if (v?.length) {
       dispatch.addHistory(v)
-      loadRemoteSubtitle(v)
+      loadRemoteSubtitleAsync(v)
       dispatch.setPath(v)
       const d = dirname(v)
       if (!d) {
