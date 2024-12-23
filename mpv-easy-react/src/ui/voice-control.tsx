@@ -46,7 +46,8 @@ export const VoiceControl: ForwardRefExoticComponent<
     previewBottom + volumeStyle.previewCursorSize / 2 / boxHeight > volumeHeight
       ? button.color
       : volumeStyle.backgroundColor
-
+  // FIXME: make icon button can hold three-digit numbers like 100
+  const volumeFontSize = (smallFontSize.fontSize * 0.75) & ~7
   return (
     osdH > wrapHeight && (
       <Box
@@ -80,7 +81,7 @@ export const VoiceControl: ForwardRefExoticComponent<
       >
         <Box
           id="voice-control-volume"
-          fontSize={smallFontSize.fontSize}
+          fontSize={volumeFontSize}
           text={volume.toFixed(0).toString()}
           width={iconSize}
           height={iconSize}
