@@ -4,7 +4,15 @@ https://github.com/bloc97/Anime4K/blob/master/md/GLSL_Instructions_Windows_MPV.m
 
 https://github.com/bloc97/Anime4K/blob/master/md/Template/GLSL_Windows_High-end/input.conf
 
-## usage
+
+## install
+
+
+- Download the latest version of [anime4k.js](https://github.com/mpv-easy/mpv-easy/releases) and copy it to the mpv script directory
+
+- Add configuration to input.conf [shortkey](https://github.com/mpv-easy/mpv-easy/tree/main/mpv-anime4k#shortkey)
+-
+## shortkey
 
 Add config to `input.conf`
 

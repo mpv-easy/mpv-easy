@@ -50,7 +50,7 @@ export const defaultScaleFactor = 1
 export const defaultThumbPath = getTmpPath("bgra")
 
 export const defaultThumbStartTime = 0
-export const defaultLifetime = 10000
+export const defaultLifetime = 10
 export const defaultConfig: ThumbFastConfig = {
   path: defaultThumbPath,
   format: defaultThumbFormat,
@@ -264,7 +264,7 @@ export class ThumbFast {
     if (!this.prevRun) {
       this.prevRun = now
     }
-    if (now - this.prevRun > this.lifetime) {
+    if (this.lifetime && now - this.prevRun > this.lifetime * 1000) {
       this.prevRun = now
       this.exit()
       this.subprocessId = this.startIpc()

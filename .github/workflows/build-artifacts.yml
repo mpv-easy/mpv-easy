@@ -272,6 +272,8 @@ jobs:
           cp mpv-autoload/es5/autoload.js mpv-easy-js/autoload.js
           cp mpv-thumbfast/thumbfast.conf mpv-easy-js/thumbfast.conf
           cp mpv-thumbfast/es5/thumbfast.js mpv-easy-js/thumbfast.js
+          cp mpv-anime4k/anime4k.conf mpv-easy-js/anime4k.conf
+          cp mpv-anime4k/es5/anime4k.js mpv-easy-js/anime4k.js
 
       - name: Upload
         uses: actions/upload-artifact@v4

@@ -4,7 +4,6 @@ import {
   commandv,
   osdMessage,
   registerScriptMessage,
-  removeKeyBinding,
 } from "@mpv-easy/tool"
 
 export const pluginName = "@mpv-easy/anime4k"
@@ -94,35 +93,41 @@ function clearShader() {
   // commandv('no-osd', 'change-list', 'glsl-shaders', 'clr', "''")
   command(`no-osd change-list glsl-shaders clr ''`)
 }
+
+export function anime4k(
+  config: Anime4kConfig,
+  onChange?: (config: Anime4kConfig) => void,
+) {
+  // const config = context[pluginName]
+  const { value } = config.shaders[config.current]
+  if (!config.current) {
+    toggle(value)
+  } else {
+    clearShader()
+  }
+  for (let i = 0; i < config.shaders.length; i++) {
+    const { eventName: key, value, title } = config.shaders[i]
+    registerScriptMessage(key, () => {
+      if (value.length) {
+        toggle(value)
+      } else {
+        clearShader()
+      }
+      if (config.osdDuration) {
+        osdMessage(title, config.osdDuration)
+      }
+      config.current = i
+      onChange?.(config)
+    })
+  }
+}
 export default definePlugin((context, api) => ({
   name: pluginName,
   create() {
-    const config = context[pluginName]
-    const { value } = config.shaders[config.current]
-    if (!config.current) {
-      toggle(value)
-    } else {
-      clearShader()
-    }
-    for (let i = 0; i < config.shaders.length; i++) {
-      const { eventName: key, value, title } = config.shaders[i]
-      registerScriptMessage(key, () => {
-        if (value.length) {
-          toggle(value)
-        } else {
-          clearShader()
-        }
-        if (config.osdDuration) {
-          osdMessage(title, config.osdDuration)
-        }
-        config.current = i
-        api.saveConfig(context)
-      })
-    }
+    anime4k(context[pluginName], (config) => {
+      context[pluginName] = config
+      api.saveConfig(context)
+    })
   },
-  destroy() {
-    for (const { eventName: key } of context[pluginName].shaders) {
-      removeKeyBinding(`${pluginName}/${key}`)
-    }
-  },
+  destroy() {},
 }))
