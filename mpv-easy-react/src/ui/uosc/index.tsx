@@ -25,7 +25,7 @@ export const Uosc: ForwardRefExoticComponent<
       ref={ref}
       id="uosc"
       justifyContent="end"
-      onMouseDown={(e) => e.stopPropagation()}
+      // onMouseDown={(e) => e.stopPropagation()}
     >
       <UoscControl {...props} height={h} />
       <Progress {...props} height={h} id="uosc-progress" />
