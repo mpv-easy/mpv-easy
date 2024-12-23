@@ -10,10 +10,9 @@ import clipboardPlayPlugin, {
   pluginName as clipboardPlayName,
 } from "@mpv-easy/clipboard-play"
 
-import easyPlugin, {
-  defaultConfig as easyConfig,
-  pluginName as easyName,
-} from "./main"
+import easyPlugin from "./main"
+
+import { defaultConfig as easyConfig, pluginName as easyName } from "./const"
 
 import anime4kPlugin, {
   defaultConfig as anime4kConfig,
@@ -82,7 +81,7 @@ export type Experimental = {
   toolbar: boolean
 }
 
-export const plugins = [
+export const getPlugins = () => [
   clipboardPlayPlugin,
   anime4kPlugin,
   copyTimePlugin,

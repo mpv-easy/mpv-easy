@@ -9,8 +9,8 @@ import {
 } from "./mpv-easy-theme"
 import { syncPlayer, type Store } from "./models"
 import throttle from "lodash-es/throttle"
-export const pluginName = "@mpv-easy/easy-react"
-
+export * from "./const"
+import { pluginName } from "./const"
 declare module "@mpv-easy/plugin" {
   interface PluginContext {
     [pluginName]: EasyConfig
@@ -22,8 +22,6 @@ declare module "@mpv-easy/plugin" {
     store: Store
   }
 }
-
-export { defaultConfig } from "./mpv-easy-theme"
 
 export default definePlugin((context, api) => ({
   name: pluginName,

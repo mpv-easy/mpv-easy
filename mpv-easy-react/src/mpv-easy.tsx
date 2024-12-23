@@ -1,4 +1,4 @@
-import { getConfig, plugins, saveConfig } from "./context"
+import { getConfig, getPlugins, saveConfig } from "./context"
 import type { EnablePlugin } from "./context"
 import { print, registerEvent } from "@mpv-easy/tool"
 import type { SystemApi } from "@mpv-easy/plugin"
@@ -23,6 +23,7 @@ export function runMpvEasy(renderConfig: Partial<RenderConfig> = {}) {
     store,
   }
   customConfig.renderConfig = renderConfig
+  const plugins = getPlugins()
   for (const definePlugin of plugins) {
     const plugin = definePlugin(customConfig, api)
     if (
