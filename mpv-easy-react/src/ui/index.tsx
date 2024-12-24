@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react"
+import React, { useEffect, useReducer, useRef, useState } from "react"
 import { Uosc } from "./uosc"
 import { Osc } from "./osc"
 import { Oscx } from "./oscx"
@@ -226,7 +226,7 @@ export const Easy = (props: Partial<EasyProps>) => {
     getColor("sub-outline-color") ?? translateStyle.subOutlineColor
   const h = useSelector(cellSizeSelector)
   const font = useSelector(fontSelector)
-
+  const update = useReducer((prev) => (prev + 1) % 1000, 0)[1]
   return (
     <>
       <Box
@@ -238,8 +238,12 @@ export const Easy = (props: Partial<EasyProps>) => {
         justifyContent="space-between"
         alignItems="start"
         position="relative"
-        // position="absolute"
         onMouseDown={(e) => {
+          setTimeout(() => {
+            // FIXME: update tooltip
+            update()
+          })
+
           if (showCrop) {
             if (cropPoints.length < 2) {
               dispatch.setCropPoints([...cropPoints, [mousePos.x, mousePos.y]])

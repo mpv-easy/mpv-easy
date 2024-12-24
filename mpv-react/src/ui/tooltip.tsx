@@ -145,24 +145,24 @@ export const Tooltip = ({
     y: 0,
   })
   const tooltipRef = useRef<MpDom>(null)
-  const targetRef = useRef<MpDom>(undefined)
+  let targetRef: MpDom | undefined = undefined
   if (!mousePos) {
-    targetRef.current = undefined
+    targetRef = undefined
   } else {
     const { x, y, hover } = mousePos
     if (!hover) {
-      targetRef.current = undefined
+      targetRef = undefined
     } else {
-      targetRef.current = getTooltipElement(getRootNode(), x, y)
+      targetRef = getTooltipElement(getRootNode(), x, y)
     }
   }
 
   useEffect(() => {
-    if (!targetRef.current) {
+    if (!targetRef) {
       setShow(false)
       return
     }
-    const title = targetRef.current?.attributes.title
+    const title = targetRef?.attributes.title
     if (title?.length && mousePos) {
       const direction = getDirection(
         mousePos.x,
@@ -182,12 +182,7 @@ export const Tooltip = ({
     } else {
       setShow(false)
     }
-  }, [
-    mousePos?.x,
-    mousePos?.y,
-    mousePos?.hover,
-    targetRef.current?.attributes.text,
-  ])
+  }, [mousePos?.x, mousePos?.y, mousePos?.hover, targetRef?.attributes.text])
 
   return (
     <Box
