@@ -335,6 +335,7 @@ export function syncPlayer(store: Store) {
   const osdDimensionsProp = new PropertyNative<
     MpvPropertyTypeMap["osd-dimensions"]
   >("osd-dimensions")
+  const mediaTitleProp = new PropertyString("media-title")
 
   const rerender = store.rerender
 
@@ -360,6 +361,7 @@ export function syncPlayer(store: Store) {
     windowMinimizedProp,
     videoZoomProp,
     pathProp,
+    mediaTitleProp,
   ]
   function updateProp() {
     const state = store.getState()
@@ -407,5 +409,9 @@ export function syncPlayer(store: Store) {
     }
   })
 
+  mediaTitleProp.observe((_, v) => {
+    // wait yt-dlp update media-title
+    dispatch.addHistory(pathProp.value)
+  })
   updateProp()
 }

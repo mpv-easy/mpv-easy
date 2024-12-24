@@ -139,6 +139,7 @@ export type EasyConfig = {
   }
   history: { path: string; name: string }[]
   player: {
+    "media-title": string
     "playlist-play-index": number
     seekable: boolean
     "sub-scale": number
@@ -456,6 +457,7 @@ export const defaultState: EasyConfig["state"] = {
 }
 
 export const defaultPlayer: EasyConfig["player"] = {
+  "media-title": "",
   "playlist-play-index": 0,
   pause: false,
   seekable: false,
