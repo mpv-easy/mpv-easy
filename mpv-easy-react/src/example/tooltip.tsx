@@ -1,9 +1,10 @@
-import { Box, Tooltip } from "@mpv-easy/react"
+import { Box, Tooltip, useMousePos } from "@mpv-easy/react"
 import React from "react"
 
 const size = 400
 const dark = "#000000A0"
 export function TooltipBox() {
+  const mousePos = useMousePos()
   return (
     <Box id="tooltip-main" title="tooltip-main" width={"100%"} height={"100%"}>
       <Box
@@ -44,7 +45,8 @@ export function TooltipBox() {
       />
 
       <Tooltip
-        tooltipThrottle={300}
+        // tooltipThrottle={300}
+        mousePos={mousePos}
         color="#00FFFF"
         backgroundColor="#00FF00"
       />

@@ -33,7 +33,7 @@ import {
 } from "@mpv-easy/anime4k"
 import { translate, pluginName as translateName } from "@mpv-easy/translate"
 import { createDefaultContext } from "../context"
-import { getVideoName } from "../common"
+import { getVideoName, getVideoTitle } from "../common"
 import { defineStore } from "./easy-store"
 import isEqual from "lodash-es/isEqual"
 import { getPlayableList } from "@mpv-easy/autoload"
@@ -162,6 +162,8 @@ const store = defineStore({
       if (!isRemote(path) && !existsSync(path)) {
         return state
       }
+      // const name =
+      //   (isRemote(path) ? getVideoTitle(path) : getVideoName(path)) || ""
       const history = state[pluginName].history || []
       const index = history.findIndex((i) => i.path === path)
 
@@ -169,6 +171,7 @@ const store = defineStore({
       if (index >= 0) {
         newHistory.splice(index, 1)
       }
+      // newHistory.unshift({ path, name })
       newHistory.unshift({ path, name: getVideoName(path) })
 
       const mode = state[pluginName].mode
@@ -385,9 +388,10 @@ export function syncPlayer(store: Store) {
     const state = store.getState()
     v = normalize(v ?? "")
     if (v?.length) {
-      dispatch.addHistory(v)
-      loadRemoteSubtitleAsync(v)
       dispatch.setPath(v)
+      loadRemoteSubtitleAsync(v)
+      dispatch.addHistory(v)
+
       const d = dirname(v)
       if (!d) {
         return

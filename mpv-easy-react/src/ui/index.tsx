@@ -229,22 +229,6 @@ export const Easy = (props: Partial<EasyProps>) => {
 
   return (
     <>
-      <Tooltip
-        id="tooltip"
-        backgroundColor={tooltip.backgroundColor}
-        font={font}
-        fontSize={smallFontSize.fontSize}
-        color={tooltip.color}
-        padding={smallFontSize.padding}
-        display="flex"
-        justifyContent="center"
-        alignItems="center"
-        zIndex={style[mode].tooltip.zIndex}
-        maxWidth={style[mode].tooltip.maxWidth}
-        height="auto"
-        width="auto"
-      />
-
       <Box
         id="mpv-easy-main"
         display="flex"
@@ -280,6 +264,23 @@ export const Easy = (props: Partial<EasyProps>) => {
           }
         }}
       >
+        <Tooltip
+          id="tooltip"
+          backgroundColor={tooltip.backgroundColor}
+          font={font}
+          fontSize={smallFontSize.fontSize}
+          color={tooltip.color}
+          padding={smallFontSize.padding}
+          display="flex"
+          justifyContent="center"
+          alignItems="center"
+          zIndex={style[mode].tooltip.zIndex}
+          maxWidth={style[mode].tooltip.maxWidth}
+          mousePos={mousePos}
+          height="auto"
+          width="auto"
+        />
+
         <Toolbar ref={toolbarRef} hide={hide || showCrop} />
         <Element ref={elementRef} hide={hide || showCrop} width={"100%"} />
         <VoiceControl ref={volumeDomRef} hide={hide || showCrop} />

@@ -1,14 +1,12 @@
 import { Box } from "../index"
 import React, { useEffect, useRef, useState } from "react"
-import { getOsdSize, type MousePos, PropertyNative } from "@mpv-easy/tool"
-import isEqual from "lodash-es/isEqual"
-import throttle from "lodash-es/throttle"
+import { getOsdSize, type MousePos } from "@mpv-easy/tool"
 import { getRootNode } from "../flex"
 import type { MpDom, MpDomProps } from "../flex"
 import { getAttribute } from "@mpv-easy/flex"
 
 export type TooltipProps = {
-  tooltipThrottle: number
+  mousePos: MousePos
 }
 
 export type TooltipDirection =
@@ -136,55 +134,60 @@ function getTooltipElement(
     }
   }
 }
-const mousePosProp = new PropertyNative<MousePos>("mouse-pos")
-
 export const Tooltip = ({
-  tooltipThrottle = 100,
+  mousePos,
   ...boxProps
 }: Partial<TooltipProps & MpDomProps>) => {
-  const [show, setShow] = useState(true)
+  const [show, setShow] = useState(false)
   const [text, setText] = useState("")
-  const mousePos = mousePosProp.value!
-  const [tooltipPos, setTooltipPos] = useState<{ x: number; y: number }>(
-    mousePos,
-  )
+  const [tooltipPos, setTooltipPos] = useState<{ x: number; y: number }>({
+    x: 0,
+    y: 0,
+  })
   const tooltipRef = useRef<MpDom>(null)
+  const targetRef = useRef<MpDom>(undefined)
+  if (!mousePos) {
+    targetRef.current = undefined
+  } else {
+    const { x, y, hover } = mousePos
+    if (!hover) {
+      targetRef.current = undefined
+    } else {
+      targetRef.current = getTooltipElement(getRootNode(), x, y)
+    }
+  }
 
   useEffect(() => {
-    let lastPos = mousePos
-    const update = throttle((pos) => {
-      lastPos = pos
-      const { x, y, hover } = pos
-      if (!hover) {
-        setShow(false)
-        return
-      }
-
-      const target = getTooltipElement(getRootNode(), x, y)
-
-      if (!target) {
-        setShow(false)
-        return
-      }
-
-      const title = target?.attributes.title
-      if (title?.length) {
-        const direction = getDirection(
-          x,
-          y,
-          getRootNode().layoutNode.width,
-          getRootNode().layoutNode.height,
-        )
-        const pos = computeTooltipPosition(tooltipRef.current, x, y, direction)
-        setTooltipPos(pos)
-        setShow(true)
-        setText(title)
-      } else {
-        setShow(false)
-      }
-    }, tooltipThrottle)
-    mousePosProp.observe((_, v) => update(v), isEqual)
-  }, [])
+    if (!targetRef.current) {
+      setShow(false)
+      return
+    }
+    const title = targetRef.current?.attributes.title
+    if (title?.length && mousePos) {
+      const direction = getDirection(
+        mousePos.x,
+        mousePos.y,
+        getRootNode().layoutNode.width,
+        getRootNode().layoutNode.height,
+      )
+      const pos = computeTooltipPosition(
+        tooltipRef.current,
+        mousePos.x,
+        mousePos.y,
+        direction,
+      )
+      setTooltipPos(pos)
+      setShow(true)
+      setText(title)
+    } else {
+      setShow(false)
+    }
+  }, [
+    mousePos?.x,
+    mousePos?.y,
+    mousePos?.hover,
+    targetRef.current?.attributes.text,
+  ])
 
   return (
     <Box
