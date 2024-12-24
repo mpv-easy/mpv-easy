@@ -89,44 +89,42 @@ export async function loadRemoteSubtitleAsync(path = getProperty("path")) {
   if (!path?.length || isYtdlp(path)) {
     return
   }
-  if (isRemote(path)) {
-    const list = SubtitleTypes.map((i) => {
-      const s = path.split(".").slice(0, -1)
-      s.push(i)
-      return s.join(".")
-    })
-    const tmp = getTmpDir()
-    for (const url of list) {
-      const name = getFileName(url)
-      if (!name?.length) {
-        continue
-      }
+  if (!isRemote(path)) {
+    return
+  }
 
-      const trackList = getSubtitleTracks()
-      if (trackList.find((i) => i.title === name)) {
-        continue
-      }
-
-      try {
-        const resp = await fetch(url)
-
-        if (resp.status !== 200 || !resp.text?.length) {
-          continue
-        }
-        const text = await resp.text()
-        if (!text.length) {
-          continue
-        }
-
-        const subPath = joinPath(tmp, name)
-        writeFile(subPath, text)
-        commandv("sub-add", subPath)
-      } catch (e) {
-        print("loadRemoteSubtitle error:", e)
-      }
+  const list = SubtitleTypes.map((i) => {
+    return replaceExt(path, i)
+  })
+  for (const url of list) {
+    const name = getFileName(url)
+    if (!name?.length) {
+      continue
     }
-  } else {
-    loadLocalSubtitle(path)
+
+    const trackList = getSubtitleTracks()
+    if (trackList.find((i) => i.title === name)) {
+      continue
+    }
+
+    try {
+      const resp = await fetch(url)
+
+      if (resp.status !== 200 || !resp.text?.length) {
+        continue
+      }
+      const text = await resp.text()
+      if (!text.length) {
+        continue
+      }
+
+      const tmp = getTmpDir()
+      const subPath = joinPath(tmp, name)
+      writeFile(subPath, text)
+      commandv("sub-add", subPath)
+    } catch (e) {
+      print("loadRemoteSubtitle error:", e)
+    }
   }
 }
 
