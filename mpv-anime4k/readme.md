@@ -1,9 +1,8 @@
-copy from: https://github.com/bloc97/Anime4K/releases
+copy from: [Anime4K](https://github.com/bloc97/Anime4K/releases)  [GLSL_Instructions_Windows_MPV](https://github.com/bloc97/Anime4K/blob/master/md/GLSL_Instructions_Windows_MPV.md) [input.conf](https://github.com/bloc97/Anime4K/blob/master/md/Template/GLSL_Windows_High-end/input.conf)
 
-https://github.com/bloc97/Anime4K/blob/master/md/GLSL_Instructions_Windows_MPV.md
-
-https://github.com/bloc97/Anime4K/blob/master/md/Template/GLSL_Windows_High-end/input.conf
-
+<div style="display: flex;">
+  <img src="../assets/img/anime4k.jpg" alt="anime4k"/>
+</div>
 
 ## install
 
