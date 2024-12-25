@@ -3,6 +3,7 @@ import fs from "node:fs"
 
 build({
   entryPoints: ["./scripts/*"],
+  // entryPoints: ["./scripts/mpv-easy.tsx"],
   bundle: true,
   outdir: "bundle",
   minify: true,

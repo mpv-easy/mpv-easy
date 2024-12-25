@@ -2,7 +2,7 @@
 // @name                    mpv-easy-play-with
 // @name:zh                 mpv-easy-play-with
 // @namespace               https://github.com/mpv-easy
-// @version                 0.1.0
+// @version                 0.1.13
 // @author                  mpv-easy
 // @copyright               2024, mpv-easy (https://github.com/mpv-easy)
 // @license                 MIT
