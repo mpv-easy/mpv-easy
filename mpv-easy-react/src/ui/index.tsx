@@ -3,16 +3,14 @@ import { Uosc } from "./uosc"
 import { Osc } from "./osc"
 import { Oscx } from "./oscx"
 import { Toolbar } from "./toolbar"
-import { Box, type MpDom, Tooltip } from "@mpv-easy/react"
+import { Box, DefaultFps, type MpDom, Tooltip } from "@mpv-easy/react"
 import {
   modeSelector,
   mousePosSelector,
-  pathSelector,
   smallFontSizeSelector,
   styleSelector,
   toolbarStyleSelector,
   uiNameSelector,
-  clickMenuStyleSelector,
   protocolHookSelector,
   volumeSelector,
   volumeMaxSelector,
@@ -29,7 +27,6 @@ import {
   subScaleSelector,
 } from "../store"
 import {
-  loadRemoteSubtitleAsync,
   getMpvExePath,
   setProtocolHook,
   getPlayWithExePath,
@@ -74,11 +71,11 @@ export function hasPoint(node: MpDom | null, x: number, y: number): boolean {
 export type EasyProps = {
   initHide: boolean
   fontSize: number
+  fps: number
 }
 
 export const Easy = (props: Partial<EasyProps>) => {
   const frameTime = useSelector(frameTimeSelector)
-  const path = useSelector(pathSelector)
   const protocolHook = useSelector(protocolHookSelector)
   const fontSize = useSelector(normalFontSizeSelector)
   const fontSizeRef = useRef(fontSize.fontSize)
@@ -143,6 +140,10 @@ export const Easy = (props: Partial<EasyProps>) => {
     registerScriptMessage("mouse-right-click", () => {
       dispatch.setPause(!getPropertyBool("pause"))
     })
+
+    // FIXME: update thumbfast when pause
+    const h = setInterval(update, 1000 / (props.fps || DefaultFps))
+    return () => clearInterval(h)
   }, [])
 
   const smallFontSize = useSelector(smallFontSizeSelector)
