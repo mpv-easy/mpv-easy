@@ -1,5 +1,6 @@
 import "@mpv-easy/polyfill"
-import { anime4k, defaultConfig, Shaders } from "@mpv-easy/anime4k"
+import { anime4k, defaultConfig } from "@mpv-easy/anime4k"
+import { Shaders } from "@mpv-easy/anime4k/shaders"
 import {
   clone,
   existsSync,

@@ -12,6 +12,16 @@
     "dev": "tsc -p ./tsconfig.build.json -w"
   },
   "keywords": [],
+  "exports": {
+    ".": "./dist/index.js",
+    "./shaders": "./dist/shaders.js"
+  },
+  "typesVersions": {
+    "*": {
+      ".": ["./dist/index.d.ts"],
+      "vite": ["./dist/shaders.d.ts"]
+    }
+  },
   "author": "ahaoboy <504595380@qq.com> (https://github.com/ahaoboy)",
   "license": "MIT",
   "dependencies": {
