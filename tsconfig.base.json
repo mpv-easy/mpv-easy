@@ -2,7 +2,7 @@
   "compilerOptions": {
     "target": "ESNext",
     "useDefineForClassFields": true,
-    "lib": ["ESNext", "ES2022", "es2021"],
+    "lib": ["ESNext", "ES2022", "es2021", "DOM"],
     "allowJs": true,
     "esModuleInterop": false,
     "allowSyntheticDefaultImports": true,
@@ -49,6 +49,6 @@
       "@mpv-easy/crop": ["./mpv-crop/src"]
     }
   },
-  "include": ["**/src", "**/test", "**/example"],
+  "include": ["**/src", "**/test", "**/example", "**/scripts"],
   "exclude": ["**/dist"]
 }

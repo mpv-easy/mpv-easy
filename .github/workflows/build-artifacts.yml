@@ -253,27 +253,8 @@ jobs:
           pnpm run build
 
           mkdir mpv-easy-js -p
-          cp mpv-easy-react/es5/mpv-easy-es5.js mpv-easy-js/mpv-easy-es5.js
-          cp mpv-easy-react/bundle/mpv-easy-es6.js mpv-easy-js/mpv-easy-es6.js
-          cp mpv-play-with/dist/mpv-easy-play-with.user.js mpv-easy-js/mpv-easy-play-with.user.js
-          cp mpv-translate/es5/translate.js mpv-easy-js/translate.js
-          cp mpv-translate/translate.conf mpv-easy-js/translate.conf
-          cp mpv-cut/es5/cut.js mpv-easy-js/cut.js
-          cp mpv-cut/cut.conf mpv-easy-js/cut.conf
-          cp mpv-crop/es5/crop.js mpv-easy-js/crop.js
-          cp mpv-crop/crop.conf mpv-easy-js/crop.conf
-          cp mpv-clipboard-play/clipboard-play.conf mpv-easy-js/clipboard-play.conf
-          cp mpv-clipboard-play/es5/clipboard-play.js mpv-easy-js/clipboard-play.js
-          cp mpv-copy-screen/copy-screen.conf mpv-easy-js/copy-screen.conf
-          cp mpv-copy-screen/es5/copy-screen.js mpv-easy-js/copy-screen.js
-          cp mpv-copy-time/copy-time.conf mpv-easy-js/copy-time.conf
-          cp mpv-copy-time/es5/copy-time.js mpv-easy-js/copy-time.js
-          cp mpv-autoload/autoload.conf mpv-easy-js/autoload.conf
-          cp mpv-autoload/es5/autoload.js mpv-easy-js/autoload.js
-          cp mpv-thumbfast/thumbfast.conf mpv-easy-js/thumbfast.conf
-          cp mpv-thumbfast/es5/thumbfast.js mpv-easy-js/thumbfast.js
-          cp mpv-anime4k/anime4k.conf mpv-easy-js/anime4k.conf
-          cp mpv-anime4k/es5/anime4k.js mpv-easy-js/anime4k.js
+          cp mpv-easy-react/es5/*.js mpv-easy-js/
+          cp mpv-easy-react/conf/*.conf mpv-easy-js/
 
       - name: Upload
         uses: actions/upload-artifact@v4
@@ -290,11 +271,11 @@ jobs:
           mkdir dist/scripts/mpv-easy-config/mpv-easy-ext -p
           # mkdir dist/script-opts -p
 
-          cp mpv-easy-react/es5/mpv-easy-es5.js dist/scripts/mpv-easy-es5.js
+          cp mpv-easy-react/es5/mpv-easy.js dist/scripts/mpv-easy.js
           cp -r mpv-easy-react/fonts dist
           cp -r mpv-anime4k/shaders dist
-          cp mpv-easy-react/mpv-conf/mpv.conf dist/mpv.conf
-          cp mpv-easy-react/mpv-conf/input.conf dist/input.conf
+          cp mpv-easy-react/conf/mpv.conf dist/mpv.conf
+          cp mpv-easy-react/conf/input.conf dist/input.conf
 
           chmod 777 mpv-easy-ext-dist/*
           chmod 777 mpv-easy-play-with-dist/*
@@ -325,20 +306,20 @@ jobs:
 
 
           # cp deno-dll/mpv-deno-windows.dll mpy-easy-deno-windows/scripts/mpv-deno-windows.dll
-          # rm mpy-easy-deno-windows/scripts/mpv-easy-es5.js
+          # rm mpy-easy-deno-windows/scripts/mpv-easy.js
           # mkdir mpy-easy-deno-windows/scripts-deno
           # cp mpv-easy-react/bundle/mpv-easy-es6.js mpy-easy-deno-windows/scripts-deno/mpv-easy-es6.js
           # mv mpy-easy-deno-windows/scripts/mpv-easy-config mpy-easy-deno-windows/scripts-deno/mpv-easy-config
 
 
           # cp qjs-dll/mpv-qjs-windows.dll mpy-easy-qjs-windows/scripts/mpv-qjs-windows.dll
-          # rm mpy-easy-qjs-windows/scripts/mpv-easy-es5.js
+          # rm mpy-easy-qjs-windows/scripts/mpv-easy.js
           # mkdir mpy-easy-qjs-windows/scripts-qjs
           # cp mpv-easy-react/bundle/mpv-easy-es6.js mpy-easy-qjs-windows/scripts-qjs/mpv-easy-es6.js
           # mv mpy-easy-qjs-windows/scripts/mpv-easy-config mpy-easy-qjs-windows/scripts-qjs/mpv-easy-config
 
           # cp boa-dll/mpv-boa-windows.dll mpy-easy-boa-windows/scripts/mpv-boa-windows.dll
-          # rm mpy-easy-boa-windows/scripts/mpv-easy-es5.js
+          # rm mpy-easy-boa-windows/scripts/mpv-easy.js
           # mkdir mpy-easy-boa-windows/scripts-boa
           # cp mpv-easy-react/bundle/mpv-easy-es6.js mpy-easy-boa-windows/scripts-boa/mpv-easy-es6.js
           # mv mpy-easy-boa-windows/scripts/mpv-easy-config mpy-easy-boa-windows/scripts-boa/mpv-easy-config
@@ -346,7 +327,7 @@ jobs:
           7z x mpv-win.7z -ompy-easy-windows-full -y
           cp -r mpy-easy-windows mpy-easy-windows-full/portable_config
           cp yt-dlp.exe mpy-easy-windows-full/yt-dlp.exe
-          cp mpv-easy-react/mpv-conf/cookies.txt mpy-easy-windows-full/cookies.txt
+          cp mpv-easy-react/conf/cookies.txt mpy-easy-windows-full/cookies.txt
 
 
           cp -r mpy-easy-windows-full mpy-easy-windows-deno-full

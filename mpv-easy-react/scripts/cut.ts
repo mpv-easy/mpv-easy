@@ -4,7 +4,7 @@ import {
   defaultConfig,
   getVideoSegment,
   getCutVideoPath,
-} from "./index"
+} from "@mpv-easy/cut"
 import {
   cutVideo,
   detectFfmpeg,

@@ -9,6 +9,7 @@ export * from "./tool"
 export * from "./bing"
 export * from "./google"
 export * from "./ui"
+export * from "./const"
 
 export const pluginName = "@mpv-easy/translate"
 

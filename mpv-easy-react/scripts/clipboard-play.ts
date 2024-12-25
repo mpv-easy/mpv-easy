@@ -4,7 +4,11 @@ import {
   registerScriptMessage,
   updatePlaylist,
 } from "@mpv-easy/tool"
-import { clipboardPlay, defaultConfig, pluginName } from "./index"
+import {
+  clipboardPlay,
+  defaultConfig,
+  pluginName,
+} from "@mpv-easy/clipboard-play"
 import {
   pluginName as autoloadName,
   defaultConfig as autoloadConfig,

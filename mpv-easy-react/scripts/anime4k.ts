@@ -1,0 +1,71 @@
+import "@mpv-easy/polyfill"
+import { anime4k, defaultConfig, Shaders } from "@mpv-easy/anime4k"
+import {
+  clone,
+  existsSync,
+  getTmpDir,
+  joinPath,
+  mkdir,
+  writeFile,
+} from "@mpv-easy/tool"
+const { current, osdDuration } = {
+  ...defaultConfig,
+  ...getOptions("cut", {
+    current: {
+      type: "number",
+      key: "current",
+    },
+    "osd-duration": {
+      type: "number",
+      key: "osdDuration",
+    },
+  }),
+}
+
+const shaderDir = joinPath(getTmpDir(), "__anime4k__")
+
+function createShadersDir() {
+  if (!existsSync(shaderDir)) {
+    mkdir(shaderDir)
+  }
+  for (const [name, value] of Object.entries(Shaders)) {
+    const p = joinPath(shaderDir, `${name}.glsl`)
+    writeFile(p, value)
+  }
+}
+
+function getCustomCOnfig() {
+  const config = clone(defaultConfig)
+
+  for (const shader of config.shaders) {
+    shader.value = shader.value
+      .split(";")
+      .map((i) => {
+        const name = i.split("/").at(-1)?.split(".")?.[0]
+        if (!name) {
+          // clear
+          return ""
+        }
+        const p = joinPath(shaderDir, `${name}.glsl`)
+        return p
+      })
+      .join(";")
+  }
+
+  config.current = current
+  config.osdDuration = osdDuration
+  return config
+}
+
+createShadersDir()
+const config = getCustomCOnfig()
+anime4k(config)
+function getOptions(
+  arg0: string,
+  arg1: {
+    current: { type: string; key: string }
+    "osd-duration": { type: string; key: string }
+  },
+): { current: any; osdDuration: any } {
+  throw new Error("Function not implemented.")
+}

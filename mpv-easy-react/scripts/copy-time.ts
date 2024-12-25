@@ -1,6 +1,6 @@
 import "@mpv-easy/polyfill"
 import { getOptions, registerScriptMessage } from "@mpv-easy/tool"
-import { copyTime, defaultConfig } from "./index"
+import { copyTime, defaultConfig } from "@mpv-easy/copy-time"
 
 const { copyTimeEventName } = {
   ...defaultConfig,

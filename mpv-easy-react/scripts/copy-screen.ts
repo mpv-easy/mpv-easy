@@ -1,6 +1,6 @@
 import "@mpv-easy/polyfill"
 import { getOptions, registerScriptMessage } from "@mpv-easy/tool"
-import { copyScreen, defaultConfig } from "./index"
+import { copyScreen, defaultConfig } from "@mpv-easy/copy-screen"
 
 const { copyScreenEventName, format } = {
   ...defaultConfig,

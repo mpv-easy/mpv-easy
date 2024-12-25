@@ -6,10 +6,9 @@
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
-    "meta": "tsx ./script/meta.ts",
-    "build": "tsc  -p ./tsconfig.build.json && npm run bundle",
-    "bundle": "esbuild --minify ./src/play-with.tsx --outfile=./dist/mpv-easy-play-with.js --bundle  --loader:.png=base64 --format=esm --define:process.env.NODE_ENV='\"production\"' && npm run meta",
-    "dev": "esbuild ./src/play-with.tsx --outfile=./dist/mpv-easy-play-with.js --bundle  --loader:.png=base64 --format=esm --watch"
+    "es5": "babel ./dist -d es5",
+    "build": "tsc -p ./tsconfig.build.json",
+    "dev": "tsc -p ./tsconfig.build.json -w"
   },
   "keywords": [],
   "author": "ahaoboy <504595380@qq.com> (https://github.com/ahaoboy)",

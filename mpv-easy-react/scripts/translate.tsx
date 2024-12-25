@@ -1,9 +1,12 @@
 import "@mpv-easy/polyfill"
 import { render, Tooltip } from "@mpv-easy/react"
-import { Translation } from "./ui"
+import {
+  Translation,
+  defaultSubConfig,
+  defaultTooltipConfig,
+} from "@mpv-easy/translate"
 import React from "react"
 import { getOptions, getPropertyNumber } from "@mpv-easy/tool"
-import { defaultSubConfig, defaultTooltipConfig } from "./const"
 
 const {
   subFontSize,

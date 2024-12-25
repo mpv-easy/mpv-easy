@@ -1,5 +1,5 @@
 import "@mpv-easy/polyfill"
-import { autoload, defaultConfig } from "./index"
+import { autoload, defaultConfig } from "@mpv-easy/autoload"
 import {
   updatePlaylist,
   getMpvPlaylist,

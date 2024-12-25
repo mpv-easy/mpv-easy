@@ -63,11 +63,11 @@ export const OscInfo = ({ height }: Partial<MpDomProps>) => {
         alignItems="center"
       >
         <History />
-        <PreviousFrame />
+        {/* <PreviousFrame /> */}
         <Previous />
         <Play />
         <Next />
-        <NextFrame />
+        {/* <NextFrame /> */}
         <Playlist />
       </Box>
 

@@ -1,6 +1,6 @@
 import React from "react"
 import { createRoot } from "react-dom/client"
-import { App } from "./app"
+import { App } from "@mpv-easy/play-with"
 
 async function main() {
   const container = document.createElement("div")

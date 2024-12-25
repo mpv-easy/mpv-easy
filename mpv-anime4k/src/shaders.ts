@@ -1,5 +1,3 @@
-import "@mpv-easy/polyfill"
-import { anime4k, defaultConfig } from "./index"
 import adaptive_sharpen from "../shaders/adaptive_sharpen.glsl"
 import adaptive_sharpen_luma from "../shaders/adaptive_sharpen_luma.glsl"
 import AMD_FSR from "../shaders/AMD_FSR.glsl"
@@ -55,17 +53,8 @@ import nlmeans_dx from "../shaders/nlmeans_dx.glsl"
 import nnedi3_nns128_win8x4 from "../shaders/nnedi3_nns128_win8x4.glsl"
 import nnedi3_nns128_win8x6 from "../shaders/nnedi3_nns128_win8x6.glsl"
 import SSimDownscaler from "../shaders/SSimDownscaler.glsl"
-import {
-  clone,
-  existsSync,
-  getOptions,
-  getTmpDir,
-  joinPath,
-  mkdir,
-} from "@mpv-easy/tool"
-import { writeFile } from "@mpv-easy/tool"
 
-const FileMap = {
+export const Shaders = {
   adaptive_sharpen,
   adaptive_sharpen_luma,
   AMD_FSR,
@@ -122,56 +111,3 @@ const FileMap = {
   nnedi3_nns128_win8x6,
   SSimDownscaler,
 }
-
-const { current, osdDuration } = {
-  ...defaultConfig,
-  ...getOptions("cut", {
-    current: {
-      type: "number",
-      key: "current",
-    },
-    "osd-duration": {
-      type: "number",
-      key: "osdDuration",
-    },
-  }),
-}
-
-const shaderDir = joinPath(getTmpDir(), "__anime4k__")
-
-function createShadersDir() {
-  if (!existsSync(shaderDir)) {
-    mkdir(shaderDir)
-  }
-  for (const [name, value] of Object.entries(FileMap)) {
-    const p = joinPath(shaderDir, `${name}.glsl`)
-    writeFile(p, value)
-  }
-}
-
-function getCustomCOnfig() {
-  const config = clone(defaultConfig)
-
-  for (const shader of config.shaders) {
-    shader.value = shader.value
-      .split(";")
-      .map((i) => {
-        const name = i.split("/").at(-1)?.split(".")?.[0]
-        if (!name) {
-          // clear
-          return ""
-        }
-        const p = joinPath(shaderDir, `${name}.glsl`)
-        return p
-      })
-      .join(";")
-  }
-
-  config.current = current
-  config.osdDuration = osdDuration
-  return config
-}
-
-createShadersDir()
-const config = getCustomCOnfig()
-anime4k(config)

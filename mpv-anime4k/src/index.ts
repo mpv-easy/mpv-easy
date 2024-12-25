@@ -5,6 +5,7 @@ import {
   osdMessage,
   registerScriptMessage,
 } from "@mpv-easy/tool"
+export * from "./shaders"
 
 export const pluginName = "@mpv-easy/anime4k"
 

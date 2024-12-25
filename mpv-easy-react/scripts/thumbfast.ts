@@ -9,7 +9,11 @@ import {
   registerScriptMessage,
   VideoParams,
 } from "@mpv-easy/tool"
-import { ThumbFast, defaultConfig, getThumbFastVideoPath } from "./index"
+import {
+  ThumbFast,
+  defaultConfig,
+  getThumbFastVideoPath,
+} from "@mpv-easy/thumbfast"
 
 const {
   path,

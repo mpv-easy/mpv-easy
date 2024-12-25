@@ -1,5 +1,5 @@
 import "@mpv-easy/polyfill"
-import { runMpvEasy } from "./mpv-easy"
+import { runMpvEasy } from "../src/mpv-easy"
 runMpvEasy({
   // showFps: true,
 })

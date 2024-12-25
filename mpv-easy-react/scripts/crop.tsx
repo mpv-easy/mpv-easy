@@ -9,7 +9,12 @@ import {
   showNotification,
   registerScriptMessage,
 } from "@mpv-easy/tool"
-import { Crop, defaultConfig, getCropImagePath, getCropRect } from "./index"
+import {
+  Crop,
+  defaultConfig,
+  getCropImagePath,
+  getCropRect,
+} from "@mpv-easy/crop"
 import {
   Box,
   DefaultFps,

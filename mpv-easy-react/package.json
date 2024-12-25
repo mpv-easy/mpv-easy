@@ -15,7 +15,7 @@
     "dev-ts": "tsc -p ./tsconfig.build.json -w",
     "build": "tsc -p ./tsconfig.build.json && pnpm run bundle && pnpm run es5 && pnpm run meta",
     "build-es6": "esbuild ./src/mpv-easy-es6.tsx --bundle --outdir=bundle --charset=utf8 --define:globalThis.version='\"0.1.13\"' --minify --define:process.env.NODE_ENV='\"production\"'",
-    "copy": "cp -r ./es5/mpv-easy-es5.js $MPV_SCRIPT_DIR/mpv-easy-es5.js",
+    "copy": "cp -r ./es5/mpv-easy.js $MPV_SCRIPT_DIR/mpv-easy.js",
     "meta": "tsx ./meta/build.ts",
     "babel": "minify ./dist/mpv-easy.js --out-file ./dist/input.min.js"
   },
