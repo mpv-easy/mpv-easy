@@ -7,7 +7,6 @@ import {
   getOsdSize,
   getPropertyNative,
   getPropertyNumber,
-  printAndOsd,
   Rect,
   VideoParams,
 } from "@mpv-easy/tool"

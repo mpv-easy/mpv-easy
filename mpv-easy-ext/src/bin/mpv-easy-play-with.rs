@@ -1,4 +1,4 @@
-#![windows_subsystem = "windows"]
+#![cfg_attr(target_os = "windows", windows_subsystem = "windows")]
 
 use base64::{prelude::BASE64_STANDARD, Engine};
 use flate2::read::GzDecoder;

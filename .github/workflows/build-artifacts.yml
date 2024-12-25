@@ -255,6 +255,7 @@ jobs:
           mkdir mpv-easy-js -p
           cp mpv-easy-react/es5/*.js mpv-easy-js/
           cp mpv-easy-react/conf/*.conf mpv-easy-js/
+          cp mpv-easy-react/bundle/mpv-easy-es6.js mpv-easy-js/mpv-easy-es6.js
 
       - name: Upload
         uses: actions/upload-artifact@v4
