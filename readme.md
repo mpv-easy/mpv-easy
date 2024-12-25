@@ -25,7 +25,9 @@ fish
 set -x MPV_SCRIPT_DIR /your_mpv_dir/portable_config/scripts ; pnpm run dev
 ```
 
-## plugin
+## scripts
+
+[mpv-easy-scripts](./mpv-easy-react/docs/index.md)
 
 - [anime4k](./mpv-anime4k/readme.md)
 - [autoload](./mpv-autoload/readme.md)
