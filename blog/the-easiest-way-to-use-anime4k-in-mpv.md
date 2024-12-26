@@ -1,8 +1,8 @@
 # the easiest way to use anime4k in mpv
 
 It only takes two steps:
-- download [anime4k.js](https://github.com/mpv-easy/mpv-easy/releases) and copy it to the scripts directory
-- add the [shortkey](https://github.com/mpv-easy/mpv-easy/tree/main/mpv-anime4k#shortkey) eg:`CTRL+6    script-message Anime4K-CA-HQ` in `input.conf`
+- download [anime4k.js](https://github.com/mpv-easy/mpv-easy/releases) and copy it to `<mpv-home>/portable_config/scripts/anime4k.js`
+- add the [shortkey](https://github.com/mpv-easy/mpv-easy/tree/main/mpv-anime4k#shortkey) eg:`CTRL+6    script-message Anime4K-CA-HQ` in `<mpv-home>/portable_config/input.conf`
 
 That’s all.
 
