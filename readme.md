@@ -16,13 +16,13 @@ TS and React toolkit for mpv script
 bash
 
 ```bash
-export MPV_SCRIPT_DIR=/your_mpv_dir/portable_config/scripts && pnpm run dev
+export MPV_SCRIPT_DIR=/your_mpv_dir/portable_config/scripts && pnpm run dev-copy
 ```
 
 fish
 
 ```fish
-set -x MPV_SCRIPT_DIR /your_mpv_dir/portable_config/scripts ; pnpm run dev
+set -x MPV_SCRIPT_DIR /your_mpv_dir/portable_config/scripts ; pnpm run dev-copy
 ```
 
 ## scripts
