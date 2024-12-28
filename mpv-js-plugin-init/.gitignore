@@ -1,6 +1,0 @@
-/target
-dist
-node_modules
-dist
-Cargo.lock
-pnpm-lock.yaml
