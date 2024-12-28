@@ -87,8 +87,7 @@ export async function cropImage(
   const tmpDir = getTmpDir()
   const list = outputPath.split(".")
   const ext = list.at(-1) || "webp"
-  const name = list.slice(0, -1).join(".")
-  const tmpPath = joinPath(tmpDir, `${name}.${randomId()}.${ext}`)
+  const tmpPath = joinPath(tmpDir, `${randomId()}.${ext}`)
   screenshotToFile(tmpPath)
   const { x, y, width, height } = rect
   const cmd = [
