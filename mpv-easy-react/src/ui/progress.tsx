@@ -1,14 +1,10 @@
 import {
-  PropertyNative,
-  type VideoParams,
   cutVideo,
   detectFfmpeg,
   formatTime,
-  getPropertyBool,
   getTimeFormat,
   showNotification,
   registerScriptMessage,
-  setPropertyNumber,
   isRemote,
   cropImage,
   cropVideo,
@@ -22,7 +18,6 @@ import {
   durationSelector,
   timePosSelector,
   smallFontSizeSelector,
-  buttonStyleSelector,
   pathSelector,
   thumbfastSelector,
   cutSelector,
@@ -31,13 +26,16 @@ import {
   fontSelector,
   seekableSelector,
   videoParamsSelector,
+  cellSizeSelector,
+  mousePosSelector,
+  osdDimensionsSelector,
 } from "../store"
 import { ThumbFast } from "@mpv-easy/thumbfast"
 import { getCutVideoPath, getVideoSegment } from "@mpv-easy/cut"
 import { dispatch, useSelector } from "../models"
 import { getCropImagePath, getCropRect } from "@mpv-easy/crop"
 
-export const Progress = ({ width, height, ...props }: MpDomProps) => {
+export const Progress = ({ width, ...props }: MpDomProps) => {
   const [leftPreview, setLeftPreview] = useState(0)
   const [mouseOut, setMouseOut] = useState(true)
   const progress = useSelector(progressStyleSelector)
@@ -59,6 +57,9 @@ export const Progress = ({ width, height, ...props }: MpDomProps) => {
   const cropConfig = useSelector(cropSelector)
   const [thumbfastUpdateId, setThumbfastUpdateId] = useState(randomId())
   const videoParams = useSelector(videoParamsSelector)
+  const cellSize = useSelector(cellSizeSelector)
+  const mousePos = useSelector(mousePosSelector)
+  const osd = useSelector(osdDimensionsSelector)
   // TODO: support yt-dlp thumbfast
   // const supportThumbfast = !isYtdlp(path) && isSeekable
   const supportThumbfast = isSeekable && (!isRemote(path) || thumbfast.network)
@@ -223,23 +224,23 @@ export const Progress = ({ width, height, ...props }: MpDomProps) => {
     setThumbfastUpdateId(randomId())
     return per
   }
-  const hoverCursorRef = useRef<MpDom>(null)
-
   const previewTextWidth = previewTextRef.current?.layoutNode.width ?? 0
   const previewTimeTextOffsetX = (progress.cursorSize - previewTextWidth) >> 1
-  let thumbX = 0
-  let thumbY = 0
 
-  if (hoverCursorRef.current) {
-    const { x, y, height, width } = hoverCursorRef.current.layoutNode
-    thumbX = x + width / 2 - (thumbRef.current?.thumbWidth ?? 0) / 2
-    thumbY = y - (thumbRef.current?.thumbHeight ?? 0) - height
+  let thumbPos: undefined | { x: number; y: number } = undefined
+
+  if (!mouseOut) {
+    const width = progress.cursorSize
+    const x = mousePos.x + width / 2
+    const y = osd.h - cellSize
+    const thumbX = x + width / 2 - (thumbRef.current?.thumbWidth ?? 0) / 2
+    const thumbY = y - (thumbRef.current?.thumbHeight ?? 0) - cellSize
+    thumbPos = { x: thumbX, y: thumbY }
   }
-
   const fontSize = useSelector(smallFontSizeSelector)
   const font = useSelector(fontSelector)
   const showThumbfast =
-    thumbRef.current && !mouseOut && !!thumbX && !!thumbY && supportThumbfast
+    thumbRef.current && !mouseOut && thumbPos && supportThumbfast
 
   return (
     <Box
@@ -248,7 +249,7 @@ export const Progress = ({ width, height, ...props }: MpDomProps) => {
       id="progress"
       position="relative"
       width={width}
-      height={height}
+      height={cellSize}
       color={progress.backgroundColor}
       fontSize={fontSize.fontSize}
       font={font}
@@ -375,7 +376,6 @@ export const Progress = ({ width, height, ...props }: MpDomProps) => {
       )}
       <Box
         hide={mouseOut}
-        ref={hoverCursorRef}
         id="preview-cursor"
         position="relative"
         width={progress.previewCursorSize}
@@ -409,8 +409,8 @@ export const Progress = ({ width, height, ...props }: MpDomProps) => {
           hide={!showThumbfast}
           id={42}
           position="absolute"
-          x={thumbX}
-          y={thumbY}
+          x={thumbPos?.x || 0}
+          y={thumbPos?.y || 0}
           width={thumbRef.current?.thumbWidth}
           height={thumbRef.current?.thumbHeight}
           backgroundImage={`${thumbRef.current?.path}?id=${thumbfastUpdateId}`}
