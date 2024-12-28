@@ -1,4 +1,3 @@
-import { loadfile } from "@mpv-easy/tool"
 import { Box, type MpDom } from "@mpv-easy/react"
 import React, { useRef } from "react"
 import * as ICON from "../icon"
@@ -7,8 +6,8 @@ import {
   historyHideSelector,
   historySelector,
   historyStyleSelector,
+  osdDimensionsSelector,
 } from "../store"
-import { getRootNode } from "@mpv-easy/react"
 import { ScrollList } from "./components/scroll-list"
 import { textEllipsis } from "../common"
 import { dispatch, useSelector } from "../models"
@@ -23,15 +22,12 @@ export const History = () => {
   const history = useSelector(historySelector)
   const historyRef = useRef<MpDom>(null)
   const historyHide = useSelector(historyHideSelector)
-  let x = 0
-  let y = 0
+  let pos: undefined | { x: number; y: number } = undefined
+  const osd = useSelector(osdDimensionsSelector)
   if (historyRef.current) {
-    const rootW = getRootNode().layoutNode.width
-    const rootH = getRootNode().layoutNode.height
     const w = historyRef.current.layoutNode.width
     const h = historyRef.current.layoutNode.height
-    x = (rootW - w) / 2
-    y = (rootH - h) / 2
+    pos = { x: (osd.w - w) / 2, y: (osd.h - h) / 2 }
   }
 
   const path = useSelector(pathSelector)
@@ -40,9 +36,9 @@ export const History = () => {
     <Box
       id={"history"}
       ref={historyRef}
-      x={x}
-      y={y}
-      hide={historyHide}
+      x={pos?.x || 0}
+      y={pos?.y || 0}
+      hide={historyHide || !pos}
       display="flex"
       position="relative"
       flexDirection="row"

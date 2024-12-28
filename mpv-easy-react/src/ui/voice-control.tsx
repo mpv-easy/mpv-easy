@@ -11,12 +11,10 @@ import {
   buttonStyleSelector,
   volumeStyleSelector,
   osdDimensionsSelector,
-  smallFontSizeSelector,
-  cellSizeSelector,
   fontSelector,
   normalFontSizeSelector,
 } from "../store"
-import { clamp, setPropertyNumber } from "@mpv-easy/tool"
+import { clamp } from "@mpv-easy/tool"
 import { Mute } from "./components/mute"
 import { dispatch, useSelector } from "../models"
 

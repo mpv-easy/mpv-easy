@@ -1,4 +1,3 @@
-import { command } from "@mpv-easy/tool"
 import { Box, type MpDom } from "@mpv-easy/react"
 import React, { useRef } from "react"
 import * as ICON from "../icon"
@@ -7,8 +6,8 @@ import {
   playlistSelector,
   playlistHideSelector,
   pathSelector,
+  osdDimensionsSelector,
 } from "../store"
-import { getRootNode } from "@mpv-easy/react"
 import { ScrollList } from "./components/scroll-list"
 import { getVideoName, textEllipsis } from "../common"
 import { dispatch, useSelector } from "../models"
@@ -23,15 +22,12 @@ export const Playlist = () => {
   const playlist = useSelector(playlistSelector)
   const playlistRef = useRef<MpDom>(null)
   const playlistHide = useSelector(playlistHideSelector)
-  let x = 0
-  let y = 0
+  let pos: undefined | { x: number; y: number } = undefined
+  const osd = useSelector(osdDimensionsSelector)
   if (playlistRef.current) {
-    const rootW = getRootNode().layoutNode.width
-    const rootH = getRootNode().layoutNode.height
     const w = playlistRef.current.layoutNode.width
     const h = playlistRef.current.layoutNode.height
-    x = (rootW - w) / 2
-    y = (rootH - h) / 2
+    pos = { x: (osd.w - w) / 2, y: (osd.h - h) / 2 }
   }
 
   const path = useSelector(pathSelector)
@@ -40,9 +36,9 @@ export const Playlist = () => {
     <Box
       id={"playlist"}
       ref={playlistRef}
-      x={x}
-      y={y}
-      hide={playlistHide}
+      x={pos?.x || 0}
+      y={pos?.y || 0}
+      hide={playlistHide || !pos}
       display="flex"
       position="relative"
       flexDirection="row"
