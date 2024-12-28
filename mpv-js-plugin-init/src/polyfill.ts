@@ -27,7 +27,7 @@ declare global {
         op_set_property_bool: (name: string, v: boolean) => true | undefined
         op_set_property_number: (name: string, v: number) => true | undefined
         op_set_property_string: (name: string, v: string) => true | undefined
-        op_read_file: (name: string) => string
+        op_read_file: (name: string) => string | undefined
         op_write_file: (name: string, text: string) => void
         op_file_size: (path: string) => number
         op_file_exists: (path: string) => boolean

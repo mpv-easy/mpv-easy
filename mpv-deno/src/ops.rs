@@ -54,8 +54,8 @@ fn op_get_cwd() -> Result<String, deno_core::error::AnyError> {
 
 #[op2]
 #[string]
-fn op_read_file(#[string] path: String) -> Result<String, deno_core::error::AnyError> {
-    let text: String = mpv::op_read_file(path);
+fn op_read_file(#[string] path: String) -> Result<Option<String>, deno_core::error::AnyError> {
+    let text = mpv::op_read_file(path);
     Ok(text)
 }
 

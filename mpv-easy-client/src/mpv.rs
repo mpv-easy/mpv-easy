@@ -32,10 +32,10 @@ pub fn op_get_cwd() -> String {
     dir
 }
 
-pub fn op_read_file(path: String) -> String {
+pub fn op_read_file(path: String) -> Option<String> {
     // println!("op_read_file {:?}", path);
-    let text: String = std::fs::read_to_string(path).unwrap();
-    text
+    
+    std::fs::read_to_string(path).ok()
 }
 
 pub fn op_write_file(path: String, contents: String) {
