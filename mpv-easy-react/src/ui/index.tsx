@@ -192,11 +192,14 @@ export const Easy = (props: Partial<EasyProps>) => {
     }
   }
 
-  if (mouseInUI) {
-    showUI()
-  } else {
-    hideUI()
-  }
+  useEffect(() => {
+    if (mouseInUI) {
+      showUI()
+    } else {
+      hideUI()
+    }
+  }, [mouseInUI])
+
   const translateStyle = useSelector(translateSelector)
   const subScale = useSelector(subScaleSelector)
 
