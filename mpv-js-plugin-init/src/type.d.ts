@@ -19,10 +19,10 @@ export type MpApi = {
   __command_string: (cmd: string) => void
   __commandv: (args: (string | number)[]) => void
   __command_json: (args: string) => string
-  __file_size: (path: string) => number
+  __file_size: (path: string) => number | undefined
   __file_exists: (path: string) => boolean
   __is_file: (path: string) => boolean
-  __read_dir: (path: string) => string[]
+  __read_dir: (path: string) => string[] | undefined
 
   __request_event: (name: string, flag: boolean) => any
   __observe_property: (id: number, name: string, format?: string) => any

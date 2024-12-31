@@ -28,11 +28,11 @@ declare global {
         op_set_property_number: (name: string, v: number) => true | undefined
         op_set_property_string: (name: string, v: string) => true | undefined
         op_read_file: (name: string) => string | undefined
-        op_write_file: (name: string, text: string) => void
-        op_file_size: (path: string) => number
+        op_write_file: (name: string, text: string) => boolean
+        op_file_size: (path: string) => number | undefined
         op_file_exists: (path: string) => boolean
         op_is_file: (path: string) => boolean
-        op_read_dir: (path: string) => string[]
+        op_read_dir: (path: string) => string[] | undefined
         op_command_native: (name: string, args: string[]) => string
         op_command_native_async: (
           name: string,

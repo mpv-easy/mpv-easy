@@ -34,17 +34,15 @@ pub fn op_get_cwd() -> String {
 
 pub fn op_read_file(path: String) -> Option<String> {
     // println!("op_read_file {:?}", path);
-    
     std::fs::read_to_string(path).ok()
 }
 
-pub fn op_write_file(path: String, contents: String) {
-    std::fs::write(path, contents).unwrap();
+pub fn op_write_file(path: String, contents: String) -> bool {
+    std::fs::write(path, contents).is_ok()
 }
 
-pub fn op_file_size(path: String) -> u32 {
-    let size = std::fs::read(path).unwrap_or_default().len();
-    size as u32
+pub fn op_file_size(path: String) -> Option<u32> {
+    std::fs::read(path).ok().map(|i| i.len() as u32)
 }
 
 pub fn op_file_exists(path: String) -> bool {
@@ -59,17 +57,17 @@ pub fn op_is_file(path: String) -> bool {
 pub fn op_getenv(name: String) -> Option<String> {
     std::env::var(name).ok()
 }
-pub fn op_read_dir(path: String, filter: Option<String>) -> Vec<String> {
+pub fn op_read_dir(path: String, filter: Option<String>) -> Option<Vec<String>> {
     let mut files = vec![];
     let mut dirs = vec![];
     let mut others = vec![];
 
     let p = std::path::PathBuf::from(&path);
 
-    for i in p.read_dir().unwrap() {
+    for i in p.read_dir().ok()? {
         if let Ok(k) = i {
-            let meta = k.metadata().unwrap();
-            let name = k.path().file_name().unwrap().to_string_lossy().to_string();
+            let meta = k.metadata().ok()?;
+            let name = k.path().file_name()?.to_string_lossy().to_string();
             if meta.is_dir() {
                 dirs.push(name);
             } else if meta.is_file() {
@@ -80,12 +78,12 @@ pub fn op_read_dir(path: String, filter: Option<String>) -> Vec<String> {
         }
     }
 
-    match filter.unwrap_or_default().as_str() {
+    Some(match filter.unwrap_or_default().as_str() {
         "files" => files,
         "dirs" => dirs,
         "all" => [files, dirs, others].concat(),
         "normal" | _ => [files, dirs].concat(),
-    }
+    })
 }
 
 fn exec_command(name: String, args: Vec<String>) -> Option<String> {
@@ -94,7 +92,7 @@ fn exec_command(name: String, args: Vec<String>) -> Option<String> {
         if args.len() == 1 {
             (&args[0], empty_args.as_slice())
         } else {
-            args.split_first().unwrap()
+            args.split_first()?
         }
     } else {
         (&name, args.as_slice())
@@ -112,7 +110,7 @@ pub fn op_command_native(name: String, args: Vec<String>) -> Option<String> {
 
 pub fn op_command_json(args: String) -> Option<String> {
     // println!("op_command_json {:?}", args);
-    let v: Vec<serde_json::Value> = serde_json::from_str(&args).unwrap();
+    let v: Vec<serde_json::Value> = serde_json::from_str(&args).ok()?;
     let js = command_json(v);
     js.map(|i| i.to_string())
 }
@@ -123,7 +121,7 @@ async fn exec_command_async(name: String, args: Vec<String>) -> Option<String> {
         if args.len() == 1 {
             (&args[0], empty_args.as_slice())
         } else {
-            args.split_first().unwrap()
+            args.split_first()?
         }
     } else {
         (&name, args.as_slice())
@@ -134,7 +132,7 @@ async fn exec_command_async(name: String, args: Vec<String>) -> Option<String> {
         .args(cmd_args)
         .output()
         .await
-        .unwrap();
+        .ok()?;
     String::from_utf8(output.stdout).ok()
 }
 

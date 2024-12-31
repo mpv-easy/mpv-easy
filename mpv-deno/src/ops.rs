@@ -68,8 +68,8 @@ fn op_write_file(
     Ok(())
 }
 
-#[op2(fast)]
-fn op_file_size(#[string] path: String) -> Result<u32, deno_core::error::AnyError> {
+#[op2]
+fn op_file_size(#[string] path: String) -> Result<Option<u32>, deno_core::error::AnyError> {
     let size = mpv::op_file_size(path);
     Ok(size)
 }
@@ -91,8 +91,8 @@ fn op_is_file(#[string] path: String) -> Result<bool, deno_core::error::AnyError
 fn op_read_dir(
     #[string] path: String,
     #[string] filter: Option<String>,
-) -> Result<Vec<String>, deno_core::error::AnyError> {
-    let v: Vec<String> = mpv::op_read_dir(path, filter);
+) -> Result<Option<Vec<String>>, deno_core::error::AnyError> {
+    let v = mpv::op_read_dir(path, filter);
     Ok(v)
 }
 
