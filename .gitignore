@@ -1,5 +1,6 @@
 .million
 bun.lockb
+Cargo.lock
 
 # Logs
 dist
