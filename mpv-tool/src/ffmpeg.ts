@@ -5,6 +5,8 @@ import { existsSync } from "./fs"
 import { detectCmd } from "./ext"
 import { getTmpDir } from "./tmp"
 import { randomId } from "./math"
+import { replaceExt } from "./path"
+import { getCurrentSubtitle, getSubtitleTracks } from "./subtitle"
 
 const defaultMacExeName = "ffmpeg"
 const defaultWindowsExeName = "ffmpeg.exe"
@@ -42,15 +44,23 @@ export function detectFfmpeg(): false | string {
   return detectCmd("ffmpeg")
 }
 
+export type GifConfig = {
+  fps: number
+  maxWidth: number
+  flags: string
+}
+
 export async function cutVideo(
   area: [number, number],
   videoPath: string,
   outputPath: string,
+  gifConfig: GifConfig | undefined,
   ffmpeg: string,
 ) {
   const [ss, to] = area.map((i) => i.toString())
   const cmd = [
     ffmpeg,
+    "-y",
     "-nostdin",
     "-accurate_seek",
     "-ss",
@@ -59,18 +69,40 @@ export async function cutVideo(
     to,
     "-i",
     videoPath,
-    // "-c",
-    // "copy",
-    // "-map",
-    // "0",
-    // "-avoid_negative_ts",
-    // "make_zero",
-    // only video and audio
-    // "-dn",
-    "-y",
-    outputPath,
   ]
-  // console.log("cmd", cmd.join(" "))
+  const sub = getCurrentSubtitle()
+  if (gifConfig) {
+    const { fps, flags, maxWidth } = gifConfig
+    const vf = [`fps=${fps}`, `scale=${maxWidth}:-1:flags=${flags}`]
+
+    if (sub) {
+      if (sub.external) {
+      } else {
+        vf.push(`subtitles=${videoPath}:si=${sub.id}`)
+      }
+    } else {
+      cmd.push("-sn")
+    }
+
+    cmd.push("-vf", vf.join(","))
+    cmd.push(replaceExt(outputPath, "gif"))
+  } else {
+    const vf: string[] = []
+    if (sub) {
+      if (sub.external) {
+      } else {
+        vf.push(`subtitles=${videoPath}:si=${sub.id}`)
+      }
+    } else {
+      cmd.push("-sn")
+    }
+    if (vf.length) {
+      cmd.push("-vf", vf.join(","))
+    }
+    cmd.push("-c", "copy")
+    cmd.push(outputPath)
+  }
+  // console.log("cmd:", cmd.join(' '))
   try {
     await execAsync(cmd)
   } catch (e) {
@@ -92,11 +124,13 @@ export async function cropImage(
   const { x, y, width, height } = rect
   const cmd = [
     ffmpeg,
+    "-y",
+    "-nostdin",
+    "-accurate_seek",
     "-i",
     tmpPath,
     "-vf",
     `crop=${width}:${height}:${x}:${y}`,
-    "-y",
     outputPath,
   ]
   // console.log("cmd", cmd.join(" "))
@@ -115,27 +149,33 @@ export async function cropVideo(
   area: [number, number],
   rect: Rect,
   outputPath: string,
+  gifConfig: GifConfig | undefined,
   ffmpeg: string,
 ) {
   const [ss, to] = area
   const { width, height, x, y } = rect
   const cmd = [
     ffmpeg,
+    "-y",
     "-nostdin",
+    "-accurate_seek",
     "-ss",
     ss.toString(),
     "-to",
     to.toString(),
-
     "-i",
     videoPath,
     "-vf",
-
-    `crop=${width}:${height}:${x}:${y}`,
-
-    "-y",
-    outputPath,
   ]
+  if (gifConfig) {
+    const { fps, flags, maxWidth } = gifConfig
+    cmd.push(
+      `crop=${width}:${height}:${x}:${y},fps=${fps},scale=${maxWidth}:-1:flags=${flags}`,
+    )
+    cmd.push(replaceExt(outputPath, "gif"))
+  } else {
+    cmd.push("-c", "copy", `crop=${width}:${height}:${x}:${y}`, outputPath)
+  }
   // console.log("cmd: ", cmd.join(' '))
   try {
     await execAsync(cmd)

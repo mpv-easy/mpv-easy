@@ -7,15 +7,24 @@ export const pluginName = "@mpv-easy/cut"
 export const defaultConfig: CutConfig = {
   cutEventName: "cut",
   outputEventName: "output",
+  outputGifEventName: "output-gif",
   cancelEventName: "cancel",
   outputDirectory: "",
+  fps: 24,
+  // https://ffmpeg.org/ffmpeg-scaler.html#toc-Scaler-Options
+  flags: "spline",
+  maxWidth: 1024,
 }
 
 export type CutConfig = {
   cutEventName: string
   outputEventName: string
+  outputGifEventName: string
   cancelEventName: string
   outputDirectory: string
+  fps: number
+  flags: string
+  maxWidth: number
 }
 
 declare module "@mpv-easy/plugin" {

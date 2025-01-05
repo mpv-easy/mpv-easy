@@ -10,13 +10,23 @@ import {
   detectFfmpeg,
   getOptions,
   getProperty,
+  GifConfig,
   PropertyNumber,
   registerScriptMessage,
 } from "@mpv-easy/tool"
 import { isRemote } from "@mpv-easy/tool"
 import { hideNotification, showNotification } from "@mpv-easy/tool"
 
-const { outputEventName, cutEventName, cancelEventName, outputDirectory } = {
+const {
+  outputEventName,
+  cutEventName,
+  cancelEventName,
+  outputDirectory,
+  outputGifEventName,
+  fps,
+  flags,
+  maxWidth,
+} = {
   ...defaultConfig,
   ...getOptions("cut", {
     "cut-event-name": {
@@ -27,6 +37,10 @@ const { outputEventName, cutEventName, cancelEventName, outputDirectory } = {
       type: "string",
       key: "outputEventName",
     },
+    "output-gif-event-name": {
+      type: "string",
+      key: "outputGifEventName",
+    },
     "cancel-event-name": {
       type: "string",
       key: "cancelEventName",
@@ -34,6 +48,18 @@ const { outputEventName, cutEventName, cancelEventName, outputDirectory } = {
     "output-directory": {
       type: "string",
       key: "outputDirectory",
+    },
+    fps: {
+      type: "number",
+      key: "fps",
+    },
+    flags: {
+      type: "string",
+      key: "flags",
+    },
+    "max-width": {
+      type: "number",
+      key: "maxWidth",
     },
   }),
 }
@@ -59,7 +85,7 @@ function cancel() {
   renderLabel()
 }
 
-async function output() {
+async function output(gitConfig?: GifConfig) {
   const path = getProperty("path")
   if (!path) {
     showNotification("video not found")
@@ -71,7 +97,7 @@ async function output() {
   }
   const segment = getVideoSegment(points)
   if (!segment) {
-    showNotification("cut segment not found")
+    showNotification("video segment not found")
     return
   }
   const ffmpeg = detectFfmpeg()
@@ -81,13 +107,13 @@ async function output() {
   }
 
   const outputPath = getCutVideoPath(path, segment, undefined, outputDirectory)
-  const ok = await cutVideo(segment, path, outputPath, ffmpeg)
+  const ok = await cutVideo(segment, path, outputPath, gitConfig, ffmpeg)
   hideNotification()
   if (!ok) {
-    showNotification("failed to cut")
+    showNotification("failed to output")
     return
   }
-  showNotification("cut finish")
+  showNotification("output finish")
 }
 
 registerScriptMessage(cutEventName, () => {
@@ -100,4 +126,12 @@ registerScriptMessage(cancelEventName, () => {
 
 registerScriptMessage(outputEventName, () => {
   output()
+})
+
+registerScriptMessage(outputGifEventName, () => {
+  output({
+    fps,
+    flags,
+    maxWidth,
+  })
 })

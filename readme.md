@@ -50,6 +50,7 @@ set -x MPV_SCRIPT_DIR /your_mpv_dir/portable_config/scripts ; pnpm run dev-copy
 | c          | script-message cut                   |
 | C          | script-message crop                  |
 | o          | script-message output                |
+| g          | script-message output-gif            |
 | ESC        | script-message cancel                |
 | UP         | script-message change-volume +10     |
 | DOWN       | script-message change-volume -10     |

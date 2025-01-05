@@ -40,6 +40,7 @@ Add configuration to input.conf
 ```
 c         script-message cut
 o         script-message output
+g         script-message output-gif
 ESC       script-message cancel
 ```
 
@@ -49,8 +50,12 @@ config file: `cut.conf`
 ```conf
 cut-event-name="cut"
 output-event-name="output"
+output-gif-event-name="output-gif"
 cancel-event-name="cancel"
 output-directory=""
+max-width=600
+fps=24
+flags="spline"
 ```
 
 ## todo

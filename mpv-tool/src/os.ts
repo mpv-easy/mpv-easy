@@ -1,4 +1,4 @@
-import { execSync } from "./common"
+import { execSync, getOs } from "./common"
 
 export const LangList = [
   "en-US",
@@ -38,9 +38,17 @@ export type Lang = (typeof LangList)[number]
 let _lang: Lang
 export function getLang(): Lang {
   if (_lang) return _lang
-  return (_lang = execSync([
-    "powershell",
-    "-c",
-    "(Get-Culture).Name",
-  ]).trim() as Lang)
+  switch (getOs()) {
+    case "windows":
+      return (_lang = execSync([
+        "powershell",
+        "-c",
+        "(Get-Culture).Name",
+      ]).trim() as Lang)
+    case "linux":
+    case "darwin":
+    case "android": {
+      return "en-US"
+    }
+  }
 }

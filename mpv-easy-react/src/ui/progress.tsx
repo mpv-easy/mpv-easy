@@ -9,6 +9,7 @@ import {
   cropImage,
   cropVideo,
   randomId,
+  GifConfig,
 } from "@mpv-easy/tool"
 import { Box, type MpDom } from "@mpv-easy/react"
 import React, { useRef, useState, useEffect } from "react"
@@ -99,8 +100,8 @@ export const Progress = ({ width, ...props }: MpDomProps) => {
     }
   }
 
-  const outputRef = useRef<() => Promise<void>>(null)
-  outputRef.current = async () => {
+  const outputRef = useRef<(gifConfig?: GifConfig) => Promise<void>>(null)
+  outputRef.current = async (gifConfig?: GifConfig) => {
     if (!path.length) {
       showNotification("video not found")
       return
@@ -130,7 +131,14 @@ export const Progress = ({ width, ...props }: MpDomProps) => {
           cropConfig.outputDirectory,
         )
         showNotification("crop starting")
-        const ok = await cropVideo(path, segment, rect, outputPath, ffmpeg)
+        const ok = await cropVideo(
+          path,
+          segment,
+          rect,
+          outputPath,
+          gifConfig,
+          ffmpeg,
+        )
         // TODO: To reuse fragments, don't remove cutPoints, should use esc to remove
         // dispatch.setCutPoints([])
         if (!ok) {
@@ -170,20 +178,21 @@ export const Progress = ({ width, ...props }: MpDomProps) => {
       return
     }
 
-    showNotification("cut starting")
+    showNotification("output starting")
 
     const ok = await cutVideo(
       segment,
       path,
       getCutVideoPath(path, segment, undefined, cutConfig.outputDirectory),
+      gifConfig,
       ffmpeg,
     )
     dispatch.setCutPoints([])
     if (!ok) {
-      showNotification("failed to cut")
+      showNotification("failed to output")
       return
     }
-    showNotification("cut finish")
+    showNotification("output finish")
   }
 
   useEffect(() => {
@@ -204,14 +213,22 @@ export const Progress = ({ width, ...props }: MpDomProps) => {
   }, [videoParams?.w, videoParams?.h, supportThumbfast, isSeekable])
 
   useEffect(() => {
-    registerScriptMessage("cut", () => {
+    registerScriptMessage(cutConfig.cutEventName, () => {
       cutRef.current?.()
     })
-    registerScriptMessage("cancel", () => {
+    registerScriptMessage(cutConfig.cancelEventName, () => {
       cancelRef.current?.()
     })
-    registerScriptMessage("output", () => {
+    registerScriptMessage(cutConfig.outputEventName, () => {
       outputRef.current?.()
+    })
+
+    registerScriptMessage(cutConfig.outputGifEventName, () => {
+      outputRef.current?.({
+        fps: cutConfig.fps,
+        flags: cutConfig.flags,
+        maxWidth: cutConfig.maxWidth,
+      })
     })
   }, [])
 
