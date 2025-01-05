@@ -1,7 +1,7 @@
 [workspace]
 members = [
   "mpv-deno",
-  "mpv-qjs",
+  # "mpv-qjs",
   "mpv-easy-client",
   # "mpv-boa",
   "mpv-easy-ext",
