@@ -32,7 +32,7 @@ import {
   osdDimensionsSelector,
 } from "../store"
 import { ThumbFast } from "@mpv-easy/thumbfast"
-import { getCutVideoPath, getVideoSegment } from "@mpv-easy/cut"
+import { appendPoint, getCutVideoPath, getVideoSegment } from "@mpv-easy/cut"
 import { dispatch, useSelector } from "../models"
 import { getCropImagePath, getCropRect } from "@mpv-easy/crop"
 
@@ -69,10 +69,7 @@ export const Progress = ({ width, ...props }: MpDomProps) => {
 
   const cutRef = useRef<(() => void) | null>(null)
   cutRef.current = () => {
-    const newPoints = [...cutPoints, curCutPoint]
-    while (newPoints.length > 2) {
-      newPoints.shift()
-    }
+    const newPoints = appendPoint(cutPoints, curCutPoint)
     dispatch.setCutPoints(newPoints)
   }
 

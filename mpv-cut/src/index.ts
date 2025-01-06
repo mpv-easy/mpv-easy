@@ -45,6 +45,9 @@ export function appendPoint(points: number[], n: number): number[] {
   while (newPoints.length > 2) {
     newPoints.shift()
   }
+  if (newPoints.length === 2 && newPoints[0] === newPoints[1]) {
+    newPoints.pop()
+  }
   return newPoints
 }
 
