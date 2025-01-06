@@ -1,12 +1,12 @@
 import { execAsync, getOs, Rect } from "./common"
 import { joinPath, screenshotToFile } from "./mpv"
-import { getDefaultBinDirPath, removeFile } from "./rs-ext"
+import { getDefaultBinDirPath } from "./rs-ext"
 import { existsSync } from "./fs"
 import { detectCmd } from "./ext"
 import { getTmpDir } from "./tmp"
 import { randomId } from "./math"
 import { replaceExt } from "./path"
-import { getCurrentSubtitle, getSubtitleTracks } from "./subtitle"
+// import { getCurrentSubtitle, getSubtitleTracks } from "./subtitle"
 
 const defaultMacExeName = "ffmpeg"
 const defaultWindowsExeName = "ffmpeg.exe"
@@ -70,35 +70,35 @@ export async function cutVideo(
     "-i",
     videoPath,
   ]
-  const sub = getCurrentSubtitle()
+  // const sub = getCurrentSubtitle()
   if (gifConfig) {
     const { fps, flags, maxWidth } = gifConfig
     const vf = [`fps=${fps}`, `scale=${maxWidth}:-1:flags=${flags}`]
 
-    if (sub) {
-      if (sub.external) {
-      } else {
-        vf.push(`subtitles=${videoPath}:si=${sub.id}`)
-      }
-    } else {
-      cmd.push("-sn")
-    }
+    // if (sub) {
+    //   if (sub.external) {
+    //   } else {
+    //     vf.push(`subtitles=${videoPath}:si=${sub.id}`)
+    //   }
+    // } else {
+    //   cmd.push("-sn")
+    // }
 
     cmd.push("-vf", vf.join(","))
     cmd.push(replaceExt(outputPath, "gif"))
   } else {
-    const vf: string[] = []
-    if (sub) {
-      if (sub.external) {
-      } else {
-        vf.push(`subtitles=${videoPath}:si=${sub.id}`)
-      }
-    } else {
-      cmd.push("-sn")
-    }
-    if (vf.length) {
-      cmd.push("-vf", vf.join(","))
-    }
+    // const vf: string[] = []
+    // if (sub) {
+    //   if (sub.external) {
+    //   } else {
+    //     vf.push(`subtitles=${videoPath}:si=${sub.id}`)
+    //   }
+    // } else {
+    //   cmd.push("-sn")
+    // }
+    // if (vf.length) {
+    //   cmd.push("-vf", vf.join(","))
+    // }
     cmd.push("-c", "copy")
     cmd.push(outputPath)
   }
