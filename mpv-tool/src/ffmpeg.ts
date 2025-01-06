@@ -174,7 +174,8 @@ export async function cropVideo(
     )
     cmd.push(replaceExt(outputPath, "gif"))
   } else {
-    cmd.push("-c", "copy", `crop=${width}:${height}:${x}:${y}`, outputPath)
+    cmd.push(`crop=${width}:${height}:${x}:${y}`, outputPath)
+    cmd.push("-c", "copy", "-c:v", "libx265")
   }
   // console.log("cmd: ", cmd.join(' '))
   try {
