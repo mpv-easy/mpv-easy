@@ -197,10 +197,11 @@ const store = defineStore({
       if (newPos === pos) {
         return state
       }
-      state[pluginName].player["playlist-play-index"] = newPos
-      state[pluginName].player.path = list[newPos]
-      pathProp.value = list[newPos]
-      // commandv("playlist-play-index", newPos)
+      // console.log('next: ', newPos, pos, list[newPos])
+      // state[pluginName].player["playlist-play-index"] = newPos
+      // state[pluginName].player.path = list[newPos]
+      // pathProp.value = list[newPos]
+      commandv("playlist-play-index", newPos)
       return { ...state }
     },
     previous(state) {
@@ -212,9 +213,9 @@ const store = defineStore({
       if (newPos === pos) {
         return state
       }
-      state[pluginName].player["playlist-play-index"] = newPos
-      state[pluginName].player.path = list[newPos]
-      pathProp.value = list[newPos]
+      // state[pluginName].player["playlist-play-index"] = newPos
+      // state[pluginName].player.path = list[newPos]
+      // pathProp.value = list[newPos]
       command(`playlist-play-index ${newPos}`)
       return { ...state }
     },
