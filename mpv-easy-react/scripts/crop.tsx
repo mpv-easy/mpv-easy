@@ -72,8 +72,7 @@ const {
 function App() {
   const [showCrop, setShowCrop] = useState(false)
   const [points, setPoints] = useState<[number, number][]>([])
-  const w = usePropertyNumber("osd-dimensions/w", 0)[0]
-  const h = usePropertyNumber("osd-dimensions/h", 0)[0]
+  const { w, h } = useProperty("osd-dimensions")[0]
 
   const mousePos = useProperty("mouse-pos", {
     x: 0,

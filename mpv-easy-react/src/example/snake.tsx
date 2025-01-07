@@ -1,5 +1,5 @@
-import { addForcedKeyBinding, choice, OsdDimensions } from "@mpv-easy/tool"
-import { Box, useProperty, usePropertyNumber } from "@mpv-easy/react"
+import { addForcedKeyBinding, choice } from "@mpv-easy/tool"
+import { Box, useProperty } from "@mpv-easy/react"
 import React, { useEffect, useRef, useState } from "react"
 
 const cellHCount = 4
@@ -92,8 +92,7 @@ class Snake {
 const snake = new Snake()
 
 export function SnakeGame() {
-  const w = usePropertyNumber("osd-dimensions/w", 0)[0]
-  const h = usePropertyNumber("osd-dimensions/h", 0)[0]
+  const { w, h } = useProperty("osd-dimensions")[0]
   const [body, setBody] = useState(snake.body)
 
   const [food, setFood] = useState({ x: -1, y: -1 })

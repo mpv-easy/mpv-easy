@@ -9,6 +9,10 @@ import {
   setPropertyNative,
   setPropertyNumber,
   StringProp,
+  getPropertyNumber,
+  getProperty,
+  getPropertyBool,
+  getPropertyNative,
 } from "@mpv-easy/tool"
 import { useState } from "react"
 
@@ -36,8 +40,30 @@ const setMpvProp = (name: string, type: keyof MpvType, value: any) => {
   }
 }
 
-function useProp<T>(name: string, type: keyof MpvType, defaultValue: T) {
-  const [prop, setProp] = useState(defaultValue)
+const getMpvProp = <T>(name: string, type: keyof MpvType): T => {
+  switch (type) {
+    case "bool": {
+      return getPropertyBool(name) as T
+    }
+    case "string": {
+      return getProperty(name) as T
+    }
+    case "number": {
+      return getPropertyNumber(name) as T
+    }
+    case "native": {
+      return getPropertyNative(name) as T
+    }
+    default: {
+      throw new Error(`prop type error: ${name} ${type}`)
+    }
+  }
+}
+
+function useProp<T>(name: string, type: keyof MpvType, defaultValue?: T) {
+  const [prop, setProp] = useState<T>(
+    typeof defaultValue === "undefined" ? getMpvProp(name, type) : defaultValue,
+  )
 
   observeProperty(name, type, (_, value) => {
     if (prop !== value) setProp(value)
@@ -59,26 +85,26 @@ function useProp<T>(name: string, type: keyof MpvType, defaultValue: T) {
 
 export function useProperty<K extends keyof NativeProp, T = NativeProp[K]>(
   name: K,
-  defaultValue: NoInfer<T>,
+  defaultValue?: NoInfer<T>,
 ) {
   return useProp<T>(name, "native", defaultValue)
 }
 
 export function usePropertyBool(
   name: BoolProp | (string & {}),
-  defaultValue: boolean,
+  defaultValue?: boolean,
 ) {
   return useProp<boolean>(name, "bool", defaultValue)
 }
 export function usePropertyNumber(
   name: NumberProp | (string & {}),
-  defaultValue: number,
+  defaultValue?: number,
 ) {
   return useProp<number>(name, "number", defaultValue)
 }
 export function usePropertyString(
   name: StringProp | (string & {}),
-  defaultValue: string,
+  defaultValue?: string,
 ) {
   return useProp<string>(name, "string", defaultValue)
 }

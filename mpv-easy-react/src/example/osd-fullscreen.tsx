@@ -1,19 +1,9 @@
-import { Box } from "@mpv-easy/react"
-import { PropertyNative } from "@mpv-easy/tool"
-import React, { useEffect, useState } from "react"
-
-const dim = new PropertyNative("osd-dimensions")
+import { Box, useProperty } from "@mpv-easy/react"
+import React from "react"
 
 export function OsdFullscreen() {
-  const [osd, setOsd] = useState(dim.value)
-  const w = osd?.w || 0
-  const h = osd?.h || 0
+  const { w, h } = useProperty("osd-dimensions")[0]
 
-  useEffect(() => {
-    dim.observe((_, v) => {
-      setOsd(v)
-    })
-  }, [])
   return (
     <Box
       id="box-main"
@@ -24,12 +14,7 @@ export function OsdFullscreen() {
       justifyContent="center"
       alignItems="center"
     >
-      <Box
-        id="box-text"
-        text={`${osd?.w} ${osd?.h}`}
-        fontSize={w / 8}
-        color="#00FF00"
-      />
+      <Box id="box-text" text={`${w} ${h}`} fontSize={w / 8} color="#00FF00" />
     </Box>
   )
 }
