@@ -1,4 +1,6 @@
 import type { KeyEvent } from "./mpv"
+import { BoolProp, MousePos, NumberProp, StringProp } from "./type-prop"
+export * from "./type-prop"
 
 declare global {
   // @ts-ignore
@@ -17,13 +19,6 @@ export type LogLevel =
   | "v"
   | "debug"
   | "trace"
-
-export type MousePos = {
-  // mouse in video or toolbar
-  hover: boolean
-  x: number
-  y: number
-}
 
 export type MpvType = {
   string: string
@@ -110,33 +105,42 @@ export type MP = {
 
   abort_async_command(t: number): void
 
-  get_property(name: string, def: string): string
-  get_property(name: string): string | undefined
+  get_property(name: StringProp | (string & {}), def: string): string
+  get_property(name: StringProp | (string & {})): string | undefined
 
   get_property_osd(name: string, def?: string): string
 
-  get_property_bool(name: string, def: boolean): boolean
-  get_property_bool(name: string): boolean | undefined
+  get_property_bool(name: BoolProp | (string & {}), def: boolean): boolean
+  get_property_bool(name: BoolProp | (string & {})): boolean | undefined
 
-  get_property_number(name: string, def: number): number
-  get_property_number(name: string): number | undefined
+  get_property_number(name: NumberProp | (string & {}), def: number): number
+  get_property_number(name: NumberProp | (string & {})): number | undefined
 
   get_property_native<T = string | undefined | boolean | number>(
     name: string,
   ): T
   get_property_native<T = unknown>(name: string, def?: T): T
 
-  get_property_string(name: string): string | undefined
-  get_property_string(name: string, def: string): string
+  get_property_string(name: StringProp | (string & {})): string | undefined
+  get_property_string(name: StringProp | (string & {}), def: string): string
 
   set_property(name: string, value: string): true | undefined
 
-  set_property_bool(name: string, value: boolean): true | undefined
+  set_property_bool(
+    name: BoolProp | (string & {}),
+    value: boolean,
+  ): true | undefined
 
-  set_property_number(name: string, value: number): true | undefined
+  set_property_number(
+    name: NumberProp | (string & {}),
+    value: number,
+  ): true | undefined
 
   set_property_native(name: string, value: unknown): true | undefined
-  set_property_string(name: string, value: string): true | undefined
+  set_property_string(
+    name: StringProp | (string & {}),
+    value: string,
+  ): true | undefined
 
   get_time(): number
   set_osd_ass(res_x: number, res_y: number, data: string): unknown
@@ -279,48 +283,4 @@ export type MP = {
       content_str: string,
     ): (...args: unknown[]) => unknown
   }
-}
-
-export type OsdDimensions = {
-  aspect: number
-  h: number
-  mb: number
-  ml: number
-  mr: number
-  mt: number
-  par: number
-  w: number
-}
-
-export type TrackItem = {
-  title?: string
-  lang?: string
-  albumart: boolean
-  codec: "h264" | (string & {})
-  "decoder-desc": string
-  default: boolean
-  "demux-fps": number
-  "demux-h": number
-  "demux-par": number
-  "demux-w": number
-  dependent: boolean
-  external: boolean
-  "ff-index": number
-  forced: boolean
-  "hearing-impaired": boolean
-  id: number
-  image: boolean
-  "main-selection": number
-  selected: boolean
-  "src-id": number
-  type: "video" | "audio" | "image" | "sub" | (string & {})
-  "visual-impaired": boolean
-  "external-filename"?: string
-}
-
-export type Geometry = {
-  w: number
-  h: number
-  x: number
-  y: number
 }

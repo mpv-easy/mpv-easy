@@ -1,10 +1,9 @@
 import {
   type AlphabetKey,
   AlphabetKeys,
-  DEFAULT_ASS_HEIGHT,
   type NumberKey,
   NumberKeys,
-} from "./const"
+} from "./type"
 import { existsSync } from "./fs"
 import {
   command,
@@ -18,6 +17,7 @@ import {
   osdMessage,
 } from "./mpv"
 import { normalize } from "./path"
+import { DEFAULT_ASS_HEIGHT } from "./const"
 
 export const VideoTypes =
   "3g2,3gp,asf,avi,f4v,flv,h264,h265,m2ts,m4v,mkv,mov,mp4,mp4v,mpeg,mpg,ogm,ogv,rm,rmvb,ts,vob,webm,wmv,y4m,m4s".split(

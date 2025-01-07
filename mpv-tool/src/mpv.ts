@@ -8,14 +8,17 @@ import type {
   FileInfo,
   LogLevel,
   MP,
-  MousePos,
   MpvType,
   OSDMargins,
   MpvOsdOverlay,
   OSDSize,
   StrToType,
   CommandResult,
+  StringProp,
+  BoolProp,
+  NumberProp,
 } from "./type"
+import { MousePos } from "./type-prop"
 
 export function getMP(): MP {
   // @ts-ignore
@@ -58,9 +61,17 @@ export function abortAsyncCommand(t: number) {
 }
 
 // export const getProperty = getMP().get_property
-export function getProperty(name: string): string | undefined
-export function getProperty(name: string, def: string): string
-export function getProperty(name: string, def?: string): string | undefined {
+export function getProperty(
+  name: StringProp | (string & {}),
+): string | undefined
+export function getProperty(
+  name: StringProp | (string & {}),
+  def: string,
+): string
+export function getProperty(
+  name: StringProp | (string & {}),
+  def?: string,
+): string | undefined {
   return getMP().get_property(name) ?? def
 }
 
@@ -72,18 +83,28 @@ export function getPropertyOsd(name: string, def?: string): string | undefined {
 }
 
 // export const getPropertyBool = getMP().get_property_bool
-export function getPropertyBool(name: string): boolean | undefined
-export function getPropertyBool(name: string, def: boolean): boolean
 export function getPropertyBool(
-  name: string,
+  name: BoolProp | (string & {}),
+): boolean | undefined
+export function getPropertyBool(
+  name: BoolProp | (string & {}),
+  def: boolean,
+): boolean
+export function getPropertyBool(
+  name: BoolProp | (string & {}),
   def?: boolean,
 ): boolean | undefined {
   return getMP().get_property_bool(name) ?? def
 }
 
 // export const getPropertyString = getMP().get_property_string
-export function getPropertyString(name: string): string | undefined
-export function getPropertyString(name: string, def: string): string
+export function getPropertyString(
+  name: StringProp | (string & {}),
+): string | undefined
+export function getPropertyString(
+  name: StringProp | (string & {}),
+  def: string,
+): string
 export function getPropertyString(
   name: string,
   def?: string,
@@ -92,10 +113,15 @@ export function getPropertyString(
 }
 
 // export const getPropertyNumber = getMP().get_property_number
-export function getPropertyNumber(name: string): number | undefined
-export function getPropertyNumber(name: string, def: number): number
 export function getPropertyNumber(
-  name: string,
+  name: NumberProp | (string & {}),
+): number | undefined
+export function getPropertyNumber(
+  name: NumberProp | (string & {}),
+  def: number,
+): number
+export function getPropertyNumber(
+  name: NumberProp | (string & {}),
   def?: number,
 ): number | undefined {
   return getMP().get_property_number(name) ?? def
@@ -112,20 +138,20 @@ export function setProperty(name: string, value: string): true | undefined {
 }
 
 export function setPropertyBool(
-  name: string,
+  name: BoolProp | (string & {}),
   value: boolean,
 ): true | undefined {
   return getMP().set_property_bool(name, value)
 }
 export function setPropertyString(
-  name: string,
+  name: StringProp | (string & {}),
   value: string,
 ): true | undefined {
   return getMP().set_property(name, value)
 }
 
 export function setPropertyNumber(
-  name: string,
+  name: NumberProp | (string & {}),
   value: number,
 ): true | undefined {
   return getMP().set_property_number(name, value)
@@ -243,33 +269,6 @@ export function registerScriptMessage(
 
 export function unregisterScriptMessage(name: string) {
   return getMP().unregister_script_message(name)
-}
-
-export type VideoParams = {
-  aspect: number
-  "aspect-name": string
-  "average-bpp": number
-  "chroma-location": string
-  colorlevels: string
-  colormatrix: string
-  "crop-h": number
-  "crop-w": number
-  "crop-x": number
-  "crop-y": number
-  dh: number
-  dw: number
-  gamma: string
-  h: number
-  light: string
-  par: number
-  pixelformat: string
-  primaries: string
-  rotate: number
-  sar: number
-  "sar-name": string
-  "sig-peak": number
-  "stereo-in": string
-  w: number
 }
 
 export function createOsdOverlay(
