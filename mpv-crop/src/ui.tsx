@@ -239,10 +239,8 @@ export function getCropRect(points: [number, number][]): Rect | undefined {
   const osd = getOsdSize()!
   const osdRect = new Rect(0, 0, osd.width, osd.height)
   const osdCropRect = new Rect(left, top, right - left, bottom - top)
-  const videoParams = getPropertyNative<VideoParams>("video-params")!
-  const videoTargetParams = getPropertyNative<VideoParams>(
-    "video-target-params",
-  )!
+  const videoParams = getPropertyNative("video-params")!
+  const videoTargetParams = getPropertyNative("video-target-params")!
   if (
     videoTargetParams.w <= osdRect.width &&
     videoTargetParams.h <= osdRect.height &&

@@ -7,7 +7,6 @@ import {
   registerEvent,
   registerIdle,
   registerScriptMessage,
-  VideoParams,
 } from "@mpv-easy/tool"
 import {
   ThumbFast,
@@ -151,7 +150,7 @@ function start() {
 
 function initThumb() {
   // console.log('initThumb')
-  const params = getPropertyNative<VideoParams>("video-params")
+  const params = getPropertyNative("video-params")
   if (thumb) {
     thumb.exit()
   }
@@ -170,7 +169,7 @@ function initThumb() {
   })
 }
 function update() {
-  const params = getPropertyNative<VideoParams>("video-params")
+  const params = getPropertyNative("video-params")
   if (
     params &&
     (params.w !== thumb.videoWidth || params.h !== thumb.videoHeight)

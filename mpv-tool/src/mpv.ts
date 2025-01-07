@@ -132,13 +132,13 @@ export function getPropertyNative<K extends keyof Prop, T = Prop[K]>(
 ): T | undefined
 export function getPropertyNative<K extends keyof Prop, T = Prop[K]>(
   name: K,
-  def: T,
+  def: NoInfer<T>,
 ): T
 export function getPropertyNative<T>(name: string): T | undefined
 export function getPropertyNative<T>(name: string, def: T): T
 export function getPropertyNative<K extends keyof Prop, T = Prop[K]>(
   name: K,
-  def?: T,
+  def?: NoInfer<T>,
 ): T | undefined {
   return getMP().get_property_native(name) ?? def
 }

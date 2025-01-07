@@ -117,11 +117,14 @@ export type MP = {
   get_property_number(name: NumberProp | (string & {})): number | undefined
 
   get_property_native<K extends keyof Prop, T = Prop[K]>(name: K): T
-  get_property_native<K extends keyof Prop, T = Prop[K]>(name: K, def?: T): T
+  get_property_native<K extends keyof Prop, T = Prop[K]>(
+    name: K,
+    def?: NoInfer<T>,
+  ): T
   get_property_native<T = string | undefined | boolean | number>(
     name: string,
   ): T
-  get_property_native<T = unknown>(name: string, def?: T): T
+  get_property_native<T = unknown>(name: string, def?: NoInfer<T>): T
 
   get_property_string(name: StringProp | (string & {})): string | undefined
   get_property_string(name: StringProp | (string & {}), def: string): string

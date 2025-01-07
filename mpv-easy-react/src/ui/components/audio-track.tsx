@@ -16,7 +16,7 @@ import {
 import { dispatch, useSelector } from "../../models"
 
 function getAudioTracks() {
-  const trackList = getPropertyNative<TrackItem[]>("track-list") || []
+  const trackList = getPropertyNative("track-list") || []
   return trackList.filter((i) => i.type === "audio")
 }
 export const AudioTrack = () => {

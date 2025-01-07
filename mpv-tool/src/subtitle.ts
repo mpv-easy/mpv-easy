@@ -139,7 +139,7 @@ export type SubtitleTrack = {
 
 export function getSubtitleTracks(): SubtitleTrack[] {
   const tracks: SubtitleTrack[] = []
-  const list = getPropertyNative<TrackItem[]>("track-list", []).filter(
+  const list = getPropertyNative("track-list", []).filter(
     (i) => i.type === "sub",
   )
   for (let i = 0; i < list.length; i++) {
