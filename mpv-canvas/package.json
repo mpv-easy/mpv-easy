@@ -16,7 +16,7 @@
     "@mpv-easy/react": "workspace:*",
     "@mpv-easy/tool": "workspace:*",
     "e-color": "0.1.7",
-    "fabric": "6.5.3",
+    "fabric": "6.5.4",
     "fontfaceobserver": "2.3.0",
     "lodash-es": "4.17.21"
   },
