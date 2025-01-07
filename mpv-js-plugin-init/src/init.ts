@@ -27,11 +27,11 @@ for (const lv of levels) {
 
 // the following return undefined on error, null passthrough, or legacy object
 mp.get_osd_size = function get_osd_size() {
-  const d = mp.get_property_native("osd-dimensions") as any
+  const d = mp.get_property_native("osd-dimensions")
   return d && { width: d.w, height: d.h, aspect: d.aspect }
 }
 mp.get_osd_margins = function get_osd_margins() {
-  const d = mp.get_property_native("osd-dimensions") as any
+  const d = mp.get_property_native("osd-dimensions")
   return d && { left: d.ml, right: d.mr, top: d.mt, bottom: d.mb }
 }
 

@@ -10,6 +10,7 @@ import {
   cropVideo,
   randomId,
   GifConfig,
+  clamp,
 } from "@mpv-easy/tool"
 import { Box, type MpDom } from "@mpv-easy/react"
 import React, { useRef, useState, useEffect } from "react"
@@ -243,12 +244,16 @@ export const Progress = ({ width, ...props }: MpDomProps) => {
 
   let thumbPos: undefined | { x: number; y: number } = undefined
 
-  if (!mouseOut) {
+  if (!mouseOut && thumbRef.current) {
     const width = progress.cursorSize
     const x = mousePos.x + width / 2
     const y = osd.h - cellSize
-    const thumbX = x + width / 2 - (thumbRef.current?.thumbWidth ?? 0) / 2
-    const thumbY = y - (thumbRef.current?.thumbHeight ?? 0) - cellSize
+    const thumbX = clamp(
+      x + width / 2 - thumbRef.current.thumbWidth / 2,
+      0,
+      osd.w - thumbRef.current.thumbWidth,
+    )
+    const thumbY = y - thumbRef.current.thumbHeight - cellSize
     thumbPos = { x: thumbX, y: thumbY }
   }
   const fontSize = useSelector(smallFontSizeSelector)

@@ -4,7 +4,6 @@ import {
   cropImage,
   detectFfmpeg,
   getOptions,
-  MousePos,
   showNotification,
   registerScriptMessage,
 } from "@mpv-easy/tool"
@@ -73,13 +72,8 @@ const {
 function App() {
   const [showCrop, setShowCrop] = useState(false)
   const [points, setPoints] = useState<[number, number][]>([])
-  const osd = useProperty("osd-dimensions", {
-    w: 0,
-    h: 0,
-  })[0]
-
-  const w = osd.w || 0
-  const h = osd.h || 0
+  const w = usePropertyNumber("osd-dimensions/w", 0)[0]
+  const h = usePropertyNumber("osd-dimensions/h", 0)[0]
 
   const mousePos = useProperty("mouse-pos", {
     x: 0,
