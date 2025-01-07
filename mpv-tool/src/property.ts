@@ -9,7 +9,7 @@ import {
   setPropertyNumber,
   setPropertyString,
 } from "./mpv"
-import { BoolProp, NumberProp, Prop, StringProp } from "./type"
+import { BoolProp, NumberProp, NativeProp, StringProp } from "./type"
 
 export class Property<T> {
   constructor(public name: string) {}
@@ -105,7 +105,7 @@ export class PropertyString {
     })
   }
 }
-export class PropertyNative<K extends keyof Prop, T = Prop[K]> {
+export class PropertyNative<K extends keyof NativeProp, T = NativeProp[K]> {
   constructor(public name: K) {}
   get value(): T | undefined {
     return getPropertyNative(this.name)

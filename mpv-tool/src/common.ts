@@ -392,7 +392,7 @@ export function getAssScale(assHeight = DEFAULT_ASS_HEIGHT): number {
     _scaleInit = true
     _lastH = getPropertyNumber("osd-height") || 0
     _lastScale = assHeight / _lastH
-    observePropertyNumber("osd-height", (v) => {
+    observePropertyNumber("osd-height", (_, v) => {
       if (_lastH !== v && v) {
         _lastH = v
         _lastScale = assHeight / _lastH

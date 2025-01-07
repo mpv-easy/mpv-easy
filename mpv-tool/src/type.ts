@@ -1,5 +1,11 @@
 import type { KeyEvent } from "./mpv"
-import { BoolProp, MousePos, NumberProp, Prop, StringProp } from "./type-prop"
+import {
+  BoolProp,
+  MousePos,
+  NumberProp,
+  NativeProp,
+  StringProp,
+} from "./type-prop"
 export * from "./type-prop"
 
 declare global {
@@ -116,8 +122,8 @@ export type MP = {
   get_property_number(name: NumberProp | (string & {}), def: number): number
   get_property_number(name: NumberProp | (string & {})): number | undefined
 
-  get_property_native<K extends keyof Prop, T = Prop[K]>(name: K): T
-  get_property_native<K extends keyof Prop, T = Prop[K]>(
+  get_property_native<K extends keyof NativeProp, T = NativeProp[K]>(name: K): T
+  get_property_native<K extends keyof NativeProp, T = NativeProp[K]>(
     name: K,
     def?: NoInfer<T>,
   ): T

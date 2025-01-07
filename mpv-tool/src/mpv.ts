@@ -2,7 +2,6 @@ import { execSync, getOs } from "./common"
 import { ConfigDir } from "./const"
 import { normalize } from "./path"
 import { Argb } from "e-color"
-
 import type {
   AddKeyBindingFlags,
   FileInfo,
@@ -17,7 +16,7 @@ import type {
   StringProp,
   BoolProp,
   NumberProp,
-  Prop,
+  NativeProp,
 } from "./type"
 import { MousePos } from "./type-prop"
 
@@ -127,19 +126,20 @@ export function getPropertyNumber(
 ): number | undefined {
   return getMP().get_property_number(name) ?? def
 }
-export function getPropertyNative<K extends keyof Prop, T = Prop[K]>(
-  name: K,
-): T | undefined
-export function getPropertyNative<K extends keyof Prop, T = Prop[K]>(
-  name: K,
-  def: NoInfer<T>,
-): T
+export function getPropertyNative<
+  K extends keyof NativeProp,
+  T = NativeProp[K],
+>(name: K): T | undefined
+export function getPropertyNative<
+  K extends keyof NativeProp,
+  T = NativeProp[K],
+>(name: K, def: NoInfer<T>): T
 export function getPropertyNative<T>(name: string): T | undefined
-export function getPropertyNative<T>(name: string, def: T): T
-export function getPropertyNative<K extends keyof Prop, T = Prop[K]>(
-  name: K,
-  def?: NoInfer<T>,
-): T | undefined {
+export function getPropertyNative<T>(name: string, def: NoInfer<T>): T
+export function getPropertyNative<
+  K extends keyof NativeProp,
+  T = NativeProp[K],
+>(name: K, def?: NoInfer<T>): T | undefined {
   return getMP().get_property_native(name) ?? def
 }
 
@@ -227,33 +227,39 @@ export function unregisterEvent(fn: (...args: unknown[]) => void) {
   return getMP().unregister_event(fn)
 }
 
-export function observeProperty<T extends keyof MpvType, P = StrToType<T>>(
-  name: string,
-  type: T,
-  fn: (name: string, value: P) => void,
-) {
+export function observeProperty<
+  K extends (string & {}) | keyof NativeProp,
+  T extends keyof MpvType,
+  P = K extends keyof NativeProp ? NativeProp[K] : StrToType<T>,
+>(name: K, type: T, fn: (name: string, value: P) => void) {
   return getMP().observe_property(name, type as any, fn as any)
 }
 
 export function observePropertyNumber(
   name: NumberProp | (string & {}),
-  fn: (value: number) => void,
+  fn: (name: string, value: number) => void,
 ) {
-  return observeProperty(name, "number", (name: string, v: number) => fn(v))
+  return observeProperty(name, "number", (name: string, v: number) =>
+    fn(name, v),
+  )
 }
 
 export function observePropertyBool(
   name: BoolProp | (string & {}),
-  fn: (value: number) => void,
+  fn: (name: string, value: boolean) => void,
 ) {
-  return observeProperty(name, "bool", (name: string, v: number) => fn(v))
+  return observeProperty(name, "bool", (name: string, v: boolean) =>
+    fn(name, v),
+  )
 }
 
 export function observePropertyString(
   name: StringProp | (string & {}),
-  fn: (value: number) => void,
+  fn: (name: string, value: string) => void,
 ) {
-  return observeProperty(name, "number", (name: string, v: number) => fn(v))
+  return observeProperty(name, "string", (name: string, v: string) =>
+    fn(name, v),
+  )
 }
 
 export function unobserveProperty(fn: (...args: unknown[]) => void) {

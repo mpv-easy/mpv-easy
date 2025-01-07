@@ -3,7 +3,7 @@ import {
   type MpvType,
   NumberProp,
   observeProperty,
-  Prop,
+  NativeProp,
   setProperty,
   setPropertyBool,
   setPropertyNative,
@@ -57,9 +57,9 @@ function useProp<T>(name: string, type: keyof MpvType, defaultValue: T) {
   ] as const
 }
 
-export function useProperty<K extends keyof Prop, T = Prop[K]>(
+export function useProperty<K extends keyof NativeProp, T = NativeProp[K]>(
   name: K,
-  defaultValue: T,
+  defaultValue: NoInfer<T>,
 ) {
   return useProp<T>(name, "native", defaultValue)
 }

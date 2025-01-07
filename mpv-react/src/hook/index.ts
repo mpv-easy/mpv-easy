@@ -1,6 +1,5 @@
 export * from "./mpv"
 export * from "./use-keyboard"
-export * from "./use-osd"
 export * from "./use-property"
 export * from "./use-mousepos"
 export * from "./use-fetch"
