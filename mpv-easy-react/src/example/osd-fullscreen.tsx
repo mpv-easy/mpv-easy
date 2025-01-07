@@ -1,10 +1,8 @@
 import { Box } from "@mpv-easy/react"
-import { MpvPropertyTypeMap, PropertyNative } from "@mpv-easy/tool"
+import { PropertyNative } from "@mpv-easy/tool"
 import React, { useEffect, useState } from "react"
 
-const dim = new PropertyNative<MpvPropertyTypeMap["osd-dimensions"]>(
-  "osd-dimensions",
-)
+const dim = new PropertyNative("osd-dimensions")
 
 export function OsdFullscreen() {
   const [osd, setOsd] = useState(dim.value)

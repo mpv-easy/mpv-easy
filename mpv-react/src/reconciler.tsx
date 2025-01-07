@@ -1,6 +1,5 @@
 import type React from "react"
 import {
-  type MpvPropertyTypeMap,
   PropertyNative,
   addKeyBinding,
   observeProperty,
@@ -385,9 +384,7 @@ export function createRender({
 
     let lastW = 0
     let lastH = 0
-    const dim = new PropertyNative<MpvPropertyTypeMap["osd-dimensions"]>(
-      "osd-dimensions",
-    )
+    const dim = new PropertyNative("osd-dimensions")
     function updateRootNode() {
       const { w, h } = dim.value || { w: 0, h: 0 }
       if (!w || !h || (lastW === w && lastH === h)) {

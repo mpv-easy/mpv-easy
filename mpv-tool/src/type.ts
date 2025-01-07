@@ -1,5 +1,5 @@
 import type { KeyEvent } from "./mpv"
-import { BoolProp, MousePos, NumberProp, StringProp } from "./type-prop"
+import { BoolProp, MousePos, NumberProp, Prop, StringProp } from "./type-prop"
 export * from "./type-prop"
 
 declare global {
@@ -116,6 +116,8 @@ export type MP = {
   get_property_number(name: NumberProp | (string & {}), def: number): number
   get_property_number(name: NumberProp | (string & {})): number | undefined
 
+  get_property_native<K extends keyof Prop, T = Prop[K]>(name: K): T
+  get_property_native<K extends keyof Prop, T = Prop[K]>(name: K, def?: T): T
   get_property_native<T = string | undefined | boolean | number>(
     name: string,
   ): T
@@ -178,17 +180,17 @@ export type MP = {
   observe_property(
     name: string,
     type: "bool",
-    fn: (name: string, value: boolean | undefined) => void,
+    fn: (name: BoolProp | (string & {}), value: boolean | undefined) => void,
   ): void
   observe_property(
     name: string,
     type: "string",
-    fn: (name: string, value: string | undefined) => void,
+    fn: (name: StringProp | (string & {}), value: string | undefined) => void,
   ): void
   observe_property(
     name: string,
     type: "number",
-    fn: (name: string, value: number | undefined) => void,
+    fn: (name: NumberProp | (string & {}), value: number | undefined) => void,
   ): void
   observe_property(
     name: string,

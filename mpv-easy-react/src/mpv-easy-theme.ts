@@ -1,4 +1,4 @@
-import type { MousePos, Rect, VideoParams } from "@mpv-easy/tool"
+import type { MousePos, OsdDimensions, Rect, VideoParams } from "@mpv-easy/tool"
 import { DefaultFps } from "@mpv-easy/react"
 import { cloneDeep } from "lodash-es"
 
@@ -152,16 +152,7 @@ export type EasyConfig = {
     path: string
     "mouse-pos": MousePos
     mute: boolean
-    "osd-dimensions": {
-      w: number
-      h: number
-      aspect: number
-      mb: number
-      ml: number
-      mr: number
-      mt: number
-      par: number
-    }
+    "osd-dimensions": OsdDimensions
     playlist: string[]
     aid: number
     vid: number

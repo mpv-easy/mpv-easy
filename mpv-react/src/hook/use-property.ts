@@ -1,10 +1,14 @@
 import {
+  BoolProp,
   type MpvType,
+  NumberProp,
   observeProperty,
+  Prop,
   setProperty,
   setPropertyBool,
   setPropertyNative,
   setPropertyNumber,
+  StringProp,
 } from "@mpv-easy/tool"
 import { useState } from "react"
 
@@ -53,16 +57,28 @@ function useProp<T>(name: string, type: keyof MpvType, defaultValue: T) {
   ] as const
 }
 
-export function useProperty<T>(name: string, defaultValue: T) {
+export function useProperty<K extends keyof Prop, T = Prop[K]>(
+  name: K,
+  defaultValue: T,
+) {
   return useProp<T>(name, "native", defaultValue)
 }
 
-export function usePropertyBool(name: string, defaultValue: boolean) {
+export function usePropertyBool(
+  name: BoolProp | (string & {}),
+  defaultValue: boolean,
+) {
   return useProp<boolean>(name, "bool", defaultValue)
 }
-export function usePropertyNumber(name: string, defaultValue: number) {
+export function usePropertyNumber(
+  name: NumberProp | (string & {}),
+  defaultValue: number,
+) {
   return useProp<number>(name, "number", defaultValue)
 }
-export function usePropertyString(name: string, defaultValue: string) {
+export function usePropertyString(
+  name: StringProp | (string & {}),
+  defaultValue: string,
+) {
   return useProp<string>(name, "string", defaultValue)
 }

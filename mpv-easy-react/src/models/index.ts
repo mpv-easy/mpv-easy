@@ -15,7 +15,6 @@ import {
   clamp,
   PropertyNumber,
   PropertyNative,
-  MpvPropertyTypeMap,
   getMpvPlaylist,
   normalize,
   dirname,
@@ -319,8 +318,8 @@ export function syncPlayer(store: Store) {
   const durationProp = new PropertyNumber("duration")
   const pauseProp = new PropertyBool("pause")
   const pathProp = new PropertyString("path")
-  const mousePosProp = new PropertyNative<MousePos>("mouse-pos")
-  const videoParamsProp = new PropertyNative<VideoParams>("video-params")
+  const mousePosProp = new PropertyNative("mouse-pos")
+  const videoParamsProp = new PropertyNative("video-params")
   const muteProp = new PropertyBool("mute")
   const seekableProp = new PropertyBool("seekable")
   const videoZoomProp = new PropertyNumber("video-zoom")
@@ -333,9 +332,7 @@ export function syncPlayer(store: Store) {
   const subScaleProp = new PropertyNumber("sub-scale")
   const playlistCountProp = new PropertyNumber("playlist/count")
   const playlistIndexProp = new PropertyNumber("playlist-play-index")
-  const osdDimensionsProp = new PropertyNative<
-    MpvPropertyTypeMap["osd-dimensions"]
-  >("osd-dimensions")
+  const osdDimensionsProp = new PropertyNative("osd-dimensions")
   const mediaTitleProp = new PropertyString("media-title")
 
   const rerender = store.rerender

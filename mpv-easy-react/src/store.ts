@@ -145,7 +145,7 @@ export const playlistSelector = (state: PluginContext) =>
   state[pluginName].player.playlist
 export const osdDimensionsSelector = (state: PluginContext) =>
   state[pluginName].player["osd-dimensions"]
-// getPropertyNative<MpvPropertyTypeMap["osd-dimensions"]>("osd-dimensions")!
+// getPropertyNative("osd-dimensions")!
 
 export const speedSelector = (state: PluginContext) =>
   state[pluginName].player.speed

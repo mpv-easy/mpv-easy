@@ -1,9 +1,7 @@
 import {
-  type MpvPropertyTypeMap,
   getPropertyNative,
   getPropertyNumber,
   observeProperty,
-  print,
 } from "@mpv-easy/tool"
 import { useState } from "react"
 
@@ -26,10 +24,8 @@ export function useOsdHeight() {
 let _lastOsdW = 0
 let _lastOsdH = 0
 export function useOsdDimensions() {
-  const [dimension, setDimension] = useState<
-    MpvPropertyTypeMap["osd-dimensions"]
-  >(
-    getPropertyNative<MpvPropertyTypeMap["osd-dimensions"]>("osd-dimensions", {
+  const [dimension, setDimension] = useState(
+    getPropertyNative("osd-dimensions", {
       w: 0,
       h: 0,
     }),

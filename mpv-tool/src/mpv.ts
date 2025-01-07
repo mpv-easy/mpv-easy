@@ -17,6 +17,7 @@ import type {
   StringProp,
   BoolProp,
   NumberProp,
+  Prop,
 } from "./type"
 import { MousePos } from "./type-prop"
 
@@ -106,7 +107,7 @@ export function getPropertyString(
   def: string,
 ): string
 export function getPropertyString(
-  name: string,
+  name: StringProp | (string & {}),
   def?: string,
 ): string | undefined {
   return getMP().get_property_native<string>(name) ?? def
@@ -126,11 +127,20 @@ export function getPropertyNumber(
 ): number | undefined {
   return getMP().get_property_number(name) ?? def
 }
-// export const getPropertyNative = getMP().get_property_native
+export function getPropertyNative<K extends keyof Prop, T = Prop[K]>(
+  name: K,
+): T | undefined
+export function getPropertyNative<K extends keyof Prop, T = Prop[K]>(
+  name: K,
+  def: T,
+): T
 export function getPropertyNative<T>(name: string): T | undefined
 export function getPropertyNative<T>(name: string, def: T): T
-export function getPropertyNative<T>(name: string, def?: T): T | undefined {
-  return getMP().get_property_native<T>(name) ?? def
+export function getPropertyNative<K extends keyof Prop, T = Prop[K]>(
+  name: K,
+  def?: T,
+): T | undefined {
+  return getMP().get_property_native(name) ?? def
 }
 
 export function setProperty(name: string, value: string): true | undefined {
@@ -226,7 +236,21 @@ export function observeProperty<T extends keyof MpvType, P = StrToType<T>>(
 }
 
 export function observePropertyNumber(
-  name: string,
+  name: NumberProp | (string & {}),
+  fn: (value: number) => void,
+) {
+  return observeProperty(name, "number", (name: string, v: number) => fn(v))
+}
+
+export function observePropertyBool(
+  name: BoolProp | (string & {}),
+  fn: (value: number) => void,
+) {
+  return observeProperty(name, "bool", (name: string, v: number) => fn(v))
+}
+
+export function observePropertyString(
+  name: StringProp | (string & {}),
   fn: (value: number) => void,
 ) {
   return observeProperty(name, "number", (name: string, v: number) => fn(v))

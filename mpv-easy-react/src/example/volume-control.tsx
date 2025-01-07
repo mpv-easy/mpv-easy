@@ -1,14 +1,10 @@
 import { dispatchEvent, getRootNode } from "@mpv-easy/react"
 import { Box } from "@mpv-easy/react"
 import React, { useEffect, useRef } from "react"
-import {
-  PropertyNative,
-  type MousePos,
-  addForcedKeyBinding,
-} from "@mpv-easy/tool"
+import { PropertyNative, addForcedKeyBinding } from "@mpv-easy/tool"
 import { usePropertyNumber } from "@mpv-easy/react"
 
-const mousePosProp = new PropertyNative<MousePos>("mouse-pos")
+const mousePosProp = new PropertyNative("mouse-pos")
 
 export function VolumeControl() {
   const [volume, setVolume] = usePropertyNumber("volume", 100)

@@ -9,25 +9,14 @@ import {
   setPropertyNumber,
   setPropertyString,
 } from "./mpv"
+import { BoolProp, NumberProp, Prop, StringProp } from "./type"
 
-export type MpvPropertyBoolName = "pause" | (string & {})
-export type MpvPropertyNumberName = "osd-width" | (string & {})
-export type MpvPropertyStringName = "path" | (string & {})
-
-export type MpvPropertyTypeMap = {
-  "osd-dimensions": {
-    w: number
-    h: number
-  }
-}
-
-export type MpvPropertyNativeName = "osd" | "osd-dimensions" | (string & {})
 export class Property<T> {
   constructor(public name: string) {}
 }
 
 export class PropertyNumber {
-  constructor(public name: MpvPropertyNumberName) {}
+  constructor(public name: NumberProp | (string & {})) {}
 
   get value(): number {
     return getPropertyNumber(this.name)!
@@ -55,7 +44,7 @@ export class PropertyNumber {
 }
 
 export class PropertyBool {
-  constructor(public name: MpvPropertyBoolName) {}
+  constructor(public name: BoolProp | (string & {})) {}
   get value(): boolean {
     return getPropertyBool(this.name)!
   }
@@ -91,7 +80,7 @@ export class PropertyBool {
 }
 
 export class PropertyString {
-  constructor(public name: MpvPropertyStringName) {}
+  constructor(public name: StringProp | (string & {})) {}
   get value(): string {
     return getPropertyString(this.name)!
   }
@@ -116,8 +105,8 @@ export class PropertyString {
     })
   }
 }
-export class PropertyNative<T> {
-  constructor(public name: MpvPropertyNativeName | (string & {})) {}
+export class PropertyNative<K extends keyof Prop, T = Prop[K]> {
+  constructor(public name: K) {}
   get value(): T | undefined {
     return getPropertyNative(this.name)
   }
