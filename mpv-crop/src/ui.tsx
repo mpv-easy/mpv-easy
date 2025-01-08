@@ -281,6 +281,7 @@ export function Crop({
     osdHeight,
     points,
     select,
+    labelFontSize / 4,
   )
   const label = getLabelText(points, mouseX, mouseY, select)
 
