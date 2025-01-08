@@ -31,7 +31,6 @@ const {
   lineWidth,
   lineColor,
   maskColor,
-  linePadding,
   lineColorHover,
   labelFontSize,
 } = {
@@ -68,10 +67,6 @@ const {
     "label-font-size": {
       type: "number",
       key: "labelFontSize",
-    },
-    "line-padding": {
-      type: "number",
-      key: "linePadding",
     },
     "output-directory": {
       type: "string",
@@ -178,7 +173,6 @@ function App() {
           mouseX={x}
           mouseY={y}
           lineWidth={lineWidth}
-          linePadding={linePadding}
           lineColorHover={lineColorHover}
           lineColor={lineColor}
           osdWidth={w}

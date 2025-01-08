@@ -301,7 +301,6 @@ export const Easy = (props: Partial<EasyProps>) => {
             lineColor={cropConfig.lineColor}
             lineColorHover={cropConfig.lineColorHover}
             lineWidth={cropConfig.lineWidth}
-            linePadding={cropConfig.linePadding}
             osdHeight={osdDimensions.h}
             osdWidth={osdDimensions.w}
             points={cropPoints}

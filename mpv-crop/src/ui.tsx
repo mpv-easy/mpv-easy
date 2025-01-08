@@ -98,7 +98,6 @@ type CropProps = {
   mouseX: number
   mouseY: number
   lineWidth: number
-  linePadding: number
   lineColor: string
   lineColorHover: string
   osdWidth: number
@@ -115,7 +114,6 @@ function getMask(
   width: number,
   height: number,
   lineWidth: number,
-  linePadding: number,
   mouseX: number,
   mouseY: number,
 ): { mask: Rect[]; select?: Rect; edge: Rect[]; vertex: Rect[] } {
@@ -156,66 +154,66 @@ function getMask(
       : new Rect(left, top, right - left, bottom - top)
   const edge: Rect[] = []
   const vertex: Rect[] = []
-  const lw = lineWidth + 2 * linePadding
+  const lw = lineWidth + 2 * lineWidth
   if (select) {
     edge.push(
       // left
       new Rect(
-        select.x - linePadding,
-        select.y - linePadding,
+        select.x - lineWidth,
+        select.y - lineWidth,
         lineWidth,
-        select.height + linePadding,
+        select.height + lineWidth,
       ),
 
       // top
       new Rect(
-        select.x - linePadding,
-        select.y - linePadding,
-        select.width + linePadding,
+        select.x - lineWidth,
+        select.y - lineWidth,
+        select.width + lineWidth,
         lineWidth,
       ),
 
       // right
       new Rect(
-        right - linePadding,
-        top - linePadding,
+        right - lineWidth,
+        top - lineWidth,
         lineWidth,
-        select.height + linePadding,
+        select.height + lineWidth,
       ),
 
       // bottom
       new Rect(
-        left - linePadding,
-        bottom - linePadding,
-        select.width + linePadding,
+        left - lineWidth,
+        bottom - lineWidth,
+        select.width + lineWidth,
         lineWidth,
       ),
     )
 
     vertex.push(
       // left-top
-      new Rect(select.x - linePadding, select.y - linePadding, lw, lw),
+      new Rect(select.x - lineWidth, select.y - lineWidth, lw, lw),
 
       // right-top
       new Rect(
-        select.x + select.width - linePadding,
-        select.y - linePadding,
+        select.x + select.width - lineWidth,
+        select.y - lineWidth,
         lw,
         lw,
       ),
 
       // left-bottom
       new Rect(
-        select.x - linePadding,
-        select.y + select.height - linePadding,
+        select.x - lineWidth,
+        select.y + select.height - lineWidth,
         lw,
         lw,
       ),
 
       // right-bottom
       new Rect(
-        select.x + select.width - linePadding,
-        select.y + select.height - linePadding,
+        select.x + select.width - lineWidth,
+        select.y + select.height - lineWidth,
         lw,
         lw,
       ),
@@ -261,7 +259,6 @@ export function Crop({
   maskColor,
   points,
   zIndex,
-  linePadding,
   labelFontSize,
   onChange,
 }: CropProps) {
@@ -273,7 +270,6 @@ export function Crop({
     osdWidth,
     osdHeight,
     lineWidth,
-    linePadding,
     mouseX,
     mouseY,
   )
@@ -536,7 +532,7 @@ export function Crop({
             height={r.height}
             backgroundColor={lineColor}
             backgroundColorHover={lineColorHover}
-            padding={linePadding}
+            padding={lineWidth}
             zIndex={zIndex + 3}
             onMouseDown={(e) => {
               e.stopPropagation()

@@ -20,9 +20,9 @@ If the video file is `/a/b/c.mp4`, the output image file is `/a/b/c.time.x.y.w.h
 
 ### crop
 
-<div style="display: flex;">
-  <img src="../assets/img/mpv-crop-image.webp" alt="crop-image"/>
-</div>
+<video controls>
+  <source src="../assets/video/crop.mp4" type="video/mp4">
+</video>
 
 ### mpv-easy
 
@@ -48,9 +48,11 @@ config file: `crop.conf`
 crop-event-name="crop"
 output-event-name="output"
 cancel-event-name="cancel"
-line-color="00FF00"
-mask-color="00FF00"
-line-width=2
+line-color="FFFFFF"
+mask-color="00000040"
+line-color-hover="00FFFF"
+line-width=4
+label-font-size=24
 output-directory=""
 crop-image-format="webp"
 ```
