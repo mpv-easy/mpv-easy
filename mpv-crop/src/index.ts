@@ -10,10 +10,13 @@ export const defaultConfig: CropConfig = {
   cancelEventName: "cancel",
   lineColor: "FFFFFF",
   maskColor: "00000040",
-  lineWidth: 2,
+  lineWidth: 4,
+  linePadding: 4,
+  lineColorHover: "00FFFF",
   outputDirectory: "",
   cropImageFormat: "webp",
   zIndex: 2048,
+  labelFontSize: 24,
 }
 
 export type CropConfig = {
@@ -23,9 +26,12 @@ export type CropConfig = {
   lineColor: string
   maskColor: string
   lineWidth: number
+  lineColorHover: string
   outputDirectory: string
   cropImageFormat: string
   zIndex: number
+  linePadding: number
+  labelFontSize: number
 }
 
 declare module "@mpv-easy/plugin" {

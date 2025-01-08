@@ -293,12 +293,11 @@ export class Rect {
   }
 
   static fromCoord(coord: CoordRect) {
-    return new Rect(
-      coord.x0,
-      coord.y0,
-      coord.x1 - coord.x0,
-      coord.y1 - coord.y0,
-    )
+    const x = Math.min(coord.x0, coord.x1)
+    const y = Math.min(coord.y0, coord.y1)
+    const w = Math.abs(coord.x0 - coord.x1)
+    const h = Math.abs(coord.y0 - coord.y1)
+    return new Rect(x, y, w, h)
   }
 
   hasPoint(x: number, y: number) {

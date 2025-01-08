@@ -31,6 +31,9 @@ const {
   lineWidth,
   lineColor,
   maskColor,
+  linePadding,
+  lineColorHover,
+  labelFontSize,
 } = {
   ...defaultConfig,
   ...getOptions("crop", {
@@ -50,6 +53,10 @@ const {
       type: "color",
       key: "lineColor",
     },
+    "line-color-hover": {
+      type: "color",
+      key: "lineColorHover",
+    },
     "mask-color": {
       type: "color",
       key: "maskColor",
@@ -57,6 +64,14 @@ const {
     "line-width": {
       type: "number",
       key: "lineWidth",
+    },
+    "label-font-size": {
+      type: "number",
+      key: "labelFontSize",
+    },
+    "line-padding": {
+      type: "number",
+      key: "linePadding",
     },
     "output-directory": {
       type: "string",
@@ -164,12 +179,16 @@ function App() {
           mouseX={x}
           mouseY={y}
           lineWidth={lineWidth}
+          linePadding={linePadding}
+          lineColorHover={lineColorHover}
           lineColor={lineColor}
           osdWidth={w}
           osdHeight={h}
           points={points}
           maskColor={maskColor}
+          labelFontSize={labelFontSize}
           zIndex={1024}
+          onChange={setPoints}
         />
       )}
     </Box>

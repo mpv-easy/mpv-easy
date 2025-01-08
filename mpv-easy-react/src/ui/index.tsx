@@ -252,7 +252,7 @@ export const Easy = (props: Partial<EasyProps>) => {
             if (cropPoints.length < 2) {
               dispatch.setCropPoints([...cropPoints, [mousePos.x, mousePos.y]])
             } else {
-              showNotification("crop points must be 2")
+              // showNotification("crop points must be 2")
             }
           }
 
@@ -301,12 +301,16 @@ export const Easy = (props: Partial<EasyProps>) => {
             mouseX={mousePos.x}
             mouseY={mousePos.y}
             lineColor={cropConfig.lineColor}
+            lineColorHover={cropConfig.lineColorHover}
             lineWidth={cropConfig.lineWidth}
+            linePadding={cropConfig.linePadding}
             osdHeight={osdDimensions.h}
             osdWidth={osdDimensions.w}
             points={cropPoints}
             maskColor={cropConfig.maskColor}
             zIndex={cropConfig.zIndex}
+            onChange={dispatch.setCropPoints}
+            labelFontSize={smallFontSize.fontSize}
           />
         )}
         <Translation
