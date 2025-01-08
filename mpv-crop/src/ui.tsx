@@ -538,7 +538,7 @@ export function Crop({
             backgroundColorHover={lineColorHover}
             padding={linePadding}
             zIndex={zIndex + 3}
-            onClick={(e) => {
+            onMouseDown={(e) => {
               e.stopPropagation()
               if (selectMoving.current || vertexMoving.current) {
                 return
@@ -568,7 +568,7 @@ export function Crop({
             backgroundColor={lineColor}
             backgroundColorHover={lineColorHover}
             zIndex={zIndex + 4}
-            onClick={(e) => {
+            onMouseDown={(e) => {
               e.stopPropagation()
               if (selectMoving.current || edgeMoving.current) {
                 return

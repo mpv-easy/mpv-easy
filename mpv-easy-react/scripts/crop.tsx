@@ -159,18 +159,17 @@ function App() {
       clearInterval(h)
     }
   }, [])
-
   return (
     <Box
       position="absolute"
       width={w}
       height={h}
-      onClick={() => {
+      onMouseDown={() => {
+        if (points.length >= 2) {
+          return
+        }
         const newPoints = [...points]
         newPoints.push([x, y])
-        while (newPoints.length > 2) {
-          newPoints.shift()
-        }
         setPoints(newPoints)
       }}
     >

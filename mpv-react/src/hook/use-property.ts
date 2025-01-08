@@ -14,6 +14,7 @@ import {
   getPropertyBool,
   getPropertyNative,
 } from "@mpv-easy/tool"
+import isEqual from "lodash-es/isEqual"
 import { useState } from "react"
 
 const setMpvProp = (name: string, type: keyof MpvType, value: any) => {
@@ -66,7 +67,7 @@ function useProp<T>(name: string, type: keyof MpvType, defaultValue?: T) {
   )
 
   observeProperty(name, type, (_, value) => {
-    if (prop !== value) setProp(value)
+    if (!isEqual(prop, value)) setProp(value)
   })
 
   return [

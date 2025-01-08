@@ -251,8 +251,6 @@ export const Easy = (props: Partial<EasyProps>) => {
           if (showCrop) {
             if (cropPoints.length < 2) {
               dispatch.setCropPoints([...cropPoints, [mousePos.x, mousePos.y]])
-            } else {
-              // showNotification("crop points must be 2")
             }
           }
 
