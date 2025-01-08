@@ -1,3 +1,4 @@
+import isEq from "lodash-es/isEqual"
 import {
   getPropertyBool,
   getPropertyNative,
@@ -10,10 +11,6 @@ import {
   setPropertyString,
 } from "./mpv"
 import { BoolProp, NumberProp, NativeProp, StringProp } from "./type"
-
-export class Property<T> {
-  constructor(public name: string) {}
-}
 
 export class PropertyNumber {
   constructor(public name: NumberProp | (string & {})) {}
@@ -123,7 +120,7 @@ export class PropertyNative<K extends keyof NativeProp, T = NativeProp[K]> {
     return this.value
   }
 
-  observe(fn: (name: string, value: T) => void, isEqual = Object.is) {
+  observe(fn: (name: string, value: T) => void, isEqual = isEq) {
     let lastValue: T
     observeProperty(this.name, "native", (name: string, value: T) => {
       if (typeof lastValue === "undefined" || !isEqual(value, lastValue)) {
