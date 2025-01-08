@@ -9,6 +9,7 @@ import {
   setPropertyNative,
   setPropertyNumber,
   setPropertyString,
+  unobserveProperty,
 } from "./mpv"
 import { BoolProp, NumberProp, NativeProp, StringProp } from "./type"
 
@@ -31,12 +32,19 @@ export class PropertyNumber {
 
   observe(fn: (name: string, value: number) => void) {
     let last: number
-    observeProperty(this.name, "number", (name: string, value: number) => {
-      if (last !== value || typeof last === "undefined") {
-        fn(name, value)
-        last = value
-      }
-    })
+    return observeProperty(
+      this.name,
+      "number",
+      (name: string, value: number) => {
+        if (last !== value || typeof last === "undefined") {
+          fn(name, value)
+          last = value
+        }
+      },
+    )
+  }
+  unobserve(fn: (...args: unknown[]) => void) {
+    return unobserveProperty(fn)
   }
 }
 
@@ -67,12 +75,15 @@ export class PropertyBool {
 
   observe(fn: (name: string, value: boolean) => void) {
     let last: boolean
-    observeProperty(this.name, "bool", (name, value) => {
+    return observeProperty(this.name, "bool", (name, value) => {
       if (last !== value || typeof last === "undefined") {
         fn(name, value)
         last = value
       }
     })
+  }
+  unobserve(fn: (...args: unknown[]) => void) {
+    return unobserveProperty(fn)
   }
 }
 
@@ -94,12 +105,15 @@ export class PropertyString {
 
   observe(fn: (name: string, value: string) => void) {
     let last: string
-    observeProperty(this.name, "string", (name, value) => {
+    return observeProperty(this.name, "string", (name, value) => {
       if (last !== value || typeof last === "undefined") {
         fn(name, value)
         last = value
       }
     })
+  }
+  unobserve(fn: (...args: unknown[]) => void) {
+    return unobserveProperty(fn)
   }
 }
 export class PropertyNative<K extends keyof NativeProp, T = NativeProp[K]> {
@@ -122,11 +136,15 @@ export class PropertyNative<K extends keyof NativeProp, T = NativeProp[K]> {
 
   observe(fn: (name: string, value: T) => void, isEqual = isEq) {
     let lastValue: T
-    observeProperty(this.name, "native", (name: string, value: T) => {
+    return observeProperty(this.name, "native", (name: string, value: T) => {
       if (typeof lastValue === "undefined" || !isEqual(value, lastValue)) {
         lastValue = value
         fn(name, value)
       }
     })
+  }
+
+  unobserve(fn: (...args: unknown[]) => void) {
+    return unobserveProperty(fn)
   }
 }
