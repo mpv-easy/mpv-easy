@@ -20,7 +20,7 @@ If the video file is `/a/b/c.mp4`, the output image file is `/a/b/c.time.x.y.w.h
 
 ### crop
 
-https://github.com/user-attachments/assets/04c04cfa-7877-49f6-a939-71beed329c65
+<video src="https://github.com/user-attachments/assets/ffbbd61b-c01a-4b1f-b326-a07b61a460fc" controls></video>
 
 ### mpv-easy
 
