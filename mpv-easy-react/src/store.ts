@@ -217,6 +217,13 @@ export const commonDropdownStyleSelector = (
   // const cell = cellSizeSelector(state)
   const size = normalFontSize.fontSize
 
+  const item: Partial<DropdownProps> = {
+    ...commonDropdownItemStyleSelector(state),
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+  }
+
   return {
     dropdownStyle: dropdown.button,
     width: size,
@@ -236,8 +243,8 @@ export const commonDropdownStyleSelector = (
     fontSize: normalFontSize.fontSize,
     color: dropdown.button.color,
     dropdownListStyle: dropdown.list,
-    pageDown: { style: dropdown.item, text: ICON.TriangleDown },
-    pageUp: { style: dropdown.item, text: ICON.TriangleUp },
+    pageDown: { style: item, text: ICON.TriangleDown },
+    pageUp: { style: item, text: ICON.TriangleUp },
   }
 }
 

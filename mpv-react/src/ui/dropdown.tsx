@@ -1,13 +1,7 @@
 import React, { useRef, useState } from "react"
 import { Button, type ButtonProps } from "./button"
 import { Box } from "./box"
-import {
-  MpDomProps,
-  type MpAttrs,
-  type MpDom,
-  type MpEvent,
-  type MpProps,
-} from "../flex"
+import { type MpAttrs, type MpDom, type MpEvent, type MpProps } from "../flex"
 import { type BaseMouseEvent, EventNameList } from "@mpv-easy/flex"
 
 export type DropdownItem = {
@@ -84,7 +78,8 @@ export const Dropdown = (props: Partial<ButtonProps & DropdownProps>) => {
   const pageEnd = pageStart + maxItemCount
 
   const showItems = items.slice(pageStart, pageEnd)
-
+  const pageUpStyle = pageUp?.style
+  const pageDownStyle = pageDown?.style
   return (
     <Button
       {...props}
@@ -124,12 +119,12 @@ export const Dropdown = (props: Partial<ButtonProps & DropdownProps>) => {
               width={undefined}
               key={"dropdown-up"}
               text={pageUp?.text}
-              {...pageUp?.style}
               onMouseDown={(e) => {
                 const p = (page - 1 + pageCount) % pageCount
                 setPage(p)
                 e.stopPropagation()
               }}
+              {...pageUpStyle}
             />
           )}
           {showItems.map((i) => {
@@ -158,13 +153,13 @@ export const Dropdown = (props: Partial<ButtonProps & DropdownProps>) => {
               {...dropdownStyle}
               width={undefined}
               key={"dropdown-down"}
-              {...pageDown?.style}
               text={pageDown?.text}
               onMouseDown={(e) => {
                 const p = (page + 1) % pageCount
                 setPage(p)
                 e.stopPropagation()
               }}
+              {...pageDownStyle}
             />
           )}
         </Box>
