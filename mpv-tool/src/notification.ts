@@ -26,11 +26,11 @@ export function showNotification(text: string, seconds = 1) {
   ovl.data = text
   ovl.computeBounds = true
   ovl.hidden = true
-  const rect = ovl.update()
+  const scale = getAssScale()
+  const rect = ovl.update(1 / scale)
   const osd = getOsdSize()
   const osdRect = new Rect(0, 0, osd?.width || 0, osd?.height || 0)
   const centerRect = osdRect.placeCenter(rect)
-  const scale = getAssScale()
   ovl.data = new AssDraw()
     .pos(centerRect.x * scale, centerRect.y * scale)
     .append(text)
