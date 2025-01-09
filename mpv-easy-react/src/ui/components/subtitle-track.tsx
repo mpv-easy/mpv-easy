@@ -26,17 +26,7 @@ export const SubtitleTrack = () => {
       label,
       key,
       onSelect: (_, e) => {
-        if (sid === id) {
-          dispatch.setSid(-1)
-          setPropertyNative("sid", "no")
-        } else {
-          dispatch.setSid(id)
-
-          // FIXME: no need to set yes in 0.39
-          // setPropertyNative("sid", "yes")
-
-          setPropertyNative("sid", id)
-        }
+        dispatch.setSid(id === sid ? -1 : id)
         e.stopPropagation()
       },
       style: itemStyle,

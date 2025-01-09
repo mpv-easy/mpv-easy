@@ -22,6 +22,7 @@ import {
   setPropertyNumber,
   loadfile,
   loadRemoteSubtitleAsync,
+  setPropertyNative,
 } from "@mpv-easy/tool"
 import type { Language } from "@mpv-easy/i18n"
 import { type ThemeMode, type UIName, PlayMode } from "../mpv-easy-theme"
@@ -219,15 +220,15 @@ const store = defineStore({
       return { ...state }
     },
     setVid(state, vid: number) {
-      state[pluginName].player = { ...state[pluginName].player, vid }
+      setPropertyNative("vid", vid === -1 ? "no" : vid)
       return { ...state }
     },
     setAid(state, aid: number) {
-      state[pluginName].player = { ...state[pluginName].player, aid }
+      setPropertyNative("aid", aid === -1 ? "no" : aid)
       return { ...state }
     },
     setSid(state, sid: number) {
-      state[pluginName].player = { ...state[pluginName].player, sid }
+      setPropertyNative("sid", sid === -1 ? "no" : sid)
       return { ...state }
     },
     setAnime4k(state, config: Anime4kConfig) {

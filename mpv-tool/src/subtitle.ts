@@ -12,6 +12,7 @@ import {
   getProperty,
   getPropertyNative,
   joinPath,
+  readFile,
   writeFile,
 } from "./mpv"
 import { getFileName, replaceExt } from "./path"
@@ -171,18 +172,19 @@ export async function saveSrt(
   videoPath: string,
   trackId: number,
   outputPath: string,
-): Promise<boolean> {
+  segment: number[] = [],
+): Promise<string | undefined> {
   if (!videoPath) {
-    return false
+    return undefined
   }
   const subTrack = getSubtitleTracks().find((i) => i.id === trackId)
   if (!subTrack) {
-    return false
+    return undefined
   }
   const ffmpeg = detectFfmpeg()
   if (!ffmpeg) {
     printAndOsd("ffmpeg not found")
-    return false
+    return undefined
   }
 
   const cmd = [
@@ -195,12 +197,19 @@ export async function saveSrt(
     videoPath,
     "-map",
     `0:s:${subTrack.id - 1}`,
-    outputPath,
   ]
+
+  if (segment.length === 2) {
+    cmd.push("-ss", segment[0].toString(), "-to", segment[1].toString())
+  }
+
+  cmd.push(outputPath)
+
+  // console.log('cmd: ',cmd.join(' '))
   try {
     await execAsync(cmd)
   } catch (e) {
-    return false
+    return undefined
   }
-  return true
+  return readFile(outputPath)
 }

@@ -1,6 +1,6 @@
 import { execSync, getOs } from "./common"
 import { ConfigDir } from "./const"
-import { normalize } from "./path"
+import { getFileName, normalize } from "./path"
 import { Argb } from "e-color"
 import type {
   AddKeyBindingFlags,
@@ -19,6 +19,8 @@ import type {
   NativeProp,
 } from "./type"
 import { MousePos } from "./type-prop"
+import { dirname, existsSync } from "./fs"
+import { showNotification } from "./notification"
 
 export function getMP(): MP {
   // @ts-ignore
@@ -512,10 +514,7 @@ export function setGeometry(w: number, h: number, x: number, y: number) {
 }
 
 export function getMpvExePath() {
-  const configPath = commandNative([
-    "expand-path",
-    "~~home/",
-  ]) as unknown as string
+  const configPath = expandPath("~~home/")
 
   const exeName = getOs() === "windows" ? "mpv.exe" : "mpv"
 
@@ -532,7 +531,13 @@ export function getColor(name: string): string | undefined {
 }
 
 export function screenshotToFile(path: string) {
-  commandv("no-osd", "screenshot-to-file", path)
+  const cmd = ["screenshot-to-file", path]
+  showNotification(cmd.join(" "))
+  commandv(...cmd)
+}
+
+export function expandPath(path: string) {
+  return commandNative(["expand-path", path]) as unknown as string
 }
 
 export function getDesktopDir() {
@@ -550,4 +555,81 @@ export function getDesktopDir() {
     case "android":
       return normalize(execSync(["bash", "-c", "echo ~/Desktop"]).trim())
   }
+}
+
+let screenshotId = 1
+type TemplateData = {
+  f: string // Filename of the video
+  x: string // Directory path of the video
+  p: string // Current playback time (HH:MM:SS)
+  P: string // Playback time with milliseconds (HH:MM:SS.mmm)
+  ext: string
+}
+
+function expandScreenshotTemplate(
+  template: string,
+  data: TemplateData,
+): string {
+  const id = screenshotId++
+  // template = template.replaceAll("%%", "%")
+  template = template.replaceAll("%n", id.toString().padStart(4, "0"))
+  template = template.replaceAll("%f", data.f)
+  template = template.replaceAll("%F", data.f.replace(/\.[^/.]+$/, ""))
+  template = template.replaceAll("%x", data.x)
+  template = template.replaceAll("%X", data.x)
+  template = template.replaceAll("%p", data.p)
+  template = template.replaceAll("%P", data.P)
+  return `${template}.${data.ext}`
+}
+
+function formatTime(milliseconds: number, includeMilliseconds = false): string {
+  const totalSeconds = Math.floor(milliseconds / 1000)
+  const hours = Math.floor(totalSeconds / 3600)
+  const minutes = Math.floor((totalSeconds % 3600) / 60)
+  const seconds = totalSeconds % 60
+
+  const ms = milliseconds % 1000
+
+  const formattedTime = [
+    hours.toString().padStart(2, "0"),
+    minutes.toString().padStart(2, "0"),
+    seconds.toString().padStart(2, "0"),
+  ].join("_")
+
+  if (includeMilliseconds) {
+    return `${formattedTime}.${ms.toFixed(3).toString().padStart(3, "0")}`
+  }
+  return formattedTime
+}
+
+export function getScreenshotPath(): string | undefined {
+  const path = getPropertyString("path")
+  if (!path) return
+
+  const absPath = expandPath(path)
+  const f = getFileName(absPath)
+  const x = dirname(absPath)?.split("/").at(-1)
+
+  if (!f || !x) {
+    return
+  }
+
+  const p = getPropertyNumber("playback-time", 0)
+  const P = getPropertyNumber("playback-time/full", 0)
+  const tpl = getPropertyString("screenshot-template", "~~desktop/MPV-%P-N%n")
+  const absTpl = expandPath(tpl)
+  const ext = getPropertyString("screenshot-format", "png")
+  const config = {
+    f,
+    x,
+    p: formatTime(p),
+    P: formatTime(P, true),
+    ext,
+  }
+
+  let s = expandScreenshotTemplate(absTpl, config)
+  while (existsSync(s)) {
+    s = expandScreenshotTemplate(absTpl, config)
+  }
+  return normalize(s)
 }

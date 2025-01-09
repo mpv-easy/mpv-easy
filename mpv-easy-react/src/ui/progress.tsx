@@ -11,6 +11,16 @@ import {
   randomId,
   GifConfig,
   clamp,
+  saveSrt,
+  Srt,
+  writeFile,
+  command,
+  getPropertyNumber,
+  getScreenshotPath,
+  screenshotToFile,
+  setPropertyNative,
+  commandv,
+  getTmpPath,
 } from "@mpv-easy/tool"
 import { Box, type MpDom } from "@mpv-easy/react"
 import React, { useRef, useState, useEffect } from "react"
@@ -95,6 +105,10 @@ export const Progress = ({ width, ...props }: MpDomProps) => {
       dispatch.setShowCrop(false)
     } else {
       dispatch.setCutPoints([])
+    }
+
+    if (originSubRef.current > 0 && mergeSubRef.current > 0) {
+      clearMerge()
     }
   }
 
@@ -193,6 +207,41 @@ export const Progress = ({ width, ...props }: MpDomProps) => {
     showNotification("output finish")
   }
 
+  const clearMerge = () => {
+    commandv("sub-remove", mergeSubRef.current)
+    setPropertyNative("sid", originSubRef.current)
+    originSubRef.current = -1
+    mergeSubRef.current = -1
+    return
+  }
+  const subtitleMergeRef = useRef<() => void>(null)
+  const originSubRef = useRef(-1)
+  const mergeSubRef = useRef(-1)
+
+  subtitleMergeRef.current = async () => {
+    if (originSubRef.current > 0 && mergeSubRef.current > 0) {
+      clearMerge()
+      return
+    }
+
+    const sid = getPropertyNumber("sid", -1)
+    if (sid < 0) {
+      return
+    }
+    if (originSubRef.current < 0) {
+      originSubRef.current = sid
+    }
+    const outputPath = getTmpPath("srt")
+    const text = await saveSrt(path, sid, outputPath, cutPoints)
+    if (!text) {
+      return
+    }
+    const subText = new Srt(text).toText()
+    const mergePath = getTmpPath("srt")
+    writeFile(mergePath, ["1", "00:0:0,0 --> 99:00:00,00", subText].join("\n"))
+    command(`sub-add "${mergePath}" select merge`)
+    mergeSubRef.current = getPropertyNumber("sid", -1)
+  }
   useEffect(() => {
     if (!supportThumbfast) {
       return
@@ -227,6 +276,17 @@ export const Progress = ({ width, ...props }: MpDomProps) => {
         flags: cutConfig.flags,
         maxWidth: cutConfig.maxWidth,
       })
+    })
+
+    registerScriptMessage("screenshot", () => {
+      const p = getScreenshotPath()
+      if (!p) {
+        return
+      }
+      screenshotToFile(p)
+    })
+    registerScriptMessage("subtitle-merge", () => {
+      subtitleMergeRef.current?.()
     })
   }, [])
 

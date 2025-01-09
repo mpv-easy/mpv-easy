@@ -55,4 +55,8 @@ export class Srt {
   toString() {
     return this.blocks.map((i) => `${i.id}\n${i.time}\n${i.text}`).join("\n\n")
   }
+
+  toText() {
+    return this.blocks.map((i) => i.text).join("\n")
+  }
 }

@@ -35,8 +35,7 @@ export const AudioTrack = () => {
         label,
         key,
         onSelect: (_, e) => {
-          setPropertyNative("aid", id)
-          dispatch.setAid(id)
+          dispatch.setAid(id === aid ? -1 : id)
           e.stopPropagation()
         },
         style: itemStyle,
