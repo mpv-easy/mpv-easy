@@ -370,12 +370,10 @@ jobs:
 
           cd mpy-easy-windows-full
           zip -r -q ../release/mpy-easy-windows-full.zip .
-          tree
           cd ..
 
           cd mpy-easy-windows-deno-full
           zip -r -q ../release/mpy-easy-windows-deno-full.zip .
-          tree
           cd ..
 
           cp mpv-easy-js/* release/
@@ -388,8 +386,8 @@ jobs:
           cp mpv-easy-play-with-dist/mpv-easy-play-with-linux release/mpv-easy-play-with-linux
           cp mpv-easy-play-with-dist/mpv-easy-play-with-android release/mpv-easy-play-with-android
           cp mpv-easy-play-with-dist/mpv-easy-play-with-windows.exe release/mpv-easy-play-with-windows.exe
-          cd release
 
+          cd release
           zip -r -q ../release.zip .
           cd ..
 
