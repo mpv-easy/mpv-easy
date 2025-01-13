@@ -338,51 +338,46 @@ jobs:
           mkdir -p mpy-easy-windows-deno-full/portable_config/scripts
           cp -r mpv-deno-dist/mpv-deno-windows.dll mpy-easy-windows-deno-full/portable_config/scripts/mpv-deno-windows.dll
 
+          mkdir release -p
+
           cd mpy-easy-macos
-          zip -r -q mpy-easy-macos.zip .
+          zip -r -q ../release/mpy-easy-macos.zip .
           cd ..
 
           cd mpy-easy-linux
-          zip -r -q mpy-easy-linux.zip .
+          zip -r -q ../release/mpy-easy-linux.zip .
           cd ..
 
           cd mpy-easy-android
-          zip -r -q mpy-easy-android.zip .
+          zip -r -q ../release/mpy-easy-android.zip .
           cd ..
 
           cd mpy-easy-windows
-          zip -r -q mpy-easy-windows.zip .
+          zip -r -q ../release/mpy-easy-windows.zip .
           cd ..
 
           # cd mpy-easy-deno-windows
-          # zip -r -q mpy-easy-deno-windows.zip .
+          # zip -r -q ../release/mpy-easy-deno-windows.zip .
           # cd ..
 
           # cd mpy-easy-qjs-windows
-          # zip -r -q mpy-easy-qjs-windows.zip .
+          # zip -r -q ../release/mpy-easy-qjs-windows.zip .
           # cd ..
 
           # cd mpy-easy-boa-windows
-          # zip -r -q mpy-easy-boa-windows.zip .
+          # zip -r -q ../release/mpy-easy-boa-windows.zip .
           # cd ..
 
           cd mpy-easy-windows-full
-          zip -r -q mpy-easy-windows-full.zip .
+          zip -r -q ../release/mpy-easy-windows-full.zip .
           tree
           cd ..
 
           cd mpy-easy-windows-deno-full
-          zip -r -q mpy-easy-windows-deno-full.zip .
+          zip -r -q ../release/mpy-easy-windows-deno-full.zip .
           tree
           cd ..
 
-          mkdir release
-          cp mpy-easy-macos/mpy-easy-macos.zip release/mpy-easy-macos.zip
-          cp mpy-easy-linux/mpy-easy-linux.zip release/mpy-easy-linux.zip
-          cp mpy-easy-android/mpy-easy-android.zip release/mpy-easy-android.zip
-          cp mpy-easy-windows/mpy-easy-windows.zip release/mpy-easy-windows.zip
-          cp mpy-easy-windows-full/mpy-easy-windows-full.zip release/mpy-easy-windows-full.zip
-          cp mpy-easy-windows-deno-full/mpy-easy-windows-deno-full.zip release/mpy-easy-windows-deno-full.zip
           cp mpv-easy-js/* release/
           cp mpv-deno-dist/mpv-deno-windows.dll release/mpv-deno-windows.dll
           cp mpv-easy-ext-dist/mpv-easy-ext-macos release/mpv-easy-ext-macos
@@ -394,7 +389,8 @@ jobs:
           cp mpv-easy-play-with-dist/mpv-easy-play-with-android release/mpv-easy-play-with-android
           cp mpv-easy-play-with-dist/mpv-easy-play-with-windows.exe release/mpv-easy-play-with-windows.exe
           cd release
-          zip -r -q release.zip .
+
+          zip -r -q ../release.zip .
           cd ..
 
       - name: Upload mpy-easy-macos
@@ -431,4 +427,4 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: release
-          path: release/release.zip
+          path: release.zip
