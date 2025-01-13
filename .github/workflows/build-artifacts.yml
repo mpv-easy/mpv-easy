@@ -395,32 +395,32 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: mpy-easy-macos
-          path: mpy-easy-macos/mpy-easy-macos.zip
+          path: release/mpy-easy-macos.zip
       - name: Upload mpy-easy-linux
         uses: actions/upload-artifact@v4
         with:
           name: mpy-easy-linux
-          path: mpy-easy-linux/mpy-easy-linux.zip
+          path: release/mpy-easy-linux.zip
       - name: Upload mpy-easy-android
         uses: actions/upload-artifact@v4
         with:
           name: mpy-easy-android
-          path: mpy-easy-android/mpy-easy-android.zip
+          path: release/mpy-easy-android.zip
       - name: Upload mpy-easy-windows
         uses: actions/upload-artifact@v4
         with:
           name: mpy-easy-windows
-          path: mpy-easy-windows/mpy-easy-windows.zip
+          path: release/mpy-easy-windows.zip
       - name: Upload mpy-easy-windows-full
         uses: actions/upload-artifact@v4
         with:
           name: mpy-easy-windows-full
-          path: mpy-easy-windows-full/mpy-easy-windows-full.zip
+          path: release/mpy-easy-windows-full.zip
       - name: Upload mpy-easy-windows-deno-full
         uses: actions/upload-artifact@v4
         with:
           name: mpy-easy-windows-deno-full
-          path: mpy-easy-windows-deno-full/mpy-easy-windows-deno-full.zip
+          path: release/mpy-easy-windows-deno-full.zip
       - name: Upload release
         uses: actions/upload-artifact@v4
         with:
