@@ -3,7 +3,7 @@ import {
   getClipboard,
   isDir,
   isRemote,
-  isVideo,
+  isPlayable,
   youtube,
   bilibili,
   webdavList,
@@ -12,6 +12,8 @@ import {
   compareString,
   registerScriptMessage,
   showNotification,
+  isSubtitle,
+  commandv,
 } from "@mpv-easy/tool"
 
 import { type SystemApi, definePlugin } from "@mpv-easy/plugin"
@@ -35,7 +37,7 @@ function getList(
   }
   const osdDuration = context[pluginName].osdDuration
   if (isRemote(s)) {
-    if (isVideo(s)) {
+    if (isPlayable(s)) {
       return [normalize(s)]
     }
 
@@ -57,7 +59,7 @@ function getList(
     try {
       return webdavList(s)
         .map((i) => normalize(s + i))
-        .filter((p) => isVideo(p))
+        .filter((p) => isPlayable(p))
     } catch (e) {
       print("webdav error: ", e)
     }
@@ -93,7 +95,7 @@ function getList(
     return [s]
   }
 
-  if (isVideo(s)) {
+  if (isPlayable(s)) {
     const c = context[autoloadName]
     const d = dirname(s)
     if (!d) {
@@ -115,6 +117,12 @@ export async function clipboardPlay(
   updatePlaylist: (list: string[], playIndex: number) => void,
 ) {
   const s = (await getClipboard()).trim().replace(/\\/g, "/")
+
+  if (isSubtitle(s)) {
+    commandv("sub-add", s)
+    return
+  }
+
   const v = getList(s, context)
 
   if (v?.length) {
