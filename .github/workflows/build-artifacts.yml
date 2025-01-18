@@ -388,7 +388,7 @@ jobs:
           mkdir -p portable_config/script-opts
           cp ../uosc.conf portable_config/script-opts/uosc.conf
           cp ../thumbfast.conf portable_config/script-opts/thumbfast.conf
-          cp ../thumbfast.lua portable_config/script/thumbfast.lua
+          cp ../thumbfast.lua portable_config/scripts/thumbfast.lua
           zip -r -q ../release/mpy-uosc-windows-full.zip .
           cd ..
 
