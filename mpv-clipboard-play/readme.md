@@ -10,7 +10,7 @@ You need to install [yt-dlp](https://github.com/yt-dlp/yt-dlp?tab=readme-ov-file
 ## Supported link formats
 Folders do not support recursive scanning
 
-- local file: c:/a/b/c.mp4
+- local file: c:/a/b/c.mp4, c:/a/b/c.mp3, c:/a/b/c.srt
 - local folder: c:/a/b
 - webdav file http://<host>/a.mp4
 - webdav folder: http://<host>/a

@@ -78,6 +78,13 @@ export function isImage(s: string, types = ImageTypes) {
   return endsWith(s, types)
 }
 
+export function isPlayable(
+  s: string,
+  types = [...VideoTypes, ...AudioTypes, ...ImageTypes],
+) {
+  return endsWith(s, types)
+}
+
 export function isSubtitle(s: string, types = SubtitleTypes) {
   return endsWith(s, types)
 }

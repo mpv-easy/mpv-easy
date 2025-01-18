@@ -3,10 +3,8 @@ import { pluginName } from "../main"
 import {
   PropertyBool,
   PropertyString,
-  type MousePos,
   command,
   setPropertyBool,
-  type VideoParams,
   updatePlaylist,
   getPropertyString,
   isRemote,
@@ -33,14 +31,9 @@ import {
 } from "@mpv-easy/anime4k"
 import { translate, pluginName as translateName } from "@mpv-easy/translate"
 import { createDefaultContext } from "../context"
-import { getVideoName, getVideoTitle } from "../common"
+import { getVideoName } from "../common"
 import { defineStore } from "./easy-store"
-import isEqual from "lodash-es/isEqual"
 import { getPlayableList } from "@mpv-easy/autoload"
-
-const pauseProp = new PropertyBool("pause")
-const pathProp = new PropertyString("path")
-const muteProp = new PropertyBool("mute")
 
 const store = defineStore({
   state: {} as PluginContext,
