@@ -376,6 +376,22 @@ jobs:
           zip -r -q ../release/mpy-easy-windows-deno-full.zip .
           cd ..
 
+          # uosc
+          7z x mpv-win.7z -ompy-uosc-windows-full -y
+          rwget https://github.com/tomasklaen/uosc/releases/latest/download/uosc.zip
+          rwget https://github.com/tomasklaen/uosc/releases/latest/download/uosc.conf
+          rwget https://raw.githubusercontent.com/po5/thumbfast/refs/heads/master/thumbfast.lua
+          rwget https://raw.githubusercontent.com/po5/thumbfast/refs/heads/master/thumbfast.conf
+          cd mpy-uosc-windows-full
+          mkdir -p portable_config
+          unzip ../uosc.zip -d portable_config
+          mkdir -p portable_config/script-opts
+          cp ../uosc.conf portable_config/script-opts/uosc.conf
+          cp ../thumbfast.conf portable_config/script-opts/thumbfast.conf
+          cp ../thumbfast.lua portable_config/script/thumbfast.lua
+          zip -r -q ../release/mpy-uosc-windows-full.zip .
+          cd ..
+
           cp mpv-easy-js/* release/
           cp mpv-deno-dist/mpv-deno-windows.dll release/mpv-deno-windows.dll
           cp mpv-easy-ext-dist/mpv-easy-ext-macos release/mpv-easy-ext-macos
@@ -416,6 +432,11 @@ jobs:
         with:
           name: mpy-easy-windows-full
           path: release/mpy-easy-windows-full.zip
+      - name: Upload mpy-uosc-windows-full
+        uses: actions/upload-artifact@v4
+        with:
+          name: mpy-uosc-windows-full
+          path: release/mpy-uosc-windows-full.zip
       - name: Upload mpy-easy-windows-deno-full
         uses: actions/upload-artifact@v4
         with:
