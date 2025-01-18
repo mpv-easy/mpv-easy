@@ -383,13 +383,29 @@ jobs:
           rwget https://raw.githubusercontent.com/po5/thumbfast/refs/heads/master/thumbfast.lua
           rwget https://raw.githubusercontent.com/po5/thumbfast/refs/heads/master/thumbfast.conf
           cd mpy-uosc-windows-full
-          mkdir -p portable_config
-          unzip ../uosc.zip -d portable_config
+          mkdir -p portable_config/scripts
           mkdir -p portable_config/script-opts
+          unzip ../uosc.zip -d portable_config
           cp ../uosc.conf portable_config/script-opts/uosc.conf
           cp ../thumbfast.conf portable_config/script-opts/thumbfast.conf
           cp ../thumbfast.lua portable_config/scripts/thumbfast.lua
           zip -r -q ../release/mpy-uosc-windows-full.zip .
+          cd ..
+
+          # modernx
+          7z x mpv-win.7z -ompy-modernx-windows-full -y
+          rwget https://github.com/cyl0/ModernX/raw/refs/heads/main/modernx.lua
+          rwget https://github.com/cyl0/ModernX/raw/refs/heads/main/Material-Design-Iconic-Font.ttf
+          cd mpy-modernx-windows-full
+          mkdir -p portable_config/scripts
+          mkdir -p portable_config/script-opts
+          mkdir -p portable_config/fonts
+          cp ../modernx.lua portable_config/scripts/modernx.lua
+          cp ../modernx.lua portable_config/scripts/modernx.lua
+          cp ../Material-Design-Iconic-Font.ttf portable_config/fonts/Material-Design-Iconic-Font.ttf
+          cp ../thumbfast.conf portable_config/script-opts/thumbfast.conf
+          cp ../thumbfast.lua portable_config/scripts/thumbfast.lua
+          zip -r -q ../release/mpy-modernx-windows-full.zip .
           cd ..
 
           cp mpv-easy-js/* release/
@@ -437,6 +453,11 @@ jobs:
         with:
           name: mpy-uosc-windows-full
           path: release/mpy-uosc-windows-full.zip
+      - name: Upload mpy-modernx-windows-full
+        uses: actions/upload-artifact@v4
+        with:
+          name: mpy-modernx-windows-full
+          path: release/mpy-modernx-windows-full.zip
       - name: Upload mpy-easy-windows-deno-full
         uses: actions/upload-artifact@v4
         with:
