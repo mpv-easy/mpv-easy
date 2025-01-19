@@ -16,6 +16,7 @@ import {
   commandv,
   getSubtitleTracks,
   setPropertyNative,
+  subAdd,
 } from "@mpv-easy/tool"
 
 import { type SystemApi, definePlugin } from "@mpv-easy/plugin"
@@ -120,12 +121,7 @@ export async function clipboardPlay(
 ) {
   const s = (await getClipboard()).trim().replace(/\\/g, "/")
   if (isSubtitle(s)) {
-    const sub = getSubtitleTracks().find((i) => i.externalFilename === s)
-    if (sub) {
-      setPropertyNative("sid", sub.id)
-    } else {
-      commandv("sub-add", s)
-    }
+    subAdd(s, "cached")
     return
   }
 

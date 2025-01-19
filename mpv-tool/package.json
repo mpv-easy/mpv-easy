@@ -9,6 +9,7 @@
   "scripts": {
     "es5": "babel ./dist -d es5",
     "build": "tsc -p ./tsconfig.build.json",
+    "autogen": "tsx ./scripts/command.ts",
     "dev": "tsc -p ./tsconfig.build.json -w"
   },
   "keywords": [],
@@ -22,6 +23,7 @@
     "type-fest": "4.31.0"
   },
   "devDependencies": {
+    "change-case": "5.4.4",
     "@types/crypto-js": "4.2.2"
   }
 }

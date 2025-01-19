@@ -1,5 +1,6 @@
 import { execAsync, getOs, Rect } from "./common"
-import { joinPath, screenshotToFile } from "./mpv"
+import { joinPath } from "./mpv"
+import { screenshotToFile } from "./type"
 import { getDefaultBinDirPath } from "./rs-ext"
 import { existsSync } from "./fs"
 import { detectCmd } from "./ext"

@@ -7,9 +7,9 @@ import {
   StringProp,
 } from "./type-prop"
 export * from "./type-prop"
+export * from "./type-cmd"
 
 declare global {
-  // @ts-ignore
   var mp: MP
   // @ts-ignore
   function print(...args: any[]): void
@@ -90,11 +90,13 @@ export type CommandResult = {
 export type MP = {
   command(command: string): true | undefined
 
-  commandv(...args: (string | number)[]): true | undefined
+  commandv(
+    ...args: (string | number | boolean | Object | undefined)[]
+  ): true | undefined
 
-  command_native(table: unknown, def?: unknown): CommandResult
+  command_native<T = CommandResult>(table: unknown, def?: unknown): T
 
-  command_native_async(
+  command_native_async<T = CommandResult>(
     table: {
       name: string
       args?: string[]
@@ -102,11 +104,7 @@ export type MP = {
       capture_stdout?: boolean
       capture_stderr?: boolean
     },
-    fn?: (
-      success: boolean,
-      result: CommandResult,
-      error: string | undefined,
-    ) => void,
+    fn?: (success: boolean, result: T, error: string | undefined) => void,
   ): number
 
   abort_async_command(t: number): void

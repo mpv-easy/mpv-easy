@@ -16,7 +16,7 @@ import {
   writeFile,
 } from "./mpv"
 import { getFileName, replaceExt } from "./path"
-import type { TrackItem } from "./type"
+import { subAdd, type TrackItem } from "./type"
 import { getTmpDir } from "./tmp"
 import { isYtdlp } from "./yt-dlp"
 import { detectFfmpeg } from "./ffmpeg"
@@ -35,8 +35,7 @@ export function loadLocalSubtitle(path: string) {
       if (trackList.find((i) => i.externalFilename === url)) {
         continue
       }
-
-      commandv("sub-add", url)
+      subAdd(url, "cached")
     }
   }
 }
