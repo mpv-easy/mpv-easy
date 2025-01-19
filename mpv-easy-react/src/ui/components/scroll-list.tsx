@@ -13,6 +13,7 @@ import {
   fontSelector,
   mouseHoverStyleSelector,
   normalFontSizeSelector,
+  osdDimensionsSelector,
   scrollListStyleSelector,
 } from "../../store"
 import { measureText, type MouseEvent } from "@mpv-easy/react"
@@ -69,12 +70,16 @@ export const ScrollList = ({
 }: ScrollListProps & Partial<MpDomProps>) => {
   const button = useSelector(buttonStyleSelector)
   const scrollListStyle = useSelector(scrollListStyleSelector)
-  const maxItemCount = scrollListStyle.maxItemCount
+  const osd = useSelector(osdDimensionsSelector)
   const [startIndex, setStartIndex] = useState(0)
   const mouseHoverStyle = useSelector(mouseHoverStyleSelector)
   const normalFontSize = useSelector(normalFontSizeSelector)
   const cellSize = useSelector(cellSizeSelector)
   const font = useSelector(fontSelector)
+  const maxItemCount = Math.min(
+    scrollListStyle.maxItemCount,
+    (osd.h / 2 / cellSize) | 0,
+  )
   const showScrollBar = maxItemCount < items.length
   const scrollListHeight =
     maxItemCount * (normalFontSize.fontSize + normalFontSize.padding * 2)
