@@ -156,6 +156,7 @@ const store = defineStore({
       return { ...state }
     },
     addHistory(state, path: string) {
+      path = path.replaceAll("\\", "/")
       if (!isRemote(path) && !existsSync(path)) {
         return state
       }
