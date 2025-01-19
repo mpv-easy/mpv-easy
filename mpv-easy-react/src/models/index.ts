@@ -3,7 +3,6 @@ import { pluginName } from "../main"
 import {
   PropertyBool,
   PropertyString,
-  command,
   setPropertyBool,
   updatePlaylist,
   getPropertyString,
@@ -207,7 +206,7 @@ const store = defineStore({
       if (newPos === pos) {
         return state
       }
-      command(`playlist-play-index ${newPos}`)
+      playlistPlayIndex(newPos)
       return { ...state }
     },
     setVid(state, vid: number) {

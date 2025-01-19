@@ -2,7 +2,7 @@ import React from "react"
 import { Button } from "@mpv-easy/react"
 import * as ICON from "../../icon"
 import { i18nSelector, iconButtonStyle } from "../../store"
-import { command } from "@mpv-easy/tool"
+import { frameStep } from "@mpv-easy/tool"
 import { useSelector } from "../../models"
 
 export const NextFrame = () => {
@@ -15,7 +15,7 @@ export const NextFrame = () => {
       title={i18n.nextFrame}
       text={ICON.FastForward}
       onMouseDown={(e) => {
-        command("no-osd frame-step")
+        frameStep()
       }}
     />
   )

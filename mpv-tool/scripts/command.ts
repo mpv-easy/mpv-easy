@@ -5,7 +5,7 @@ import { camelCase } from "change-case"
 
 const filePath = process.argv[2]
 if (!filePath || !filePath.endsWith("command.c") || !fs.existsSync(filePath)) {
-  console.log(`npm run autogen "<mpv>/player/command.c"`)
+  // console.log(`npm run autogen "<mpv>/player/command.c"`)
   process.exit(0)
 }
 const commandCode = fs.readFileSync(filePath, "utf-8")
@@ -28,64 +28,52 @@ type Cmd = {
   name: string
   args: Arg[]
   ret?: string
+  vararg?: boolean
 }
 
 function parseType(s: string): Type {
   // console.log("parseType", s)
+  let type = "any"
+  let def = undefined
   if (s.startsWith("OPT_BOOL")) {
-    let def = ""
     if (s.includes("OPTDEF_INT(0)")) {
       def = "false"
     }
     if (s.includes("OPTDEF_INT(1)")) {
       def = "true"
     }
-    return { type: "boolean", def }
-  }
-  if (s.startsWith("OPT_STRING")) {
-    return { type: "string" }
-  }
-  if (s.startsWith("OPT_TIME")) {
-    return { type: "number" }
-  }
-  if (s.startsWith("OPT_INT")) {
-    return { type: "number" }
-  }
-  if (s.startsWith("OPT_DOUBLE")) {
-    return { type: "number" }
-  }
-  if (s.startsWith("OPT_CHOICE")) {
+    type = "boolean"
+  } else if (s.startsWith("OPT_STRING")) {
+    type = "string"
+  } else if (s.startsWith("OPT_TIME")) {
+    type = "number"
+  } else if (s.startsWith("OPT_INT")) {
+    type = "number"
+  } else if (s.startsWith("OPT_DOUBLE")) {
+    type = "number"
+  } else if (s.startsWith("OPT_CHOICE")) {
     const flags = [...s.matchAll(/"(.*?)"/g)].map((i) => `"${i[1]}"`)
-    let type = flags.join("|")
-
+    type = flags.join("|")
     if (s.includes("M_RANGE")) {
       type += "| number"
     }
-    return { type }
-  }
-  if (s.startsWith("OPT_FLAGS")) {
+  } else if (s.startsWith("OPT_FLAGS")) {
     const flags = [...s.matchAll(/"(.*?)"/g)].map((i) => `"${i[1]}"`)
-    const type = `${flags.join("|")} | (string & {})`
-    return { type }
-  }
-  if (s.startsWith("OPT_KEYVALUELIST")) {
-    return { type: "object" }
-  }
-  if (s.startsWith("OPT_BYTE_SIZE")) {
-    return { type: "number" }
-  }
-  if (s.startsWith("OPT_CYCLEDIR")) {
-    let def = ""
+    type = `${flags.join("|")} | (string & {})`
+  } else if (s.startsWith("OPT_KEYVALUELIST")) {
+    type = "object"
+  } else if (s.startsWith("OPT_BYTE_SIZE")) {
+    type = "number"
+  } else if (s.startsWith("OPT_CYCLEDIR")) {
     if (s.includes("OPTDEF_DOUBLE(1)")) {
       def = "true"
     }
     if (s.includes("OPTDEF_DOUBLE(0)")) {
       def = "false"
     }
-
-    return { type: "boolean", def }
+    type = "boolean"
   }
-  return { type: "any" }
+  return { type, def }
 }
 
 function readPair(
@@ -118,7 +106,7 @@ function readPair(
 }
 
 function parseArg(s: string): Arg | undefined {
-  // console.log('parseArg', s)
+  // console.log("parseArg", s)
   const name = s.match(/"(.*?)",/)?.[1]
   if (!name) {
     return
@@ -148,7 +136,7 @@ function getMpFnRet(s: string, fnName: string): string | undefined {
 }
 
 function parseArgs(s: string): Arg[] {
-  // console.log('parseArgs', s)
+  // console.log("parseArgs", s)
   let st = 1
   const argStrList: string[] = []
   while (st < s.length) {
@@ -168,8 +156,7 @@ function parseArgs(s: string): Arg[] {
 
 function parseCmd(s: string): Cmd | undefined {
   const name = s.match(/\{ "(.*?)",/)?.[1]
-  const fnName = s.match(/, (.*?),/)?.[1]
-
+  const fnName = s.match(/, (.*?)[ |,]/)?.[1]
   if (!name || !fnName) {
     return undefined
   }
@@ -182,10 +169,12 @@ function parseCmd(s: string): Cmd | undefined {
   const args = argStr.length ? parseArgs(argStr) : []
 
   const ret = getMpFnRet(commandCode, fnName)
+  const vararg = s.includes(".vararg = true")
   return {
     name,
     args,
     ret,
+    vararg,
   }
 }
 
@@ -208,25 +197,38 @@ function getCmdList(code: string): string[] {
 
 function cmdToFn(cmd: Cmd): string {
   const name = camelCase(cmd.name)
-  const arg = cmd.args.map((i) => {
+  const arg = cmd.args.map((i, k) => {
     const { name, type } = i
+    if (cmd.vararg && k === cmd.args.length - 1) {
+      return `...${name}: ${type.type}[]`
+    }
     return `${name}?: ${type.type}`
   })
+
   const s = arg.join(",")
   const { ret } = cmd
+  const argStr = arg.length ? `...args: [${s}]` : ""
   if (!ret) {
     return `
-export function ${name}(...args: [${s}]): true | undefined {
-  return mp.commandv("${cmd.name}", ...args)
+export function ${name}(${argStr}): true | undefined {
+  return mp.commandv("${cmd.name}"${arg.length ? ", ...args" : ""})
 }
 `.trim()
   }
   return `
-export function ${name}(...args: [${s}]): ${ret} {
-  return mp.command_native<${ret}>(["${cmd.name}", ...args])
+export function ${name}(${argStr}): ${ret} {
+  return mp.command_native<${ret}>(["${cmd.name}"${arg.length ? ", ...args]" : "]"})
 }
 `.trim()
 }
+
+const test = `
+
+    { "playlist-clear", cmd_playlist_clear },
+
+
+`
+
 const fnCode = getCmdList(mp_cmds_code)
   .map((i) => {
     const cmd = parseCmd(i)
@@ -238,4 +240,5 @@ const fnCode = getCmdList(mp_cmds_code)
   .filter((i) => !!i)
   .join("\n\n")
 
+// console.log(fnCode)
 fs.writeFileSync(outputPath, fnCode)

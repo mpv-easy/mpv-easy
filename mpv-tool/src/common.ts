@@ -4,10 +4,11 @@ import {
   type NumberKey,
   NumberKeys,
   loadfile,
+  playlistClear,
   playlistPlayIndex,
+  playlistRemove,
 } from "./type"
 import {
-  command,
   commandNative,
   commandNativeAsync,
   getProperty,
@@ -15,6 +16,7 @@ import {
   getPropertyString,
   observePropertyNumber,
   osdMessage,
+  setPropertyBool,
 } from "./mpv"
 import { normalize } from "./path"
 import { DEFAULT_ASS_HEIGHT } from "./const"
@@ -90,18 +92,13 @@ export function isSubtitle(s: string, types = SubtitleTypes) {
 }
 
 export function playVideo(n: number) {
-  command(`playlist-play-index ${n}`)
+  playlistPlayIndex(n)
 }
 
 export function clearPlayList() {
   const count = getPropertyNumber("playlist-count") || 0
-  command("set pause yes")
-  command("playlist-clear")
-  // const pos = getPropertyNumber('playlist-pos');
-  // for (let i = 0; i < count; i++) {
-  //   command(`playlist-remove 0`);
-  //   print('remove', i);
-  // }
+  setPropertyBool("pause", true)
+  playlistClear()
 }
 
 export function execSync(
@@ -207,9 +204,8 @@ export function getOs(): OsType {
 }
 
 export function replacePlaylist(videoList: string[], play?: number) {
-  command("set pause yes")
-
-  command("playlist-clear")
+  setPropertyBool("pause", true)
+  playlistClear()
 
   let count = getPropertyNumber("playlist-count") || 0
 
@@ -217,29 +213,18 @@ export function replacePlaylist(videoList: string[], play?: number) {
     loadfile(i, "append")
   }
 
-  // commandv("playlist-play-index", count.toString())
-
   while (count--) {
-    command("playlist-remove 0")
+    playlistRemove(0)
   }
 
   if (play !== undefined) {
     playlistPlayIndex(play)
-    command("set pause no")
+    setPropertyBool("pause", false)
   }
 }
-// export const osName =
-// const options = getOptions() as any
-// if (options.socket === "") {
-//   if (osName === "windows") {
-//     options.socket = "thumbfast";
-//   } else {
-//     options.socket = "/tmp/thumbfast";
-//   }
-// }
+
 export function commandExists(cmdName: string) {
   try {
-    // exec(['command', "-s", cmdName]);
     execSync(["which", cmdName])
     return true
   } catch (error) {
@@ -447,7 +432,7 @@ export function updatePlaylist(list: string[], playIndex = 0) {
     for (const i of list) {
       loadfile(i, "append")
     }
-    command(`playlist-play-index ${playIndex}`)
+    playlistPlayIndex(playIndex)
     return
   }
 
@@ -457,15 +442,15 @@ export function updatePlaylist(list: string[], playIndex = 0) {
     for (const i of list) {
       loadfile(i, "append")
     }
-    command(`playlist-play-index ${playIndex + oldList.length}`)
+    playlistPlayIndex(playIndex + oldList.length)
     for (let i = 0; i < oldList.length; i++) {
-      command("playlist-remove 0")
+      playlistRemove(0)
     }
     return
   }
   if (JSON.stringify(oldList) === JSON.stringify(list)) {
     if (oldListIndex !== playIndex) {
-      command(`playlist-play-index ${playIndex}`)
+      playlistPlayIndex(playIndex)
     }
     return
   }
@@ -473,16 +458,16 @@ export function updatePlaylist(list: string[], playIndex = 0) {
     for (const i of list) {
       loadfile(i, "append")
     }
-    command(`playlist-play-index ${playIndex + oldCount}`)
+    playlistPlayIndex(playIndex + oldCount)
     for (let i = 0; i < oldList.length; i++) {
-      command("playlist-remove 0")
+      playlistRemove(0)
     }
   } else {
     for (let i = 0; i < oldListIndex; i++) {
-      command("playlist-remove 0")
+      playlistRemove(0)
     }
     for (let i = 0; i < oldCount - oldListIndex - 1; i++) {
-      command("playlist-remove 1")
+      playlistRemove(1)
     }
     for (let i = 0; i < list.length; i++) {
       if (i === playIndex) {
@@ -491,9 +476,9 @@ export function updatePlaylist(list: string[], playIndex = 0) {
         loadfile(list[i], "append")
       }
     }
-    command("playlist-remove 0")
+    playlistRemove(0)
     if (getPropertyNumber("playlist-pos") !== playIndex) {
-      command(`playlist-play-index ${playIndex}`)
+      playlistPlayIndex(playIndex)
     }
   }
 }

@@ -1,7 +1,7 @@
 import React, { useState } from "react"
 import * as ICON from "../../icon"
 import { i18nSelector, iconButtonStyle } from "../../store"
-import { command } from "@mpv-easy/tool"
+import { scriptMessageTo } from "@mpv-easy/tool"
 import { useSelector } from "../../models"
 import { Button } from "@mpv-easy/react"
 
@@ -16,11 +16,7 @@ export const MoreInfo = () => {
       text={ICON.Info}
       title={i18n.moreInfo}
       onMouseDown={() => {
-        if (consoleShow) {
-          command("script-message-to console disable")
-        } else {
-          command("script-message-to console enable")
-        }
+        scriptMessageTo("console", consoleShow ? "disable" : "enable")
         setConsoleShow((c) => !c)
       }}
     />

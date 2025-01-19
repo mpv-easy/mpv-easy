@@ -127,10 +127,8 @@ export async function clipboardPlay(
     const index = v.indexOf(s)
     if (index !== -1) {
       updatePlaylist(v, index)
-      // command(`playlist-play-index ${index}`)
     } else {
       updatePlaylist(v, 0)
-      // command(`playlist-play-index ${0}`)
     }
   }
 }
