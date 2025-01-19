@@ -14,13 +14,13 @@ import {
   saveSrt,
   Srt,
   writeFile,
-  command,
   getPropertyNumber,
   getScreenshotPath,
   screenshotToFile,
   setPropertyNative,
   getTmpPath,
   subRemove,
+  subAdd,
 } from "@mpv-easy/tool"
 import { Box, type MpDom } from "@mpv-easy/react"
 import React, { useRef, useState, useEffect } from "react"
@@ -239,7 +239,7 @@ export const Progress = ({ width, ...props }: MpDomProps) => {
     const subText = new Srt(text).toText()
     const mergePath = getTmpPath("srt")
     writeFile(mergePath, ["1", "00:0:0,0 --> 99:00:00,00", subText].join("\n"))
-    command(`sub-add "${mergePath}" select merge`)
+    subAdd(mergePath, "select", "merge")
     mergeSubRef.current = getPropertyNumber("sid", -1)
   }
   useEffect(() => {

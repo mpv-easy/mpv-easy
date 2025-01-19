@@ -1,5 +1,4 @@
-import { command } from "./mpv"
-import { overlayAdd } from "./type-cmd"
+import { overlayAdd, overlayRemove } from "./type-cmd"
 
 const maxId = 64
 const overlayIdUsed = new Array(maxId).map(() => false)
@@ -41,7 +40,7 @@ export class Overlay {
   }
 
   remove() {
-    command(`overlay-remove ${this.id}`)
+    overlayRemove(this.id)
   }
 
   destroy() {

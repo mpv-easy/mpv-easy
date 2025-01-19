@@ -1,5 +1,4 @@
 import {
-  command,
   existsSync,
   getCurrentSubtitle,
   getFileName,
@@ -14,6 +13,8 @@ import {
   writeFile,
   md5,
   SubtitleTrack,
+  subRemove,
+  subAdd,
 } from "@mpv-easy/tool"
 import { google } from "./google"
 import { readFile } from "@mpv-easy/tool"
@@ -144,26 +145,26 @@ export async function translate(option: Partial<TranslateOption> = {}) {
   const sourceLang = option.sourceLang?.length ? option.sourceLang : sub.lang
   if (mix && TrackInfoBackupMix && sub.title === `${targetLang}-mix`) {
     setPropertyNative("sid", TrackInfoBackupMix.id)
-    command(`sub-remove ${sub.id}`)
+    subRemove(sub.id)
     TrackInfoBackupMix = undefined
     return
   }
   if (!mix && TrackInfoBackup && sub.title === targetLang) {
     setPropertyNative("sid", TrackInfoBackup.id)
-    command(`sub-remove ${sub.id}`)
+    subRemove(sub.id)
     TrackInfoBackup = undefined
     return
   }
 
   if (mix && TrackInfoBackup) {
     setPropertyNative("sid", TrackInfoBackup.id)
-    command(`sub-remove ${sub.id}`)
+    subRemove(sub.id)
     TrackInfoBackup = undefined
     // return
   }
   if (!mix && TrackInfoBackupMix) {
     setPropertyNative("sid", TrackInfoBackupMix.id)
-    command(`sub-remove ${sub.id}`)
+    subRemove(sub.id)
     TrackInfoBackupMix = undefined
     // return
   }
@@ -233,8 +234,8 @@ export async function translate(option: Partial<TranslateOption> = {}) {
         secondSubFontface,
       )
     }
-    command(`sub-add "${srtMixPath}" select ${targetLang}-mix ${targetLang}`)
+    subAdd(srtMixPath, "select", `${targetLang}-mix`, targetLang)
   } else {
-    command(`sub-add "${srtPath}" select ${targetLang} ${targetLang}`)
+    subAdd(srtMixPath, "select", targetLang, targetLang)
   }
 }

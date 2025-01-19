@@ -1,6 +1,5 @@
 import "@mpv-easy/polyfill"
 import {
-  commandv,
   getOptions,
   getPropertyNative,
   observeProperty,
@@ -9,6 +8,7 @@ import {
   registerEvent,
   registerIdle,
   registerScriptMessage,
+  scriptMessage,
 } from "@mpv-easy/tool"
 import {
   ThumbFast,
@@ -127,8 +127,7 @@ function start() {
 
   registerIdle(update)
 
-  commandv("script-message", "thumbfast-info", getJson())
-
+  scriptMessage("thumbfast-info", getJson())
   registerScriptMessage("thumb", (time, x, y, script) => {
     // console.log('thumb', time, x, y, script)
     thumb?.seek(+time)

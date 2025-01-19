@@ -1,5 +1,5 @@
-export function ignore(...args: []): true | undefined {
-  return mp.commandv("ignore", ...args)
+export function ignore(): true | undefined {
+  return mp.commandv("ignore")
 }
 
 export function seek(
@@ -40,12 +40,12 @@ export function stop(
   return mp.commandv("stop", ...args)
 }
 
-export function frameStep(...args: []): true | undefined {
-  return mp.commandv("frame-step", ...args)
+export function frameStep(): true | undefined {
+  return mp.commandv("frame-step")
 }
 
-export function frameBackStep(...args: []): true | undefined {
-  return mp.commandv("frame-back-step", ...args)
+export function frameBackStep(): true | undefined {
+  return mp.commandv("frame-back-step")
 }
 
 export function playlistNext(
@@ -60,12 +60,12 @@ export function playlistPrev(
   return mp.commandv("playlist-prev", ...args)
 }
 
-export function playlistNextPlaylist(...args: []): true | undefined {
-  return mp.commandv("playlist-next-playlist", ...args)
+export function playlistNextPlaylist(): true | undefined {
+  return mp.commandv("playlist-next-playlist")
 }
 
-export function playlistPrevPlaylist(...args: []): true | undefined {
-  return mp.commandv("playlist-prev-playlist", ...args)
+export function playlistPrevPlaylist(): true | undefined {
+  return mp.commandv("playlist-prev-playlist")
 }
 
 export function playlistPlayIndex(
@@ -74,12 +74,12 @@ export function playlistPlayIndex(
   return mp.commandv("playlist-play-index", ...args)
 }
 
-export function playlistShuffle(...args: []): true | undefined {
-  return mp.commandv("playlist-shuffle", ...args)
+export function playlistShuffle(): true | undefined {
+  return mp.commandv("playlist-shuffle")
 }
 
-export function playlistUnshuffle(...args: []): true | undefined {
-  return mp.commandv("playlist-unshuffle", ...args)
+export function playlistUnshuffle(): true | undefined {
+  return mp.commandv("playlist-unshuffle")
 }
 
 export function subStep(
@@ -120,8 +120,8 @@ export function escapeAss(...args: [text?: string]): string {
   return mp.command_native<string>(["escape-ass", ...args])
 }
 
-export function showProgress(...args: []): true | undefined {
-  return mp.commandv("show-progress", ...args)
+export function showProgress(): true | undefined {
+  return mp.commandv("show-progress")
 }
 
 export function subAdd(
@@ -253,6 +253,10 @@ export function loadlist(
   return mp.commandv("loadlist", ...args)
 }
 
+export function playlistClear(): true | undefined {
+  return mp.commandv("playlist-clear")
+}
+
 export function playlistRemove(
   ...args: [index?: "current" | number]
 ): true | undefined {
@@ -266,7 +270,7 @@ export function playlistMove(
 }
 
 export function run(
-  ...args: [command?: string, args?: string]
+  ...args: [command?: string, ...args: string[]]
 ): true | undefined {
   return mp.commandv("run", ...args)
 }
@@ -322,7 +326,7 @@ export function multiply(
 }
 
 export function cycleValues(
-  ...args: [arg0?: string, arg1?: string, argN?: string]
+  ...args: [arg0?: string, arg1?: string, ...argN: string[]]
 ): true | undefined {
   return mp.commandv("cycle-values", ...args)
 }
@@ -351,8 +355,12 @@ export function defineSection(
   return mp.commandv("define-section", ...args)
 }
 
-export function dropBuffers(...args: []): true | undefined {
-  return mp.commandv("drop-buffers", ...args)
+export function abLoop(): true | undefined {
+  return mp.commandv("ab-loop")
+}
+
+export function dropBuffers(): true | undefined {
+  return mp.commandv("drop-buffers")
 }
 
 export function af(
@@ -389,18 +397,22 @@ export function vfCommand(
   return mp.commandv("vf-command", ...args)
 }
 
+export function aoReload(): true | undefined {
+  return mp.commandv("ao-reload")
+}
+
 export function scriptBinding(
   ...args: [name?: string, arg?: string]
 ): true | undefined {
   return mp.commandv("script-binding", ...args)
 }
 
-export function scriptMessage(...args: [args?: string]): true | undefined {
+export function scriptMessage(...args: [...args: string[]]): true | undefined {
   return mp.commandv("script-message", ...args)
 }
 
 export function scriptMessageTo(
-  ...args: [target?: string, args?: string]
+  ...args: [target?: string, ...args: string[]]
 ): true | undefined {
   return mp.commandv("script-message-to", ...args)
 }
@@ -440,6 +452,10 @@ export function osdOverlay(
   ]
 ): true | undefined {
   return mp.commandv("osd-overlay", ...args)
+}
+
+export function writeWatchLaterConfig(): true | undefined {
+  return mp.commandv("write-watch-later-config")
 }
 
 export function deleteWatchLaterConfig(
@@ -502,6 +518,18 @@ export function abLoopDumpCache(
   ...args: [filename?: string]
 ): true | undefined {
   return mp.commandv("ab-loop-dump-cache", ...args)
+}
+
+export function abLoopAlignCache(): true | undefined {
+  return mp.commandv("ab-loop-align-cache")
+}
+
+export function beginVoDragging(): true | undefined {
+  return mp.commandv("begin-vo-dragging")
+}
+
+export function contextMenu(): true | undefined {
+  return mp.commandv("context-menu")
 }
 
 export function flushStatusLine(...args: [clear?: boolean]): true | undefined {
