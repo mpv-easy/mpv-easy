@@ -60,7 +60,7 @@ const {
       key: "lifetime",
     },
     "overlay-id": {
-      type: "string",
+      type: "number",
       key: "overlayId",
     },
     "scale-factor": {

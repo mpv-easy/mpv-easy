@@ -3,8 +3,8 @@ import {
   AlphabetKeys,
   type NumberKey,
   NumberKeys,
+  loadfile,
 } from "./type"
-import { existsSync } from "./fs"
 import {
   command,
   commandNative,
@@ -497,24 +497,6 @@ export function updatePlaylist(list: string[], playIndex = 0) {
       command(`playlist-play-index ${playIndex}`)
     }
   }
-}
-
-export type LoadfileFlag =
-  | "replace"
-  | "append"
-  | "append-play"
-  | "insert-next"
-  | "insert-next-play"
-  | "insert-at"
-  | "insert-at-play"
-
-export function loadfile(path: string, flag: LoadfileFlag = "replace") {
-  if (!isRemote(path) && !existsSync(path)) {
-    // command(`loadfile "${path}" ${flag}`)
-    printAndOsd(`loadfile: file ${path} not exist`)
-    return
-  }
-  commandv("loadfile", path, flag)
 }
 
 export function printAndOsd(s: string, seconds = 1) {

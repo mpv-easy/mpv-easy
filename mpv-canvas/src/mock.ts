@@ -570,7 +570,7 @@ export function createMpvMock(
       // console.log("cmd: ", ...args)
       return true
     },
-    command_native: (table: unknown, def?: unknown): CommandResult => {
+    command_native: <T = CommandResult>(table: unknown, def?: unknown): T => {
       // console.log("command_native: ")
       return {
         status: 0,
@@ -578,9 +578,9 @@ export function createMpvMock(
         stdout: "",
         error_string: "",
         killed_by_us: false,
-      }
+      } as T
     },
-    command_native_async: (
+    command_native_async: <T = CommandResult>(
       table: {
         name: string
         args?: string[]
@@ -589,11 +589,7 @@ export function createMpvMock(
         capture_stderr?: boolean
       },
       fn?:
-        | ((
-            success: boolean,
-            result: CommandResult,
-            error: string | undefined,
-          ) => void)
+        | ((success: boolean, result: T, error: string | undefined) => void)
         | undefined,
     ): number => {
       // console.log("command_native_async: ")

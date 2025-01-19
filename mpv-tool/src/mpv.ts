@@ -18,6 +18,7 @@ import type {
   NumberProp,
   NativeProp,
 } from "./type"
+import { expandPath } from "./type"
 import { MousePos } from "./type-prop"
 import { dirname, existsSync } from "./fs"
 import { showNotification } from "./notification"
@@ -37,11 +38,11 @@ export function commandv(...args: (string | number)[]): true | undefined {
   return getMP().commandv(...args)
 }
 
-export function commandNative(table: unknown): CommandResult {
-  return getMP().command_native(table)
+export function commandNative<T = CommandResult>(table: unknown): T {
+  return getMP().command_native<T>(table)
 }
 
-export function commandNativeAsync(
+export function commandNativeAsync<T = CommandResult>(
   table: {
     name: string
     args?: string[]
@@ -49,13 +50,9 @@ export function commandNativeAsync(
     capture_stdout?: boolean
     capture_stderr?: boolean
   },
-  fn?: (
-    success: boolean,
-    result: CommandResult,
-    error: string | undefined,
-  ) => void,
+  fn?: (success: boolean, result: T, error: string | undefined) => void,
 ): number {
-  return getMP().command_native_async(table, fn)
+  return getMP().command_native_async<T>(table, fn)
 }
 
 export function abortAsyncCommand(t: number) {
@@ -528,16 +525,6 @@ export function getColor(name: string): string | undefined {
   const prop = getPropertyString(name)
   if (!prop) return
   return new Argb(prop, true).toBgra().toHex("#")
-}
-
-export function screenshotToFile(path: string) {
-  const cmd = ["screenshot-to-file", path]
-  showNotification(cmd.join(" "))
-  commandv(...cmd)
-}
-
-export function expandPath(path: string) {
-  return commandNative(["expand-path", path]) as unknown as string
 }
 
 export function getDesktopDir() {

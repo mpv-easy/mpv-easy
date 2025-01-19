@@ -1,5 +1,5 @@
-// @ts-ignore
-const mp: any = {}
+// @ts-nocheck
+
 const g = Function("return this")()
 g.mp = mp
 const log = g.print

@@ -284,6 +284,7 @@ export const Progress = ({ width, ...props }: MpDomProps) => {
         return
       }
       screenshotToFile(p)
+      showNotification(`screenshot: ${p}`)
     })
     registerScriptMessage("subtitle-merge", () => {
       subtitleMergeRef.current?.()
