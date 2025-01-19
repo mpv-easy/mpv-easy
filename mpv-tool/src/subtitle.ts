@@ -8,7 +8,6 @@ import {
 import { fetch } from "./fetch"
 import { existsSync } from "./fs"
 import {
-  commandv,
   getProperty,
   getPropertyNative,
   joinPath,
@@ -121,7 +120,7 @@ export async function loadRemoteSubtitleAsync(path = getProperty("path")) {
       const tmp = getTmpDir()
       const subPath = joinPath(tmp, name)
       writeFile(subPath, text)
-      commandv("sub-add", subPath)
+      subAdd(subPath, "cached")
     } catch (e) {
       print("loadRemoteSubtitle error:", e)
     }

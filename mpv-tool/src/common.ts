@@ -4,12 +4,12 @@ import {
   type NumberKey,
   NumberKeys,
   loadfile,
+  playlistPlayIndex,
 } from "./type"
 import {
   command,
   commandNative,
   commandNativeAsync,
-  commandv,
   getProperty,
   getPropertyNumber,
   getPropertyString,
@@ -224,8 +224,7 @@ export function replacePlaylist(videoList: string[], play?: number) {
   }
 
   if (play !== undefined) {
-    commandv("playlist-play-index", play.toString())
-
+    playlistPlayIndex(play)
     command("set pause no")
   }
 }

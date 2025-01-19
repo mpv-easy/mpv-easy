@@ -9,7 +9,6 @@ import {
   getPropertyString,
   isRemote,
   existsSync,
-  commandv,
   clamp,
   PropertyNumber,
   PropertyNative,
@@ -21,6 +20,10 @@ import {
   loadfile,
   loadRemoteSubtitleAsync,
   setPropertyNative,
+  screenshot,
+  showNotification,
+  quit,
+  playlistPlayIndex,
 } from "@mpv-easy/tool"
 import type { Language } from "@mpv-easy/i18n"
 import { type ThemeMode, type UIName, PlayMode } from "../mpv-easy-theme"
@@ -112,7 +115,8 @@ const store = defineStore({
       return state
     },
     screenshot(state) {
-      commandv("screenshot", "video")
+      screenshot("video")
+      showNotification("screenshot")
       return { ...state }
     },
     // setMousePos(state, pos: MousePos) {
@@ -178,7 +182,7 @@ const store = defineStore({
       return { ...state }
     },
     exit(state) {
-      commandv("quit")
+      quit(0)
       return { ...state }
     },
     next(state) {
@@ -190,11 +194,7 @@ const store = defineStore({
       if (newPos === pos) {
         return state
       }
-      // console.log('next: ', newPos, pos, list[newPos])
-      // state[pluginName].player["playlist-play-index"] = newPos
-      // state[pluginName].player.path = list[newPos]
-      // pathProp.value = list[newPos]
-      commandv("playlist-play-index", newPos)
+      playlistPlayIndex(newPos)
       return { ...state }
     },
     previous(state) {
@@ -206,9 +206,6 @@ const store = defineStore({
       if (newPos === pos) {
         return state
       }
-      // state[pluginName].player["playlist-play-index"] = newPos
-      // state[pluginName].player.path = list[newPos]
-      // pathProp.value = list[newPos]
       command(`playlist-play-index ${newPos}`)
       return { ...state }
     },
@@ -228,13 +225,6 @@ const store = defineStore({
       state[anime4kName] = { ...config }
       return { ...state }
     },
-    // setVideoParams(state, videoParams: VideoParams) {
-    //   state[pluginName].player = {
-    //     ...state[pluginName].player,
-    //     "video-params": videoParams,
-    //   }
-    //   return { ...state }
-    // },
     setVolume(state, volume: number) {
       setPropertyNumber("volume", volume)
       state[pluginName].player = { ...state[pluginName].player, volume }

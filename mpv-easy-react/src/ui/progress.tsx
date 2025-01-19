@@ -19,8 +19,8 @@ import {
   getScreenshotPath,
   screenshotToFile,
   setPropertyNative,
-  commandv,
   getTmpPath,
+  subRemove,
 } from "@mpv-easy/tool"
 import { Box, type MpDom } from "@mpv-easy/react"
 import React, { useRef, useState, useEffect } from "react"
@@ -208,7 +208,7 @@ export const Progress = ({ width, ...props }: MpDomProps) => {
   }
 
   const clearMerge = () => {
-    commandv("sub-remove", mergeSubRef.current)
+    subRemove(mergeSubRef.current)
     setPropertyNative("sid", originSubRef.current)
     originSubRef.current = -1
     mergeSubRef.current = -1
