@@ -4,6 +4,8 @@ import {
   getOptions,
   getPropertyNative,
   observeProperty,
+  overlayAdd,
+  overlayRemove,
   registerEvent,
   registerIdle,
   registerScriptMessage,
@@ -94,7 +96,7 @@ function shutdown() {
 
 function clear() {
   // console.log('clear')
-  commandv("overlay-remove", overlayId)
+  overlayRemove(overlayId)
 }
 
 function start() {
@@ -131,11 +133,10 @@ function start() {
     // console.log('thumb', time, x, y, script)
     thumb?.seek(+time)
     // commandv("script-message", "thumbfast-render", getJson())
-    commandv(
-      "overlay-add",
+    overlayAdd(
       overlayId,
-      x,
-      y,
+      +x,
+      +y,
       thumb.path,
       0,
       "bgra",

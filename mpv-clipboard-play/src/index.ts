@@ -13,12 +13,8 @@ import {
   registerScriptMessage,
   showNotification,
   isSubtitle,
-  commandv,
-  getSubtitleTracks,
-  setPropertyNative,
   subAdd,
 } from "@mpv-easy/tool"
-
 import { type SystemApi, definePlugin } from "@mpv-easy/plugin"
 import type { PluginContext } from "@mpv-easy/plugin"
 import { pluginName as autoloadName, getPlayableList } from "@mpv-easy/autoload"
