@@ -84,9 +84,9 @@ export class LayoutNode extends Rect {
 }
 
 export const EventNameList = [
-  "onClick",
   "onMouseDown",
   "onMouseUp",
+  "onClick",
   "onMouseMove",
   "onMousePress",
   "onMouseEnter",

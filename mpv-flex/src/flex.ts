@@ -858,9 +858,9 @@ export abstract class Flex<A extends {}, P extends {}, E extends {} = {}> {
   }
   dispatchMouseEvent(node: BaseDom<A, P, E>, event: BaseMouseEvent<A, P, E>) {
     const dm: Record<EventName, BaseDom<A, P, E>[]> = {
-      onClick: [],
       onMouseDown: [],
       onMouseUp: [],
+      onClick: [],
       onMouseMove: [],
       onMousePress: [],
       onMouseEnter: [],

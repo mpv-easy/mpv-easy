@@ -56,6 +56,9 @@ export function Speed() {
       onMouseUp={() => {
         clear()
       }}
+      onClick={() => {
+        clear()
+      }}
     >
       {style.showText && press && (
         <Box

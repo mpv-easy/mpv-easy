@@ -278,26 +278,34 @@ export function createRender({
       }
     })
 
-    function dispatchEvent(name: string, arg = "") {
+    function dispatchEvent(
+      name: string,
+      event: "down" | "up" | "press" = "down",
+    ) {
       customDispatch(flex.rootNode, lastMousePos, {
         key_name: name,
         key: name,
-        event: "down",
+        event,
         is_mouse: true,
         canceled: false,
         scale: 0,
-        arg,
       })
     }
 
     registerScriptMessage("mouse-left-click", () => {
-      dispatchEvent("MOUSE_BTN0", "click")
+      // dispatchEvent("MOUSE_BTN0", "click")
+      dispatchEvent("MOUSE_BTN0", "down")
+      dispatchEvent("MOUSE_BTN0", "up")
     })
     registerScriptMessage("mouse-mid-click", () => {
-      dispatchEvent("MOUSE_BTN1", "click")
+      // dispatchEvent("MOUSE_BTN1", "click")
+      dispatchEvent("MOUSE_BTN1", "down")
+      dispatchEvent("MOUSE_BTN1", "up")
     })
     registerScriptMessage("mouse-right-click", () => {
-      dispatchEvent("MOUSE_BTN2", "click")
+      // dispatchEvent("MOUSE_BTN2", "click")
+      dispatchEvent("MOUSE_BTN2", "down")
+      dispatchEvent("MOUSE_BTN2", "up")
     })
     registerScriptMessage("mouse-wheel-up", () => {
       dispatchEvent("WHEEL_UP")
