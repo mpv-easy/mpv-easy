@@ -20,6 +20,7 @@ import {
 } from "./mpv"
 import { normalize } from "./path"
 import { DEFAULT_ASS_HEIGHT } from "./const"
+import { head } from "lodash-es"
 
 export const VideoTypes =
   "3g2,3gp,asf,avi,f4v,flv,h264,h265,m2ts,m4v,mkv,mov,mp4,mp4v,mpeg,mpg,ogm,ogv,rm,rmvb,ts,vob,webm,wmv,y4m,m4s".split(
@@ -493,4 +494,49 @@ export class Point {
     public x: number,
     public y: number,
   ) {}
+}
+
+export function getDisplayResolution():
+  | undefined
+  | {
+      width: number
+      height: number
+    } {
+  switch (getOs()) {
+    case "windows": {
+      const s = execSync([
+        "powershell",
+        "-c",
+        `$display = Get-CimInstance -ClassName Win32_VideoController;"$($display.CurrentHorizontalResolution),$($display.CurrentVerticalResolution)"`,
+      ])
+        .trim()
+        .split(",")
+      if (s.length === 2) {
+        return { width: +s[0], height: +s[1] }
+      }
+    }
+    case "linux":
+    case "darwin":
+    case "android":
+  }
+  return undefined
+}
+
+export function getDisplayResolutionType(
+  size = getDisplayResolution(),
+): undefined | "720P" | "1080P" | "2K" | "4K" {
+  if (!size) return
+  const { width: w, height: h } = size
+  if (w >= 3840 || h >= 2160) {
+    return "4K"
+  }
+  if (w >= 2560 || h >= 1440) {
+    return "2K"
+  }
+  if (w >= 1920 || h >= 1080) {
+    return "1080P"
+  }
+  if (w >= 1280 || h >= 720) {
+    return "720P"
+  }
 }

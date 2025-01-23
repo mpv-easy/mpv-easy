@@ -5,13 +5,13 @@ This project is still in its early stages, and API changes occur frequently. It 
 bash
 
 ```bash
-export MPV_SCRIPT_DIR=/your_mpv_dir/portable_config/scripts && pnpm run dev
+export MPV_SCRIPT_DIR=/your_mpv_dir/portable_config/scripts && pnpm run dev-copy
 ```
 
 fish
 
 ```fish
-set -x MPV_SCRIPT_DIR /your_mpv_dir/portable_config/scripts ; pnpm run dev
+set -x MPV_SCRIPT_DIR /your_mpv_dir/portable_config/scripts ; pnpm run dev-copy
 ```
 
 ## todo

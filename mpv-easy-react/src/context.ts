@@ -12,7 +12,11 @@ import clipboardPlayPlugin, {
 
 import easyPlugin from "./main"
 
-import { defaultConfig as easyConfig, pluginName as easyName } from "./const"
+import {
+  defaultConfig as easyConfig,
+  pluginName as easyName,
+  pluginName,
+} from "./const"
 
 import anime4kPlugin, {
   defaultConfig as anime4kConfig,
@@ -64,8 +68,10 @@ import cropPlugin, {
 
 import { type PluginContext, SystemApi } from "@mpv-easy/plugin"
 import {
+  clone,
   ConfigDir,
   existsSync,
+  getDisplayResolutionType,
   getOs,
   getScriptDir,
   joinPath,
@@ -203,8 +209,25 @@ export function getConfig() {
       print("config version error: fallback to default config")
     }
   } else {
-    saveConfig(defaultContext)
-    customConfig = defaultContext
+    customConfig = clone(defaultContext)
+    const type = getDisplayResolutionType()
+    let scale = 1
+    switch (type) {
+      case "4K": {
+      }
+      case "2K": {
+        scale = 0.75
+      }
+      case "1080P": {
+        scale = 0.5
+      }
+      case "720P": {
+        scale = 0.5
+      }
+    }
+    customConfig[pluginName].style.dark.fontSizeScale = scale
+    customConfig[pluginName].style.light.fontSizeScale = scale
+    saveConfig(customConfig)
   }
 
   return customConfig
