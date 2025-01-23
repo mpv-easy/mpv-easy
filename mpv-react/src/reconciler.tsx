@@ -412,7 +412,7 @@ export function createRender({
       setAttribute(flex.rootNode, "x", 0)
       setAttribute(flex.rootNode, "y", 0)
       setAttribute(flex.rootNode, "zIndex", 0)
-      setAttribute(flex.rootNode, "alignContent", "stretch")
+      // setAttribute(flex.rootNode, "alignContent", "stretch")
       setAttribute(flex.rootNode, "fontSize", 16)
 
       setLayoutNode(flex.rootNode, "x", 0)
