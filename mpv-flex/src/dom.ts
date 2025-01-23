@@ -7,6 +7,7 @@ import type {
   Len,
   Position,
   TextAlign,
+  WordBreak,
 } from "./type"
 
 export class BaseMouseEvent<
@@ -128,6 +129,7 @@ export interface BaseDom<
       text: string
       flexDirection: FlexDirection
       flexWrap: FlexWrap
+      wordBreak: WordBreak
       justifyContent: AlignType
       alignItems: AlignType
       padding: Len

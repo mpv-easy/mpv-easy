@@ -1,6 +1,11 @@
 import { AssDraw } from "@mpv-easy/assdraw"
 import { OsdOverlay, getAssScale } from "@mpv-easy/tool"
-import { lenToNumber, getFirstValidAttribute, type Shape } from "@mpv-easy/flex"
+import {
+  lenToNumber,
+  getFirstValidAttribute,
+  type Shape,
+  WordBreak,
+} from "@mpv-easy/flex"
 import type { MpDom } from "./dom"
 export const propsToSkip = {
   children: true,
@@ -15,38 +20,79 @@ export const propsToSkip = {
 
 const GetAssTextAssdraw = new AssDraw()
 
-function maxWidth(text: string, maxLength = 0): string {
+function maxWidth(
+  text: string,
+  maxLength = 0,
+  wordBreak: WordBreak = "break-all",
+): string {
   if (!maxLength || text.length <= maxLength) {
     return text
   }
+  switch (wordBreak) {
+    case "break-word": {
+      const lines: string[] = []
+      let currentLine: string[] = []
+      for (const word of text.split(" ")) {
+        if (word === "\n") {
+          lines.push(currentLine.join(" "))
+          currentLine = []
+        } else {
+          if (
+            currentLine.length === 0 ||
+            currentLine.join(" ").length + word.length <= maxLength
+          ) {
+            currentLine.push(word)
+          } else {
+            lines.push(currentLine.join(" "))
+            currentLine = [word]
+          }
 
-  const lines: string[] = []
-  let currentLine: string[] = []
+          if (currentLine.join(" ").length >= maxLength) {
+            lines.push(currentLine.join(" "))
+            currentLine = []
+          }
+        }
+      }
+      if (currentLine.length) {
+        lines.push(currentLine.join(" "))
+        currentLine = []
+      }
+      return lines.join("\n")
+    }
+    default: {
+      const lines: string[] = []
+      let currentLine: string[] = []
 
-  for (const word of text.split("")) {
-    if (word === "\n") {
-      lines.push(currentLine.join(""))
-      currentLine = []
-    } else {
-      currentLine.push(word)
-      if (currentLine.length === maxLength) {
+      for (const word of text.split("")) {
+        if (word === "\n") {
+          lines.push(currentLine.join(""))
+          currentLine = []
+        } else {
+          currentLine.push(word)
+          if (currentLine.length === maxLength) {
+            lines.push(currentLine.join(""))
+            currentLine = []
+          }
+        }
+      }
+
+      if (currentLine.length) {
         lines.push(currentLine.join(""))
         currentLine = []
       }
+
+      return lines.join("\n")
     }
   }
-
-  if (currentLine.length) {
-    lines.push(currentLine.join(""))
-    currentLine = []
-  }
-
-  return lines.join("\n")
 }
 
 export function getAssText(node: MpDom, x: number, y: number) {
   const { text = "" } = node.attributes
-  const t = maxWidth(text.replaceAll("\r\n", "\n"), node.attributes.maxWidth)
+  const t = maxWidth(
+    text.replaceAll("\r\n", "\n"),
+    node.attributes.maxWidth,
+    node.attributes.wordBreak,
+  )
     .replaceAll("\n", "\\N")
     .replaceAll("\t", "    ")
   const assScale = getAssScale()
