@@ -10,6 +10,9 @@ Inspired by https://github.com/LuckyPuppy514/Play-With-MPV
 
 You need to install the [tampermonkey](https://www.tampermonkey.net/) extension first
 
+**note**
+Enable dev mode https://www.tampermonkey.net/faq.php#Q209
+
 Then install script [mpv-easy-play-with.user.js](https://github.com/mpv-easy/mpv-easy/releases/latest/download/mpv-easy-play-with.user.js)
 
 When play-with detects videos in the page, you can add all videos to the mpv player through the mpv icon in the bottom left corner

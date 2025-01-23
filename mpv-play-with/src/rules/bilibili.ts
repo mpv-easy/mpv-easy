@@ -1,6 +1,5 @@
 import { bilibili } from "@mpv-easy/tool"
 import { PlayWith, PlayItem, Rule } from "../type"
-import { getBvid } from "../../../mpv-tool/src/bilibili"
 
 export const Bilibili: Rule = {
   match: (url: string): boolean => bilibili.isBilibili(url),
@@ -114,7 +113,7 @@ export const Bilibili: Rule = {
         }
       })
 
-      const bvid = getBvid()
+      const bvid = bilibili.getBvid()
       const start = episodes.findIndex((i) => i.bvid === bvid)
       return {
         start: start === -1 ? 0 : start,
