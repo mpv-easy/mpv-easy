@@ -21,7 +21,6 @@ import type {
 import { expandPath } from "./type"
 import { MousePos } from "./type-prop"
 import { dirname, existsSync } from "./fs"
-import { showNotification } from "./notification"
 
 export function getMP(): MP {
   // @ts-ignore
@@ -528,20 +527,7 @@ export function getColor(name: string): string | undefined {
 }
 
 export function getDesktopDir() {
-  switch (getOs()) {
-    case "windows":
-      return normalize(
-        execSync([
-          "powershell",
-          "-c",
-          '[Environment]::GetFolderPath("Desktop")',
-        ]).trim(),
-      )
-    case "linux":
-    case "darwin":
-    case "android":
-      return normalize(execSync(["bash", "-c", "echo ~/Desktop"]).trim())
-  }
+  return normalize(expandPath("~~desktop/"))
 }
 
 let screenshotId = 1

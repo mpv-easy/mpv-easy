@@ -34,3 +34,11 @@ export function isAbsolute(path: string): boolean {
     isLinuxAbsolutePath
   )
 }
+
+const UnsafeChars = '\\/:*?"<>|'
+export function getSafeName(s: string): string {
+  for (const c of UnsafeChars) {
+    s = s.replaceAll(c, "_")
+  }
+  return s
+}

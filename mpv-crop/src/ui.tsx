@@ -5,8 +5,11 @@ import {
   getDesktopDir,
   getFileName,
   getOsdSize,
+  getProperty,
   getPropertyNative,
   getPropertyNumber,
+  getSafeName,
+  isRemote,
   Rect,
 } from "@mpv-easy/tool"
 
@@ -593,10 +596,13 @@ export function getCropImagePath(
   outputDirectory: string,
 ) {
   const dir = existsSync(outputDirectory) ? outputDirectory : getDesktopDir()
-  const name = getFileName(videoPath)!
+  const unsafeName = isRemote(videoPath)
+    ? getProperty("force-media-title", getFileName(videoPath)!)
+    : getFileName(videoPath)!
+  const name = getSafeName(unsafeName)
   const list = name.split(".")
   const ext = imageFormat || "webp"
-  const prefix = list.slice(0, -1).join(".")
+  const prefix = list.slice(0, list.length === 1 ? 1 : -1).join(".")
   const nameList = [
     prefix,
     time | 0,

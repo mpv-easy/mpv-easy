@@ -51,3 +51,9 @@ You need to install the [tampermonkey](https://www.tampermonkey.net/) extension 
 Then install script [mpv-easy-play-with.user.js](https://github.com/mpv-easy/mpv-easy/releases/latest/download/mpv-easy-play-with.user.js)
 
 When play-with detects videos in the page, you can add all videos to the mpv player through the mpv icon in the lower left corner
+
+## Using UTF-8 Encoding in Windows
+
+It is recommended to set the encoding to utf-8
+
+https://stackoverflow.com/questions/57131654/using-utf-8-encoding-chcp-65001-in-command-prompt-windows-powershell-window
