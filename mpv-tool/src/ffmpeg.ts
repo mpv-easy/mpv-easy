@@ -1,7 +1,6 @@
 import { execAsync, getOs, Rect } from "./common"
-import { joinPath } from "./mpv"
+import { getMpvExeDir, joinPath } from "./mpv"
 import { screenshotToFile } from "./type"
-import { getDefaultBinDirPath } from "./rs-ext"
 import { existsSync } from "./fs"
 import { detectCmd } from "./ext"
 import { getTmpDir } from "./tmp"
@@ -18,16 +17,16 @@ export function getFfmpegPath() {
   const os = getOs()
   switch (os) {
     case "darwin": {
-      return joinPath(getDefaultBinDirPath(), defaultMacExeName)
+      return joinPath(getMpvExeDir(), defaultMacExeName)
     }
     case "linux": {
-      return joinPath(getDefaultBinDirPath(), defaultLinuxExeName)
+      return joinPath(getMpvExeDir(), defaultLinuxExeName)
     }
     case "windows": {
-      return joinPath(getDefaultBinDirPath(), defaultWindowsExeName)
+      return joinPath(getMpvExeDir(), defaultWindowsExeName)
     }
     case "android": {
-      return joinPath(getDefaultBinDirPath(), defaultAndroidExeName)
+      return joinPath(getMpvExeDir(), defaultAndroidExeName)
     }
     default: {
       throw new Error(`mpv-easy-ext not support os: ${os}`)

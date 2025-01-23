@@ -18,7 +18,7 @@ import type {
   NumberProp,
   NativeProp,
 } from "./type"
-import { expandPath } from "./type"
+import { expandPath, normalizePath } from "./type"
 import { MousePos } from "./type-prop"
 import { dirname, existsSync } from "./fs"
 
@@ -516,10 +516,15 @@ export function getMpvExePath() {
 
   const exePath = joinPath(...splitPath(configPath).slice(0, -1), exeName)
   if (getOs() === "windows") {
-    return exePath.replaceAll("/", "\\\\")
+    return normalize(exePath)
   }
   return exePath
 }
+
+export function getMpvExeDir() {
+  return dirname(getMpvExePath())!
+}
+
 export function getColor(name: string): string | undefined {
   const prop = getPropertyString(name)
   if (!prop) return

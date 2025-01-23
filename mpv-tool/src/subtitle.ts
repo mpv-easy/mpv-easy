@@ -15,7 +15,7 @@ import {
   writeFile,
 } from "./mpv"
 import { getFileName, replaceExt } from "./path"
-import { subAdd, type TrackItem } from "./type"
+import { subAdd } from "./type"
 import { getTmpDir } from "./tmp"
 import { isYtdlp } from "./yt-dlp"
 import { detectFfmpeg } from "./ffmpeg"
