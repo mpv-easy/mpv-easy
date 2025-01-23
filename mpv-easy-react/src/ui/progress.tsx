@@ -15,8 +15,6 @@ import {
   Srt,
   writeFile,
   getPropertyNumber,
-  getScreenshotPath,
-  screenshotToFile,
   setPropertyNative,
   getTmpPath,
   subRemove,
