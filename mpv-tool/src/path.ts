@@ -23,3 +23,14 @@ export function replaceExt(path: string, ext: string) {
   list.push(ext)
   return list.join(".")
 }
+
+export function isAbsolute(path: string): boolean {
+  const webUrlPattern = /^(https?:\/\/|ftp:\/\/|file:\/\/)/i
+  const windowsPathPattern = /^[a-zA-Z]:[\\/]/
+  const isLinuxAbsolutePath = path.startsWith("/")
+  return (
+    webUrlPattern.test(path) ||
+    windowsPathPattern.test(path) ||
+    isLinuxAbsolutePath
+  )
+}

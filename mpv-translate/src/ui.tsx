@@ -280,7 +280,7 @@ export function Translation(props: Partial<TranslationProps>) {
       })
     })
     registerScriptMessage("interactive-translate", () => {
-      const sub = getCurrentSubtitle
+      const sub = getCurrentSubtitle()
       if (!sub) {
         printAndOsd("subtitle not found")
       }

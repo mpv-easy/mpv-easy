@@ -166,6 +166,35 @@ export function getCurrentSubtitle() {
   return getSubtitleTracks().find((i) => i.selected)
 }
 
+export async function convertSubtitle(
+  subPath: string,
+  outputPath: string,
+): Promise<string | undefined> {
+  const ffmpeg = detectFfmpeg()
+  if (!ffmpeg) {
+    printAndOsd("ffmpeg not found")
+    return undefined
+  }
+
+  const cmd = [
+    ffmpeg,
+    "-y",
+    "-hide_banner",
+    "-loglevel",
+    "error",
+    "-i",
+    subPath,
+    outputPath,
+  ]
+  // console.log('cmd: ',cmd.join(' '))
+  try {
+    await execAsync(cmd)
+  } catch (e) {
+    return undefined
+  }
+  return readFile(outputPath)
+}
+
 export async function saveSrt(
   videoPath: string,
   trackId: number,

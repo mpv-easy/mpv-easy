@@ -15,6 +15,10 @@ import {
   SubtitleTrack,
   subRemove,
   subAdd,
+  convertSubtitle,
+  normalizePath,
+  fetch,
+  getTmpPath,
 } from "@mpv-easy/tool"
 import { google } from "./google"
 import { readFile } from "@mpv-easy/tool"
@@ -137,8 +141,8 @@ export async function translate(option: Partial<TranslateOption> = {}) {
   }
   const videoPath = getPropertyString("path")!
 
-  if (!existsSync(videoPath)) {
-    printAndOsd("not support remote video")
+  if (!existsSync(videoPath) && !sub.external) {
+    printAndOsd("not support remote video with embedded subtitles")
     return
   }
   const targetLang = option.targetLang?.length ? option.targetLang : getLang()
@@ -197,34 +201,48 @@ export async function translate(option: Partial<TranslateOption> = {}) {
       secondSubFontface,
     ].join("-"),
   )
-  const srtOriPath = normalize(
+  const subOriginPath = sub.external
+    ? normalizePath(sub.externalFilename!)
+    : normalize(`${tmpDir}/${hash}.${videoName}.${sourceLang}.srt`)
+  const srtSubPath = normalize(
     `${tmpDir}/${hash}.${videoName}.${sourceLang}.srt`,
   )
-  const srtPath = sub.external
-    ? sub.externalFilename!
-    : normalize(
-        `${tmpDir}/${hash}.${videoName}.${sourceLang}.${targetLang}.srt`,
-      )
-  if (!existsSync(srtPath)) {
+  const srtOutputPath = normalize(
+    `${tmpDir}/${hash}.${videoName}.${sourceLang}.${targetLang}.srt`,
+  )
+
+  const pattern = /https?:\/\/[^\s]+/
+  const match = subOriginPath.match(pattern)
+  if (match) {
+    const url = match[0]
+    const text = await fetch(url).then((i) => i.text())
+    const tmp = getTmpPath()
+    writeFile(tmp, text)
+    await convertSubtitle(tmp, srtSubPath)
+  }
+  if (sub.external && !existsSync(srtSubPath)) {
+    await convertSubtitle(subOriginPath, srtSubPath)
+  }
+  if (!existsSync(srtSubPath)) {
     if (
-      !(await saveSrt(videoPath, sub.id, srtOriPath)) ||
-      !existsSync(srtOriPath)
+      !(await saveSrt(videoPath, sub.id, srtSubPath)) ||
+      !existsSync(srtSubPath)
     ) {
       printAndOsd("save subtitle error")
       return
     }
-    const text = readFile(srtOriPath)
-    const srt = await translateSrt(text, targetLang as Lang, sourceLang as Lang)
-    writeFile(srtPath, srt)
   }
-  const srtMixPath = normalize(
-    `${tmpDir}/${hash}.${videoName}.${sourceLang}.${targetLang}.mix.srt`,
-  )
+  const text = readFile(srtSubPath)
+  const srt = await translateSrt(text, targetLang as Lang, sourceLang as Lang)
+  writeFile(srtOutputPath, srt)
   if (mix) {
+    const srtMixPath = normalize(
+      `${tmpDir}/${hash}.${videoName}.${sourceLang}.${targetLang}.mix.srt`,
+    )
     if (!existsSync(srtMixPath)) {
       mixSrt(
-        srtPath,
-        srtOriPath,
+        srtOutputPath,
+        srtSubPath,
         srtMixPath,
         firstFontSize,
         secondFontSize,
@@ -236,6 +254,6 @@ export async function translate(option: Partial<TranslateOption> = {}) {
     }
     subAdd(srtMixPath, "select", `${targetLang}-mix`, targetLang)
   } else {
-    subAdd(srtMixPath, "select", targetLang, targetLang)
+    subAdd(srtOutputPath, "select", targetLang, targetLang)
   }
 }
