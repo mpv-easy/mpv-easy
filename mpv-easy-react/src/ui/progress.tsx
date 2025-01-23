@@ -279,12 +279,7 @@ export const Progress = ({ width, ...props }: MpDomProps) => {
     })
 
     registerScriptMessage("screenshot", () => {
-      const p = getScreenshotPath()
-      if (!p) {
-        return
-      }
-      screenshotToFile(p)
-      showNotification(`screenshot: ${p}`)
+      dispatch.screenshot()
     })
     registerScriptMessage("subtitle-merge", () => {
       subtitleMergeRef.current?.()
