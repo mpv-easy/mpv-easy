@@ -199,6 +199,7 @@ export function Translation(props: Partial<TranslationProps>) {
   }
   const [active, setActive] = useState(false)
   const [text, setText] = useState("")
+  const textCache = useRef("")
 
   const update = useRef<((s: string) => void) | null>(null)
   update.current = (s: string) => {
@@ -288,12 +289,14 @@ export function Translation(props: Partial<TranslationProps>) {
         printAndOsd("curl not found")
         return
       }
+      setText(textCache.current)
       setActive((v) => !v)
       setPropertyBool("sub-visibility", !getPropertyBool("sub-visibility"))
     })
 
     observeProperty("sub-text", "string", (_, value) => {
       update.current?.(value)
+      textCache.current = value
     })
   }, [])
   const isMix = !!TrackInfoBackupMix

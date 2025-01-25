@@ -294,18 +294,18 @@ export function createRender({
 
     registerScriptMessage("mouse-left-click", () => {
       // dispatchEvent("MOUSE_BTN0", "click")
-      dispatchEvent("MOUSE_BTN0", "down")
-      dispatchEvent("MOUSE_BTN0", "up")
+      dispatchEvent("MBTN_LEFT", "down")
+      dispatchEvent("MBTN_LEFT", "up")
     })
     registerScriptMessage("mouse-mid-click", () => {
       // dispatchEvent("MOUSE_BTN1", "click")
-      dispatchEvent("MOUSE_BTN1", "down")
-      dispatchEvent("MOUSE_BTN1", "up")
+      dispatchEvent("MBTN_MID", "down")
+      dispatchEvent("MBTN_MID", "up")
     })
     registerScriptMessage("mouse-right-click", () => {
       // dispatchEvent("MOUSE_BTN2", "click")
-      dispatchEvent("MOUSE_BTN2", "down")
-      dispatchEvent("MOUSE_BTN2", "up")
+      dispatchEvent("MOUSE_RIGHT", "down")
+      dispatchEvent("MOUSE_RIGHT", "up")
     })
     registerScriptMessage("mouse-wheel-up", () => {
       dispatchEvent("WHEEL_UP")

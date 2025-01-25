@@ -15,7 +15,10 @@ export async function en2zh(s: string): Promise<WordInfo> {
     .split(";")
     .map((i) => i.trim())
   const word = unescapeHtml(text.match(/data-word="(.*?)"/)?.[1] || s).trim()
-  const audio = unescapeHtml(text.match(/audiomd5="(.*?)"/)?.[1] || "").trim()
+  let audio = unescapeHtml(text.match(/audiomd5="(.*?)"/)?.[1] || "").trim()
+  if (audio.startsWith("/")) {
+    audio = `https://cn.bing.com/${audio}`
+  }
   return {
     word,
     detail,
