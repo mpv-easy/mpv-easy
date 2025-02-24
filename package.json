@@ -45,7 +45,7 @@
     "babel-minify": "0.5.2",
     "core-js": "3.39.0",
     "dotenv": "16.4.7",
-    "esbuild": "0.24.2",
+    "esbuild": "0.25.0",
     "fflate": "0.8.2",
     "lefthook": "1.10.1",
     "lodash-es": "4.17.21",
@@ -58,6 +58,6 @@
     "tsx": "4.19.2",
     "typescript": "5.7.2",
     "use-sync-external-store": "1.4.0",
-    "vitest": "2.1.8"
+    "vitest": "3.0.6"
   }
 }
