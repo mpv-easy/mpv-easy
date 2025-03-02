@@ -207,6 +207,20 @@ export const iconButtonStyle = (state: PluginContext): Partial<ButtonProps> => {
   }
 }
 
+export const logoStyle = (state: PluginContext): Partial<ButtonProps> => {
+  const button = buttonStyleSelector(state)
+  const fontSize = normalFontSizeSelector(state)
+  const font = fontSelector(state)
+  const scale = 4
+  const size = fontSize.fontSize
+  return {
+    height: size * scale,
+    fontSize: fontSize.fontSize * scale,
+    color: button.color,
+    font,
+  }
+}
+
 export const commonDropdownStyleSelector = (
   state: PluginContext,
 ): Partial<DropdownProps> => {
