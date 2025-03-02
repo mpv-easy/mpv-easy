@@ -1,6 +1,6 @@
 {
   "name": "@mpv-easy/flex",
-  "version": "0.1.13",
+  "version": "0.1.14",
   "files": ["dist", "readme.md", "package.json"],
   "description": "@mpv-easy/flex",
   "main": "dist/index.js",
