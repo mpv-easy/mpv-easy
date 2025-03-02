@@ -25,6 +25,7 @@ import {
   normalFontSizeSelector,
   osdDimensionsSelector,
   subScaleSelector,
+  pathSelector,
 } from "../store"
 import {
   getMpvExePath,
@@ -46,6 +47,7 @@ import { Speed } from "./speed"
 import { Translation } from "@mpv-easy/translate"
 import { Crop } from "@mpv-easy/crop"
 import { dispatch, useSelector } from "../models"
+import { Logo } from "./components/logo"
 export * from "./progress"
 export * from "./toolbar"
 export * from "./voice-control"
@@ -231,6 +233,10 @@ export const Easy = (props: Partial<EasyProps>) => {
   const h = useSelector(cellSizeSelector)
   const font = useSelector(fontSelector)
   const update = useReducer((prev) => (prev + 1) % 1000, 0)[1]
+  const path = useSelector(pathSelector)
+  const showLogo =
+    !path && !showCrop && playerState.historyHide && playerState.playlistHide
+
   return (
     <>
       <Box
@@ -294,6 +300,7 @@ export const Easy = (props: Partial<EasyProps>) => {
         <Playlist />
         <History />
         <Speed />
+        {showLogo && <Logo />}
         {showCrop && (
           <Crop
             mouseX={mousePos.x}
