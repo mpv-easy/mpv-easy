@@ -33,6 +33,7 @@ jobs:
           mv mpv-easy-ext/output/mpv-easy-play-with.exe mpv-easy-play-with-windows.exe
 
       - name: build deno
+        if: false
         run: |
           rustup target add nightly-x86_64-pc-windows-msvc
           rustup toolchain install nightly-x86_64-pc-windows-msvc
@@ -48,6 +49,7 @@ jobs:
           mv mpv-deno/output/mpv_deno.dll mpv-deno-windows.dll
 
       - name: Upload windows deno Artifact
+        if: false
         uses: actions/upload-artifact@v4
         with:
           name: mpv-deno-windows
@@ -218,6 +220,7 @@ jobs:
           pattern: mpv-easy-ext-*
           merge-multiple: true
       - uses: actions/download-artifact@v4
+        if: false
         with:
           path: mpv-deno-dist
           pattern: mpv-deno-*
@@ -293,37 +296,11 @@ jobs:
           cp mpv-easy-ext-dist/mpv-easy-ext-linux mpy-easy-linux/scripts/mpv-easy-config/mpv-easy-ext/mpv-easy-ext-linux
           cp mpv-easy-ext-dist/mpv-easy-ext-android mpy-easy-android/scripts/mpv-easy-config/mpv-easy-ext/mpv-easy-ext-android
           cp mpv-easy-ext-dist/mpv-easy-ext-windows.exe mpy-easy-windows/scripts/mpv-easy-config/mpv-easy-ext/mpv-easy-ext-windows.exe
-          # cp mpv-easy-ext-dist/mpv-easy-ext-windows.exe mpy-easy-deno-windows/scripts/mpv-easy-config/mpv-easy-ext/mpv-easy-ext-windows.exe
-          # cp mpv-easy-ext-dist/mpv-easy-ext-windows.exe mpy-easy-qjs-windows/scripts/mpv-easy-config/mpv-easy-ext/mpv-easy-ext-windows.exe
-          # cp mpv-easy-ext-dist/mpv-easy-ext-windows.exe mpy-easy-boa-windows/scripts/mpv-easy-config/mpv-easy-ext/mpv-easy-ext-windows.exe
 
           cp mpv-easy-play-with-dist/mpv-easy-play-with-macos mpy-easy-macos/scripts/mpv-easy-config/mpv-easy-ext/mpv-easy-play-with-macos
           cp mpv-easy-play-with-dist/mpv-easy-play-with-linux mpy-easy-linux/scripts/mpv-easy-config/mpv-easy-ext/mpv-easy-play-with-linux
           cp mpv-easy-play-with-dist/mpv-easy-play-with-android mpy-easy-android/scripts/mpv-easy-config/mpv-easy-ext/mpv-easy-play-with-android
           cp mpv-easy-play-with-dist/mpv-easy-play-with-windows.exe mpy-easy-windows/scripts/mpv-easy-config/mpv-easy-ext/mpv-easy-play-with-windows.exe
-          # cp mpv-easy-play-with-dist/mpv-easy-play-with-windows.exe mpy-easy-deno-windows/scripts/mpv-easy-config/mpv-easy-ext/mpv-easy-play-with-windows.exe
-          # cp mpv-easy-play-with-dist/mpv-easy-play-with-windows.exe mpy-easy-qjs-windows/scripts/mpv-easy-config/mpv-easy-ext/mpv-easy-play-with-windows.exe
-          # cp mpv-easy-play-with-dist/mpv-easy-play-with-windows.exe mpy-easy-boa-windows/scripts/mpv-easy-config/mpv-easy-ext/mpv-easy-play-with-windows.exe
-
-
-          # cp deno-dll/mpv-deno-windows.dll mpy-easy-deno-windows/scripts/mpv-deno-windows.dll
-          # rm mpy-easy-deno-windows/scripts/mpv-easy.js
-          # mkdir mpy-easy-deno-windows/scripts-deno
-          # cp mpv-easy-react/bundle/mpv-easy-es6.js mpy-easy-deno-windows/scripts-deno/mpv-easy-es6.js
-          # mv mpy-easy-deno-windows/scripts/mpv-easy-config mpy-easy-deno-windows/scripts-deno/mpv-easy-config
-
-
-          # cp qjs-dll/mpv-qjs-windows.dll mpy-easy-qjs-windows/scripts/mpv-qjs-windows.dll
-          # rm mpy-easy-qjs-windows/scripts/mpv-easy.js
-          # mkdir mpy-easy-qjs-windows/scripts-qjs
-          # cp mpv-easy-react/bundle/mpv-easy-es6.js mpy-easy-qjs-windows/scripts-qjs/mpv-easy-es6.js
-          # mv mpy-easy-qjs-windows/scripts/mpv-easy-config mpy-easy-qjs-windows/scripts-qjs/mpv-easy-config
-
-          # cp boa-dll/mpv-boa-windows.dll mpy-easy-boa-windows/scripts/mpv-boa-windows.dll
-          # rm mpy-easy-boa-windows/scripts/mpv-easy.js
-          # mkdir mpy-easy-boa-windows/scripts-boa
-          # cp mpv-easy-react/bundle/mpv-easy-es6.js mpy-easy-boa-windows/scripts-boa/mpv-easy-es6.js
-          # mv mpy-easy-boa-windows/scripts/mpv-easy-config mpy-easy-boa-windows/scripts-boa/mpv-easy-config
 
           7z x mpv-win.7z -ompy-easy-windows-full -y
           cp -r mpy-easy-windows mpy-easy-windows-full/portable_config
@@ -332,12 +309,12 @@ jobs:
           cp mpv-easy-react/conf/cookies.txt mpy-easy-windows-full/cookies.txt
 
 
-          cp -r mpy-easy-windows-full mpy-easy-windows-deno-full
-          rm -rf mpy-easy-windows-deno-full/portable_config/scripts/*.js
-          cp mpv-easy-react/bundle/mpv-easy-es6.js mpy-easy-windows-deno-full/portable_config/scripts/mpv-easy-es6.js
-          mv mpy-easy-windows-deno-full/portable_config/scripts mpy-easy-windows-deno-full/portable_config/scripts-deno
-          mkdir -p mpy-easy-windows-deno-full/portable_config/scripts
-          cp -r mpv-deno-dist/mpv-deno-windows.dll mpy-easy-windows-deno-full/portable_config/scripts/mpv-deno-windows.dll
+          # cp -r mpy-easy-windows-full mpy-easy-windows-deno-full
+          # rm -rf mpy-easy-windows-deno-full/portable_config/scripts/*.js
+          # cp mpv-easy-react/bundle/mpv-easy-es6.js mpy-easy-windows-deno-full/portable_config/scripts/mpv-easy-es6.js
+          # mv mpy-easy-windows-deno-full/portable_config/scripts mpy-easy-windows-deno-full/portable_config/scripts-deno
+          # mkdir -p mpy-easy-windows-deno-full/portable_config/scripts
+          # cp -r mpv-deno-dist/mpv-deno-windows.dll mpy-easy-windows-deno-full/portable_config/scripts/mpv-deno-windows.dll
 
           mkdir release -p
 
@@ -357,25 +334,13 @@ jobs:
           zip -r -q ../release/mpy-easy-windows.zip .
           cd ..
 
-          # cd mpy-easy-deno-windows
-          # zip -r -q ../release/mpy-easy-deno-windows.zip .
-          # cd ..
-
-          # cd mpy-easy-qjs-windows
-          # zip -r -q ../release/mpy-easy-qjs-windows.zip .
-          # cd ..
-
-          # cd mpy-easy-boa-windows
-          # zip -r -q ../release/mpy-easy-boa-windows.zip .
-          # cd ..
-
           cd mpy-easy-windows-full
           zip -r -q ../release/mpy-easy-windows-full.zip .
           cd ..
 
-          cd mpy-easy-windows-deno-full
-          zip -r -q ../release/mpy-easy-windows-deno-full.zip .
-          cd ..
+          # cd mpy-easy-windows-deno-full
+          # zip -r -q ../release/mpy-easy-windows-deno-full.zip .
+          # cd ..
 
           # uosc
           7z x mpv-win.7z -ompy-uosc-windows-full -y
@@ -410,7 +375,7 @@ jobs:
           cd ..
 
           cp mpv-easy-js/* release/
-          cp mpv-deno-dist/mpv-deno-windows.dll release/mpv-deno-windows.dll
+          # cp mpv-deno-dist/mpv-deno-windows.dll release/mpv-deno-windows.dll
           cp mpv-easy-ext-dist/mpv-easy-ext-macos release/mpv-easy-ext-macos
           cp mpv-easy-ext-dist/mpv-easy-ext-linux release/mpv-easy-ext-linux
           cp mpv-easy-ext-dist/mpv-easy-ext-android release/mpv-easy-ext-android
@@ -459,11 +424,11 @@ jobs:
         with:
           name: mpy-modernx-windows-full
           path: release/mpy-modernx-windows-full.zip
-      - name: Upload mpy-easy-windows-deno-full
-        uses: actions/upload-artifact@v4
-        with:
-          name: mpy-easy-windows-deno-full
-          path: release/mpy-easy-windows-deno-full.zip
+      # - name: Upload mpy-easy-windows-deno-full
+      #   uses: actions/upload-artifact@v4
+      #   with:
+      #     name: mpy-easy-windows-deno-full
+      #     path: release/mpy-easy-windows-deno-full.zip
       - name: Upload release
         uses: actions/upload-artifact@v4
         with:
