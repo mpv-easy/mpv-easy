@@ -49,10 +49,8 @@ for (const [name, value] of Object.entries({
   decodeURIComponent,
   Buffer,
 })) {
-  // @ts-ignore
-  if (!globalThis[name]) {
-    // @ts-ignore
-    globalThis[name] = value
+  if (!g[name]) {
+    g[name] = value
   }
 }
 
