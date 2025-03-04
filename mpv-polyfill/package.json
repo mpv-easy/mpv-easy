@@ -15,10 +15,11 @@
   "author": "ahaoboy <504595380@qq.com> (https://github.com/ahaoboy)",
   "license": "MIT",
   "dependencies": {
-    "buffer": "6.0.3",
-    "core-js": "3.39.0",
+    "buffer": "4.9.2",
+    "core-js": "3.41.0",
     "es-symbol": "1.1.2",
     "textcodec": "0.1.0",
+    "typedarray": "^0.0.7",
     "uri-component": "0.1.1"
   }
 }

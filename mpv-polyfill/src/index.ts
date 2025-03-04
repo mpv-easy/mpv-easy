@@ -24,7 +24,7 @@ import "core-js/stable/string/pad-start"
 import "core-js/stable/string/at"
 import "core-js/stable/string"
 import "core-js/stable/structured-clone"
-import "core-js/stable/typed-array"
+// import "core-js/stable/typed-array"
 import "core-js/stable/escape"
 import "core-js/stable/unescape"
 import "core-js/stable/promise"
@@ -39,6 +39,21 @@ import { TextDecoder, TextEncoder } from "textcodec"
 import { encodeURIComponent, decodeURIComponent } from "uri-component"
 // biome-ignore lint/style/useNodejsImportProtocol: <explanation>
 import { Buffer } from "buffer"
+import {
+  ArrayBuffer,
+  DataView,
+  Float32Array,
+  Float64Array,
+  Int8Array,
+  Int16Array,
+  Int32Array,
+  Uint8Array,
+  Uint8ClampedArray,
+  Uint16Array,
+  Uint32Array,
+  // @ts-ignore
+} from "typedarray"
+import { MessageChannel } from "./message-channel"
 
 const g = getGlobal()
 for (const [name, value] of Object.entries({
@@ -48,6 +63,18 @@ for (const [name, value] of Object.entries({
   encodeURIComponent,
   decodeURIComponent,
   Buffer,
+  ArrayBuffer,
+  DataView,
+  Float32Array,
+  Float64Array,
+  Int8Array,
+  Int16Array,
+  Int32Array,
+  Uint8Array,
+  Uint8ClampedArray,
+  Uint16Array,
+  Uint32Array,
+  MessageChannel,
 })) {
   if (!g[name]) {
     g[name] = value
