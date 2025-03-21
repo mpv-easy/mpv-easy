@@ -28,7 +28,7 @@ export const Osc: ForwardRefExoticComponent<
       justifyContent="end"
       alignItems="end"
       id="osc"
-      onMouseDown={(e) => e.stopPropagation()}
+      // onMouseDown={(e) => e.stopPropagation()}
     >
       <OscInfo {...props} width={"100%"} height={h} />
       <OscControl {...props} width={"100%"} height={h} />

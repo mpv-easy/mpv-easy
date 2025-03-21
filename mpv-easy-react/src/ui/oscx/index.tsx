@@ -27,7 +27,7 @@ export const Oscx: ForwardRefExoticComponent<
       justifyContent="end"
       alignItems="end"
       id="osc"
-      onMouseDown={(e) => e.stopPropagation()}
+      // onMouseDown={(e) => e.stopPropagation()}
     >
       <Progress width={"100%"} height={h} id="oscx-progress" />
       <OscInfo {...props} width={"100%"} height={h} />
