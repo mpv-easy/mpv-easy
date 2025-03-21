@@ -6,7 +6,7 @@ function openExplorerWindows(path: string) {
   const cmd = [
     "powershell",
     "-c",
-    `Start-Process explorer.exe /select,'${winPath}'`,
+    `Start-Process explorer.exe '/select,${winPath}'`,
   ]
   execAsync(cmd)
 }
