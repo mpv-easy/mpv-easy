@@ -13,7 +13,7 @@ import {
   openBrowser,
   openExplorer,
 } from "@mpv-easy/tool"
-import { useSelector } from "../../models"
+import { dispatch, useSelector } from "../../models"
 
 export const Filename = () => {
   const path = useSelector(pathSelector)
@@ -35,10 +35,12 @@ export const Filename = () => {
         width="auto"
         onMouseUp={() => {
           if (isYtdlp(path) || isRemote(path)) {
+            dispatch.setPause(true)
             openBrowser(path)
             return
           }
           if (existsSync(path)) {
+            dispatch.setPause(true)
             openExplorer(path)
             return
           }
