@@ -10,11 +10,15 @@ const Rules = [Bilibili, Youtube, Jellyfin, Twitch]
 
 const LocalStorageKey = "mpv-easy-play-with"
 const LoadingTime = 2000
+const ICON_SIZE = 64
+const LABEL_MIN_SIZE = 24
+const LABEL_FONT_SIZE = 16
+const LABEL_BG_COLOR = "lightgray"
+const MPV_COLOR = "#6B2D85"
+// const MPV_BG_COLOR = '#4A1E5E'
 
 export function App() {
   const fullscreen = document.fullscreen || !!document.fullscreenElement
-  const width = 64
-  const height = 64
 
   // _pos maybe undefined ?
   const [_pos, setPos, removePos] = useLocalStorage(LocalStorageKey, {
@@ -70,8 +74,8 @@ export function App() {
       <div
         ref={domRef}
         style={{
-          width,
-          height,
+          width: ICON_SIZE,
+          height: ICON_SIZE,
           display: "flex",
           position: "fixed",
           left: pos.left,
@@ -115,12 +119,42 @@ export function App() {
           e.preventDefault()
         }}
       >
-        <img
-          width={"100%"}
-          height={"100%"}
-          src={MPV_LOGO}
-          alt="play-with-mpv"
-        />
+        <div
+          style={{
+            display: "flex",
+            position: "relative",
+            width: "100%",
+            height: "100%",
+          }}
+        >
+          <img
+            width={"100%"}
+            height={"100%"}
+            src={MPV_LOGO}
+            alt="play-with-mpv"
+          />
+
+          <div
+            style={{
+              display: "flex",
+              position: "absolute",
+              fontSize: LABEL_FONT_SIZE,
+              minHeight: LABEL_MIN_SIZE,
+              minWidth: LABEL_MIN_SIZE,
+              fontWeight: "bold",
+              right: 0,
+              top: 0,
+              color: MPV_COLOR,
+              background: LABEL_BG_COLOR,
+              aspectRatio: "1 / 1",
+              borderRadius: "50%",
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            {videos.length}
+          </div>
+        </div>
       </div>
     )
   )
