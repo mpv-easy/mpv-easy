@@ -4,6 +4,7 @@ import { Shaders } from "@mpv-easy/anime4k/shaders"
 import {
   clone,
   existsSync,
+  getOptions,
   getTmpDir,
   joinPath,
   mkdir,
@@ -61,12 +62,3 @@ function getCustomCOnfig() {
 createShadersDir()
 const config = getCustomCOnfig()
 anime4k(config)
-function getOptions(
-  arg0: string,
-  arg1: {
-    current: { type: string; key: string }
-    "osd-duration": { type: string; key: string }
-  },
-): { current: any; osdDuration: any } {
-  throw new Error("Function not implemented.")
-}
