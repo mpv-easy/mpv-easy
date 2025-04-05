@@ -9,7 +9,7 @@ export const MyVideosReg =
 export const ListReg =
   /^(?:https?:\/\/)(.*?).youtube\.(.*?)\/watch\?v=(.*?)&list=(.*?)/
 
-export const VideoReg = /^(?:https?:\/\/)(.*?).youtube\.(.*?)\/watch\?v=(.*?)$/
+export const VideoReg = /^(?:https?:\/\/)(.*?).youtube\.(.*?)\/watch\?v=(.*?)/
 
 export const ResultReg =
   /^(?:https?:\/\/)(.*?).youtube\.(.*?)\/results\?search_query=(.*?)/
