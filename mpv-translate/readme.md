@@ -28,6 +28,14 @@ https://cloud.google.com/translate/docs/languages
 | ctrl+T | script-message mix-translate         |
 | ctrl+i | script-message interactive-translate |
 
+`input.conf`
+
+```
+CTRL+t     script-message translate
+CTRL+i     script-message interactive-translate
+CTRL+T     script-message mix-translate
+```
+
 ## translate (ctrl+t)
 
 Default subtitle is English
