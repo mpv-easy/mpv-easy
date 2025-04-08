@@ -1,12 +1,12 @@
 import React, { useEffect, useRef, useState } from "react"
-import { Bilibili, Jellyfin, Youtube, Twitch } from "./rules"
+import { Bilibili, Jellyfin, Youtube, Twitch, Nicovideo } from "./rules"
 import { encodeToBase64, openUrl } from "./share"
 import { PlayWith } from "./type"
 import Mpv from "../assets/mpv-logo.png"
 export const MPV_LOGO = `data:image/png;base64,${Mpv}`
 import { useLocalStorage } from "react-use"
 
-const Rules = [Bilibili, Youtube, Jellyfin, Twitch]
+const Rules = [Bilibili, Youtube, Jellyfin, Twitch, Nicovideo]
 
 const LocalStorageKey = "mpv-easy-play-with"
 const LoadingTime = 2000
@@ -15,6 +15,8 @@ const LABEL_MIN_SIZE = 24
 const LABEL_FONT_SIZE = 16
 const LABEL_BG_COLOR = "lightgray"
 const MPV_COLOR = "#6B2D85"
+const PLAY_WITH_ID = "__MPV_PLAY_WITH__"
+const MAX_ZINDEX = 1 << 30
 // const MPV_BG_COLOR = '#4A1E5E'
 
 export function App() {
@@ -28,7 +30,6 @@ export function App() {
   const pos = { left: 0, bottom: 0, ..._pos }
   const dragStartMousePos = useRef(pos)
 
-  const zIndex = 1 << 20
   const [display, setDisplay] = useState(false)
   const [hover, setHover] = useState(false)
   const domRef = useRef<HTMLDivElement>(null)
@@ -72,6 +73,7 @@ export function App() {
     !fullscreen &&
     videos.length > 0 && (
       <div
+        id={PLAY_WITH_ID}
         ref={domRef}
         style={{
           width: ICON_SIZE,
@@ -80,7 +82,7 @@ export function App() {
           position: "fixed",
           left: pos.left,
           bottom: pos.bottom,
-          zIndex,
+          zIndex: MAX_ZINDEX,
           opacity,
           cursor: "pointer",
           // @ts-ignore
