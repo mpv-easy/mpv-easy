@@ -10,15 +10,21 @@ export const Jellyfin: Rule = {
       jellyfin.StreamReg,
       jellyfin.ListReg,
       jellyfin.videoReg,
+      jellyfin.HomeReg,
     ].some((i) => i.test(url))
   },
   getVideos: async (url: string): Promise<PlayWith | undefined> => {
     if (jellyfin.detailsReg.test(url)) {
-      const dom = document.querySelector(".detailImageContainer > .card")
-      if (!dom) {
+      const id = [
+        ".detailImageContainer > .card",
+        '[is="emby-ratingbutton"]',
+        '[is="emby-playstatebutton"]',
+      ]
+        .map((i) => document.querySelector(i)?.getAttribute("data-id"))
+        .find((i) => !!i)
+      if (!id) {
         return
       }
-      const id = dom.getAttribute("data-id")
       const titleDom = document.querySelector(".nameContainer > .itemName")
       const title = titleDom?.textContent?.trim()
 
@@ -85,6 +91,40 @@ export const Jellyfin: Rule = {
           title: getTitle(title || "") || "",
         }
       })
+
+      return { playlist: { list } }
+    }
+
+    if (jellyfin.HomeReg.test(url)) {
+      const embyList = Array.from(
+        document.querySelectorAll('[is="emby-itemscontainer"]'),
+      )
+      if (!embyList.length) {
+        return
+      }
+
+      const list = embyList
+        .flatMap((dom) => {
+          const cards = Array.from(dom.querySelectorAll(".card-withuserdata"))
+          return cards.map((i) => {
+            const id = i.getAttribute("data-id")
+            if (i.getAttribute("data-type") === "CollectionFolder") {
+              return
+            }
+            const url = `${location.origin}/Videos/${id}/stream?Static=true`
+            const title = i
+              .querySelector(`a[data-id="${id}"]`)
+              ?.textContent?.trim()
+            if (!id || !title) {
+              return
+            }
+            return {
+              url,
+              title,
+            }
+          })
+        })
+        .filter((i) => !!i)
 
       return { playlist: { list } }
     }
