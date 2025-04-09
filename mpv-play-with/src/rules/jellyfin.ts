@@ -58,7 +58,7 @@ async function getSubtitleById(
     const videoInfo: VideoInfo = await fetch(videoApi).then((i) => i.json())
 
     const sub = videoInfo?.MediaSources[0].MediaStreams.find(
-      (i) => i.IsExternal,
+      (i) => i.IsExternal && i.Type === "Subtitle",
     )
     if (!sub) {
       return
