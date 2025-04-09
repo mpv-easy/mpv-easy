@@ -2,6 +2,7 @@ export type PlayItem = {
   url: string
   title: string
   time?: number
+  vlc_opt?: Record<string, string>
 }
 
 export type Playlist = {
