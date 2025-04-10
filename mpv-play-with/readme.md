@@ -115,6 +115,14 @@ C:/Program Files/DAUM/PotPlayer
 ├── PotPlayerMini64.exe
 ```
 
+## switch icon
+
+When the mouse hovers over the icon, you can use the mouse wheel to switch icons, and clicking the corresponding icon will open the corresponding player
+
+## lock icon
+
+If you are only using one player, you can click the mouse wheel button on the icon to lock the icon. The lock will be cleared when you reset it using the `ctrl+shift+r` shortcut key.
+
 
 ## rules
 
