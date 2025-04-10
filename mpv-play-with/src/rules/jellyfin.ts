@@ -1,5 +1,4 @@
-import { getTitle } from "../share"
-import { PlayWith, Rule } from "../type"
+import { PlayItem, PlayWith, Rule, Subtitle } from "../type"
 import { jellyfin } from "@mpv-easy/tool"
 
 type Servers = {
@@ -21,6 +20,7 @@ type MediaSources = {
 }
 
 type VideoInfo = {
+  Name: string
   MediaSources: MediaSources[]
 }
 
@@ -37,6 +37,13 @@ function getApiKey(): string | undefined {
   }
 }
 
+function getSubUrl(id: string, subId: number, apiKey: string): string {
+  return `${location.origin}/Videos/${splitVideoId(id)}/${id}/Subtitles/${subId}/0/Stream.srt?api_key=${apiKey}`
+}
+function getVideoUrl(id: string) {
+  return `${location.origin}/Videos/${id}/stream?Static=true`
+}
+
 function splitVideoId(id: string): string {
   return [
     id.slice(0, 8),
@@ -46,9 +53,8 @@ function splitVideoId(id: string): string {
     id.slice(20, id.length),
   ].join("-")
 }
-async function getSubtitleById(
-  id: string,
-): Promise<Record<string, string> | undefined> {
+
+async function getJellyVideoInfo(id: string): Promise<VideoInfo | undefined> {
   const apiKey = getApiKey()
   if (!apiKey) {
     return
@@ -56,22 +62,45 @@ async function getSubtitleById(
   const videoApi = `/Items/${id}?api_key=${apiKey}`
   try {
     const videoInfo: VideoInfo = await fetch(videoApi).then((i) => i.json())
-
-    const sub = videoInfo?.MediaSources[0].MediaStreams.find(
-      (i) => i.IsExternal && i.Type === "Subtitle",
-    )
-    if (!sub) {
-      return
-    }
-
-    const subId = sub.Index
-    const vid = splitVideoId(id)
-    const url = `http://localhost:8096/Videos/${vid}/${id}/Subtitles/${subId}/0/Stream.srt?api_key=${apiKey}`
-    return {
-      "sub-file": url,
-    }
+    return videoInfo
   } catch {
     return
+  }
+}
+
+function getJellySubtitles(
+  id: string,
+  videoInfo: VideoInfo,
+): Subtitle[] | undefined {
+  const apiKey = getApiKey()
+  if (!apiKey) {
+    return
+  }
+  const sublist = videoInfo?.MediaSources[0].MediaStreams.filter(
+    (i) => i.IsExternal && i.Type === "Subtitle",
+  )
+  if (!sublist?.length) {
+    return
+  }
+  return sublist.map((i) => {
+    const url = getSubUrl(id, i.Index, apiKey)
+    const title = i.Path.replaceAll("\\", "/").split("/").at(-1)
+    return { url, default: i.IsDefault, lang: i.Language, title }
+  })
+}
+
+async function getJellyfinPlayItem(id: string): Promise<PlayItem | undefined> {
+  const info = await getJellyVideoInfo(id)
+  if (!info) {
+    return
+  }
+  const subtitles = getJellySubtitles(id, info)
+  return {
+    video: {
+      url: getVideoUrl(id),
+      title: info.Name,
+    },
+    subtitles,
   }
 }
 
@@ -98,19 +127,9 @@ export const Jellyfin: Rule = {
       if (!id) {
         return
       }
-      const titleDom = document.querySelector(".nameContainer > .itemName")
-      const title = titleDom?.textContent?.trim()
-
-      const streamUrl = `${location.origin}/Videos/${id}/stream?Static=true`
       return {
         playlist: {
-          list: [
-            {
-              url: streamUrl,
-              title: getTitle(title || "") || "",
-              vlc_opt: await getSubtitleById(id),
-            },
-          ],
+          list: [await getJellyfinPlayItem(id)].filter((i) => !!i),
         },
       }
     }
@@ -131,17 +150,9 @@ export const Jellyfin: Rule = {
       if (!id.length) {
         return
       }
-      const streamUrl = `${location.origin}/Videos/${id}/stream?Static=true`
-      const title = document.title
       return {
         playlist: {
-          list: [
-            {
-              url: streamUrl,
-              title: getTitle(title || "") || "",
-              vlc_opt: await getSubtitleById(id),
-            },
-          ],
+          list: [await getJellyfinPlayItem(id)].filter((i) => !!i),
         },
       }
     }
@@ -160,17 +171,10 @@ export const Jellyfin: Rule = {
         await Promise.all(
           Array.from(dom).map(async (i) => {
             const id = i.getAttribute("data-id")
-            const streamUrl = `${location.origin}/Videos/${id}/stream?Static=true`
-            const btn = i.querySelector(".cardText > button")
-            const title = btn?.getAttribute("title")
             if (!id) {
               return
             }
-            return {
-              url: streamUrl,
-              title: getTitle(title || "") || "",
-              vlc_opt: await getSubtitleById(id),
-            }
+            return await getJellyfinPlayItem(id)
           }),
         )
       ).filter((i) => !!i)
@@ -195,18 +199,13 @@ export const Jellyfin: Rule = {
               if (i.getAttribute("data-type") === "CollectionFolder") {
                 return
               }
-              const url = `${location.origin}/Videos/${id}/stream?Static=true`
               const title = i
                 .querySelector(`a[data-id="${id}"]`)
                 ?.textContent?.trim()
               if (!id || !title) {
                 return
               }
-              return {
-                url,
-                title,
-                vlc_opt: await getSubtitleById(id),
-              }
+              return await getJellyfinPlayItem(id)
             })
           }),
         )

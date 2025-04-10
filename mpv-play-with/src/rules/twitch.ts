@@ -13,7 +13,7 @@ export const Twitch: Rule = {
       }
       const url = location.href
       return {
-        playlist: { list: [{ url, title }] },
+        playlist: { list: [{ video: { url, title } }] },
       }
     }
 

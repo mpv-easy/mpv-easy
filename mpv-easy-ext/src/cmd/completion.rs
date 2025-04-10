@@ -1,7 +1,7 @@
 use std::io;
 
 use clap::CommandFactory;
-use clap_complete::{generate, Shell};
+use clap_complete::{Shell, generate};
 
 use super::cli::{Cli, Cmd};
 

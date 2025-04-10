@@ -1,5 +1,5 @@
 use super::cli::Cmd;
-use reqwest::{header, Method, Url};
+use reqwest::{Method, Url, header};
 use serde_xml_rs::from_str;
 
 use webdav_serde::Multistatus;

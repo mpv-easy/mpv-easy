@@ -14,8 +14,10 @@ export const Bilibili: Rule = {
         }
 
         list.push({
-          url: location.protocol + url,
-          title,
+          video: {
+            url: location.protocol + url,
+            title,
+          },
         })
       }
       return {
@@ -24,7 +26,7 @@ export const Bilibili: Rule = {
     }
 
     if (bilibili.LiveReg.test(url)) {
-      return { playlist: { list: [{ url, title: document.title }] } }
+      return { playlist: { list: [{ video: { url, title: document.title } }] } }
     }
 
     if (bilibili.BangumiReg.test(url)) {
@@ -49,8 +51,10 @@ export const Bilibili: Rule = {
           start = list.length
         }
         list.push({
-          url: location.origin + href,
-          title: `${name} ${title}`.trim(),
+          video: {
+            url: location.origin + href,
+            title: `${name} ${title}`.trim(),
+          },
         })
       }
 
@@ -70,8 +74,10 @@ export const Bilibili: Rule = {
           continue
         }
         list.push({
-          url: location.protocol + href,
-          title,
+          video: {
+            url: location.protocol + href,
+            title,
+          },
         })
       }
 
@@ -88,8 +94,10 @@ export const Bilibili: Rule = {
           continue
         }
         list.push({
-          url: location.protocol + href,
-          title,
+          video: {
+            url: location.protocol + href,
+            title,
+          },
         })
       }
 
@@ -107,9 +115,11 @@ export const Bilibili: Rule = {
       }
       const list = episodes.map((i) => {
         return {
-          url: `${location.origin}/video/${i.bvid}`,
-          title: i.title,
-          args: [],
+          video: {
+            url: `${location.origin}/video/${i.bvid}`,
+            title: i.title,
+            args: [],
+          },
         }
       })
 
@@ -141,7 +151,7 @@ export const Bilibili: Rule = {
           start = list.length
         }
 
-        list.push({ url, title })
+        list.push({ video: { url, title } })
       }
       return { playlist: { list }, start }
     }
@@ -157,8 +167,10 @@ export const Bilibili: Rule = {
         playlist: {
           list: [
             {
-              url,
-              title,
+              video: {
+                url,
+                title,
+              },
             },
           ],
         },
@@ -179,8 +191,10 @@ export const Bilibili: Rule = {
         }
 
         list.push({
-          url: href,
-          title,
+          video: {
+            url: href,
+            title,
+          },
         })
       }
       return { playlist: { list } }

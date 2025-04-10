@@ -7,7 +7,7 @@ export const Nicovideo: Rule = {
     if (nicovideo.VideoRegex.test(url)) {
       const title =
         document.querySelector("h1")?.textContent?.trim() || document.title
-      return { playlist: { list: [{ url, title }] } }
+      return { playlist: { list: [{ video: { url, title } }] } }
     }
 
     if (nicovideo.MainRegex.test(url)) {
@@ -20,7 +20,9 @@ export const Nicovideo: Rule = {
           if (!url || !title) {
             return
           }
-          return { url: `https://www.nicovideo.jp/watch/${url}`, title }
+          return {
+            video: { url: `https://www.nicovideo.jp/watch/${url}`, title },
+          }
         })
         .filter((i) => !!i)
       return { playlist: { list } }

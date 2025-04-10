@@ -17,8 +17,10 @@ export const Youtube: Rule = {
 
         if (title?.length && href.length) {
           list.push({
-            url,
-            title,
+            video: {
+              url,
+              title,
+            },
           })
         }
       }
@@ -37,8 +39,10 @@ export const Youtube: Rule = {
         const title = titleDom?.textContent?.trim() || ""
         if (href.length) {
           list.push({
-            url,
-            title,
+            video: {
+              url,
+              title,
+            },
           })
         }
       }
@@ -54,8 +58,10 @@ export const Youtube: Rule = {
           playlist: {
             list: [
               {
-                url,
-                title,
+                video: {
+                  url,
+                  title,
+                },
               },
             ],
           },
@@ -92,8 +98,10 @@ export const Youtube: Rule = {
 
         if (title?.length && href.length) {
           list.push({
-            url,
-            title,
+            video: {
+              url,
+              title,
+            },
           })
         }
       }
@@ -104,8 +112,10 @@ export const Youtube: Rule = {
       playlist: {
         list: [
           {
-            url,
-            title: document.title,
+            video: {
+              url,
+              title: document.title,
+            },
           },
         ],
       },
