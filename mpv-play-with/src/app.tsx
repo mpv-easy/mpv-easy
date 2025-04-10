@@ -3,7 +3,12 @@ import { Bilibili, Jellyfin, Youtube, Twitch, Nicovideo } from "./rules"
 import { encodeToBase64, openUrl } from "./share"
 import { PlayWith } from "./type"
 import Mpv from "../assets/mpv-logo.png"
+import VLC from "../assets/vlc-logo.png"
 export const MPV_LOGO = `data:image/png;base64,${Mpv}`
+export const VLC_LOGO = `data:image/png;base64,${VLC}`
+
+const LOGO_LIST = [MPV_LOGO, VLC_LOGO]
+
 import { useLocalStorage } from "react-use"
 
 const Rules = [Bilibili, Youtube, Jellyfin, Twitch, Nicovideo]
@@ -38,6 +43,7 @@ export function App() {
   // console.log('videos: ', videos)
   const opacity = hover ? 100 : 0
   const [loading, setLoading] = useState(false)
+  const [logoIndex, setLogoIndex] = useState(0)
 
   async function detect() {
     const url = window.location.href
@@ -120,6 +126,13 @@ export function App() {
           e.stopPropagation()
           e.preventDefault()
         }}
+        onWheel={(e) => {
+          if (e.deltaY > 0) {
+            setLogoIndex((logoIndex + 1) % LOGO_LIST.length)
+          } else {
+            setLogoIndex((logoIndex + LOGO_LIST.length - 1) % LOGO_LIST.length)
+          }
+        }}
       >
         <div
           style={{
@@ -132,7 +145,7 @@ export function App() {
           <img
             width={"100%"}
             height={"100%"}
-            src={MPV_LOGO}
+            src={LOGO_LIST[logoIndex]}
             alt="play-with-mpv"
           />
 
