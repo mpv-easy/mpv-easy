@@ -33,8 +33,8 @@ You only need to run the mpv player once, and mpv-easy will automatically regist
 Make sure you have already installed [yt-dlp](https://github.com/yt-dlp/yt-dlp)
 
 - Download [mpv-easy-play-with-windows.exe](https://github.com/mpv-easy/mpv-easy/releases/latest/download/mpv-easy-play-with-windows.exe)
-- Move mpv-easy-play-with-windows.exe to the same folder as mpv.exe
-- Double-click mpv-easy-play-with-windows.exe
+- Copy `mpv-easy-play-with-windows.exe` to the same folder as `mpv.exe`
+- Double-click `mpv-easy-play-with-windows.exe`
 
 ## protocol test
 
@@ -78,6 +78,43 @@ base64?chunkId&chunkCount
 ### ctrl+shift+r
 
 reset icon position to bottom left
+
+
+## VLC
+
+https://www.videolan.org/
+
+### install
+
+Copy `mpv-easy-play-with-windows.exe` to the same directory as `vlc.exe` and double-click `mpv-easy-play-with-windows.exe`
+
+```
+C:/Program Files/VideoLAN/VLC:
+
+
+├── README.txt
+├── mpv-easy-play-with-windows.exe
+├── uninstall.exe
+├── vlc.exe
+```
+
+## potplayer
+
+https://potplayer.daum.net/
+
+### install
+
+Copy `mpv-easy-play-with-windows.exe` to the same directory as `PotPlayerMini64.exe` and double-click `mpv-easy-play-with-windows.exe`
+
+```
+C:/Program Files/DAUM/PotPlayer
+
+├── License.txt
+├── mpv-easy-play-with-windows.exe
+├── PotPlayer64.dll
+├── PotPlayerMini64.exe
+```
+
 
 ## rules
 
