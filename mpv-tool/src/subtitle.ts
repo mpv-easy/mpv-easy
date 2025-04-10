@@ -19,7 +19,7 @@ import { subAdd } from "./type"
 import { getTmpDir } from "./tmp"
 import { isYtdlp } from "./yt-dlp"
 import { detectFfmpeg } from "./ffmpeg"
-import type { Subtitle } from "@mpv-easy/play-with"
+import type { Subtitle } from "./play-with"
 import { jellyfin } from "./rs-ext"
 
 export function loadLocalSubtitle(path: string) {

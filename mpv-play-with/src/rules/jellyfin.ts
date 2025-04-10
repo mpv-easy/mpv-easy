@@ -1,5 +1,5 @@
-import { PlayItem, PlayWith, Rule, Subtitle } from "../type"
-import { jellyfin } from "@mpv-easy/tool"
+import { PlayWith, Rule } from "../type"
+import { jellyfin, PlayItem, Subtitle } from "@mpv-easy/tool"
 
 type Servers = {
   AccessToken: string
