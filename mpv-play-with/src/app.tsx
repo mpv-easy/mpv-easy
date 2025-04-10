@@ -1,19 +1,23 @@
 import React, { useEffect, useRef, useState } from "react"
 import { Bilibili, Jellyfin, Youtube, Twitch, Nicovideo } from "./rules"
-import { encodeToBase64, openUrl } from "./share"
+import { encodeToBase64, MpvHeader, openUrl, VlcHeader } from "./share"
 import { PlayWith } from "./type"
 import Mpv from "../assets/mpv-logo.png"
 import VLC from "../assets/vlc-logo.png"
 export const MPV_LOGO = `data:image/png;base64,${Mpv}`
 export const VLC_LOGO = `data:image/png;base64,${VLC}`
 
-const LOGO_LIST = [MPV_LOGO, VLC_LOGO]
+const Players = [
+  { logo: MPV_LOGO, header: MpvHeader },
+  { logo: VLC_LOGO, header: VlcHeader },
+]
 
 import { useLocalStorage } from "react-use"
 
 const Rules = [Bilibili, Youtube, Jellyfin, Twitch, Nicovideo]
 
-const LocalStorageKey = "mpv-easy-play-with"
+const LocalStoragePosKey = "mpv-easy-play-with-pos"
+const LocalStorageIndexKey = "mpv-easy-play-with-index"
 const LoadingTime = 2000
 const ICON_SIZE = 64
 const LABEL_MIN_SIZE = 24
@@ -28,10 +32,14 @@ export function App() {
   const fullscreen = document.fullscreen || !!document.fullscreenElement
 
   // _pos maybe undefined ?
-  const [_pos, setPos, removePos] = useLocalStorage(LocalStorageKey, {
+  const [_pos, setPos, removePos] = useLocalStorage(LocalStoragePosKey, {
     left: 0,
     bottom: 0,
   })
+
+  const [playerIndex = 0, setPlayerIndex, removePlayerIndex] =
+    useLocalStorage<number>(LocalStorageIndexKey, 0)
+
   const pos = { left: 0, bottom: 0, ..._pos }
   const dragStartMousePos = useRef(pos)
 
@@ -43,7 +51,6 @@ export function App() {
   // console.log('videos: ', videos)
   const opacity = hover ? 100 : 0
   const [loading, setLoading] = useState(false)
-  const [logoIndex, setLogoIndex] = useState(0)
 
   async function detect() {
     const url = window.location.href
@@ -70,6 +77,7 @@ export function App() {
       if (e.code === "KeyR" && e.shiftKey && e.ctrlKey) {
         setPos({ left: 0, bottom: 0 })
         removePos()
+        removePlayerIndex()
       }
     })
   }, [])
@@ -102,7 +110,7 @@ export function App() {
           }
           const url = encodeToBase64(playWith)
           setLoading(true)
-          await openUrl(url)
+          await openUrl(url, Players[playerIndex].header)
           setTimeout(() => {
             setLoading(false)
           }, LoadingTime)
@@ -128,9 +136,9 @@ export function App() {
         }}
         onWheel={(e) => {
           if (e.deltaY > 0) {
-            setLogoIndex((logoIndex + 1) % LOGO_LIST.length)
+            setPlayerIndex((playerIndex + 1) % Players.length)
           } else {
-            setLogoIndex((logoIndex + LOGO_LIST.length - 1) % LOGO_LIST.length)
+            setPlayerIndex((playerIndex + Players.length - 1) % Players.length)
           }
         }}
       >
@@ -145,7 +153,7 @@ export function App() {
           <img
             width={"100%"}
             height={"100%"}
-            src={LOGO_LIST[logoIndex]}
+            src={Players[playerIndex].logo}
             alt="play-with-mpv"
           />
 

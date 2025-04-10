@@ -52,28 +52,30 @@ export function splitChunk(array: string, chunkSize: number): string[] {
   return chunks
 }
 
-export const Header = "mpv-easy://"
+export const MpvHeader = "mpv-easy://"
+export const VlcHeader = "vlc-easy://"
+
 const ChunkSize = 2000
 const WaitTime = 100
 
-export async function sendToMpv(base64: string) {
+export async function sendToMpv(base64: string, header: string) {
   const a = document.createElement("a")
-  a.href = Header + base64
+  a.href = header + base64
   a.click()
 }
-export async function openUrl(base64: string) {
+export async function openUrl(base64: string, header: string) {
   if (base64.length > ChunkSize) {
     const count = Math.ceil(base64.length / ChunkSize)
     const chunks = splitChunk(base64, ChunkSize)
     for (let i = 0; i < count; i++) {
       const chunk = chunks[i]
       const url = `${chunk}?${i}&${count}`
-      sendToMpv(url)
+      sendToMpv(url, header)
 
       // Wait for mpv-easy-play-with to write the file to prevent out-of-order problems
       await sleep(WaitTime)
     }
     return
   }
-  sendToMpv(base64)
+  sendToMpv(base64, header)
 }
