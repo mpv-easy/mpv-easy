@@ -54,6 +54,7 @@ export function splitChunk(array: string, chunkSize: number): string[] {
 
 export const MpvHeader = "mpv-easy://"
 export const VlcHeader = "vlc-easy://"
+export const PotHeader = "pot-easy://"
 
 const ChunkSize = 2000
 const WaitTime = 100
