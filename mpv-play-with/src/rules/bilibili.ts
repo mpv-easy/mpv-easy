@@ -1,5 +1,5 @@
-import { bilibili } from "@mpv-easy/tool"
-import { PlayWith, PlayItem, Rule } from "../type"
+import { bilibili, PlayItem } from "@mpv-easy/tool"
+import { PlayWith, Rule } from "../type"
 
 export const Bilibili: Rule = {
   match: (url: string): boolean => bilibili.isBilibili(url),

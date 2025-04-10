@@ -1,5 +1,5 @@
-import { youtube } from "@mpv-easy/tool"
-import { PlayItem, PlayWith, Rule } from "../type"
+import { PlayItem, youtube } from "@mpv-easy/tool"
+import { PlayWith, Rule } from "../type"
 
 export const Youtube: Rule = {
   match: (url: string): boolean =>
