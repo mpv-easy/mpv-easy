@@ -11,7 +11,7 @@ pub struct Clipboard {
 
 #[cfg(not(target_os = "android"))]
 mod clip {
-    use clipboard_rs::{common::RustImage, Clipboard as _, ClipboardContext};
+    use clipboard_rs::{Clipboard as _, ClipboardContext, common::RustImage};
     pub fn set_text(text: &str) {
         let ctx = ClipboardContext::new().unwrap();
         ctx.set_text(text.to_string()).unwrap();

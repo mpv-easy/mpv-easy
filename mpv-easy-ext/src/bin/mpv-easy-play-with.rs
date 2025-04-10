@@ -1,21 +1,71 @@
 #![cfg_attr(target_os = "windows", windows_subsystem = "windows")]
 
-use base64::{prelude::BASE64_STANDARD, Engine};
+use base64::{Engine, prelude::BASE64_STANDARD};
 use flate2::read::GzDecoder;
 use mpv_easy_ext::common::set_protocol_hook;
-use serde_m3u::Playlist;
-use std::io::prelude::*;
-
+use serde_m3u::Entry;
+use std::io::Read;
 #[cfg(windows)]
 use std::os::windows::process::CommandExt;
+use urlencoding::encode;
 
-#[derive(Debug, Clone, serde::Serialize, serde::Deserialize)]
+const JELLYFIN_SUBTITLES: &str = "jellyfin_subtitles";
+
+#[derive(Debug, Clone, serde::Serialize, serde::Deserialize, Default)]
+pub struct Subtitle {
+    url: String,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    title: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    default: Option<bool>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    lang: Option<String>,
+}
+
+#[derive(Debug, Clone, serde::Serialize, serde::Deserialize, Default)]
+pub struct PlayItem {
+    video: Entry,
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    subtitles: Vec<Subtitle>,
+}
+
+#[derive(Debug, Clone, serde::Serialize, serde::Deserialize, Default)]
+pub struct Playlist {
+    #[serde(default, skip_serializing_if = "Vec::is_empty")]
+    list: Vec<PlayItem>,
+}
+
+#[derive(Debug, Clone, serde::Serialize, serde::Deserialize, Default)]
 pub struct PlayWith {
     pub playlist: Playlist,
     pub start: Option<i32>,
     // args when start mpv
     pub args: Option<Vec<String>>,
     pub log: Option<String>,
+}
+
+enum Player {
+    Mpv,
+    // TODO
+    // Vlc,
+    // Potplayer,
+}
+
+impl Player {
+    fn stringify(&self, mut playlist: Playlist) -> String {
+        let mut v = vec!["#EXTM3U".to_owned()];
+
+        for PlayItem { video, subtitles } in &mut playlist.list {
+            if !subtitles.is_empty() {
+                if let Ok(s) = serde_json::to_string(subtitles) {
+                    video.url = format!("{}&{JELLYFIN_SUBTITLES}={}", video.url, encode(&s));
+                }
+            }
+            v.push(video.to_string());
+        }
+
+        v.join("\n")
+    }
 }
 
 const HEADER: &str = "mpv-easy://";
@@ -79,7 +129,7 @@ fn play_with(mpv_path: String, mut b64: String) {
         return;
     }
 
-    let m3u = play_with.playlist.to_string();
+    let m3u = Player::Mpv.stringify(play_with.playlist);
 
     let m3u_path = tmp_dir.join(M3U_NAME);
     std::fs::write(&m3u_path, m3u).unwrap();

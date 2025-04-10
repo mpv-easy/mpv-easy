@@ -1,9 +1,9 @@
 use std::collections::HashMap;
 
 use reqwest::{
+    Client,
     header::{HeaderMap, HeaderName, HeaderValue},
     redirect::Policy,
-    Client,
 };
 use serde::{Deserialize, Serialize};
 

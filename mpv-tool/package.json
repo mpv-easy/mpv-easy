@@ -23,6 +23,7 @@
     "type-fest": "4.31.0"
   },
   "devDependencies": {
+    "@mpv-easy/play-with": "workspace:*",
     "change-case": "5.4.4",
     "@types/crypto-js": "4.2.2"
   }

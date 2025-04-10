@@ -19,6 +19,8 @@ import { subAdd } from "./type"
 import { getTmpDir } from "./tmp"
 import { isYtdlp } from "./yt-dlp"
 import { detectFfmpeg } from "./ffmpeg"
+import type { Subtitle } from "@mpv-easy/play-with"
+import { jellyfin } from "./rs-ext"
 
 export function loadLocalSubtitle(path: string) {
   const list = SubtitleTypes.map((i) => {
@@ -84,6 +86,30 @@ export function loadLocalSubtitle(path: string) {
 //   }
 // }
 
+const JELLYFIN_SUBTITLES = "jellyfin_subtitles"
+const JELLYFIN_SUBTITLES_PREFIX = `&${JELLYFIN_SUBTITLES}=`
+
+function hasJellyfinSubtitle(url: string): boolean {
+  return url.includes(JELLYFIN_SUBTITLES_PREFIX)
+}
+
+function loadJellyfinSubtitle(url: string) {
+  const i = url.indexOf(JELLYFIN_SUBTITLES_PREFIX)
+  const s = decodeURIComponent(url.slice(i + JELLYFIN_SUBTITLES_PREFIX.length))
+  try {
+    const subtitles: Subtitle[] = JSON.parse(s)
+    for (const i of subtitles) {
+      subAdd(i.url, i.default ? "select" : "cached", i.title, i.lang)
+    }
+  } catch {
+    return
+  }
+}
+
+function isJellyfinStream(url: string): boolean {
+  return jellyfin.StreamReg.test(url)
+}
+
 export async function loadRemoteSubtitleAsync(path = getProperty("path")) {
   if (!path?.length || isYtdlp(path)) {
     return
@@ -91,7 +117,13 @@ export async function loadRemoteSubtitleAsync(path = getProperty("path")) {
   if (!isRemote(path)) {
     return
   }
-
+  if (hasJellyfinSubtitle(path)) {
+    loadJellyfinSubtitle(path)
+    return
+  }
+  if (isJellyfinStream(path)) {
+    return
+  }
   const list = SubtitleTypes.map((i) => {
     return replaceExt(path, i)
   })
