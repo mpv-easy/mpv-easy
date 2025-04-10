@@ -2,16 +2,19 @@ use serde_m3u::Entry;
 #[cfg(windows)]
 use std::os::windows::process::CommandExt;
 use std::path::{Path, PathBuf};
+pub use strum::IntoEnumIterator;
+use strum_macros::EnumIter;
 use urlencoding::encode;
 
 pub const JELLYFIN_SUBTITLES: &str = "jellyfin_subtitles";
 pub const MPV_HEADER: &str = "mpv-easy://";
 pub const VLC_HEADER: &str = "vlc-easy://";
+pub const POT_HEADER: &str = "pot-easy://";
 pub const MPV_HKEY: &str = "mpv-easy";
 pub const VLC_HKEY: &str = "vlc-easy";
+pub const POT_HKEY: &str = "pot-easy";
 pub const M3U_NAME: &str = "mpv-easy-play-with.m3u8";
 pub const CHUNK_PREFIX: &str = "mpv-easy-play-with-chunk-";
-pub const LOG_FILE_NAME: &str = "mpv-easy-play-with.log";
 
 #[derive(Debug, Clone, serde::Serialize, serde::Deserialize, Default)]
 pub struct Subtitle {
@@ -46,12 +49,11 @@ pub struct PlayWith {
     pub log: Option<String>,
 }
 
-#[derive(Debug, Clone, serde::Serialize, serde::Deserialize)]
+#[derive(EnumIter, Debug, Clone, serde::Serialize, serde::Deserialize)]
 pub enum Player {
     Mpv,
     Vlc,
-    // TODO
-    // Potplayer,
+    Pot,
 }
 
 impl Player {
@@ -61,6 +63,7 @@ impl Player {
         match name {
             "mpv.exe" | "mpv" => Some(Player::Mpv),
             "vlc.exe" | "vlc" => Some(Player::Vlc),
+            "PotPlayerMini64.exe" | "PotPlayerMini64" => Some(Player::Pot),
             _ => None,
         }
     }
@@ -96,6 +99,18 @@ impl Player {
                 }
                 v.join("\n")
             }
+            Player::Pot => {
+                let mut v = vec!["#EXTM3U".to_owned()];
+
+                for PlayItem {
+                    video,
+                    subtitles: _,
+                } in &mut playlist.list
+                {
+                    v.push(video.to_string());
+                }
+                v.join("\n")
+            }
         }
     }
 
@@ -103,6 +118,7 @@ impl Player {
         match self {
             Player::Mpv => MPV_HEADER,
             Player::Vlc => VLC_HEADER,
+            Player::Pot => POT_HEADER,
         }
     }
 
@@ -110,6 +126,7 @@ impl Player {
         match self {
             Player::Mpv => MPV_HKEY,
             Player::Vlc => VLC_HKEY,
+            Player::Pot => POT_HKEY,
         }
     }
 
@@ -145,17 +162,17 @@ impl Player {
                 cmd.output().unwrap();
             }
             Player::Vlc => {
-                let mut args_str = m3u_path.to_string_lossy().to_string();
+                cmd.arg(m3u_path.to_string_lossy().to_string());
 
                 if let Some(start) = start {
-                    args_str.push_str(&format!(" --playlist-start={} ", start));
+                    cmd.arg("--playlist-start");
+                    cmd.arg(start.to_string());
                 }
 
-                #[cfg(windows)]
-                cmd.raw_arg(args_str);
-                #[cfg(not(windows))]
-                cmd.arg(args_str);
-
+                cmd.output().unwrap();
+            }
+            Player::Pot => {
+                cmd.arg(m3u_path.to_string_lossy().to_string());
                 cmd.output().unwrap();
             }
         }
@@ -178,6 +195,12 @@ pub fn set_protocol_hook(exe_path: Option<String>) -> Option<Player> {
         .to_string_lossy()
         .to_string();
 
+    let pot_default_path = play_with_path
+        .parent()?
+        .join("PotPlayerMini64.exe")
+        .to_string_lossy()
+        .to_string();
+
     let play_with_path = play_with_path
         .to_string_lossy()
         .to_string()
@@ -194,6 +217,12 @@ pub fn set_protocol_hook(exe_path: Option<String>) -> Option<Player> {
         .or_else(|| {
             if std::fs::exists(&vlc_default_path).unwrap_or(false) {
                 return Some(vlc_default_path);
+            }
+            None
+        })
+        .or_else(|| {
+            if std::fs::exists(&pot_default_path).unwrap_or(false) {
+                return Some(pot_default_path);
             }
             None
         })?
@@ -235,7 +264,6 @@ Windows Registry Editor Version 5.00
     .trim()
     .to_string();
 
-    println!("reg_code: {}", reg_code);
     let tmp_dir = std::env::temp_dir();
     let tmp_path = tmp_dir.join("set-protocol-hook-windows.reg");
     let tmp_path = tmp_path.to_string_lossy().to_string().replace("/", "\\");

@@ -2,10 +2,9 @@
 
 use base64::{Engine, prelude::BASE64_STANDARD};
 use flate2::read::GzDecoder;
-use mpv_easy_ext::common::{
-    CHUNK_PREFIX, M3U_NAME, MPV_HEADER, PlayWith, Player, set_protocol_hook,
-};
+use mpv_easy_ext::common::{CHUNK_PREFIX, M3U_NAME, PlayWith, Player, set_protocol_hook};
 use std::io::Read;
+use strum::IntoEnumIterator;
 
 fn play_with(exe_path: String, mut b64: String) {
     let Some(player) = Player::from_path(&exe_path) else {
@@ -15,8 +14,12 @@ fn play_with(exe_path: String, mut b64: String) {
     if b64.ends_with('/') {
         b64 = b64[..b64.len() - 1].to_string();
     }
-    if b64.starts_with(MPV_HEADER) {
-        b64 = b64[MPV_HEADER.len()..].to_string();
+
+    for i in Player::iter() {
+        if b64.starts_with(i.header()) {
+            b64 = b64[i.header().len()..].to_string();
+            break;
+        }
     }
 
     let chunk_index = b64.find("?");
@@ -72,8 +75,8 @@ fn play_with(exe_path: String, mut b64: String) {
 fn main() {
     let mut args = std::env::args().skip(1);
     match (args.next(), args.next()) {
-        (Some(mpv_path), Some(b64)) => {
-            play_with(mpv_path, b64);
+        (Some(exe_path), Some(b64)) => {
+            play_with(exe_path, b64);
         }
         (exe_path, None) => {
             set_protocol_hook(exe_path);

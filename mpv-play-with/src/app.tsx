@@ -1,46 +1,75 @@
 import React, { useEffect, useRef, useState } from "react"
 import { Bilibili, Jellyfin, Youtube, Twitch, Nicovideo } from "./rules"
-import { encodeToBase64, MpvHeader, openUrl, VlcHeader } from "./share"
+import {
+  encodeToBase64,
+  MpvHeader,
+  openUrl,
+  VlcHeader,
+  PotHeader,
+} from "./share"
 import { PlayWith } from "./type"
 import Mpv from "../assets/mpv-logo.png"
 import VLC from "../assets/vlc-logo.png"
+import POT from "../assets/pot-logo.png"
 export const MPV_LOGO = `data:image/png;base64,${Mpv}`
 export const VLC_LOGO = `data:image/png;base64,${VLC}`
-
-const Players = [
-  { logo: MPV_LOGO, header: MpvHeader },
-  { logo: VLC_LOGO, header: VlcHeader },
-]
+export const POT_LOGO = `data:image/png;base64,${POT}`
 
 import { useLocalStorage } from "react-use"
 
 const Rules = [Bilibili, Youtube, Jellyfin, Twitch, Nicovideo]
 
-const LocalStoragePosKey = "mpv-easy-play-with-pos"
-const LocalStorageIndexKey = "mpv-easy-play-with-index"
+const LocalStorageKey = "mpv-easy-play-with"
 const LoadingTime = 2000
 const ICON_SIZE = 64
 const LABEL_MIN_SIZE = 24
 const LABEL_FONT_SIZE = 16
-const LABEL_BG_COLOR = "lightgray"
+const MPV_LABEL_BG_COLOR = "lightgray"
 const MPV_COLOR = "#6B2D85"
 const PLAY_WITH_ID = "__MPV_PLAY_WITH__"
 const MAX_ZINDEX = 1 << 30
-// const MPV_BG_COLOR = '#4A1E5E'
+const POT_COLOR = "#f8e100"
+const POT_LABEL_BG_COLOR = "#lightgray"
+const VLC_COLOR = "#f27500"
+const VLC_LABEL_BG_COLOR = "#lightgray"
 
+// const MPV_BG_COLOR = '#4A1E5E'
+const Players = [
+  {
+    logo: MPV_LOGO,
+    header: MpvHeader,
+    color: MPV_COLOR,
+    bg: MPV_LABEL_BG_COLOR,
+  },
+  {
+    logo: VLC_LOGO,
+    header: VlcHeader,
+    color: VLC_COLOR,
+    bg: VLC_LABEL_BG_COLOR,
+  },
+  {
+    logo: POT_LOGO,
+    header: PotHeader,
+    color: POT_COLOR,
+    bg: POT_LABEL_BG_COLOR,
+  },
+]
+
+const defaultConfig = {
+  left: 0,
+  bottom: 0,
+  playerIndex: 0,
+  lock: false,
+}
 export function App() {
   const fullscreen = document.fullscreen || !!document.fullscreenElement
 
   // _pos maybe undefined ?
-  const [_pos, setPos, removePos] = useLocalStorage(LocalStoragePosKey, {
-    left: 0,
-    bottom: 0,
-  })
+  const [config = { ...defaultConfig }, setConfig, removeConfig] =
+    useLocalStorage(LocalStorageKey, { ...defaultConfig })
 
-  const [playerIndex = 0, setPlayerIndex, removePlayerIndex] =
-    useLocalStorage<number>(LocalStorageIndexKey, 0)
+  const { playerIndex = 0, lock, ...pos } = config
 
-  const pos = { left: 0, bottom: 0, ..._pos }
   const dragStartMousePos = useRef(pos)
 
   const [display, setDisplay] = useState(false)
@@ -75,13 +104,14 @@ export function App() {
 
     document.body.addEventListener("keydown", (e) => {
       if (e.code === "KeyR" && e.shiftKey && e.ctrlKey) {
-        setPos({ left: 0, bottom: 0 })
-        removePos()
-        removePlayerIndex()
+        setConfig({ ...defaultConfig })
+        removeConfig()
       }
     })
   }, [])
 
+  const color = Players[playerIndex].color
+  const bg = Players[playerIndex].bg
   return (
     display &&
     !fullscreen &&
@@ -105,6 +135,14 @@ export function App() {
         }}
         onMouseUp={async (e) => {
           e.stopPropagation()
+          if (e.button === 1) {
+            setConfig({
+              ...config,
+              lock: !lock,
+            })
+            return
+          }
+
           if (loading || !playWith) {
             return
           }
@@ -127,7 +165,8 @@ export function App() {
         onDragEnd={(e) => {
           const dx = e.clientX - dragStartMousePos.current.left
           const dy = e.clientY - dragStartMousePos.current.bottom
-          setPos({
+          setConfig({
+            ...config,
             left: pos.left + dx,
             bottom: pos.bottom - dy,
           })
@@ -135,10 +174,19 @@ export function App() {
           e.preventDefault()
         }}
         onWheel={(e) => {
+          if (lock) {
+            return
+          }
           if (e.deltaY > 0) {
-            setPlayerIndex((playerIndex + 1) % Players.length)
+            setConfig({
+              ...config,
+              playerIndex: (playerIndex + 1) % Players.length,
+            })
           } else {
-            setPlayerIndex((playerIndex + Players.length - 1) % Players.length)
+            setConfig({
+              ...config,
+              playerIndex: (playerIndex + Players.length - 1) % Players.length,
+            })
           }
         }}
       >
@@ -167,8 +215,8 @@ export function App() {
               fontWeight: "bold",
               right: 0,
               top: 0,
-              color: MPV_COLOR,
-              background: LABEL_BG_COLOR,
+              color: color,
+              background: bg,
               aspectRatio: "1 / 1",
               borderRadius: "50%",
               justifyContent: "center",

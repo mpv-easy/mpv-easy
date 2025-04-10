@@ -46,3 +46,5 @@ serde-m3u = { version = "0.1", git = "https://github.com/ahaoboy/serde-m3u" }
 clipboard-rs = "0.2"
 openssl = { version = "0.10", features = ["vendored"] }
 urlencoding = { version = "2" }
+strum_macros = "0.27"
+strum = "0.27"
