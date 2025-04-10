@@ -29,9 +29,9 @@ const MPV_COLOR = "#6B2D85"
 const PLAY_WITH_ID = "__MPV_PLAY_WITH__"
 const MAX_ZINDEX = 1 << 30
 const POT_COLOR = "#f8e100"
-const POT_LABEL_BG_COLOR = "#lightgray"
+const POT_LABEL_BG_COLOR = "darkgray"
 const VLC_COLOR = "#f27500"
-const VLC_LABEL_BG_COLOR = "#lightgray"
+const VLC_LABEL_BG_COLOR = "lightgray"
 
 // const MPV_BG_COLOR = '#4A1E5E'
 const Players = [
@@ -135,6 +135,7 @@ export function App() {
         }}
         onMouseUp={async (e) => {
           e.stopPropagation()
+          e.preventDefault()
           if (e.button === 1) {
             setConfig({
               ...config,
@@ -177,6 +178,8 @@ export function App() {
           if (lock) {
             return
           }
+          e.stopPropagation()
+          e.preventDefault()
           if (e.deltaY > 0) {
             setConfig({
               ...config,
