@@ -19,7 +19,7 @@
     "cac": "6.7.14",
     "chalk": "5.4.1",
     "e-color": "0.1.7",
-    "fs-extra": "11.2.0"
+    "fs-extra": "11.3.0"
   },
   "browserslist": [
     "iOS >= 9",

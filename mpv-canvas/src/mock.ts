@@ -449,9 +449,11 @@ export function createMpvMock(
     }, frameTime),
   )
 
+  // FIXME: https://github.com/fabricjs/fabric.js/issues/10510
   fabricCanvas.on(
     "mouse:down",
-    throttle(({ e }: fabric.TPointerEventInfo<MouseEvent>) => {
+    throttle((event: fabric.TPointerEventInfo<fabric.TPointerEvent>) => {
+      const e = event.e as MouseEvent
       switch (e.button) {
         case 1: {
           const mpvEvent = {
@@ -494,15 +496,31 @@ export function createMpvMock(
 
   fabricCanvas.on(
     "mouse:up",
-    throttle(() => {
-      const mpvEvent = {
-        event: "up",
-        is_mouse: true,
-        key_name: "MBTN_LEFT",
-      } as const
-      // // console.log(mpvEvent)
-      for (const fn of eventMap.MOUSE_BTN0 || []) {
-        fn(mpvEvent)
+    throttle((event: fabric.TPointerEventInfo<fabric.TPointerEvent>) => {
+      const e = event.e as MouseEvent
+      switch (e.button) {
+        case 1: {
+          const mpvEvent = {
+            event: "up",
+            is_mouse: true,
+            key_name: "MBTN_LEFT",
+          } as const
+          for (const fn of eventMap.MOUSE_BTN0 || []) {
+            fn(mpvEvent)
+          }
+          return
+        }
+        case 3: {
+          const mpvEvent = {
+            event: "up",
+            is_mouse: true,
+            key_name: "MBTN_RIGHT",
+          } as const
+          for (const fn of eventMap.MOUSE_BTN2 || []) {
+            fn(mpvEvent)
+          }
+          return
+        }
       }
     }, frameTime),
   )

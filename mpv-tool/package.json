@@ -20,10 +20,10 @@
     "@mpv-easy/polyfill": "workspace:*",
     "crypto-js": "4.2.0",
     "e-color": "0.1.7",
-    "type-fest": "4.31.0"
+    "type-fest": "4.39.1"
   },
   "devDependencies": {
-    "change-case": "5.4.4",
-    "@types/crypto-js": "4.2.2"
+    "@types/crypto-js": "4.2.2",
+    "change-case": "5.4.4"
   }
 }
