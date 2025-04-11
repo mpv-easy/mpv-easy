@@ -14,7 +14,7 @@ export async function getClipboard(exe = getRsExtExePath()): Promise<string> {
           const s = await execAsync([
             "powershell",
             "-c",
-            "Add-Type -AssemblyName System.Windows.Forms;[System.Windows.Forms.Clipboard]::GetText()",
+            "Add-Type -AssemblyName System.Windows.Forms; if ([System.Windows.Forms.Clipboard]::ContainsText()) { [System.Windows.Forms.Clipboard]::GetText() } else { ([System.Windows.Forms.Clipboard]::GetFileDropList()) -join [Environment]::NewLine }",
           ])
           return s
         } catch (e) {
