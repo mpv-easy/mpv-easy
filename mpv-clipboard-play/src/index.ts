@@ -115,29 +115,33 @@ export async function clipboardPlay(
   context: ClipboardPlayContext,
   updatePlaylist: (list: string[], playIndex: number) => void,
 ) {
-  let s = (await getClipboard()).trim().replace(/\\/g, "/")
-
+  const txt = (await getClipboard()).trim().replace(/\\/g, "/")
   // Windows may add double quotes when copying the path
-  if (
-    (s.startsWith('"') && s.endsWith('"')) ||
-    (s.startsWith("'") && s.endsWith("'"))
-  ) {
-    s = s.slice(1, -1)
-  }
+  const lines = txt
+    .split("\n")
+    .map((s) =>
+      (s.startsWith('"') && s.endsWith('"')) ||
+      (s.startsWith("'") && s.endsWith("'"))
+        ? s.slice(1, -1).trim()
+        : s.trim(),
+    )
 
-  if (isSubtitle(s)) {
-    subAdd(s, "cached")
-    return
-  }
-
-  const v = getList(s, context)
-
-  if (v?.length) {
-    const index = v.indexOf(s)
-    if (index !== -1) {
-      updatePlaylist(v, index)
-    } else {
-      updatePlaylist(v, 0)
+  for (const s of lines) {
+    if (!s.length) {
+      continue
+    }
+    if (isSubtitle(s)) {
+      subAdd(s, "cached")
+      return
+    }
+    const v = getList(s, context)
+    if (v?.length) {
+      const index = v.indexOf(s)
+      if (index !== -1) {
+        updatePlaylist(v, index)
+      } else {
+        updatePlaylist(v, 0)
+      }
     }
   }
 }
