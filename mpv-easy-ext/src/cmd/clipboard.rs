@@ -19,7 +19,10 @@ mod clip {
 
     pub fn get_text() -> String {
         let ctx = ClipboardContext::new().unwrap();
-        ctx.get_text().unwrap()
+        ctx.get_text()
+            .ok()
+            .or_else(|| ctx.get_files().ok().map(|v| v.join("\n")))
+            .unwrap_or_default()
     }
 
     pub fn set_image(path: &str) {
