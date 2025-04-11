@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react"
+import React, { useEffect, useRef, useState, WheelEvent } from "react"
 import { Bilibili, Jellyfin, Youtube, Twitch, Nicovideo } from "./rules"
 import {
   encodeToBase64,
@@ -112,6 +112,36 @@ export function App() {
 
   const color = Players[playerIndex].color
   const bg = Players[playerIndex].bg
+
+  // https://github.com/facebook/react/issues/22794
+  const onWheelRef = useRef<Function>(null)
+  onWheelRef.current = (e: HTMLElementEventMap["wheel"]) => {
+    if (lock) {
+      return
+    }
+    e.preventDefault()
+    e.stopImmediatePropagation()
+    e.stopPropagation()
+    if (e.deltaY > 0) {
+      setConfig({
+        ...config,
+        playerIndex: (playerIndex + 1) % Players.length,
+      })
+    } else {
+      setConfig({
+        ...config,
+        playerIndex: (playerIndex + Players.length - 1) % Players.length,
+      })
+    }
+  }
+  useEffect(() => {
+    const cb = (e: HTMLElementEventMap["wheel"]) => {
+      onWheelRef.current?.(e)
+    }
+    domRef?.current?.addEventListener("wheel", cb, { passive: false })
+    return () => domRef.current?.removeEventListener("wheel", cb)
+  }, [domRef.current])
+
   return (
     display &&
     !fullscreen &&
@@ -133,10 +163,14 @@ export function App() {
           WebkitUserDrag: "element",
           filter: loading ? "grayscale(100%)" : "",
         }}
-        onMouseUp={async (e) => {
-          e.stopPropagation()
+        onContextMenu={(e) => {
           e.preventDefault()
-          if (e.button === 1) {
+          e.stopPropagation()
+        }}
+        onMouseUp={async (e) => {
+          e.preventDefault()
+          e.stopPropagation()
+          if (e.button === 2) {
             setConfig({
               ...config,
               lock: !lock,
@@ -174,24 +208,25 @@ export function App() {
           e.stopPropagation()
           e.preventDefault()
         }}
-        onWheel={(e) => {
-          if (lock) {
-            return
-          }
-          e.stopPropagation()
-          e.preventDefault()
-          if (e.deltaY > 0) {
-            setConfig({
-              ...config,
-              playerIndex: (playerIndex + 1) % Players.length,
-            })
-          } else {
-            setConfig({
-              ...config,
-              playerIndex: (playerIndex + Players.length - 1) % Players.length,
-            })
-          }
-        }}
+
+        // onWheel={(e) => {
+        //   if (lock) {
+        //     return
+        //   }
+        //   e.stopPropagation()
+        //   e.preventDefault()
+        //   if (e.deltaY > 0) {
+        //     setConfig({
+        //       ...config,
+        //       playerIndex: (playerIndex + 1) % Players.length,
+        //     })
+        //   } else {
+        //     setConfig({
+        //       ...config,
+        //       playerIndex: (playerIndex + Players.length - 1) % Players.length,
+        //     })
+        //   }
+        // }}
       >
         <div
           style={{

@@ -121,7 +121,7 @@ When the mouse hovers over the icon, you can use the mouse wheel to switch icons
 
 ## lock icon
 
-If you are only using one player, you can click the mouse wheel button on the icon to lock the icon. The lock will be cleared when you reset it using the `ctrl+shift+r` shortcut key.
+If you are only using one player, you can click the mouse right button on the icon to lock/unlock the icon. The lock will be cleared when you reset it using the `ctrl+shift+r` shortcut key.
 
 
 ## rules
