@@ -116,6 +116,7 @@ export async function clipboardPlay(
   updatePlaylist: (list: string[], playIndex: number) => void,
 ) {
   const s = (await getClipboard()).trim().replace(/\\/g, "/")
+  console.log("s-------s", s)
   if (isSubtitle(s)) {
     subAdd(s, "cached")
     return

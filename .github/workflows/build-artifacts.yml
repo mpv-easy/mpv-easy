@@ -285,84 +285,84 @@ jobs:
           chmod 777 mpv-easy-ext-dist/*
           chmod 777 mpv-easy-play-with-dist/*
 
-          cp -r dist mpy-easy-macos
-          cp -r dist mpy-easy-linux
-          cp -r dist mpy-easy-android
-          cp -r dist mpy-easy-windows
+          cp -r dist mpv-easy-macos
+          cp -r dist mpv-easy-linux
+          cp -r dist mpv-easy-android
+          cp -r dist mpv-easy-windows
 
           7z x ffmpeg.7z -offmpeg -y
 
-          cp mpv-easy-ext-dist/mpv-easy-ext-macos mpy-easy-macos/scripts/mpv-easy-config/mpv-easy-ext/mpv-easy-ext-macos
-          cp mpv-easy-ext-dist/mpv-easy-ext-linux mpy-easy-linux/scripts/mpv-easy-config/mpv-easy-ext/mpv-easy-ext-linux
-          cp mpv-easy-ext-dist/mpv-easy-ext-android mpy-easy-android/scripts/mpv-easy-config/mpv-easy-ext/mpv-easy-ext-android
-          cp mpv-easy-ext-dist/mpv-easy-ext-windows.exe mpy-easy-windows/scripts/mpv-easy-config/mpv-easy-ext/mpv-easy-ext-windows.exe
+          cp mpv-easy-ext-dist/mpv-easy-ext-macos mpv-easy-macos/scripts/mpv-easy-config/mpv-easy-ext/mpv-easy-ext-macos
+          cp mpv-easy-ext-dist/mpv-easy-ext-linux mpv-easy-linux/scripts/mpv-easy-config/mpv-easy-ext/mpv-easy-ext-linux
+          cp mpv-easy-ext-dist/mpv-easy-ext-android mpv-easy-android/scripts/mpv-easy-config/mpv-easy-ext/mpv-easy-ext-android
+          cp mpv-easy-ext-dist/mpv-easy-ext-windows.exe mpv-easy-windows/scripts/mpv-easy-config/mpv-easy-ext/mpv-easy-ext-windows.exe
 
-          cp mpv-easy-play-with-dist/mpv-easy-play-with-macos mpy-easy-macos/scripts/mpv-easy-config/mpv-easy-ext/mpv-easy-play-with-macos
-          cp mpv-easy-play-with-dist/mpv-easy-play-with-linux mpy-easy-linux/scripts/mpv-easy-config/mpv-easy-ext/mpv-easy-play-with-linux
-          cp mpv-easy-play-with-dist/mpv-easy-play-with-android mpy-easy-android/scripts/mpv-easy-config/mpv-easy-ext/mpv-easy-play-with-android
-          cp mpv-easy-play-with-dist/mpv-easy-play-with-windows.exe mpy-easy-windows/scripts/mpv-easy-config/mpv-easy-ext/mpv-easy-play-with-windows.exe
+          cp mpv-easy-play-with-dist/mpv-easy-play-with-macos mpv-easy-macos/scripts/mpv-easy-config/mpv-easy-ext/mpv-easy-play-with-macos
+          cp mpv-easy-play-with-dist/mpv-easy-play-with-linux mpv-easy-linux/scripts/mpv-easy-config/mpv-easy-ext/mpv-easy-play-with-linux
+          cp mpv-easy-play-with-dist/mpv-easy-play-with-android mpv-easy-android/scripts/mpv-easy-config/mpv-easy-ext/mpv-easy-play-with-android
+          cp mpv-easy-play-with-dist/mpv-easy-play-with-windows.exe mpv-easy-windows/scripts/mpv-easy-config/mpv-easy-ext/mpv-easy-play-with-windows.exe
 
-          7z x mpv-win.7z -ompy-easy-windows-full -y
-          cp -r mpy-easy-windows mpy-easy-windows-full/portable_config
-          cp yt-dlp.exe mpy-easy-windows-full/yt-dlp.exe
-          cp ffmpeg/ffmpeg.exe mpy-easy-windows-full/ffmpeg.exe
-          cp mpv-easy-react/conf/cookies.txt mpy-easy-windows-full/cookies.txt
+          7z x mpv-win.7z -ompv-easy-windows-full -y
+          cp -r mpv-easy-windows mpv-easy-windows-full/portable_config
+          cp yt-dlp.exe mpv-easy-windows-full/yt-dlp.exe
+          cp ffmpeg/ffmpeg.exe mpv-easy-windows-full/ffmpeg.exe
+          cp mpv-easy-react/conf/cookies.txt mpv-easy-windows-full/cookies.txt
 
 
-          # cp -r mpy-easy-windows-full mpy-easy-windows-deno-full
-          # rm -rf mpy-easy-windows-deno-full/portable_config/scripts/*.js
-          # cp mpv-easy-react/bundle/mpv-easy-es6.js mpy-easy-windows-deno-full/portable_config/scripts/mpv-easy-es6.js
-          # mv mpy-easy-windows-deno-full/portable_config/scripts mpy-easy-windows-deno-full/portable_config/scripts-deno
-          # mkdir -p mpy-easy-windows-deno-full/portable_config/scripts
-          # cp -r mpv-deno-dist/mpv-deno-windows.dll mpy-easy-windows-deno-full/portable_config/scripts/mpv-deno-windows.dll
+          # cp -r mpv-easy-windows-full mpv-easy-windows-deno-full
+          # rm -rf mpv-easy-windows-deno-full/portable_config/scripts/*.js
+          # cp mpv-easy-react/bundle/mpv-easy-es6.js mpv-easy-windows-deno-full/portable_config/scripts/mpv-easy-es6.js
+          # mv mpv-easy-windows-deno-full/portable_config/scripts mpv-easy-windows-deno-full/portable_config/scripts-deno
+          # mkdir -p mpv-easy-windows-deno-full/portable_config/scripts
+          # cp -r mpv-deno-dist/mpv-deno-windows.dll mpv-easy-windows-deno-full/portable_config/scripts/mpv-deno-windows.dll
 
           mkdir release -p
 
-          cd mpy-easy-macos
-          zip -r -q ../release/mpy-easy-macos.zip .
+          cd mpv-easy-macos
+          zip -r -q ../release/mpv-easy-macos.zip .
           cd ..
 
-          cd mpy-easy-linux
-          zip -r -q ../release/mpy-easy-linux.zip .
+          cd mpv-easy-linux
+          zip -r -q ../release/mpv-easy-linux.zip .
           cd ..
 
-          cd mpy-easy-android
-          zip -r -q ../release/mpy-easy-android.zip .
+          cd mpv-easy-android
+          zip -r -q ../release/mpv-easy-android.zip .
           cd ..
 
-          cd mpy-easy-windows
-          zip -r -q ../release/mpy-easy-windows.zip .
+          cd mpv-easy-windows
+          zip -r -q ../release/mpv-easy-windows.zip .
           cd ..
 
-          cd mpy-easy-windows-full
-          zip -r -q ../release/mpy-easy-windows-full.zip .
+          cd mpv-easy-windows-full
+          zip -r -q ../release/mpv-easy-windows-full.zip .
           cd ..
 
-          # cd mpy-easy-windows-deno-full
-          # zip -r -q ../release/mpy-easy-windows-deno-full.zip .
+          # cd mpv-easy-windows-deno-full
+          # zip -r -q ../release/mpv-easy-windows-deno-full.zip .
           # cd ..
 
           # uosc
-          7z x mpv-win.7z -ompy-uosc-windows-full -y
+          7z x mpv-win.7z -ompv-uosc-windows-full -y
           rwget https://github.com/tomasklaen/uosc/releases/latest/download/uosc.zip
           rwget https://github.com/tomasklaen/uosc/releases/latest/download/uosc.conf
           rwget https://raw.githubusercontent.com/po5/thumbfast/refs/heads/master/thumbfast.lua
           rwget https://raw.githubusercontent.com/po5/thumbfast/refs/heads/master/thumbfast.conf
-          cd mpy-uosc-windows-full
+          cd mpv-uosc-windows-full
           mkdir -p portable_config/scripts
           mkdir -p portable_config/script-opts
           unzip ../uosc.zip -d portable_config
           cp ../uosc.conf portable_config/script-opts/uosc.conf
           cp ../thumbfast.conf portable_config/script-opts/thumbfast.conf
           cp ../thumbfast.lua portable_config/scripts/thumbfast.lua
-          zip -r -q ../release/mpy-uosc-windows-full.zip .
+          zip -r -q ../release/mpv-uosc-windows-full.zip .
           cd ..
 
           # modernx https://github.com/cyl0/ModernX
-          7z x mpv-win.7z -ompy-modernx-windows-full -y
+          7z x mpv-win.7z -ompv-modernx-windows-full -y
           rwget https://github.com/cyl0/ModernX/raw/refs/heads/main/modernx.lua
           rwget https://github.com/cyl0/ModernX/raw/refs/heads/main/Material-Design-Iconic-Font.ttf
-          cd mpy-modernx-windows-full
+          cd mpv-modernx-windows-full
           mkdir -p portable_config/scripts
           mkdir -p portable_config/script-opts
           mkdir -p portable_config/fonts
@@ -370,16 +370,16 @@ jobs:
           cp ../Material-Design-Iconic-Font.ttf portable_config/fonts/Material-Design-Iconic-Font.ttf
           cp ../thumbfast.conf portable_config/script-opts/thumbfast.conf
           cp ../thumbfast.lua portable_config/scripts/thumbfast.lua
-          zip -r -q ../release/mpy-modernx-windows-full.zip .
+          zip -r -q ../release/mpv-modernx-windows-full.zip .
           cd ..
 
 
           # modernz https://github.com/Samillion/ModernZ
-          7z x mpv-win.7z -ompy-modernz-windows-full -y
+          7z x mpv-win.7z -ompv-modernz-windows-full -y
           rwget https://github.com/Samillion/ModernZ/releases/latest/download/modernz.lua
           rwget https://github.com/Samillion/ModernZ/releases/latest/download/modernz.conf
           rwget https://github.com/Samillion/ModernZ/releases/latest/download/fluent-system-icons.ttf
-          cd mpy-modernz-windows-full
+          cd mpv-modernz-windows-full
           mkdir -p portable_config/scripts
           mkdir -p portable_config/script-opts
           mkdir -p portable_config/fonts
@@ -388,7 +388,7 @@ jobs:
           cp ../fluent-system-icons.ttf portable_config/fonts/fluent-system-icons.ttf
           cp ../thumbfast.conf portable_config/script-opts/thumbfast.conf
           cp ../thumbfast.lua portable_config/scripts/thumbfast.lua
-          zip -r -q ../release/mpy-modernz-windows-full.zip .
+          zip -r -q ../release/mpv-modernz-windows-full.zip .
           cd ..
 
           cp mpv-easy-js/* release/
@@ -406,51 +406,51 @@ jobs:
           zip -r -q ../release.zip .
           cd ..
 
-      - name: Upload mpy-easy-macos
+      - name: Upload mpv-easy-macos
         uses: actions/upload-artifact@v4
         with:
-          name: mpy-easy-macos
-          path: release/mpy-easy-macos.zip
-      - name: Upload mpy-easy-linux
+          name: mpv-easy-macos
+          path: release/mpv-easy-macos.zip
+      - name: Upload mpv-easy-linux
         uses: actions/upload-artifact@v4
         with:
-          name: mpy-easy-linux
-          path: release/mpy-easy-linux.zip
-      - name: Upload mpy-easy-android
+          name: mpv-easy-linux
+          path: release/mpv-easy-linux.zip
+      - name: Upload mpv-easy-android
         uses: actions/upload-artifact@v4
         with:
-          name: mpy-easy-android
-          path: release/mpy-easy-android.zip
-      - name: Upload mpy-easy-windows
+          name: mpv-easy-android
+          path: release/mpv-easy-android.zip
+      - name: Upload mpv-easy-windows
         uses: actions/upload-artifact@v4
         with:
-          name: mpy-easy-windows
-          path: release/mpy-easy-windows.zip
-      - name: Upload mpy-easy-windows-full
+          name: mpv-easy-windows
+          path: release/mpv-easy-windows.zip
+      - name: Upload mpv-easy-windows-full
         uses: actions/upload-artifact@v4
         with:
-          name: mpy-easy-windows-full
-          path: release/mpy-easy-windows-full.zip
-      - name: Upload mpy-uosc-windows-full
+          name: mpv-easy-windows-full
+          path: release/mpv-easy-windows-full.zip
+      - name: Upload mpv-uosc-windows-full
         uses: actions/upload-artifact@v4
         with:
-          name: mpy-uosc-windows-full
-          path: release/mpy-uosc-windows-full.zip
-      - name: Upload mpy-modernx-windows-full
+          name: mpv-uosc-windows-full
+          path: release/mpv-uosc-windows-full.zip
+      - name: Upload mpv-modernx-windows-full
         uses: actions/upload-artifact@v4
         with:
-          name: mpy-modernx-windows-full
-          path: release/mpy-modernx-windows-full.zip
-      - name: Upload mpy-modernz-windows-full
+          name: mpv-modernx-windows-full
+          path: release/mpv-modernx-windows-full.zip
+      - name: Upload mpv-modernz-windows-full
         uses: actions/upload-artifact@v4
         with:
-          name: mpy-modernz-windows-full
-          path: release/mpy-modernz-windows-full.zip
-      # - name: Upload mpy-easy-windows-deno-full
+          name: mpv-modernz-windows-full
+          path: release/mpv-modernz-windows-full.zip
+      # - name: Upload mpv-easy-windows-deno-full
       #   uses: actions/upload-artifact@v4
       #   with:
-      #     name: mpy-easy-windows-deno-full
-      #     path: release/mpy-easy-windows-deno-full.zip
+      #     name: mpv-easy-windows-deno-full
+      #     path: release/mpv-easy-windows-deno-full.zip
       - name: Upload release
         uses: actions/upload-artifact@v4
         with:
