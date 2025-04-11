@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState, WheelEvent } from "react"
+import React, { useEffect, useRef, useState } from "react"
 import { Bilibili, Jellyfin, Youtube, Twitch, Nicovideo } from "./rules"
 import {
   encodeToBase64,
