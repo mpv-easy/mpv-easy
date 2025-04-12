@@ -183,10 +183,10 @@ export const Progress = ({ width, ...props }: MpDomProps) => {
       return
     }
 
-    if (isRemote(path)) {
-      showNotification("cut not support remote video")
-      return
-    }
+    // if (isRemote(path)) {
+    //   showNotification("cut not support remote video")
+    //   return
+    // }
 
     showNotification("output starting")
 
