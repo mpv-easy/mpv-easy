@@ -45,7 +45,7 @@ export function getVideoSegment(points: number[]) {
   if (points.length !== 2) {
     return undefined
   }
-  return [...points].sort() as [number, number]
+  return [...points].sort((a, b) => a - b) as [number, number]
 }
 
 export function appendPoint(points: number[], n: number): number[] {

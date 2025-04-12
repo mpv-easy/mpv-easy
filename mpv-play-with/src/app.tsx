@@ -64,7 +64,6 @@ const defaultConfig = {
 export function App() {
   const fullscreen = document.fullscreen || !!document.fullscreenElement
 
-  // _pos maybe undefined ?
   const [config = { ...defaultConfig }, setConfig, removeConfig] =
     useLocalStorage(LocalStorageKey, { ...defaultConfig })
 

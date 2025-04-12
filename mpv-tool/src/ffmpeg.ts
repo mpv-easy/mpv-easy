@@ -1,5 +1,5 @@
-import { execAsync, getOs, Rect } from "./common"
-import { getMpvExeDir, joinPath } from "./mpv"
+import { execAsync, getOs, isRemote, Rect } from "./common"
+import { getMpvExeDir, getMpvExePath, joinPath } from "./mpv"
 import { screenshotToFile } from "./type"
 import { existsSync } from "./fs"
 import { detectCmd } from "./ext"
@@ -50,7 +50,57 @@ export type GifConfig = {
   flags: string
 }
 
+export async function cutRemoteVideo(
+  area: [number, number],
+  videoPath: string,
+  outputPath: string,
+  gifConfig: GifConfig | undefined,
+  ffmpeg: string,
+) {
+  const mpvPath = getMpvExePath()
+
+  const mpvCmd = [
+    mpvPath,
+    videoPath,
+    `--start=${area[0]}`,
+    `--end=${area[1]}`,
+    "--vo=lavc",
+    `--o=${outputPath}`,
+    "--of=mp4",
+    "--ovc=libx264",
+    "--ovcopts=crf=23,preset=medium,profile=baseline,level=3.1,tune=fastdecode",
+    "--oac=aac",
+    "--no-ocopy-metadata",
+    "--quiet",
+    "--sub-ass=yes",
+    "--sub-ass-force-style=Fonts=true",
+    "--vf=format=yuv420p",
+  ]
+
+  // console.log("mpvCmd", mpvCmd.join(' '))
+
+  try {
+    await execAsync(mpvCmd)
+    return true
+  } catch {
+    return false
+  }
+}
+
 export async function cutVideo(
+  area: [number, number],
+  videoPath: string,
+  outputPath: string,
+  gifConfig: GifConfig | undefined,
+  ffmpeg: string,
+) {
+  if (isRemote(videoPath)) {
+    return cutRemoteVideo(area, videoPath, outputPath, gifConfig, ffmpeg)
+  }
+    return cutLocalVideo(area, videoPath, outputPath, gifConfig, ffmpeg)
+}
+
+export async function cutLocalVideo(
   area: [number, number],
   videoPath: string,
   outputPath: string,
