@@ -81,15 +81,15 @@ export const ScrollList = ({
     (osd.h / 2 / cellSize) | 0,
   )
   const showScrollBar = maxItemCount < items.length
-  const scrollListVisibleHeight =
+  const scrollListHeight =
     maxItemCount * (cellSize + normalFontSize.padding * 2) +
     normalFontSize.padding * 2
   const scrollBarHeight = showScrollBar
-    ? (maxItemCount / items.length) * scrollListVisibleHeight
+    ? (maxItemCount / items.length) * scrollListHeight
     : 0
-  const scrollBarSpace = scrollListVisibleHeight - scrollBarHeight
-  const offset = scrollBarSpace / (items.length - maxItemCount)
-  const scrollBarTop = normalFontSize.padding + startIndex * offset
+  const scrollBarSpace = scrollListHeight - scrollBarHeight
+  const gap = scrollBarSpace / (items.length - maxItemCount)
+  const scrollBarTop = normalFontSize.padding + startIndex * gap
   const visibleList = items.slice(startIndex, startIndex + maxItemCount)
   const ref = useRef<MpDom | null>(null)
 
