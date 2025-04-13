@@ -144,6 +144,7 @@ export type Geometry = {
 
 export type StringProp =
   | "hwdec"
+  | "vf"
   | "include"
   | "mpv-configuration"
   | "term-clip-cc"
@@ -500,7 +501,6 @@ export type NumberProp =
   | "window-id"
   | "current-window-scale"
   | "estimated-vf-fps"
-  | "vf"
   | "video-bitrate"
   | "audio-bitrate"
   | "sub-bitrate"
@@ -1570,6 +1570,13 @@ export type MsgLevel =
 export type DirectoryFilterType = "video" | "audio" | "image"
 
 export type OsetMetadata = { title?: string; comment?: string }
+
+export type VfItem = {
+  enabled: boolean
+  name: string
+  params: Record<string, string>
+}
+
 export type NativeProp = {
   metadata: Metadata
   "filtered-metadata": Metadata
@@ -1675,4 +1682,5 @@ export type NativeProp = {
   "video-exts": string[]
   "input-commands": string[]
   "watch-later-options": string[]
+  vf: VfItem[]
 }
