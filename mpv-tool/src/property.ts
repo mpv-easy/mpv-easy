@@ -5,6 +5,9 @@ import {
   getPropertyNumber,
   getPropertyString,
   observeProperty,
+  observePropertyBool,
+  observePropertyNumber,
+  observePropertyString,
   setPropertyBool,
   setPropertyNative,
   setPropertyNumber,
@@ -32,16 +35,12 @@ export class PropertyNumber {
 
   observe(fn: (name: string, value: number) => void) {
     let last: number
-    return observeProperty(
-      this.name,
-      "number",
-      (name: string, value: number) => {
-        if (last !== value || typeof last === "undefined") {
-          fn(name, value)
-          last = value
-        }
-      },
-    )
+    return observePropertyNumber(this.name, (name: string, value: number) => {
+      if (last !== value || typeof last === "undefined") {
+        fn(name, value)
+        last = value
+      }
+    })
   }
   unobserve(fn: (...args: unknown[]) => void) {
     return unobserveProperty(fn)
@@ -75,7 +74,7 @@ export class PropertyBool {
 
   observe(fn: (name: string, value: boolean) => void) {
     let last: boolean
-    return observeProperty(this.name, "bool", (name, value) => {
+    return observePropertyBool(this.name, (name, value) => {
       if (last !== value || typeof last === "undefined") {
         fn(name, value)
         last = value
@@ -105,7 +104,7 @@ export class PropertyString {
 
   observe(fn: (name: string, value: string) => void) {
     let last: string
-    return observeProperty(this.name, "string", (name, value) => {
+    return observePropertyString(this.name, (name, value) => {
       if (last !== value || typeof last === "undefined") {
         fn(name, value)
         last = value
