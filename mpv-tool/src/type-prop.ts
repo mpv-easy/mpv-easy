@@ -1571,7 +1571,7 @@ export type DirectoryFilterType = "video" | "audio" | "image"
 
 export type OsetMetadata = { title?: string; comment?: string }
 
-export type VfItem = {
+export type Vf = {
   enabled: boolean
   name: string
   params: Record<string, string>
@@ -1682,5 +1682,5 @@ export type NativeProp = {
   "video-exts": string[]
   "input-commands": string[]
   "watch-later-options": string[]
-  vf: VfItem[]
+  vf: Vf[]
 }
