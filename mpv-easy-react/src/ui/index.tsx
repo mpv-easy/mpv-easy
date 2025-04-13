@@ -38,6 +38,8 @@ import {
   getPropertyBool,
   getColor,
   showNotification,
+  getOptions,
+  setPropertyBool,
 } from "@mpv-easy/tool"
 import clamp from "lodash-es/clamp"
 import { Playlist } from "./playlist"
@@ -145,6 +147,24 @@ export const Easy = (props: Partial<EasyProps>) => {
 
     // FIXME: update thumbfast when pause
     const h = setInterval(update, 1000 / (props.fps || DefaultFps))
+
+    const { ontop } = getOptions("mpv-easy", {
+      ontop: {
+        type: "boolean",
+        default: false,
+      },
+    })
+    if (ontop) {
+      const oldOntop = getPropertyBool("ontop", false)
+
+      setPropertyBool("ontop", true)
+      setPropertyBool("focused", true)
+
+      setTimeout(() => {
+        setPropertyBool("ontop", oldOntop)
+      })
+    }
+
     return () => clearInterval(h)
   }, [])
 

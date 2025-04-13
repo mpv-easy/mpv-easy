@@ -150,6 +150,7 @@ impl Player {
                     args_str.push_str(&format!(" --playlist-start={} ", start));
                 }
 
+                args_str.push_str(&format!(" --script-opts-append=mpv-easy-ontop=yes "));
                 if let Some(args) = &args {
                     args_str.push_str(&args.join(" "));
                 }
