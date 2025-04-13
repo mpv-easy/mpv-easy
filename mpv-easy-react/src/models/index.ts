@@ -345,7 +345,8 @@ export function syncPlayer(store: Store) {
     playlistIndexProp,
     windowMinimizedProp,
     videoZoomProp,
-    pathProp,
+    // update by pathProp.observe
+    // pathProp,
     mediaTitleProp,
   ]
   function updateProp() {
