@@ -193,6 +193,10 @@ const store = defineStore({
       const path = state[pluginName].player.path
       const len = list.length
       const pos = list.indexOf(path)
+      if (pos === -1) {
+        console.error(`not found video: ${path} in playlist`)
+        return state
+      }
       const newPos = (pos + 1) % len
       if (newPos === pos) {
         return state
@@ -205,6 +209,10 @@ const store = defineStore({
       const path = state[pluginName].player.path
       const len = list.length
       const pos = list.indexOf(path)
+      if (pos === -1) {
+        console.error(`not found video: ${path} in playlist`)
+        return state
+      }
       const newPos = (pos + len - 1) % len
       if (newPos === pos) {
         return state
