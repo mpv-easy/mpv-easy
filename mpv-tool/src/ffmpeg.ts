@@ -6,6 +6,7 @@ import { detectCmd } from "./ext"
 import { getTmpDir } from "./tmp"
 import { randomId } from "./math"
 import { replaceExt } from "./path"
+import { getCurrentSubtitle } from "./subtitle"
 // import { getCurrentSubtitle, getSubtitleTracks } from "./subtitle"
 
 const defaultMacExeName = "ffmpeg"
@@ -77,8 +78,22 @@ export async function cutRemoteVideo(
     "--vf=format=yuv420p",
   ]
 
-  // console.log("mpvCmd", mpvCmd.join(' '))
+  const sub = getCurrentSubtitle()
+  if (sub) {
+    if (sub.external) {
+      mpvCmd.push(`--sub-files=${sub.externalFilename}`)
+    } else {
+      mpvCmd.push(`--sid=${sub.id}`)
+    }
+  }
 
+  // TODO: Add vf
+  // const vf = getProperty('vf');
+  // if (vf) {
+  //   mpvCmd.push(`--vf-append=${vf}`)
+  // }
+
+  // console.log("mpvCmd", mpvCmd.join(" "))
   try {
     await execAsync(mpvCmd)
     return true
@@ -97,7 +112,7 @@ export async function cutVideo(
   if (isRemote(videoPath)) {
     return cutRemoteVideo(area, videoPath, outputPath, gifConfig, ffmpeg)
   }
-    return cutLocalVideo(area, videoPath, outputPath, gifConfig, ffmpeg)
+  return cutLocalVideo(area, videoPath, outputPath, gifConfig, ffmpeg)
 }
 
 export async function cutLocalVideo(

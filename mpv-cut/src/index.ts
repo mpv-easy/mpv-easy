@@ -64,6 +64,7 @@ export function getCutVideoPath(
   segment: [number, number],
   rect: undefined | Rect,
   outputDirectory: string,
+  fmt = "mp4",
 ): string {
   const dir = existsSync(outputDirectory) ? outputDirectory : getDesktopDir()
   const unsafeName = isRemote(videoPath)
@@ -73,7 +74,7 @@ export function getCutVideoPath(
   const list = name.split(".")
 
   const prefix = list.slice(0, list.length === 1 ? 1 : -1).join(".")
-  const ext = list.length > 1 ? list.at(-1)! : "mp4"
+  const ext = list.length > 1 ? list.at(-1)! : fmt
 
   const [ss, to] = segment.map((i) => i | 0)
   const nameList = [prefix, ss, to]
