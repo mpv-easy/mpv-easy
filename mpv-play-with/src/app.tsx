@@ -59,7 +59,7 @@ const defaultConfig = {
   left: 0,
   bottom: 0,
   playerIndex: 0,
-  lock: false,
+  lock: true,
 }
 export function App() {
   const fullscreen = document.fullscreen || !!document.fullscreenElement
