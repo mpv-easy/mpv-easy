@@ -262,6 +262,20 @@ const store = defineStore({
       }
       return { ...state }
     },
+    cancel(state) {
+      const { cropPoints = [], cutPoints = [] } = state[pluginName]?.state || {}
+      if (cropPoints.length > 0) {
+        dispatch.setCropPoints(cropPoints.slice(0, -1))
+      } else {
+        dispatch.setShowCrop(false)
+      }
+      if (cutPoints.length > 0) {
+        dispatch.setCutPoints(cutPoints.slice(0, -1))
+      } else {
+        dispatch.setCropPoints([])
+      }
+      return state
+    },
     setShowCrop(state, showCrop: boolean) {
       state[pluginName].state = {
         ...state[pluginName].state,

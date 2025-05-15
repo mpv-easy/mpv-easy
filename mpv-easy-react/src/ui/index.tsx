@@ -137,8 +137,7 @@ export const Easy = (props: Partial<EasyProps>) => {
       dispatch.setShowCrop(true)
     })
     registerScriptMessage("cancel", () => {
-      dispatch.setShowCrop(false)
-      dispatch.setCropPoints([])
+      dispatch.cancel()
     })
 
     registerScriptMessage("mouse-right-click", () => {
@@ -189,8 +188,7 @@ export const Easy = (props: Partial<EasyProps>) => {
   const menuRef = useRef<{ setHide: (v: boolean) => void }>(null)
   const volumeDomRef = useRef<MpDom>(null)
   const playerState = useSelector(playerStateSelector)
-  const showCrop = playerState.showCrop
-  const cropPoints = playerState.cropPoints
+  const { cropPoints, showCrop } = playerState
   const cropConfig = useSelector(cropSelector)
 
   const { x, y, hover } = mousePos
