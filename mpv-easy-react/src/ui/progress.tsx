@@ -62,7 +62,8 @@ export const Progress = ({ width, ...props }: MpDomProps) => {
   const path = useSelector(pathSelector)
   const isSeekable = useSelector(seekableSelector)
   const thumbfast = useSelector(thumbfastSelector)
-  const { cutPoints, cropPoints, showCrop } = useSelector(playerStateSelector)
+  const { cutPoints, cropPoints, showCrop, preview } =
+    useSelector(playerStateSelector)
   const cutConfig = useSelector(cutSelector)
   const cropConfig = useSelector(cropSelector)
   const [thumbfastUpdateId, setThumbfastUpdateId] = useState(randomId())
@@ -421,7 +422,9 @@ export const Progress = ({ width, ...props }: MpDomProps) => {
           width={progress.cursorSize}
           left={`${cutCursorLeft * 100}%`}
           height={"100%"}
-          backgroundColor={progress.cutCursorColor}
+          backgroundColor={
+            preview ? progress.previewSegmentColor : progress.cutCursorColor
+          }
           pointerEvents="none"
         />
       )}
@@ -432,7 +435,9 @@ export const Progress = ({ width, ...props }: MpDomProps) => {
           width={progress.cursorSize}
           left={`${cutCursorRight * 100}%`}
           height={"100%"}
-          backgroundColor={progress.cutCursorColor}
+          backgroundColor={
+            preview ? progress.previewSegmentColor : progress.cutCursorColor
+          }
           pointerEvents="none"
         />
       )}
@@ -443,7 +448,9 @@ export const Progress = ({ width, ...props }: MpDomProps) => {
           width={`${areaWidth! * 100}%`}
           left={`${cutCursorLeft! * 100}%`}
           height={"100%"}
-          backgroundColor={progress.cutSegmentColor}
+          backgroundColor={
+            preview ? progress.previewSegmentColor : progress.cutSegmentColor
+          }
           pointerEvents="none"
         />
       )}
