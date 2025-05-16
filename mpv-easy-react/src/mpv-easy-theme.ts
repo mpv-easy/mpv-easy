@@ -7,6 +7,7 @@ const Black = "#000000"
 const Gray = "#D3D3D3"
 const Yellow = "#00FFFF"
 const Green = "#00FF00"
+const Purple = "#800080"
 
 const AlphaHide = "FF"
 const AlphaHigh = "C0"
@@ -52,6 +53,7 @@ export type ThemeStyle = {
     previewZIndex: number
     cutCursorColor: string
     cutSegmentColor: string
+    previewSegmentColor: string
   }
 
   control: {
@@ -249,6 +251,7 @@ export function createDefaultThemeConfig(): EasyConfig {
           previewZIndex: defaultPreviewZIndex,
           cutSegmentColor: Green + AlphaLow,
           cutCursorColor: Green + AlphaShow,
+          previewSegmentColor: Purple + AlphaShow,
         },
         control: {
           backgroundColor: Black + AlphaLow,
@@ -355,6 +358,7 @@ export function createDefaultThemeConfig(): EasyConfig {
           previewZIndex: defaultPreviewZIndex,
           cutSegmentColor: Green + AlphaLow,
           cutCursorColor: Green + AlphaShow,
+          previewSegmentColor: Purple + AlphaShow,
         },
         control: {
           backgroundColor: White + AlphaLow,
