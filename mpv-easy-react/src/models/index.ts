@@ -263,7 +263,15 @@ const store = defineStore({
       return { ...state }
     },
     cancel(state) {
-      let { cropPoints = [], cutPoints = [] } = state[pluginName]?.state || {}
+      let {
+        cropPoints = [],
+        cutPoints = [],
+        showCrop,
+      } = state[pluginName]?.state || {}
+
+      if (showCrop && cropPoints.length === 0) {
+        showCrop = false
+      }
 
       cropPoints = cropPoints.length > 0 ? cropPoints.slice(0, -1) : []
       cutPoints = cutPoints.length > 0 ? cutPoints.slice(0, -1) : []
@@ -272,6 +280,7 @@ const store = defineStore({
         ...state[pluginName].state,
         cropPoints,
         cutPoints,
+        showCrop,
       }
       return { ...state }
     },
