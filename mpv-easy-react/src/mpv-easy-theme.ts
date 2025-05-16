@@ -160,6 +160,8 @@ export type EasyConfig = {
     "video-params": VideoParams | undefined
     volume: number
     "volume-max": number
+    "ab-loop-a": number | undefined
+    "ab-loop-b": number | undefined
     speed: number
     speedList: number[]
     playMode: PlayMode
@@ -171,6 +173,7 @@ export type EasyConfig = {
     cutPoints: number[]
     cropPoints: [number, number][]
     showCrop: boolean
+    preview: boolean
   }
   config: {
     fps: number
@@ -445,6 +448,7 @@ export const defaultState: EasyConfig["state"] = {
   cutPoints: [],
   cropPoints: [],
   showCrop: false,
+  preview: false,
 }
 
 export const defaultPlayer: EasyConfig["player"] = {
@@ -482,6 +486,8 @@ export const defaultPlayer: EasyConfig["player"] = {
   "video-params": {} as any,
   volume: 100,
   "volume-max": 130,
+  "ab-loop-a": undefined,
+  "ab-loop-b": undefined,
   speed: 1,
   speedList: [0.25, 0.5, 0.75, 1, 1.25, 1.5, 2, 4],
   playMode: DefaultPlayMode,
