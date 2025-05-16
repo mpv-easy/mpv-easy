@@ -23,6 +23,7 @@ import {
   showNotification,
   quit,
   playlistPlayIndex,
+  setPropertyString,
 } from "@mpv-easy/tool"
 import type { Language } from "@mpv-easy/i18n"
 import { type ThemeMode, type UIName, PlayMode } from "../mpv-easy-theme"
@@ -267,7 +268,22 @@ const store = defineStore({
         cropPoints = [],
         cutPoints = [],
         showCrop,
+        preview,
       } = state[pluginName]?.state || {}
+
+      const a = state[pluginName]?.player["ab-loop-a"]
+      const b = state[pluginName]?.player["ab-loop-b"]
+
+      if (preview && a !== undefined && b !== undefined) {
+        setPropertyString("ab-loop-a", "no")
+        setPropertyString("ab-loop-b", "no")
+
+        state[pluginName].state = {
+          ...state[pluginName].state,
+          preview: false,
+        }
+        return { ...state }
+      }
 
       if (showCrop && cropPoints.length === 0) {
         showCrop = false
@@ -281,7 +297,33 @@ const store = defineStore({
         cropPoints,
         cutPoints,
         showCrop,
+        preview: false,
       }
+      return { ...state }
+    },
+    preview(state) {
+      const { cutPoints } = state[pluginName].state
+
+      if (cutPoints.length === 0) {
+        return state
+      }if (cutPoints.length === 1) {
+        state[pluginName].player["time-pos"] = cutPoints[0]
+        setPropertyNumber("time-pos", cutPoints[0])
+      } else if (cutPoints.length === 2) {
+        const start = Math.min(cutPoints[0], cutPoints[1])
+        const end = Math.max(cutPoints[0], cutPoints[1])
+
+        setPropertyNumber("ab-loop-a", start)
+        setPropertyNumber("ab-loop-b", end)
+        state[pluginName].player["time-pos"] = start
+        setPropertyNumber("time-pos", start)
+
+        state[pluginName].state = {
+          ...state[pluginName].state,
+          preview: true,
+        }
+      }
+
       return { ...state }
     },
     setShowCrop(state, showCrop: boolean) {
@@ -351,6 +393,8 @@ export function syncPlayer(store: Store) {
   const playlistIndexProp = new PropertyNumber("playlist-play-index")
   const osdDimensionsProp = new PropertyNative("osd-dimensions")
   const mediaTitleProp = new PropertyString("media-title")
+  const abLoopA = new PropertyNumber("ab-loop-a")
+  const abLoopB = new PropertyNumber("ab-loop-b")
 
   const rerender = store.rerender
 
@@ -378,6 +422,8 @@ export function syncPlayer(store: Store) {
     // update by pathProp.observe
     // pathProp,
     mediaTitleProp,
+    abLoopA,
+    abLoopB,
   ]
   function updateProp() {
     const state = store.getState()
