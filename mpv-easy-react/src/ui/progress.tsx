@@ -141,7 +141,7 @@ export const Progress = ({ width, ...props }: MpDomProps) => {
           rect,
           cropConfig.outputDirectory,
         )
-        showNotification("crop starting")
+        showNotification("crop starting", -1)
         const ok = await cropVideo(
           path,
           segment,
@@ -166,7 +166,7 @@ export const Progress = ({ width, ...props }: MpDomProps) => {
           rect,
           cropConfig.outputDirectory,
         )
-        showNotification("crop starting")
+        showNotification("crop starting", -1)
         const ok = await cropImage(rect, outputPath, ffmpeg)
         if (!ok) {
           showNotification("failed to crop image")
@@ -189,7 +189,7 @@ export const Progress = ({ width, ...props }: MpDomProps) => {
     //   return
     // }
 
-    showNotification("output starting")
+    showNotification("output starting", -1)
 
     const ok = await cutVideo(
       segment,
