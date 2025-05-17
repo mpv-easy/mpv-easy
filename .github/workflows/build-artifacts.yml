@@ -251,7 +251,6 @@ jobs:
 
       - name: "build ts"
         run: |
-          npm i pnpm @rwget/rwget -g
           pnpm i
           pnpm run build
 
@@ -344,10 +343,10 @@ jobs:
 
           # uosc
           7z x mpv-win.7z -ompv-uosc-windows-full -y
-          rwget https://github.com/tomasklaen/uosc/releases/latest/download/uosc.zip
-          rwget https://github.com/tomasklaen/uosc/releases/latest/download/uosc.conf
-          rwget https://raw.githubusercontent.com/po5/thumbfast/refs/heads/master/thumbfast.lua
-          rwget https://raw.githubusercontent.com/po5/thumbfast/refs/heads/master/thumbfast.conf
+          curl -L -o uosc.zip https://github.com/tomasklaen/uosc/releases/latest/download/uosc.zip
+          curl -L -o uosc.conf https://github.com/tomasklaen/uosc/releases/latest/download/uosc.conf
+          curl -L -o thumbfast.lua https://raw.githubusercontent.com/po5/thumbfast/refs/heads/master/thumbfast.lua
+          curl -L -o thumbfast.conf https://raw.githubusercontent.com/po5/thumbfast/refs/heads/master/thumbfast.conf
           cd mpv-uosc-windows-full
           mkdir -p portable_config/scripts
           mkdir -p portable_config/script-opts
@@ -360,8 +359,8 @@ jobs:
 
           # modernx https://github.com/cyl0/ModernX
           7z x mpv-win.7z -ompv-modernx-windows-full -y
-          rwget https://github.com/cyl0/ModernX/raw/refs/heads/main/modernx.lua
-          rwget https://github.com/cyl0/ModernX/raw/refs/heads/main/Material-Design-Iconic-Font.ttf
+          curl -L -o modernx.lua https://github.com/cyl0/ModernX/raw/refs/heads/main/modernx.lua
+          curl -L -o Material-Design-Iconic-Font.ttf https://github.com/cyl0/ModernX/raw/refs/heads/main/Material-Design-Iconic-Font.ttf
           cd mpv-modernx-windows-full
           mkdir -p portable_config/scripts
           mkdir -p portable_config/script-opts
@@ -376,9 +375,9 @@ jobs:
 
           # modernz https://github.com/Samillion/ModernZ
           7z x mpv-win.7z -ompv-modernz-windows-full -y
-          rwget https://github.com/Samillion/ModernZ/releases/latest/download/modernz.lua
-          rwget https://github.com/Samillion/ModernZ/releases/latest/download/modernz.conf
-          rwget https://github.com/Samillion/ModernZ/releases/latest/download/fluent-system-icons.ttf
+          curl -L -o modernz.lua https://github.com/Samillion/ModernZ/releases/latest/download/modernz.lua
+          curl -L -o modernz.conf https://github.com/Samillion/ModernZ/releases/latest/download/modernz.conf
+          curl -L -o fluent-system-icons.ttf https://github.com/Samillion/ModernZ/releases/latest/download/fluent-system-icons.ttf
           cd mpv-modernz-windows-full
           mkdir -p portable_config/scripts
           mkdir -p portable_config/script-opts
