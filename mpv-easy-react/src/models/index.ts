@@ -308,7 +308,7 @@ const store = defineStore({
         return state
       }
       if (cutPoints.length === 1) {
-        state[pluginName].player["time-pos"] = cutPoints[0]
+        // state[pluginName].player["time-pos"] = cutPoints[0]
         setPropertyNumber("time-pos", cutPoints[0])
       } else if (cutPoints.length === 2) {
         const start = Math.min(cutPoints[0], cutPoints[1])
@@ -316,7 +316,7 @@ const store = defineStore({
 
         setPropertyNumber("ab-loop-a", start)
         setPropertyNumber("ab-loop-b", end)
-        state[pluginName].player["time-pos"] = start
+        // state[pluginName].player["time-pos"] = start
         setPropertyNumber("time-pos", start)
 
         state[pluginName].state = {
@@ -324,7 +324,7 @@ const store = defineStore({
           preview: true,
         }
       }
-
+      setPropertyBool("pause", false)
       return { ...state }
     },
     setShowCrop(state, showCrop: boolean) {
