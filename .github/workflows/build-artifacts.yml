@@ -27,7 +27,7 @@ jobs:
         shell: powershell
         run: |
           cd mpv-easy-ext
-          cargo build --target x86_64-pc-windows-msvc --release --out-dir=output -Z unstable-options
+          cargo build -q --target x86_64-pc-windows-msvc --release --out-dir=output -Z unstable-options
           cd ..
           mv mpv-easy-ext/output/mpv-easy-ext.exe mpv-easy-ext-windows.exe
           mv mpv-easy-ext/output/mpv-easy-play-with.exe mpv-easy-play-with-windows.exe
@@ -44,7 +44,7 @@ jobs:
           rustc --version
 
           cd mpv-deno
-          cargo build --release --out-dir=output -Z unstable-options
+          cargo build -q --release --out-dir=output -Z unstable-options
           cd ..
           mv mpv-deno/output/mpv_deno.dll mpv-deno-windows.dll
 
@@ -70,7 +70,7 @@ jobs:
       #     rustc --version
 
       #     cd mpv-qjs
-      #     cargo build --release --out-dir=output -Z unstable-options
+      #     cargo build -q --release --out-dir=output -Z unstable-options
       #     cd ..
       #     mv mpv-qjs/output/mpv_qjs.dll mpv-qjs-windows.dll
 
@@ -84,7 +84,7 @@ jobs:
       #     rustc --version
 
       #     cd mpv-boa
-      #     cargo build --release --out-dir=output -Z unstable-options
+      #     cargo build -q --release --out-dir=output -Z unstable-options
       #     cd ..
       #     mv mpv-boa/output/mpv_boa.dll mpv-boa-windows.dll
 
@@ -129,7 +129,7 @@ jobs:
       - name: build macos-amd64
         run: |
           cd mpv-easy-ext
-          cargo build --release --out-dir=output -Z unstable-options
+          cargo build -q --release --out-dir=output -Z unstable-options
           cd ..
 
           mv mpv-easy-ext/output/mpv-easy-ext mpv-easy-ext-macos-amd64
@@ -158,7 +158,7 @@ jobs:
       - name: build macos-arm64
         run: |
           cd mpv-easy-ext
-          cargo build --release --out-dir=output -Z unstable-options
+          cargo build -q --release --out-dir=output -Z unstable-options
           cd ..
 
           mv mpv-easy-ext/output/mpv-easy-ext mpv-easy-ext-macos-arm64
@@ -187,7 +187,7 @@ jobs:
       - name: build ubuntu-24.04
         run: |
           cd mpv-easy-ext
-          cargo build --release --out-dir=output -Z unstable-options
+          cargo build -q --release --out-dir=output -Z unstable-options
           cd ..
 
           mv mpv-easy-ext/output/mpv-easy-ext mpv-easy-ext-linux
