@@ -141,7 +141,7 @@ export const Progress = ({ width, ...props }: MpDomProps) => {
           rect,
           cropConfig.outputDirectory,
         )
-        showNotification("crop starting", -1)
+        showNotification("cut and crop starting", -1)
         const ok = await cropVideo(
           path,
           segment,
