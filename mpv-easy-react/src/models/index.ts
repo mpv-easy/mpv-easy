@@ -306,7 +306,8 @@ const store = defineStore({
 
       if (cutPoints.length === 0) {
         return state
-      }if (cutPoints.length === 1) {
+      }
+      if (cutPoints.length === 1) {
         state[pluginName].player["time-pos"] = cutPoints[0]
         setPropertyNumber("time-pos", cutPoints[0])
       } else if (cutPoints.length === 2) {

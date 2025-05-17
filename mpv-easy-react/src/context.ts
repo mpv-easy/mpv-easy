@@ -214,15 +214,19 @@ export function getConfig() {
     let scale = 1
     switch (type) {
       case "4K": {
+        break
       }
       case "2K": {
         scale = 0.75
+        break
       }
       case "1080P": {
         scale = 0.5
+        break
       }
       case "720P": {
         scale = 0.5
+        break
       }
     }
     customConfig[pluginName].style.dark.fontSizeScale = scale
