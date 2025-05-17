@@ -251,7 +251,7 @@ export function createDefaultThemeConfig(): EasyConfig {
           previewZIndex: defaultPreviewZIndex,
           cutSegmentColor: Green + AlphaLow,
           cutCursorColor: Green + AlphaShow,
-          previewSegmentColor: Purple + AlphaShow,
+          previewSegmentColor: Purple + AlphaLow,
         },
         control: {
           backgroundColor: Black + AlphaLow,
@@ -358,7 +358,7 @@ export function createDefaultThemeConfig(): EasyConfig {
           previewZIndex: defaultPreviewZIndex,
           cutSegmentColor: Green + AlphaLow,
           cutCursorColor: Green + AlphaShow,
-          previewSegmentColor: Purple + AlphaShow,
+          previewSegmentColor: Purple + AlphaLow,
         },
         control: {
           backgroundColor: White + AlphaLow,
