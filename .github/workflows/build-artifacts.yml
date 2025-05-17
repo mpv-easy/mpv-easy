@@ -248,7 +248,9 @@ jobs:
       #     path: boa-dll
       #     pattern: mpv-boa-*
       #     merge-multiple: true
-
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10
       - name: "build ts"
         run: |
           pnpm i
