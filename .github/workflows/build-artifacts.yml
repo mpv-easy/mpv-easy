@@ -116,8 +116,8 @@ jobs:
       #     name: mpv-boa-windows
       #     path: mpv-boa-windows.dll
 
-  build-ext-macos:
-    runs-on: macos-latest
+  build-ext-macos-amd64:
+    runs-on: macos-13
     steps:
       - uses: actions/checkout@v4
       - name: Install latest nightly
@@ -126,28 +126,27 @@ jobs:
           toolchain: nightly
           override: true
 
-      - name: build macos-latest
+      - name: build macos-amd64
         run: |
           cd mpv-easy-ext
           cargo build --release --out-dir=output -Z unstable-options
           cd ..
 
-          mv mpv-easy-ext/output/mpv-easy-ext mpv-easy-ext-macos
-          mv mpv-easy-ext/output/mpv-easy-play-with mpv-easy-play-with-macos
+          mv mpv-easy-ext/output/mpv-easy-ext mpv-easy-ext-macos-amd64
+          mv mpv-easy-ext/output/mpv-easy-play-with mpv-easy-play-with-macos-amd64
 
       - name: Upload macos Artifact ext
         uses: actions/upload-artifact@v4
         with:
-          name: mpv-easy-ext-macos
-          path: mpv-easy-ext-macos
+          name: mpv-easy-ext-macos-amd64
+          path: mpv-easy-ext-macos-amd64
       - name: Upload macos Artifact play-with
         uses: actions/upload-artifact@v4
         with:
-          name: mpv-easy-play-with-macos
-          path: mpv-easy-play-with-macos
-
-  build-ext-ubuntu:
-    runs-on: ubuntu-latest
+          name: mpv-easy-play-with-macos-amd64
+          path: mpv-easy-play-with-macos-amd64
+  build-ext-macos-arm64:
+    runs-on: macos-14
     steps:
       - uses: actions/checkout@v4
       - name: Install latest nightly
@@ -156,7 +155,36 @@ jobs:
           toolchain: nightly
           override: true
 
-      - name: build ubuntu-latest
+      - name: build macos-arm64
+        run: |
+          cd mpv-easy-ext
+          cargo build --release --out-dir=output -Z unstable-options
+          cd ..
+
+          mv mpv-easy-ext/output/mpv-easy-ext mpv-easy-ext-macos-arm64
+          mv mpv-easy-ext/output/mpv-easy-play-with mpv-easy-play-with-macos-arm64
+
+      - name: Upload macos Artifact ext
+        uses: actions/upload-artifact@v4
+        with:
+          name: mpv-easy-ext-macos-arm64
+          path: mpv-easy-ext-macos-arm64
+      - name: Upload macos Artifact play-with
+        uses: actions/upload-artifact@v4
+        with:
+          name: mpv-easy-play-with-macos-arm64
+          path: mpv-easy-play-with-macos-arm64
+  build-ext-ubuntu:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install latest nightly
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: nightly
+          override: true
+
+      - name: build ubuntu-24.04
         run: |
           cd mpv-easy-ext
           cargo build --release --out-dir=output -Z unstable-options
@@ -176,7 +204,7 @@ jobs:
           path: mpv-easy-play-with-linux
 
   build-ext-android:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
       - name: Install latest nightly
@@ -185,7 +213,7 @@ jobs:
           toolchain: nightly
           override: true
 
-      - name: build ubuntu-latest
+      - name: build ubuntu-24.04
         run: |
 
           cd mpv-easy-ext
@@ -209,9 +237,15 @@ jobs:
 
   build-release:
     needs:
-      [build-ext-windows, build-ext-macos, build-ext-ubuntu, build-ext-android]
+      [
+        build-ext-windows,
+        build-ext-macos-amd64,
+        build-ext-macos-arm64,
+        build-ext-ubuntu,
+        build-ext-android,
+      ]
     name: release
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
       - uses: actions/download-artifact@v4
@@ -293,12 +327,14 @@ jobs:
 
           7z x ffmpeg.7z -offmpeg -y
 
-          cp mpv-easy-ext-dist/mpv-easy-ext-macos mpv-easy-macos/scripts/mpv-easy-config/mpv-easy-ext/mpv-easy-ext-macos
+          cp mpv-easy-ext-dist/mpv-easy-ext-macos-amd64 mpv-easy-macos/scripts/mpv-easy-config/mpv-easy-ext/mpv-easy-ext-macos-amd64
+          cp mpv-easy-ext-dist/mpv-easy-ext-macos-arm64 mpv-easy-macos/scripts/mpv-easy-config/mpv-easy-ext/mpv-easy-ext-macos-arm64
           cp mpv-easy-ext-dist/mpv-easy-ext-linux mpv-easy-linux/scripts/mpv-easy-config/mpv-easy-ext/mpv-easy-ext-linux
           cp mpv-easy-ext-dist/mpv-easy-ext-android mpv-easy-android/scripts/mpv-easy-config/mpv-easy-ext/mpv-easy-ext-android
           cp mpv-easy-ext-dist/mpv-easy-ext-windows.exe mpv-easy-windows/scripts/mpv-easy-config/mpv-easy-ext/mpv-easy-ext-windows.exe
 
-          cp mpv-easy-play-with-dist/mpv-easy-play-with-macos mpv-easy-macos/scripts/mpv-easy-config/mpv-easy-ext/mpv-easy-play-with-macos
+          cp mpv-easy-play-with-dist/mpv-easy-play-with-macos-amd64 mpv-easy-macos/scripts/mpv-easy-config/mpv-easy-ext/mpv-easy-play-with-macos-amd64
+          cp mpv-easy-play-with-dist/mpv-easy-play-with-macos-arm64 mpv-easy-macos/scripts/mpv-easy-config/mpv-easy-ext/mpv-easy-play-with-macos-arm64
           cp mpv-easy-play-with-dist/mpv-easy-play-with-linux mpv-easy-linux/scripts/mpv-easy-config/mpv-easy-ext/mpv-easy-play-with-linux
           cp mpv-easy-play-with-dist/mpv-easy-play-with-android mpv-easy-android/scripts/mpv-easy-config/mpv-easy-ext/mpv-easy-play-with-android
           cp mpv-easy-play-with-dist/mpv-easy-play-with-windows.exe mpv-easy-windows/scripts/mpv-easy-config/mpv-easy-ext/mpv-easy-play-with-windows.exe
@@ -394,11 +430,13 @@ jobs:
 
           cp mpv-easy-js/* release/
           # cp mpv-deno-dist/mpv-deno-windows.dll release/mpv-deno-windows.dll
-          cp mpv-easy-ext-dist/mpv-easy-ext-macos release/mpv-easy-ext-macos
+          cp mpv-easy-ext-dist/mpv-easy-ext-macos-amd64 release/mpv-easy-ext-macos-amd64
+          cp mpv-easy-ext-dist/mpv-easy-ext-macos-arm64 release/mpv-easy-ext-macos-arm64
           cp mpv-easy-ext-dist/mpv-easy-ext-linux release/mpv-easy-ext-linux
           cp mpv-easy-ext-dist/mpv-easy-ext-android release/mpv-easy-ext-android
           cp mpv-easy-ext-dist/mpv-easy-ext-windows.exe release/mpv-easy-ext-windows.exe
-          cp mpv-easy-play-with-dist/mpv-easy-play-with-macos release/mpv-easy-play-with-macos
+          cp mpv-easy-play-with-dist/mpv-easy-play-with-macos-amd64 release/mpv-easy-play-with-macos-amd64
+          cp mpv-easy-play-with-dist/mpv-easy-play-with-macos-arm64 release/mpv-easy-play-with-macos-arm64
           cp mpv-easy-play-with-dist/mpv-easy-play-with-linux release/mpv-easy-play-with-linux
           cp mpv-easy-play-with-dist/mpv-easy-play-with-android release/mpv-easy-play-with-android
           cp mpv-easy-play-with-dist/mpv-easy-play-with-windows.exe release/mpv-easy-play-with-windows.exe
