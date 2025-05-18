@@ -78,6 +78,14 @@ set -x MPV_SCRIPT_DIR /your_mpv_dir/portable_config/scripts ; pnpm run dev-copy
 | MOUSE_BTN4 | script-message mouse-wheel-down      |
 
 
+## blogs
+
+- [the easiest way to use anime4k in mpv](./blog/the-easiest-way-to-use-anime4k-in-mpv.md)
+- [how to share video subtitles](./blog/how-to-share-video-subtitles.md)
+- [maybe the simplest way to install mpv](./blog/maybe-the-simplest-way-to-install-mpv.md)
+- [mpv quick start](./blog/mpv-quick-start.md)
+- [make video clips with mpv-easy](./blog/make-video-clips-with-mpv-easy.md)
+
 ## UI
 
 ### uosc
