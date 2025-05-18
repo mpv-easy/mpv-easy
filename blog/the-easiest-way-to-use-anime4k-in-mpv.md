@@ -13,4 +13,6 @@ Thanks to `esbuild` and `babel`, we can pack all different types of resources in
 
 For more details, visit the: https://github.com/mpv-easy/mpv-easy/tree/main/mpv-anime4k
 
-Youtueb video: [mpv anime4k quick start](https://www.youtube.com/watch?v=3ijL8FEClP8)
+Youtube video: [mpv anime4k quick start](https://www.youtube.com/watch?v=3ijL8FEClP8)
+
+[![Watch the video](https://img.youtube.com/vi/3ijL8FEClP8/maxresdefault.jpg)](https://www.youtube.com/watch?v=3ijL8FEClP8)
