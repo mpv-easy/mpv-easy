@@ -61,3 +61,6 @@ flags="spline"
 ## todo
 
 - support remote video
+
+## Inspired
+- https://github.com/familyfriendlymikey/mpv-cut
