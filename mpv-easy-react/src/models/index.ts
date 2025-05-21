@@ -132,6 +132,9 @@ const store = defineStore({
     },
     setMountIndex(state, mountIndex: number) {
       state[pluginName].state.mountIndex = mountIndex
+      state[pluginName].state = {
+        ...state[pluginName].state,
+      }
       return { ...state }
     },
     setPlaylistHide(state, hide: boolean) {

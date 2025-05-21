@@ -5,3 +5,4 @@
 - [maybe the simplest way to install mpv](./maybe-the-simplest-way-to-install-mpv.md)
 - [mpv quick start](./mpv-quick-start.md)
 - [make video clips with mpv-easy](./make-video-clips-with-mpv-easy.md)
+- [mount any playable link](./mount-any-playable-link.md)
