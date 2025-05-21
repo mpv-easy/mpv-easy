@@ -6,6 +6,7 @@ export type WebdavItem = {
 }
 export async function webdavList(
   url: string,
+  auth?: string,
   depth = 1,
 ): Promise<WebdavItem[]> {
   const body = `<?xml version="1.0" encoding="utf-8" ?>
@@ -16,11 +17,19 @@ export async function webdavList(
     .trim()
     .replaceAll("\n", " ")
 
+  const headers: {
+    depth: string
+    Authorization?: string
+  } = {
+    depth: depth.toString(),
+  }
+  if (auth) {
+    const encoded = Buffer.from(auth).toString("base64")
+    headers.Authorization = `Basic ${encoded}`
+  }
   const xmlString = await fetch(url, {
     method: "PROPFIND",
-    headers: {
-      depth: depth.toString(),
-    },
+    headers,
     body,
   }).then((r) => r.text())
 

@@ -23,8 +23,16 @@ export async function fetchByExt(
   }
 }
 
-export function webdavList(url: string, exe = getRsExtExePath()) {
-  const s = execSync([exe, "webdav", "list", JSON.stringify(url)])
+export function webdavList(
+  url: string,
+  auth?: string,
+  exe = getRsExtExePath(),
+) {
+  const args = [exe, "webdav", "list", JSON.stringify(url)]
+  if (auth) {
+    args.push(JSON.stringify(auth))
+  }
+  const s = execSync(args)
   const status = JSON.parse(s)
   const response = status.response as { href: string }[]
   const list = response

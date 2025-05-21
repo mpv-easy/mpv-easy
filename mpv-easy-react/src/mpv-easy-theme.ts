@@ -32,6 +32,13 @@ export type ButtonStyle = {
   colorHover: string
   backgroundColorHover: string
 }
+export type Mount = {
+  url: string
+  name: string
+  username?: string
+  password?: string
+}
+
 export type ThemeStyle = {
   font: string
   fontSizeScale: number
@@ -140,6 +147,7 @@ export type EasyConfig = {
     time: number
   }
   history: { path: string; name: string }[]
+  mount: Mount[]
   player: {
     "media-title": string
     "playlist-play-index": number
@@ -169,6 +177,7 @@ export type EasyConfig = {
     playMode: PlayMode
   }
   state: {
+    mountIndex: number
     hide: boolean
     playlistHide: boolean
     historyHide: boolean
@@ -215,6 +224,7 @@ export function createDefaultThemeConfig(): EasyConfig {
     mode: "dark",
     uiName: defaultName,
     history: [],
+    mount: [],
     style: {
       dark: {
         fontSizeScale: DefaultFontSizeScale,
@@ -453,6 +463,7 @@ export const defaultState: EasyConfig["state"] = {
   cropPoints: [],
   showCrop: false,
   preview: false,
+  mountIndex: -1,
 }
 
 export const defaultPlayer: EasyConfig["player"] = {

@@ -11,6 +11,7 @@ import {
 import { ScrollList } from "./components/scroll-list"
 import { textEllipsis } from "../common"
 import { dispatch, useSelector } from "../models"
+import { isRemote } from "@mpv-easy/tool"
 
 export type PlaylistProps = {
   list: string[]
@@ -54,6 +55,12 @@ export const History = () => {
           items={history.map((i) => {
             const prefix =
               i.path === path ? ICON.Ok : ICON.CheckboxBlankCircleOutline
+            let name = i.name
+            if (isRemote(i.path)) {
+              try {
+                name = decodeURIComponent(name)
+              } catch {}
+            }
             const s = `${prefix} ${i.name}`
             const label = textEllipsis(s, historyStyle.maxTitleLength)
             const showTitle = s !== label

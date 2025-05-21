@@ -171,6 +171,9 @@ export const enablePluginsStyleSelector = (state: PluginContext) =>
 export const protocolHookSelector = (state: PluginContext) =>
   state[pluginName].config.protocolHook
 
+export const mountSelector = (state: PluginContext) => state[pluginName].mount
+export const mountIndexSelector = (state: PluginContext) =>
+  state[pluginName].state.mountIndex
 export const thumbfastSelector = (state: PluginContext) => state[thumbfastName]
 
 export const translateSelector = (state: PluginContext) => state[translateName]
