@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react"
-import { Bilibili, Jellyfin, Youtube, Twitch, Nicovideo } from "./rules"
+import { Bilibili, Jellyfin, Youtube, Twitch, Nicovideo, AList } from "./rules"
 import {
   encodeToBase64,
   MpvHeader,
@@ -17,7 +17,7 @@ export const POT_LOGO = `data:image/png;base64,${POT}`
 
 import { useLocalStorage } from "react-use"
 
-const Rules = [Bilibili, Youtube, Jellyfin, Twitch, Nicovideo]
+const Rules = [Bilibili, Youtube, Jellyfin, Twitch, Nicovideo, AList]
 
 const LocalStorageKey = "mpv-easy-play-with"
 const LoadingTime = 2000
