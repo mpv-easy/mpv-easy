@@ -10,11 +10,16 @@
   },
   "types": "./dist/index.d.ts",
   "scripts": {
-    "build": "esbuild ./src/cli.ts --bundle --outdir=./dist --platform=node"
+    "build:lib": "tsc -p ./tsconfig.build.json",
+    "build:cli": "esbuild ./src/cli.ts --bundle --outdir=./dist --platform=node",
+    "build": "pnpm run build:lib && pnpm run build:cli"
   },
   "keywords": [],
   "author": "ahaoboy <504595380@qq.com> (https://github.com/ahaoboy)",
   "license": "MIT",
+  "dependencies": {
+    "@mpv-easy/tool": "workspace:*"
+  },
   "devDependencies": {
     "cac": "6.7.14",
     "chalk": "5.4.1",
