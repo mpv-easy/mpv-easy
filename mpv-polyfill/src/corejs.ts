@@ -51,6 +51,8 @@ import {
 } from "typedarray"
 import { MessageChannel } from "./message-channel"
 import { patch } from "./tool"
+// @ts-ignore
+import URL from "url-parse"
 patch({
   TextEncoder,
   TextDecoder,
@@ -69,4 +71,5 @@ patch({
   Uint16Array,
   Uint32Array,
   MessageChannel,
+  URL,
 })

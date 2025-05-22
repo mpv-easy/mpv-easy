@@ -85,6 +85,7 @@ set -x MPV_SCRIPT_DIR /your_mpv_dir/portable_config/scripts ; pnpm run dev-copy
 - [maybe the simplest way to install mpv](./blog/maybe-the-simplest-way-to-install-mpv.md)
 - [mpv quick start](./blog/mpv-quick-start.md)
 - [make video clips with mpv-easy](./blog/make-video-clips-with-mpv-easy.md)
+- [mount any playable link](./blog/mount-any-playable-link.md)
 
 ## UI
 
