@@ -16,6 +16,7 @@ export default {
   pause: "暂停",
   play: "播放",
   playlist: "播放列表",
+  mount: "挂载",
   screenshot: "截图",
   randomPlay: "随机播放",
   listPlay: "列表播放",

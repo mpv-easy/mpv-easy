@@ -56,8 +56,17 @@ function getList(
     }
 
     try {
+      const origin = new URL(s).origin
       return webdavList(s)
-        .map((i) => normalize(s + i))
+        .map((i) =>
+          normalize(
+            origin +
+              i
+                .split("/")
+                .map((k) => encodeURIComponent(k))
+                .join("/"),
+          ),
+        )
         .filter((p) => isPlayable(p))
     } catch (e) {
       print("webdav error: ", e)
@@ -114,8 +123,8 @@ function getList(
 export async function clipboardPlay(
   context: ClipboardPlayContext,
   updatePlaylist: (list: string[], playIndex: number) => void,
+  txt: string,
 ) {
-  const txt = (await getClipboard()).trim().replace(/\\/g, "/")
   // Windows may add double quotes when copying the path
   const lines = txt
     .split("\n")
@@ -169,8 +178,9 @@ export default definePlugin((context, api) => ({
   defaultConfig: defaultConfig,
   create: () => {
     const key = context[pluginName].clipboardPlayEventName
-    registerScriptMessage(key, () => {
-      clipboardPlay(context, api.updatePlaylist)
+    registerScriptMessage(key, async () => {
+      const txt = (await getClipboard()).trim().replace(/\\/g, "/")
+      clipboardPlay(context, api.updatePlaylist, txt)
     })
   },
   destroy: () => {

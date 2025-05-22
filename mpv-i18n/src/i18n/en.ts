@@ -16,6 +16,7 @@ export default {
   pause: "pause",
   play: "play",
   playlist: "playlist",
+  mount: "mount",
   screenshot: "screenshot",
   randomPlay: "random play",
   listPlay: "list play",

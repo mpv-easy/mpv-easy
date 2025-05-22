@@ -5,8 +5,8 @@ import {
   controlSelector,
   fontSelector,
   fullscreenSelector,
-  cellSizeSelector,
   normalFontSizeSelector,
+  mountSelector,
 } from "../../store"
 import { Play } from "../components/play"
 import { Stop } from "../components/stop"
@@ -19,10 +19,9 @@ import { SubtitleTrack } from "../components/subtitle-track"
 import { AudioTrack } from "../components/audio-track"
 import { Restore } from "../components/restore"
 import { PlayMode } from "../components/play-mode"
-import { PreviousFrame } from "../components/previous-frame"
-import { NextFrame } from "../components/next-frame"
 import { History } from "../components/history"
 import { useSelector } from "../../models"
+import { Mount } from "../components/mount"
 
 export const UoscControl = (props: Partial<MpDomProps>) => {
   const { width, height } = props
@@ -31,6 +30,7 @@ export const UoscControl = (props: Partial<MpDomProps>) => {
   const fontSize = useSelector(normalFontSizeSelector)
   const font = useSelector(fontSelector)
   const fullscreen = useSelector(fullscreenSelector)
+  const mount = useSelector(mountSelector)
   return (
     <Box
       id="uosc-control"
@@ -69,11 +69,10 @@ export const UoscControl = (props: Partial<MpDomProps>) => {
         backgroundColor={control.backgroundColor}
       >
         <PlayMode />
-        {/* <PreviousFrame /> */}
         <Previous />
+        {!!mount?.length && <Mount />}
         <Playlist />
         <Next />
-        {/* <NextFrame /> */}
         {fullscreen ? <Restore /> : <Fullscreen />}
       </Box>
     </Box>

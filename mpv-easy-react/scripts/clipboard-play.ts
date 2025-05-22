@@ -1,5 +1,6 @@
 import "@mpv-easy/polyfill"
 import {
+  getClipboard,
   getOptions,
   registerScriptMessage,
   updatePlaylist,
@@ -34,5 +35,6 @@ registerScriptMessage(clipboardPlayEventName, async () => {
     [autoloadName]: autoloadConfig,
     [pluginName]: defaultConfig,
   }
-  clipboardPlay(context, updatePlaylist)
+  const txt = (await getClipboard()).trim().replace(/\\/g, "/")
+  clipboardPlay(context, updatePlaylist, txt)
 })

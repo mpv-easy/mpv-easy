@@ -1,4 +1,5 @@
 use super::cli::Cmd;
+use base64::{Engine, prelude::BASE64_STANDARD};
 use reqwest::{Method, Url, header};
 use serde_xml_rs::from_str;
 
@@ -11,6 +12,9 @@ pub struct Webdav {
 
     #[clap(required = true)]
     url: String,
+
+    #[clap(required = false)]
+    auth: Option<String>,
 }
 
 fn custom_header(name: &str, value: &str) -> header::HeaderMap {
@@ -21,8 +25,9 @@ fn custom_header(name: &str, value: &str) -> header::HeaderMap {
     );
     headers
 }
+
 #[tokio::main]
-async fn fetch_remote(path: &str) -> Multistatus {
+async fn fetch_remote(path: &str, auth: Option<String>) -> Multistatus {
     let c = reqwest::Client::new();
     let body = r#"<?xml version="1.0" encoding="utf-8" ?>
             <D:propfind xmlns:D="DAV:">
@@ -31,14 +36,17 @@ async fn fetch_remote(path: &str) -> Multistatus {
         "#;
     let method = Method::from_bytes(b"PROPFIND").unwrap();
     let depth = "1";
-    let resp = c
+    let mut resp = c
         .request(method, Url::parse(path).unwrap())
-        .headers(custom_header("depth", depth))
-        .body(body)
-        .send()
-        .await
-        .unwrap();
+        .headers(custom_header("depth", depth));
 
+    if let Some(auth) = auth {
+        let b64 = BASE64_STANDARD.encode(&auth);
+        let s = format!("Basic {}", b64);
+        resp = resp.headers(custom_header("Authorization", &s))
+    }
+
+    let resp = resp.body(body).send().await.unwrap();
     let xml = resp.text().await.unwrap();
     let status: Multistatus = from_str(&xml).unwrap();
     status
@@ -46,12 +54,14 @@ async fn fetch_remote(path: &str) -> Multistatus {
 
 impl Cmd for Webdav {
     fn call(&self) {
-        let cmd = self.cmd.as_str();
-        let url = serde_json::from_str(self.url.as_str()).unwrap();
+        let Webdav { cmd, auth, url } = self;
 
-        match cmd {
+        let url = serde_json::from_str(url).unwrap();
+        let auth = auth.clone().map(|i| serde_json::from_str::<String>(&i).unwrap());
+
+        match cmd.as_str() {
             "list" => {
-                let status = fetch_remote(url);
+                let status = fetch_remote(url, auth);
                 let s = serde_json::to_string(&status).unwrap();
                 println!("{}", s);
             }
