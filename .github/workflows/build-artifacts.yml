@@ -441,10 +441,20 @@ jobs:
           cp mpv-easy-play-with-dist/mpv-easy-play-with-android release/mpv-easy-play-with-android
           cp mpv-easy-play-with-dist/mpv-easy-play-with-windows.exe release/mpv-easy-play-with-windows.exe
 
+          7z x mpv-win.7z -ompv-windows -y
+          cd mpv-windows
+          zip -r -q ../release/mpv-windows.zip .
+          cd ..
+
           cd release
           zip -r -q ../release.zip .
           cd ..
 
+      - name: Upload mpv-windows
+        uses: actions/upload-artifact@v4
+        with:
+          name: mpv-windows
+          path: release/mpv-windows.zip
       - name: Upload mpv-easy-macos
         uses: actions/upload-artifact@v4
         with:
