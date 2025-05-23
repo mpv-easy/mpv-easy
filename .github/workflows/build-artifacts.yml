@@ -326,6 +326,9 @@ jobs:
           cp -r dist mpv-easy-windows
 
           7z x ffmpeg.7z -offmpeg -y
+          cd ffmpeg
+          zip -r -q ../release/ffmpeg-windows.zip .
+          cd ..
 
           cp mpv-easy-ext-dist/mpv-easy-ext-macos-amd64 mpv-easy-macos/scripts/mpv-easy-config/mpv-easy-ext/mpv-easy-ext-macos-amd64
           cp mpv-easy-ext-dist/mpv-easy-ext-macos-arm64 mpv-easy-macos/scripts/mpv-easy-config/mpv-easy-ext/mpv-easy-ext-macos-arm64
@@ -446,10 +449,25 @@ jobs:
           zip -r -q ../release/mpv-windows.zip .
           cd ..
 
+          mkdir yt-dlp-windows
+          cd yt-dlp-windows
+          cp yt-dlp.exe yt-dlp-windows/yt-dlp.exe
+          zip -r -q ../release/yt-dlp-windows.zip .
+          cd ..
+
           cd release
           zip -r -q ../release.zip .
           cd ..
-
+      - name: Upload yt-dlp-windows
+        uses: actions/upload-artifact@v4
+        with:
+          name: yt-dlp-windows
+          path: release/yt-dlp-windows.zip
+      - name: Upload ffmpeg-windows
+        uses: actions/upload-artifact@v4
+        with:
+          name: ffmpeg-windows
+          path: release/ffmpeg-windows.zip
       - name: Upload mpv-windows
         uses: actions/upload-artifact@v4
         with:
