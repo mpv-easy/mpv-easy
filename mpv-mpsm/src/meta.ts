@@ -1,10 +1,11 @@
 export type Meta = {
   name: string
-  version: string
+  version?: string
   description: string
   author: string
   downloadURL: string
-  updateURL: string
+  updateURL?: string
+  url?: string
 }
 
 export function getMetaByLang(
