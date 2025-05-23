@@ -450,20 +450,20 @@ jobs:
           zip -r -q ../release/mpv-windows.zip .
           cd ..
 
-          mkdir yt-dlp-windows
-          cd yt-dlp-windows
-          cp yt-dlp.exe yt-dlp-windows/yt-dlp.exe
-          zip -r -q ../release/yt-dlp-windows.zip .
-          cd ..
+          # mkdir yt-dlp-windows
+          # cd yt-dlp-windows
+          # cp yt-dlp.exe yt-dlp-windows/yt-dlp.exe
+          # zip -r -q ../release/yt-dlp-windows.zip .
+          # cd ..
 
           cd release
           zip -r -q ../release.zip .
           cd ..
-      - name: Upload yt-dlp-windows
-        uses: actions/upload-artifact@v4
-        with:
-          name: yt-dlp-windows
-          path: release/yt-dlp-windows.zip
+      # - name: Upload yt-dlp-windows
+      #   uses: actions/upload-artifact@v4
+      #   with:
+      #     name: yt-dlp-windows
+      #     path: release/yt-dlp-windows.zip
       - name: Upload ffmpeg-windows
         uses: actions/upload-artifact@v4
         with:
