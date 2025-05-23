@@ -393,6 +393,8 @@ jobs:
           mkdir -p portable_config/scripts
           mkdir -p portable_config/script-opts
           unzip ../uosc.zip -d portable_config
+          cp ../yt-dlp.exe ./yt-dlp.exe
+          cp ../ffmpeg/ffmpeg.exe ./ffmpeg.exe
           cp ../uosc.conf portable_config/script-opts/uosc.conf
           cp ../thumbfast.conf portable_config/script-opts/thumbfast.conf
           cp ../thumbfast.lua portable_config/scripts/thumbfast.lua
@@ -407,6 +409,8 @@ jobs:
           mkdir -p portable_config/scripts
           mkdir -p portable_config/script-opts
           mkdir -p portable_config/fonts
+          cp ../yt-dlp.exe ./yt-dlp.exe
+          cp ../ffmpeg/ffmpeg.exe ./ffmpeg.exe
           cp ../modernx.lua portable_config/scripts/modernx.lua
           cp ../Material-Design-Iconic-Font.ttf portable_config/fonts/Material-Design-Iconic-Font.ttf
           cp ../thumbfast.conf portable_config/script-opts/thumbfast.conf
@@ -424,6 +428,8 @@ jobs:
           mkdir -p portable_config/scripts
           mkdir -p portable_config/script-opts
           mkdir -p portable_config/fonts
+          cp ../yt-dlp.exe ./yt-dlp.exe
+          cp ../ffmpeg/ffmpeg.exe ./ffmpeg.exe
           cp ../modernz.lua portable_config/scripts/modernz.lua
           cp ../modernz.conf portable_config/scripts/modernz.conf
           cp ../fluent-system-icons.ttf portable_config/fonts/fluent-system-icons.ttf
