@@ -1,5 +1,5 @@
 {
-  "name": "mpv-build",
+  "name": "@mpv-easy/mpv-build",
   "private": true,
   "version": "0.0.0",
   "type": "module",
