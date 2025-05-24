@@ -63,3 +63,10 @@ mpv-build is a work in progress with big potential:
 
 - **Script library:** Third-party script info lives in this [GitHub repo](https://github.com/mpv-easy/mpsm-scripts), parsed from [awesome-mpv](https://github.com/stax76/awesome-mpv). That’s over 400 scripts! Most haven’t been tested yet (time’s tight), and some haven’t been updated in years.
 - **Script upgrades:** I’m planning to reimplement some scripts with `mpv-easy`. Lua scripts are tricky to bundle, but JavaScript ones? They pack into a single file, making management a breeze.
+
+
+## Related Links
+
+- https://mpv-easy.github.io/mpv-build/
+- https://github.com/mpv-easy/mpsm-scripts
+- https://github.com/mpv-easy/mpv-easy-cdn

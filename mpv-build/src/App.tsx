@@ -4,7 +4,7 @@ import type { CheckboxOptionType, GetProps } from "antd"
 const { Search } = Input
 type SearchProps = GetProps<typeof Input.Search>
 import { Button, Flex, Spin, Table, type TableProps } from "antd"
-import { DownloadOutlined } from "@ant-design/icons"
+import { DownloadOutlined, GithubOutlined } from "@ant-design/icons"
 import Fuse from "fuse.js"
 import { Tag } from "antd"
 import { Radio } from "antd"
@@ -12,7 +12,8 @@ import { decode, encode, File, Fmt, guess } from "@easy-install/easy-archive"
 import { Typography } from "antd"
 const { Title, Link } = Typography
 
-const META_URL = "https://raw.githubusercontent.com/mpv-easy/mpsm-scripts/main/meta.json"
+const META_URL =
+  "https://raw.githubusercontent.com/mpv-easy/mpsm-scripts/main/meta.json"
 
 function downloadBinaryFile(fileName: string, content: Uint8Array): void {
   const blob = new Blob([content], { type: "application/octet-stream" })
@@ -259,6 +260,14 @@ function App() {
         justify="center"
         align="center"
       >
+        <Typography.Link
+          href="https://github.com/mpv-easy/mpv-easy"
+          target="_blank"
+        >
+          <GithubOutlined
+            style={{ position: "absolute", top: "1rem", right: "1rem" }}
+          />
+        </Typography.Link>
         <Flex gap="middle" vertical justify="center" align="center">
           <Typography>
             <Title level={3}>UI</Title>
