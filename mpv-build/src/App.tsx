@@ -4,13 +4,19 @@ import type { CheckboxOptionType, GetProps } from "antd"
 const { Search } = Input
 type SearchProps = GetProps<typeof Input.Search>
 import { Button, Flex, Spin, Table, type TableProps } from "antd"
-import { DownloadOutlined, GithubOutlined } from "@ant-design/icons"
+import {
+  DownloadOutlined,
+  GithubOutlined,
+  TwitterOutlined,
+  YoutubeOutlined,
+} from "@ant-design/icons"
 import Fuse from "fuse.js"
 import { Tag } from "antd"
 import { Radio } from "antd"
 import { decode, encode, File, Fmt, guess } from "@easy-install/easy-archive"
 import { Typography } from "antd"
 const { Title, Link } = Typography
+import useSWR from "swr"
 
 const META_URL =
   "https://raw.githubusercontent.com/mpv-easy/mpsm-scripts/main/meta.json"
@@ -109,6 +115,8 @@ function App() {
   const fuseRef = useRef<Fuse<any> | null>(null)
   const [selected, setSelected] = useState<number[]>([])
   const [external, setExternal] = useState<string[]>([])
+  const [ui, setUI] = useState("mpv")
+
   const options: CheckboxOptionType<string>[] = [
     { label: "ffmpeg", value: "ffmpeg" },
     { label: "yt-dlp", value: "yt-dlp" },
@@ -242,7 +250,22 @@ function App() {
       setTable(v.map((i) => i.item))
     }
   }
-  const [ui, setUI] = useState("mpv")
+
+  if (!data.length) {
+    return (
+      <Flex
+        className="main"
+        vertical
+        gap="middle"
+        justify="center"
+        align="center"
+      >
+        <Typography>
+          <Title level={3}>Loading...</Title>
+        </Typography>
+      </Flex>
+    )
+  }
   return (
     <>
       <Flex
@@ -252,14 +275,29 @@ function App() {
         justify="center"
         align="center"
       >
-        <Typography.Link
-          href="https://github.com/mpv-easy/mpv-easy"
-          target="_blank"
+        <Flex
+          gap="middle"
+          justify="center"
+          align="center"
+          style={{ position: "absolute", top: "1rem", right: "1rem" }}
         >
-          <GithubOutlined
-            style={{ position: "absolute", top: "1rem", right: "1rem" }}
-          />
-        </Typography.Link>
+          <Typography.Link
+            href="https://github.com/mpv-easy/mpv-easy"
+            target="_blank"
+          >
+            <GithubOutlined />
+          </Typography.Link>
+          <Typography.Link
+            href="https://www.youtube.com/@mpveasy"
+            target="_blank"
+          >
+            <YoutubeOutlined />
+          </Typography.Link>
+          <Typography.Link href="https://x.com/mpv_easy" target="_blank">
+            <TwitterOutlined />
+          </Typography.Link>
+        </Flex>
+
         <Flex gap="middle" vertical justify="center" align="center">
           <Typography>
             <Title level={3}>UI</Title>
