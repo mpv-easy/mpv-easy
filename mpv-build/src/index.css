@@ -1,13 +1,11 @@
 #root {
   display: flex;
   width: 100vw;
-  height: 100vh;
   text-align: center;
 }
 
 body, html {
   width: 100vw;
-  height: 100vh;
   margin: 0;
   padding: 0;
 }
@@ -37,12 +35,11 @@ body, html {
 .main {
   display: flex;
   width: 100vw;
-  height: 100vh;
   justify-content: center;
   align-items: center;
   flex-direction: column;
 }
 
 .table {
-  width: 100vw;
+  width: 100%;
 }
