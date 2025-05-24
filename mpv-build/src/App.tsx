@@ -17,6 +17,13 @@ import { decode, encode, File, Fmt, guess } from "@easy-install/easy-archive"
 import { Typography } from "antd"
 const { Title, Link } = Typography
 import { Meta } from "@mpv-easy/mpsm"
+import { notification } from "antd"
+
+const MAX_SCRIPT_COUNT = 16
+
+interface DataType extends Meta {
+  key: number
+}
 
 const META_URL =
   "https://raw.githubusercontent.com/mpv-easy/mpsm-scripts/main/meta.json"
@@ -105,13 +112,14 @@ async function getScriptFiles(meta: Meta): Promise<File[]> {
 }
 
 function App() {
-  const [data, setData] = useState<Meta[]>([])
-  const [table, setTable] = useState<Meta[]>([])
+  const [data, setData] = useState<DataType[]>([])
+  const [table, setTable] = useState<DataType[]>([])
   const [spinning, setSpinning] = useState(false)
   const fuseRef = useRef<Fuse<any> | null>(null)
   const [selected, setSelected] = useState<number[]>([])
   const [external, setExternal] = useState<string[]>([])
   const [ui, setUI] = useState("mpv")
+  const [api, contextHolder] = notification.useNotification()
 
   const options: CheckboxOptionType<string>[] = [
     { label: "ffmpeg", value: "ffmpeg" },
@@ -201,9 +209,8 @@ function App() {
     fetch(META_URL)
       .then((i) => i.text())
       .then((text) => {
-        const data: Meta[] = Object.values(JSON.parse(text))
+        const data: DataType[] = Object.values(JSON.parse(text))
         for (let i = 0; i < data.length; i++) {
-          // @ts-ignore
           data[i].key = i
         }
         setData(data)
@@ -214,7 +221,7 @@ function App() {
       })
   }, [])
 
-  const columns: TableProps<Meta>["columns"] = [
+  const columns: TableProps<DataType>["columns"] = [
     {
       title: "name",
       dataIndex: "name",
@@ -226,6 +233,7 @@ function App() {
           </Link>
         )
       },
+      width: 250,
     },
     {
       title: "description",
@@ -263,6 +271,7 @@ function App() {
   }
   return (
     <>
+      {contextHolder}
       <Flex
         className="main"
         vertical
@@ -332,13 +341,21 @@ function App() {
           onSearch={onSearch}
           enterButton
         />
-        <Table<Meta>
+        <Table<DataType>
           rowSelection={{
             type: "checkbox",
-            onChange: (selectedRowKeys: React.Key[], selectedRows: Meta[]) => {
-              setSelected([...selected, +selectedRowKeys])
+            onChange: (selectedRowKeys: React.Key[]) => {
+              if (selectedRowKeys.length > MAX_SCRIPT_COUNT) {
+                api.open({
+                  message: "Too many scripts",
+                  description: `The maximum supported number of selectable scripts is ${MAX_SCRIPT_COUNT}`,
+                  duration: 3,
+                })
+                return
+              }
               setSelected(selectedRowKeys as number[])
             },
+            selectedRowKeys: selected,
           }}
           className="table"
           columns={columns}
@@ -352,7 +369,6 @@ function App() {
                 // TODO: support delete tag
                 // closable
                 color="success"
-                // @ts-ignore
                 key={data[i].key}
               >
                 {data[i].name}
