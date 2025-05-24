@@ -4,8 +4,6 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "update:meta": "bun ./scripts/update.ts",
-    "merge:meta": "bun ./scripts/merge.ts",
     "dev": "vite",
     "build": "vite build"
   },
