@@ -366,10 +366,18 @@ function App() {
           {selected.map((i) => {
             return (
               <Tag
-                // TODO: support delete tag
-                // closable
+                closable
                 color="success"
                 key={data[i].key}
+                onClose={(e) => {
+                  const index = selected.indexOf(data[i].key)
+                  if (index !== -1) {
+                    const v = [...selected]
+                    v.splice(index, 1)
+                    setSelected(v)
+                  }
+                  e.preventDefault()
+                }}
               >
                 {data[i].name}
               </Tag>
