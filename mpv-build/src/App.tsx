@@ -16,7 +16,7 @@ import { Radio } from "antd"
 import { decode, encode, File, Fmt, guess } from "@easy-install/easy-archive"
 import { Typography } from "antd"
 const { Title, Link } = Typography
-import useSWR from "swr"
+import { Meta } from "@mpv-easy/mpsm"
 
 const META_URL =
   "https://raw.githubusercontent.com/mpv-easy/mpsm-scripts/main/meta.json"
@@ -32,15 +32,6 @@ function downloadBinaryFile(fileName: string, content: Uint8Array): void {
   a.click()
   document.body.removeChild(a)
   URL.revokeObjectURL(url)
-}
-
-export type Meta = {
-  name: string
-  description: string
-  author: string
-  downloadURL: string
-  url: string
-  key: number
 }
 
 const MPV_UI = [
@@ -207,6 +198,7 @@ function App() {
       .then((text) => {
         const data: Meta[] = Object.values(JSON.parse(text))
         for (let i = 0; i < data.length; i++) {
+          // @ts-ignore
           data[i].key = i
         }
         setData(data)
@@ -358,6 +350,7 @@ function App() {
                 // TODO: support delete tag
                 // closable
                 color="success"
+                // @ts-ignore
                 key={data[i].key}
               >
                 {data[i].name}
