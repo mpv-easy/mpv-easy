@@ -47,13 +47,13 @@ Curious about the magic behind it? mpv-build keeps things simple and server-free
 
 ## Benefits of mpv-build
 
-mpv-build isn’t just convenient—it’s a game-changer for different users:
+mpv-build is convenient for different users:
 
 - **For developers:**
    It creates a stable bug-testing environment. Download the same config on any machine, and if a plugin clash happens, it’s easy to reproduce and fix.
 
 - **For beginners:**
-   No config? No problem—you’ll get a barebones MPV. Plus, using a GUI to add plugins and extensions beats wrestling with the command line any day.
+   No config? No problem—you’ll get a origin MPV. Plus, using a GUI to add plugins and extensions beats wrestling with the command line any day.
 
 ---
 

@@ -74,7 +74,6 @@ async function downloadBinary(url: string): Promise<Uint8Array> {
 }
 
 async function getScriptFiles(meta: Meta): Promise<File[]> {
-  console.log("getScriptFiles", meta)
   let name = meta.name
   const { downloadURL } = meta
   if (downloadURL.endsWith("master.zip") || downloadURL.endsWith("main.zip")) {
@@ -89,8 +88,6 @@ async function getScriptFiles(meta: Meta): Promise<File[]> {
 
   const url = `https://raw.githubusercontent.com/mpv-easy/mpv-easy-cdn/main/${name}`
   const bin = await downloadBinary(url)
-
-  console.log("download script: ", meta, name, url)
 
   if (downloadURL.endsWith("master.zip") || downloadURL.endsWith("main.zip")) {
     const v = decode(guess(name)!, bin)!.filter((i) => !i.isDir)
@@ -111,7 +108,6 @@ function App() {
   const [spinning, setSpinning] = useState(false)
   const fuseRef = useRef<Fuse<any> | null>(null)
   const [selected, setSelected] = useState<number[]>([])
-  // const [external, setExternal] = useState<string[]>(['ffmpeg', 'yt-dlp'])
   const [external, setExternal] = useState<string[]>([])
   const options: CheckboxOptionType<string>[] = [
     { label: "ffmpeg", value: "ffmpeg" },
@@ -126,13 +122,11 @@ function App() {
     // ui
     const uiBinary = await downloadBinary(uiUrl)
     const fmt = guess(uiUrl)
-    console.log("fmt", fmt)
     if (!fmt) {
       console.log("fmt error")
       return
     }
     const uiFiles = decode(fmt, uiBinary)
-    console.log("uiFiles", uiFiles)
     if (!uiFiles) {
       console.log("uiFiles error")
       return
@@ -191,7 +185,6 @@ function App() {
     return zipBinary
   }
   const download = async () => {
-    console.log("download", ui, selected)
     setSpinning(true)
     const zipBinary = await zipAll()
     setSpinning(false)
@@ -246,7 +239,6 @@ function App() {
 
     const v = fuseRef.current?.search(value)
     if (v?.length) {
-      console.log(v)
       setTable(v.map((i) => i.item))
     }
   }
