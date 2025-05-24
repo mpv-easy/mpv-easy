@@ -1,7 +1,8 @@
+import React from "react"
 import { createRoot } from "react-dom/client"
 // @ts-ignore
 import "./index.css"
-import App from "./App.tsx"
+import App from "./App"
 import { ConfigProvider, theme } from "antd"
 const { defaultAlgorithm, darkAlgorithm } = theme
 import "@ant-design/v5-patch-for-react-19"

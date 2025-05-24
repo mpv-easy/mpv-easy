@@ -38,22 +38,27 @@ const MPV_UI = [
   {
     name: "mpv",
     url: "https://raw.githubusercontent.com/mpv-easy/mpv-easy-cdn/main/mpv-windows.tar.xz",
+    repo: "https://github.com/mpv-player/mpv",
   },
   {
     name: "mpv-uosc",
     url: "https://raw.githubusercontent.com/mpv-easy/mpv-easy-cdn/main/mpv-uosc-windows-full.tar.xz",
+    repo: "https://github.com/tomasklaen/uosc",
   },
   {
     name: "mpv-easy",
     url: "https://raw.githubusercontent.com/mpv-easy/mpv-easy-cdn/main/mpv-easy-windows-full.tar.xz",
+    repo: "https://github.com/mpv-easy/mpv-easy",
   },
   {
     name: "mpv-modernx",
     url: "https://raw.githubusercontent.com/mpv-easy/mpv-easy-cdn/main/mpv-modernx-windows-full.tar.xz",
+    repo: "https://github.com/cyl0/ModernX",
   },
   {
     name: "mpv-modernz",
     url: "https://raw.githubusercontent.com/mpv-easy/mpv-easy-cdn/main/mpv-modernz-windows-full.tar.xz",
+    repo: "https://github.com/Samillion/ModernZ",
   },
 ]
 
@@ -235,8 +240,6 @@ function App() {
   ]
 
   const onSearch: SearchProps["onSearch"] = (value, _e, info) => {
-    console.log(info?.source, value)
-
     const v = fuseRef.current?.search(value)
     if (v?.length) {
       setTable(v.map((i) => i.item))
@@ -299,11 +302,16 @@ function App() {
               setUI(e.target.value)
             }}
             value={ui}
-            options={MPV_UI.map((i) => ({
-              value: i.name,
-              label: i.name,
-            }))}
-          />
+          >
+            {MPV_UI.map((i) => (
+              <Radio value={i.name} key={i.url}>
+                <Typography.Link href={i.repo} target="_blank">
+                  {" "}
+                  {i.name}
+                </Typography.Link>
+              </Radio>
+            ))}
+          </Radio.Group>
         </Flex>
 
         <Flex gap="middle" vertical justify="center" align="center">
@@ -328,12 +336,6 @@ function App() {
           rowSelection={{
             type: "checkbox",
             onChange: (selectedRowKeys: React.Key[], selectedRows: Meta[]) => {
-              console.log(
-                selectedRowKeys,
-                `selectedRowKeys: ${selectedRowKeys}`,
-                "selectedRows: ",
-                selectedRows,
-              )
               setSelected([...selected, +selectedRowKeys])
               setSelected(selectedRowKeys as number[])
             },
