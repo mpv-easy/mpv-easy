@@ -1,6 +1,6 @@
-import { useEffect, useRef, useState } from "react"
-import { Input } from "antd"
-import type { GetProps } from "antd"
+import React, { useEffect, useRef, useState } from "react"
+import { Checkbox, Input } from "antd"
+import type { CheckboxOptionType, GetProps } from "antd"
 const { Search } = Input
 type SearchProps = GetProps<typeof Input.Search>
 import { Button, Flex, Spin, Table, type TableProps } from "antd"
@@ -9,10 +9,12 @@ import Fuse from "fuse.js"
 import { Tag } from "antd"
 import { Radio } from "antd"
 import { decode, encode, File, Fmt, guess } from "@easy-install/easy-archive"
-// @ts-ignore
-import META from "../meta.json?raw"
+import { Typography } from "antd"
+const { Title, Link } = Typography
 
-function downloadBinaryFile(fileName: string, content: ArrayBuffer): void {
+const META_URL = "https://raw.githubusercontent.com/mpv-easy/mpsm-scripts/main/meta.json"
+
+function downloadBinaryFile(fileName: string, content: Uint8Array): void {
   const blob = new Blob([content], { type: "application/octet-stream" })
   const url = URL.createObjectURL(blob)
   const a = document.createElement("a")
@@ -61,6 +63,8 @@ const FFMPEG_URL =
   "https://raw.githubusercontent.com/mpv-easy/mpv-easy-cdn/main/ffmpeg-windows.zip"
 const YT_DLP_URL =
   "https://raw.githubusercontent.com/mpv-easy/mpv-easy-cdn/main/yt-dlp.exe"
+const PLAY_WITH_URL =
+  "https://raw.githubusercontent.com/mpv-easy/mpv-easy-cdn/main/mpv-easy-play-with-windows.exe"
 
 async function downloadBinary(url: string): Promise<Uint8Array> {
   return fetch(url)
@@ -106,7 +110,13 @@ function App() {
   const [spinning, setSpinning] = useState(false)
   const fuseRef = useRef<Fuse<any> | null>(null)
   const [selected, setSelected] = useState<number[]>([])
-
+  // const [external, setExternal] = useState<string[]>(['ffmpeg', 'yt-dlp'])
+  const [external, setExternal] = useState<string[]>([])
+  const options: CheckboxOptionType<string>[] = [
+    { label: "ffmpeg", value: "ffmpeg" },
+    { label: "yt-dlp", value: "yt-dlp" },
+    { label: "play-with", value: "play-with" },
+  ]
   const zipAll = async () => {
     const uiUrl = MPV_UI.find((i) => i.name === ui)?.url
     if (!uiUrl) {
@@ -139,22 +149,31 @@ function App() {
       }
     }
 
-    // ffmpeg and ytdlp
-    // const ffmpegBinary = await downloadBinary(FFMPEG_URL);
-    // const ytdlpBinary = await downloadBinary(YT_DLP_URL);
+    // ffmpeg
+    if (external.includes("ffmpeg")) {
+      const ffmpegBinary = await downloadBinary(FFMPEG_URL)
+      const ffmpegFiles = decode(guess(FFMPEG_URL)!, ffmpegBinary)!
+      for (const { path, mode, isDir, buffer } of ffmpegFiles) {
+        if (isDir) {
+          continue
+        }
+        v.push(new File(path, buffer, mode, isDir))
+      }
+    }
 
-    // const ffmpegFiles = decode(guess(FFMPEG_URL)!, ffmpegBinary)!
+    // yt-dlp
+    if (external.includes("yt-dlp")) {
+      const bin = await downloadBinary(YT_DLP_URL)
+      v.push(new File("yt-dlp.exe", bin, null, false))
+    }
 
-    // for (const { path, mode, isDir, buffer } of ffmpegFiles) {
-    //   if (isDir) {
-    //     continue
-    //   }
-    //   v.push(new File(path, buffer, mode, isDir));
-    // }
-    // v.push(new File("yt-dlp.exe", ytdlpBinary, null, false));
+    // play-with
+    if (external.includes("play-with")) {
+      const bin = await downloadBinary(PLAY_WITH_URL)
+      v.push(new File("play-with.exe", bin, null, false))
+    }
 
     // scripts
-    console.log("selected", selected)
     for (const i of selected) {
       const files = await getScriptFiles(data[i])
       for (const i of files) {
@@ -181,15 +200,19 @@ function App() {
   }
 
   useEffect(() => {
-    const data: Meta[] = Object.values(JSON.parse(META))
-    for (let i = 0; i < data.length; i++) {
-      data[i].key = i
-    }
-    setData(data)
-    setTable([...data].sort(() => 0.5 - Math.random()))
-    fuseRef.current = new Fuse(data, {
-      keys: ["name"],
-    })
+    fetch(META_URL)
+      .then((i) => i.text())
+      .then((text) => {
+        const data: Meta[] = Object.values(JSON.parse(text))
+        for (let i = 0; i < data.length; i++) {
+          data[i].key = i
+        }
+        setData(data)
+        setTable([...data].sort(() => 0.5 - Math.random()))
+        fuseRef.current = new Fuse(data, {
+          keys: ["name"],
+        })
+      })
   }, [])
 
   const columns: TableProps<Meta>["columns"] = [
@@ -199,9 +222,9 @@ function App() {
       key: "key",
       render: (_, i) => {
         return (
-          <a href={i.url} target="_blank" rel="noreferrer">
+          <Link href={i.url} target="_blank" rel="noreferrer">
             {i.name}
-          </a>
+          </Link>
         )
       },
     },
@@ -236,16 +259,34 @@ function App() {
         justify="center"
         align="center"
       >
-        <Radio.Group
-          onChange={(e) => {
-            setUI(e.target.value)
-          }}
-          value={ui}
-          options={MPV_UI.map((i) => ({
-            value: i.name,
-            label: i.name,
-          }))}
-        />
+        <Flex gap="middle" vertical justify="center" align="center">
+          <Typography>
+            <Title level={3}>UI</Title>
+          </Typography>
+          <Radio.Group
+            onChange={(e) => {
+              setUI(e.target.value)
+            }}
+            value={ui}
+            options={MPV_UI.map((i) => ({
+              value: i.name,
+              label: i.name,
+            }))}
+          />
+        </Flex>
+
+        <Flex gap="middle" vertical justify="center" align="center">
+          <Typography>
+            <Title level={3}>External</Title>
+          </Typography>
+          <Checkbox.Group
+            value={external}
+            options={options}
+            onChange={(e) => {
+              setExternal(e)
+            }}
+          />
+        </Flex>
 
         <Search
           placeholder="input search text"
@@ -279,11 +320,6 @@ function App() {
                 // closable
                 color="success"
                 key={data[i].key}
-                onClose={(e) => {
-                  console.log(e)
-                  // const i = selected.indexOf()
-                  e.preventDefault()
-                }}
               >
                 {data[i].name}
               </Tag>
