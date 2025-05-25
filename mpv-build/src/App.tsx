@@ -43,13 +43,13 @@ interface Store {
   data: Record<string, DataType>
   tableData: DataType[]
   spinning: boolean
-  selectedKeys: string[]
+  selectedRowKeys: string[]
   externalList: string[]
   ui: UI
   setData: (data: Record<string, DataType>) => void
   setTableData: (tableData: DataType[]) => void
   setSpinning: (spinning: boolean) => void
-  setSelectedKeys: (selectedKeys: string[]) => void
+  setSelectedKeys: (selectedRowKeys: string[]) => void
   setExternalList: (externalList: string[]) => void
   setUI: (ui: UI) => void
 }
@@ -60,14 +60,14 @@ const useMpvStore = create<Store>()(
       data: {},
       tableData: [],
       spinning: false,
-      selectedKeys: [],
+      selectedRowKeys: [],
       externalList: [],
       ui: "mpv",
       setData: (data: Record<string, DataType>) => set({ ...get(), data }),
       setTableData: (tableData: DataType[]) => set({ ...get(), tableData }),
       setSpinning: (spinning: boolean) => set({ ...get(), spinning }),
-      setSelectedKeys: (selectedKeys: string[]) =>
-        set({ ...get(), selectedKeys }),
+      setSelectedKeys: (selectedRowKeys: string[]) =>
+        set({ ...get(), selectedRowKeys }),
       setExternalList: (externalList: string[]) =>
         set({ ...get(), externalList }),
       setUI: (ui: UI) => set({ ...get(), ui }),
@@ -168,10 +168,12 @@ async function getScriptFiles(meta: Meta): Promise<File[]> {
 
   if (downloadURL.endsWith("master.zip") || downloadURL.endsWith("main.zip")) {
     const v = decode(guess(name)!, bin)!.filter((i) => !i.isDir)
-    return v.map(
-      ({ path, mode, isDir, buffer }) =>
-        new File(`portable_config/scripts/${path}`, buffer, mode, isDir),
-    )
+    return v.map(({ path, mode, isDir, buffer }) => {
+      const filePath = path.endsWith(".conf")
+        ? `portable_config/script-opts/${path}`
+        : `portable_config/scripts/${path}`
+      return new File(filePath, buffer, mode, isDir)
+    })
   }
   if (name.endsWith(".js") || name.endsWith(".lua")) {
     return [new File(`portable_config/scripts/${name}`, bin, null, false)]
@@ -186,7 +188,7 @@ function App() {
     data,
     tableData,
     spinning,
-    selectedKeys,
+    selectedRowKeys,
     externalList,
     ui,
     setData,
@@ -258,7 +260,7 @@ function App() {
     }
 
     // scripts
-    for (const i of selectedKeys) {
+    for (const i of selectedRowKeys) {
       const files = await getScriptFiles(data[i])
       for (const i of files) {
         v.push(i)
@@ -293,10 +295,10 @@ function App() {
 
     setData(data)
 
-    const selectedData = selectedKeys.map((i) => data[i])
+    const selectedData = selectedRowKeys.map((i) => data[i])
     const tableData = Object.values(data)
       .sort(() => 0.5 - Math.random())
-      .filter((i) => !selectedKeys.includes(i.name))
+      .filter((i) => !selectedRowKeys.includes(i.name))
 
     setTableData([...selectedData, ...tableData])
     fuseRef.current = new Fuse(Object.values(data), {
@@ -438,7 +440,7 @@ function App() {
               }
               setSelectedKeys(selectedRowKeys as string[])
             },
-            selectedRowKeys: selectedKeys,
+            selectedRowKeys,
           }}
           className="table"
           columns={columns}
@@ -446,16 +448,16 @@ function App() {
         />
         <Spin spinning={spinning} fullscreen />
         <Flex>
-          {selectedKeys.map((i) => {
+          {selectedRowKeys.map((i) => {
             return (
               <Tag
                 closable
                 color="success"
                 key={data[i].key}
                 onClose={(e) => {
-                  const index = selectedKeys.indexOf(data[i].key)
+                  const index = selectedRowKeys.indexOf(data[i].key)
                   if (index !== -1) {
-                    const v = [...selectedKeys]
+                    const v = [...selectedRowKeys]
                     v.splice(index, 1)
                     setSelectedKeys(v)
                   }
