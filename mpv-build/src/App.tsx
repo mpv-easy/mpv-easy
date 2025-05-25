@@ -178,6 +178,9 @@ async function getScriptFiles(meta: Meta): Promise<File[]> {
   if (name.endsWith(".js") || name.endsWith(".lua")) {
     return [new File(`portable_config/scripts/${name}`, bin, null, false)]
   }
+  if (name.endsWith(".conf")) {
+    return [new File(`portable_config/script-opts/${name}`, bin, null, false)]
+  }
   return []
 }
 
