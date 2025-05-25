@@ -18,11 +18,77 @@ import { Typography } from "antd"
 const { Title, Link } = Typography
 import { Meta } from "@mpv-easy/mpsm"
 import { notification } from "antd"
+import { useMount } from "react-use"
+import { create } from "zustand"
+import { persist, StateStorage, createJSONStorage } from "zustand/middleware"
 
-const MAX_SCRIPT_COUNT = 16
+const hashStorage: StateStorage = {
+  getItem: (key): string => {
+    const searchParams = new URLSearchParams(location.hash.slice(1))
+    const storedValue = searchParams.get(key) ?? ""
+    return JSON.parse(storedValue)
+  },
+  setItem: (key, newValue): void => {
+    const searchParams = new URLSearchParams(location.hash.slice(1))
+    searchParams.set(key, JSON.stringify(newValue))
+    location.hash = searchParams.toString()
+  },
+  removeItem: (key): void => {
+    const searchParams = new URLSearchParams(location.hash.slice(1))
+    searchParams.delete(key)
+    location.hash = searchParams.toString()
+  },
+}
+interface Store {
+  data: Record<string, DataType>
+  tableData: DataType[]
+  spinning: boolean
+  selectedRowKeys: string[]
+  externalList: string[]
+  ui: UI
+  setData: (data: Record<string, DataType>) => void
+  setTableData: (tableData: DataType[]) => void
+  setSpinning: (spinning: boolean) => void
+  setSelectedKeys: (selectedRowKeys: string[]) => void
+  setExternalList: (externalList: string[]) => void
+  setUI: (ui: UI) => void
+}
+
+const useMpvStore = create<Store>()(
+  persist(
+    (set, get) => ({
+      data: {},
+      tableData: [],
+      spinning: false,
+      selectedRowKeys: [],
+      externalList: [],
+      ui: "mpv",
+      setData: (data: Record<string, DataType>) => set({ ...get(), data }),
+      setTableData: (tableData: DataType[]) => set({ ...get(), tableData }),
+      setSpinning: (spinning: boolean) => set({ ...get(), spinning }),
+      setSelectedKeys: (selectedRowKeys: string[]) =>
+        set({ ...get(), selectedRowKeys }),
+      setExternalList: (externalList: string[]) =>
+        set({ ...get(), externalList }),
+      setUI: (ui: UI) => set({ ...get(), ui }),
+    }),
+    {
+      name: "mpv-build-storage",
+      storage: createJSONStorage(() => hashStorage),
+      partialize: (state) =>
+        Object.fromEntries(
+          Object.entries(state).filter(
+            ([key]) => !["data", "tableData", "spinning"].includes(key),
+          ),
+        ),
+    },
+  ),
+)
+
+const MAX_SCRIPT_COUNT = 32
 
 interface DataType extends Meta {
-  key: number
+  key: string
 }
 
 const META_URL =
@@ -67,7 +133,9 @@ const MPV_UI = [
     url: "https://raw.githubusercontent.com/mpv-easy/mpv-easy-cdn/main/mpv-modernz-windows-full.tar.xz",
     repo: "https://github.com/Samillion/ModernZ",
   },
-]
+] as const
+
+type UI = (typeof MPV_UI)[number]["name"]
 
 const FFMPEG_URL =
   "https://raw.githubusercontent.com/mpv-easy/mpv-easy-cdn/main/ffmpeg-windows.zip"
@@ -100,25 +168,39 @@ async function getScriptFiles(meta: Meta): Promise<File[]> {
 
   if (downloadURL.endsWith("master.zip") || downloadURL.endsWith("main.zip")) {
     const v = decode(guess(name)!, bin)!.filter((i) => !i.isDir)
-    return v.map(
-      ({ path, mode, isDir, buffer }) =>
-        new File(`portable_config/scripts/${path}`, buffer, mode, isDir),
-    )
+    return v.map(({ path, mode, isDir, buffer }) => {
+      const filePath = path.endsWith(".conf")
+        ? `portable_config/script-opts/${path}`
+        : `portable_config/scripts/${path}`
+      return new File(filePath, buffer, mode, isDir)
+    })
   }
   if (name.endsWith(".js") || name.endsWith(".lua")) {
     return [new File(`portable_config/scripts/${name}`, bin, null, false)]
+  }
+  if (name.endsWith(".conf")) {
+    return [new File(`portable_config/script-opts/${name}`, bin, null, false)]
   }
   return []
 }
 
 function App() {
-  const [data, setData] = useState<DataType[]>([])
-  const [table, setTable] = useState<DataType[]>([])
-  const [spinning, setSpinning] = useState(false)
+  const store = useMpvStore()
   const fuseRef = useRef<Fuse<any> | null>(null)
-  const [selected, setSelected] = useState<number[]>([])
-  const [external, setExternal] = useState<string[]>([])
-  const [ui, setUI] = useState("mpv")
+  const {
+    data,
+    tableData,
+    spinning,
+    selectedRowKeys,
+    externalList,
+    ui,
+    setData,
+    setTableData,
+    setSpinning,
+    setUI,
+    setSelectedKeys,
+    setExternalList,
+  } = store
   const [api, contextHolder] = notification.useNotification()
 
   const options: CheckboxOptionType<string>[] = [
@@ -157,7 +239,7 @@ function App() {
     }
 
     // ffmpeg
-    if (external.includes("ffmpeg")) {
+    if (externalList.includes("ffmpeg")) {
       const ffmpegBinary = await downloadBinary(FFMPEG_URL)
       const ffmpegFiles = decode(guess(FFMPEG_URL)!, ffmpegBinary)!
       for (const { path, mode, isDir, buffer } of ffmpegFiles) {
@@ -169,19 +251,19 @@ function App() {
     }
 
     // yt-dlp
-    if (external.includes("yt-dlp")) {
+    if (externalList.includes("yt-dlp")) {
       const bin = await downloadBinary(YT_DLP_URL)
       v.push(new File("yt-dlp.exe", bin, null, false))
     }
 
     // play-with
-    if (external.includes("play-with")) {
+    if (externalList.includes("play-with")) {
       const bin = await downloadBinary(PLAY_WITH_URL)
       v.push(new File("play-with.exe", bin, null, false))
     }
 
     // scripts
-    for (const i of selected) {
+    for (const i of selectedRowKeys) {
       const files = await getScriptFiles(data[i])
       for (const i of files) {
         v.push(i)
@@ -205,21 +287,27 @@ function App() {
     }
   }
 
-  useEffect(() => {
-    fetch(META_URL)
+  useMount(async () => {
+    const data: Record<string, DataType> = await fetch(META_URL)
       .then((i) => i.text())
-      .then((text) => {
-        const data: DataType[] = Object.values(JSON.parse(text))
-        for (let i = 0; i < data.length; i++) {
-          data[i].key = i
-        }
-        setData(data)
-        setTable([...data].sort(() => 0.5 - Math.random()))
-        fuseRef.current = new Fuse(data, {
-          keys: ["name"],
-        })
-      })
-  }, [])
+      .then((text) => JSON.parse(text))
+
+    for (const i in data) {
+      data[i].key = i
+    }
+
+    setData(data)
+
+    const selectedData = selectedRowKeys.map((i) => data[i])
+    const tableData = Object.values(data)
+      .sort(() => 0.5 - Math.random())
+      .filter((i) => !selectedRowKeys.includes(i.name))
+
+    setTableData([...selectedData, ...tableData])
+    fuseRef.current = new Fuse(Object.values(data), {
+      keys: ["name"],
+    })
+  })
 
   const columns: TableProps<DataType>["columns"] = [
     {
@@ -250,11 +338,11 @@ function App() {
   const onSearch: SearchProps["onSearch"] = (value, _e, info) => {
     const v = fuseRef.current?.search(value)
     if (v?.length) {
-      setTable(v.map((i) => i.item))
+      setTableData(v.map((i) => i.item))
     }
   }
 
-  if (!data.length) {
+  if (!Object.keys(data).length) {
     return (
       <Flex
         className="main"
@@ -328,10 +416,10 @@ function App() {
             <Title level={3}>External</Title>
           </Typography>
           <Checkbox.Group
-            value={external}
+            value={externalList}
             options={options}
             onChange={(e) => {
-              setExternal(e)
+              setExternalList(e)
             }}
           />
         </Flex>
@@ -353,28 +441,28 @@ function App() {
                 })
                 return
               }
-              setSelected(selectedRowKeys as number[])
+              setSelectedKeys(selectedRowKeys as string[])
             },
-            selectedRowKeys: selected,
+            selectedRowKeys,
           }}
           className="table"
           columns={columns}
-          dataSource={table}
+          dataSource={tableData}
         />
         <Spin spinning={spinning} fullscreen />
         <Flex>
-          {selected.map((i) => {
+          {selectedRowKeys.map((i) => {
             return (
               <Tag
                 closable
                 color="success"
                 key={data[i].key}
                 onClose={(e) => {
-                  const index = selected.indexOf(data[i].key)
+                  const index = selectedRowKeys.indexOf(data[i].key)
                   if (index !== -1) {
-                    const v = [...selected]
+                    const v = [...selectedRowKeys]
                     v.splice(index, 1)
-                    setSelected(v)
+                    setSelectedKeys(v)
                   }
                   e.preventDefault()
                 }}
