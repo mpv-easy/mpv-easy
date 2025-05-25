@@ -75,6 +75,7 @@ const useMpvStore = create<Store>()(
     {
       name: "mpv-build-storage",
       storage: createJSONStorage(() => hashStorage),
+      version: undefined,
       partialize: (state) =>
         Object.fromEntries(
           Object.entries(state).filter(
