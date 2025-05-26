@@ -1,17 +1,19 @@
-export type Meta = {
+export type Script = {
   name: string
-  version?: string
-  description: string
-  author: string
   downloadURL: string
+  version?: string
+  description?: string
+  author?: string
   updateURL?: string
-  url?: string
+  homepage?: string
+  license?: string
+  keywords?: string[]
 }
 
-export function getMetaByLang(
+export function getScriptByLang(
   text: string,
   lang: "js" | "lua",
-): undefined | Meta {
+): undefined | Script {
   const jsBlocksReg =
     /\B(\/\/ ==UserScript==\r?\n([\S\s]*?)\r?\n\/\/ ==\/UserScript==)([\S\s]*)/
 
@@ -27,46 +29,53 @@ export function getMetaByLang(
 
   const metas = blocks[2]
 
-  const meta = {} as Meta
+  const meta = {} as Script
   const metaArray = metas.split("\n")
   for (const i of metaArray) {
     const parts = i.match(/@([\w-]+)\s+(.+)/)
     if (parts) {
-      const name = parts[1] as keyof Meta
-      meta[name] = parts[2]
+      const name = parts[1] as keyof Script
+      if (name === "keywords") {
+        meta[name] = parts[2].split(",")
+      } else {
+        meta[name] = parts[2]
+      }
     }
   }
 
   return meta
 }
 
-export function getMeta(text: string): undefined | Meta {
-  const meta = getMetaByLang(text, "js")
-  if (meta) {
-    return meta
+export function getScript(text: string): undefined | Script {
+  const script = getScriptByLang(text, "js")
+  if (script) {
+    return script
   }
-  return getMetaByLang(text, "lua")
+  return getScriptByLang(text, "lua")
 }
 
-export function metaToString(meta: Meta, lang: "js" | "lua"): string {
+export function scriptToString(script: Script, lang: "js" | "lua"): string {
   const comment = lang === "js" ? "//" : "--"
 
   const header = "==UserScript=="
   const footer = "==/UserScript=="
   const list = [header]
-  const maxKeyLength = Object.keys(meta)
+  const maxKeyLength = Object.keys(script)
     .map((i) => i.length)
     .reduce((a, b) => Math.max(a, b), 0)
-  for (const [k, v] of Object.entries(meta)) {
+  for (let [k, v] of Object.entries(script)) {
     const space = " ".repeat(maxKeyLength - k.length + 2)
+    if (k === "keywords" && Array.isArray(v)) {
+      v = v.join(",")
+    }
     list.push(`@${k}${space}${v}`)
   }
   list.push(footer)
   return list.map((i) => `${comment} ${i}`).join("\n")
 }
 
-export function addMeta(text: string, meta: Meta): string {
-  const lang = meta.downloadURL.split(".").at(-1) as "js" | "lua"
-  const metaString = metaToString(meta, lang)
+export function addScript(text: string, script: Script): string {
+  const lang = script.downloadURL.split(".").at(-1) as "js" | "lua"
+  const metaString = scriptToString(script, lang)
   return `${metaString}\n\n${text}`
 }

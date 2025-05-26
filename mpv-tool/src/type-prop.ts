@@ -999,19 +999,19 @@ export type BoolProp =
   | "orawts"
   | "ocopy-metadata"
 
-export type Metadata = {
+export type Scriptdata = {
   compatible_brands: "mp42mp41isomavc1" | (string & {})
   creation_time: string
   major_brand: "mp42" | (string & {})
   minor_version: string
 }
 
-export type ChapterMetadata = {
+export type ChapterScriptdata = {
   title: string
 }
 
-export type VfMetadata = {}
-export type AfMetadata = {}
+export type VfScriptdata = {}
+export type AfScriptdata = {}
 export type Chapter = {
   title: number
   count: number
@@ -1569,7 +1569,7 @@ export type MsgLevel =
   | "trace"
 export type DirectoryFilterType = "video" | "audio" | "image"
 
-export type OsetMetadata = { title?: string; comment?: string }
+export type OsetScriptdata = { title?: string; comment?: string }
 
 export type Vf = {
   enabled: boolean
@@ -1578,11 +1578,11 @@ export type Vf = {
 }
 
 export type NativeProp = {
-  metadata: Metadata
-  "filtered-metadata": Metadata
-  "chapter-metadata": ChapterMetadata
-  "vf-metadata": VfMetadata
-  "af-metadata": AfMetadata
+  metadata: Scriptdata
+  "filtered-metadata": Scriptdata
+  "chapter-metadata": ChapterScriptdata
+  "vf-metadata": VfScriptdata
+  "af-metadata": AfScriptdata
   "demuxer-cache-state": DemuxerCacheState
   "chapter-list": Chapter[]
   "display-names": string[]
@@ -1636,7 +1636,7 @@ export type NativeProp = {
   "input-bindings": InputBinding[]
   "msg-level": Record<string, MsgLevel>
   "gpu-api": GpuContext[]
-  "oset-metadata": OsetMetadata
+  "oset-metadata": OsetScriptdata
   "oremove-metadata": string[]
   oacopts: Record<string, string>
   ovcopts: Record<string, string>

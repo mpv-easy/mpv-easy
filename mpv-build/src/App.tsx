@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react"
+import React, { useRef } from "react"
 import { Checkbox, Input } from "antd"
 import type { CheckboxOptionType, GetProps } from "antd"
 const { Search } = Input
@@ -16,7 +16,7 @@ import { Radio } from "antd"
 import { decode, encode, File, Fmt, guess } from "@easy-install/easy-archive"
 import { Typography } from "antd"
 const { Title, Link } = Typography
-import { Meta } from "@mpv-easy/mpsm"
+import { Script } from "@mpv-easy/mpsm"
 import { notification } from "antd"
 import { useMount } from "react-use"
 import { create } from "zustand"
@@ -46,13 +46,21 @@ interface Store {
   selectedRowKeys: string[]
   externalList: string[]
   ui: UI
+  cdn: CDN
+  platform: PLATFORM
   setData: (data: Record<string, DataType>) => void
   setTableData: (tableData: DataType[]) => void
   setSpinning: (spinning: boolean) => void
   setSelectedKeys: (selectedRowKeys: string[]) => void
   setExternalList: (externalList: string[]) => void
   setUI: (ui: UI) => void
+  setCDN: (cdn: CDN) => void
+  setPlatform: (platform: PLATFORM) => void
 }
+
+// TODO: support liunx
+const PLATFORM_LIST = ["mpv", "mpv-v3"] as const
+type PLATFORM = (typeof PLATFORM_LIST)[number]
 
 const useMpvStore = create<Store>()(
   persist(
@@ -63,6 +71,8 @@ const useMpvStore = create<Store>()(
       selectedRowKeys: [],
       externalList: [],
       ui: "mpv",
+      cdn: "github",
+      platform: "mpv-v3",
       setData: (data: Record<string, DataType>) => set({ ...get(), data }),
       setTableData: (tableData: DataType[]) => set({ ...get(), tableData }),
       setSpinning: (spinning: boolean) => set({ ...get(), spinning }),
@@ -71,6 +81,8 @@ const useMpvStore = create<Store>()(
       setExternalList: (externalList: string[]) =>
         set({ ...get(), externalList }),
       setUI: (ui: UI) => set({ ...get(), ui }),
+      setCDN: (cdn: CDN) => set({ ...get(), cdn }),
+      setPlatform: (platform: PLATFORM) => set({ ...get(), platform }),
     }),
     {
       name: "mpv-build-storage",
@@ -87,13 +99,16 @@ const useMpvStore = create<Store>()(
 )
 
 const MAX_SCRIPT_COUNT = 32
+const TITLE_WIDTH = 150
+const ITEM_WIDTH = 150
+const NAME_WIDTH = 250
 
-interface DataType extends Meta {
+interface DataType extends Script {
   key: string
 }
 
 const META_URL =
-  "https://raw.githubusercontent.com/mpv-easy/mpsm-scripts/main/meta.json"
+  "https://raw.githubusercontent.com/mpv-easy/mpsm-scripts/rfc/scripts-full.json"
 
 function downloadBinaryFile(fileName: string, content: Uint8Array): void {
   const blob = new Blob([content], { type: "application/octet-stream" })
@@ -145,44 +160,69 @@ const YT_DLP_URL =
 const PLAY_WITH_URL =
   "https://raw.githubusercontent.com/mpv-easy/mpv-easy-cdn/main/mpv-easy-play-with-windows.exe"
 
+const ExternalList = [
+  {
+    name: "ffmpeg",
+    url: FFMPEG_URL,
+  },
+  {
+    name: "yt-dlp",
+    url: YT_DLP_URL,
+  },
+  {
+    name: "play-with",
+    url: PLAY_WITH_URL,
+  },
+]
+
 async function downloadBinary(url: string): Promise<Uint8Array> {
   return fetch(url)
     .then((resp) => resp.arrayBuffer())
     .then((i) => new Uint8Array(i))
 }
 
-async function getScriptFiles(meta: Meta): Promise<File[]> {
-  let name = meta.name
-  const { downloadURL } = meta
-  if (downloadURL.endsWith("master.zip") || downloadURL.endsWith("main.zip")) {
-    name = `${meta.name}.zip`
-  } else if (downloadURL.endsWith(".js") || downloadURL.endsWith(".lua")) {
-    name = downloadURL.split("/").at(-1)!
+const CDN_LIST = ["github", "jsdelivr"] as const
+
+type CDN = (typeof CDN_LIST)[number]
+
+function getScriptDownloadURL(script: Script, cdn: CDN = "github") {
+  const { name } = script
+  if (cdn === "jsdelivr") {
+    // https://cdn.jsdelivr.net/gh/mpv-easy/mpv-easy-cdn@main/auto-save-state.zip
+    return `https://cdn.jsdelivr.net/gh/mpv-easy/mpv-easy-cdn@main/${name}.zip`
   }
+
+  return `https://raw.githubusercontent.com/mpv-easy/mpv-easy-cdn/main/${name}.zip`
+}
+
+async function getScriptFiles(script: Script): Promise<File[]> {
+  const { downloadURL, name } = script
   if (![".js", ".lua", ".zip"].some((i) => downloadURL.endsWith(i))) {
-    console.log("not support script: ", meta)
+    console.log("not support script: ", script)
     return []
   }
 
-  const url = `https://raw.githubusercontent.com/mpv-easy/mpv-easy-cdn/main/${name}`
+  const url = getScriptDownloadURL(script)
   const bin = await downloadBinary(url)
 
-  if (downloadURL.endsWith("master.zip") || downloadURL.endsWith("main.zip")) {
-    const v = decode(guess(name)!, bin)!.filter((i) => !i.isDir)
-    return v.map(({ path, mode, isDir, buffer }) => {
-      const filePath = path.endsWith(".conf")
-        ? `portable_config/script-opts/${path}`
-        : `portable_config/scripts/${path}`
-      return new File(filePath, buffer, mode, isDir)
-    })
+  // if (downloadURL.endsWith("master.zip") || downloadURL.endsWith("main.zip")) {
+  const v = decode(guess(url)!, bin)!.filter((i) => !i.isDir)
+  const files = v.map(({ path, mode, isDir, lastModified, buffer }) => {
+    const filePath = path.endsWith(".conf")
+      ? `portable_config/script-opts/${name}/${path}`
+      : `portable_config/scripts/${name}/${path}`
+    return new File(filePath, buffer, mode, isDir, lastModified)
+  })
+  const inputConf = files.find((i) => i.path === "input.conf")
+  const mpvConf = files.find((i) => i.path === "mpv.conf")
+
+  if (inputConf) {
   }
-  if (name.endsWith(".js") || name.endsWith(".lua")) {
-    return [new File(`portable_config/scripts/${name}`, bin, null, false)]
+
+  if (mpvConf) {
   }
-  if (name.endsWith(".conf")) {
-    return [new File(`portable_config/script-opts/${name}`, bin, null, false)]
-  }
-  return []
+
+  return files
 }
 
 function App() {
@@ -201,14 +241,18 @@ function App() {
     setUI,
     setSelectedKeys,
     setExternalList,
+    setCDN,
+    cdn,
+    platform,
+    setPlatform,
   } = store
   const [api, contextHolder] = notification.useNotification()
 
-  const options: CheckboxOptionType<string>[] = [
-    { label: "ffmpeg", value: "ffmpeg" },
-    { label: "yt-dlp", value: "yt-dlp" },
-    { label: "play-with", value: "play-with" },
-  ]
+  // const options: CheckboxOptionType<string>[] = [
+  //   { label: "ffmpeg", value: "ffmpeg" },
+  //   { label: "yt-dlp", value: "yt-dlp" },
+  //   { label: "play-with", value: "play-with" },
+  // ]
   const zipAll = async () => {
     const uiUrl = MPV_UI.find((i) => i.name === ui)?.url
     if (!uiUrl) {
@@ -317,12 +361,12 @@ function App() {
       key: "key",
       render: (_, i) => {
         return (
-          <Link href={i.url} target="_blank" rel="noreferrer">
+          <Link href={i.homepage} target="_blank" rel="noreferrer">
             {i.name}
           </Link>
         )
       },
-      width: 250,
+      width: NAME_WIDTH,
     },
     {
       title: "description",
@@ -333,6 +377,23 @@ function App() {
       title: "author",
       dataIndex: "author",
       key: "url",
+    },
+    {
+      title: "download",
+      dataIndex: "download",
+      key: "url",
+      render: (_, script) => {
+        return (
+          <Button
+            key={script.downloadURL}
+            icon={<DownloadOutlined />}
+            onClick={async () => {
+              const bin = await downloadBinary(getScriptDownloadURL(script))
+              downloadBinaryFile(`${script.name}.zip`, bin)
+            }}
+          />
+        )
+      },
     },
   ]
 
@@ -391,38 +452,96 @@ function App() {
           </Typography.Link>
         </Flex>
 
-        <Flex gap="middle" vertical justify="center" align="center">
-          <Typography>
-            <Title level={3}>UI</Title>
-          </Typography>
-          <Radio.Group
-            onChange={(e) => {
-              setUI(e.target.value)
-            }}
-            value={ui}
-          >
-            {MPV_UI.map((i) => (
-              <Radio value={i.name} key={i.url}>
-                <Typography.Link href={i.repo} target="_blank">
-                  {" "}
-                  {i.name}
-                </Typography.Link>
-              </Radio>
-            ))}
-          </Radio.Group>
-        </Flex>
+        <Flex gap="middle" vertical align="start">
+          <Flex gap="middle" justify="center" align="center">
+            <Typography.Title
+              level={5}
+              style={{ margin: 0, width: TITLE_WIDTH }}
+            >
+              Platform:{" "}
+            </Typography.Title>
+            <Radio.Group
+              value={platform}
+              onChange={(e) => {
+                setPlatform(e.target.value)
+              }}
+            >
+              {PLATFORM_LIST.map((i) => (
+                <Radio value={i} key={i} style={{ width: ITEM_WIDTH }}>
+                  {i}
+                </Radio>
+              ))}
+            </Radio.Group>
+          </Flex>
 
-        <Flex gap="middle" vertical justify="center" align="center">
-          <Typography>
-            <Title level={3}>External</Title>
-          </Typography>
-          <Checkbox.Group
-            value={externalList}
-            options={options}
-            onChange={(e) => {
-              setExternalList(e)
-            }}
-          />
+          <Flex gap="middle" justify="center" align="center">
+            <Typography.Title
+              level={5}
+              style={{ margin: 0, width: TITLE_WIDTH }}
+            >
+              CDN:{" "}
+            </Typography.Title>
+            <Radio.Group
+              value={cdn}
+              onChange={(e) => {
+                setCDN(e.target.value)
+              }}
+            >
+              {CDN_LIST.map((i) => (
+                <Radio value={i} key={i} style={{ width: ITEM_WIDTH }}>
+                  {i}
+                </Radio>
+              ))}
+            </Radio.Group>
+          </Flex>
+
+          <Flex gap="middle" justify="center" align="center">
+            <Typography.Title
+              level={5}
+              style={{ margin: 0, width: TITLE_WIDTH }}
+            >
+              UI:{" "}
+            </Typography.Title>
+            <Radio.Group
+              onChange={(e) => {
+                setUI(e.target.value)
+              }}
+              value={ui}
+            >
+              {MPV_UI.map((i) => (
+                <Radio value={i.name} key={i.url} style={{ width: ITEM_WIDTH }}>
+                  <Typography.Link href={i.repo} target="_blank">
+                    {i.name}
+                  </Typography.Link>
+                </Radio>
+              ))}
+            </Radio.Group>
+          </Flex>
+
+          <Flex gap="middle" justify="center" align="center">
+            <Typography.Title
+              level={5}
+              style={{ margin: 0, width: TITLE_WIDTH }}
+            >
+              External:{" "}
+            </Typography.Title>
+            <Checkbox.Group
+              value={externalList}
+              onChange={(e) => {
+                setExternalList(e)
+              }}
+            >
+              {ExternalList.map((i) => (
+                <Checkbox
+                  value={i.name}
+                  key={i.url}
+                  style={{ width: ITEM_WIDTH }}
+                >
+                  {i.name}
+                </Checkbox>
+              ))}
+            </Checkbox.Group>
+          </Flex>
         </Flex>
 
         <Search
