@@ -1,5 +1,5 @@
 import React, { useRef } from "react"
-import { Checkbox, Input } from "antd"
+import { Checkbox, Input, Tooltip } from "antd"
 import type { GetProps } from "antd"
 const { Search } = Input
 type SearchProps = GetProps<typeof Input.Search>
@@ -73,7 +73,7 @@ const DEFAULT_STATE: State = {
   spinning: false,
   selectedRowKeys: [],
   externalList: [],
-  ui: "mpv",
+  ui: "osc",
   cdn: "github",
   platform: "mpv-v3",
 }
@@ -137,7 +137,7 @@ function downloadBinaryFile(fileName: string, content: Uint8Array): void {
 
 const MPV_UI = [
   {
-    name: "mpv",
+    name: "osc",
     url: "https://raw.githubusercontent.com/mpv-easy/mpv-easy-cdn/main/mpv-windows.tar.xz",
     repo: "https://github.com/mpv-player/mpv",
   },
@@ -475,7 +475,7 @@ function App() {
               level={5}
               style={{ margin: 0, width: TITLE_WIDTH }}
             >
-              Platform:{" "}
+              Platform:
             </Typography.Title>
             <Radio.Group
               value={platform}
@@ -484,9 +484,19 @@ function App() {
               }}
             >
               {PLATFORM_LIST.map((i) => (
-                <Radio value={i} key={i} style={{ width: ITEM_WIDTH }}>
-                  {i}
-                </Radio>
+                <Tooltip
+                  key={i}
+                  placement="topLeft"
+                  title={
+                    i === "mpv"
+                      ? `Typically, you should use mpv-v3 unless it fails to run or you're using an older CPU (manufactured around 2015 or earlier).`
+                      : ""
+                  }
+                >
+                  <Radio value={i} key={i} style={{ width: ITEM_WIDTH }}>
+                    {i}
+                  </Radio>
+                </Tooltip>
               ))}
             </Radio.Group>
           </Flex>
@@ -496,7 +506,7 @@ function App() {
               level={5}
               style={{ margin: 0, width: TITLE_WIDTH }}
             >
-              CDN:{" "}
+              CDN:
             </Typography.Title>
             <Radio.Group
               value={cdn}
@@ -517,7 +527,7 @@ function App() {
               level={5}
               style={{ margin: 0, width: TITLE_WIDTH }}
             >
-              UI:{" "}
+              UI:
             </Typography.Title>
             <Radio.Group
               onChange={(e) => {
@@ -540,7 +550,7 @@ function App() {
               level={5}
               style={{ margin: 0, width: TITLE_WIDTH }}
             >
-              External:{" "}
+              External:
             </Typography.Title>
             <Checkbox.Group
               value={externalList}

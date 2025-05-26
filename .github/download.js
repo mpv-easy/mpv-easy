@@ -10,12 +10,24 @@ async function downloadMpv() {
   const { assets } = await fetch(
     "https://api.github.com/repos/shinchiro/mpv-winbuild-cmake/releases/latest"
   ).then((r) => r.json());
-  const mpvUrl = assets.find((i) =>
+
+  const mpvV3Url = assets.find((i) =>
     i.name.startsWith("mpv-x86_64-v3-")
   ).browser_download_url;
+  await download(mpvV3Url, "./mpv-v3-win.7z");
+
+  const mpvUrl = assets.find((i) =>
+    i.name.startsWith("mpv-x86_64-2")
+  ).browser_download_url;
   await download(mpvUrl, "./mpv-win.7z");
-  const ffmpegUrl = assets.find((i) =>
+
+  const ffmpegV3Url = assets.find((i) =>
     i.name.startsWith("ffmpeg-x86_64-v3-")
+  ).browser_download_url;
+  await download(ffmpegV3Url, "./ffmpeg-v3.7z");
+
+  const ffmpegUrl = assets.find((i) =>
+    i.name.startsWith("ffmpeg-x86_64-git")
   ).browser_download_url;
   await download(ffmpegUrl, "./ffmpeg.7z");
 }
