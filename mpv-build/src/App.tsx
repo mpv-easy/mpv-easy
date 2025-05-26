@@ -47,7 +47,7 @@ interface Store {
   externalList: string[]
   ui: UI
   cdn: CDN
-  platform: PLATFORM
+  platform: Platform
   setData: (data: Record<string, DataType>) => void
   setTableData: (tableData: DataType[]) => void
   setSpinning: (spinning: boolean) => void
@@ -55,13 +55,13 @@ interface Store {
   setExternalList: (externalList: string[]) => void
   setUI: (ui: UI) => void
   setCDN: (cdn: CDN) => void
-  setPlatform: (platform: PLATFORM) => void
+  setPlatform: (platform: Platform) => void
   setState: (state: State) => void
 }
 
 // TODO: support liunx
 const PLATFORM_LIST = ["mpv", "mpv-v3"] as const
-type PLATFORM = (typeof PLATFORM_LIST)[number]
+type Platform = (typeof PLATFORM_LIST)[number]
 
 type State = {
   [K in keyof Store as Store[K] extends Function ? never : K]: Store[K]
@@ -91,7 +91,7 @@ const useMpvStore = create<Store>()(
         set({ ...get(), externalList }),
       setUI: (ui: UI) => set({ ...get(), ui }),
       setCDN: (cdn: CDN) => set({ ...get(), cdn }),
-      setPlatform: (platform: PLATFORM) => set({ ...get(), platform }),
+      setPlatform: (platform: Platform) => set({ ...get(), platform }),
       setState: (state: State) => {
         set({ ...get(), ...state })
       },
@@ -135,31 +135,40 @@ function downloadBinaryFile(fileName: string, content: Uint8Array): void {
   URL.revokeObjectURL(url)
 }
 
+const MPV_V3_URL =
+  "https://raw.githubusercontent.com/mpv-easy/mpv-easy-cdn/main/mpv-v3-windows.tar.xz"
+const MPV_URL =
+  "https://raw.githubusercontent.com/mpv-easy/mpv-easy-cdn/main/mpv-windows.tar.xz"
 const MPV_UI = [
   {
     name: "osc",
-    url: "https://raw.githubusercontent.com/mpv-easy/mpv-easy-cdn/main/mpv-windows.tar.xz",
+    url: MPV_V3_URL,
     repo: "https://github.com/mpv-player/mpv",
+    deps: [],
   },
   {
     name: "mpv-uosc",
     url: "https://raw.githubusercontent.com/mpv-easy/mpv-easy-cdn/main/mpv-uosc-windows-full.tar.xz",
     repo: "https://github.com/tomasklaen/uosc",
+    deps: ["thumbfast", "uosc"],
   },
   {
     name: "mpv-easy",
     url: "https://raw.githubusercontent.com/mpv-easy/mpv-easy-cdn/main/mpv-easy-windows-full.tar.xz",
     repo: "https://github.com/mpv-easy/mpv-easy",
+    deps: ["thumbfast", "mpv-easy"],
   },
   {
     name: "mpv-modernx",
     url: "https://raw.githubusercontent.com/mpv-easy/mpv-easy-cdn/main/mpv-modernx-windows-full.tar.xz",
     repo: "https://github.com/cyl0/ModernX",
+    deps: ["thumbfast", "ModernX"],
   },
   {
     name: "mpv-modernz",
     url: "https://raw.githubusercontent.com/mpv-easy/mpv-easy-cdn/main/mpv-modernz-windows-full.tar.xz",
     repo: "https://github.com/Samillion/ModernZ",
+    deps: ["thumbfast", "ModernZ"],
   },
 ] as const
 
@@ -167,25 +176,16 @@ type UI = (typeof MPV_UI)[number]["name"]
 
 const FFMPEG_URL =
   "https://raw.githubusercontent.com/mpv-easy/mpv-easy-cdn/main/ffmpeg-windows.zip"
+
+const FFMPEG_V3_URL =
+  "https://raw.githubusercontent.com/mpv-easy/mpv-easy-cdn/main/ffmpeg-v3-windows.zip"
+
 const YT_DLP_URL =
   "https://raw.githubusercontent.com/mpv-easy/mpv-easy-cdn/main/yt-dlp.exe"
 const PLAY_WITH_URL =
   "https://raw.githubusercontent.com/mpv-easy/mpv-easy-cdn/main/mpv-easy-play-with-windows.exe"
 
-const ExternalList = [
-  {
-    name: "ffmpeg",
-    url: FFMPEG_URL,
-  },
-  {
-    name: "yt-dlp",
-    url: YT_DLP_URL,
-  },
-  {
-    name: "play-with",
-    url: PLAY_WITH_URL,
-  },
-]
+const ExternalList = ["ffmpeg", "yt-dlp", "play-with"]
 
 async function downloadBinary(url: string): Promise<Uint8Array> {
   return fetch(url)
@@ -207,7 +207,7 @@ function getScriptDownloadURL(script: Script, cdn: CDN = "github") {
 }
 
 async function getScriptFiles(script: Script): Promise<File[]> {
-  const { downloadURL, name } = script
+  const { downloadURL } = script
   if (![".js", ".lua", ".zip"].some((i) => downloadURL.endsWith(i))) {
     console.log("not support script: ", script)
     return []
@@ -217,14 +217,139 @@ async function getScriptFiles(script: Script): Promise<File[]> {
   const bin = await downloadBinary(url)
 
   const v = decode(guess(url)!, bin)!.filter((i) => !i.isDir)
-  const files = v.map(({ path, mode, isDir, lastModified, buffer }) => {
-    const filePath = path.endsWith(".conf")
-      ? `portable_config/script-opts/${name}/${path}`
-      : `portable_config/scripts/${name}/${path}`
-    return new File(filePath, buffer, mode, isDir, lastModified)
-  })
+  return v
+}
 
-  return files
+function appendScriptConf(
+  mpvConf: Uint8Array,
+  scriptConf: Uint8Array,
+  script: Script,
+): Uint8Array {
+  const decoder = new TextDecoder("utf-8")
+  const mpvString = decoder.decode(mpvConf)
+  const tab = "#".repeat(4)
+  const banner = [tab, script.name, tab].join(" ")
+  if (mpvString.includes(banner)) {
+    return mpvConf
+  }
+  const scriptString = decoder.decode(scriptConf)
+  const resultString = [mpvString, banner, scriptString, banner].join("\n")
+  const encoder = new TextEncoder()
+  return encoder.encode(resultString)
+}
+
+function installScript(mpvFiles: File[], scriptFiles: File[], script: Script) {
+  // fonts and script-opts
+  for (const dir of ["fonts", "script-opts"]) {
+    if (scriptFiles.find((i) => i.path.startsWith(`${dir}/`))) {
+      const files = scriptFiles.filter((i) => i.path.startsWith(`${dir}/`))
+      scriptFiles = scriptFiles.filter((i) => !i.path.startsWith(`${dir}/`))
+      for (const i of files) {
+        i.path = `portable_config/${dir}/${i.path}`
+        mpvFiles.push(i)
+      }
+    }
+  }
+
+  // scripts
+  if (scriptFiles.find((i) => i.path.startsWith("scripts/"))) {
+    const files = scriptFiles.filter((i) => i.path.startsWith("scripts/"))
+    scriptFiles = scriptFiles.filter((i) => !i.path.startsWith("scripts/"))
+    for (const i of files) {
+      i.path = `portable_config/scripts/${i.path.replace("scripts/", `${script.name}/`)}`
+      mpvFiles.push(i)
+    }
+  }
+
+  // externals
+  if (scriptFiles.find((i) => i.path.startsWith("externals/"))) {
+    const files = scriptFiles.filter((i) => i.path.startsWith("externals/"))
+    scriptFiles = scriptFiles.filter((i) => !i.path.startsWith("externals/"))
+    for (const i of files) {
+      i.path = i.path.replace("externals/", "")
+      mpvFiles.push(i)
+    }
+  }
+
+  // input.conf and mpv.conf
+  for (const name of ["input.conf", "mpv.conf"]) {
+    const scriptConfIndex = scriptFiles.findIndex((i) => i.path === name)
+    if (scriptConfIndex === -1) {
+      continue
+    }
+    const scriptConf = scriptFiles.splice(scriptConfIndex, 1)[0]
+
+    const fileIndex = mpvFiles.findIndex((i) => i.path === name)
+    let file: File
+    if (fileIndex === -1) {
+      file = new File(
+        name,
+        new Uint8Array(),
+        undefined,
+        false,
+        BigInt(+new Date()),
+      )
+    } else {
+      file = mpvFiles.splice(fileIndex, 1)[0]
+    }
+
+    const { path, mode, isDir, lastModified, buffer } = file
+    const newBuffer = appendScriptConf(buffer, scriptConf.buffer, script)
+    mpvFiles.push(new File(path, newBuffer, mode, isDir, lastModified))
+  }
+
+  for (const i of scriptFiles) {
+    i.path = `portable_config/scripts/${script.name}/${i.path}`
+    mpvFiles.push(i)
+  }
+}
+
+async function getMpvFiles(platform: Platform, ui: UI) {
+  const uiUrl = MPV_UI.find((i) => i.name === ui)?.url
+  if (!uiUrl) {
+    return []
+  }
+
+  // ui
+  const uiBinary = await downloadBinary(uiUrl)
+  const fmt = guess(uiUrl)
+  if (!fmt) {
+    console.log("fmt error")
+    return []
+  }
+  const uiFiles = decode(fmt, uiBinary)
+  if (!uiFiles) {
+    console.log("uiFiles error")
+    return []
+  }
+  const v: File[] = []
+  for (const item of uiFiles) {
+    try {
+      const { path, mode, isDir, lastModified, buffer } = item
+      if (isDir) {
+        continue
+      }
+      v.push(new File(path, new Uint8Array(buffer), mode, isDir, lastModified))
+    } catch (e) {
+      console.log(e)
+
+      return []
+    }
+  }
+
+  // replace all v3 files
+  if (platform === "mpv") {
+    const bin = await downloadBinary(MPV_URL)
+    const files = decode(guess(MPV_URL)!, bin)!
+    for (const file of files) {
+      const index = v.findIndex((i) => i.path === file.path)
+      if (index !== -1) {
+        v[index] = file
+      }
+    }
+  }
+
+  return v
 }
 
 function App() {
@@ -249,6 +374,10 @@ function App() {
     setPlatform,
     setState,
   } = store
+
+  const uiDeps: readonly string[] =
+    MPV_UI.find((i) => i.name === ui)?.deps || []
+
   const [api, contextHolder] = notification.useNotification()
 
   const reset = () => {
@@ -256,84 +385,46 @@ function App() {
   }
 
   const zipAll = async () => {
-    const uiUrl = MPV_UI.find((i) => i.name === ui)?.url
-    if (!uiUrl) {
-      return
-    }
-    // ui
-    const uiBinary = await downloadBinary(uiUrl)
-    const fmt = guess(uiUrl)
-    if (!fmt) {
-      console.log("fmt error")
-      return
-    }
-    const uiFiles = decode(fmt, uiBinary)
-    if (!uiFiles) {
-      console.log("uiFiles error")
-      return
-    }
-    const v: File[] = []
-    for (const item of uiFiles) {
-      try {
-        const { path, mode, isDir, buffer } = item
-        if (isDir) {
-          continue
-        }
-        v.push(new File(path, new Uint8Array(buffer), mode, isDir))
-      } catch (e) {
-        console.log(e)
-      }
-    }
+    const mpvFiles = await getMpvFiles(platform, ui)
 
     // ffmpeg
     if (externalList.includes("ffmpeg")) {
-      const ffmpegBinary = await downloadBinary(FFMPEG_URL)
+      const ffmpegBinary = await downloadBinary(
+        platform === "mpv-v3" ? FFMPEG_V3_URL : FFMPEG_URL,
+      )
       const ffmpegFiles = decode(guess(FFMPEG_URL)!, ffmpegBinary)!
-      for (const { path, mode, isDir, buffer } of ffmpegFiles) {
+      for (const { path, mode, isDir, lastModified, buffer } of ffmpegFiles) {
         if (isDir) {
           continue
         }
-        v.push(new File(path, buffer, mode, isDir))
+        mpvFiles.push(new File(path, buffer, mode, isDir, lastModified))
       }
     }
 
     // yt-dlp
     if (externalList.includes("yt-dlp")) {
       const bin = await downloadBinary(YT_DLP_URL)
-      v.push(new File("yt-dlp.exe", bin, null, false))
+      mpvFiles.push(
+        new File("yt-dlp.exe", bin, null, false, BigInt(+new Date())),
+      )
     }
 
     // play-with
     if (externalList.includes("play-with")) {
       const bin = await downloadBinary(PLAY_WITH_URL)
-      v.push(new File("play-with.exe", bin, null, false))
+      mpvFiles.push(
+        new File("play-with.exe", bin, null, false, BigInt(+new Date())),
+      )
     }
 
     // scripts
     for (const i of selectedRowKeys) {
-      const files = await getScriptFiles(data[i])
-      for (const i of files) {
-        v.push(i)
-        console.log(i.path, i.isDir)
-      }
-
-      const inputConf = files.find((i) => i.path === "input.conf")
-      const mpvConf = files.find((i) => i.path === "mpv.conf")
-
-      if (inputConf) {
-      }
-
-      if (mpvConf) {
-      }
-    }
-
-    console.log(v)
-    for (const i of v) {
-      console.log(i.path, i.isDir)
+      const scriptFiles = await getScriptFiles(data[i])
+      installScript(mpvFiles, scriptFiles, data[i])
     }
 
     // encode to zip
-    const zipBinary = encode(Fmt.Zip, v)
+    const zipBinary = encode(Fmt.Zip, mpvFiles)
     if (!zipBinary) {
       console.log("zip file error")
       return
@@ -559,12 +650,8 @@ function App() {
               }}
             >
               {ExternalList.map((i) => (
-                <Checkbox
-                  value={i.name}
-                  key={i.url}
-                  style={{ width: ITEM_WIDTH }}
-                >
-                  {i.name}
+                <Checkbox value={i} key={i} style={{ width: ITEM_WIDTH }}>
+                  {i}
                 </Checkbox>
               ))}
             </Checkbox.Group>
@@ -589,6 +676,12 @@ function App() {
                 return
               }
               setSelectedKeys(selectedRowKeys as string[])
+            },
+            getCheckboxProps: (record: DataType) => {
+              return {
+                disabled: uiDeps.includes(record.name),
+                name: record.name,
+              }
             },
             selectedRowKeys,
           }}
