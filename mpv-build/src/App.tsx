@@ -239,8 +239,8 @@ function appendScriptConf(
 }
 
 function installScript(mpvFiles: File[], scriptFiles: File[], script: Script) {
-  // fonts and script-opts
-  for (const dir of ["fonts", "script-opts"]) {
+  // fonts, script-opts, shaders
+  for (const dir of ["fonts", "script-opts", "shaders"]) {
     if (scriptFiles.find((i) => i.path.startsWith(`${dir}/`))) {
       const files = scriptFiles.filter((i) => i.path.startsWith(`${dir}/`))
       scriptFiles = scriptFiles.filter((i) => !i.path.startsWith(`${dir}/`))
