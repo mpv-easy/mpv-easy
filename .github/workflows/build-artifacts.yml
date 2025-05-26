@@ -1,6 +1,9 @@
 name: build artifacts
 on: workflow_call
 
+env:
+  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
 jobs:
   build-ext-windows:
     env:

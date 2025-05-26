@@ -1,14 +1,22 @@
 const fs = require("fs");
 
+const headers = {
+  'User-Agent': 'GitHub Actions',
+  Connection: 'close',
+}
+if (process.env.GITHUB_TOKEN) {
+  headers.Authorization = `token ${process.env.GITHUB_TOKEN}`
+}
+
 async function download(url, filePath) {
-  const buf = await fetch(url).then((r) => r.arrayBuffer());
+  const buf = await fetch(url).then((r) => r.arrayBuffer(), headers);
   fs.writeFileSync(filePath, new Uint8Array(buf));
 }
 
 async function downloadMpv() {
   // https://github.com/shinchiro/mpv-winbuild-cmake/releases
   const { assets } = await fetch(
-    "https://api.github.com/repos/shinchiro/mpv-winbuild-cmake/releases/latest"
+    "https://api.github.com/repos/shinchiro/mpv-winbuild-cmake/releases/latest", headers
   ).then((r) => r.json());
 
   const mpvV3Url = assets.find((i) =>
@@ -35,7 +43,7 @@ async function downloadMpv() {
 async function downloadYtdl() {
   // https://github.com/yt-dlp/yt-dlp/releases
   const { assets } = await fetch(
-    "https://api.github.com/repos/yt-dlp/yt-dlp/releases/latest"
+    "https://api.github.com/repos/yt-dlp/yt-dlp/releases/latest", headers
   ).then((r) => r.json());
   const ytUrl = assets.find((i) =>
     i.name.startsWith("yt-dlp.exe")
