@@ -303,7 +303,7 @@ jobs:
 
               zip_js="tmp/mpv-easy-${name}.js"
               zip_conf="tmp/mpv-easy-${name}.conf"
-              zip_json="tmp/mpv-easy-${name}.json"
+              zip_json="tmp/script.json"
               zip_input="tmp/input.conf"
 
               mkdir -p tmp
