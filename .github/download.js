@@ -1,11 +1,11 @@
 const fs = require("fs");
 
-const headers = {
-  'User-Agent': 'GitHub Actions',
-  Connection: 'close',
-}
-if (process.env.GITHUB_TOKEN) {
-  headers.Authorization = `token ${process.env.GITHUB_TOKEN}`
+const headers: RequestInit = {
+  headers: {
+    'User-Agent': 'GitHub Actions',
+    Connection: 'close',
+    Authorization: `token ${process.env.GITHUB_TOKEN}`
+  }
 }
 
 async function download(url, filePath) {
