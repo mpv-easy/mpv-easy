@@ -355,7 +355,7 @@ jobs:
           mkdir release -p
 
           7z x ffmpeg-v3.7z -offmpeg-v3 -y
-          cd ffmpeg
+          cd ffmpeg-v3
           zip -r -q ../release/ffmpeg-v3-windows.zip .
           cd ..
 
