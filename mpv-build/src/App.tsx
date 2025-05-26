@@ -73,7 +73,7 @@ const DEFAULT_STATE: State = {
   spinning: false,
   selectedRowKeys: [],
   externalList: [],
-  ui: "osc",
+  ui: "mpv",
   cdn: "github",
   platform: "mpv-v3",
 }
@@ -141,7 +141,7 @@ const MPV_URL =
   "https://raw.githubusercontent.com/mpv-easy/mpv-easy-cdn/main/mpv-windows.tar.xz"
 const MPV_UI = [
   {
-    name: "osc",
+    name: "mpv",
     url: MPV_V3_URL,
     repo: "https://github.com/mpv-player/mpv",
     deps: [],
@@ -527,6 +527,7 @@ function App() {
       </Flex>
     )
   }
+
   return (
     <>
       {contextHolder}
@@ -675,7 +676,11 @@ function App() {
                 })
                 return
               }
-              setSelectedKeys(selectedRowKeys as string[])
+              setSelectedKeys(
+                (selectedRowKeys as string[]).filter(
+                  (i) => !uiDeps.includes(i),
+                ),
+              )
             },
             getCheckboxProps: (record: DataType) => {
               return {
@@ -683,7 +688,7 @@ function App() {
                 name: record.name,
               }
             },
-            selectedRowKeys,
+            selectedRowKeys: [...selectedRowKeys, ...uiDeps],
           }}
           className="table"
           columns={columns}
@@ -691,6 +696,13 @@ function App() {
         />
         <Spin spinning={spinning} fullscreen />
         <Flex>
+          {uiDeps.map((i) => {
+            return (
+              <Tag color="success" key={data[i].key}>
+                {data[i].name}
+              </Tag>
+            )
+          })}
           {selectedRowKeys.map((i) => {
             return (
               <Tag

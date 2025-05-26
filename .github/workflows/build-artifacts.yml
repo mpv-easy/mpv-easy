@@ -290,17 +290,45 @@ jobs:
           pnpm i
           pnpm run build
 
-          mkdir mpv-easy-js -p
-          cp mpv-easy-react/es5/*.js mpv-easy-js/
-          cp mpv-easy-react/conf/*.conf mpv-easy-js/
-          cp mpv-easy-react/bundle/mpv-easy-es6.js mpv-easy-js/mpv-easy-es6.js
-          cp mpv-easy-react/bundle/mpv-easy-play-with.user.js mpv-easy-js/mpv-easy-play-with.user.js
+          mkdir mpv-easy-scripts -p
+          cp mpv-easy-react/bundle/mpv-easy-play-with.user.js mpv-easy-scripts/mpv-easy-play-with.user.js
+
+          files=(anime4k autoload clipboard-play copy-screen copy-time crop cut thumbfast translate)
+          for name in "${files[@]}"; do
+              # mpv-easy-react/es5/*.js
+              js="mpv-easy-react/es5/${name}.js"
+              conf="mpv-easy-react/conf/${name}.conf"
+              json="mpv-easy-react/scripts/${name}.json"
+              input="mpv-easy-react/conf/${name}.input.conf"
+
+              zip_js="tmp/mpv-easy-${name}.js"
+              zip_conf="tmp/mpv-easy-${name}.conf"
+              zip_json="tmp/mpv-easy-${name}.json"
+              zip_input="tmp/input.conf"
+
+              mkdir -p tmp
+
+              cp ${js} ${zip_js}
+              cp ${json} ${zip_json}
+
+              if [ -f "$conf" ]; then
+                  cp ${conf} ${zip_conf}
+              fi
+              if [ -f "$input" ]; then
+                  cp ${input} ${zip_input}
+              fi
+
+              cd tmp
+              zip -r -q ../mpv-easy-scripts/mpv-easy-${name}.zip .
+              cd ..
+              rm -rf tmp
+          done
 
       - name: Upload
         uses: actions/upload-artifact@v4
         with:
-          name: mpv-easy-js
-          path: mpv-easy-js/*
+          name: mpv-easy-scripts
+          path: mpv-easy-scripts/*
 
       - name: "create dist"
         run: |
@@ -313,7 +341,6 @@ jobs:
 
           cp mpv-easy-react/es5/mpv-easy.js dist/scripts/mpv-easy.js
           cp -r mpv-easy-react/fonts dist
-          cp -r mpv-anime4k/shaders dist
           cp mpv-easy-react/conf/mpv.conf dist/mpv.conf
           cp mpv-easy-react/conf/input.conf dist/input.conf
 
@@ -384,6 +411,11 @@ jobs:
           zip -r -q ../release/mpv-easy-windows-full.zip .
           cd ..
 
+          cp -rf ./mpv-easy-windows-full/portable_config/ ./mpv-easy-script
+          cd mpv-easy-script
+          zip -r -q ../release/mpv-easy.zip .
+          cd ..
+
           # cd mpv-easy-windows-deno-full
           # zip -r -q ../release/mpv-easy-windows-deno-full.zip .
           # cd ..
@@ -443,7 +475,7 @@ jobs:
           zip -r -q ../release/mpv-modernz-windows-full.zip .
           cd ..
 
-          cp mpv-easy-js/* release/
+          cp mpv-easy-scripts/* release/
           # cp mpv-deno-dist/mpv-deno-windows.dll release/mpv-deno-windows.dll
           cp mpv-easy-ext-dist/mpv-easy-ext-macos-amd64 release/mpv-easy-ext-macos-amd64
           cp mpv-easy-ext-dist/mpv-easy-ext-macos-arm64 release/mpv-easy-ext-macos-arm64
