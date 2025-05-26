@@ -298,7 +298,7 @@ jobs:
               # mpv-easy-react/es5/*.js
               js="mpv-easy-react/es5/${name}.js"
               conf="mpv-easy-react/conf/${name}.conf"
-              json="mpv-easy-react/scripts/${name}.json"
+              json="mpv-easy-react/conf/${name}.json"
               input="mpv-easy-react/conf/${name}.input.conf"
 
               zip_js="tmp/mpv-easy-${name}.js"

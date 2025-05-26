@@ -2,7 +2,7 @@ import { build } from "esbuild"
 import fs from "node:fs"
 
 build({
-  entryPoints: ["./scripts/*.{tsx,ts}"],
+  entryPoints: ["./scripts/*"],
   // entryPoints: ["./scripts/mpv-easy.tsx"],
   bundle: true,
   outdir: "bundle",

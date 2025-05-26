@@ -1,10 +1,10 @@
 export type Script = {
   name: string
-  downloadURL: string
+  download: string
   version?: string
   description?: string
   author?: string
-  updateURL?: string
+  update?: string
   homepage?: string
   license?: string
   keywords?: string[]
@@ -75,7 +75,7 @@ export function scriptToString(script: Script, lang: "js" | "lua"): string {
 }
 
 export function addScript(text: string, script: Script): string {
-  const lang = script.downloadURL.split(".").at(-1) as "js" | "lua"
+  const lang = script.download.split(".").at(-1) as "js" | "lua"
   const metaString = scriptToString(script, lang)
   return `${metaString}\n\n${text}`
 }

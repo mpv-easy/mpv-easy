@@ -207,8 +207,8 @@ function getScriptDownloadURL(script: Script, cdn: CDN = "github") {
 }
 
 async function getScriptFiles(script: Script): Promise<File[]> {
-  const { downloadURL } = script
-  if (![".js", ".lua", ".zip"].some((i) => downloadURL.endsWith(i))) {
+  const { download } = script
+  if (![".js", ".lua", ".zip"].some((i) => download.endsWith(i))) {
     console.log("not support script: ", script)
     return []
   }
@@ -493,7 +493,7 @@ function App() {
       render: (_, script) => {
         return (
           <Button
-            key={script.downloadURL}
+            key={script.download}
             icon={<DownloadOutlined />}
             onClick={async () => {
               const bin = await downloadBinary(getScriptDownloadURL(script))

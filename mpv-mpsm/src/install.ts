@@ -64,7 +64,7 @@ export async function installFromScript(url: string): Promise<Script> {
     process.exit()
   }
 
-  const downloadUrl = meta.downloadURL
+  const downloadUrl = meta.download
   await installFromUrl(downloadUrl, meta)
   return meta
 }
