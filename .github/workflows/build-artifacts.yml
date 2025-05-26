@@ -489,7 +489,7 @@ jobs:
           cp mpv-easy-play-with-dist/mpv-easy-play-with-windows.exe release/mpv-easy-play-with-windows.exe
 
           7z x mpv-v3-win.7z -ompv-v3-windows -y
-          cd mpv-windows
+          cd mpv-v3-windows
           zip -r -q ../release/mpv-v3-windows.zip .
           cd ..
 
