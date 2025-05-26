@@ -11,5 +11,5 @@
   "include": "*",
   "grant": "GM_getValue",
   "run-at": "document-body",
-  "download": "https://github.com/mpv-easy/mpv-easy/releases/latest/download/mpv-easy-play-with.zip"
+  "download": "https://github.com/mpv-easy/mpv-easy/releases/latest/download/mpv-easy-mpv-easy-play-with.zip"
 }
