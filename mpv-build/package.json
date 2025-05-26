@@ -10,7 +10,7 @@
   "dependencies": {
     "@ant-design/icons": "^6.0.0",
     "@ant-design/v5-patch-for-react-19": "^1.0.3",
-    "@easy-install/easy-archive": "^0.1.12",
+    "@easy-install/easy-archive": "^0.1.14",
     "antd": "^5.25.2",
     "fuse.js": "^7.1.0",
     "react": "^19.1.0",

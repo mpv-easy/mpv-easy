@@ -1,6 +1,6 @@
 import React, { useRef } from "react"
 import { Checkbox, Input } from "antd"
-import type { CheckboxOptionType, GetProps } from "antd"
+import type { GetProps } from "antd"
 const { Search } = Input
 type SearchProps = GetProps<typeof Input.Search>
 import { Button, Flex, Spin, Table, type TableProps } from "antd"
@@ -56,23 +56,32 @@ interface Store {
   setUI: (ui: UI) => void
   setCDN: (cdn: CDN) => void
   setPlatform: (platform: PLATFORM) => void
+  setState: (state: State) => void
 }
 
 // TODO: support liunx
 const PLATFORM_LIST = ["mpv", "mpv-v3"] as const
 type PLATFORM = (typeof PLATFORM_LIST)[number]
 
+type State = {
+  [K in keyof Store as Store[K] extends Function ? never : K]: Store[K]
+}
+
+const DEFAULT_STATE: State = {
+  data: {},
+  tableData: [],
+  spinning: false,
+  selectedRowKeys: [],
+  externalList: [],
+  ui: "mpv",
+  cdn: "github",
+  platform: "mpv-v3",
+}
+
 const useMpvStore = create<Store>()(
   persist(
     (set, get) => ({
-      data: {},
-      tableData: [],
-      spinning: false,
-      selectedRowKeys: [],
-      externalList: [],
-      ui: "mpv",
-      cdn: "github",
-      platform: "mpv-v3",
+      ...DEFAULT_STATE,
       setData: (data: Record<string, DataType>) => set({ ...get(), data }),
       setTableData: (tableData: DataType[]) => set({ ...get(), tableData }),
       setSpinning: (spinning: boolean) => set({ ...get(), spinning }),
@@ -83,6 +92,9 @@ const useMpvStore = create<Store>()(
       setUI: (ui: UI) => set({ ...get(), ui }),
       setCDN: (cdn: CDN) => set({ ...get(), cdn }),
       setPlatform: (platform: PLATFORM) => set({ ...get(), platform }),
+      setState: (state: State) => {
+        set({ ...get(), ...state })
+      },
     }),
     {
       name: "mpv-build-storage",
@@ -188,7 +200,6 @@ type CDN = (typeof CDN_LIST)[number]
 function getScriptDownloadURL(script: Script, cdn: CDN = "github") {
   const { name } = script
   if (cdn === "jsdelivr") {
-    // https://cdn.jsdelivr.net/gh/mpv-easy/mpv-easy-cdn@main/auto-save-state.zip
     return `https://cdn.jsdelivr.net/gh/mpv-easy/mpv-easy-cdn@main/${name}.zip`
   }
 
@@ -205,7 +216,6 @@ async function getScriptFiles(script: Script): Promise<File[]> {
   const url = getScriptDownloadURL(script)
   const bin = await downloadBinary(url)
 
-  // if (downloadURL.endsWith("master.zip") || downloadURL.endsWith("main.zip")) {
   const v = decode(guess(url)!, bin)!.filter((i) => !i.isDir)
   const files = v.map(({ path, mode, isDir, lastModified, buffer }) => {
     const filePath = path.endsWith(".conf")
@@ -213,14 +223,6 @@ async function getScriptFiles(script: Script): Promise<File[]> {
       : `portable_config/scripts/${name}/${path}`
     return new File(filePath, buffer, mode, isDir, lastModified)
   })
-  const inputConf = files.find((i) => i.path === "input.conf")
-  const mpvConf = files.find((i) => i.path === "mpv.conf")
-
-  if (inputConf) {
-  }
-
-  if (mpvConf) {
-  }
 
   return files
 }
@@ -245,14 +247,14 @@ function App() {
     cdn,
     platform,
     setPlatform,
+    setState,
   } = store
   const [api, contextHolder] = notification.useNotification()
 
-  // const options: CheckboxOptionType<string>[] = [
-  //   { label: "ffmpeg", value: "ffmpeg" },
-  //   { label: "yt-dlp", value: "yt-dlp" },
-  //   { label: "play-with", value: "play-with" },
-  // ]
+  const reset = () => {
+    setState({ ...DEFAULT_STATE, data, tableData })
+  }
+
   const zipAll = async () => {
     const uiUrl = MPV_UI.find((i) => i.name === ui)?.url
     if (!uiUrl) {
@@ -312,7 +314,22 @@ function App() {
       const files = await getScriptFiles(data[i])
       for (const i of files) {
         v.push(i)
+        console.log(i.path, i.isDir)
       }
+
+      const inputConf = files.find((i) => i.path === "input.conf")
+      const mpvConf = files.find((i) => i.path === "mpv.conf")
+
+      if (inputConf) {
+      }
+
+      if (mpvConf) {
+      }
+    }
+
+    console.log(v)
+    for (const i of v) {
+      console.log(i.path, i.isDir)
     }
 
     // encode to zip
@@ -592,15 +609,19 @@ function App() {
             )
           })}
         </Flex>
-
-        <Button
-          type="primary"
-          icon={<DownloadOutlined />}
-          size={"large"}
-          onClick={download}
-        >
-          Download {ui}.zip
-        </Button>
+        <Flex gap="middle">
+          <Button color="danger" size={"large"} variant="solid" onClick={reset}>
+            Reset
+          </Button>
+          <Button
+            type="primary"
+            icon={<DownloadOutlined />}
+            size={"large"}
+            onClick={download}
+          >
+            Download {ui}.zip
+          </Button>
+        </Flex>
       </Flex>
     </>
   )
