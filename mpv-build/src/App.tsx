@@ -156,13 +156,25 @@ const UI_LIST = [
     name: "mpv-easy",
     url: "https://raw.githubusercontent.com/mpv-easy/mpv-easy-cdn/main/mpv-easy-windows-full.tar.xz",
     repo: "https://github.com/mpv-easy/mpv-easy",
-    deps: ["thumbfast", "mpv-easy"],
+    deps: [
+      "thumbfast",
+      "mpv-easy",
+      "mpv-easy-anime4k",
+      " mpv-easy-clipboard-play",
+      "mpv-easy-copy-time",
+      "mpv-easy-cut",
+      " mpv-easy-translate",
+      "mpv-easy-autoload",
+      "mpv-easy-copy-screen",
+      "mpv-easy-crop",
+      "mpv-easy-thumbfast",
+    ],
   },
   {
     name: "mpv-modernx",
     url: "https://raw.githubusercontent.com/mpv-easy/mpv-easy-cdn/main/mpv-modernx-windows-full.tar.xz",
     repo: "https://github.com/cyl0/ModernX",
-    deps: ["thumbfast", "ModernX"],
+    deps: ["thumbfast", "ModernX", "ModernX cyl0"],
   },
   {
     name: "mpv-modernz",
@@ -277,6 +289,24 @@ function installScript(mpvFiles: File[], scriptFiles: File[], script: Script) {
     } else {
       prefixList.pop()
     }
+
+    // rename to main
+    const luaFiles = files.filter(
+      (i) =>
+        !i.path.replace(`${prefixList.join("/")}/`, "").includes("/") &&
+        i.path.endsWith(".lua"),
+    )
+    const jsFiles = files.filter(
+      (i) =>
+        !i.path.replace(`${prefixList.join("/")}/`, "").includes("/") &&
+        i.path.endsWith(".js"),
+    )
+    if (luaFiles.length === 1) {
+      luaFiles[0].path = `${script.name}/main.lua`
+    } else if (jsFiles.length === 1) {
+      jsFiles[0].path = `${script.name}/main.js`
+    }
+
     for (const i of files) {
       i.path = `portable_config/scripts/${i.path.replace(`${prefixList.join("/")}/`, `${script.name}/`)}`
       mpvFiles.push(i)
@@ -350,6 +380,19 @@ function installScript(mpvFiles: File[], scriptFiles: File[], script: Script) {
       i.path = `portable_config/fonts/${i.path}`
       mpvFiles.push(i)
     }
+  }
+
+  // rename to main
+  const luaFiles = scriptFiles.filter(
+    (i) => !i.path.includes("/") && i.path.endsWith(".lua"),
+  )
+  const jsFiles = scriptFiles.filter(
+    (i) => !i.path.includes("/") && i.path.endsWith(".js"),
+  )
+  if (luaFiles.length === 1) {
+    luaFiles[0].path = "main.lua"
+  } else if (jsFiles.length === 1) {
+    jsFiles[0].path = "main.js"
   }
 
   for (const i of scriptFiles) {
@@ -725,7 +768,6 @@ function App() {
           rowSelection={{
             type: "checkbox",
             onChange: (keys: React.Key[]) => {
-              console.log("selectedRowKeys: ", keys)
               if (keys.length > MAX_SCRIPT_COUNT) {
                 api.open({
                   message: "Too many scripts",
@@ -757,9 +799,11 @@ function App() {
         <Flex>
           {uiDeps.map((i) => {
             return (
-              <Tag color="success" key={data[i].key}>
-                {data[i].name}
-              </Tag>
+              data[i] && (
+                <Tag color="success" key={data[i].key}>
+                  {data[i].name}
+                </Tag>
+              )
             )
           })}
           {selectedRowKeys.map((i) => {
