@@ -415,6 +415,7 @@ jobs:
           cd ..
 
           cp -rf ./mpv-easy-windows-full/portable_config/ ./mpv-easy-script
+          cp mpv-easy-react/conf/mpv-easy.json ./mpv-easy-script/script.json
           cd mpv-easy-script
           zip -r -q ../release/mpv-easy.zip .
           cd ..

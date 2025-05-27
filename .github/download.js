@@ -1,6 +1,6 @@
 const fs = require("fs");
 
-const headers: RequestInit = {
+const headers = {
   headers: {
     'User-Agent': 'GitHub Actions',
     Connection: 'close',
