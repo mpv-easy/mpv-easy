@@ -244,8 +244,10 @@ function appendScriptConf(
   if (mpvString.includes(banner)) {
     return mpvConf
   }
-  const scriptString = decoder.decode(scriptConf)
-  const resultString = [mpvString, banner, scriptString, banner].join("\n")
+  const scriptString = decoder.decode(scriptConf).trim()
+  const resultString = [mpvString, "", banner, scriptString, banner, ""]
+    .join("\n")
+    .trimStart()
   const encoder = new TextEncoder()
   return encoder.encode(resultString)
 }
@@ -331,11 +333,13 @@ function installScript(mpvFiles: File[], scriptFiles: File[], script: Script) {
     }
     const scriptConf = scriptFiles.splice(scriptConfIndex, 1)[0]
 
-    const fileIndex = mpvFiles.findIndex((i) => i.path === name)
+    const fileIndex = mpvFiles.findIndex(
+      (i) => i.path === `portable_config/${name}`,
+    )
     let file: File
     if (fileIndex === -1) {
       file = new File(
-        name,
+        `portable_config/${name}`,
         new Uint8Array(),
         undefined,
         false,
@@ -347,9 +351,7 @@ function installScript(mpvFiles: File[], scriptFiles: File[], script: Script) {
 
     const { path, mode, isDir, lastModified, buffer } = file
     const newBuffer = appendScriptConf(buffer, scriptConf.buffer, script)
-    mpvFiles.push(
-      new File(`portable_config/${path}`, newBuffer, mode, isDir, lastModified),
-    )
+    mpvFiles.push(new File(path, newBuffer, mode, isDir, lastModified))
   }
 
   // conf
@@ -766,22 +768,16 @@ function App() {
         />
         <Table<DataType>
           rowSelection={{
+            hideSelectAll: true,
             type: "checkbox",
-            onChange: (keys: React.Key[]) => {
-              if (keys.length > MAX_SCRIPT_COUNT) {
-                api.open({
-                  message: "Too many scripts",
-                  description: `The maximum supported number of selectable scripts is ${MAX_SCRIPT_COUNT}`,
-                  duration: 3,
-                })
-                return
+            onSelect: (record, selected) => {
+              if (selected) {
+                setSelectedKeys([...selectedRowKeys, record.name])
+              } else {
+                setSelectedKeys(
+                  [...selectedRowKeys].filter((i) => i !== record.name),
+                )
               }
-
-              const newKeys = new Set([
-                ...selectedRowKeys,
-                ...(keys as string[]).filter((i) => !uiDeps.includes(i)),
-              ])
-              setSelectedKeys([...newKeys])
             },
             getCheckboxProps: (record: DataType) => {
               return {
@@ -797,6 +793,9 @@ function App() {
         />
         <Spin spinning={spinning} fullscreen />
         <Flex>
+          <Tag color="processing" key={ui}>
+            {ui}
+          </Tag>
           {uiDeps.map((i) => {
             return (
               data[i] && (
