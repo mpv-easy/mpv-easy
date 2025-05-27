@@ -315,6 +315,22 @@ function installScript(mpvFiles: File[], scriptFiles: File[], script: Script) {
     mpvFiles.push(new File(path, newBuffer, mode, isDir, lastModified))
   }
 
+  // conf
+  if (
+    scriptFiles.find((i) => !i.path.includes("/") && i.path.endsWith(".conf"))
+  ) {
+    const files = scriptFiles.filter(
+      (i) => !i.path.includes("/") && i.path.endsWith(".conf"),
+    )
+    scriptFiles = scriptFiles.filter(
+      (i) => !(!i.path.includes("/") && i.path.endsWith(".conf")),
+    )
+    for (const i of files) {
+      i.path = `portable_config/script-opts/${i.path}`
+      mpvFiles.push(i)
+    }
+  }
+
   for (const i of scriptFiles) {
     i.path = `portable_config/scripts/${script.name}/${i.path}`
     mpvFiles.push(i)
