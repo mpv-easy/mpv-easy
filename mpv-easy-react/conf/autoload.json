@@ -1,0 +1,7 @@
+{
+  "name": "mpv-easy-autoload",
+  "description": "mpv player autoload script",
+  "author": "mpv-easy",
+  "download": "https://github.com/mpv-easy/mpv-easy/releases/latest/download/mpv-easy-autoload.zip",
+  "homepage": "https://github.com/mpv-easy/mpv-easy/tree/main/mpv-autoload"
+}

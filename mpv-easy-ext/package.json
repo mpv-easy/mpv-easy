@@ -1,6 +1,6 @@
 {
   "name": "@mpv-easy/ext",
-  "version": "0.1.14",
+  "version": "v0.1.15-alpha.6",
   "homepage": "https://github.com/mpv-easy/mpv-easy#readme",
   "private": true,
   "description": "",

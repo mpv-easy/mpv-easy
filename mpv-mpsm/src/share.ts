@@ -10,7 +10,7 @@ export function getFileNameFromUrl(url: string): string {
   return url.split("/").at(-1)!
 }
 
-export function isMeta(url: string) {
+export function isScript(url: string) {
   return url.endsWith(".meta.js") || url.endsWith(".meta.lua")
 }
 

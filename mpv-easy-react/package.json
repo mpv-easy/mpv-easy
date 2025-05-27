@@ -1,6 +1,6 @@
 {
   "name": "@mpv-easy/easy-react",
-  "version": "0.1.14",
+  "version": "v0.1.15-alpha.6",
   "homepage": "https://github.com/mpv-easy/mpv-easy#readme",
   "files": ["dist", "readme.md", "package.json"],
   "description": "@mpv-easy/easy-react",
@@ -14,10 +14,9 @@
     "dev": "chokidar '../mpv-*/{src,scripts}/**/*' -c 'pnpm run build' -d 2000 --initial",
     "dev-copy": "chokidar '../mpv-*/{src,scripts}/**/*' -c 'pnpm run build && pnpm run copy' -d 2000 --initial",
     "dev-ts": "tsc -p ./tsconfig.build.json -w",
-    "build": "tsc -p ./tsconfig.build.json && pnpm run bundle && pnpm run es5 && pnpm run meta",
+    "build": "tsc -p ./tsconfig.build.json && pnpm run bundle && pnpm run es5",
     "build-es6": "esbuild ./src/mpv-easy-es6.tsx --bundle --outdir=bundle --charset=utf8 --define:globalThis.version='\"0.1.14\"' --minify --define:process.env.NODE_ENV='\"production\"'",
     "copy": "cp -r ./es5/mpv-easy.js $MPV_SCRIPT_DIR/mpv-easy.js",
-    "meta": "tsx ./meta/build.ts",
     "babel": "minify ./dist/mpv-easy.js --out-file ./dist/input.min.js"
   },
   "keywords": [],

@@ -7,7 +7,7 @@ import {
   readFileSync,
   statSync,
 } from "fs-extra"
-import { type Meta, getMeta } from "./meta"
+import { type Script, getScript } from "./meta"
 import chalk from "chalk"
 
 export const ConfigFileName = "mpsm-config.json"
@@ -43,9 +43,9 @@ export function configDetect() {
   }
 }
 
-export function getAllScript(): (Meta & { filePath: string })[] {
+export function getAllScript(): (Script & { filePath: string })[] {
   const dir = getMpsmDir()
-  const metaList: (Meta & { filePath: string })[] = []
+  const metaList: (Script & { filePath: string })[] = []
 
   if (!existsSync(dir)) {
     return metaList
@@ -57,7 +57,7 @@ export function getAllScript(): (Meta & { filePath: string })[] {
       continue
     }
     const text = readFileSync(scriptPath, "utf8")
-    const meta = getMeta(text)
+    const meta = getScript(text)
     if (meta) {
       metaList.push({ ...meta, filePath: scriptPath })
     }

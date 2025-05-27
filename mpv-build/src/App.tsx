@@ -1,6 +1,6 @@
-import React, { useEffect, useRef, useState } from "react"
-import { Checkbox, Input } from "antd"
-import type { CheckboxOptionType, GetProps } from "antd"
+import React, { useEffect, useRef } from "react"
+import { Checkbox, Input, Tooltip } from "antd"
+import type { GetProps } from "antd"
 const { Search } = Input
 type SearchProps = GetProps<typeof Input.Search>
 import { Button, Flex, Spin, Table, type TableProps } from "antd"
@@ -16,7 +16,7 @@ import { Radio } from "antd"
 import { decode, encode, File, Fmt, guess } from "@easy-install/easy-archive"
 import { Typography } from "antd"
 const { Title, Link } = Typography
-import { Meta } from "@mpv-easy/mpsm"
+import { Script } from "@mpv-easy/mpsm"
 import { notification } from "antd"
 import { useMount } from "react-use"
 import { create } from "zustand"
@@ -46,23 +46,39 @@ interface Store {
   selectedRowKeys: string[]
   externalList: string[]
   ui: UI
+  platform: Platform
   setData: (data: Record<string, DataType>) => void
   setTableData: (tableData: DataType[]) => void
   setSpinning: (spinning: boolean) => void
   setSelectedKeys: (selectedRowKeys: string[]) => void
   setExternalList: (externalList: string[]) => void
   setUI: (ui: UI) => void
+  setPlatform: (platform: Platform) => void
+  setState: (state: State) => void
+}
+
+// TODO: support liunx
+const PLATFORM_LIST = ["mpv", "mpv-v3"] as const
+type Platform = (typeof PLATFORM_LIST)[number]
+
+type State = {
+  [K in keyof Store as Store[K] extends Function ? never : K]: Store[K]
+}
+
+const DEFAULT_STATE: State = {
+  data: {},
+  tableData: [],
+  spinning: false,
+  selectedRowKeys: [],
+  externalList: [],
+  ui: "mpv",
+  platform: "mpv-v3",
 }
 
 const useMpvStore = create<Store>()(
   persist(
     (set, get) => ({
-      data: {},
-      tableData: [],
-      spinning: false,
-      selectedRowKeys: [],
-      externalList: [],
-      ui: "mpv",
+      ...DEFAULT_STATE,
       setData: (data: Record<string, DataType>) => set({ ...get(), data }),
       setTableData: (tableData: DataType[]) => set({ ...get(), tableData }),
       setSpinning: (spinning: boolean) => set({ ...get(), spinning }),
@@ -71,9 +87,13 @@ const useMpvStore = create<Store>()(
       setExternalList: (externalList: string[]) =>
         set({ ...get(), externalList }),
       setUI: (ui: UI) => set({ ...get(), ui }),
+      setPlatform: (platform: Platform) => set({ ...get(), platform }),
+      setState: (state: State) => {
+        set({ ...get(), ...state })
+      },
     }),
     {
-      name: "mpv-build-storage",
+      name: "mpv-build",
       storage: createJSONStorage(() => hashStorage),
       version: undefined,
       partialize: (state) =>
@@ -87,13 +107,13 @@ const useMpvStore = create<Store>()(
 )
 
 const MAX_SCRIPT_COUNT = 32
+const TITLE_WIDTH = 150
+const ITEM_WIDTH = 150
+const NAME_WIDTH = 250
 
-interface DataType extends Meta {
+interface DataType extends Script {
   key: string
 }
-
-const META_URL =
-  "https://raw.githubusercontent.com/mpv-easy/mpsm-scripts/main/meta.json"
 
 function downloadBinaryFile(fileName: string, content: Uint8Array): void {
   const blob = new Blob([content], { type: "application/octet-stream" })
@@ -108,42 +128,118 @@ function downloadBinaryFile(fileName: string, content: Uint8Array): void {
   URL.revokeObjectURL(url)
 }
 
-const MPV_UI = [
+function getMpvV3Url() {
+  return getDownloadUrl(
+    "mpv-easy",
+    "mpv-easy-cdn",
+    "main",
+    "mpv-v3-windows.tar.xz",
+  )
+}
+function getMpvUrl() {
+  return getDownloadUrl("mpv-easy", "mpv-easy-cdn", "main", "mpv-windows.zip")
+}
+function getPlayWithUrl() {
+  return getDownloadUrl(
+    "mpv-easy",
+    "mpv-easy-cdn",
+    "main",
+    "mpv-easy-play-with-windows.exe",
+  )
+}
+function getYtdlpUrl() {
+  return getDownloadUrl("mpv-easy", "mpv-easy-cdn", "main", "yt-dlp.exe")
+}
+function getFfmpegUrl() {
+  return getDownloadUrl(
+    "mpv-easy",
+    "mpv-easy-cdn",
+    "main",
+    "ffmpeg-windows.zip",
+  )
+}
+function getFfmpegV3Url() {
+  return getDownloadUrl(
+    "mpv-easy",
+    "mpv-easy-cdn",
+    "main",
+    "ffmpeg-v3-windows.zip",
+  )
+}
+
+const UI_LIST = [
   {
     name: "mpv",
-    url: "https://raw.githubusercontent.com/mpv-easy/mpv-easy-cdn/main/mpv-windows.tar.xz",
+    info: {
+      user: "mpv-easy",
+      repo: "mpv-easy-cdn",
+      tag: "main",
+      file: "mpv-v3-windows.tar.xz",
+    },
     repo: "https://github.com/mpv-player/mpv",
+    deps: [],
   },
   {
     name: "mpv-uosc",
-    url: "https://raw.githubusercontent.com/mpv-easy/mpv-easy-cdn/main/mpv-uosc-windows-full.tar.xz",
+    info: {
+      user: "mpv-easy",
+      repo: "mpv-easy-cdn",
+      tag: "main",
+      file: "mpv-uosc-windows-full.tar.xz",
+    },
     repo: "https://github.com/tomasklaen/uosc",
+    deps: ["thumbfast", "uosc"],
   },
   {
     name: "mpv-easy",
-    url: "https://raw.githubusercontent.com/mpv-easy/mpv-easy-cdn/main/mpv-easy-windows-full.tar.xz",
+    info: {
+      user: "mpv-easy",
+      repo: "mpv-easy-cdn",
+      tag: "main",
+      file: "mpv-easy-windows-full.tar.xz",
+    },
     repo: "https://github.com/mpv-easy/mpv-easy",
+    deps: [
+      "thumbfast",
+      "mpv-easy",
+      "mpv-easy-anime4k",
+      " mpv-easy-clipboard-play",
+      "mpv-easy-copy-time",
+      "mpv-easy-cut",
+      " mpv-easy-translate",
+      "mpv-easy-autoload",
+      "mpv-easy-copy-screen",
+      "mpv-easy-crop",
+      "mpv-easy-thumbfast",
+    ],
   },
   {
     name: "mpv-modernx",
-    url: "https://raw.githubusercontent.com/mpv-easy/mpv-easy-cdn/main/mpv-modernx-windows-full.tar.xz",
+    info: {
+      user: "mpv-easy",
+      repo: "mpv-easy-cdn",
+      tag: "main",
+      file: "mpv-modernx-windows-full.tar.xz",
+    },
     repo: "https://github.com/cyl0/ModernX",
+    deps: ["thumbfast", "ModernX", "ModernX cyl0"],
   },
   {
     name: "mpv-modernz",
-    url: "https://raw.githubusercontent.com/mpv-easy/mpv-easy-cdn/main/mpv-modernz-windows-full.tar.xz",
+    info: {
+      user: "mpv-easy",
+      repo: "mpv-easy-cdn",
+      tag: "main",
+      file: "mpv-modernz-windows-full.tar.xz",
+    },
     repo: "https://github.com/Samillion/ModernZ",
+    deps: ["thumbfast", "ModernZ"],
   },
 ] as const
 
-type UI = (typeof MPV_UI)[number]["name"]
+type UI = (typeof UI_LIST)[number]["name"]
 
-const FFMPEG_URL =
-  "https://raw.githubusercontent.com/mpv-easy/mpv-easy-cdn/main/ffmpeg-windows.zip"
-const YT_DLP_URL =
-  "https://raw.githubusercontent.com/mpv-easy/mpv-easy-cdn/main/yt-dlp.exe"
-const PLAY_WITH_URL =
-  "https://raw.githubusercontent.com/mpv-easy/mpv-easy-cdn/main/mpv-easy-play-with-windows.exe"
+const ExternalList = ["ffmpeg", "yt-dlp", "play-with"]
 
 async function downloadBinary(url: string): Promise<Uint8Array> {
   return fetch(url)
@@ -151,38 +247,256 @@ async function downloadBinary(url: string): Promise<Uint8Array> {
     .then((i) => new Uint8Array(i))
 }
 
-async function getScriptFiles(meta: Meta): Promise<File[]> {
-  let name = meta.name
-  const { downloadURL } = meta
-  if (downloadURL.endsWith("master.zip") || downloadURL.endsWith("main.zip")) {
-    name = `${meta.name}.zip`
-  } else if (downloadURL.endsWith(".js") || downloadURL.endsWith(".lua")) {
-    name = downloadURL.split("/").at(-1)!
-  }
-  if (![".js", ".lua", ".zip"].some((i) => downloadURL.endsWith(i))) {
-    console.log("not support script: ", meta)
+function getDownloadUrl(user: string, repo: string, tag: string, file: string) {
+  return `https://raw.githubusercontent.com/${user}/${repo}/${tag}/${file}`
+}
+
+function getScriptDownloadURL({ name }: Script) {
+  return getDownloadUrl("mpv-easy", "mpv-easy-cdn", "main", `${name}.zip`)
+}
+
+async function getScriptFiles(script: Script): Promise<File[]> {
+  const { download } = script
+  if (![".js", ".lua", ".zip"].some((i) => download.endsWith(i))) {
+    console.log("not support script: ", script)
     return []
   }
 
-  const url = `https://raw.githubusercontent.com/mpv-easy/mpv-easy-cdn/main/${name}`
+  const url = getScriptDownloadURL(script)
   const bin = await downloadBinary(url)
 
-  if (downloadURL.endsWith("master.zip") || downloadURL.endsWith("main.zip")) {
-    const v = decode(guess(name)!, bin)!.filter((i) => !i.isDir)
-    return v.map(({ path, mode, isDir, buffer }) => {
-      const filePath = path.endsWith(".conf")
-        ? `portable_config/script-opts/${path}`
-        : `portable_config/scripts/${path}`
-      return new File(filePath, buffer, mode, isDir)
-    })
+  const v = decode(guess(url)!, bin)!.filter((i) => !i.isDir)
+  return v
+}
+
+function appendScriptConf(
+  mpvConf: Uint8Array,
+  scriptConf: Uint8Array,
+  script: Script,
+): Uint8Array {
+  const decoder = new TextDecoder("utf-8")
+  const mpvString = decoder.decode(mpvConf)
+  const tab = "#".repeat(4)
+  const banner = [tab, script.name, tab].join(" ")
+  if (mpvString.includes(banner)) {
+    return mpvConf
   }
-  if (name.endsWith(".js") || name.endsWith(".lua")) {
-    return [new File(`portable_config/scripts/${name}`, bin, null, false)]
+  const scriptString = decoder.decode(scriptConf).trim()
+  const resultString = [mpvString, "", banner, scriptString, banner, ""]
+    .join("\n")
+    .trimStart()
+  const encoder = new TextEncoder()
+  return encoder.encode(resultString)
+}
+
+function isFont(url: string) {
+  const fontExtensions: string[] = [".ttf", ".otf", ".woff", ".woff2", ".eot"]
+  const lowerUrl: string = url.toLowerCase()
+  return fontExtensions.some((ext) => lowerUrl.endsWith(ext))
+}
+function installScript(mpvFiles: File[], scriptFiles: File[], script: Script) {
+  // fonts, script-opts, shaders
+  for (const dir of ["fonts", "script-opts", "shaders"]) {
+    if (scriptFiles.find((i) => i.path.startsWith(`${dir}/`))) {
+      const files = scriptFiles.filter((i) => i.path.startsWith(`${dir}/`))
+      scriptFiles = scriptFiles.filter((i) => !i.path.startsWith(`${dir}/`))
+      for (const i of files) {
+        i.path = `portable_config/${dir}/${i.path.replace(`${dir}/`, "")}`
+        mpvFiles.push(i)
+      }
+    }
   }
-  if (name.endsWith(".conf")) {
-    return [new File(`portable_config/script-opts/${name}`, bin, null, false)]
+
+  // scripts
+  if (scriptFiles.find((i) => i.path.startsWith("scripts/"))) {
+    const files = scriptFiles.filter((i) => i.path.startsWith("scripts/"))
+    scriptFiles = scriptFiles.filter((i) => !i.path.startsWith("scripts/"))
+
+    const pathList = files.map((i) => i.path.split("/"))
+    const prefixList = files[0].path.split("/").slice(0, 2)
+    if (
+      prefixList.length === 2 &&
+      pathList.every(
+        (i) =>
+          i.length >= 3 &&
+          // scripts
+          i[0] === prefixList[0] &&
+          // uosc
+          i[1] === prefixList[1],
+      )
+    ) {
+    } else {
+      prefixList.pop()
+    }
+
+    // rename to main
+    const luaFiles = files.filter(
+      (i) =>
+        !i.path.replace(`${prefixList.join("/")}/`, "").includes("/") &&
+        i.path.endsWith(".lua"),
+    )
+    const jsFiles = files.filter(
+      (i) =>
+        !i.path.replace(`${prefixList.join("/")}/`, "").includes("/") &&
+        i.path.endsWith(".js"),
+    )
+    if (luaFiles.length === 1) {
+      luaFiles[0].path = `${script.name}/main.lua`
+    } else if (jsFiles.length === 1) {
+      jsFiles[0].path = `${script.name}/main.js`
+    }
+
+    for (const i of files) {
+      i.path = `portable_config/scripts/${i.path.replace(`${prefixList.join("/")}/`, `${script.name}/`)}`
+      mpvFiles.push(i)
+    }
   }
-  return []
+
+  // externals
+  if (scriptFiles.find((i) => i.path.startsWith("externals/"))) {
+    const files = scriptFiles.filter((i) => i.path.startsWith("externals/"))
+    scriptFiles = scriptFiles.filter((i) => !i.path.startsWith("externals/"))
+    for (const i of files) {
+      i.path = i.path.replace("externals/", "")
+      mpvFiles.push(i)
+    }
+  }
+
+  // input.conf and mpv.conf
+  for (const name of ["input.conf", "mpv.conf"]) {
+    const scriptConfIndex = scriptFiles.findIndex((i) => i.path === name)
+    if (scriptConfIndex === -1) {
+      continue
+    }
+    const scriptConf = scriptFiles.splice(scriptConfIndex, 1)[0]
+
+    const fileIndex = mpvFiles.findIndex(
+      (i) => i.path === `portable_config/${name}`,
+    )
+    let file: File
+    if (fileIndex === -1) {
+      file = new File(
+        `portable_config/${name}`,
+        new Uint8Array(),
+        undefined,
+        false,
+        BigInt(+new Date()),
+      )
+    } else {
+      file = mpvFiles.splice(fileIndex, 1)[0]
+    }
+
+    const { path, mode, isDir, lastModified, buffer } = file
+    const newBuffer = appendScriptConf(buffer, scriptConf.buffer, script)
+    mpvFiles.push(new File(path, newBuffer, mode, isDir, lastModified))
+  }
+
+  // conf
+  if (
+    scriptFiles.find((i) => !i.path.includes("/") && i.path.endsWith(".conf"))
+  ) {
+    const files = scriptFiles.filter(
+      (i) => !i.path.includes("/") && i.path.endsWith(".conf"),
+    )
+    scriptFiles = scriptFiles.filter(
+      (i) => !(!i.path.includes("/") && i.path.endsWith(".conf")),
+    )
+    for (const i of files) {
+      i.path = `portable_config/script-opts/${i.path}`
+      mpvFiles.push(i)
+    }
+  }
+
+  // font file
+  if (scriptFiles.find((i) => !i.path.includes("/") && isFont(i.path))) {
+    const files = scriptFiles.filter(
+      (i) => !i.path.includes("/") && isFont(i.path),
+    )
+    scriptFiles = scriptFiles.filter(
+      (i) => !(!i.path.includes("/") && isFont(i.path)),
+    )
+    for (const i of files) {
+      i.path = `portable_config/fonts/${i.path}`
+      mpvFiles.push(i)
+    }
+  }
+
+  // rename to main
+  const luaFiles = scriptFiles.filter(
+    (i) => !i.path.includes("/") && i.path.endsWith(".lua"),
+  )
+  const jsFiles = scriptFiles.filter(
+    (i) => !i.path.includes("/") && i.path.endsWith(".js"),
+  )
+  if (luaFiles.length === 1) {
+    luaFiles[0].path = "main.lua"
+  } else if (jsFiles.length === 1) {
+    jsFiles[0].path = "main.js"
+  }
+
+  for (const i of scriptFiles) {
+    i.path = `portable_config/scripts/${script.name}/${i.path}`
+    mpvFiles.push(i)
+  }
+}
+
+async function getMpvFiles(platform: Platform, ui: UI) {
+  let uiUrl = ""
+  if (platform === "mpv" && ui === "mpv") {
+    uiUrl = getMpvUrl()
+  } else {
+    const info = UI_LIST.find((i) => i.name === ui)?.info
+    if (info) {
+      const { repo, user, tag, file } = info
+      uiUrl = getDownloadUrl(user, repo, tag, file)
+    }
+  }
+
+  if (!uiUrl) {
+    return []
+  }
+
+  // ui
+  const uiBinary = await downloadBinary(uiUrl)
+  const fmt = guess(uiUrl)
+  if (!fmt) {
+    console.log("fmt error")
+    return []
+  }
+  const uiFiles = decode(fmt, uiBinary)
+  if (!uiFiles) {
+    console.log("uiFiles error")
+    return []
+  }
+  const v: File[] = []
+  for (const item of uiFiles) {
+    try {
+      const { path, mode, isDir, lastModified, buffer } = item
+      if (isDir) {
+        continue
+      }
+      v.push(new File(path, new Uint8Array(buffer), mode, isDir, lastModified))
+    } catch (e) {
+      console.log(e)
+
+      return []
+    }
+  }
+
+  // replace all v3 files
+  if (platform === "mpv" && ui !== "mpv") {
+    const mpvUrl = getMpvUrl()
+    const bin = await downloadBinary(mpvUrl)
+    const files = decode(guess(mpvUrl)!, bin)!
+    for (const file of files) {
+      const index = v.findIndex((i) => i.path === file.path)
+      if (index !== -1) {
+        v[index] = file
+      }
+    }
+  }
+
+  return v
 }
 
 function App() {
@@ -201,78 +515,61 @@ function App() {
     setUI,
     setSelectedKeys,
     setExternalList,
+    platform,
+    setPlatform,
+    setState,
   } = store
+
+  const uiDeps: readonly string[] =
+    UI_LIST.find((i) => i.name === ui)?.deps || []
+
   const [api, contextHolder] = notification.useNotification()
 
-  const options: CheckboxOptionType<string>[] = [
-    { label: "ffmpeg", value: "ffmpeg" },
-    { label: "yt-dlp", value: "yt-dlp" },
-    { label: "play-with", value: "play-with" },
-  ]
+  const reset = () => {
+    setState({ ...DEFAULT_STATE, data, tableData })
+  }
+
   const zipAll = async () => {
-    const uiUrl = MPV_UI.find((i) => i.name === ui)?.url
-    if (!uiUrl) {
-      return
-    }
-    // ui
-    const uiBinary = await downloadBinary(uiUrl)
-    const fmt = guess(uiUrl)
-    if (!fmt) {
-      console.log("fmt error")
-      return
-    }
-    const uiFiles = decode(fmt, uiBinary)
-    if (!uiFiles) {
-      console.log("uiFiles error")
-      return
-    }
-    const v: File[] = []
-    for (const item of uiFiles) {
-      try {
-        const { path, mode, isDir, buffer } = item
-        if (isDir) {
-          continue
-        }
-        v.push(new File(path, new Uint8Array(buffer), mode, isDir))
-      } catch (e) {
-        console.log(e)
-      }
-    }
+    const mpvFiles = await getMpvFiles(platform, ui)
 
     // ffmpeg
     if (externalList.includes("ffmpeg")) {
-      const ffmpegBinary = await downloadBinary(FFMPEG_URL)
-      const ffmpegFiles = decode(guess(FFMPEG_URL)!, ffmpegBinary)!
-      for (const { path, mode, isDir, buffer } of ffmpegFiles) {
+      const ffmpegBinary = await downloadBinary(
+        platform === "mpv-v3" ? getFfmpegV3Url() : getFfmpegUrl(),
+      )
+      const ffmpegFiles = decode(guess(getFfmpegUrl())!, ffmpegBinary)!
+      for (const { path, mode, isDir, lastModified, buffer } of ffmpegFiles) {
         if (isDir) {
           continue
         }
-        v.push(new File(path, buffer, mode, isDir))
+        mpvFiles.push(new File(path, buffer, mode, isDir, lastModified))
       }
     }
 
     // yt-dlp
     if (externalList.includes("yt-dlp")) {
-      const bin = await downloadBinary(YT_DLP_URL)
-      v.push(new File("yt-dlp.exe", bin, null, false))
+      const bin = await downloadBinary(getYtdlpUrl())
+      mpvFiles.push(
+        new File("yt-dlp.exe", bin, null, false, BigInt(+new Date())),
+      )
     }
 
     // play-with
     if (externalList.includes("play-with")) {
-      const bin = await downloadBinary(PLAY_WITH_URL)
-      v.push(new File("play-with.exe", bin, null, false))
+      const bin = await downloadBinary(getPlayWithUrl())
+      mpvFiles.push(
+        new File("play-with.exe", bin, null, false, BigInt(+new Date())),
+      )
     }
 
     // scripts
     for (const i of selectedRowKeys) {
-      const files = await getScriptFiles(data[i])
-      for (const i of files) {
-        v.push(i)
-      }
+      const scriptFiles = await getScriptFiles(data[i])
+      installScript(mpvFiles, scriptFiles, data[i])
     }
 
     // encode to zip
-    const zipBinary = encode(Fmt.Zip, v)
+    const zipBinary = encode(Fmt.Zip, mpvFiles)
     if (!zipBinary) {
       console.log("zip file error")
       return
@@ -281,6 +578,8 @@ function App() {
   }
   const download = async () => {
     setSpinning(true)
+    // Wait for spinning
+    await new Promise((r) => setTimeout(r))
     const zipBinary = await zipAll()
     setSpinning(false)
     if (zipBinary) {
@@ -288,7 +587,14 @@ function App() {
     }
   }
 
-  useMount(async () => {
+  const resetData = async () => {
+    const META_URL = getDownloadUrl(
+      "mpv-easy",
+      "mpsm-scripts",
+      "main",
+      "scripts-full.json",
+    )
+
     const data: Record<string, DataType> = await fetch(META_URL)
       .then((i) => i.text())
       .then((text) => JSON.parse(text))
@@ -308,7 +614,9 @@ function App() {
     fuseRef.current = new Fuse(Object.values(data), {
       keys: ["name"],
     })
-  })
+  }
+
+  useMount(resetData)
 
   const columns: TableProps<DataType>["columns"] = [
     {
@@ -317,12 +625,12 @@ function App() {
       key: "key",
       render: (_, i) => {
         return (
-          <Link href={i.url} target="_blank" rel="noreferrer">
+          <Link href={i.homepage} target="_blank" rel="noreferrer">
             {i.name}
           </Link>
         )
       },
-      width: 250,
+      width: NAME_WIDTH,
     },
     {
       title: "description",
@@ -333,6 +641,23 @@ function App() {
       title: "author",
       dataIndex: "author",
       key: "url",
+    },
+    {
+      title: "download",
+      dataIndex: "download",
+      key: "url",
+      render: (_, script) => {
+        return (
+          <Button
+            key={script.download}
+            icon={<DownloadOutlined />}
+            onClick={async () => {
+              const bin = await downloadBinary(getScriptDownloadURL(script))
+              downloadBinaryFile(`${script.name}.zip`, bin)
+            }}
+          />
+        )
+      },
     },
   ]
 
@@ -358,6 +683,7 @@ function App() {
       </Flex>
     )
   }
+
   return (
     <>
       {contextHolder}
@@ -391,38 +717,85 @@ function App() {
           </Typography.Link>
         </Flex>
 
-        <Flex gap="middle" vertical justify="center" align="center">
-          <Typography>
-            <Title level={3}>UI</Title>
-          </Typography>
-          <Radio.Group
-            onChange={(e) => {
-              setUI(e.target.value)
-            }}
-            value={ui}
-          >
-            {MPV_UI.map((i) => (
-              <Radio value={i.name} key={i.url}>
-                <Typography.Link href={i.repo} target="_blank">
-                  {" "}
-                  {i.name}
-                </Typography.Link>
-              </Radio>
-            ))}
-          </Radio.Group>
-        </Flex>
+        <Flex gap="middle" vertical align="start">
+          <Flex gap="middle" justify="center" align="center">
+            <Typography.Title
+              level={5}
+              style={{ margin: 0, width: TITLE_WIDTH }}
+            >
+              Platform:
+            </Typography.Title>
+            <Radio.Group
+              value={platform}
+              onChange={(e) => {
+                setPlatform(e.target.value)
+              }}
+            >
+              {PLATFORM_LIST.map((i) => (
+                <Tooltip
+                  key={i}
+                  placement="topLeft"
+                  title={
+                    i === "mpv"
+                      ? `Typically, you should use mpv-v3 unless it fails to run or you're using an older CPU (manufactured around 2015 or earlier).`
+                      : ""
+                  }
+                >
+                  <Radio value={i} key={i} style={{ width: ITEM_WIDTH }}>
+                    {i}
+                  </Radio>
+                </Tooltip>
+              ))}
+            </Radio.Group>
+          </Flex>
 
-        <Flex gap="middle" vertical justify="center" align="center">
-          <Typography>
-            <Title level={3}>External</Title>
-          </Typography>
-          <Checkbox.Group
-            value={externalList}
-            options={options}
-            onChange={(e) => {
-              setExternalList(e)
-            }}
-          />
+          <Flex gap="middle" justify="center" align="center">
+            <Typography.Title
+              level={5}
+              style={{ margin: 0, width: TITLE_WIDTH }}
+            >
+              UI:
+            </Typography.Title>
+            <Radio.Group
+              onChange={(e) => {
+                setUI(e.target.value)
+              }}
+              value={ui}
+            >
+              {UI_LIST.map((i) => (
+                <Radio
+                  value={i.name}
+                  key={i.name}
+                  style={{ width: ITEM_WIDTH }}
+                >
+                  <Typography.Link href={i.repo} target="_blank">
+                    {i.name}
+                  </Typography.Link>
+                </Radio>
+              ))}
+            </Radio.Group>
+          </Flex>
+
+          <Flex gap="middle" justify="center" align="center">
+            <Typography.Title
+              level={5}
+              style={{ margin: 0, width: TITLE_WIDTH }}
+            >
+              External:
+            </Typography.Title>
+            <Checkbox.Group
+              value={externalList}
+              onChange={(e) => {
+                setExternalList(e)
+              }}
+            >
+              {ExternalList.map((i) => (
+                <Checkbox value={i} key={i} style={{ width: ITEM_WIDTH }}>
+                  {i}
+                </Checkbox>
+              ))}
+            </Checkbox.Group>
+          </Flex>
         </Flex>
 
         <Search
@@ -432,19 +805,24 @@ function App() {
         />
         <Table<DataType>
           rowSelection={{
+            hideSelectAll: true,
             type: "checkbox",
-            onChange: (selectedRowKeys: React.Key[]) => {
-              if (selectedRowKeys.length > MAX_SCRIPT_COUNT) {
-                api.open({
-                  message: "Too many scripts",
-                  description: `The maximum supported number of selectable scripts is ${MAX_SCRIPT_COUNT}`,
-                  duration: 3,
-                })
-                return
+            onSelect: (record, selected) => {
+              if (selected) {
+                setSelectedKeys([...selectedRowKeys, record.name])
+              } else {
+                setSelectedKeys(
+                  [...selectedRowKeys].filter((i) => i !== record.name),
+                )
               }
-              setSelectedKeys(selectedRowKeys as string[])
             },
-            selectedRowKeys,
+            getCheckboxProps: (record: DataType) => {
+              return {
+                disabled: uiDeps.includes(record.name),
+                name: record.name,
+              }
+            },
+            selectedRowKeys: [...selectedRowKeys, ...uiDeps],
           }}
           className="table"
           columns={columns}
@@ -452,6 +830,18 @@ function App() {
         />
         <Spin spinning={spinning} fullscreen />
         <Flex>
+          <Tag color="processing" key={ui}>
+            {ui}
+          </Tag>
+          {uiDeps.map((i) => {
+            return (
+              data[i] && (
+                <Tag color="success" key={data[i].key}>
+                  {data[i].name}
+                </Tag>
+              )
+            )
+          })}
           {selectedRowKeys.map((i) => {
             return (
               <Tag
@@ -473,15 +863,19 @@ function App() {
             )
           })}
         </Flex>
-
-        <Button
-          type="primary"
-          icon={<DownloadOutlined />}
-          size={"large"}
-          onClick={download}
-        >
-          Download {ui}.zip
-        </Button>
+        <Flex gap="middle">
+          <Button color="danger" size={"large"} variant="solid" onClick={reset}>
+            Reset
+          </Button>
+          <Button
+            type="primary"
+            icon={<DownloadOutlined />}
+            size={"large"}
+            onClick={download}
+          >
+            Download {ui}.zip
+          </Button>
+        </Flex>
       </Flex>
     </>
   )

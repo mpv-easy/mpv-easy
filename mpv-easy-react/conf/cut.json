@@ -1,0 +1,7 @@
+{
+  "name": "mpv-easy-cut",
+  "description": "mpv player cut script",
+  "author": "mpv-easy",
+  "download": "https://github.com/mpv-easy/mpv-easy/releases/latest/download/mpv-easy-cut.zip",
+  "homepage": "https://github.com/mpv-easy/mpv-easy/tree/main/mpv-cut"
+}

@@ -8,7 +8,7 @@ build({
   outfile: "./bundle/mpv-easy-tpl.js",
   charset: "utf8",
   define: {
-    "globalThis.version": '"0.1.14"',
+    "globalThis.version": '"v0.1.15-alpha.6"',
     "process.env.NODE_ENV": '"production"',
   },
   metafile: true,

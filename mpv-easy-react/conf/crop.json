@@ -1,0 +1,7 @@
+{
+  "name": "mpv-easy-crop",
+  "description": "mpv player crop script",
+  "author": "mpv-easy",
+  "download": "https://github.com/mpv-easy/mpv-easy/releases/latest/download/mpv-easy-crop.zip",
+  "homepage": "https://github.com/mpv-easy/mpv-easy/tree/main/mpv-crop"
+}

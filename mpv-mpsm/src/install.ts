@@ -1,8 +1,13 @@
 import { join } from "node:path"
 import { getMpsmDir } from "./config"
 import { outputFileSync } from "fs-extra"
-import { type Meta, addMeta, getMeta } from "./meta"
-import { downloadJson, downloadText, getFileNameFromUrl, isMeta } from "./share"
+import { type Script, addScript, getScript } from "./meta"
+import {
+  downloadJson,
+  downloadText,
+  getFileNameFromUrl,
+  isScript,
+} from "./share"
 import chalk from "chalk"
 import { existsSync, readFileSync } from "fs-extra"
 import { ScriptRemoteUrl } from "./const"
@@ -10,16 +15,16 @@ import { isRemote } from "@mpv-easy/tool"
 
 export async function installFromUrl(
   url: string,
-  preferMeta?: Meta | undefined,
-): Promise<Meta> {
-  if (isMeta(url)) {
-    return installFromMeta(url)
+  preferScript?: Script | undefined,
+): Promise<Script> {
+  if (isScript(url)) {
+    return installFromScript(url)
   }
 
   const dir = getMpsmDir()
   const text = await downloadText(url)
-  const rawMeta = getMeta(text)
-  const meta = preferMeta ?? rawMeta
+  const rawScript = getScript(text)
+  const meta = preferScript ?? rawScript
   if (!meta) {
     console.log(
       `script ${url} don't have meta info. see: https://github.com/mpv-easy/mpsm-scripts?tab=readme-ov-file#meta-info`,
@@ -31,9 +36,9 @@ export async function installFromUrl(
 
   if (
     !existsSync(p) ||
-    getMeta(readFileSync(p, "utf8"))?.version !== meta.version
+    getScript(readFileSync(p, "utf8"))?.version !== meta.version
   ) {
-    const outputText = !rawMeta ? addMeta(text, meta) : text
+    const outputText = !rawScript ? addScript(text, meta) : text
     outputFileSync(p, outputText)
   }
 
@@ -50,16 +55,16 @@ export async function installFromMpsm(name: string) {
   return installFromUrl(url)
 }
 
-export async function installFromMeta(url: string): Promise<Meta> {
+export async function installFromScript(url: string): Promise<Script> {
   const text = await downloadText(url)
-  const meta = getMeta(text)
+  const meta = getScript(text)
 
   if (!meta) {
     console.log(`${url} don't have meta info`)
     process.exit()
   }
 
-  const downloadUrl = meta.downloadURL
+  const downloadUrl = meta.download
   await installFromUrl(downloadUrl, meta)
   return meta
 }
