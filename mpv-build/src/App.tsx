@@ -1,4 +1,4 @@
-import React, { useRef } from "react"
+import React, { useEffect, useRef } from "react"
 import { Checkbox, Input, Tooltip } from "antd"
 import type { GetProps } from "antd"
 const { Search } = Input
@@ -46,7 +46,6 @@ interface Store {
   selectedRowKeys: string[]
   externalList: string[]
   ui: UI
-  cdn: CDN
   platform: Platform
   setData: (data: Record<string, DataType>) => void
   setTableData: (tableData: DataType[]) => void
@@ -54,7 +53,6 @@ interface Store {
   setSelectedKeys: (selectedRowKeys: string[]) => void
   setExternalList: (externalList: string[]) => void
   setUI: (ui: UI) => void
-  setCDN: (cdn: CDN) => void
   setPlatform: (platform: Platform) => void
   setState: (state: State) => void
 }
@@ -74,7 +72,6 @@ const DEFAULT_STATE: State = {
   selectedRowKeys: [],
   externalList: [],
   ui: "mpv",
-  cdn: "github",
   platform: "mpv-v3",
 }
 
@@ -90,14 +87,13 @@ const useMpvStore = create<Store>()(
       setExternalList: (externalList: string[]) =>
         set({ ...get(), externalList }),
       setUI: (ui: UI) => set({ ...get(), ui }),
-      setCDN: (cdn: CDN) => set({ ...get(), cdn }),
       setPlatform: (platform: Platform) => set({ ...get(), platform }),
       setState: (state: State) => {
         set({ ...get(), ...state })
       },
     }),
     {
-      name: "mpv-build-storage",
+      name: "mpv-build",
       storage: createJSONStorage(() => hashStorage),
       version: undefined,
       partialize: (state) =>
@@ -119,9 +115,6 @@ interface DataType extends Script {
   key: string
 }
 
-const META_URL =
-  "https://raw.githubusercontent.com/mpv-easy/mpsm-scripts/rfc/scripts-full.json"
-
 function downloadBinaryFile(fileName: string, content: Uint8Array): void {
   const blob = new Blob([content], { type: "application/octet-stream" })
   const url = URL.createObjectURL(blob)
@@ -135,26 +128,76 @@ function downloadBinaryFile(fileName: string, content: Uint8Array): void {
   URL.revokeObjectURL(url)
 }
 
-const MPV_V3_URL =
-  "https://raw.githubusercontent.com/mpv-easy/mpv-easy-cdn/main/mpv-v3-windows.tar.xz"
-const MPV_URL =
-  "https://raw.githubusercontent.com/mpv-easy/mpv-easy-cdn/main/mpv-windows.tar.xz"
+function getMpvV3Url() {
+  return getDownloadUrl(
+    "mpv-easy",
+    "mpv-easy-cdn",
+    "main",
+    "mpv-v3-windows.tar.xz",
+  )
+}
+function getMpvUrl() {
+  return getDownloadUrl("mpv-easy", "mpv-easy-cdn", "main", "mpv-windows.zip")
+}
+function getPlayWithUrl() {
+  return getDownloadUrl(
+    "mpv-easy",
+    "mpv-easy-cdn",
+    "main",
+    "mpv-easy-play-with-windows.exe",
+  )
+}
+function getYtdlpUrl() {
+  return getDownloadUrl("mpv-easy", "mpv-easy-cdn", "main", "yt-dlp.exe")
+}
+function getFfmpegUrl() {
+  return getDownloadUrl(
+    "mpv-easy",
+    "mpv-easy-cdn",
+    "main",
+    "ffmpeg-windows.zip",
+  )
+}
+function getFfmpegV3Url() {
+  return getDownloadUrl(
+    "mpv-easy",
+    "mpv-easy-cdn",
+    "main",
+    "ffmpeg-v3-windows.zip",
+  )
+}
+
 const UI_LIST = [
   {
     name: "mpv",
-    url: MPV_V3_URL,
+    info: {
+      user: "mpv-easy",
+      repo: "mpv-easy-cdn",
+      tag: "main",
+      file: "mpv-v3-windows.tar.xz",
+    },
     repo: "https://github.com/mpv-player/mpv",
     deps: [],
   },
   {
     name: "mpv-uosc",
-    url: "https://raw.githubusercontent.com/mpv-easy/mpv-easy-cdn/main/mpv-uosc-windows-full.tar.xz",
+    info: {
+      user: "mpv-easy",
+      repo: "mpv-easy-cdn",
+      tag: "main",
+      file: "mpv-uosc-windows-full.tar.xz",
+    },
     repo: "https://github.com/tomasklaen/uosc",
     deps: ["thumbfast", "uosc"],
   },
   {
     name: "mpv-easy",
-    url: "https://raw.githubusercontent.com/mpv-easy/mpv-easy-cdn/main/mpv-easy-windows-full.tar.xz",
+    info: {
+      user: "mpv-easy",
+      repo: "mpv-easy-cdn",
+      tag: "main",
+      file: "mpv-easy-windows-full.tar.xz",
+    },
     repo: "https://github.com/mpv-easy/mpv-easy",
     deps: [
       "thumbfast",
@@ -172,30 +215,29 @@ const UI_LIST = [
   },
   {
     name: "mpv-modernx",
-    url: "https://raw.githubusercontent.com/mpv-easy/mpv-easy-cdn/main/mpv-modernx-windows-full.tar.xz",
+    info: {
+      user: "mpv-easy",
+      repo: "mpv-easy-cdn",
+      tag: "main",
+      file: "mpv-modernx-windows-full.tar.xz",
+    },
     repo: "https://github.com/cyl0/ModernX",
     deps: ["thumbfast", "ModernX", "ModernX cyl0"],
   },
   {
     name: "mpv-modernz",
-    url: "https://raw.githubusercontent.com/mpv-easy/mpv-easy-cdn/main/mpv-modernz-windows-full.tar.xz",
+    info: {
+      user: "mpv-easy",
+      repo: "mpv-easy-cdn",
+      tag: "main",
+      file: "mpv-modernz-windows-full.tar.xz",
+    },
     repo: "https://github.com/Samillion/ModernZ",
     deps: ["thumbfast", "ModernZ"],
   },
 ] as const
 
 type UI = (typeof UI_LIST)[number]["name"]
-
-const FFMPEG_URL =
-  "https://raw.githubusercontent.com/mpv-easy/mpv-easy-cdn/main/ffmpeg-windows.zip"
-
-const FFMPEG_V3_URL =
-  "https://raw.githubusercontent.com/mpv-easy/mpv-easy-cdn/main/ffmpeg-v3-windows.zip"
-
-const YT_DLP_URL =
-  "https://raw.githubusercontent.com/mpv-easy/mpv-easy-cdn/main/yt-dlp.exe"
-const PLAY_WITH_URL =
-  "https://raw.githubusercontent.com/mpv-easy/mpv-easy-cdn/main/mpv-easy-play-with-windows.exe"
 
 const ExternalList = ["ffmpeg", "yt-dlp", "play-with"]
 
@@ -205,17 +247,12 @@ async function downloadBinary(url: string): Promise<Uint8Array> {
     .then((i) => new Uint8Array(i))
 }
 
-const CDN_LIST = ["github", "jsdelivr"] as const
+function getDownloadUrl(user: string, repo: string, tag: string, file: string) {
+  return `https://raw.githubusercontent.com/${user}/${repo}/${tag}/${file}`
+}
 
-type CDN = (typeof CDN_LIST)[number]
-
-function getScriptDownloadURL(script: Script, cdn: CDN = "github") {
-  const { name } = script
-  if (cdn === "jsdelivr") {
-    return `https://cdn.jsdelivr.net/gh/mpv-easy/mpv-easy-cdn@main/${name}.zip`
-  }
-
-  return `https://raw.githubusercontent.com/mpv-easy/mpv-easy-cdn/main/${name}.zip`
+function getScriptDownloadURL({ name }: Script) {
+  return getDownloadUrl("mpv-easy", "mpv-easy-cdn", "main", `${name}.zip`)
 }
 
 async function getScriptFiles(script: Script): Promise<File[]> {
@@ -404,10 +441,17 @@ function installScript(mpvFiles: File[], scriptFiles: File[], script: Script) {
 }
 
 async function getMpvFiles(platform: Platform, ui: UI) {
-  const uiUrl =
-    platform === "mpv" && ui === "mpv"
-      ? MPV_URL
-      : UI_LIST.find((i) => i.name === ui)?.url
+  let uiUrl = ""
+  if (platform === "mpv" && ui === "mpv") {
+    uiUrl = getMpvUrl()
+  } else {
+    const info = UI_LIST.find((i) => i.name === ui)?.info
+    if (info) {
+      const { repo, user, tag, file } = info
+      uiUrl = getDownloadUrl(user, repo, tag, file)
+    }
+  }
+
   if (!uiUrl) {
     return []
   }
@@ -441,8 +485,9 @@ async function getMpvFiles(platform: Platform, ui: UI) {
 
   // replace all v3 files
   if (platform === "mpv" && ui !== "mpv") {
-    const bin = await downloadBinary(MPV_URL)
-    const files = decode(guess(MPV_URL)!, bin)!
+    const mpvUrl = getMpvUrl()
+    const bin = await downloadBinary(mpvUrl)
+    const files = decode(guess(mpvUrl)!, bin)!
     for (const file of files) {
       const index = v.findIndex((i) => i.path === file.path)
       if (index !== -1) {
@@ -470,8 +515,6 @@ function App() {
     setUI,
     setSelectedKeys,
     setExternalList,
-    setCDN,
-    cdn,
     platform,
     setPlatform,
     setState,
@@ -492,9 +535,9 @@ function App() {
     // ffmpeg
     if (externalList.includes("ffmpeg")) {
       const ffmpegBinary = await downloadBinary(
-        platform === "mpv-v3" ? FFMPEG_V3_URL : FFMPEG_URL,
+        platform === "mpv-v3" ? getFfmpegV3Url() : getFfmpegUrl(),
       )
-      const ffmpegFiles = decode(guess(FFMPEG_URL)!, ffmpegBinary)!
+      const ffmpegFiles = decode(guess(getFfmpegUrl())!, ffmpegBinary)!
       for (const { path, mode, isDir, lastModified, buffer } of ffmpegFiles) {
         if (isDir) {
           continue
@@ -505,7 +548,7 @@ function App() {
 
     // yt-dlp
     if (externalList.includes("yt-dlp")) {
-      const bin = await downloadBinary(YT_DLP_URL)
+      const bin = await downloadBinary(getYtdlpUrl())
       mpvFiles.push(
         new File("yt-dlp.exe", bin, null, false, BigInt(+new Date())),
       )
@@ -513,7 +556,7 @@ function App() {
 
     // play-with
     if (externalList.includes("play-with")) {
-      const bin = await downloadBinary(PLAY_WITH_URL)
+      const bin = await downloadBinary(getPlayWithUrl())
       mpvFiles.push(
         new File("play-with.exe", bin, null, false, BigInt(+new Date())),
       )
@@ -544,7 +587,14 @@ function App() {
     }
   }
 
-  useMount(async () => {
+  const resetData = async () => {
+    const META_URL = getDownloadUrl(
+      "mpv-easy",
+      "mpsm-scripts",
+      "main",
+      "scripts-full.json",
+    )
+
     const data: Record<string, DataType> = await fetch(META_URL)
       .then((i) => i.text())
       .then((text) => JSON.parse(text))
@@ -564,7 +614,9 @@ function App() {
     fuseRef.current = new Fuse(Object.values(data), {
       keys: ["name"],
     })
-  })
+  }
+
+  useMount(resetData)
 
   const columns: TableProps<DataType>["columns"] = [
     {
@@ -702,27 +754,6 @@ function App() {
               level={5}
               style={{ margin: 0, width: TITLE_WIDTH }}
             >
-              CDN:
-            </Typography.Title>
-            <Radio.Group
-              value={cdn}
-              onChange={(e) => {
-                setCDN(e.target.value)
-              }}
-            >
-              {CDN_LIST.map((i) => (
-                <Radio value={i} key={i} style={{ width: ITEM_WIDTH }}>
-                  {i}
-                </Radio>
-              ))}
-            </Radio.Group>
-          </Flex>
-
-          <Flex gap="middle" justify="center" align="center">
-            <Typography.Title
-              level={5}
-              style={{ margin: 0, width: TITLE_WIDTH }}
-            >
               UI:
             </Typography.Title>
             <Radio.Group
@@ -732,7 +763,11 @@ function App() {
               value={ui}
             >
               {UI_LIST.map((i) => (
-                <Radio value={i.name} key={i.url} style={{ width: ITEM_WIDTH }}>
+                <Radio
+                  value={i.name}
+                  key={i.name}
+                  style={{ width: ITEM_WIDTH }}
+                >
                   <Typography.Link href={i.repo} target="_blank">
                     {i.name}
                   </Typography.Link>
