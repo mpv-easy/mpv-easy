@@ -238,6 +238,11 @@ function appendScriptConf(
   return encoder.encode(resultString)
 }
 
+function isFont(url: string) {
+  const fontExtensions: string[] = [".ttf", ".otf", ".woff", ".woff2", ".eot"]
+  const lowerUrl: string = url.toLowerCase()
+  return fontExtensions.some((ext) => lowerUrl.endsWith(ext))
+}
 function installScript(mpvFiles: File[], scriptFiles: File[], script: Script) {
   // fonts, script-opts, shaders
   for (const dir of ["fonts", "script-opts", "shaders"]) {
@@ -312,7 +317,9 @@ function installScript(mpvFiles: File[], scriptFiles: File[], script: Script) {
 
     const { path, mode, isDir, lastModified, buffer } = file
     const newBuffer = appendScriptConf(buffer, scriptConf.buffer, script)
-    mpvFiles.push(new File(path, newBuffer, mode, isDir, lastModified))
+    mpvFiles.push(
+      new File(`portable_config/${path}`, newBuffer, mode, isDir, lastModified),
+    )
   }
 
   // conf
@@ -327,6 +334,20 @@ function installScript(mpvFiles: File[], scriptFiles: File[], script: Script) {
     )
     for (const i of files) {
       i.path = `portable_config/script-opts/${i.path}`
+      mpvFiles.push(i)
+    }
+  }
+
+  // font file
+  if (scriptFiles.find((i) => !i.path.includes("/") && isFont(i.path))) {
+    const files = scriptFiles.filter(
+      (i) => !i.path.includes("/") && isFont(i.path),
+    )
+    scriptFiles = scriptFiles.filter(
+      (i) => !(!i.path.includes("/") && isFont(i.path)),
+    )
+    for (const i of files) {
+      i.path = `portable_config/fonts/${i.path}`
       mpvFiles.push(i)
     }
   }
@@ -703,8 +724,9 @@ function App() {
         <Table<DataType>
           rowSelection={{
             type: "checkbox",
-            onChange: (selectedRowKeys: React.Key[]) => {
-              if (selectedRowKeys.length > MAX_SCRIPT_COUNT) {
+            onChange: (keys: React.Key[]) => {
+              console.log("selectedRowKeys: ", keys)
+              if (keys.length > MAX_SCRIPT_COUNT) {
                 api.open({
                   message: "Too many scripts",
                   description: `The maximum supported number of selectable scripts is ${MAX_SCRIPT_COUNT}`,
@@ -712,11 +734,12 @@ function App() {
                 })
                 return
               }
-              setSelectedKeys(
-                (selectedRowKeys as string[]).filter(
-                  (i) => !uiDeps.includes(i),
-                ),
-              )
+
+              const newKeys = new Set([
+                ...selectedRowKeys,
+                ...(keys as string[]).filter((i) => !uiDeps.includes(i)),
+              ])
+              setSelectedKeys([...newKeys])
             },
             getCheckboxProps: (record: DataType) => {
               return {
