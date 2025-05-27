@@ -139,7 +139,7 @@ const MPV_V3_URL =
   "https://raw.githubusercontent.com/mpv-easy/mpv-easy-cdn/main/mpv-v3-windows.tar.xz"
 const MPV_URL =
   "https://raw.githubusercontent.com/mpv-easy/mpv-easy-cdn/main/mpv-windows.tar.xz"
-const MPV_UI = [
+const UI_LIST = [
   {
     name: "mpv",
     url: MPV_V3_URL,
@@ -172,7 +172,7 @@ const MPV_UI = [
   },
 ] as const
 
-type UI = (typeof MPV_UI)[number]["name"]
+type UI = (typeof UI_LIST)[number]["name"]
 
 const FFMPEG_URL =
   "https://raw.githubusercontent.com/mpv-easy/mpv-easy-cdn/main/ffmpeg-windows.zip"
@@ -322,7 +322,10 @@ function installScript(mpvFiles: File[], scriptFiles: File[], script: Script) {
 }
 
 async function getMpvFiles(platform: Platform, ui: UI) {
-  const uiUrl = MPV_UI.find((i) => i.name === ui)?.url
+  const uiUrl =
+    platform === "mpv" && ui === "mpv"
+      ? MPV_URL
+      : UI_LIST.find((i) => i.name === ui)?.url
   if (!uiUrl) {
     return []
   }
@@ -355,7 +358,7 @@ async function getMpvFiles(platform: Platform, ui: UI) {
   }
 
   // replace all v3 files
-  if (platform === "mpv") {
+  if (platform === "mpv" && ui !== "mpv") {
     const bin = await downloadBinary(MPV_URL)
     const files = decode(guess(MPV_URL)!, bin)!
     for (const file of files) {
@@ -393,7 +396,7 @@ function App() {
   } = store
 
   const uiDeps: readonly string[] =
-    MPV_UI.find((i) => i.name === ui)?.deps || []
+    UI_LIST.find((i) => i.name === ui)?.deps || []
 
   const [api, contextHolder] = notification.useNotification()
 
@@ -644,7 +647,7 @@ function App() {
               }}
               value={ui}
             >
-              {MPV_UI.map((i) => (
+              {UI_LIST.map((i) => (
                 <Radio value={i.name} key={i.url} style={{ width: ITEM_WIDTH }}>
                   <Typography.Link href={i.repo} target="_blank">
                     {i.name}
