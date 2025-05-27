@@ -535,6 +535,8 @@ function App() {
   }
   const download = async () => {
     setSpinning(true)
+    // Wait for spinning
+    await new Promise((r) => setTimeout(r))
     const zipBinary = await zipAll()
     setSpinning(false)
     if (zipBinary) {
