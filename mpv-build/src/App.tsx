@@ -245,7 +245,7 @@ function installScript(mpvFiles: File[], scriptFiles: File[], script: Script) {
       const files = scriptFiles.filter((i) => i.path.startsWith(`${dir}/`))
       scriptFiles = scriptFiles.filter((i) => !i.path.startsWith(`${dir}/`))
       for (const i of files) {
-        i.path = `portable_config/${dir}/${i.path}`
+        i.path = `portable_config/${dir}/${i.path.replace(`${dir}/`, "")}`
         mpvFiles.push(i)
       }
     }
@@ -255,8 +255,25 @@ function installScript(mpvFiles: File[], scriptFiles: File[], script: Script) {
   if (scriptFiles.find((i) => i.path.startsWith("scripts/"))) {
     const files = scriptFiles.filter((i) => i.path.startsWith("scripts/"))
     scriptFiles = scriptFiles.filter((i) => !i.path.startsWith("scripts/"))
+
+    const pathList = files.map((i) => i.path.split("/"))
+    const prefixList = files[0].path.split("/").slice(0, 2)
+    if (
+      prefixList.length === 2 &&
+      pathList.every(
+        (i) =>
+          i.length >= 3 &&
+          // scripts
+          i[0] === prefixList[0] &&
+          // uosc
+          i[1] === prefixList[1],
+      )
+    ) {
+    } else {
+      prefixList.pop()
+    }
     for (const i of files) {
-      i.path = `portable_config/scripts/${i.path.replace("scripts/", `${script.name}/`)}`
+      i.path = `portable_config/scripts/${i.path.replace(`${prefixList.join("/")}/`, `${script.name}/`)}`
       mpvFiles.push(i)
     }
   }
