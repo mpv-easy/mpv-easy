@@ -7,3 +7,4 @@
 - [make video clips with mpv-easy](./make-video-clips-with-mpv-easy.md)
 - [mount any playable link](./mount-any-playable-link.md)
 - [mpv-build: Customize your own MPV right from your browser](./customize-your-own-mpv-right-from-your-browser.md)
+- [Revolutionizing mpv Scripting: A New Package Format Proposal](./Revolutionizing-mpv-Scripting-A-New-Package-Format-Proposal.md)

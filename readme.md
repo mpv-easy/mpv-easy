@@ -87,6 +87,7 @@ set -x MPV_SCRIPT_DIR /your_mpv_dir/portable_config/scripts ; pnpm run dev-copy
 - [make video clips with mpv-easy](./blog/make-video-clips-with-mpv-easy.md)
 - [mount any playable link](./blog/mount-any-playable-link.md)
 - [mpv-build: Customize your own MPV right from your browser](./blog/customize-your-own-mpv-right-from-your-browser.md)
+- [Revolutionizing mpv Scripting: A New Package Format Proposal](./blog/Revolutionizing-mpv-Scripting-A-New-Package-Format-Proposal.md)
 
 ## UI
 
