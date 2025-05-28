@@ -304,12 +304,13 @@ jobs:
               json="mpv-easy-react/conf/${name}.json"
               input="mpv-easy-react/conf/${name}.input.conf"
 
-              zip_js="tmp/mpv-easy-${name}.js"
-              zip_conf="tmp/mpv-easy-${name}.conf"
+              zip_js="tmp/scripts/main.js"
+              zip_conf="tmp/script-opts/mpv-easy-${name}.conf"
               zip_json="tmp/script.json"
               zip_input="tmp/input.conf"
 
-              mkdir -p tmp
+              mkdir -p tmp/scripts
+              mkdir -p tmp/script-opts
 
               cp ${js} ${zip_js}
               cp ${json} ${zip_json}
