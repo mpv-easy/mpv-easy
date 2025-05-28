@@ -28,7 +28,7 @@ const {
   maxWidth,
 } = {
   ...defaultConfig,
-  ...getOptions("cut", {
+  ...getOptions("mpv-easy-cut", {
     "cut-event-name": {
       type: "string",
       key: "cutEventName",

@@ -21,7 +21,7 @@ import {
 
 const { clipboardPlayEventName } = {
   ...defaultConfig,
-  ...getOptions("clipboard-play", {
+  ...getOptions("mpv-easy-clipboard-play", {
     "clipboard-play-event-name": {
       type: "string",
       key: "clipboardPlayEventName",

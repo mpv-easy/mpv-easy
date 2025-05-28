@@ -35,7 +35,7 @@ const {
   labelFontSize,
 } = {
   ...defaultConfig,
-  ...getOptions("crop", {
+  ...getOptions("mpv-easy-crop", {
     "crop-event-name": {
       type: "string",
       key: "cropEventName",

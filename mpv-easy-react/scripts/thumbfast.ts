@@ -28,7 +28,7 @@ const {
   scaleFactor,
 } = {
   ...defaultConfig,
-  ...getOptions("thumbfast", {
+  ...getOptions("mpv-easy-thumbfast", {
     path: {
       type: "string",
       key: "path",

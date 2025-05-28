@@ -12,7 +12,7 @@ import {
 } from "@mpv-easy/tool"
 const { current, osdDuration } = {
   ...defaultConfig,
-  ...getOptions("cut", {
+  ...getOptions("mpv-easy-cut", {
     current: {
       type: "number",
       key: "current",

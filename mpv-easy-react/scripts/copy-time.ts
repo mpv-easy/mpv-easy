@@ -4,7 +4,7 @@ import { copyTime, defaultConfig } from "@mpv-easy/copy-time"
 
 const { copyTimeEventName } = {
   ...defaultConfig,
-  ...getOptions("copy-time", {
+  ...getOptions("mpv-easy-copy-time", {
     "copy-time-event-name": {
       type: "string",
       key: "copyTimeEventName",

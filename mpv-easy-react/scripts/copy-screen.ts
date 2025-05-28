@@ -4,7 +4,7 @@ import { copyScreen, defaultConfig } from "@mpv-easy/copy-screen"
 
 const { copyScreenEventName, format } = {
   ...defaultConfig,
-  ...getOptions("copy-screen", {
+  ...getOptions("mpv-easy-copy-screen", {
     "copy-screen-event-name": {
       type: "string",
       key: "copyScreenEventName",
