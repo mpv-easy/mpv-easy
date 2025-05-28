@@ -1,6 +1,7 @@
 {
   "name": "mpv-easy-clipboard-play",
   "description": "mpv player clipboard-play script",
+  "version": "v0.1.15-alpha.6",
   "author": "mpv-easy",
   "download": "https://github.com/mpv-easy/mpv-easy/releases/latest/download/mpv-easy-clipboard-play.zip",
   "homepage": "https://github.com/mpv-easy/mpv-easy/tree/main/mpv-clipboard-play"
