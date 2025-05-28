@@ -14,7 +14,7 @@ export const defaultConfig: CropConfig = {
   lineColorHover: "00FFFF",
   outputDirectory: "",
   cropImageFormat: "webp",
-  zIndex: 2048,
+  cropZIndex: 2048,
   labelFontSize: 24,
 }
 
@@ -28,7 +28,7 @@ export type CropConfig = {
   lineColorHover: string
   outputDirectory: string
   cropImageFormat: string
-  zIndex: number
+  cropZIndex: number
   labelFontSize: number
 }
 

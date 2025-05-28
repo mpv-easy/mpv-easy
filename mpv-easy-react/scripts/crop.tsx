@@ -33,6 +33,7 @@ const {
   maskColor,
   lineColorHover,
   labelFontSize,
+  cropZIndex,
 } = {
   ...defaultConfig,
   ...getOptions("mpv-easy-crop", {
@@ -75,6 +76,10 @@ const {
     "crop-image-format": {
       type: "string",
       key: "cropImageFormat",
+    },
+    "crop-zindex": {
+      type: "number",
+      key: "cropZIndex",
     },
   }),
 }
@@ -168,8 +173,10 @@ function App() {
   return (
     <Box
       position="absolute"
+      display="flex"
       width={w}
       height={h}
+      zIndex={cropZIndex}
       onMouseDown={() => {
         if (points.length >= 2) {
           return
@@ -191,7 +198,7 @@ function App() {
           points={points}
           maskColor={maskColor}
           labelFontSize={labelFontSize}
-          zIndex={1024}
+          zIndex={cropZIndex + 1}
           onChange={setPoints}
         />
       )}

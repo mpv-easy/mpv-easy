@@ -333,7 +333,7 @@ export const Easy = (props: Partial<EasyProps>) => {
             osdWidth={osdDimensions.w}
             points={cropPoints}
             maskColor={cropConfig.maskColor}
-            zIndex={cropConfig.zIndex}
+            zIndex={cropConfig.cropZIndex}
             onChange={dispatch.setCropPoints}
             labelFontSize={smallFontSize.fontSize}
           />
