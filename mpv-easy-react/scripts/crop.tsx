@@ -94,6 +94,7 @@ function App() {
   const path = usePropertyString("path", "")[0]
   const timePos = usePropertyNumber("time-pos", 0)[0]
   const cropRef = useRef<(() => void) | null>(null)
+  const cancelRef = useRef<(() => void) | null>(null)
 
   const hack = useState(0)[1]
   cropRef.current = async () => {
@@ -132,14 +133,24 @@ function App() {
     setShowCrop(false)
   }
 
+  cancelRef.current = () => {
+    if (points.length === 1) {
+      setShowCrop(false)
+      setPoints([])
+    } else {
+      const v = [...points]
+      v.pop()
+      setPoints(v)
+    }
+  }
+
   useEffect(() => {
     registerScriptMessage(cropEventName, () => {
       setPoints([])
       setShowCrop(true)
     })
     registerScriptMessage(cancelEventName, () => {
-      setShowCrop(false)
-      setPoints([])
+      cancelRef.current?.()
     })
     registerScriptMessage(outputEventName, () => {
       cropRef.current?.()
