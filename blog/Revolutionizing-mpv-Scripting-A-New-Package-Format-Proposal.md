@@ -85,6 +85,28 @@ This format unlocks game-changing possibilities:
 
 ---
 
+
+## Demo
+
+This is the folder structure after installing both scripts using [mpv-build](https://github.com/mpv-easy/mpv-easy/tree/main/mpv-build)
+
+https://github.com/user-attachments/assets/6858b854-c708-4458-b0a6-2d35bc1cb540
+
+```
+.
+├── input.conf
+├── script-opts
+│   ├── mpv-easy-crop.conf
+│   └── mpv-easy-translate.conf
+└── scripts
+    ├── mpv-easy-crop
+    │   ├── main.js
+    │   └── script.json
+    └── mpv-easy-translate
+        ├── main.js
+        └── script.json
+```
+
 ## Conclusion
 
 This RFC’s package format promises to streamline mpv scripting, making it easier to discover, install, and maintain scripts while supporting both simple and complex use cases. We invite the community to dive into the [RFC](https://github.com/mpv-easy/mpv-easy/issues/124), share feedback, and help shape this exciting evolution.
