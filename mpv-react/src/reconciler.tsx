@@ -162,7 +162,6 @@ export function createCustomReconciler(customRender: () => void) {
     },
     resetTextContent(instance: unknown) {},
     // shouldDeprioritizeSubtree() {
-
     // },
     clearContainer: () => {},
     resetAfterCommit: (containerInfo: unknown): void => {},
@@ -180,9 +179,9 @@ export function createCustomReconciler(customRender: () => void) {
     // isXRenderer: true,
     isPrimaryRenderer: true,
     // warnsIfNotActing: true,
-    getCurrentEventPriority: (): number => {
-      return DiscreteEventPriority
-    },
+    // getCurrentEventPriority: (): number => {
+    //   return DiscreteEventPriority
+    // },
     getInstanceFromNode: (node: any): null => {
       return null
     },
@@ -200,6 +199,42 @@ export function createCustomReconciler(customRender: () => void) {
       customRender()
     },
     supportsHydration: false,
+    NotPendingTransition: undefined,
+    HostTransitionContext: {} as any,
+    resetFormInstance: (form: unknown): void => {
+      throw new Error("Function not implemented.")
+    },
+    requestPostPaintCallback: (callback: (time: number) => void): void => {
+      throw new Error("Function not implemented.")
+    },
+    shouldAttemptEagerTransition: (): boolean => {
+      throw new Error("Function not implemented.")
+    },
+    trackSchedulerEvent: (): void => {
+      throw new Error("Function not implemented.")
+    },
+    resolveEventType: (): null | string => {
+      throw new Error("Function not implemented.")
+    },
+    resolveEventTimeStamp: (): number => {
+      throw new Error("Function not implemented.")
+    },
+    preloadInstance: (type: unknown, props: unknown): boolean => {
+      throw new Error("Function not implemented.")
+    },
+    startSuspendingCommit: (): void => {
+      throw new Error("Function not implemented.")
+    },
+    suspendInstance: (type: unknown, props: unknown): void => {
+      throw new Error("Function not implemented.")
+    },
+    waitForCommitToBeReady: ():
+      | ((
+          initiateCommit: (...args: unknown[]) => unknown,
+        ) => (...args: unknown[]) => unknown)
+      | null => {
+      throw new Error("Function not implemented.")
+    },
   })
 }
 
