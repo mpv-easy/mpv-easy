@@ -4,7 +4,7 @@ import {
   observeProperty,
   registerScriptMessage,
   setPropertyBool,
-  playAuido,
+  playAudio,
   detectCmd,
   printAndOsd,
   getCurrentSubtitle,
@@ -89,7 +89,7 @@ export function Word({
       onClick={async (e) => {
         if (e.event.key_name === "MBTN_LEFT") {
           if (info.audio?.length) {
-            playAuido(info.audio)
+            playAudio(info.audio)
           }
           // e.stopPropagation()
           // e.preventdetailault()
