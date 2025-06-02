@@ -425,6 +425,8 @@ jobs:
           # zip -r -q ../release/mpv-easy-windows-deno-full.zip .
           # cd ..
 
+          curl -L -o autoload.lua https://raw.githubusercontent.com/mpv-player/mpv/master/TOOLS/lua/autoload.lua
+
           # uosc
           7z x mpv-v3-win.7z -ompv-uosc-windows-full -y
           curl -L -o uosc.zip https://github.com/tomasklaen/uosc/releases/latest/download/uosc.zip
@@ -440,6 +442,7 @@ jobs:
           cp ../uosc.conf portable_config/script-opts/uosc.conf
           cp ../thumbfast.conf portable_config/script-opts/thumbfast.conf
           cp ../thumbfast.lua portable_config/scripts/thumbfast.lua
+          cp ../autoload.lua portable_config/scripts/autoload.lua
           zip -r -q ../release/mpv-uosc-windows-full.zip .
           cd ..
 
@@ -457,6 +460,7 @@ jobs:
           cp ../Material-Design-Iconic-Font.ttf portable_config/fonts/Material-Design-Iconic-Font.ttf
           cp ../thumbfast.conf portable_config/script-opts/thumbfast.conf
           cp ../thumbfast.lua portable_config/scripts/thumbfast.lua
+          cp ../autoload.lua portable_config/scripts/autoload.lua
           zip -r -q ../release/mpv-modernx-windows-full.zip .
           cd ..
 
@@ -477,6 +481,7 @@ jobs:
           cp ../fluent-system-icons.ttf portable_config/fonts/fluent-system-icons.ttf
           cp ../thumbfast.conf portable_config/script-opts/thumbfast.conf
           cp ../thumbfast.lua portable_config/scripts/thumbfast.lua
+          cp ../autoload.lua portable_config/scripts/autoload.lua
           zip -r -q ../release/mpv-modernz-windows-full.zip .
           cd ..
 

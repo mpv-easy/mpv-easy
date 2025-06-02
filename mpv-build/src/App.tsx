@@ -211,6 +211,7 @@ const UI_LIST = [
       "mpv-easy-copy-screen",
       "mpv-easy-crop",
       "mpv-easy-thumbfast",
+      "autoload",
     ],
   },
   {
@@ -222,7 +223,7 @@ const UI_LIST = [
       file: "mpv-modernx-windows-full.tar.xz",
     },
     repo: "https://github.com/cyl0/ModernX",
-    deps: ["thumbfast", "ModernX", "ModernX cyl0"],
+    deps: ["thumbfast", "ModernX", "ModernX cyl0", "autoload"],
   },
   {
     name: "mpv-modernz",
@@ -233,7 +234,7 @@ const UI_LIST = [
       file: "mpv-modernz-windows-full.tar.xz",
     },
     repo: "https://github.com/Samillion/ModernZ",
-    deps: ["thumbfast", "ModernZ"],
+    deps: ["thumbfast", "ModernZ", "autoload"],
   },
 ] as const
 
