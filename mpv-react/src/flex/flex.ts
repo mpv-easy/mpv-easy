@@ -38,6 +38,7 @@ export type RenderConfig = {
     mouseEvent?: MouseEvent,
   ) => void
   showFps?: boolean
+  mouseKeyBinding?: boolean
 }
 
 const RootName = "@mpv-easy/root"
