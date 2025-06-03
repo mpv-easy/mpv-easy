@@ -18,7 +18,7 @@ jobs:
     runs-on: ubuntu-24.04
     if: github.ref == 'refs/heads/main'
     steps:
-      - name: update
+      - name: update-mpv-build
         run: |
           curl -X POST \
             -H "Authorization: Bearer ${{ secrets.MPV_BUILD }}" \
