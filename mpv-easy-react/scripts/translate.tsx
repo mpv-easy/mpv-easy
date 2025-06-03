@@ -40,10 +40,6 @@ const {
   ...defaultSubConfig,
   ...defaultTooltipConfig,
   ...getOptions("mpv-easy-translate", {
-    "sub-font-size": {
-      type: "number",
-      key: "subFontSize",
-    },
     "sub-color": { type: "color", key: "subColor" },
     "sub-back-color": {
       type: "color",
@@ -102,6 +98,7 @@ const {
     "second-sub-fontface": { type: "string", key: "secondSubFontface" },
   }),
   subScale: getPropertyNumber("sub-scale", 1),
+  subFontSize: getPropertyNumber("sub-font-size", 38),
 }
 
 function App() {

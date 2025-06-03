@@ -6,9 +6,10 @@ import {
   setPropertyBool,
   playAudio,
   detectCmd,
-  printAndOsd,
   getCurrentSubtitle,
   detectFfmpeg,
+  showNotification,
+  getPropertyNative,
 } from "@mpv-easy/tool"
 import React, { useEffect, useRef, useState } from "react"
 import { Box, Button, MpDomProps } from "@mpv-easy/react"
@@ -57,18 +58,27 @@ export function Word({
   showTitle,
   subConfig,
   skipTranslate,
+  videoScale,
 }: {
   word: string
   showTitle: boolean
   subConfig: SubConfig
   skipTranslate: boolean
+  videoScale: number
 }) {
   const [info, setInfo] = useState<WordInfo>({
     word: "",
     detail: [],
   })
   const loading = useRef(false)
-
+  // FIXME: find a way to convert the srt text size and the text size in libass
+  const firstFontSize = Math.round(subConfig.subFontSize * videoScale * 2)
+  // FIXME: magic number, font scale differently in libass and srt
+  const secondFontSize = Math.round(firstFontSize / 1.5)
+  const fontSize = skipTranslate ? firstFontSize : secondFontSize
+  const fontBorderSize = skipTranslate
+    ? subConfig.subOutlineSize * videoScale
+    : (subConfig.subOutlineSize * videoScale) / 2
   useEffect(() => {
     if (loading.current || !word.length || skipTranslate) return
     loading.current = true
@@ -97,9 +107,9 @@ export function Word({
       }}
       display="flex"
       position="relative"
-      fontSize={subConfig.subFontSize}
+      fontSize={fontSize}
       color={subConfig.subColor}
-      fontBorderSize={subConfig.subOutlineSize}
+      fontBorderSize={fontBorderSize}
       fontBorderColor={subConfig.subOutlineColor}
       fontWeight={subConfig.subBold ? "bold" : "normal"}
       colorHover={skipTranslate ? subConfig.subColor : subConfig.subColorHover}
@@ -125,7 +135,14 @@ function Line({
   subConfig,
   lineIndex,
   isMix,
-}: { line: string; subConfig: SubConfig; lineIndex: number; isMix: boolean }) {
+  videoScale,
+}: {
+  line: string
+  subConfig: SubConfig
+  lineIndex: number
+  isMix: boolean
+  videoScale: number
+}) {
   const words = split(line)
   const [showTitle, setShowTitle] = useState(true)
   const loading = useRef(false)
@@ -161,6 +178,7 @@ function Line({
     >
       {words.map((i, k) => (
         <Word
+          videoScale={videoScale}
           showTitle={showTitle}
           key={[i, k].join(",")}
           word={i.trim()}
@@ -229,18 +247,31 @@ export function Translation(props: Partial<TranslationProps>) {
   const firstFontSize = Math.round(subSrtScale * subFontSize * subScale)
   const secondFontSize = Math.round(firstFontSize / 2)
 
+  const videoParams = getPropertyNative("video-params")!
+  const videoTargetParams = getPropertyNative("video-target-params")!
+  const aspect = videoTargetParams.w / videoTargetParams.h
+  let scaleW = videoTargetParams.w
+  let scaleH = videoTargetParams.h
+  if (aspect <= videoParams.aspect) {
+    scaleH = videoTargetParams.w / videoParams.aspect
+  } else {
+    scaleW = videoTargetParams.w / videoParams.aspect
+  }
+  const sx = scaleW / videoParams.w
+  const sy = scaleH / videoParams.h
+  const videoScale = Math.min(sx, sy)
   useEffect(() => {
     registerScriptMessage("translate", () => {
       const sub = getCurrentSubtitle()
       if (!sub) {
-        printAndOsd("subtitle not found")
+        showNotification("subtitle not found")
       }
       if (!detectFfmpeg()) {
-        printAndOsd("ffmpeg not found")
+        showNotification("ffmpeg not found")
         return
       }
       if (!detectCmd("curl")) {
-        printAndOsd("curl not found")
+        showNotification("curl not found")
         return
       }
       translate({
@@ -258,14 +289,14 @@ export function Translation(props: Partial<TranslationProps>) {
     registerScriptMessage("mix-translate", () => {
       const sub = getCurrentSubtitle()
       if (!sub) {
-        printAndOsd("subtitle not found")
+        showNotification("subtitle not found")
       }
       if (!detectFfmpeg()) {
-        printAndOsd("ffmpeg not found")
+        showNotification("ffmpeg not found")
         return
       }
       if (!detectCmd("curl")) {
-        printAndOsd("curl not found")
+        showNotification("curl not found")
         return
       }
       translate({
@@ -283,10 +314,10 @@ export function Translation(props: Partial<TranslationProps>) {
     registerScriptMessage("interactive-translate", () => {
       const sub = getCurrentSubtitle()
       if (!sub) {
-        printAndOsd("subtitle not found")
+        showNotification("subtitle not found")
       }
       if (!detectCmd("curl")) {
-        printAndOsd("curl not found")
+        showNotification("curl not found")
         return
       }
       setText(textCache.current)
@@ -318,6 +349,7 @@ export function Translation(props: Partial<TranslationProps>) {
         .split("\n")
         .map((i, k) => (
           <Line
+            videoScale={videoScale}
             isMix={isMix}
             key={[i, k].join()}
             line={i}

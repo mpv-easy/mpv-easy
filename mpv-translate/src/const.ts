@@ -34,7 +34,7 @@ export type TooltipConfig = {
 }
 
 export const defaultSubConfig: SubConfig = {
-  subFontSize: 55,
+  subFontSize: 38,
   subColor: "#FFFFFF00",
   subBackColor: "#FFFFFFFF",
   subBackColorHover: "#000000BF",
@@ -46,7 +46,7 @@ export const defaultSubConfig: SubConfig = {
   subZIndex: 512,
   targetLang: getLang(),
   sourceLang: "",
-  subSrtScale: 0.4,
+  subSrtScale: 0.6,
   firstSubColor: "",
   secondSubColor: "",
   firstSubFontface: "",

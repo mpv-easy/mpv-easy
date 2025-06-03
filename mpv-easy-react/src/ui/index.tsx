@@ -238,19 +238,12 @@ export const Easy = (props: Partial<EasyProps>) => {
     secondSubFontface,
   } = translateStyle
 
-  const subFontSize =
-    (getPropertyNumber("sub-font-size") ??
-      (translateStyle.subFontSize || fontSize.fontSize)) * subScale
+  const subFontSize = getPropertyNumber("sub-font-size")
 
-  const subColor =
-    getColor("sub-color") ?? (translateStyle.subColor || "#FFFFFFFF")
-  const subBold =
-    getPropertyBool("sub-bold") ?? (translateStyle.subBold || false)
-  const subOutlineSize =
-    getPropertyNumber("sub-outline-size") ??
-    (translateStyle.subOutlineSize || 0)
-  const subOutlineColor =
-    getColor("sub-outline-color") ?? translateStyle.subOutlineColor
+  const subColor = getColor("sub-color")
+  const subBold = getPropertyBool("sub-bold")
+  const subOutlineSize = getPropertyNumber("sub-outline-size")
+  const subOutlineColor = getColor("sub-outline-color")
   const h = useSelector(cellSizeSelector)
   const font = useSelector(fontSelector)
   const update = useReducer((prev) => (prev + 1) % 1000, 0)[1]
@@ -355,6 +348,7 @@ export const Easy = (props: Partial<EasyProps>) => {
           firstSubFontface={firstSubFontface}
           secondSubFontface={secondSubFontface}
           secondSubColor={secondSubColor}
+          subSrtScale={translateStyle.subSrtScale}
         />
       </Box>
     </>
