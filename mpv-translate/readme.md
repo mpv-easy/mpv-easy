@@ -1,3 +1,6 @@
+https://github.com/user-attachments/assets/b734f9e7-d847-43ab-9705-85dea9791d43
+
+
 ## install
 You need to install [ffmpeg](https://www.ffmpeg.org/download.html) and curl and add them to ```PATH```, curl is usually installed by default on all systems including windows11, if you only use interactive translation, you don't need to install ffmpeg
 
