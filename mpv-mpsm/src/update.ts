@@ -1,6 +1,9 @@
 import chalk from "chalk"
 import { getAllScript } from "./config"
-import { installFromUrl } from "./install"
+import { installFromScript } from "./install"
+import { downloadJson } from "./share"
+import { Script } from "./meta"
+import { ScriptRemoteUrl } from "./const"
 
 export async function updateByName(name: string, metaList = getAllScript()) {
   const meta = metaList.find((i) => i.name === name)
@@ -10,15 +13,16 @@ export async function updateByName(name: string, metaList = getAllScript()) {
     process.exit()
   }
 
-  const url = meta.update || meta.download
-  const newScript = await installFromUrl(url)
+  const json = await downloadJson<Record<string, Script>>(ScriptRemoteUrl)
+  const newScript = json[name]
 
   if (newScript.version !== meta.version) {
-    console.log(
-      `update ${chalk.green(meta.name)} from ${meta.version} to ${
-        newScript.version
-      }`,
-    )
+    await installFromScript(meta)
+    const v = [`update ${chalk.green(meta.name)}`]
+    if (newScript.version) {
+      v.push(`from ${meta.version} to ${newScript.version}`)
+    }
+    console.log(v.join(" "))
   } else {
     console.log(
       `${chalk.green(meta.name)}(${

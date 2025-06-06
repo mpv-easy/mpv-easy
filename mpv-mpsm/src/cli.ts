@@ -1,7 +1,7 @@
 import Cac from "cac"
 import { install } from "./install"
 import { uninstall } from "./uninstall"
-import { configDetect, getScriptDir, setScriptDir } from "./config"
+import { configDetect, getScriptsDir, setConfigDir } from "./config"
 import { list } from "./list"
 import { update, updateAll } from "./update"
 import { version } from "../package.json"
@@ -13,16 +13,16 @@ const cli = Cac("mpsm")
 
 cli
   .command(
-    "set-script-dir <dir>",
-    "set mpv script dir eg: <mpv-dir>/portable_config/scripts",
+    "set-config-dir <dir>",
+    "set mpv config dir eg: <mpv-dir>/portable_config",
   )
   .action((dir) => {
-    setScriptDir(dir)
+    setConfigDir(dir)
   })
 
 cli.command("get-script-dir", "get mpv script dir").action(() => {
   configDetect()
-  const dir = getScriptDir()
+  const dir = getScriptsDir()
   console.log(dir)
 })
 
@@ -63,7 +63,7 @@ cli.command("list", "list installed scripts").action(() => {
 })
 
 cli
-  .command("backup <file>", "backup all installed scripts to json file")
+  .command("backup [file]", "backup all installed scripts to json file")
   .action((file) => {
     configDetect()
     backup(file)

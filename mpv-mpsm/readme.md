@@ -11,8 +11,8 @@ mpsm get-script-dir
 
 
 # install script from https://github.com/mpv-easy/mpsm-scripts
-mpsm install speed
-mpsm uninstall speed
+mpsm install mpv-easy-crop
+mpsm uninstall mpv-easy-crop
 
 # install script from url
 mpsm install "<your-script-url>"

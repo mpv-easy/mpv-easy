@@ -1,15 +1,16 @@
 import { readFileSync } from "fs-extra"
-import { installFromUrl } from "./install"
+import { installFromScript } from "./install"
 import chalk from "chalk"
+import { Script } from "./meta"
 
 export async function restore(file: string) {
   const list = readFileSync(file, "utf8")
-  const json = JSON.parse(list) as string[]
+  const json = JSON.parse(list) as Script[]
 
-  for (const url of json) {
-    const meta = await installFromUrl(url)
+  for (const script of json) {
+    await installFromScript(script)
     console.log(
-      `${chalk.green(meta.name)}(${meta.version}) Successfully restored`,
+      `${chalk.green(script.name)}(${script.version}) Successfully restored`,
     )
   }
 }

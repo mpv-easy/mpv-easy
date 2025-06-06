@@ -1,73 +1,101 @@
 import { join } from "node:path"
-import { getMpsmDir } from "./config"
+import { getConfigDir, getMpsmDir } from "./config"
 import { outputFileSync } from "fs-extra"
-import { type Script, addScript, getScript } from "./meta"
+import { type Script } from "./meta"
 import {
+  downloadBinary,
   downloadJson,
   downloadText,
-  getFileNameFromUrl,
-  isScript,
+  installScript,
 } from "./share"
 import chalk from "chalk"
 import { existsSync, readFileSync } from "fs-extra"
 import { ScriptRemoteUrl } from "./const"
 import { isRemote } from "@mpv-easy/tool"
+import { File, Fmt, decode } from "@easy-install/easy-archive"
 
-export async function installFromUrl(
-  url: string,
-  preferScript?: Script | undefined,
-): Promise<Script> {
-  if (isScript(url)) {
-    return installFromScript(url)
+export async function installFromUrl(url: string) {
+  const text = await downloadText(url)
+  const script: Script = JSON.parse(text)
+  return installFromScript(script)
+}
+
+export async function installFromZip(script: Script, scriptFiles: File[]) {
+  const mpvFiles: File[] = []
+  const configDir = getConfigDir()
+
+  for (const i of ["input.conf", "mpv.conf"]) {
+    const filePath = join(configDir, i).replaceAll("\\", "/")
+    if (existsSync(filePath)) {
+      const buf = readFileSync(filePath)
+      const file = new File(
+        filePath,
+        buf,
+        undefined,
+        false,
+        BigInt(+new Date()),
+      )
+      mpvFiles.push(file)
+    }
   }
 
+  installScript(mpvFiles, scriptFiles, script, configDir)
+
+  for (const i of mpvFiles) {
+    outputFileSync(i.path, i.buffer)
+  }
+}
+
+export async function installFromScript(script: Script): Promise<Script> {
   const dir = getMpsmDir()
-  const text = await downloadText(url)
-  const rawScript = getScript(text)
-  const meta = preferScript ?? rawScript
-  if (!meta) {
-    console.log(
-      `script ${url} don't have meta info. see: https://github.com/mpv-easy/mpsm-scripts?tab=readme-ov-file#meta-info`,
-    )
+  const bin = await downloadBinary(script.download)
+
+  const scriptDir = join(dir, script.name)
+
+  const ext = script.download.split(".").at(-1) || ""
+  if (ext === "zip") {
+    const files = decode(Fmt.Zip, bin)
+    if (!files) {
+      console.log(`zip decode error ${chalk.green(ext)}`)
+      process.exit()
+    }
+    installFromZip(script, files)
+  } else if (["json", "lua"].includes(ext)) {
+    const scriptPath = join(scriptDir, `main.${ext}`)
+    const scriptJsonPath = join(scriptDir, "script.json")
+    outputFileSync(scriptPath, bin)
+    outputFileSync(scriptJsonPath, JSON.stringify(script))
+  } else {
+    console.log(`not support script format ${chalk.green(ext)}`)
     process.exit()
   }
-  const name = getFileNameFromUrl(url)
-  const p = join(dir, name)
 
-  if (
-    !existsSync(p) ||
-    getScript(readFileSync(p, "utf8"))?.version !== meta.version
-  ) {
-    const outputText = !rawScript ? addScript(text, meta) : text
-    outputFileSync(p, outputText)
-  }
-
-  return meta
+  return script
 }
 
 export async function installFromMpsm(name: string) {
-  const json = await downloadJson<Record<string, string>>(ScriptRemoteUrl)
-  const url = json[name]
-  if (!url) {
+  const json = await downloadJson<Record<string, Script>>(ScriptRemoteUrl)
+  const script = json[name]
+  if (!script) {
     console.log(`not found script ${chalk.green(name)}`)
     process.exit()
   }
-  return installFromUrl(url)
+  return installFromScript(script)
 }
 
-export async function installFromScript(url: string): Promise<Script> {
-  const text = await downloadText(url)
-  const meta = getScript(text)
+// export async function installFromScript(url: string): Promise<Script> {
+//   const text = await downloadText(url)
+//   const meta = getScript(text)
 
-  if (!meta) {
-    console.log(`${url} don't have meta info`)
-    process.exit()
-  }
+//   if (!meta) {
+//     console.log(`${url} don't have meta info`)
+//     process.exit()
+//   }
 
-  const downloadUrl = meta.download
-  await installFromUrl(downloadUrl, meta)
-  return meta
-}
+//   const downloadUrl = meta.download
+//   await installFromUrl(downloadUrl, meta)
+//   return meta
+// }
 
 export async function install(scripts: string[]) {
   for (const name of scripts) {
@@ -75,8 +103,15 @@ export async function install(scripts: string[]) {
       ? installFromUrl(name)
       : installFromMpsm(name))
 
-    console.log(
-      `${chalk.green(meta.name)}(${meta.version}) Successfully installed`,
-    )
+    const v: string[] = [chalk.green(meta.name)]
+
+    if (meta.author?.length) {
+      v.push(`@${chalk.green(meta.author)}`)
+    }
+    if (meta.version?.length) {
+      v.push(`(${chalk.green(meta.version)})`)
+    }
+    console.log("Successfully installed:")
+    console.log(v.join(""))
   }
 }

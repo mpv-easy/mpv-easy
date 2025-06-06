@@ -1,8 +1,12 @@
 import { outputFileSync } from "fs-extra"
 import { getAllScript } from "./config"
 
-export function backup(file: string) {
-  const metaList = getAllScript().map((i) => i.update || i.download)
+export function backup(file?: string) {
+  const metaList = getAllScript()
   const json = JSON.stringify(metaList)
-  outputFileSync(file, json, "utf8")
+  if (file?.length) {
+    outputFileSync(file, json, "utf8")
+  } else {
+    console.log(json)
+  }
 }
