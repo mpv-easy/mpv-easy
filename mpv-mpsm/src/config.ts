@@ -17,26 +17,31 @@ export type Config = {
   scriptDir: string
 }
 
-export function setScriptDir(scriptDir: string) {
+export function setConfigDir(configDir: string) {
   outputJsonSync(ConfigPath, {
-    scriptDir: scriptDir.replaceAll("\\", "/"),
+    configDir: configDir.replaceAll("\\", "/"),
   })
 }
 
-export function getScriptDir(): string {
+export function getScriptsDir(): string {
   const config = readJsonSync(ConfigPath)
-  return config.scriptDir
+  return join(getConfigDir(), "scripts")
+}
+
+export function getConfigDir(): string {
+  const config = readJsonSync(ConfigPath)
+  return config.configDir
 }
 
 export function getMpsmDir(): string {
-  return getScriptDir()
+  return getScriptsDir()
 }
 
 export function configDetect() {
   if (!existsSync(ConfigPath)) {
     console.log(
       `You must first execute "${chalk.green(
-        "mpsm set-script-dir '<your-mpv-dir>/portable_config/scripts'",
+        "mpsm set-config-dir '<your-mpv-dir>/portable_config'",
       )}" and make sure the directory is correct`,
     )
     process.exit()
@@ -54,12 +59,11 @@ export function getAllScript(): (Script & { filePath: string })[] {
   for (const name of readdirSync(dir)) {
     const scriptPath = join(dir, name)
     if (!existsSync(scriptPath) || !statSync(scriptPath).isFile()) {
-      continue
-    }
-    const text = readFileSync(scriptPath, "utf8")
-    const meta = getScript(text)
-    if (meta) {
-      metaList.push({ ...meta, filePath: scriptPath })
+      const jsonPath = join(scriptPath, "script.json")
+      if (existsSync(jsonPath) && statSync(jsonPath).isFile()) {
+        const json = JSON.parse(readFileSync(jsonPath, "utf8"))
+        metaList.push(json)
+      }
     }
   }
   return metaList

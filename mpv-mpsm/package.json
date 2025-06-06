@@ -18,6 +18,7 @@
   "author": "ahaoboy <504595380@qq.com> (https://github.com/ahaoboy)",
   "license": "MIT",
   "dependencies": {
+    "@easy-install/easy-archive": "^0.1.14",
     "@mpv-easy/tool": "workspace:*"
   },
   "devDependencies": {

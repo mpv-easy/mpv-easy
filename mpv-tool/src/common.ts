@@ -39,6 +39,8 @@ export const SubtitleTypes =
     ",",
   )
 
+export const FontTypes = "ttf,otf,woff,woff2,eot".split(",")
+
 export function endsWith(s: string | undefined, exts: string[]) {
   if (!s?.length) {
     return false
@@ -71,14 +73,18 @@ export function isRemote(s: string) {
 }
 
 export function isVideo(s: string, types = VideoTypes) {
-  return endsWith(s, types)
+  return endsWith(s.toLocaleLowerCase(), types)
 }
 export function isAudio(s: string, types = AudioTypes) {
-  return endsWith(s, types)
+  return endsWith(s.toLocaleLowerCase(), types)
 }
 
 export function isImage(s: string, types = ImageTypes) {
-  return endsWith(s, types)
+  return endsWith(s.toLocaleLowerCase(), types)
+}
+
+export function isFont(s: string, types = ImageTypes) {
+  return endsWith(s.toLocaleLowerCase(), types)
 }
 
 export function isPlayable(

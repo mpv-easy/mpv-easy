@@ -1,20 +1,18 @@
-import { getAllScript } from "./config"
+import { getScriptsDir } from "./config"
 import { removeSync } from "fs-extra"
 import chalk from "chalk"
+import { existsSync } from "node:fs"
+import { join } from "node:path"
 
 export async function uninstall(scripts: string[]) {
-  const metaList = await getAllScript()
+  const dir = await getScriptsDir()
   for (const name of scripts) {
-    const meta = metaList.find((i) => i.name === name)
-
-    if (!meta) {
+    const scriptPath = join(dir, name)
+    if (existsSync(scriptPath)) {
+      removeSync(scriptPath)
+      console.log(`${chalk.green(name)} Successfully uninstalled`)
+    } else {
       console.log(`not found script: ${chalk.green(name)}`)
-      process.exit()
     }
-
-    removeSync(meta.filePath)
-    console.log(
-      `${chalk.green(meta.name)}(${meta.version}) Successfully uninstalled`,
-    )
   }
 }
