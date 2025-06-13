@@ -26,6 +26,7 @@ import {
   osdDimensionsSelector,
   subScaleSelector,
   pathSelector,
+  tooltipSelector,
 } from "../store"
 import {
   getMpvExePath,
@@ -97,6 +98,7 @@ export const Easy = (props: Partial<EasyProps>) => {
   const speedMax = Math.max(...speedList)
   const speedMin = Math.min(...speedList)
   const osdDimensions = useSelector(osdDimensionsSelector)
+  const tooltip = useSelector(tooltipSelector)
 
   useEffect(() => {
     const mpvExe = getMpvExePath()
@@ -146,7 +148,9 @@ export const Easy = (props: Partial<EasyProps>) => {
     registerScriptMessage("mouse-right-click", () => {
       dispatch.setPause(!getPropertyBool("pause"))
     })
-
+    registerScriptMessage("toggle-tooltip", () => {
+      dispatch.toggleTooltip()
+    })
     // FIXME: update thumbfast when pause
     const h = setInterval(update, 1000 / (props.fps || DefaultFps))
 
@@ -184,7 +188,7 @@ export const Easy = (props: Partial<EasyProps>) => {
     oscx: Oscx,
   }[uiName]
 
-  const tooltip = style[mode].tooltip
+  const tooltipStyle = style[mode].tooltip
 
   const toolbarRef = useRef<MpDom>(null)
   const elementRef = useRef<MpDom>(null)
@@ -290,22 +294,24 @@ export const Easy = (props: Partial<EasyProps>) => {
           }
         }}
       >
-        <Tooltip
-          id="tooltip"
-          backgroundColor={tooltip.backgroundColor}
-          font={font}
-          fontSize={smallFontSize.fontSize}
-          color={tooltip.color}
-          padding={smallFontSize.padding}
-          display="flex"
-          justifyContent="center"
-          alignItems="center"
-          zIndex={style[mode].tooltip.zIndex}
-          maxWidth={style[mode].tooltip.maxWidth}
-          mousePos={mousePos}
-          height="auto"
-          width="auto"
-        />
+        {tooltip && (
+          <Tooltip
+            id="tooltip"
+            backgroundColor={tooltipStyle.backgroundColor}
+            font={font}
+            fontSize={smallFontSize.fontSize}
+            color={tooltipStyle.color}
+            padding={smallFontSize.padding}
+            display="flex"
+            justifyContent="center"
+            alignItems="center"
+            zIndex={style[mode].tooltip.zIndex}
+            maxWidth={style[mode].tooltip.maxWidth}
+            mousePos={mousePos}
+            height="auto"
+            width="auto"
+          />
+        )}
 
         <Toolbar ref={toolbarRef} hide={hide || showCrop} />
         <Element ref={elementRef} hide={hide || showCrop} width={"100%"} />

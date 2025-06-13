@@ -142,6 +142,7 @@ export type EasyConfig = {
   style: {
     [x in ThemeMode]: ThemeStyle
   }
+  tooltip: boolean
   progress: {
     save: boolean
     time: number
@@ -453,6 +454,7 @@ export function createDefaultThemeConfig(): EasyConfig {
       saveConfigThrottle: defaultSaveConfigThrottle,
       protocolHook: "",
     },
+    tooltip: true,
   } satisfies EasyConfig)
 }
 export const defaultState: EasyConfig["state"] = {

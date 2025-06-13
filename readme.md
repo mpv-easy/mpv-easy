@@ -71,6 +71,7 @@ set -x MPV_SCRIPT_DIR /your_mpv_dir/portable_config/scripts ; pnpm run dev-copy
 | CTRL+v     | script-message clipboard-play        |
 | CTRL+c     | script-message copy-screen           |
 | CTRL+C     | script-message copy-time             |
+| CTRL+F1    | script-message toggle-tooltip        |
 | MOUSE_BTN0 | script-message mouse-left-click      |
 | MOUSE_BTN1 | script-message mouse-mid-click       |
 | MOUSE_BTN2 | script-message mouse-right-click     |

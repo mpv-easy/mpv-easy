@@ -76,6 +76,10 @@ const store = defineStore({
       // muteProp.value = mute
       return { ...state }
     },
+    toggleTooltip(state) {
+      state[pluginName].tooltip = !state[pluginName].tooltip
+      return { ...state }
+    },
     setTimePos(state, timePos: number) {
       state[pluginName].player["time-pos"] = timePos
       setPropertyNumber("time-pos", timePos)
