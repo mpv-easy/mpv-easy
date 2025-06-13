@@ -8,24 +8,24 @@
     "build": "vite build"
   },
   "dependencies": {
-    "@ant-design/icons": "^6.0.0",
-    "@ant-design/v5-patch-for-react-19": "^1.0.3",
-    "@easy-install/easy-archive": "^0.1.14",
-    "antd": "^5.25.3",
-    "fuse.js": "^7.1.0",
-    "react": "^19.1.0",
-    "react-dom": "^19.1.0",
+    "@ant-design/icons": "6.0.0",
+    "@ant-design/v5-patch-for-react-19": "1.0.3",
+    "@easy-install/easy-archive": "0.1.14",
+    "antd": "5.25.3",
+    "fuse.js": "7.1.0",
+    "react": "19.1.0",
+    "react-dom": "19.1.0",
     "react-use": "17.6.0",
     "zustand": "5.0.5"
   },
   "devDependencies": {
     "@mpv-easy/mpsm": "workspace:*",
-    "@types/node": "^22.15.27",
-    "@types/react": "^19.1.6",
-    "@types/react-dom": "^19.1.5",
-    "@vitejs/plugin-react": "^4.5.0",
-    "globals": "^16.2.0",
+    "@types/node": "24.0.1",
+    "@types/react": "19.1.6",
+    "@types/react-dom": "19.1.5",
+    "@vitejs/plugin-react": "4.5.0",
+    "globals": "16.2.0",
     "typescript": "~5.8.3",
-    "vite": "^6.3.5"
+    "vite": "6.3.5"
   }
 }

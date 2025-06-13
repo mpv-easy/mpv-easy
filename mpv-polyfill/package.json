@@ -19,8 +19,8 @@
     "core-js": "3.42.0",
     "es-symbol": "1.1.2",
     "textcodec": "0.1.0",
-    "typedarray": "^0.0.7",
+    "typedarray": "0.0.7",
     "uri-component": "0.1.1",
-    "url-parse": "^1.5.10"
+    "url-parse": "1.5.10"
   }
 }

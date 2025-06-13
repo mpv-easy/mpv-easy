@@ -7,7 +7,7 @@ import {
   readFileSync,
   statSync,
 } from "fs-extra"
-import { type Script, getScript } from "./meta"
+import { type Script } from "./meta"
 import chalk from "chalk"
 
 export const ConfigFileName = "mpsm-config.json"
