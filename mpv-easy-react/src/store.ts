@@ -14,6 +14,8 @@ import { ButtonProps, DropdownProps } from "@mpv-easy/react"
 export * from "./models"
 
 export const modeSelector = (state: PluginContext) => state[pluginName].mode
+export const tooltipSelector = (state: PluginContext) =>
+  state[pluginName].tooltip
 export const styleSelector = (state: PluginContext) => state[pluginName].style
 
 export const uiNameSelector = (state: PluginContext) => state[pluginName].uiName
