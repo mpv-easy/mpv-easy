@@ -303,11 +303,13 @@ jobs:
               conf="mpv-easy-react/conf/${name}.conf"
               json="mpv-easy-react/conf/${name}.json"
               input="mpv-easy-react/conf/${name}.input.conf"
+              shaders="mpv-easy-react/shaders/${name}"
 
               zip_js="tmp/scripts/main.js"
               zip_conf="tmp/script-opts/mpv-easy-${name}.conf"
               zip_json="tmp/script.json"
               zip_input="tmp/input.conf"
+              zip_shaders="tmp/shaders"
 
               mkdir -p tmp/scripts
               mkdir -p tmp/script-opts
@@ -321,7 +323,9 @@ jobs:
               if [ -f "$input" ]; then
                   cp ${input} ${zip_input}
               fi
-
+              if [ -d "$shaders" ]; then
+                  cp -r ${shaders} ${zip_shaders}
+              fi
               cd tmp
               zip -r -q ../mpv-easy-scripts/mpv-easy-${name}.zip .
               cd ..
