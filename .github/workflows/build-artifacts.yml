@@ -296,32 +296,37 @@ jobs:
           mkdir mpv-easy-scripts -p
           cp mpv-easy-react/bundle/mpv-easy-play-with.user.js mpv-easy-scripts/mpv-easy-play-with.user.js
 
-          files=(anime4k autoload clipboard-play copy-screen copy-time crop cut thumbfast translate)
+          files=(anime4k autoload clipboard-play copy-screen copy-time crop cut thumbfast translate pause-mossaic)
           for name in "${files[@]}"; do
               # mpv-easy-react/es5/*.js
               js="mpv-easy-react/es5/${name}.js"
               conf="mpv-easy-react/conf/${name}.conf"
               json="mpv-easy-react/conf/${name}.json"
               input="mpv-easy-react/conf/${name}.input.conf"
+              shaders="mpv-easy-react/shaders/${name}"
 
               zip_js="tmp/scripts/main.js"
               zip_conf="tmp/script-opts/mpv-easy-${name}.conf"
               zip_json="tmp/script.json"
               zip_input="tmp/input.conf"
+              zip_shaders="tmp/shaders"
 
               mkdir -p tmp/scripts
-              mkdir -p tmp/script-opts
 
               cp ${js} ${zip_js}
               cp ${json} ${zip_json}
 
               if [ -f "$conf" ]; then
+                  mkdir -p tmp/script-opts
                   cp ${conf} ${zip_conf}
               fi
               if [ -f "$input" ]; then
                   cp ${input} ${zip_input}
               fi
-
+              if [ -d "$shaders" ]; then
+                  mkdir -p tmp/shaders
+                  cp -r ${shaders} ${zip_shaders}
+              fi
               cd tmp
               zip -r -q ../mpv-easy-scripts/mpv-easy-${name}.zip .
               cd ..

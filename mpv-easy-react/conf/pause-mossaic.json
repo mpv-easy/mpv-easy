@@ -1,0 +1,8 @@
+{
+  "name": "mpv-easy-pause-mossaic",
+  "description": "mpv player pause-mossaic script, add a mossaic shader when pause",
+  "version": "v0.1.15-alpha.6",
+  "author": "mpv-easy",
+  "download": "https://github.com/mpv-easy/mpv-easy/releases/latest/download/mpv-easy-pause-mossaic.zip",
+  "homepage": "https://github.com/mpv-easy/mpv-easy/tree/main/mpv-easy-react/scripts/pause-mossaic.ts"
+}
