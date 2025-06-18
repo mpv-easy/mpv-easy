@@ -1,0 +1,8 @@
+{
+  "name": "mpv-easy-pause-mosaic",
+  "description": "mpv player pause-mosaic script, add a mosaic shader when pause",
+  "version": "v0.1.15-alpha.6",
+  "author": "mpv-easy",
+  "download": "https://github.com/mpv-easy/mpv-easy/releases/latest/download/mpv-easy-pause-mosaic.zip",
+  "homepage": "https://github.com/mpv-easy/mpv-easy/tree/main/mpv-easy-react/scripts/pause-mosaic.ts"
+}

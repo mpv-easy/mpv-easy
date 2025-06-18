@@ -296,7 +296,7 @@ jobs:
           mkdir mpv-easy-scripts -p
           cp mpv-easy-react/bundle/mpv-easy-play-with.user.js mpv-easy-scripts/mpv-easy-play-with.user.js
 
-          files=(anime4k autoload clipboard-play copy-screen copy-time crop cut thumbfast translate pause-mossaic)
+          files=(anime4k autoload clipboard-play copy-screen copy-time crop cut thumbfast translate pause-mosaic)
           for name in "${files[@]}"; do
               # mpv-easy-react/es5/*.js
               js="mpv-easy-react/es5/${name}.js"

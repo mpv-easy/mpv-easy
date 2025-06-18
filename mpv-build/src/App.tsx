@@ -203,10 +203,10 @@ const UI_LIST = [
       "thumbfast",
       "mpv-easy",
       "mpv-easy-anime4k",
-      " mpv-easy-clipboard-play",
+      "mpv-easy-clipboard-play",
       "mpv-easy-copy-time",
       "mpv-easy-cut",
-      " mpv-easy-translate",
+      "mpv-easy-translate",
       "mpv-easy-autoload",
       "mpv-easy-copy-screen",
       "mpv-easy-crop",
@@ -235,6 +235,17 @@ const UI_LIST = [
     },
     repo: "https://github.com/Samillion/ModernZ",
     deps: ["thumbfast", "ModernZ", "autoload"],
+  },
+  {
+    name: "mpv.net",
+    info: {
+      user: "mpv-easy",
+      repo: "mpv-easy-cdn",
+      tag: "main",
+      file: "mpv.net.zip",
+    },
+    repo: "https://github.com/mpvnet-player/mpv.net",
+    deps: ["mpv.net"],
   },
 ] as const
 
@@ -314,7 +325,7 @@ async function getMpvFiles(platform: Platform, ui: UI) {
   }
 
   // replace all v3 files
-  if (platform === "mpv" && ui !== "mpv") {
+  if (platform === "mpv" && ui !== "mpv" && ui !== "mpv.net") {
     const mpvUrl = getMpvUrl()
     const bin = await downloadBinary(mpvUrl)
     const files = decode(guess(mpvUrl)!, bin)!

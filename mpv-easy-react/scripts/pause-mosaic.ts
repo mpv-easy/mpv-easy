@@ -1,4 +1,4 @@
-const GLSL_PATH = "~~/shaders/pause-mossaic.glsl"
+const GLSL_PATH = "~~/shaders/pause-mosaic.glsl"
 
 mp.observe_property("pause", "bool", (_, v) => {
   if (v) {
