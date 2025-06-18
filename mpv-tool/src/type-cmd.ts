@@ -301,8 +301,18 @@ export function del(...args: [name?: string]): true | undefined {
   return mp.commandv("del", ...args)
 }
 
+export type ChangeListOperation =
+  | "set"
+  | "append"
+  | "add"
+  | "pre"
+  | "clr"
+  | "remove"
+  | "toggle"
+  | "help"
+
 export function changeList(
-  ...args: [name?: string, operation?: string, value?: string]
+  ...args: [name?: string, operation?: ChangeListOperation, value?: string]
 ): true | undefined {
   return mp.commandv("change-list", ...args)
 }
