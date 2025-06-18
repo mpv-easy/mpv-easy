@@ -324,7 +324,6 @@ jobs:
                   cp ${input} ${zip_input}
               fi
               if [ -d "$shaders" ]; then
-                  mkdir -p tmp/shaders
                   cp -r ${shaders} ${zip_shaders}
               fi
               cd tmp
