@@ -1,10 +1,5 @@
 import { definePlugin } from "@mpv-easy/plugin"
-import {
-  command,
-  commandv,
-  osdMessage,
-  registerScriptMessage,
-} from "@mpv-easy/tool"
+import { changeList, osdMessage, registerScriptMessage } from "@mpv-easy/tool"
 
 export const pluginName = "@mpv-easy/anime4k"
 
@@ -77,13 +72,12 @@ export const defaultConfig: Anime4kConfig = {
 }
 
 export function toggle(s: string) {
-  const cmd = s
-    .split(";")
-    .filter((i) => !!i.length)
-    .map((i) => ["no-osd", "change-list", "glsl-shaders", "toggle", i])
+  const cmd = s.split(";").filter((i) => !!i.length)
+  // .map((i) => ["no-osd", "change-list", "glsl-shaders", "toggle", i])
   if (cmd.length) {
     for (const i of cmd) {
-      commandv(...i)
+      // commandv(...i)
+      changeList("glsl-shaders", "toggle", i)
     }
   } else {
     clearShader()
@@ -91,7 +85,8 @@ export function toggle(s: string) {
 }
 function clearShader() {
   // commandv('no-osd', 'change-list', 'glsl-shaders', 'clr', "''")
-  command(`no-osd change-list glsl-shaders clr ''`)
+  // command(`no-osd change-list glsl-shaders clr ''`)
+  changeList("glsl-shaders", "clr", "")
 }
 
 export function anime4k(
