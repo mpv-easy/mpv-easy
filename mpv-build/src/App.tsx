@@ -369,6 +369,24 @@ function App() {
   const reset = () => {
     setState({ ...DEFAULT_STATE, data, tableData })
   }
+  const zipPortableConfig = async () => {
+    const files: File[] = []
+    // scripts
+    for (const i of selectedRowKeys) {
+      const scriptFiles = await getScriptFiles(data[i])
+      installScript(files, scriptFiles, data[i])
+    }
+    for (const i of files) {
+      i.path = i.path.replace("portable_config/", "")
+    }
+    // encode to zip
+    const zipBinary = encode(Fmt.Zip, files)
+    if (!zipBinary) {
+      console.log("zip file error")
+      return
+    }
+    return zipBinary
+  }
 
   const zipAll = async () => {
     const mpvFiles = await getMpvFiles(platform, ui)
@@ -425,6 +443,17 @@ function App() {
     setSpinning(false)
     if (zipBinary) {
       downloadBinaryFile(`${ui}.zip`, zipBinary)
+    }
+  }
+
+  const downloadPortableConfig = async () => {
+    setSpinning(true)
+    // Wait for spinning
+    await new Promise((r) => setTimeout(r))
+    const zipBinary = await zipPortableConfig()
+    setSpinning(false)
+    if (zipBinary) {
+      downloadBinaryFile("portable_config.zip", zipBinary)
     }
   }
 
@@ -714,7 +743,15 @@ function App() {
             size={"large"}
             onClick={download}
           >
-            Download {ui}.zip
+            {ui}.zip
+          </Button>
+          <Button
+            type="primary"
+            icon={<DownloadOutlined />}
+            size={"large"}
+            onClick={downloadPortableConfig}
+          >
+            portable_config.zip
           </Button>
         </Flex>
       </Flex>
