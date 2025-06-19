@@ -39,6 +39,7 @@ set -x MPV_SCRIPT_DIR /your_mpv_dir/portable_config/scripts ; pnpm run dev-copy
 - [translate](./mpv-translate/readme.md)
 - [cut](./mpv-cut/readme.md)
 - [crop](./mpv-crop/readme.md)
+- [pause-mosia](./mpv-easy-react/docs/pause-mosaic.md)
 
 ## short key
 

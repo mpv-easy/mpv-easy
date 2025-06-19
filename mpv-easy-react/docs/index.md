@@ -13,6 +13,7 @@ mpv-easy-scripts is a series of js scripts implemented using mpv-easy, you only 
 - [cut](../../mpv-cut/readme.md)
 - [crop](../../mpv-crop/readme.md)
 - [mpv-easy](../../mpv-easy-react/readme.md)
+- [pause-mosaic](./pause-mosaic.md)
 
 
 ## QA
