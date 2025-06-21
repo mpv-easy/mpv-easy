@@ -117,7 +117,10 @@ function renderNodeToMpv(node: MpDom) {
 
     // border ovl
 
-    if (typeof borderSize !== "undefined") {
+    if (
+      typeof borderSize !== "undefined" &&
+      (borderColor[7] !== "0" || borderColor[8] !== "0")
+    ) {
       borderOverlay.data = drawBorder({
         x: x * assScale,
         y: y * assScale,
@@ -242,14 +245,18 @@ function renderNodeToMpv(node: MpDom) {
           )
         }
       }
-      textOverlay.data = getAssText(node, textX * assScale, textY * assScale)
+      const text = getAssText(node, textX * assScale, textY * assScale)
+      textOverlay.data = text
       textOverlay.hidden = false
       textOverlay.computeBounds = true
     }
     const textRect = textOverlay.update(1 / assScale)
 
     // bg ovl
-    if (typeof backgroundColor !== "undefined") {
+    if (
+      typeof backgroundColor !== "undefined" &&
+      (backgroundColor[7] !== "0" || backgroundColor[8] !== "0")
+    ) {
       if (backgroundColor.length === 7) {
         backgroundColor += "00"
       }

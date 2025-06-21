@@ -111,7 +111,9 @@ export function getAssText(node: MpDom, x: number, y: number) {
     alpha = color.slice(-2)
     color = color.slice(0, -2)
   }
-
+  if (alpha === "FF") {
+    return ""
+  }
   const s = GetAssTextAssdraw.clear()
     .pos(x, y)
     .font(font)
