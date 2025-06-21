@@ -119,7 +119,7 @@ function renderNodeToMpv(node: MpDom) {
 
     if (
       typeof borderSize !== "undefined" &&
-      (borderColor[7] !== "0" || borderColor[8] !== "0")
+      !(borderColor.length > 7 && borderColor.slice(-2) === "FF")
     ) {
       borderOverlay.data = drawBorder({
         x: x * assScale,
@@ -255,7 +255,7 @@ function renderNodeToMpv(node: MpDom) {
     // bg ovl
     if (
       typeof backgroundColor !== "undefined" &&
-      (backgroundColor[7] !== "0" || backgroundColor[8] !== "0")
+      !(backgroundColor.length > 7 && backgroundColor.slice(-2) === "FF")
     ) {
       if (backgroundColor.length === 7) {
         backgroundColor += "00"
