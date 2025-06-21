@@ -1,13 +1,20 @@
-mpsm(mpv script manager)
+## mpsm(mpv script manager)
+
+### MPV Script RFC
+
+https://github.com/mpv-easy/mpv-easy/blob/main/blog/Revolutionizing-mpv-Scripting-A-New-Package-Format-Proposal.md
+
+
+### Usage
 
 ```bash
 npm i @mpv-easy/mpsm -g
 
-# set mpv script dir first!
-mpsm set-script-dir '<your-mpv-dir>/portable_config/scripts'
+# set mpv config dir first!
+mpsm set-config-dir '<your-mpv-dir>/portable_config'
 
-# print mpv script dir
-mpsm get-script-dir
+# print mpv config dir
+mpsm get-config-dir
 
 
 # install script from https://github.com/mpv-easy/mpsm-scripts
