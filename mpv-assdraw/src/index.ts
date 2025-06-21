@@ -393,13 +393,13 @@ export function drawRect({
   borderColor?: string
   borderRadius?: number
 }) {
-  return DrawRectAssdraw.clear()
-    .color(color)
-    .drawStart()
-    .pos(x, y)
-    .borderSize(borderSize)
-    .borderColor(borderColor)
-    .roundRectCw(0, 0, width, height, borderRadius)
+  DrawRectAssdraw.clear().color(color).drawStart().pos(x, y)
+
+  if (borderSize) {
+    DrawRectAssdraw.borderSize(borderSize).borderColor(borderColor)
+  }
+
+  return DrawRectAssdraw.roundRectCw(0, 0, width, height, borderRadius)
     .end()
     .toString()
 }
