@@ -575,7 +575,8 @@ export function createMpvMock(
     aid: 0,
     vid: 0,
     sid: 0,
-    "video-params": {},
+    "video-params": { w: 1080, h: 720 },
+    "video-target-params": { w: 1080, h: 720 },
     "time-pos/full": 0,
     "playlist/count": 1,
   }
