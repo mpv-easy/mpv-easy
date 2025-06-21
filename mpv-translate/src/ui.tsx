@@ -247,8 +247,17 @@ export function Translation(props: Partial<TranslationProps>) {
   const firstFontSize = Math.round(subSrtScale * subFontSize * subScale)
   const secondFontSize = Math.round(firstFontSize / 2)
 
-  const videoParams = getPropertyNative("video-params")!
-  const videoTargetParams = getPropertyNative("video-target-params")!
+  const videoParams = getPropertyNative("video-params") || {
+    w: 0,
+    h: 0,
+    aspect: 0,
+  }
+  const videoTargetParams = getPropertyNative("video-target-params") || {
+    w: 0,
+    h: 0,
+    aspect: 0,
+  }
+
   const aspect = videoTargetParams.w / videoTargetParams.h
   let scaleW = videoTargetParams.w
   let scaleH = videoTargetParams.h
@@ -332,49 +341,50 @@ export function Translation(props: Partial<TranslationProps>) {
   }, [])
   const isMix = !!TrackInfoBackupMix
   return (
-    <Box
-      display="flex"
-      position="absolute"
-      width="100%"
-      height="100%"
-      hide={!active}
-      flexDirection="row"
-      justifyContent="end"
-      alignItems="center"
-      {...props}
-    >
-      {text
-        .trim()
-        .replaceAll("\r\n", "\n")
-        .split("\n")
-        .map((i, k) => (
-          <Line
-            videoScale={videoScale}
-            isMix={isMix}
-            key={[i, k].join()}
-            line={i}
-            lineIndex={k}
-            subConfig={{
-              subFontSize,
-              subColor,
-              subBackColor,
-              subBackColorHover,
-              subColorHover,
-              subBold,
-              subScale,
-              subOutlineSize,
-              subOutlineColor,
-              targetLang,
-              sourceLang,
-              subZIndex,
-              subSrtScale,
-              firstSubColor,
-              firstSubFontface,
-              secondSubFontface,
-              secondSubColor,
-            }}
-          />
-        ))}
-    </Box>
+    active && (
+      <Box
+        display="flex"
+        position="absolute"
+        width="100%"
+        height="100%"
+        flexDirection="row"
+        justifyContent="end"
+        alignItems="center"
+        {...props}
+      >
+        {text
+          .trim()
+          .replaceAll("\r\n", "\n")
+          .split("\n")
+          .map((i, k) => (
+            <Line
+              videoScale={videoScale}
+              isMix={isMix}
+              key={[i, k].join()}
+              line={i}
+              lineIndex={k}
+              subConfig={{
+                subFontSize,
+                subColor,
+                subBackColor,
+                subBackColorHover,
+                subColorHover,
+                subBold,
+                subScale,
+                subOutlineSize,
+                subOutlineColor,
+                targetLang,
+                sourceLang,
+                subZIndex,
+                subSrtScale,
+                firstSubColor,
+                firstSubFontface,
+                secondSubFontface,
+                secondSubColor,
+              }}
+            />
+          ))}
+      </Box>
+    )
   )
 }
