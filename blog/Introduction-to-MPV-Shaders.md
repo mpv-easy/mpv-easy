@@ -129,3 +129,4 @@ mp.observe_property("pause", "bool", (name, isPaused) => {
 - [MDN: GLSL Shaders for Web Applications](https://developer.mozilla.org/en-US/docs/Games/Techniques/3D_on_the_web/GLSL_Shaders)
 - [PTC Mathcad Example: Grayscale and Color in Images](https://support.ptc.com/help/mathcad/r10.0/en/index.html#page/PTC_Mathcad_Help/example_grayscale_and_color_in_images.html)
 - [pause mosaic: mpv shader script - youtube](https://www.youtube.com/watch?v=ftvaZ-Wp9f8)
+- [mpv-easy-pause-mosaic](https://github.com/mpv-easy/mpv-easy/blob/main/mpv-easy-react/scripts/pause-mosaic.ts)
