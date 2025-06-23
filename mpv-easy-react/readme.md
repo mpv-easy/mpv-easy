@@ -14,6 +14,12 @@ fish
 set -x MPV_SCRIPT_DIR /your_mpv_dir/portable_config/scripts ; pnpm run dev-copy
 ```
 
+powershell
+
+```pwsh
+$env:MPV_SCRIPT_DIR = "/your_mpv_dir/portable_config/scripts"; pnpm run dev-copy
+```
+
 ## todo
 
 - [ ] @reduxjs/toolkit

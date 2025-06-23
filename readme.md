@@ -90,6 +90,7 @@ set -x MPV_SCRIPT_DIR /your_mpv_dir/portable_config/scripts ; pnpm run dev-copy
 - [mount any playable link](./blog/mount-any-playable-link.md)
 - [mpv-build: Customize your own MPV right from your browser](./blog/customize-your-own-mpv-right-from-your-browser.md)
 - [Revolutionizing mpv Scripting: A New Package Format Proposal](./blog/Revolutionizing-mpv-Scripting-A-New-Package-Format-Proposal.md)
+- [Introduction to MPV Shaders](././blog/Introduction-to-MPV-Shaders.md)
 
 ## UI
 
