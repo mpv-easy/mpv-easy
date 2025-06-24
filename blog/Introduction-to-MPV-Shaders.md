@@ -130,3 +130,4 @@ mp.observe_property("pause", "bool", (name, isPaused) => {
 - [PTC Mathcad Example: Grayscale and Color in Images](https://support.ptc.com/help/mathcad/r10.0/en/index.html#page/PTC_Mathcad_Help/example_grayscale_and_color_in_images.html)
 - [pause mosaic: mpv shader script - youtube](https://www.youtube.com/watch?v=ftvaZ-Wp9f8)
 - [mpv-easy-pause-mosaic](https://github.com/mpv-easy/mpv-easy/blob/main/mpv-easy-react/scripts/pause-mosaic.ts)
+- [mpv-build(pause-mosaic)](https://mpv-easy.github.io/mpv-build/#mpv-build=%22%7B%5C%22state%5C%22%3A%7B%5C%22selectedRowKeys%5C%22%3A%5B%5C%22mpv-easy-pause-mosaic%5C%22%5D%2C%5C%22externalList%5C%22%3A%5B%5D%2C%5C%22ui%5C%22%3A%5C%22mpv%5C%22%2C%5C%22platform%5C%22%3A%5C%22mpv-v3%5C%22%7D%7D%22)

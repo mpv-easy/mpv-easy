@@ -12,7 +12,7 @@ build({
     "process.env.NODE_ENV": '"production"',
   },
   metafile: true,
-  format: "cjs",
+  format: "esm",
 })
   .then((r) => {
     fs.writeFileSync("./bundle/metafile.json", JSON.stringify(r.metafile))
