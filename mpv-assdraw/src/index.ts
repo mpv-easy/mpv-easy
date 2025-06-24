@@ -25,7 +25,9 @@ export class AssDraw {
     return this
   }
   clear() {
-    this._textBuffer.length = 0
+    // FIXME: which one is better?
+    // this._textBuffer.length = 0
+    this._textBuffer = []
     return this
   }
   drawStart() {
@@ -395,9 +397,11 @@ export function drawRect({
 }) {
   DrawRectAssdraw.clear().color(color).drawStart().pos(x, y)
 
-  if (borderSize) {
-    DrawRectAssdraw.borderSize(borderSize).borderColor(borderColor)
-  }
+  // FIXME: The default size of borderSize does not seem to be 0, so it must be set explicitly
+  // if (borderSize) {
+  //   DrawRectAssdraw.borderSize(borderSize).borderColor(borderColor)
+  // }
+  DrawRectAssdraw.borderSize(borderSize).borderColor(borderColor)
 
   return DrawRectAssdraw.roundRectCw(0, 0, width, height, borderRadius)
     .end()
