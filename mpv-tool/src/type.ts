@@ -46,7 +46,7 @@ export interface AddKeyBindingFlags {
 }
 
 export interface MpvOsdOverlay {
-  id?: number
+  id: number
   data: string
   res_x: number
   res_y: number

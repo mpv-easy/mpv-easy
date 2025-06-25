@@ -256,6 +256,7 @@ function getText(s: string) {
 }
 
 let zindex = 0
+let ovlId = 1
 function createOsdOverlay(
   fabricCanvas: fabric.Canvas,
 ): MpvOsdOverlay & { fabricNode: any } {
@@ -264,6 +265,7 @@ function createOsdOverlay(
   }
 
   return {
+    id: ovlId++,
     data: "",
     res_x: 0,
     res_y: 720,

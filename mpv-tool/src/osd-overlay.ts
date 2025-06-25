@@ -1,5 +1,5 @@
 import { Rect, type CoordRect } from "./common"
-import { createOsdOverlay } from "./mpv"
+import { createOsdOverlay, writeFile } from "./mpv"
 import type { MpvOsdOverlay } from "./type"
 
 const overlayPool: {
@@ -21,9 +21,10 @@ function getOverlay(): MpvOsdOverlay {
     overlay.data = ""
     overlay.compute_bounds = false
     overlay.update()
-    overlayPool[overlay.id || 0].busy = false
+    overlayPool[overlay.id - 1].busy = false
   }
-  overlayPool[overlay.id || 0] = { overlay, busy: true }
+  // MPV overlay id starts from 1
+  overlayPool[overlay.id - 1] = { overlay, busy: true }
   return overlay
 }
 
@@ -34,75 +35,69 @@ export type OverlayConfig = {
   resY: number
   z: number
   data: string
-  overlay: MpvOsdOverlay
+  overlay?: MpvOsdOverlay
   cache: boolean
 }
 
-export class OsdOverlay {
-  private overlay: MpvOsdOverlay
-  private cache: boolean
-  constructor(option: Partial<OverlayConfig> = {}) {
-    const {
-      hidden = false,
-      resX = 0,
-      resY = 720,
-      z = 0,
-      computeBounds = true,
-      data = "",
-      cache = false,
-      overlay = getOverlay(),
-    } = option
+const DefaultOsdOverlayOption = {
+  hidden: false,
+  resX: 0,
+  resY: 720,
+  z: 0,
+  computeBounds: true,
+  data: "",
+  cache: false,
+}
 
-    overlay.res_x = resX
-    overlay.res_y = resY
-    overlay.hidden = hidden
-    overlay.compute_bounds = computeBounds
-    overlay.data = data
-    overlay.z = z
-    this.cache = cache
-    this.overlay = overlay
+export class OsdOverlay {
+  private overlay: MpvOsdOverlay | undefined
+  private option: OverlayConfig
+  constructor(option: Partial<OverlayConfig> = {}) {
+    this.option = { ...DefaultOsdOverlayOption, ...option }
   }
 
   set hidden(hidden: boolean) {
-    this.overlay.hidden = hidden
+    this.option.hidden = hidden
   }
   get hidden() {
-    return this.overlay.hidden
+    return this.option.hidden
   }
 
   set computeBounds(computeBounds: boolean) {
-    this.overlay.compute_bounds = computeBounds
+    this.option.computeBounds = computeBounds
   }
   get computeBounds() {
-    return this.overlay.compute_bounds
+    return this.option.computeBounds
   }
   set z(z: number) {
-    this.overlay.z = z
+    this.option.z = z
   }
   get z() {
-    return this.overlay.z
+    return this.option.z
   }
   set data(data: string) {
-    this.overlay.data = data
+    this.option.data = data
   }
   get data() {
-    return this.overlay.data
+    return this.option.data
   }
   set resX(resX: number) {
-    this.overlay.res_x = resX
+    this.option.resX = resX
   }
   get resX() {
-    return this.overlay.res_x
+    return this.option.resX
   }
   set resY(resY: number) {
-    this.overlay.res_y = resY
+    this.option.resY = resY
   }
   get resY() {
-    return this.overlay.res_y
+    return this.option.resY
   }
 
   remove() {
-    this.overlay.remove()
+    if (this.overlay) {
+      this.overlay.remove()
+    }
   }
 
   private _lastResY: number | undefined = undefined
@@ -113,7 +108,21 @@ export class OsdOverlay {
   private _lastZ: number | undefined = undefined
   private _lastRect: Rect | undefined = undefined
   update(scale = 1): Rect {
-    if (this.cache) {
+    if (!!this.option.data && !this.overlay) {
+      this.overlay = getOverlay()
+    }
+    if (!this.overlay) {
+      return this._lastRect || new Rect(0, 0, 0, 0)
+    }
+
+    this.overlay.data = this.option.data
+    this.overlay.res_x = this.option.resX
+    this.overlay.res_y = this.option.resY
+    this.overlay.z = this.option.z
+    this.overlay.hidden = this.option.hidden
+    this.overlay.compute_bounds = this.option.computeBounds
+
+    if (this.option.cache) {
       if (
         this._lastResX === this.resX &&
         this._lastResY === this.resY &&
