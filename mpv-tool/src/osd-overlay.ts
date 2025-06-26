@@ -1,5 +1,5 @@
 import { Rect, type CoordRect } from "./common"
-import { createOsdOverlay, writeFile } from "./mpv"
+import { createOsdOverlay } from "./mpv"
 import type { MpvOsdOverlay } from "./type"
 
 const overlayPool: {

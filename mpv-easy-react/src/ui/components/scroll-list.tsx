@@ -29,8 +29,6 @@ export type ScrollListProps = {
     title: string
   }[]
 }
-
-const MaxWidthCache: Record<string, number> = {}
 const MaxWidthDomCache: MpDom[] = []
 
 function getMaxWidth(
@@ -38,13 +36,6 @@ function getMaxWidth(
   button: Partial<ButtonProps>,
   parent?: MpDom | null | undefined,
 ) {
-  const size = getOsdSize()
-  const cacheKey = `${JSON.stringify(size)}\n${textList.join("\n")}`
-
-  // if (MaxWidthCache[cacheKey]) {
-  //   return MaxWidthCache[cacheKey]
-  // }
-
   while (MaxWidthDomCache.length < textList.length) {
     MaxWidthDomCache.push(createNode("@mpv-easy/box"))
   }
@@ -55,12 +46,12 @@ function getMaxWidth(
     const node = MaxWidthDomCache[i]
     node.attributes = button
     node.attributes.text = text
-    max = Math.max(max, measureText(node).width)
     if (parent) {
       node.parentNode = parent
     }
+    max = Math.max(max, measureText(node).width)
+    node.parentNode = undefined
   }
-  MaxWidthCache[cacheKey] = max
   return max
 }
 
