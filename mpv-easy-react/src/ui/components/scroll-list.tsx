@@ -29,13 +29,14 @@ export type ScrollListProps = {
     title: string
   }[]
 }
-const MaxWidthDomCache: MpDom[] = []
 
 function getMaxWidth(
   textList: string[],
   button: Partial<ButtonProps>,
   parent?: MpDom | null | undefined,
 ) {
+  // TODO: Do we need cache?
+  const MaxWidthDomCache: MpDom[] = []
   while (MaxWidthDomCache.length < textList.length) {
     MaxWidthDomCache.push(createNode("@mpv-easy/box"))
   }
@@ -50,7 +51,6 @@ function getMaxWidth(
       node.parentNode = parent
     }
     max = Math.max(max, measureText(node).width)
-    node.parentNode = undefined
   }
   return max
 }
