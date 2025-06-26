@@ -37,7 +37,7 @@ export function Speed() {
       fontSize={fontSize.fontSize}
       onMouseDown={() => {
         clear()
-        const now = Date.now()
+        const now = +Date.now()
         const dur = now - lastClickRef.current
         const doubleClickDuration = 500
         // FIXME: avoid double click
