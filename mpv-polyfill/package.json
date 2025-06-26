@@ -16,7 +16,7 @@
   "license": "MIT",
   "dependencies": {
     "buffer": "6.0.3",
-    "core-js": "3.42.0",
+    "core-js": "3.43.0",
     "es-symbol": "1.1.2",
     "textcodec": "0.1.0",
     "typedarray": "0.0.7",

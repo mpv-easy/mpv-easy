@@ -1,12 +1,20 @@
-import { getPropertyNumber, createOsdOverlay, Rect } from "@mpv-easy/tool"
+import {
+  getPropertyNumber,
+  createOsdOverlay,
+  Rect,
+  type MpvOsdOverlay,
+} from "@mpv-easy/tool"
 
+let ScaleOvl: MpvOsdOverlay
 export function scaleText(text: string, maxWidth: number, maxHeight: number) {
   const fontSize = getPropertyNumber("options/osd-font-size")!
-  const ovl = createOsdOverlay()
-  ovl.hidden = true
-  ovl.compute_bounds = true
-  ovl.data = text
-  const coord = ovl.update()
+  if (!ScaleOvl) {
+    ScaleOvl = createOsdOverlay()
+  }
+  ScaleOvl.hidden = true
+  ScaleOvl.compute_bounds = true
+  ScaleOvl.data = text
+  const coord = ScaleOvl.update()
   const rect = Rect.fromCoord(coord as any)
   const sw = maxWidth / rect.width
   const sh = maxHeight / rect.height

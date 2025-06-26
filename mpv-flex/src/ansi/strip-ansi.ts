@@ -1,6 +1,4 @@
-import { ansiRegex } from "./ansi-regex"
-
-const regex = ansiRegex()
+import { AnsiRegex } from "./ansi-regex"
 
 export function stripAnsi(string: string) {
   if (typeof string !== "string") {
@@ -10,5 +8,5 @@ export function stripAnsi(string: string) {
   // Even though the regex is global, we don't need to reset the `.lastIndex`
   // because unlike `.exec()` and `.test()`, `.replace()` does it automatically
   // and doing it manually has a performance penalty.
-  return string.replace(regex, "")
+  return string.replace(AnsiRegex, "")
 }
