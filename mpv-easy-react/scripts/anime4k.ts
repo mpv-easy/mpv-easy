@@ -36,7 +36,7 @@ function createShadersDir() {
   }
 }
 
-function getCustomCOnfig() {
+function getCustomConfig() {
   const config = clone(defaultConfig)
 
   for (const shader of config.shaders) {
@@ -60,5 +60,5 @@ function getCustomCOnfig() {
 }
 
 createShadersDir()
-const config = getCustomCOnfig()
+const config = getCustomConfig()
 anime4k(config)
