@@ -458,7 +458,7 @@ jobs:
           curl -L -o modernx.lua https://github.com/cyl0/ModernX/raw/refs/heads/main/modernx.lua
           curl -L -o Material-Design-Iconic-Font.ttf https://github.com/cyl0/ModernX/raw/refs/heads/main/Material-Design-Iconic-Font.ttf
           cd mpv-modernx-windows-full
-          mkdir -p portable_config/scripts
+          mkdir -p portable_config/scripts/ModernX
           mkdir -p portable_config/script-opts
           mkdir -p portable_config/fonts
           cp ../yt-dlp.exe ./yt-dlp.exe
@@ -480,7 +480,7 @@ jobs:
           curl -L -o modernz.conf https://github.com/Samillion/ModernZ/releases/latest/download/modernz.conf
           curl -L -o fluent-system-icons.ttf https://github.com/Samillion/ModernZ/releases/latest/download/fluent-system-icons.ttf
           cd mpv-modernz-windows-full
-          mkdir -p portable_config/scripts
+          mkdir -p portable_config/scripts/ModernZ
           mkdir -p portable_config/script-opts
           mkdir -p portable_config/fonts
           cp ../yt-dlp.exe ./yt-dlp.exe
