@@ -26,6 +26,9 @@ export type UIName = (typeof UINameList)[number]
 export const DefaultPlayMode: PlayMode = "loopAll"
 export const DefaultClickMenuDisable = true
 export const DefaultFontSizeScale = 1
+export const DefaultStackSize = 24
+export const DefaultMaxTitleLength = 48
+
 export type ButtonStyle = {
   color: string
   backgroundColor: string
@@ -273,7 +276,7 @@ export function createDefaultThemeConfig(): EasyConfig {
         toolbar: {
           backgroundColor: Black + AlphaLow,
           autoHideDelay: defaultHideUIDelay,
-          maxTitleLength: 48,
+          maxTitleLength: DefaultMaxTitleLength,
         },
         volume: {
           backgroundColor: Black + AlphaLow,
@@ -290,13 +293,13 @@ export function createDefaultThemeConfig(): EasyConfig {
         playlist: {
           backgroundColor: Black + AlphaLow,
           zIndex: defaultPlaylistZIndex,
-          maxTitleLength: 48,
+          maxTitleLength: DefaultMaxTitleLength,
         },
         history: {
           backgroundColor: Black + AlphaLow,
           zIndex: defaultPlaylistZIndex,
-          maxTitleLength: 48,
-          stackSize: 32,
+          maxTitleLength: DefaultMaxTitleLength,
+          stackSize: DefaultStackSize,
         },
         tooltip: {
           enable: true,
@@ -377,7 +380,7 @@ export function createDefaultThemeConfig(): EasyConfig {
         toolbar: {
           backgroundColor: White + AlphaLow,
           autoHideDelay: defaultHideUIDelay,
-          maxTitleLength: 48,
+          maxTitleLength: DefaultMaxTitleLength,
         },
         scrollList: {
           maxItemCount: defaultMaxItemCount,
@@ -397,13 +400,13 @@ export function createDefaultThemeConfig(): EasyConfig {
         playlist: {
           backgroundColor: White + AlphaLow,
           zIndex: defaultPlaylistZIndex,
-          maxTitleLength: 48,
+          maxTitleLength: DefaultMaxTitleLength,
         },
         history: {
           backgroundColor: White + AlphaLow,
           zIndex: defaultPlaylistZIndex,
-          maxTitleLength: 48,
-          stackSize: 32,
+          maxTitleLength: DefaultMaxTitleLength,
+          stackSize: DefaultStackSize,
         },
         tooltip: {
           enable: true,

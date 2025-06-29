@@ -123,11 +123,10 @@ jobs:
     runs-on: macos-13
     steps:
       - uses: actions/checkout@v4
-      - name: Install latest nightly
-        uses: actions-rs/toolchain@v1
+      - uses: actions-rust-lang/setup-rust-toolchain@v1
         with:
-          toolchain: nightly
-          override: true
+          rustflags: "-A warnings"
+          toolchain: "nightly"
 
       - name: build macos-amd64
         run: |
@@ -152,11 +151,10 @@ jobs:
     runs-on: macos-14
     steps:
       - uses: actions/checkout@v4
-      - name: Install latest nightly
-        uses: actions-rs/toolchain@v1
+      - uses: actions-rust-lang/setup-rust-toolchain@v1
         with:
-          toolchain: nightly
-          override: true
+          rustflags: "-A warnings"
+          toolchain: "nightly"
 
       - name: build macos-arm64
         run: |
@@ -181,11 +179,10 @@ jobs:
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
-      - name: Install latest nightly
-        uses: actions-rs/toolchain@v1
+      - uses: actions-rust-lang/setup-rust-toolchain@v1
         with:
-          toolchain: nightly
-          override: true
+          rustflags: "-A warnings"
+          toolchain: "nightly"
 
       - name: build ubuntu-24.04
         run: |
@@ -210,19 +207,18 @@ jobs:
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
-      - name: Install latest nightly
-        uses: actions-rs/toolchain@v1
+      - uses: actions-rust-lang/setup-rust-toolchain@v1
         with:
-          toolchain: nightly
-          override: true
+          rustflags: "-A warnings"
+          toolchain: "nightly"
 
       - name: build ubuntu-24.04
         run: |
 
           cd mpv-easy-ext
 
-          cargo install cross --git https://github.com/cross-rs/cross
-          cross build --release --target aarch64-linux-android --out-dir=output -Z unstable-options
+          cargo install -q cross --git https://github.com/cross-rs/cross
+          cross build -q --release --target aarch64-linux-android --out-dir=output -Z unstable-options
           cd ..
 
           mv mpv-easy-ext/output/mpv-easy-ext mpv-easy-ext-android
@@ -288,6 +284,11 @@ jobs:
       - uses: pnpm/action-setup@v4
         with:
           version: 10
+
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
       - name: "build ts"
         run: |
           pnpm i
@@ -344,10 +345,11 @@ jobs:
 
           node .github/download.js
 
-          mkdir dist/scripts/mpv-easy-config/mpv-easy-ext -p
+          mkdir dist/scripts/mpv-easy/mpv-easy-config/mpv-easy-ext -p
           # mkdir dist/script-opts -p
 
-          cp mpv-easy-react/es5/mpv-easy.js dist/scripts/mpv-easy.js
+          cp mpv-easy-react/es5/mpv-easy.js dist/scripts/mpv-easy/main.js
+          cp mpv-easy-react/conf/mpv-easy.json dist/scripts/mpv-easy/script.json
           cp -r mpv-easy-react/fonts dist
           cp mpv-easy-react/conf/mpv.conf dist/mpv.conf
           cp mpv-easy-react/conf/input.conf dist/input.conf
@@ -372,17 +374,17 @@ jobs:
           zip -r -q ../release/ffmpeg-windows.zip .
           cd ..
 
-          cp mpv-easy-ext-dist/mpv-easy-ext-macos-amd64 mpv-easy-macos/scripts/mpv-easy-config/mpv-easy-ext/mpv-easy-ext-macos-amd64
-          cp mpv-easy-ext-dist/mpv-easy-ext-macos-arm64 mpv-easy-macos/scripts/mpv-easy-config/mpv-easy-ext/mpv-easy-ext-macos-arm64
-          cp mpv-easy-ext-dist/mpv-easy-ext-linux mpv-easy-linux/scripts/mpv-easy-config/mpv-easy-ext/mpv-easy-ext-linux
-          cp mpv-easy-ext-dist/mpv-easy-ext-android mpv-easy-android/scripts/mpv-easy-config/mpv-easy-ext/mpv-easy-ext-android
-          cp mpv-easy-ext-dist/mpv-easy-ext-windows.exe mpv-easy-windows/scripts/mpv-easy-config/mpv-easy-ext/mpv-easy-ext-windows.exe
+          cp mpv-easy-ext-dist/mpv-easy-ext-macos-amd64 mpv-easy-macos/scripts/mpv-easy/mpv-easy-config/mpv-easy-ext/mpv-easy-ext-macos-amd64
+          cp mpv-easy-ext-dist/mpv-easy-ext-macos-arm64 mpv-easy-macos/scripts/mpv-easy/mpv-easy-config/mpv-easy-ext/mpv-easy-ext-macos-arm64
+          cp mpv-easy-ext-dist/mpv-easy-ext-linux mpv-easy-linux/scripts/mpv-easy/mpv-easy-config/mpv-easy-ext/mpv-easy-ext-linux
+          cp mpv-easy-ext-dist/mpv-easy-ext-android mpv-easy-android/scripts/mpv-easy/mpv-easy-config/mpv-easy-ext/mpv-easy-ext-android
+          cp mpv-easy-ext-dist/mpv-easy-ext-windows.exe mpv-easy-windows/scripts/mpv-easy/mpv-easy-config/mpv-easy-ext/mpv-easy-ext-windows.exe
 
-          cp mpv-easy-play-with-dist/mpv-easy-play-with-macos-amd64 mpv-easy-macos/scripts/mpv-easy-config/mpv-easy-ext/mpv-easy-play-with-macos-amd64
-          cp mpv-easy-play-with-dist/mpv-easy-play-with-macos-arm64 mpv-easy-macos/scripts/mpv-easy-config/mpv-easy-ext/mpv-easy-play-with-macos-arm64
-          cp mpv-easy-play-with-dist/mpv-easy-play-with-linux mpv-easy-linux/scripts/mpv-easy-config/mpv-easy-ext/mpv-easy-play-with-linux
-          cp mpv-easy-play-with-dist/mpv-easy-play-with-android mpv-easy-android/scripts/mpv-easy-config/mpv-easy-ext/mpv-easy-play-with-android
-          cp mpv-easy-play-with-dist/mpv-easy-play-with-windows.exe mpv-easy-windows/scripts/mpv-easy-config/mpv-easy-ext/mpv-easy-play-with-windows.exe
+          cp mpv-easy-play-with-dist/mpv-easy-play-with-macos-amd64 mpv-easy-macos/scripts/mpv-easy/mpv-easy-config/mpv-easy-ext/mpv-easy-play-with-macos-amd64
+          cp mpv-easy-play-with-dist/mpv-easy-play-with-macos-arm64 mpv-easy-macos/scripts/mpv-easy/mpv-easy-config/mpv-easy-ext/mpv-easy-play-with-macos-arm64
+          cp mpv-easy-play-with-dist/mpv-easy-play-with-linux mpv-easy-linux/scripts/mpv-easy/mpv-easy-config/mpv-easy-ext/mpv-easy-play-with-linux
+          cp mpv-easy-play-with-dist/mpv-easy-play-with-android mpv-easy-android/scripts/mpv-easy/mpv-easy-config/mpv-easy-ext/mpv-easy-play-with-android
+          cp mpv-easy-play-with-dist/mpv-easy-play-with-windows.exe mpv-easy-windows/scripts/mpv-easy/mpv-easy-config/mpv-easy-ext/mpv-easy-play-with-windows.exe
 
           7z x mpv-v3-win.7z -ompv-easy-windows-full -y
           cp -r mpv-easy-windows mpv-easy-windows-full/portable_config
@@ -444,9 +446,10 @@ jobs:
           cp ../yt-dlp.exe ./yt-dlp.exe
           cp ../ffmpeg/ffmpeg.exe ./ffmpeg.exe
           cp ../uosc.conf portable_config/script-opts/uosc.conf
-          cp ../thumbfast.conf portable_config/script-opts/thumbfast.conf
-          cp ../thumbfast.lua portable_config/scripts/thumbfast.lua
-          cp ../autoload.lua portable_config/scripts/autoload.lua
+
+          bun ../mpv-mpsm/src/cli.ts set-config-dir ./portable_config
+          bun ../mpv-mpsm/src/cli.ts install thumbfast autoload
+          curl -L -o ./portable_config/scripts/uosc/script.json https://github.com/mpv-easy/mpsm-scripts/releases/latest/download/uosc.json
           zip -r -q ../release/mpv-uosc-windows-full.zip .
           cd ..
 
@@ -460,11 +463,13 @@ jobs:
           mkdir -p portable_config/fonts
           cp ../yt-dlp.exe ./yt-dlp.exe
           cp ../ffmpeg/ffmpeg.exe ./ffmpeg.exe
-          cp ../modernx.lua portable_config/scripts/modernx.lua
+          cp ../modernx.lua portable_config/scripts/ModernX/main.lua
           cp ../Material-Design-Iconic-Font.ttf portable_config/fonts/Material-Design-Iconic-Font.ttf
-          cp ../thumbfast.conf portable_config/script-opts/thumbfast.conf
-          cp ../thumbfast.lua portable_config/scripts/thumbfast.lua
-          cp ../autoload.lua portable_config/scripts/autoload.lua
+
+          bun ../mpv-mpsm/src/cli.ts set-config-dir ./portable_config
+          bun ../mpv-mpsm/src/cli.ts install thumbfast autoload
+          curl -L -o ./portable_config/scripts/ModernX/script.json https://github.com/mpv-easy/mpsm-scripts/releases/latest/download/ModernX.cyl0.json
+
           zip -r -q ../release/mpv-modernx-windows-full.zip .
           cd ..
 
@@ -480,15 +485,18 @@ jobs:
           mkdir -p portable_config/fonts
           cp ../yt-dlp.exe ./yt-dlp.exe
           cp ../ffmpeg/ffmpeg.exe ./ffmpeg.exe
-          cp ../modernz.lua portable_config/scripts/modernz.lua
-          cp ../modernz.conf portable_config/scripts/modernz.conf
+          cp ../modernz.lua portable_config/scripts/ModernZ/main.lua
+          cp ../modernz.conf portable_config/script-opts/modernz.conf
           cp ../fluent-system-icons.ttf portable_config/fonts/fluent-system-icons.ttf
-          cp ../thumbfast.conf portable_config/script-opts/thumbfast.conf
-          cp ../thumbfast.lua portable_config/scripts/thumbfast.lua
-          cp ../autoload.lua portable_config/scripts/autoload.lua
+
+          bun ../mpv-mpsm/src/cli.ts set-config-dir ./portable_config
+          bun ../mpv-mpsm/src/cli.ts install thumbfast autoload
+
+          curl -L -o ./portable_config/scripts/ModernZ/script.json https://github.com/mpv-easy/mpsm-scripts/releases/latest/download/ModernZ.json
           zip -r -q ../release/mpv-modernz-windows-full.zip .
           cd ..
 
+          # copy all files to release
           cp mpv-easy-scripts/* release/
           # cp mpv-deno-dist/mpv-deno-windows.dll release/mpv-deno-windows.dll
           cp mpv-easy-ext-dist/mpv-easy-ext-macos-amd64 release/mpv-easy-ext-macos-amd64
