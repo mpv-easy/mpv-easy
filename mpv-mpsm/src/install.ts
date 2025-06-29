@@ -109,10 +109,9 @@ async function installFromZip(url: string) {
     throw new Error("failed to find script.json")
   }
   const decoder = new TextDecoder("utf-8")
-  // FIXME: support file.clone
-  const string = decoder.decode(file.buffer)
+  const string = decoder.decode(file.clone().buffer)
   const script: Script = JSON.parse(string)
-  installFromFiles(script, decode(Fmt.Zip, bin)!)
+  installFromFiles(script, files)
   return script
 }
 
