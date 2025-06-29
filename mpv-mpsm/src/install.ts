@@ -11,16 +11,15 @@ import {
 import chalk from "chalk"
 import { existsSync, readFileSync } from "fs-extra"
 import { ScriptRemoteUrl } from "./const"
-import { isRemote } from "@mpv-easy/tool"
 import { File, Fmt, decode } from "@easy-install/easy-archive"
 
-export async function installFromUrl(url: string) {
+export async function installFromJSON(url: string) {
   const text = await downloadText(url)
   const script: Script = JSON.parse(text)
   return installFromScript(script)
 }
 
-export async function installFromZip(script: Script, scriptFiles: File[]) {
+export async function installFromFiles(script: Script, scriptFiles: File[]) {
   const mpvFiles: File[] = []
   const configDir = getConfigDir()
 
@@ -59,7 +58,7 @@ export async function installFromScript(script: Script): Promise<Script> {
       console.log(`zip decode error ${chalk.green(ext)}`)
       process.exit()
     }
-    installFromZip(script, files)
+    installFromFiles(script, files)
   } else if (["json", "lua"].includes(ext)) {
     const scriptPath = join(scriptDir, `main.${ext}`)
     const scriptJsonPath = join(scriptDir, "script.json")
@@ -97,11 +96,37 @@ export async function installFromMpsm(name: string) {
 //   return meta
 // }
 
+async function installFromZip(url: string) {
+  const bin = existsSync(url)
+    ? new Uint8Array(readFileSync(url))
+    : await downloadBinary(url)
+  const files = decode(Fmt.Zip, bin)
+  if (!files) {
+    throw new Error("failed to decode zip")
+  }
+  const file = files.find((i) => i.path === "script.json")
+  if (!file) {
+    throw new Error("failed to find script.json")
+  }
+  const decoder = new TextDecoder("utf-8")
+  // FIXME: support file.clone
+  const string = decoder.decode(file.buffer)
+  const script: Script = JSON.parse(string)
+  installFromFiles(script, decode(Fmt.Zip, bin)!)
+  return script
+}
+
 export async function install(scripts: string[]) {
   for (const name of scripts) {
-    const meta = await (isRemote(name)
-      ? installFromUrl(name)
-      : installFromMpsm(name))
+    let meta: Script
+
+    if (name.endsWith(".json")) {
+      meta = await installFromJSON(name)
+    } else if (name.endsWith(".zip")) {
+      meta = await installFromZip(name)
+    } else {
+      meta = await installFromMpsm(name)
+    }
 
     const v: string[] = [chalk.green(meta.name)]
 

@@ -1,4 +1,4 @@
-import { join } from "node:path"
+import { join, resolve } from "node:path"
 import {
   outputJsonSync,
   readJsonSync,
@@ -19,7 +19,7 @@ export type Config = {
 
 export function setConfigDir(configDir: string) {
   outputJsonSync(ConfigPath, {
-    configDir: configDir.replaceAll("\\", "/"),
+    configDir: resolve(configDir).replaceAll("\\", "/"),
   })
 }
 
