@@ -37,7 +37,7 @@ export default definePlugin((context, api) => ({
         api.saveConfig(state)
       }, defaultSaveConfigThrottle),
     )
-    const fps = context[pluginName].config.fps || DefaultFps
+    const fps = context.renderConfig?.fps || DefaultFps
     const render = createRender({
       fps,
       // showFps: true,

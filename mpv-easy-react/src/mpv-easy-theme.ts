@@ -191,7 +191,7 @@ export type EasyConfig = {
     preview: boolean
   }
   config: {
-    fps: number
+    // fps: number
     enableMouseMoveEvent: boolean
     saveConfigThrottle: number
     protocolHook: string
@@ -452,7 +452,7 @@ export function createDefaultThemeConfig(): EasyConfig {
     player: defaultPlayer,
     state: defaultState,
     config: {
-      fps: DefaultFps,
+      // fps: DefaultFps,
       enableMouseMoveEvent: true,
       saveConfigThrottle: defaultSaveConfigThrottle,
       protocolHook: "",

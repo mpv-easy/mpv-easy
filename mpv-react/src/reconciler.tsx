@@ -29,7 +29,6 @@ import {
   RootName,
 } from "./flex"
 
-import throttle from "lodash-es/throttle"
 const NO_CONTEXT = {}
 
 function detachDeletedInstance(node: MpDom) {

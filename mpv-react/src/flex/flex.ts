@@ -414,9 +414,9 @@ export class MpFlex extends Flex<MpAttrs, MpProps, MpEvent> {
 
 let RootFlex: MpFlex
 
-export function getRootFlex(confgi: Partial<RenderConfig> = {}) {
+export function getRootFlex(config: Partial<RenderConfig> = {}) {
   if (RootFlex) return RootFlex
-  return (RootFlex = new MpFlex(confgi))
+  return (RootFlex = new MpFlex(config))
 }
 
 export const dispatchEvent = (node: MpDom, pos: MousePos, event: KeyEvent) => {

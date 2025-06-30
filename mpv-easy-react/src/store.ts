@@ -9,7 +9,7 @@ import { pluginName as cropName } from "@mpv-easy/crop"
 import { clamp, normalize } from "@mpv-easy/tool"
 import { PluginContext } from "@mpv-easy/plugin"
 import * as ICON from "./icon"
-import { ButtonProps, DropdownProps } from "@mpv-easy/react"
+import { ButtonProps, DefaultFps, DropdownProps } from "@mpv-easy/react"
 
 export * from "./models"
 
@@ -72,11 +72,10 @@ export const volumeMaxSelector = (state: PluginContext) =>
 export const videoParamsSelector = (state: PluginContext) =>
   state[pluginName].player["video-params"]
 
-export const fpsSelector = (state: PluginContext) =>
-  state[pluginName].config.fps
+export const fpsSelector = (state: PluginContext) => state.renderConfig.fps
 
 export const frameTimeSelector = (state: PluginContext) =>
-  1000 / state[pluginName].config.fps
+  1000 / (state.renderConfig.fps || DefaultFps)
 
 export const buttonStyleSelector = (state: PluginContext) =>
   styleSelector(state)[modeSelector(state)].button.default

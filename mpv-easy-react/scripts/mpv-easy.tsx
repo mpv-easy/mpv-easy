@@ -1,6 +1,8 @@
 import "@mpv-easy/polyfill"
 import { runMpvEasy } from "../src/mpv-easy"
+import { DefaultFps } from "@mpv-easy/react"
 runMpvEasy({
+  fps: DefaultFps,
   // showFps: true,
 })
 // import React from "react"
