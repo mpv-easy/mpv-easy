@@ -5,6 +5,7 @@ import {
   NumberKeys,
   loadfile,
   playlistClear,
+  playlistMove,
   playlistPlayIndex,
   playlistRemove,
 } from "./type"
@@ -20,7 +21,7 @@ import {
 } from "./mpv"
 import { normalize } from "./path"
 import { DEFAULT_ASS_HEIGHT } from "./const"
-import { head } from "lodash-es"
+import isEqual from "lodash-es/isEqual"
 
 export const VideoTypes =
   "3g2,3gp,asf,avi,f4v,flv,h264,h265,m2ts,m4v,mkv,mov,mp4,mp4v,mpeg,mpg,ogm,ogv,rm,rmvb,ts,vob,webm,wmv,y4m,m4s".split(
@@ -455,7 +456,7 @@ export function updatePlaylist(list: string[], playIndex = 0) {
     }
     return
   }
-  if (JSON.stringify(oldList) === JSON.stringify(list)) {
+  if (isEqual(oldList, list)) {
     if (oldListIndex !== playIndex) {
       playlistPlayIndex(playIndex)
     }
@@ -478,12 +479,15 @@ export function updatePlaylist(list: string[], playIndex = 0) {
     }
     for (let i = 0; i < list.length; i++) {
       if (i === playIndex) {
-        loadfile(list[i], "append-play")
+        // loadfile(list[i], "append-play")
       } else {
         loadfile(list[i], "append")
       }
     }
-    playlistRemove(0)
+    if (oldListIndex !== playIndex) {
+      const targetIndex = oldListIndex < playIndex ? playIndex + 1 : playIndex
+      playlistMove(oldListIndex, targetIndex)
+    }
     if (getPropertyNumber("playlist-pos") !== playIndex) {
       playlistPlayIndex(playIndex)
     }

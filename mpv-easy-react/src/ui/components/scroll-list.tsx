@@ -17,7 +17,6 @@ import {
   scrollListStyleSelector,
 } from "../../store"
 import { measureText, type MouseEvent } from "@mpv-easy/react"
-import { getOsdSize } from "@mpv-easy/tool"
 import { useSelector } from "../../models"
 
 export type ScrollListProps = {

@@ -51,7 +51,6 @@ export const Mount = () => {
               url,
               undefined,
             )
-            console.log("videoList", url, videoList)
             dispatch.setPlaylist(videoList, 0)
           } else if (exists && url.endsWith(".m3u")) {
             // m3u

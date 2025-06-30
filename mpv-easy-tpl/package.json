@@ -10,7 +10,7 @@
     "es5": "babel --presets  @babel/preset-env ./bundle -d es5",
     "dev": "chokidar '../mpv-*/src/**/*' -c 'pnpm run build && pnpm run copy' -d 2000 --initial",
     "build": "pnpm run bundle && pnpm run es5",
-    "copy": "cp es5/mpv-easy-tpl.js $MPV_SCRIPT_DIR"
+    "copy": "cp es5/mpv-easy-tpl.js $MPV_CONFIG_DIR"
   },
   "keywords": [],
   "author": "ahaoboy <504595380@qq.com> (https://github.com/ahaoboy)",

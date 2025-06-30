@@ -20,13 +20,14 @@ import {
   readdir,
 } from "@mpv-easy/tool"
 import { registerEvent } from "@mpv-easy/tool"
-
+import isEqual from "lodash-es/isEqual"
 export const pluginName = "@mpv-easy/autoload"
 
 export type AutoloadConfig = {
   image: boolean
   video: boolean
   audio: boolean
+  // FIXME: calculating the maximum width of a playlist consumes a lot of resources
   maxSize: number
   // additionalImageExts: string,
   // additionalVideoExts: string,
@@ -46,7 +47,7 @@ export const defaultConfig: AutoloadConfig = {
   image: true,
   video: true,
   audio: true,
-  maxSize: 64,
+  maxSize: 32,
 }
 
 /**
@@ -87,8 +88,13 @@ export function getPlayableList(
     )
     .map((i) => joinPath(searchDir, i))
     .sort((a, b) => compareString(a, b))
+
+  if (currentPath && !videoList.includes(currentPath)) {
+    console.log(`not found ${currentPath} in ${searchDir}`)
+  }
+
   if (videoList.length > config.maxSize) {
-    print(`load too many videos(${videoList.length})`)
+    console.log(`autoload: load too many videos(${videoList.length})`)
   }
   const startIndex = currentPath ? videoList.indexOf(currentPath) : -1
 
@@ -127,7 +133,7 @@ export function autoload(
 
   const ext = getExtName(path)
   const videoList = getPlayableList(config, path, d, ext || "")
-  if (JSON.stringify(videoList) === JSON.stringify(getPlaylist())) {
+  if (isEqual(videoList, getPlaylist())) {
     return
   }
   const currentPos = videoList.indexOf(path)
