@@ -1,17 +1,22 @@
 import { isFont } from "@mpv-easy/tool"
 import { Script } from "./meta"
 import { File } from "@easy-install/easy-archive"
+import { fetch } from "undici";
+import { getProxyFromEnv } from "./proxy";
 
 export async function downloadBinary(url: string): Promise<Uint8Array> {
-  const buf = await fetch(url).then((resp) => resp.arrayBuffer())
+  const proxyAgent = getProxyFromEnv();
+  const buf = await fetch(url, { dispatcher: proxyAgent }).then((resp) => resp.arrayBuffer())
   return new Uint8Array(buf)
 }
 export async function downloadText(url: string): Promise<string> {
-  return await fetch(url).then((resp) => resp.text())
+  const proxyAgent = getProxyFromEnv();
+  return await fetch(url, { dispatcher: proxyAgent }).then((resp) => resp.text())
 }
 
 export async function downloadJson<T>(url: string): Promise<T> {
-  return (await fetch(url).then((resp) => resp.json())) as T
+  const proxyAgent = getProxyFromEnv();
+  return (await fetch(url, { dispatcher: proxyAgent }).then((resp) => resp.json())) as T
 }
 
 export function getFileNameFromUrl(url: string): string {

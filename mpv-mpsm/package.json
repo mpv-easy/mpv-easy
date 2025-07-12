@@ -19,7 +19,8 @@
   "license": "MIT",
   "dependencies": {
     "@easy-install/easy-archive": "0.2.0",
-    "@mpv-easy/tool": "workspace:*"
+    "@mpv-easy/tool": "workspace:*",
+    "undici": "^7.11.0"
   },
   "devDependencies": {
     "cac": "6.7.14",
