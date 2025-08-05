@@ -71,10 +71,6 @@ export const Progress = ({ width, ...props }: MpDomProps) => {
   const cellSize = useSelector(cellSizeSelector)
   const mousePos = useSelector(mousePosSelector)
   const osd = useSelector(osdDimensionsSelector)
-  // TODO: support yt-dlp thumbfast
-  // const supportThumbfast = !isYtdlp(path) && isSeekable
-  const supportThumbfast = isSeekable && (!isRemote(path) || thumbfast.network)
-
   const curCutPoint = mouseOut ? timePos : duration * leftPreview
 
   const cutRef = useRef<(() => void) | null>(null)
@@ -242,7 +238,7 @@ export const Progress = ({ width, ...props }: MpDomProps) => {
     mergeSubRef.current = getPropertyNumber("sid", -1)
   }
   useEffect(() => {
-    if (!supportThumbfast) {
+    if (!isSeekable) {
       return
     }
     if (!videoParams || !videoParams.w || !videoParams.h) {
@@ -256,7 +252,7 @@ export const Progress = ({ width, ...props }: MpDomProps) => {
       videoWidth: videoParams.w,
       videoHeight: videoParams.h,
     })
-  }, [videoParams?.w, videoParams?.h, supportThumbfast, isSeekable])
+  }, [videoParams?.w, videoParams?.h, isSeekable])
 
   useEffect(() => {
     registerScriptMessage(cutConfig.cutEventName, () => {
@@ -313,8 +309,7 @@ export const Progress = ({ width, ...props }: MpDomProps) => {
   }
   const fontSize = useSelector(smallFontSizeSelector)
   const font = useSelector(fontSelector)
-  const showThumbfast =
-    thumbRef.current && !mouseOut && thumbPos && supportThumbfast
+  const showThumbfast = thumbRef.current && !mouseOut && thumbPos && isSeekable
 
   return (
     <Box

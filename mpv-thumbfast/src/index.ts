@@ -14,6 +14,7 @@ import {
   execSync,
   execAsync,
   getTmpPath,
+  isRemote,
 } from "@mpv-easy/tool"
 export const pluginName = "@mpv-easy/thumbfast"
 
@@ -50,7 +51,9 @@ export const defaultScaleFactor = 1
 export const defaultThumbPath = getTmpPath("bgra")
 
 export const defaultThumbStartTime = 0
-export const defaultLifetime = 10
+// Prevent child processes from freezing when watching long videos
+// Restart a new process every few seconds
+export const defaultLifetime = 60
 export const defaultConfig: ThumbFastConfig = {
   path: defaultThumbPath,
   format: defaultThumbFormat,
@@ -113,6 +116,7 @@ export class ThumbFast {
   public videoWidth = 0
   public videoHeight = 0
   public scaleFactor = 1
+  private remote = false
   constructor(
     {
       path = defaultThumbPath,
@@ -170,10 +174,12 @@ export class ThumbFast {
   private startIpc() {
     this.ipcId = `ipc_${randomId()}`
     this.videoPath = getThumbFastVideoPath(this.network)
+    this.remote = isRemote(this.videoPath)
     const args = [
       this.mpvPath,
       this.videoPath,
-      "--no-config",
+      // FIXME: yt-dl maybe need cookies
+      this.remote ? "--no-config" : "",
       "--msg-level=all=no",
       "--idle",
       "--keep-open=always",
@@ -203,7 +209,7 @@ export class ThumbFast {
       "--sub-auto=no",
       "--audio-file-auto=no",
       "--start=0",
-      "--ytdl=no",
+      `--ytdl=${this.remote ? "yes" : "no"}`,
       "--ytdl-format=worst",
       "--demuxer-readahead-secs=0",
       "--gpu-dumb-mode=yes",
@@ -220,11 +226,16 @@ export class ThumbFast {
       "--ocopy-metadata=no",
       "--sws-allow-zimg=no",
       "--media-controls=no",
-      "--demuxer-max-bytes=512KiB",
+
+      // FIXME: yt-dlp broken
+      // It should be neither too large nor too small, so use the default value for now.
+      // "--demuxer-max-bytes=512KiB",
+      // "--demuxer-max-bytes=16MB",
+
       `--vf=scale=w=${this.thumbWidth}:h=${this.thumbHeight}:force_original_aspect_ratio=decrease,pad=w=${this.thumbWidth}:h=${this.thumbHeight}:x=-1:y=-1,format=${this.format}`,
       `--o=${this.path}`,
       `--input-ipc-server=${this.ipcId}`,
-    ]
+    ].filter((i) => !!i)
 
     // async: this cmd run forever
     return commandNativeAsync({
@@ -264,7 +275,12 @@ export class ThumbFast {
     if (!this.prevRun) {
       this.prevRun = now
     }
-    if (this.lifetime && now - this.prevRun > this.lifetime * 1000) {
+    if (
+      // Remote video takes a very long time to initialize
+      !this.remote &&
+      this.lifetime &&
+      now - this.prevRun > this.lifetime * 1000
+    ) {
       this.prevRun = now
       this.exit()
       this.subprocessId = this.startIpc()

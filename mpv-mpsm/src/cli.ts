@@ -8,14 +8,14 @@ import { version } from "../package.json"
 import chalk from "chalk"
 import { backup } from "./backup"
 import { restore } from "./restore"
-import { fetch } from "undici";
-import { getProxyFromEnv } from "./proxy";
+import { fetch } from "undici"
+import { getProxyFromEnv } from "./proxy"
 
-const proxyAgent = getProxyFromEnv();
+const proxyAgent = getProxyFromEnv()
 // FIXME: https://github.com/mpv-easy/mpv-easy/issues/139
 // @ts-ignore
-globalThis.fetch = (url:string) => {
-  return fetch(url,{ dispatcher: proxyAgent } )
+globalThis.fetch = (url: string) => {
+  return fetch(url, { dispatcher: proxyAgent })
 }
 
 const cli = Cac("mpsm")
