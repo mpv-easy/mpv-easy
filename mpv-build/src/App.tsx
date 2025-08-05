@@ -183,6 +183,7 @@ const UI_LIST = [
     },
     repo: "https://github.com/mpv-player/mpv",
     deps: [],
+    requires: []
   },
   {
     name: "mpv-uosc",
@@ -193,7 +194,8 @@ const UI_LIST = [
       file: "mpv-uosc-windows-full.tar.xz",
     },
     repo: "https://github.com/tomasklaen/uosc",
-    deps: ["thumbfast", "uosc"],
+    deps: ["thumbfast"],
+    requires: ["uosc"]
   },
   {
     name: "mpv-easy",
@@ -204,8 +206,8 @@ const UI_LIST = [
       file: "mpv-easy-windows-full.tar.xz",
     },
     repo: "https://github.com/mpv-easy/mpv-easy",
-    deps: [
-      "thumbfast",
+    deps: [],
+    requires: [
       "mpv-easy",
       "mpv-easy-anime4k",
       "mpv-easy-clipboard-play",
@@ -216,7 +218,6 @@ const UI_LIST = [
       "mpv-easy-copy-screen",
       "mpv-easy-crop",
       "mpv-easy-thumbfast",
-      "autoload",
     ],
   },
   {
@@ -228,7 +229,8 @@ const UI_LIST = [
       file: "mpv-modernx-windows-full.tar.xz",
     },
     repo: "https://github.com/cyl0/ModernX",
-    deps: ["thumbfast", "ModernX", "ModernX cyl0", "autoload"],
+    deps: ["thumbfast", "ModernX cyl0", "autoload"],
+    requires: ["ModernX cyl0"],
   },
   {
     name: "mpv-modernz",
@@ -239,7 +241,8 @@ const UI_LIST = [
       file: "mpv-modernz-windows-full.tar.xz",
     },
     repo: "https://github.com/Samillion/ModernZ",
-    deps: ["thumbfast", "ModernZ", "autoload"],
+    deps: ["thumbfast", "autoload"],
+    requires: ["ModernZ"],
   },
   {
     name: "mpv.net",
@@ -250,7 +253,8 @@ const UI_LIST = [
       file: "mpv.net.zip",
     },
     repo: "https://github.com/mpvnet-player/mpv.net",
-    deps: ["mpv.net"],
+    deps: [],
+    requires: ["mpv.net"],
   },
 ] as const
 
@@ -367,8 +371,8 @@ function App() {
   } = store
   const [isDark, setIsDark] = useState(window.matchMedia("(prefers-color-scheme: dark)").matches)
 
-  const uiDeps: readonly string[] =
-    UI_LIST.find((i) => i.name === ui)?.deps || []
+  const uiRequires: readonly string[] =
+    UI_LIST.find((i) => i.name === ui)?.requires || []
 
   const [api, contextHolder] = notification.useNotification()
 
@@ -648,6 +652,8 @@ function App() {
             <Radio.Group
               onChange={(e) => {
                 setUI(e.target.value)
+                const deps = UI_LIST.find((i) => i.name === e.target.value)?.deps || []
+                setSelectedKeys([...deps])
               }}
               value={ui}
             >
@@ -707,11 +713,11 @@ function App() {
             },
             getCheckboxProps: (record: DataType) => {
               return {
-                disabled: uiDeps.includes(record.name),
+                disabled: uiRequires.includes(record.name),
                 name: record.name,
               }
             },
-            selectedRowKeys: [...selectedRowKeys, ...uiDeps],
+            selectedRowKeys: [...selectedRowKeys, ...uiRequires],
           }}
           className="table"
           columns={columns}
@@ -722,7 +728,7 @@ function App() {
           <Tag color="processing" key={ui}>
             {ui}
           </Tag>
-          {uiDeps.map((i) => {
+          {uiRequires.map((i) => {
             return (
               data[i] && (
                 <Tag color="success" key={data[i].key}>
