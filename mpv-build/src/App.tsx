@@ -374,15 +374,18 @@ function App() {
   const uiRequires: readonly string[] =
     UI_LIST.find((i) => i.name === ui)?.requires || []
 
-  const [api, contextHolder] = notification.useNotification()
+  const [_, contextHolder] = notification.useNotification()
 
   const reset = () => {
     setState({ ...DEFAULT_STATE, data, tableData })
   }
+
+  const deps = [...selectedRowKeys, ...(UI_LIST.find(i => i.name === ui)?.requires || [])]
   const zipPortableConfig = async () => {
     const files: File[] = []
     // scripts
-    for (const i of selectedRowKeys) {
+    // deps and requires
+    for (const i of deps) {
       const scriptFiles = await getScriptFiles(data[i])
       installScript(files, scriptFiles, data[i])
     }
@@ -432,6 +435,7 @@ function App() {
     }
 
     // scripts
+    // requires is already included in the zip
     for (const i of selectedRowKeys) {
       const scriptFiles = await getScriptFiles(data[i])
       installScript(mpvFiles, scriptFiles, data[i])
