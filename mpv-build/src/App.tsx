@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react"
+import React, { useEffect, useRef, useState } from "react"
 import { Checkbox, Input, Tooltip } from "antd"
 import type { GetProps } from "antd"
 const { Search } = Input
@@ -7,6 +7,8 @@ import { Button, Flex, Spin, Table, type TableProps } from "antd"
 import {
   DownloadOutlined,
   GithubOutlined,
+  MoonOutlined,
+  SunOutlined,
   TwitterOutlined,
   YoutubeOutlined,
 } from "@ant-design/icons"
@@ -21,6 +23,9 @@ import { notification } from "antd"
 import { useMount } from "react-use"
 import { create } from "zustand"
 import { persist, StateStorage, createJSONStorage } from "zustand/middleware"
+import { ConfigProvider, theme } from "antd"
+const { defaultAlgorithm, darkAlgorithm } = theme
+import "@ant-design/v5-patch-for-react-19"
 
 const hashStorage: StateStorage = {
   getItem: (key): string => {
@@ -360,6 +365,7 @@ function App() {
     setPlatform,
     setState,
   } = store
+  const [isDark, setIsDark] = useState(window.matchMedia("(prefers-color-scheme: dark)").matches)
 
   const uiDeps: readonly string[] =
     UI_LIST.find((i) => i.name === ui)?.deps || []
@@ -555,10 +561,12 @@ function App() {
   }
 
   return (
-    <>
+    <ConfigProvider
+      theme={{ algorithm: isDark ? darkAlgorithm : defaultAlgorithm }}
+    >
       {contextHolder}
       <Flex
-        className="main"
+        className={["main", isDark ? "main-dark" : "main-light"].join(" ")}
         vertical
         gap="middle"
         justify="center"
@@ -585,6 +593,17 @@ function App() {
           <Typography.Link href="https://x.com/mpv_easy" target="_blank">
             <TwitterOutlined />
           </Typography.Link>
+          {isDark
+            ? (
+              <Typography.Link onClick={() => setIsDark(false)}>
+                <SunOutlined />
+              </Typography.Link>
+            )
+            : (
+              <Typography.Link onClick={() => setIsDark(true)}>
+                <MoonOutlined />
+              </Typography.Link>
+            )}
         </Flex>
 
         <Flex gap="middle" vertical align="start">
@@ -755,7 +774,8 @@ function App() {
           </Button>
         </Flex>
       </Flex>
-    </>
+    </ConfigProvider>
+
   )
 }
 

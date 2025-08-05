@@ -5,7 +5,8 @@
   text-align: center;
 }
 
-body, html {
+body,
+html {
   width: 100vw;
   min-height: 100vh;
   margin: 0;
@@ -32,6 +33,17 @@ body, html {
     color: #213547;
     background-color: #ffffff;
   }
+
+}
+
+.main-light {
+  color: #213547;
+  background-color: #ffffff;
+}
+
+.main-dark {
+  color: rgba(255, 255, 255, 0.87);
+  background-color: #242424;
 }
 
 .main {
