@@ -309,8 +309,7 @@ export const Progress = ({ width, ...props }: MpDomProps) => {
   }
   const fontSize = useSelector(smallFontSizeSelector)
   const font = useSelector(fontSelector)
-  const showThumbfast =
-    thumbRef.current && !mouseOut && thumbPos && isSeekable
+  const showThumbfast = thumbRef.current && !mouseOut && thumbPos && isSeekable
 
   return (
     <Box

@@ -235,7 +235,7 @@ export class ThumbFast {
       `--vf=scale=w=${this.thumbWidth}:h=${this.thumbHeight}:force_original_aspect_ratio=decrease,pad=w=${this.thumbWidth}:h=${this.thumbHeight}:x=-1:y=-1,format=${this.format}`,
       `--o=${this.path}`,
       `--input-ipc-server=${this.ipcId}`,
-    ].filter(i => !!i)
+    ].filter((i) => !!i)
 
     // async: this cmd run forever
     return commandNativeAsync({
