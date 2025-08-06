@@ -78,7 +78,6 @@ export function installScript(
           i[1] === prefixList[1],
       )
     ) {
-    } else {
       prefixList.pop()
     }
 
