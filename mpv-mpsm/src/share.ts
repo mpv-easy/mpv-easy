@@ -78,6 +78,7 @@ export function installScript(
           i[1] === prefixList[1],
       )
     ) {
+    }else{
       prefixList.pop()
     }
 
@@ -93,13 +94,12 @@ export function installScript(
         i.path.endsWith(".js"),
     )
     if (luaFiles.length === 1) {
-      luaFiles[0].path = `${script.name}/main.lua`
+      luaFiles[0].path = `${script.scriptName || script.name}/main.lua`
     } else if (jsFiles.length === 1) {
-      jsFiles[0].path = `${script.name}/main.js`
+      jsFiles[0].path = `${script.scriptName || script.name}/main.js`
     }
-
     for (const i of files) {
-      i.path = `${configDir}/scripts/${i.path.replace(`${prefixList.join("/")}/`, `${script.name}/`)}`
+      i.path = `${configDir}/scripts/${i.path.replace(`${prefixList.join("/")}/`, `${script.scriptName || script.name}/`)}`
       mpvFiles.push(i)
     }
   }
@@ -187,7 +187,7 @@ export function installScript(
   }
 
   for (const i of scriptFiles) {
-    i.path = `${configDir}/scripts/${script.name}/${i.path}`
+    i.path = `${configDir}/scripts/${script.scriptName || script.name}/${i.path}`
     mpvFiles.push(i)
   }
 }

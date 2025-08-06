@@ -10,6 +10,7 @@
   },
   "types": "./dist/index.d.ts",
   "scripts": {
+    "dev": "tsc -w -p ./tsconfig.build.json",
     "build:lib": "tsc -p ./tsconfig.build.json",
     "build:cli": "esbuild ./src/cli.ts --bundle --outdir=./dist --platform=node",
     "build": "pnpm run build:lib && pnpm run build:cli"

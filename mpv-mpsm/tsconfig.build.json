@@ -1,4 +1,5 @@
 {
   "extends": "../tsconfig.build.json",
-  "exclude": ["src/cli.ts"]
+  "exclude": ["src/cli.ts"],
+  "include": ["./src/index.ts"]
 }

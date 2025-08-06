@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react"
+import React, { useRef, useState } from "react"
 import { Checkbox, Input, Tooltip } from "antd"
 import type { GetProps } from "antd"
 const { Search } = Input
@@ -133,14 +133,15 @@ function downloadBinaryFile(fileName: string, content: Uint8Array): void {
   URL.revokeObjectURL(url)
 }
 
-function getMpvV3Url() {
-  return getDownloadUrl(
-    "mpv-easy",
-    "mpv-easy-cdn",
-    "main",
-    "mpv-v3-windows.tar.xz",
-  )
-}
+// function getMpvV3Url() {
+//   return getDownloadUrl(
+//     "mpv-easy",
+//     "mpv-easy-cdn",
+//     "main",
+//     "mpv-v3-windows.tar.xz",
+//   )
+// }
+
 function getMpvUrl() {
   return getDownloadUrl("mpv-easy", "mpv-easy-cdn", "main", "mpv-windows.zip")
 }
