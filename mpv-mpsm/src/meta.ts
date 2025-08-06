@@ -1,5 +1,7 @@
 export type Script = {
   name: string
+  // FIXME: rename files of mpv-easy-thumbfast to thumbfast
+  scriptName?: string
   download: string
   version?: string
   description?: string

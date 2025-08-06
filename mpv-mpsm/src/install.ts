@@ -1,8 +1,9 @@
 import { join } from "node:path"
-import { getConfigDir, getMpsmDir } from "./config"
+import { getAllScript, getConfigDir, getMpsmDir } from "./config"
 import { outputFileSync } from "fs-extra"
 import { type Script } from "./meta"
 import {
+  checkConflict,
   downloadBinary,
   downloadJson,
   downloadText,
@@ -116,6 +117,13 @@ async function installFromZip(url: string) {
 }
 
 export async function install(scripts: string[]) {
+  const names = [...getAllScript().map(i=>i.name), ...scripts]
+  const c = checkConflict(names)
+  if(c.length){
+    console.error("Conflict:",  c.join(' '))
+    return
+  }
+
   for (const name of scripts) {
     let meta: Script
 

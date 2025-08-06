@@ -78,6 +78,7 @@ export function installScript(
           i[1] === prefixList[1],
       )
     ) {
+    } else {
       prefixList.pop()
     }
 
@@ -93,13 +94,12 @@ export function installScript(
         i.path.endsWith(".js"),
     )
     if (luaFiles.length === 1) {
-      luaFiles[0].path = `${script.name}/main.lua`
+      luaFiles[0].path = `${script.scriptName || script.name}/main.lua`
     } else if (jsFiles.length === 1) {
-      jsFiles[0].path = `${script.name}/main.js`
+      jsFiles[0].path = `${script.scriptName || script.name}/main.js`
     }
-
     for (const i of files) {
-      i.path = `${configDir}/scripts/${i.path.replace(`${prefixList.join("/")}/`, `${script.name}/`)}`
+      i.path = `${configDir}/scripts/${i.path.replace(`${prefixList.join("/")}/`, `${script.scriptName || script.name}/`)}`
       mpvFiles.push(i)
     }
   }
@@ -187,7 +187,30 @@ export function installScript(
   }
 
   for (const i of scriptFiles) {
-    i.path = `${configDir}/scripts/${script.name}/${i.path}`
+    i.path = `${configDir}/scripts/${script.scriptName || script.name}/${i.path}`
     mpvFiles.push(i)
   }
+}
+// Builtin scripts that conflict with each other
+export const ConflictMap: Record<string, string[]> = {
+  "thumbfast": ["mpv-easy-thumbfast"],
+  "autoload": ["mpv-easy-autoload"],
+  "uosc": ["mpv-easy", "ModernX cyl0", "ModernZ", "mpv.net"],
+}
+
+export function checkConflict(packages: string[], conflictMap = ConflictMap): string[] {
+  const conflictSet = new Set<string>();
+  const packageSet = new Set(packages);
+
+  for (const pkg of packages) {
+    const conflicts = conflictMap[pkg] || [];
+    for (const conflict of conflicts) {
+      if (packageSet.has(conflict)) {
+        conflictSet.add(pkg);
+        conflictSet.add(conflict);
+      }
+    }
+  }
+
+  return Array.from(conflictSet);
 }
