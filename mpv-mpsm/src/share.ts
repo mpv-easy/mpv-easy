@@ -78,7 +78,7 @@ export function installScript(
           i[1] === prefixList[1],
       )
     ) {
-    }else{
+    } else {
       prefixList.pop()
     }
 
@@ -190,4 +190,25 @@ export function installScript(
     i.path = `${configDir}/scripts/${script.scriptName || script.name}/${i.path}`
     mpvFiles.push(i)
   }
+}
+
+export const ConflictMap: Record<string, string[]> = {
+  "thumbfast": ["mpv-easy-thumbfast"]
+}
+
+export function checkConflict(packages: string[], conflictMap = ConflictMap): string[] {
+  const conflictSet = new Set<string>();
+  const packageSet = new Set(packages);
+
+  for (const pkg of packages) {
+    const conflicts = conflictMap[pkg] || [];
+    for (const conflict of conflicts) {
+      if (packageSet.has(conflict)) {
+        conflictSet.add(pkg);
+        conflictSet.add(conflict);
+      }
+    }
+  }
+
+  return Array.from(conflictSet);
 }

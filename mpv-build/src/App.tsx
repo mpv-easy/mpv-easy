@@ -1,5 +1,5 @@
 import React, { useRef, useState } from "react"
-import { Checkbox, Input, Tooltip } from "antd"
+import { Alert, Checkbox, Input, Tooltip } from "antd"
 import type { GetProps } from "antd"
 const { Search } = Input
 type SearchProps = GetProps<typeof Input.Search>
@@ -18,7 +18,7 @@ import { Radio } from "antd"
 import { decode, encode, File, Fmt, guess } from "@easy-install/easy-archive"
 import { Typography } from "antd"
 const { Title, Link } = Typography
-import { Script, installScript } from "@mpv-easy/mpsm"
+import { Script, checkConflict, installScript } from "@mpv-easy/mpsm"
 import { notification } from "antd"
 import { useMount } from "react-use"
 import { create } from "zustand"
@@ -569,6 +569,8 @@ function App() {
     )
   }
 
+  const conflicts = checkConflict(selectedRowKeys)
+
   return (
     <ConfigProvider
       theme={{ algorithm: isDark ? darkAlgorithm : defaultAlgorithm }}
@@ -786,6 +788,13 @@ function App() {
             portable_config.zip
           </Button>
         </Flex>
+        {
+          !!conflicts.length &&
+          <Alert
+            description={`conflict: ${conflicts.join(' ')}`}
+            type="error"
+          />
+        }
       </Flex>
     </ConfigProvider>
 
