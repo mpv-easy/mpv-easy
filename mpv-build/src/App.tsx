@@ -620,7 +620,9 @@ function App() {
               level={5}
               style={{ margin: 0, width: TITLE_WIDTH }}
             >
-              Platform:
+              <Tooltip title="mpv-v3 is for newer CPUs (usually after 2005). If it doesn't run, please use mpv">
+                Platform:
+              </Tooltip>
             </Typography.Title>
             <Radio.Group
               value={platform}
