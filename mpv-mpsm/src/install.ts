@@ -117,10 +117,10 @@ async function installFromZip(url: string) {
 }
 
 export async function install(scripts: string[]) {
-  const names = [...getAllScript().map(i=>i.name), ...scripts]
+  const names = [...getAllScript().map((i) => i.name), ...scripts]
   const c = checkConflict(names)
-  if(c.length){
-    console.error("Conflict:",  c.join(' '))
+  if (c.length) {
+    console.error("Conflict:", c.join(" "))
     return
   }
 

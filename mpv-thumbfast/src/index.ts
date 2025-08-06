@@ -29,6 +29,7 @@ export type ThumbFastConfig = {
   lifetime: number
   overlayId: number
   scaleFactor: number
+  noConfig: boolean
 }
 
 declare module "@mpv-easy/plugin" {
@@ -44,6 +45,7 @@ export const defaultHrSeek = true
 export const defaultThumbFormat = "bgra"
 export const defaultNetwork = true
 export const defaultScaleFactor = 1
+export const defaultNoConfig = false
 // export const defaultThumbPath = joinPath(
 //   getScriptConfigDir(),
 //   "mpv-easy-thumbfast.tmp",
@@ -65,6 +67,7 @@ export const defaultConfig: ThumbFastConfig = {
   overlayId: defaultOverlayId,
   lifetime: defaultLifetime,
   scaleFactor: defaultScaleFactor,
+  noConfig: defaultNoConfig,
 }
 
 function scaleToFit(
@@ -87,13 +90,17 @@ export function getThumbFastVideoPath(network: boolean) {
   let videoPath = normalize(getPropertyString("path") || "")
   const streamPath = getPropertyString("stream-open-filename")
   if (
+    isRemote(videoPath) &&
     getPropertyBool("demuxer-via-network") &&
     streamPath?.length &&
     network &&
     streamPath !== videoPath
   ) {
     // remove description, it's too long
-    videoPath = streamPath.replace(/,ytdl_description.*/, "")
+    const i = streamPath.indexOf(",ytdl_description=")
+    if (i >= 0) {
+      videoPath = streamPath.slice(0, i)
+    }
   }
   return videoPath
 }
@@ -117,6 +124,7 @@ export class ThumbFast {
   public videoHeight = 0
   public scaleFactor = 1
   private remote = false
+  private noConfig = defaultNoConfig
   constructor(
     {
       path = defaultThumbPath,
@@ -130,6 +138,7 @@ export class ThumbFast {
       network = defaultNetwork,
       lifetime = defaultLifetime,
       scaleFactor = defaultScaleFactor,
+      noConfig = defaultNoConfig,
     }: Partial<ThumbFastConfig> & {
       videoWidth: number
       videoHeight: number
@@ -150,6 +159,7 @@ export class ThumbFast {
     this.startTime = startTime
     this.lifetime = lifetime
     this.scaleFactor = scaleFactor
+    this.noConfig = noConfig
     const [thumbWidth, thumbHeight] = scaleToFit(
       videoWidth,
       videoHeight,
@@ -179,7 +189,7 @@ export class ThumbFast {
       this.mpvPath,
       this.videoPath,
       // FIXME: yt-dl maybe need cookies
-      this.remote ? "--no-config" : "",
+      this.noConfig ? "--no-config" : "",
       "--msg-level=all=no",
       "--idle",
       "--keep-open=always",
@@ -293,7 +303,7 @@ export class ThumbFast {
       // await this.runAsync("quit")
       abortAsyncCommand(this.subprocessId)
     } catch (e) {
-      console.log("ThumbFast abortAsyncCommand error: ", e)
+      console.error("ThumbFast abortAsyncCommand error: ", e)
     }
   }
 }

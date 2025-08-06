@@ -193,24 +193,27 @@ export function installScript(
 }
 // Builtin scripts that conflict with each other
 export const ConflictMap: Record<string, string[]> = {
-  "thumbfast": ["mpv-easy-thumbfast"],
-  "autoload": ["mpv-easy-autoload"],
-  "uosc": ["mpv-easy", "ModernX cyl0", "ModernZ", "mpv.net"],
+  thumbfast: ["mpv-easy-thumbfast"],
+  autoload: ["mpv-easy-autoload"],
+  uosc: ["mpv-easy", "ModernX cyl0", "ModernZ", "mpv.net"],
 }
 
-export function checkConflict(packages: string[], conflictMap = ConflictMap): string[] {
-  const conflictSet = new Set<string>();
-  const packageSet = new Set(packages);
+export function checkConflict(
+  packages: string[],
+  conflictMap = ConflictMap,
+): string[] {
+  const conflictSet = new Set<string>()
+  const packageSet = new Set(packages)
 
   for (const pkg of packages) {
-    const conflicts = conflictMap[pkg] || [];
+    const conflicts = conflictMap[pkg] || []
     for (const conflict of conflicts) {
       if (packageSet.has(conflict)) {
-        conflictSet.add(pkg);
-        conflictSet.add(conflict);
+        conflictSet.add(pkg)
+        conflictSet.add(conflict)
       }
     }
   }
 
-  return Array.from(conflictSet);
+  return Array.from(conflictSet)
 }

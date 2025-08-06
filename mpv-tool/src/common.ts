@@ -70,7 +70,7 @@ export function startsWith(s: string | undefined, exts: string[]) {
 }
 
 export function isRemote(s: string) {
-  return startsWith(s, ["http", "webdav", "dav"])
+  return startsWith(s, ["http", "webdav", "dav", "edl"])
 }
 
 export function isVideo(s: string, types = VideoTypes) {

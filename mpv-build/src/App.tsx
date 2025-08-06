@@ -184,7 +184,7 @@ const UI_LIST = [
     },
     repo: "https://github.com/mpv-player/mpv",
     deps: [],
-    requires: []
+    requires: [],
   },
   {
     name: "mpv-uosc",
@@ -196,7 +196,7 @@ const UI_LIST = [
     },
     repo: "https://github.com/tomasklaen/uosc",
     deps: ["thumbfast"],
-    requires: ["uosc"]
+    requires: ["uosc"],
   },
   {
     name: "mpv-easy",
@@ -370,7 +370,9 @@ function App() {
     setPlatform,
     setState,
   } = store
-  const [isDark, setIsDark] = useState(window.matchMedia("(prefers-color-scheme: dark)").matches)
+  const [isDark, setIsDark] = useState(
+    window.matchMedia("(prefers-color-scheme: dark)").matches,
+  )
 
   const uiRequires: readonly string[] =
     UI_LIST.find((i) => i.name === ui)?.requires || []
@@ -381,7 +383,10 @@ function App() {
     setState({ ...DEFAULT_STATE, data, tableData })
   }
 
-  const deps = [...selectedRowKeys, ...(UI_LIST.find(i => i.name === ui)?.requires || [])]
+  const deps = [
+    ...selectedRowKeys,
+    ...(UI_LIST.find((i) => i.name === ui)?.requires || []),
+  ]
   const zipPortableConfig = async () => {
     const files: File[] = []
     // scripts
@@ -604,17 +609,15 @@ function App() {
           <Typography.Link href="https://x.com/mpv_easy" target="_blank">
             <TwitterOutlined />
           </Typography.Link>
-          {isDark
-            ? (
-              <Typography.Link onClick={() => setIsDark(false)}>
-                <SunOutlined />
-              </Typography.Link>
-            )
-            : (
-              <Typography.Link onClick={() => setIsDark(true)}>
-                <MoonOutlined />
-              </Typography.Link>
-            )}
+          {isDark ? (
+            <Typography.Link onClick={() => setIsDark(false)}>
+              <SunOutlined />
+            </Typography.Link>
+          ) : (
+            <Typography.Link onClick={() => setIsDark(true)}>
+              <MoonOutlined />
+            </Typography.Link>
+          )}
         </Flex>
 
         <Flex gap="middle" vertical align="start">
@@ -661,7 +664,8 @@ function App() {
             <Radio.Group
               onChange={(e) => {
                 setUI(e.target.value)
-                const deps = UI_LIST.find((i) => i.name === e.target.value)?.deps || []
+                const deps =
+                  UI_LIST.find((i) => i.name === e.target.value)?.deps || []
                 setSelectedKeys([...deps])
               }}
               value={ui}
@@ -788,16 +792,14 @@ function App() {
             portable_config.zip
           </Button>
         </Flex>
-        {
-          !!conflicts.length &&
+        {!!conflicts.length && (
           <Alert
-            description={`conflict: ${conflicts.join(' ')}`}
+            description={`conflict: ${conflicts.join(" ")}`}
             type="error"
           />
-        }
+        )}
       </Flex>
     </ConfigProvider>
-
   )
 }
 

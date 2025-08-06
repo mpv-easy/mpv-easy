@@ -6,14 +6,13 @@ import {
   overlayAdd,
   overlayRemove,
   registerEvent,
-  registerIdle,
   registerScriptMessage,
   scriptMessage,
 } from "@mpv-easy/tool"
 import {
-  ThumbFast,
   defaultConfig,
   getThumbFastVideoPath,
+  ThumbFast,
 } from "@mpv-easy/thumbfast"
 
 const {
@@ -26,6 +25,7 @@ const {
   lifetime,
   overlayId,
   scaleFactor,
+  noConfig,
 } = {
   ...defaultConfig,
   ...getOptions("mpv-easy-thumbfast", {
@@ -69,6 +69,10 @@ const {
       type: "number",
       key: "scaleFactor",
     },
+    "no-config": {
+      type: "boolean",
+      key: "noConfig",
+    },
   }),
 }
 
@@ -102,50 +106,33 @@ function clear() {
 function start() {
   // console.log('start')
   initThumb()
-  observeProperty("track-list", "native", update)
-  observeProperty("display-hidpi-scale", "native", update)
-  observeProperty("video-out-params", "native", update)
-  observeProperty("video-params", "native", update)
-  observeProperty("vf", "native", update)
-  observeProperty("tone-mapping", "native", update)
-  observeProperty("demuxer-via-network", "native", update)
-  observeProperty("stream-open-filename", "native", update)
-  observeProperty("macos-app-activation-policy", "native", update)
-  observeProperty("current-vo", "native", update)
-  observeProperty("video-rotate", "native", update)
-  observeProperty("video-crop", "native", update)
-  observeProperty("path", "native", update)
-  observeProperty("vid", "native", update)
-  observeProperty("edition", "native", update)
-  observeProperty("duration", "native", update)
+  for (const prop of [
+    "display-hidpi-scale",
+    "video-out-params",
+    "video-params",
+    "vf",
+    "tone-mapping",
+    "demuxer-via-network",
+    "stream-open-filename",
+    "macos-app-activation-policy",
+    "current-vo",
+    "video-rotate",
+    "video-crop",
+    "path",
+    "vid",
+    "edition",
+    "duration",
+  ]) {
+    observeProperty(prop, "native", update)
+  }
 
-  registerScriptMessage("thumb", update)
+  // registerScriptMessage("thumb", update);
   registerScriptMessage("clear", clear)
 
   registerEvent("file-loaded", update)
   registerEvent("shutdown", shutdown)
 
-  registerIdle(update)
-
-  scriptMessage("thumbfast-info", getJson())
-  registerScriptMessage("thumb", (time, x, y, script) => {
-    // console.log('thumb', time, x, y, script)
-    thumb?.seek(+time)
-    // commandv("script-message", "thumbfast-render", getJson())
-    overlayAdd(
-      overlayId,
-      +x,
-      +y,
-      thumb.path,
-      0,
-      "bgra",
-      thumb.thumbWidth,
-      thumb.thumbHeight,
-      thumb.thumbWidth * 4,
-      thumb.thumbWidth,
-      thumb.thumbHeight,
-    )
-  })
+  registerScriptMessage("thumb", updaeThumb)
 }
 
 function initThumb() {
@@ -166,25 +153,48 @@ function initThumb() {
     network,
     videoHeight: params?.h || 0,
     videoWidth: params?.w || 0,
+    noConfig,
   })
+  scriptMessage("thumbfast-info", getJson())
 }
-function update() {
+const update = () => {
   const params = getPropertyNative("video-params")
-  if (
-    params &&
-    (params.w !== thumb.videoWidth || params.h !== thumb.videoHeight)
-  ) {
-    initThumb()
-  }
-  if (thumb.videoPath !== getThumbFastVideoPath(network)) {
-    initThumb()
-  }
+  const shouldUdpate =
+    (params &&
+      (params.w !== thumb.videoWidth || params.h !== thumb.videoHeight)) || // video size changed
+    thumb.videoPath !== getThumbFastVideoPath(network) || // video path changed
+    !thumb // thumbfast instance changed
 
-  if (!thumb) {
+  if (shouldUdpate) {
     initThumb()
   }
 }
 
+let lastX = 0
+let lastY = 0
+let lastTime = 0
+const updaeThumb = (time: string, x: string, y: string, _script: string) => {
+  if (lastTime === +time && lastX === +x && lastY === +y) {
+    return
+  }
+  lastX = +x
+  lastY = +y
+  lastTime = +time
+  thumb?.seek(lastTime)
+  overlayAdd(
+    overlayId,
+    lastX,
+    lastY,
+    thumb.path,
+    0,
+    "bgra",
+    thumb.thumbWidth,
+    thumb.thumbHeight,
+    thumb.thumbWidth * 4,
+    thumb.thumbWidth,
+    thumb.thumbHeight,
+  )
+}
 setTimeout(() => {
   start()
 }, 16)
