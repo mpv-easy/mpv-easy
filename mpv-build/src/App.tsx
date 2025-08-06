@@ -111,7 +111,7 @@ const useMpvStore = create<Store>()(
   ),
 )
 
-const MAX_SCRIPT_COUNT = 32
+// const MAX_SCRIPT_COUNT = 32
 const TITLE_WIDTH = 150
 const ITEM_WIDTH = 150
 const NAME_WIDTH = 250

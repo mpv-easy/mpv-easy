@@ -191,9 +191,11 @@ export function installScript(
     mpvFiles.push(i)
   }
 }
-
+// Builtin scripts that conflict with each other
 export const ConflictMap: Record<string, string[]> = {
-  "thumbfast": ["mpv-easy-thumbfast"]
+  "thumbfast": ["mpv-easy-thumbfast"],
+  "autoload": ["mpv-easy-autoload"],
+  "uosc": ["mpv-easy", "ModernX cyl0", "ModernZ", "mpv.net"],
 }
 
 export function checkConflict(packages: string[], conflictMap = ConflictMap): string[] {
