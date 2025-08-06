@@ -42,7 +42,7 @@ export const defaultThumbMaxHeight = 360
 export const defaultOverlayId = 42
 export const defaultHrSeek = true
 export const defaultThumbFormat = "bgra"
-export const defaultNetwork = false
+export const defaultNetwork = true
 export const defaultScaleFactor = 1
 // export const defaultThumbPath = joinPath(
 //   getScriptConfigDir(),
