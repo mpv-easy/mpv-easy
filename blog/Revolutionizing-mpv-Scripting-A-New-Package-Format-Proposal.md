@@ -85,6 +85,9 @@ This format unlocks game-changing possibilities:
 
 ---
 
+## Add `scriptName` Field
+
+`name` represents the unique ID of a script. `scriptName` is used to change the script’s file and folder name during installation. It is currently used to rename `mpv-easy-thumbfast` to `thumbfast` during installation.
 
 ## Demo
 
