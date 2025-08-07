@@ -125,6 +125,7 @@ export class ThumbFast {
   public scaleFactor = 1
   private remote = false
   private noConfig = defaultNoConfig
+  public lastTime = -1
   constructor(
     {
       path = defaultThumbPath,
@@ -185,6 +186,7 @@ export class ThumbFast {
     this.ipcId = `ipc_${randomId()}`
     this.videoPath = getThumbFastVideoPath(this.network)
     this.remote = isRemote(this.videoPath)
+    this.lastTime = -1
     const args = [
       this.mpvPath,
       this.videoPath,
@@ -281,6 +283,10 @@ export class ThumbFast {
   }
 
   seek(time: number) {
+    if (time === this.lastTime) {
+      return
+    }
+    this.lastTime = time
     const now = Date.now()
     if (!this.prevRun) {
       this.prevRun = now
