@@ -297,7 +297,10 @@ jobs:
           mkdir mpv-easy-scripts -p
           cp mpv-easy-react/bundle/mpv-easy-play-with.user.js mpv-easy-scripts/mpv-easy-play-with.user.js
 
-          files=(anime4k autoload clipboard-play copy-screen copy-time crop cut thumbfast translate pause-mosaic)
+          files=(anime4k autoload clipboard-play copy-screen copy-time crop cut thumbfast translate pause-mosaic piano)
+
+          git clone https://github.com/ahaoboy/free-piano --depth=1
+
           for name in "${files[@]}"; do
               # mpv-easy-react/es5/*.js
               js="mpv-easy-react/es5/${name}.js"
@@ -327,6 +330,12 @@ jobs:
               if [ -d "$shaders" ]; then
                   cp -r ${shaders} ${zip_shaders}
               fi
+
+              # piano audios
+              if [ "$name" = "piano" ]; then
+                cp ./free-piano/public/piano-full ./tmp/scripts/audios -r
+              fi
+
               cd tmp
               zip -r -q ../mpv-easy-scripts/mpv-easy-${name}.zip .
               cd ..
