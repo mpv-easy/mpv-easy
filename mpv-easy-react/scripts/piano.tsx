@@ -10,7 +10,6 @@ import {
 } from "@mpv-easy/tool"
 import React, { useEffect, useState } from "react"
 import {
-  Notes,
   getBlackKeys,
   getBlackOffsetX,
   getChar,
@@ -162,8 +161,6 @@ const {
     },
   }),
 }
-
-console.log(Notes.length)
 
 const BlackKeys = getBlackKeys("Small")
 const WhiteKeys = getWhiteKeys("Small")
