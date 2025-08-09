@@ -252,7 +252,7 @@ export class ThumbFast {
     return commandNativeAsync({
       name: "subprocess",
       args,
-      playback_only: true,
+      playback_only: false,
       capture_stdout: true,
       capture_stderr: true,
     })

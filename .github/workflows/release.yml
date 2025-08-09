@@ -64,5 +64,5 @@ jobs:
           curl -X POST \
             -H "Authorization: Bearer ${{ secrets.MPV_BUILD }}" \
             -H "Accept: application/vnd.github+json" \
-            -d '{"ref":"dev","inputs":{"branch":"dev"}}' \
-            https://api.github.com/repos/mpv-easy/mpv-easy-cdn/actions/workflows/update.yml/dispatches
+            -d '{"ref":"main"}' \
+            https://api.github.com/repos/ahaoboy/mpv-easy-cdn-updater/actions/workflows/update.yml/dispatches
