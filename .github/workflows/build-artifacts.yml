@@ -420,6 +420,10 @@ jobs:
             cd ..
           done
 
+          cd mpv-easy-windows-full
+          zip -r -q ../release/mpv-easy-windows-full.zip .
+          cd ..
+
           curl -L -o autoload.lua https://raw.githubusercontent.com/mpv-player/mpv/master/TOOLS/lua/autoload.lua
 
           # uosc
