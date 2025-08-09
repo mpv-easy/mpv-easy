@@ -63,7 +63,7 @@ interface Store {
 }
 
 // TODO: support liunx
-const PLATFORM_LIST = ["mpv", "mpv-v3"] as const
+const PLATFORM_LIST = ["mpv", "mpv-v3", "mpv.net"] as const
 type Platform = (typeof PLATFORM_LIST)[number]
 
 type State = {
@@ -76,7 +76,7 @@ const DEFAULT_STATE: State = {
   spinning: false,
   selectedRowKeys: [],
   externalList: [],
-  ui: "mpv",
+  ui: "osc",
   platform: "mpv-v3",
 }
 
@@ -133,18 +133,6 @@ function downloadBinaryFile(fileName: string, content: Uint8Array): void {
   URL.revokeObjectURL(url)
 }
 
-// function getMpvV3Url() {
-//   return getDownloadUrl(
-//     "mpv-easy",
-//     "mpv-easy-cdn",
-//     "main",
-//     "mpv-v3-windows.tar.xz",
-//   )
-// }
-
-function getMpvUrl() {
-  return getDownloadUrl("mpv-easy", "mpv-easy-cdn", "main", "mpv-windows.zip")
-}
 function getPlayWithUrl() {
   return getDownloadUrl(
     "mpv-easy",
@@ -154,7 +142,7 @@ function getPlayWithUrl() {
   )
 }
 function getYtdlpUrl() {
-  return getDownloadUrl("mpv-easy", "mpv-easy-cdn", "main", "yt-dlp.exe")
+  return getDownloadUrl("mpv-easy", "mpv-easy-cdn", "main", "yt-dlp.zip")
 }
 function getFfmpegUrl() {
   return getDownloadUrl(
@@ -175,87 +163,34 @@ function getFfmpegV3Url() {
 
 const UI_LIST = [
   {
-    name: "mpv",
-    info: {
-      user: "mpv-easy",
-      repo: "mpv-easy-cdn",
-      tag: "main",
-      file: "mpv-v3-windows.tar.xz",
-    },
+    name: "osc",
     repo: "https://github.com/mpv-player/mpv",
-    deps: [],
+    deps: ["autoload", "thumbfast"],
     requires: [],
   },
   {
-    name: "mpv-uosc",
-    info: {
-      user: "mpv-easy",
-      repo: "mpv-easy-cdn",
-      tag: "main",
-      file: "mpv-uosc-windows-full.tar.xz",
-    },
+    name: "uosc",
     repo: "https://github.com/tomasklaen/uosc",
     deps: ["thumbfast"],
     requires: ["uosc"],
   },
   {
     name: "mpv-easy",
-    info: {
-      user: "mpv-easy",
-      repo: "mpv-easy-cdn",
-      tag: "main",
-      file: "mpv-easy-windows-full.tar.xz",
-    },
     repo: "https://github.com/mpv-easy/mpv-easy",
     deps: [],
-    requires: [
-      "mpv-easy",
-      "mpv-easy-anime4k",
-      "mpv-easy-clipboard-play",
-      "mpv-easy-copy-time",
-      "mpv-easy-cut",
-      "mpv-easy-translate",
-      "mpv-easy-autoload",
-      "mpv-easy-copy-screen",
-      "mpv-easy-crop",
-      "mpv-easy-thumbfast",
-    ],
+    requires: ["mpv-easy"],
   },
   {
-    name: "mpv-modernx",
-    info: {
-      user: "mpv-easy",
-      repo: "mpv-easy-cdn",
-      tag: "main",
-      file: "mpv-modernx-windows-full.tar.xz",
-    },
+    name: "modernx",
     repo: "https://github.com/cyl0/ModernX",
-    deps: ["thumbfast", "ModernX cyl0", "autoload"],
+    deps: ["thumbfast", "autoload"],
     requires: ["ModernX cyl0"],
   },
   {
-    name: "mpv-modernz",
-    info: {
-      user: "mpv-easy",
-      repo: "mpv-easy-cdn",
-      tag: "main",
-      file: "mpv-modernz-windows-full.tar.xz",
-    },
+    name: "modernz",
     repo: "https://github.com/Samillion/ModernZ",
     deps: ["thumbfast", "autoload"],
     requires: ["ModernZ"],
-  },
-  {
-    name: "mpv.net",
-    info: {
-      user: "mpv-easy",
-      repo: "mpv-easy-cdn",
-      tag: "main",
-      file: "mpv.net.zip",
-    },
-    repo: "https://github.com/mpvnet-player/mpv.net",
-    deps: [],
-    requires: ["mpv.net"],
   },
 ] as const
 
@@ -273,8 +208,12 @@ function getDownloadUrl(user: string, repo: string, tag: string, file: string) {
   return `https://raw.githubusercontent.com/${user}/${repo}/${tag}/${file}`
 }
 
-function getScriptDownloadURL({ name }: Script) {
-  return getDownloadUrl("mpv-easy", "mpv-easy-cdn", "main", `${name}.zip`)
+function getScriptDownloadURL(name: string) {
+  return getCdnFileUrl(`${name}.zip`)
+}
+
+function getCdnFileUrl(fileName: string) {
+  return getDownloadUrl("mpv-easy", "mpv-easy-cdn", "main", fileName)
 }
 
 async function getScriptFiles(script: Script): Promise<File[]> {
@@ -284,7 +223,7 @@ async function getScriptFiles(script: Script): Promise<File[]> {
     return []
   }
 
-  const url = getScriptDownloadURL(script)
+  const url = getScriptDownloadURL(script.name)
   const bin = await downloadBinary(url)
 
   const v = decode(guess(url)!, bin)!.filter((i) => !i.isDir)
@@ -292,62 +231,16 @@ async function getScriptFiles(script: Script): Promise<File[]> {
 }
 
 async function getMpvFiles(platform: Platform, ui: UI) {
-  let uiUrl = ""
-  if (platform === "mpv" && ui === "mpv") {
-    uiUrl = getMpvUrl()
-  } else {
-    const info = UI_LIST.find((i) => i.name === ui)?.info
-    if (info) {
-      const { repo, user, tag, file } = info
-      uiUrl = getDownloadUrl(user, repo, tag, file)
-    }
+  let mpvUrl = getCdnFileUrl("mpv-windows.tar.xz")
+  if (platform === "mpv.net") {
+    mpvUrl = getCdnFileUrl("mpv.net.tar.xz")
+  } else if (platform === "mpv-v3") {
+    getCdnFileUrl("mpv-v3-windows.tar.xz")
   }
 
-  if (!uiUrl) {
-    return []
-  }
-
-  // ui
-  const uiBinary = await downloadBinary(uiUrl)
-  const fmt = guess(uiUrl)
-  if (!fmt) {
-    console.log("fmt error")
-    return []
-  }
-  const uiFiles = decode(fmt, uiBinary)
-  if (!uiFiles) {
-    console.log("uiFiles error")
-    return []
-  }
-  const v: File[] = []
-  for (const item of uiFiles) {
-    try {
-      const { path, mode, isDir, lastModified, buffer } = item
-      if (isDir) {
-        continue
-      }
-      v.push(new File(path, new Uint8Array(buffer), mode, isDir, lastModified))
-    } catch (e) {
-      console.log(e)
-
-      return []
-    }
-  }
-
-  // replace all v3 files
-  if (platform === "mpv" && ui !== "mpv" && ui !== "mpv.net") {
-    const mpvUrl = getMpvUrl()
-    const bin = await downloadBinary(mpvUrl)
-    const files = decode(guess(mpvUrl)!, bin)!
-    for (const file of files) {
-      const index = v.findIndex((i) => i.path === file.path)
-      if (index !== -1) {
-        v[index] = file
-      }
-    }
-  }
-
-  return v
+  const bin = await downloadBinary(mpvUrl)
+  const files = decode(guess(mpvUrl)!, bin) || []
+  return files
 }
 
 function App() {
@@ -370,6 +263,7 @@ function App() {
     setPlatform,
     setState,
   } = store
+  const downloadName = ui === "mpv-easy" ? "mpv-easy" : `mpv-${ui}`
   const [isDark, setIsDark] = useState(
     window.matchMedia("(prefers-color-scheme: dark)").matches,
   )
@@ -383,7 +277,7 @@ function App() {
     setState({ ...DEFAULT_STATE, data, tableData })
   }
 
-  const deps = [
+  const allDeps = [
     ...selectedRowKeys,
     ...(UI_LIST.find((i) => i.name === ui)?.requires || []),
   ]
@@ -391,7 +285,7 @@ function App() {
     const files: File[] = []
     // scripts
     // deps and requires
-    for (const i of deps) {
+    for (const i of allDeps) {
       const scriptFiles = await getScriptFiles(data[i])
       installScript(files, scriptFiles, data[i])
     }
@@ -412,24 +306,22 @@ function App() {
 
     // ffmpeg
     if (externalList.includes("ffmpeg")) {
-      const ffmpegBinary = await downloadBinary(
-        platform === "mpv-v3" ? getFfmpegV3Url() : getFfmpegUrl(),
-      )
-      const ffmpegFiles = decode(guess(getFfmpegUrl())!, ffmpegBinary)!
-      for (const { path, mode, isDir, lastModified, buffer } of ffmpegFiles) {
-        if (isDir) {
-          continue
-        }
-        mpvFiles.push(new File(path, buffer, mode, isDir, lastModified))
+      const url = platform === "mpv-v3" ? getFfmpegV3Url() : getFfmpegUrl()
+      const ffmpegBinary = await downloadBinary(url)
+      const files = decode(guess(url)!, ffmpegBinary)!
+      for (const i of files) {
+        mpvFiles.push(i)
       }
     }
 
     // yt-dlp
     if (externalList.includes("yt-dlp")) {
-      const bin = await downloadBinary(getYtdlpUrl())
-      mpvFiles.push(
-        new File("yt-dlp.exe", bin, null, false, BigInt(+new Date())),
-      )
+      const url = getYtdlpUrl()
+      const bin = await downloadBinary(url)
+      const files = decode(guess(url)!, bin)!
+      for (const i of files) {
+        mpvFiles.push(i)
+      }
     }
 
     // play-with
@@ -442,7 +334,7 @@ function App() {
 
     // scripts
     // requires is already included in the zip
-    for (const i of selectedRowKeys) {
+    for (const i of allDeps) {
       const scriptFiles = await getScriptFiles(data[i])
       installScript(mpvFiles, scriptFiles, data[i])
     }
@@ -462,7 +354,7 @@ function App() {
     const zipBinary = await zipAll()
     setSpinning(false)
     if (zipBinary) {
-      downloadBinaryFile(`${ui}.zip`, zipBinary)
+      downloadBinaryFile(`${downloadName}.zip`, zipBinary)
     }
   }
 
@@ -542,7 +434,9 @@ function App() {
             key={script.download}
             icon={<DownloadOutlined />}
             onClick={async () => {
-              const bin = await downloadBinary(getScriptDownloadURL(script))
+              const bin = await downloadBinary(
+                getScriptDownloadURL(script.name),
+              )
               downloadBinaryFile(`${script.name}.zip`, bin)
             }}
           />
@@ -738,8 +632,8 @@ function App() {
         />
         <Spin spinning={spinning} fullscreen />
         <Flex>
-          <Tag color="processing" key={ui}>
-            {ui}
+          <Tag color="processing" key={platform}>
+            {platform}
           </Tag>
           {uiRequires.map((i) => {
             return (
@@ -781,7 +675,7 @@ function App() {
             size={"large"}
             onClick={download}
           >
-            {ui}.zip
+            {downloadName}.zip
           </Button>
           <Button
             type="primary"

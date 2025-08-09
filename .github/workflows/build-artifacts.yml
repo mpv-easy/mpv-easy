@@ -351,6 +351,7 @@ jobs:
       - name: "create dist"
         run: |
           sudo apt install p7zip-full tree -y
+          mkdir release -p
 
           node .github/download.js
 
@@ -363,6 +364,12 @@ jobs:
           cp mpv-easy-react/conf/mpv.conf dist/mpv.conf
           cp mpv-easy-react/conf/input.conf dist/input.conf
 
+
+          cp -rf ./dist ./mpv-easy-script
+          cd mpv-easy-script
+          zip -r -q ../release/mpv-easy.zip .
+          cd ..
+
           chmod 777 mpv-easy-ext-dist/*
           chmod 777 mpv-easy-play-with-dist/*
 
@@ -370,8 +377,6 @@ jobs:
           cp -r dist mpv-easy-linux
           cp -r dist mpv-easy-android
           cp -r dist mpv-easy-windows
-
-          mkdir release -p
 
           7z x ffmpeg-v3.7z -offmpeg-v3 -y
           cd ffmpeg-v3
@@ -428,12 +433,6 @@ jobs:
 
           cd mpv-easy-windows-full
           zip -r -q ../release/mpv-easy-windows-full.zip .
-          cd ..
-
-          cp -rf ./mpv-easy-windows-full/portable_config/ ./mpv-easy-script
-          cp mpv-easy-react/conf/mpv-easy.json ./mpv-easy-script/script.json
-          cd mpv-easy-script
-          zip -r -q ../release/mpv-easy.zip .
           cd ..
 
           # cd mpv-easy-windows-deno-full
