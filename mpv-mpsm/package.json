@@ -26,13 +26,13 @@
   "dependencies": {
     "@easy-install/easy-archive": "0.2.6",
     "@mpv-easy/tool": "workspace:*",
-    "undici": "^7.11.0"
+    "undici": "^7.13.0"
   },
   "devDependencies": {
     "cac": "6.7.14",
-    "chalk": "5.4.1",
+    "chalk": "5.5.0",
     "e-color": "0.1.7",
-    "fs-extra": "11.3.0"
+    "fs-extra": "11.3.1"
   },
   "browserslist": [
     "iOS >= 9",
