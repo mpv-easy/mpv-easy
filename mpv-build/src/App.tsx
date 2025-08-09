@@ -143,7 +143,7 @@ function getPlayWithUrl() {
     "mpv-easy",
     "mpv-easy-cdn",
     "main",
-    "mpv-easy-play-with-windows.exe",
+    "mpv-easy-play-with-windows.zip",
   )
 }
 function getYtdlpUrl() {
@@ -331,10 +331,12 @@ function App() {
 
     // play-with
     if (externalList.includes("play-with")) {
-      const bin = await downloadBinary(getPlayWithUrl())
-      mpvFiles.push(
-        new File("play-with.exe", bin, null, false, BigInt(Date.now())),
-      )
+      const url = getPlayWithUrl()
+      const bin = await downloadBinary(url)
+      const files = decode(guess(url)!, bin)!
+      for (const i of files) {
+        mpvFiles.push(i)
+      }
     }
 
     // scripts
