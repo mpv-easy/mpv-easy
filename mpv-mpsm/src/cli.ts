@@ -14,8 +14,8 @@ import { getProxyFromEnv } from "./proxy"
 const proxyAgent = getProxyFromEnv()
 // FIXME: https://github.com/mpv-easy/mpv-easy/issues/139
 // @ts-ignore
-globalThis.fetch = (url: string) => {
-  return fetch(url, { dispatcher: proxyAgent })
+globalThis.fetch = (url: string, opt: any) => {
+  return fetch(url, { dispatcher: proxyAgent, ...opt })
 }
 
 const cli = Cac("mpsm")
