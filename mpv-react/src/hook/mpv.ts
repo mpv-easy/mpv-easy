@@ -1,7 +1,6 @@
 import {
   // ColorFormat,
   getPropertyBool,
-  getPropertyNumber,
   observeProperty,
   setPropertyBool,
 } from "@mpv-easy/tool"

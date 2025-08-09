@@ -13,7 +13,7 @@ export const Fullscreen = () => {
       id="mpv-easy-button-fullscreen"
       title={i18n.fullscreen}
       text={ICON.ChromeMaximize}
-      onMouseDown={(e) => {
+      onMouseDown={(_e) => {
         dispatch.setFullscreen(true)
       }}
     />

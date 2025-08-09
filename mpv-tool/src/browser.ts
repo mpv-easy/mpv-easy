@@ -1,4 +1,4 @@
-import { execAsync, execSync, getOs } from "./common"
+import { execAsync, getOs } from "./common"
 
 function openBrowserWindows(url: string) {
   execAsync(["powershell", "-c", `Start-Process ${url}`])

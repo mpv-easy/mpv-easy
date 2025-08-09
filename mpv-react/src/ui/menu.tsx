@@ -12,6 +12,6 @@ export interface MenuProps {
   menuItem: MenuItem
 }
 
-export function Menu(props: MenuProps) {
+export function Menu(_props: MenuProps) {
   return <Box />
 }

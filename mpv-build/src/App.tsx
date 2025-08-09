@@ -235,7 +235,7 @@ async function getScriptFiles(script: Script): Promise<File[]> {
   return v
 }
 
-async function getMpvFiles(platform: Platform, ui: UI) {
+async function getMpvFiles(platform: Platform, _ui: UI) {
   let mpvUrl = getCdnFileUrl("mpv-windows.tar.xz")
   if (platform === "mpv.net") {
     mpvUrl = getCdnFileUrl("mpv.net.tar.xz")
@@ -333,7 +333,7 @@ function App() {
     if (externalList.includes("play-with")) {
       const bin = await downloadBinary(getPlayWithUrl())
       mpvFiles.push(
-        new File("play-with.exe", bin, null, false, BigInt(+new Date())),
+        new File("play-with.exe", bin, null, false, BigInt(Date.now())),
       )
     }
 
@@ -450,7 +450,7 @@ function App() {
     },
   ]
 
-  const onSearch: SearchProps["onSearch"] = (value, _e, info) => {
+  const onSearch: SearchProps["onSearch"] = (value, _e, _info) => {
     const v = fuseRef.current?.search(value)
     if (v?.length) {
       setTableData(v.map((i) => i.item))
@@ -473,7 +473,10 @@ function App() {
     )
   }
 
-  const conflicts = checkConflict(selectedRowKeys)
+  const conflicts = checkConflict([
+    ...selectedRowKeys,
+    ...(UI_LIST.find((i) => i.name === ui)?.requires || []),
+  ])
   const includes = IncludesMap[ui] || []
 
   return (

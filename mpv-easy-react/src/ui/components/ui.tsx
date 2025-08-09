@@ -4,7 +4,6 @@ import { Dropdown } from "@mpv-easy/react"
 import * as ICON from "../../icon"
 import {
   i18nSelector,
-  dropdownStyleSelector,
   uiNameSelector,
   smallFontSizeSelector,
   commonDropdownStyleSelector,
@@ -18,7 +17,7 @@ export const UI = () => {
   const itemStyle = useSelector(commonDropdownItemStyleSelector)
   const uiName = useSelector(uiNameSelector)
   const maxLen = getMaxStringLength(UINameList)
-  const smallFontSize = useSelector(smallFontSizeSelector)
+  const _smallFontSize = useSelector(smallFontSizeSelector)
   const style = useSelector(commonDropdownStyleSelector)
 
   const items = UINameList.map((i): DropdownItem => {

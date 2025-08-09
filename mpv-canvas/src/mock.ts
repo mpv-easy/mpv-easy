@@ -90,7 +90,7 @@ function assToRect(s: string) {
 
   if (list.length === 16) {
     // rectCw
-    const [_, x, y, __, x1, y1, ___, x2, y2] = list
+    const [_, x, y, __, x1, _y1, ___, _x2, y2] = list
     const width = x1 - x
     const height = y2 - y
     const rect = {
@@ -114,7 +114,7 @@ function assToRect(s: string) {
     const x1 = list[4]
     const y1 = list[5]
     const bx1 = list[7]
-    const by1 = list[8]
+    const _by1 = list[8]
 
     const x3 = list[14]
     const y4 = list[15]
@@ -146,16 +146,16 @@ function assToRect(s: string) {
     const x1 = list[4]
     const y1 = list[5]
 
-    const bx1 = list[7]
+    const _bx1 = list[7]
     const by1 = list[8]
 
-    const x3 = list[14]
-    const y4 = list[15]
+    const _x3 = list[14]
+    const _y4 = list[15]
 
-    const by2 = list[18]
+    const _by2 = list[18]
     const by3 = list[20]
 
-    const c = 0.551915024494
+    const _c = 0.551915024494
     const strokeWidth = by1 - y1
     const width = x1 - x - 1 * strokeWidth
     const height = by3 - y - 1 * strokeWidth
@@ -583,15 +583,15 @@ export function createMpvMock(
     "playlist/count": 1,
   }
   const mp: MP & { renderAll: () => void } = {
-    command: (command: string): true | undefined => {
+    command: (_command: string): true | undefined => {
       // console.log("cmd: ", command)
       return true
     },
-    commandv: (...args: readonly string[]): true | undefined => {
+    commandv: (..._args: readonly string[]): true | undefined => {
       // console.log("cmd: ", ...args)
       return true
     },
-    command_native: <T = CommandResult>(table: unknown, def?: unknown): T => {
+    command_native: <T = CommandResult>(_table: unknown, _def?: unknown): T => {
       // console.log("command_native: ")
       return {
         status: 0,
@@ -602,21 +602,21 @@ export function createMpvMock(
       } as T
     },
     command_native_async: <T = CommandResult>(
-      table: {
+      _table: {
         name: string
         args?: string[]
         playback_only?: boolean
         capture_stdout?: boolean
         capture_stderr?: boolean
       },
-      fn?:
+      _fn?:
         | ((success: boolean, result: T, error: string | undefined) => void)
         | undefined,
     ): number => {
       // console.log("command_native_async: ")
       return 0
     },
-    abort_async_command: (t: number): void => {
+    abort_async_command: (_t: number): void => {
       // console.log("Function not implemented.")
     },
     get_property: (name: string, def?: string): string => {
@@ -637,7 +637,7 @@ export function createMpvMock(
     },
     get_property_native: <T = unknown, Def = unknown>(
       name: string,
-      def?: Def | undefined,
+      _def?: Def | undefined,
     ): T => {
       // console.log("get_property_native", name, def)
       return props[name]
@@ -702,7 +702,7 @@ export function createMpvMock(
       return true
     },
     get_time: (): number => Date.now(),
-    set_osd_ass: (res_x: number, res_y: number, data: string): unknown => {
+    set_osd_ass: (_res_x: number, _res_y: number, _data: string): unknown => {
       // console.log("set_osd_ass not implemented.")
       return true
     },
@@ -716,9 +716,9 @@ export function createMpvMock(
     },
     add_key_binding: (
       key: string,
-      name?: string | undefined,
+      _name?: string | undefined,
       fn?: ((event: KeyEvent) => void) | undefined,
-      flags?: AddKeyBindingFlags | undefined,
+      _flags?: AddKeyBindingFlags | undefined,
     ): void => {
       // console.log("add_key_binding not implemented.")
       if (eventMap[key]) {
@@ -729,9 +729,9 @@ export function createMpvMock(
     },
     add_forced_key_binding: (
       key: string,
-      name?: string | undefined,
+      _name?: string | undefined,
       fn?: ((event: KeyEvent) => void) | undefined,
-      flags?: AddKeyBindingFlags | undefined,
+      _flags?: AddKeyBindingFlags | undefined,
     ): void => {
       // console.log("add_key_binding not implemented.")
       if (eventMap[key]) {
@@ -740,16 +740,16 @@ export function createMpvMock(
         eventMap[key] = [fn]
       }
     },
-    remove_key_binding: (name: string): void => {
+    remove_key_binding: (_name: string): void => {
       // console.log("remove_key_binding not implemented.")
     },
     register_event: (
-      name: string,
-      fn: (event: Record<string, unknown>) => void,
+      _name: string,
+      _fn: (event: Record<string, unknown>) => void,
     ): void => {
       // console.log("register_event not implemented.")
     },
-    unregister_event: (fn: (...args: unknown[]) => void): void => {
+    unregister_event: (_fn: (...args: unknown[]) => void): void => {
       // console.log("unregister_event not implemented.")
     },
     // observe_property: function (name: string, type: "native", fn: (name: string, value: unknown) => void): void {
@@ -758,7 +758,7 @@ export function createMpvMock(
     // unobserve_property: function (fn: (...args: unknown[]) => void): void {
     //   // console.log("Function not implemented.")
     // },
-    get_opt: (key: string): string => {
+    get_opt: (_key: string): string => {
       // console.log("get_opt not implemented.")
       return ""
     },
@@ -766,28 +766,28 @@ export function createMpvMock(
       // console.log("get_script_name not implemented.")
       return props["script-name"]
     },
-    osd_message: (text: string, duration?: number | undefined): void => {
+    osd_message: (_text: string, _duration?: number | undefined): void => {
       // console.log("osd_message: ", text, duration)
     },
-    register_idle: (fn: () => void): void => {
+    register_idle: (_fn: () => void): void => {
       // console.log("register_idle not implemented.")
     },
-    unregister_idle: (fn: () => void): void => {
+    unregister_idle: (_fn: () => void): void => {
       // console.log("unregister_idle not implemented.")
     },
-    enable_messages: (level: LogLevel): void => {
+    enable_messages: (_level: LogLevel): void => {
       // console.log("enable_messages not implemented.")
     },
     register_script_message: (
-      name: string,
-      fn: (...args: string[]) => void,
+      _name: string,
+      _fn: (...args: string[]) => void,
     ): void => {
       // console.log("register_script_message not implemented.")
     },
-    unregister_script_message: (name: string): void => {
+    unregister_script_message: (_name: string): void => {
       // console.log("unregister_script_message not implemented.")
     },
-    create_osd_overlay: (format: "ass-events"): MpvOsdOverlay => {
+    create_osd_overlay: (_format: "ass-events"): MpvOsdOverlay => {
       // const fabricNode = new Rect({
       //   left: 50,
       //   top: 50,
@@ -804,7 +804,7 @@ export function createMpvMock(
       height: screenHeight,
       aspect: 1,
     }),
-    add_hook: (name: string, priority: number, fn: () => void): void => {
+    add_hook: (_name: string, _priority: number, _fn: () => void): void => {
       // console.log("add_hook not implemented.")
     },
     last_error: (): string => {
@@ -815,36 +815,36 @@ export function createMpvMock(
     get_script_file: (): string => props["script-file"],
     module_paths: [],
     msg: {
-      log: (level: LogLevel, ...msg: unknown[]): void => {
+      log: (_level: LogLevel, ..._msg: unknown[]): void => {
         // console.log("log: ", level, msg)
       },
-      fatal: (...msg: unknown[]): void => {
+      fatal: (..._msg: unknown[]): void => {
         // console.log("fatal: ", msg)
       },
-      error: (...msg: unknown[]): void => {
+      error: (..._msg: unknown[]): void => {
         // console.log("error: ", msg)
       },
-      warn: (...msg: unknown[]): void => {
+      warn: (..._msg: unknown[]): void => {
         // console.log("warn: ", msg)
       },
-      info: (...msg: unknown[]): void => {
+      info: (..._msg: unknown[]): void => {
         // console.log("info: ", msg)
       },
-      verbose: (...msg: unknown[]): void => {
+      verbose: (..._msg: unknown[]): void => {
         // console.log("verbose: ", msg)
       },
-      debug: (...msg: unknown[]): void => {
+      debug: (..._msg: unknown[]): void => {
         // console.log("debug: ", msg)
       },
-      trace: (...msg: unknown[]): void => {
+      trace: (..._msg: unknown[]): void => {
         // console.log("trace: ", msg)
       },
     },
     options: {
       read_options: (
-        table: Record<string, string | number | boolean>,
-        identifier?: string | undefined,
-        on_update?:
+        _table: Record<string, string | number | boolean>,
+        _identifier?: string | undefined,
+        _on_update?:
           | ((list: Record<string, boolean | undefined>) => void)
           | undefined,
       ): void => {
@@ -854,13 +854,13 @@ export function createMpvMock(
     utils: {
       getcwd: (): string | undefined => props.cwd,
       readdir: (
-        path: string,
-        filter?: "files" | "dirs" | "normal" | "all" | undefined,
+        _path: string,
+        _filter?: "files" | "dirs" | "normal" | "all" | undefined,
       ): string[] | undefined => {
         // console.log("readdir not implemented.")
         return []
       },
-      file_info: (path: string): FileInfo | undefined => {
+      file_info: (_path: string): FileInfo | undefined => {
         // console.log("file_info not implemented.")
         return undefined
       },
@@ -871,24 +871,24 @@ export function createMpvMock(
       },
       join_path: (p1: string, p2: string): string => `${p1}/${p2}`,
       getpid: (): number => props.pid,
-      getenv: (name: string): string | undefined => {
+      getenv: (_name: string): string | undefined => {
         // console.log("getenv not implemented.")
         return undefined
       },
-      get_user_path: (path: string): string => {
+      get_user_path: (_path: string): string => {
         // console.log("get_user_path not implemented.")
         return props["get-user-path"]
       },
-      read_file: (fname: string, max?: number | undefined): string => {
+      read_file: (_fname: string, _max?: number | undefined): string => {
         // console.log("read_file not implemented.")
         return ""
       },
-      write_file: (fname: string, str: string): void => {
+      write_file: (_fname: string, _str: string): void => {
         // console.log("write_file not implemented.")
       },
       compile_js: (
-        fname: string,
-        content_str: string,
+        _fname: string,
+        _content_str: string,
       ): ((...args: unknown[]) => unknown) => {
         // console.log("compile_js not implemented.")
         return () => {}
@@ -897,7 +897,7 @@ export function createMpvMock(
     // @ts-ignore
     observe_property: (
       name: string,
-      type: "native",
+      _type: "native",
       fn: (name: string, value: unknown) => void,
     ): void => {
       // // console.log("observe_property: ", name, type)

@@ -17,7 +17,7 @@ declare module "@mpv-easy/plugin" {
   }
 }
 
-export default definePlugin((context, api) => ({
+export default definePlugin((_context, _api) => ({
   name: pluginName,
   defaultConfig: defaultConfig,
   create: () => {},

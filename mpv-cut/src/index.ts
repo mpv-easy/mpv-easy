@@ -1,5 +1,4 @@
-import { type SystemApi, definePlugin } from "@mpv-easy/plugin"
-import type { PluginContext } from "@mpv-easy/plugin"
+import { definePlugin } from "@mpv-easy/plugin"
 import {
   existsSync,
   getDesktopDir,
@@ -89,7 +88,7 @@ export function getCutVideoPath(
   return `${dir}/${nameList.join(".")}`
 }
 
-export default definePlugin((context, api) => ({
+export default definePlugin((_context, _api) => ({
   name: pluginName,
   defaultConfig: defaultConfig,
   create: () => {},

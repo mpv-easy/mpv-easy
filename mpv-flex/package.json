@@ -1,7 +1,11 @@
 {
   "name": "@mpv-easy/flex",
   "version": "v0.1.15-alpha.6",
-  "files": ["dist", "readme.md", "package.json"],
+  "files": [
+    "dist",
+    "readme.md",
+    "package.json"
+  ],
   "description": "@mpv-easy/flex",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -11,7 +15,9 @@
     "dev": "tsc -p ./tsconfig.build.json -w",
     "test": "vitest"
   },
-  "keywords": ["flex"],
+  "keywords": [
+    "flex"
+  ],
   "author": "ahaoboy <504595380@qq.com> (https://github.com/ahaoboy)",
   "license": "MIT",
   "dependencies": {}

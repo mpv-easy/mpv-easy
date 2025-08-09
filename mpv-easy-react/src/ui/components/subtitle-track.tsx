@@ -2,7 +2,7 @@ import { type DropdownItem } from "@mpv-easy/react"
 import React from "react"
 import { Dropdown } from "@mpv-easy/react"
 import * as ICON from "../../icon"
-import { setPropertyNative, getSubtitleTracks } from "@mpv-easy/tool"
+import { getSubtitleTracks } from "@mpv-easy/tool"
 import {
   i18nSelector,
   sidSelector,

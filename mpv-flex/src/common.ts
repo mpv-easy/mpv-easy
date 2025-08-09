@@ -1,4 +1,4 @@
-import { type BaseDom, setAttribute, setProp } from "./dom"
+import { type BaseDom, setProp } from "./dom"
 export const attributesToSkip = {
   children: true,
   ref: true,

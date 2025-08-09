@@ -2,7 +2,7 @@
 import "./polyfill"
 // Must first polyfill corejs and other basic functions
 import "./corejs"
-// biome-ignore lint/style/useNodejsImportProtocol: <explanation>
+// don't use node:buffer
 import { Buffer } from "buffer"
 import { patch } from "./tool"
 

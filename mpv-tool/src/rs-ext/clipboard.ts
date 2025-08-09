@@ -88,7 +88,7 @@ export async function setClipboardImage(
             "-c",
             `Get-ChildItem "${normalize(path)}" | Set-Clipboard`,
           ]
-          const r = await execAsync(cmd)
+          const _r = await execAsync(cmd)
           return true
         } catch (e) {
           error(e)

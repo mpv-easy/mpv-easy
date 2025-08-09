@@ -5,7 +5,12 @@
   "description": "",
   "main": "dist/index.js",
   "types": "./dist/index.d.ts",
-  "files": ["dist", "readme.md", "package.json", "shaders"],
+  "files": [
+    "dist",
+    "readme.md",
+    "package.json",
+    "shaders"
+  ],
   "scripts": {
     "es5": "babel ./dist -d es5",
     "build": "tsc -p ./tsconfig.build.json",
@@ -18,8 +23,12 @@
   },
   "typesVersions": {
     "*": {
-      ".": ["./dist/index.d.ts"],
-      "vite": ["./dist/shaders.d.ts"]
+      ".": [
+        "./dist/index.d.ts"
+      ],
+      "vite": [
+        "./dist/shaders.d.ts"
+      ]
     }
   },
   "author": "ahaoboy <504595380@qq.com> (https://github.com/ahaoboy)",

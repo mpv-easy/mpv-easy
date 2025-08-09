@@ -256,107 +256,105 @@ export const Easy = (props: Partial<EasyProps>) => {
     !path && !showCrop && playerState.historyHide && playerState.playlistHide
 
   return (
-    <>
-      <Box
-        id="mpv-easy-main"
-        display="flex"
-        width={"100%"}
-        height={"100%"}
-        flexDirection="row"
-        justifyContent="space-between"
-        alignItems="start"
-        position="relative"
-        onMouseDown={(e) => {
-          setTimeout(() => {
-            // FIXME: update tooltip
-            update()
-          })
+    <Box
+      id="mpv-easy-main"
+      display="flex"
+      width={"100%"}
+      height={"100%"}
+      flexDirection="row"
+      justifyContent="space-between"
+      alignItems="start"
+      position="relative"
+      onMouseDown={(e) => {
+        setTimeout(() => {
+          // FIXME: update tooltip
+          update()
+        })
 
-          if (showCrop) {
-            if (cropPoints.length < 2) {
-              dispatch.setCropPoints([...cropPoints, [mousePos.x, mousePos.y]])
-            }
+        if (showCrop) {
+          if (cropPoints.length < 2) {
+            dispatch.setCropPoints([...cropPoints, [mousePos.x, mousePos.y]])
           }
+        }
 
-          const isEmptyClick =
-            e.target?.attributes.id === "mpv-easy-main" ||
-            e.target?.attributes.id === "mpv-easy-speed" ||
-            e.target?.attributes.id === undefined
+        const isEmptyClick =
+          e.target?.attributes.id === "mpv-easy-main" ||
+          e.target?.attributes.id === "mpv-easy-speed" ||
+          e.target?.attributes.id === undefined
 
-          setTimeout(() => {
-            menuRef.current?.setHide(true)
-          }, frameTime)
+        setTimeout(() => {
+          menuRef.current?.setHide(true)
+        }, frameTime)
 
-          if (isEmptyClick) {
-            // console.log("click empty")
-            dispatch.setPlaylistHide(true)
-            dispatch.setHistoryHide(true)
-          }
-        }}
-      >
-        {tooltip && (
-          <Tooltip
-            id="tooltip"
-            backgroundColor={tooltipStyle.backgroundColor}
-            font={font}
-            fontSize={smallFontSize.fontSize}
-            color={tooltipStyle.color}
-            padding={smallFontSize.padding}
-            display="flex"
-            justifyContent="center"
-            alignItems="center"
-            zIndex={style[mode].tooltip.zIndex}
-            maxWidth={style[mode].tooltip.maxWidth}
-            mousePos={mousePos}
-            height="auto"
-            width="auto"
-          />
-        )}
-
-        <Toolbar ref={toolbarRef} hide={hide || showCrop} />
-        <Element ref={elementRef} hide={hide || showCrop} width={"100%"} />
-        <VoiceControl ref={volumeDomRef} hide={hide || showCrop} />
-        {/* {!clickMenuStyle.disable && <ClickMenu ref={menuRef} hide={menuHide} />} */}
-        <Playlist />
-        <History />
-        <Speed />
-        {showLogo && <Logo />}
-        {showCrop && (
-          <Crop
-            mouseX={mousePos.x}
-            mouseY={mousePos.y}
-            lineColor={cropConfig.lineColor}
-            lineColorHover={cropConfig.lineColorHover}
-            lineWidth={cropConfig.lineWidth}
-            osdHeight={osdDimensions.h}
-            osdWidth={osdDimensions.w}
-            points={cropPoints}
-            maskColor={cropConfig.maskColor}
-            zIndex={cropConfig.cropZIndex}
-            onChange={dispatch.setCropPoints}
-            labelFontSize={smallFontSize.fontSize}
-          />
-        )}
-        <Translation
-          subFontSize={subFontSize}
-          subScale={subScale}
-          subColor={subColor}
-          subBold={subBold}
-          subOutlineSize={subOutlineSize}
-          subOutlineColor={subOutlineColor}
-          sourceLang={sourceLang}
-          targetLang={targetLang}
-          subBackColor={subBackColor}
-          subBackColorHover={subBackColorHover}
-          subColorHover={subColorHover}
-          bottom={2 * h}
-          firstSubColor={firstSubColor}
-          firstSubFontface={firstSubFontface}
-          secondSubFontface={secondSubFontface}
-          secondSubColor={secondSubColor}
-          subSrtScale={translateStyle.subSrtScale}
+        if (isEmptyClick) {
+          // console.log("click empty")
+          dispatch.setPlaylistHide(true)
+          dispatch.setHistoryHide(true)
+        }
+      }}
+    >
+      {tooltip && (
+        <Tooltip
+          id="tooltip"
+          backgroundColor={tooltipStyle.backgroundColor}
+          font={font}
+          fontSize={smallFontSize.fontSize}
+          color={tooltipStyle.color}
+          padding={smallFontSize.padding}
+          display="flex"
+          justifyContent="center"
+          alignItems="center"
+          zIndex={style[mode].tooltip.zIndex}
+          maxWidth={style[mode].tooltip.maxWidth}
+          mousePos={mousePos}
+          height="auto"
+          width="auto"
         />
-      </Box>
-    </>
+      )}
+
+      <Toolbar ref={toolbarRef} hide={hide || showCrop} />
+      <Element ref={elementRef} hide={hide || showCrop} width={"100%"} />
+      <VoiceControl ref={volumeDomRef} hide={hide || showCrop} />
+      {/* {!clickMenuStyle.disable && <ClickMenu ref={menuRef} hide={menuHide} />} */}
+      <Playlist />
+      <History />
+      <Speed />
+      {showLogo && <Logo />}
+      {showCrop && (
+        <Crop
+          mouseX={mousePos.x}
+          mouseY={mousePos.y}
+          lineColor={cropConfig.lineColor}
+          lineColorHover={cropConfig.lineColorHover}
+          lineWidth={cropConfig.lineWidth}
+          osdHeight={osdDimensions.h}
+          osdWidth={osdDimensions.w}
+          points={cropPoints}
+          maskColor={cropConfig.maskColor}
+          zIndex={cropConfig.cropZIndex}
+          onChange={dispatch.setCropPoints}
+          labelFontSize={smallFontSize.fontSize}
+        />
+      )}
+      <Translation
+        subFontSize={subFontSize}
+        subScale={subScale}
+        subColor={subColor}
+        subBold={subBold}
+        subOutlineSize={subOutlineSize}
+        subOutlineColor={subOutlineColor}
+        sourceLang={sourceLang}
+        targetLang={targetLang}
+        subBackColor={subBackColor}
+        subBackColorHover={subBackColorHover}
+        subColorHover={subColorHover}
+        bottom={2 * h}
+        firstSubColor={firstSubColor}
+        firstSubFontface={firstSubFontface}
+        secondSubFontface={secondSubFontface}
+        secondSubColor={secondSubColor}
+        subSrtScale={translateStyle.subSrtScale}
+      />
+    </Box>
   )
 }

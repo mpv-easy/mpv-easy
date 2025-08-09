@@ -1,7 +1,6 @@
 import React from "react"
 import { getConfig } from "../context"
 import { store } from "../store"
-import { Easy } from "../ui"
 
 interface RecursiveDivProps {
   deep: number

@@ -1,5 +1,4 @@
-import { type SystemApi, definePlugin } from "@mpv-easy/plugin"
-import type { PluginContext } from "@mpv-easy/plugin"
+import { definePlugin } from "@mpv-easy/plugin"
 export * from "./ui"
 
 export const pluginName = "@mpv-easy/crop"
@@ -37,7 +36,7 @@ declare module "@mpv-easy/plugin" {
     [pluginName]: CropConfig
   }
 }
-export default definePlugin((context, api) => ({
+export default definePlugin((_context, _api) => ({
   name: pluginName,
   defaultConfig: defaultConfig,
   create: () => {},

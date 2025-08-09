@@ -1,11 +1,20 @@
 import { isFont } from "@mpv-easy/tool"
 import { Script } from "./meta"
 import { File } from "@easy-install/easy-archive"
+import { appendScriptConf, commonPrefix, convertURL } from "./tool"
 
 export async function downloadBinary(url: string): Promise<Uint8Array> {
   const buf = await fetch(url).then((resp) => resp.arrayBuffer())
   return new Uint8Array(buf)
 }
+
+export async function downloadBinaryFromGithub(
+  url: string,
+): Promise<Uint8Array> {
+  const buf = await fetch(convertURL(url)).then((resp) => resp.arrayBuffer())
+  return new Uint8Array(buf)
+}
+
 export async function downloadText(url: string): Promise<string> {
   return await fetch(url).then((resp) => resp.text())
 }
@@ -20,26 +29,6 @@ export function getFileNameFromUrl(url: string): string {
 
 export function getLang(url: string) {
   return url.split(".").at(-1)
-}
-
-function appendScriptConf(
-  mpvConf: Uint8Array,
-  scriptConf: Uint8Array,
-  script: Script,
-): Uint8Array {
-  const decoder = new TextDecoder("utf-8")
-  const mpvString = decoder.decode(mpvConf)
-  const tab = "#".repeat(4)
-  const banner = [tab, script.name, tab].join(" ")
-  if (mpvString.includes(banner)) {
-    return mpvConf
-  }
-  const scriptString = decoder.decode(scriptConf).trim()
-  const resultString = [mpvString, "", banner, scriptString, banner, ""]
-    .join("\n")
-    .trimStart()
-  const encoder = new TextEncoder()
-  return encoder.encode(resultString)
 }
 
 export function installScript(
@@ -65,40 +54,22 @@ export function installScript(
     const files = scriptFiles.filter((i) => i.path.startsWith("scripts/"))
     scriptFiles = scriptFiles.filter((i) => !i.path.startsWith("scripts/"))
 
-    const pathList = files.map((i) => i.path.split("/"))
-    const prefixList = files[0].path.split("/").slice(0, 2)
-    const prefixStr = `${prefixList.join("/")}/`
-    if (
-      prefixList.length === 2 &&
-      pathList.every(
-        (i) =>
-          i.length >= 3 &&
-          // scripts
-          i[0] === prefixList[0] &&
-          // uosc
-          i[1] === prefixList[1],
-      )
-    ) {
-      prefixList.pop()
-    }
-
-    if (prefixList.length === 1) {
-      for (const f of files) {
-        if (f.path.startsWith(prefixStr)) {
-          f.path = f.path.replace(prefixStr, `${prefixList}/`)
-        }
-      }
-    }
-
-    // rename to main
+    const dirList = files
+      .map((i) => i.path.split("/"))
+      .map((i) => i.slice(1, i.length - 1))
+    const commonPrefixIndex = commonPrefix(dirList)
+    const commonPrefixList = commonPrefixIndex
+      ? ["scripts", ...dirList[0].slice(0, commonPrefixIndex)]
+      : ["scripts"]
+    const commonPrefixString = `${commonPrefixList.join("/")}/`
     const luaFiles = files.filter(
       (i) =>
-        !i.path.replace(`${prefixList.join("/")}/`, "").includes("/") &&
+        !i.path.replace(commonPrefixString, "").includes("/") &&
         i.path.endsWith(".lua"),
     )
     const jsFiles = files.filter(
       (i) =>
-        !i.path.replace(`${prefixList.join("/")}/`, "").includes("/") &&
+        !i.path.replace(commonPrefixString, "").includes("/") &&
         i.path.endsWith(".js"),
     )
     if (luaFiles.length === 1) {
@@ -106,8 +77,13 @@ export function installScript(
     } else if (jsFiles.length === 1) {
       jsFiles[0].path = `${script.scriptName || script.name}/main.js`
     }
+
     for (const i of files) {
-      i.path = `${configDir}/scripts/${i.path.replace(`${prefixList.join("/")}/`, `${script.scriptName || script.name}/`)}`
+      const s = i.path.replace(
+        commonPrefixString,
+        `${script.scriptName || script.name}/`,
+      )
+      i.path = `${configDir}/scripts/${s}`
       mpvFiles.push(i)
     }
   }
@@ -140,7 +116,7 @@ export function installScript(
         new Uint8Array(),
         undefined,
         false,
-        BigInt(+new Date()),
+        BigInt(Date.now()),
       )
     } else {
       file = mpvFiles.splice(fileIndex, 1)[0]
@@ -200,11 +176,11 @@ export function installScript(
   }
 }
 // Builtin scripts that conflict with each other
-export const ConflictMap: Record<string, string[]> = {
-  thumbfast: ["mpv-easy-thumbfast"],
-  autoload: ["mpv-easy-autoload"],
-  uosc: ["mpv-easy", "ModernX cyl0", "ModernZ", "mpv.net"],
-}
+export const ConflictMap: string[][] = [
+  ["thumbfast", "mpv-easy-thumbfast"],
+  ["autoload", "mpv-easy-autoload"],
+  ["uosc", "mpv-easy", "ModernX cyl0", "ModernZ", "mpv.net"],
+]
 
 // Builtin scripts that includes other scripts
 export const IncludesMap: Record<string, string[]> = {
@@ -226,24 +202,25 @@ export function checkConflict(
   packages: string[],
   conflictMap = ConflictMap,
 ): string[] {
-  const conflictSet = new Set<string>()
-  const packageSet = new Set(packages)
+  console.log(packages)
 
-  for (const pkg of packages) {
-    const conflicts = conflictMap[pkg] || []
-    for (const conflict of conflicts) {
-      if (packageSet.has(conflict)) {
-        conflictSet.add(pkg)
-        conflictSet.add(conflict)
+  for (const g of conflictMap) {
+    const conflicts: string[] = []
+    for (const pkg of packages) {
+      if (g.includes(pkg)) {
+        conflicts.push(pkg)
       }
+    }
+
+    if (conflicts.length > 1) {
+      return conflicts
     }
   }
 
-  if (conflictSet.size > 0) {
-    return Array.from(conflictSet)
-  }
+  const conflictSet = new Set<string>()
+  const packageSet = new Set(packages)
 
-  for (const pkg in IncludesMap) {
+  for (const pkg in packages) {
     const conflicts = IncludesMap[pkg] || []
     for (const conflict of conflicts) {
       if (packageSet.has(conflict)) {

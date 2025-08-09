@@ -1,6 +1,6 @@
 import { execSync } from "../common"
 import { ConfigDir } from "../const"
-import { getScriptDir, joinPath, print } from "../mpv"
+import { getScriptDir, joinPath } from "../mpv"
 import { pwshExecCode } from "./shell"
 
 export type MouseCursorType = "Arrow" | "Hand"

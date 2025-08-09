@@ -1,5 +1,5 @@
 import { getOs, execSync } from "../common"
-import { pwshExecCode, shellExecString } from "./shell"
+import { shellExecString } from "./shell"
 
 export function mkdir(dir: string) {
   switch (getOs()) {

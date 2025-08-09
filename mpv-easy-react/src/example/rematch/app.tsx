@@ -17,30 +17,28 @@ function CounterA() {
   )
   const dispatch = useDispatch<Dispatch>()
   return (
-    <>
+    <Box
+      display="flex"
+      fontSize={128}
+      color="#FFFFFF"
+      backgroundColor="#000000A0"
+    >
       <Box
-        display="flex"
-        fontSize={128}
-        color="#FFFFFF"
-        backgroundColor="#000000A0"
-      >
-        <Box
-          text="-"
-          onClick={() => {
-            print("-")
-            dispatch.counter.changeA(-1)
-          }}
-        />
-        <CounterText c={counterA} />
-        <Box
-          text="+"
-          onClick={() => {
-            print("+")
-            dispatch.counter.changeA(1)
-          }}
-        />
-      </Box>
-    </>
+        text="-"
+        onClick={() => {
+          print("-")
+          dispatch.counter.changeA(-1)
+        }}
+      />
+      <CounterText c={counterA} />
+      <Box
+        text="+"
+        onClick={() => {
+          print("+")
+          dispatch.counter.changeA(1)
+        }}
+      />
+    </Box>
   )
 }
 
@@ -49,31 +47,29 @@ function CounterB() {
   const dispatch = useDispatch<Dispatch>()
   print("CounterB")
   return (
-    <>
+    <Box
+      display="flex"
+      fontSize={128}
+      color="#FFFFFF"
+      backgroundColor="#000000A0"
+    >
       <Box
-        display="flex"
-        fontSize={128}
-        color="#FFFFFF"
-        backgroundColor="#000000A0"
-      >
-        <Box
-          text="-"
-          onClick={() => {
-            print("-")
-            dispatch.counter.changeB(-1)
-          }}
-        />
-        <CounterText c={counterB} />
-        {/* <Box text={counter.count.toString()}></Box> */}
-        <Box
-          text="+"
-          onClick={() => {
-            print("+")
-            dispatch.counter.changeB(1)
-          }}
-        />
-      </Box>
-    </>
+        text="-"
+        onClick={() => {
+          print("-")
+          dispatch.counter.changeB(-1)
+        }}
+      />
+      <CounterText c={counterB} />
+      {/* <Box text={counter.count.toString()}></Box> */}
+      <Box
+        text="+"
+        onClick={() => {
+          print("+")
+          dispatch.counter.changeB(1)
+        }}
+      />
+    </Box>
   )
 }
 function App() {

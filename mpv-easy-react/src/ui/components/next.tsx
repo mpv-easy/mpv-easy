@@ -13,7 +13,7 @@ export const Next = () => {
       id="mpv-easy-button-next"
       title={i18n.next}
       text={ICON.ChevronRight}
-      onMouseDown={(e) => {
+      onMouseDown={(_e) => {
         dispatch.next()
       }}
     />

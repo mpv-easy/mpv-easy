@@ -17,7 +17,7 @@ export function useSpring(
   to: SpringInput,
   config: SpringConfig = defaultSpringConfig,
 ) {
-  const { fps, duration } = {
+  const { duration } = {
     ...defaultSpringConfig,
     ...config,
   }

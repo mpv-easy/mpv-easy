@@ -293,7 +293,7 @@ export const Progress = ({ width, ...props }: MpDomProps) => {
   const previewTextWidth = previewTextRef.current?.layoutNode.width ?? 0
   const previewTimeTextOffsetX = (progress.cursorSize - previewTextWidth) >> 1
 
-  let thumbPos: undefined | { x: number; y: number } = undefined
+  let thumbPos: undefined | { x: number; y: number }
 
   if (!mouseOut && thumbRef.current) {
     const width = progress.cursorSize

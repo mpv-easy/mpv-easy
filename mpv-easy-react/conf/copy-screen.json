@@ -1,7 +1,7 @@
 {
   "name": "mpv-easy-copy-screen",
   "description": "mpv player copy-screen script",
-  "version": "v0.1.15-alpha.6",
+  "version": "v0.1.15-alpha.12",
   "author": "mpv-easy",
   "download": "https://github.com/mpv-easy/mpv-easy/releases/latest/download/mpv-easy-copy-screen.zip",
   "homepage": "https://github.com/mpv-easy/mpv-easy/tree/main/mpv-copy-screen"

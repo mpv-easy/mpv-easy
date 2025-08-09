@@ -14,7 +14,7 @@ export const Play = () => {
       id="mpv-easy-button-play"
       title={pause ? i18n.play : i18n.pause}
       text={pause ? ICON.Play : ICON.Pause}
-      onMouseDown={(e) => {
+      onMouseDown={(_e) => {
         dispatch.setPause(!pause)
       }}
     />

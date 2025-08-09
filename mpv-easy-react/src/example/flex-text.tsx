@@ -3,7 +3,7 @@ import React from "react"
 
 const padding = 16
 const borderSize = 16
-const fontSize = 32
+const _fontSize = 32
 export function FlexText() {
   return (
     <Box

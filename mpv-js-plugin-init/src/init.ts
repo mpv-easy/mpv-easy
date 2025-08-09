@@ -61,7 +61,7 @@ mp.command_native_async = (table, fn) => {
   return __mp.__command_native_async(id, table, fn)
 }
 
-mp.abort_async_command = (...args) => {
+mp.abort_async_command = (..._args) => {
   log("abort_async_command: not support yet")
 }
 
@@ -95,7 +95,7 @@ mp.get_property_native = <T>(name: string): T => {
   try {
     const v = JSON.parse(s)
     return v
-  } catch (e) {
+  } catch (_e) {
     return s as T
   }
 }
@@ -112,7 +112,7 @@ mp.set_property_number = (name, v: number) => {
   return __mp.__set_property_number(name, v)
 }
 
-mp.set_property = (name, v) => {
+mp.set_property = (_name, v) => {
   // log("setProperty: " + args.join(", "))
   switch (typeof v) {
     case "string": {
@@ -152,26 +152,26 @@ mp.set_property_native = (...args) => {
 
 mp.get_time = () => Date.now() / 1000
 
-mp.add_key_binding = (...args) => {
+mp.add_key_binding = (..._args) => {
   log("add_key_binding not support yet")
   // log("add_key_binding: " + args.join(", "))
 }
-mp.add_forced_key_binding = (...args) => {
+mp.add_forced_key_binding = (..._args) => {
   log("add_forced_key_binding not support yet")
   // log("add_forced_key_binding: " + args.join(", "))
 }
 
-mp.remove_key_binding = (...args) => {
+mp.remove_key_binding = (..._args) => {
   log("remove_key_binding not support yet")
   // log("remove_key_binding: " + args.join(", "))
 }
 
-mp.register_event = (...args) => {
+mp.register_event = (..._args) => {
   log("register_event not support yet")
   // log("register_event: " + args.join(", "))
 }
 
-mp.unregister_event = (...args) => {
+mp.unregister_event = (..._args) => {
   log("unregister_event not support yet")
   // log("unregister_event: " + args.join(", "))
 }
@@ -257,7 +257,7 @@ mp.get_opt = (key, def) => {
   return typeof v !== "undefined" ? v : def
 }
 
-mp.get_script_name = (...args) => {
+mp.get_script_name = (..._args) => {
   // log("get_script_name: " + args.join(", "))
   return globalThis.__script_name
 }
@@ -265,14 +265,14 @@ mp.get_script_name = (...args) => {
 mp.osd_message = (text: string, duration?: number) => {
   mp.commandv("show_text", text, Math.round(1000 * (duration || -1)))
 }
-mp.register_idle = (...args) => {
+mp.register_idle = (..._args) => {
   // log("register_idle: " + args.join(", "))
 }
 
-mp.unregister_idle = (...args) => {
+mp.unregister_idle = (..._args) => {
   // log("unregister_idle: " + args.join(", "))
 }
-mp.enable_messages = (...args) => {
+mp.enable_messages = (..._args) => {
   // log("enable_messages: " + args.join(", "))
 }
 mp.unregister_script_message = (name: String) => {
@@ -336,7 +336,7 @@ mp.set_osd_ass = (res_x: number, res_y: number, data: string) => {
   return mp._legacy_overlay.update()
 }
 
-mp.get_osd_margins = (...args) => {
+mp.get_osd_margins = (..._args) => {
   // log("get_osd_margins: " + args.join(", "))
   const d = mp.get_property_native("osd-dimensions")
   return d && { left: d.ml, right: d.mr, top: d.mt, bottom: d.mb }
@@ -372,15 +372,15 @@ mp.msg = {
 }
 
 mp.options = {
-  read_options(opts, id, on_update, conf_override) {
+  read_options(opts, id, on_update, _conf_override) {
     // log("read_options: " + args.join(", "))
-    const name = String(id ? id : mp.get_script_name())
+    const _name = String(id ? id : mp.get_script_name())
     const fname = `~~/script-opts/${id}.conf`
     let conf: string
     try {
       // conf = arguments.length > 3 ? conf_override : mp.utils.read_file(fname);
       conf = mp.utils.read_file(fname)
-    } catch (e) {
+    } catch (_e) {
       mp.msg.verbose(`${fname} not found.`)
     }
 
@@ -407,7 +407,7 @@ mp.options = {
           ? `${fname}:${i + 1}` // 1-based line number
           : `script-opts:${prefix}${key}`
 
-      // biome-ignore lint/suspicious/noPrototypeBuiltins: <explanation>
+      // biome-ignore lint/suspicious/noPrototypeBuiltins: hack
       if (!opts.hasOwnProperty(key))
         mp.msg.warn(info, `Ignoring unknown key '${key}'`)
       else if (type === "string") opts[key] = val
@@ -436,7 +436,7 @@ mp.options = {
 }
 
 mp.utils = {
-  getcwd(...args) {
+  getcwd(..._args) {
     // log("read_options: " + args.join(", "))
     return mp.get_property("working-directory")
   },
@@ -475,7 +475,7 @@ mp.utils = {
     // log("join_path: " + p1 + "/" + p2)
     return `${p1}/${p2}`
   },
-  getpid(...args) {
+  getpid(..._args) {
     // log("getpid: " + args.join(", "))
     return mp.get_property_number("pid")!
   },
@@ -496,7 +496,7 @@ mp.utils = {
     // log("write_file: " + path + text)
     __mp.__write_file(path, text)
   },
-  compile_js(...args) {
+  compile_js(..._args) {
     // log("compile_js: " + args.join(", "))
     return () => {}
   },

@@ -1,7 +1,6 @@
 import { execAsync, execSync, getOs } from "../common"
 import { existsSync } from "../fs"
 import { readFile, writeFile } from "../mpv"
-import { normalize } from "../path"
 
 export function readFileBase64() {}
 
@@ -29,7 +28,7 @@ export function shellExecString(cmd: string) {
 }
 
 export function detectCmd(cmdName: string): false | string {
-  const os = getOs()
+  const _os = getOs()
   const cmd = `where ${cmdName}`
   try {
     const s = runCmdSync(cmd).stdout

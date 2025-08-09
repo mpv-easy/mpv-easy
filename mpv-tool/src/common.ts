@@ -104,7 +104,7 @@ export function playVideo(n: number) {
 }
 
 export function clearPlayList() {
-  const count = getPropertyNumber("playlist-count") || 0
+  const _count = getPropertyNumber("playlist-count") || 0
   setPropertyBool("pause", true)
   playlistClear()
 }
@@ -235,7 +235,7 @@ export function commandExists(cmdName: string) {
   try {
     execSync(["which", cmdName])
     return true
-  } catch (error) {
+  } catch (_error) {
     return false
   }
 }

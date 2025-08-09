@@ -1,4 +1,4 @@
-let g: any = undefined
+let g: any
 export function getGlobal() {
   if (g) return g
   g = Function("return this")()

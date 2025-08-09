@@ -1,4 +1,4 @@
-import { SystemApi, definePlugin } from "@mpv-easy/plugin"
+import { definePlugin } from "@mpv-easy/plugin"
 import {
   AudioTypes,
   compareString,

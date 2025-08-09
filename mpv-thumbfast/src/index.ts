@@ -12,7 +12,6 @@ import {
   abortAsyncCommand,
   randomId,
   execSync,
-  execAsync,
   getTmpPath,
   isRemote,
 } from "@mpv-easy/tool"
@@ -271,17 +270,6 @@ export class ThumbFast {
     return execSync(args, true, true, true)
   }
 
-  private runAsync(cmd: string) {
-    const args = [
-      getOs() === "windows" ? "cmd" : "sh",
-      getOs() === "windows" ? "/c" : "-c",
-      `echo ${cmd} > \\\\.\\pipe\\${this.ipcId}`,
-      // `echo async seek ${time} absolute+keyframes > \\\\.\\pipe\\${this.ipcId}`,
-      // `echo seek ${time} absolute+keyframes > \\\\.\\pipe\\${this.ipcId}`,
-    ]
-    return execAsync(args, true, true, true)
-  }
-
   seek(time: number) {
     if (time === this.lastTime) {
       return
@@ -314,7 +302,7 @@ export class ThumbFast {
   }
 }
 
-export default definePlugin((context, api) => ({
+export default definePlugin((context, _api) => ({
   name: pluginName,
   create() {
     const d = dirname(context[pluginName].path)

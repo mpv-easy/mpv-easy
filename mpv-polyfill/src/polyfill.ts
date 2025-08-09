@@ -5,6 +5,7 @@ function setProtoOf(obj: any, proto: any) {
 
 function mixinProperties(obj: any, proto: any) {
   for (const prop in proto) {
+    // biome-ignore lint: don't change to hasOwn
     if (!Object.prototype.hasOwnProperty.call(obj, prop)) {
       obj[prop] = proto[prop]
     }
@@ -14,6 +15,6 @@ function mixinProperties(obj: any, proto: any) {
 
 if (typeof Object.setPrototypeOf !== "function") {
   Object.setPrototypeOf =
-    // biome-ignore lint/suspicious/useIsArray: <explanation>
+    // biome-ignore lint/suspicious/useIsArray: hack
     { __proto__: [] } instanceof Array ? setProtoOf : mixinProperties
 }

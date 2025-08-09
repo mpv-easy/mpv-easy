@@ -22,7 +22,7 @@ export function ProgressPreview() {
   let thumbX = 0
   let thumbY = 0
   if (hoverCursorRef.current) {
-    const { x, y, height, width } = hoverCursorRef.current.layoutNode
+    const { x, y, width } = hoverCursorRef.current.layoutNode
     thumbX = x + width / 2 - thumb?.thumbWidth / 2
     thumbY = y - thumb?.thumbHeight
   }

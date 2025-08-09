@@ -1,4 +1,4 @@
-import { execSync, getOs } from "./common"
+import { getOs } from "./common"
 import { ConfigDir } from "./const"
 import { getFileName, normalize } from "./path"
 import { Argb } from "e-color"
@@ -18,7 +18,7 @@ import type {
   NumberProp,
   NativeProp,
 } from "./type"
-import { expandPath, normalizePath } from "./type"
+import { expandPath } from "./type"
 import { MousePos } from "./type-prop"
 import { dirname, existsSync } from "./fs"
 

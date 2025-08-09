@@ -299,7 +299,7 @@ export abstract class Flex<A extends {}, P extends {}, E extends {} = {}> {
       let maxXAxisLen = 0
       let maxYAxisLen = 0
       let sumXAxisLen = 0
-      let sumYAxisLen = 0
+      let _sumYAxisLen = 0
 
       if (!xIsAuto) {
         this.computeNodeSizeAxis(node, xAttr, isX, extraSize)
@@ -320,7 +320,7 @@ export abstract class Flex<A extends {}, P extends {}, E extends {} = {}> {
         maxXAxisLen = Math.max(maxXAxisLen, childXSize)
         maxYAxisLen = Math.max(maxYAxisLen, childYSize)
         sumXAxisLen += childXSize
-        sumYAxisLen += childYSize
+        _sumYAxisLen += childYSize
       }
 
       if (xIsAuto) {

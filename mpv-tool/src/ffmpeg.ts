@@ -55,8 +55,8 @@ export async function cutRemoteVideo(
   area: [number, number],
   videoPath: string,
   outputPath: string,
-  gifConfig: GifConfig | undefined,
-  ffmpeg: string,
+  _gifConfig: GifConfig | undefined,
+  _ffmpeg: string,
 ) {
   const mpvPath = getMpvExePath()
 
@@ -170,7 +170,7 @@ export async function cutLocalVideo(
   // console.log("cmd:", cmd.join(' '))
   try {
     await execAsync(cmd)
-  } catch (e) {
+  } catch (_e) {
     return false
   }
   return true
@@ -203,7 +203,7 @@ export async function cropImage(
     await execAsync(cmd)
     // TODO: remove tmp file?
     // removeFile(tmpPath)
-  } catch (e) {
+  } catch (_e) {
     return false
   }
   return true
@@ -245,7 +245,7 @@ export async function cropVideo(
   // console.log("cmd: ", cmd.join(' '))
   try {
     await execAsync(cmd)
-  } catch (e) {
+  } catch (_e) {
     return false
   }
   return true

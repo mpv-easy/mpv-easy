@@ -2,7 +2,12 @@
   "name": "@mpv-easy/mpsm",
   "version": "v0.1.15-alpha.6",
   "homepage": "https://github.com/mpv-easy/mpv-easy#readme",
-  "files": ["bin", "dist", "readme.md", "package.json"],
+  "files": [
+    "bin",
+    "dist",
+    "readme.md",
+    "package.json"
+  ],
   "description": "@mpv-easy/mpsm",
   "main": "./dist/index.js",
   "bin": {

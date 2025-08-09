@@ -1,4 +1,4 @@
-// biome-ignore lint/suspicious/noEmptyInterface: <explanation>
+// biome-ignore lint/suspicious/noEmptyInterface: hack
 export interface PluginContext {}
 
 export interface SystemApi {

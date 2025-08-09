@@ -73,11 +73,11 @@ export function createCustomReconciler(customRender: () => void) {
       customRender()
     },
     insertInContainerBefore: insertBeforeNode,
-    commitUpdate(node: MpDom, tag: string, oldProps: any, newProps: any) {
+    commitUpdate(node: MpDom, _tag: string, _oldProps: any, newProps: any) {
       applyAttributes(node, newProps)
       customRender()
     },
-    commitTextUpdate(node, _oldText, newText) {
+    commitTextUpdate(_node, _oldText, _newText) {
       throw new Error("not support Text Component update")
     },
     commitMount() {},
@@ -93,28 +93,28 @@ export function createCustomReconciler(customRender: () => void) {
     //   internalInstanceHandle: Object,
     // ): Instance {
     createInstance: (
-      originalType: unknown,
+      _originalType: unknown,
       props: any,
-      rootContainer: unknown,
-      hostContext: unknown,
-      internalHandle: any,
+      _rootContainer: unknown,
+      _hostContext: unknown,
+      _internalHandle: any,
     ): unknown => {
       const node = createNode("@mpv-easy/box")
       applyAttributes(node, props)
       return node
     },
     createTextInstance: (
-      text: string,
-      rootContainer: unknown,
-      hostContext: unknown,
-      internalHandle: any,
+      _text: string,
+      _rootContainer: unknown,
+      _hostContext: unknown,
+      _internalHandle: any,
     ): unknown => {
       throw new Error("not support Text components")
     },
-    hideTextInstance(node) {},
-    unhideTextInstance(node, text) {},
-    hideInstance(node) {},
-    unhideInstance(node) {},
+    hideTextInstance(_node) {},
+    unhideTextInstance(_node, _text) {},
+    hideInstance(_node) {},
+    unhideInstance(_node) {},
     appendInitialChild: (parentInstance: MpDom, child: MpDom): void => {
       appendChildNode(parentInstance, child)
       customRender()
@@ -132,39 +132,39 @@ export function createCustomReconciler(customRender: () => void) {
       customRender()
     },
     finalizeInitialChildren: (
-      instance: unknown,
-      type: unknown,
-      props: unknown,
-      rootContainer: unknown,
-      hostContext: unknown,
+      _instance: unknown,
+      _type: unknown,
+      _props: unknown,
+      _rootContainer: unknown,
+      _hostContext: unknown,
     ): boolean => {
       return false
     },
-    shouldSetTextContent: (type: unknown, props: unknown): boolean => {
+    shouldSetTextContent: (_type: unknown, _props: unknown): boolean => {
       return false
     },
-    getRootHostContext: (rootContainer: unknown): unknown => {
+    getRootHostContext: (_rootContainer: unknown): unknown => {
       return NO_CONTEXT
     },
     getChildHostContext: (
-      parentHostContext: unknown,
-      type: unknown,
-      rootContainer: unknown,
+      _parentHostContext: unknown,
+      _type: unknown,
+      _rootContainer: unknown,
     ): unknown => {
       return NO_CONTEXT
     },
     getPublicInstance: (instance: unknown): unknown => {
       return instance
     },
-    prepareForCommit: (containerInfo: unknown): Record<string, any> | null => {
+    prepareForCommit: (_containerInfo: unknown): Record<string, any> | null => {
       return null
     },
-    resetTextContent(instance: unknown) {},
+    resetTextContent(_instance: unknown) {},
     // shouldDeprioritizeSubtree() {
     // },
     clearContainer: () => {},
-    resetAfterCommit: (containerInfo: unknown): void => {},
-    preparePortalMount: (containerInfo: unknown): void => {},
+    resetAfterCommit: (_containerInfo: unknown): void => {},
+    preparePortalMount: (_containerInfo: unknown): void => {},
     scheduleTimeout: (
       fn: (...args: unknown[]) => unknown,
       delay?: number | undefined,
@@ -181,13 +181,13 @@ export function createCustomReconciler(customRender: () => void) {
     // getCurrentEventPriority: (): number => {
     //   return DiscreteEventPriority
     // },
-    getInstanceFromNode: (node: any): null => {
+    getInstanceFromNode: (_node: any): null => {
       return null
     },
     beforeActiveInstanceBlur: (): void => {},
     afterActiveInstanceBlur: (): void => {},
-    prepareScopeUpdate: (scopeInstance: any, instance: any): void => {},
-    getInstanceFromScope: (scopeInstance: any): unknown => {
+    prepareScopeUpdate: (_scopeInstance: any, _instance: any): void => {},
+    getInstanceFromScope: (_scopeInstance: any): unknown => {
       return null
     },
     detachDeletedInstance(node: MpDom): void {
@@ -200,10 +200,10 @@ export function createCustomReconciler(customRender: () => void) {
     supportsHydration: false,
     NotPendingTransition: undefined,
     HostTransitionContext: {} as any,
-    resetFormInstance: (form: unknown): void => {
+    resetFormInstance: (_form: unknown): void => {
       throw new Error("Function not implemented.")
     },
-    requestPostPaintCallback: (callback: (time: number) => void): void => {
+    requestPostPaintCallback: (_callback: (time: number) => void): void => {
       throw new Error("Function not implemented.")
     },
     shouldAttemptEagerTransition: (): boolean => {
@@ -218,13 +218,13 @@ export function createCustomReconciler(customRender: () => void) {
     resolveEventTimeStamp: (): number => {
       throw new Error("Function not implemented.")
     },
-    preloadInstance: (type: unknown, props: unknown): boolean => {
+    preloadInstance: (_type: unknown, _props: unknown): boolean => {
       throw new Error("Function not implemented.")
     },
     startSuspendingCommit: (): void => {
       throw new Error("Function not implemented.")
     },
-    suspendInstance: (type: unknown, props: unknown): void => {
+    suspendInstance: (_type: unknown, _props: unknown): void => {
       throw new Error("Function not implemented.")
     },
     waitForCommitToBeReady: ():

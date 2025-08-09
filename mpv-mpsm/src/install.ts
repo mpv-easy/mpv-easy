@@ -28,13 +28,7 @@ export async function installFromFiles(script: Script, scriptFiles: File[]) {
     const filePath = join(configDir, i).replaceAll("\\", "/")
     if (existsSync(filePath)) {
       const buf = readFileSync(filePath)
-      const file = new File(
-        filePath,
-        buf,
-        undefined,
-        false,
-        BigInt(+new Date()),
-      )
+      const file = new File(filePath, buf, undefined, false, BigInt(Date.now()))
       mpvFiles.push(file)
     }
   }

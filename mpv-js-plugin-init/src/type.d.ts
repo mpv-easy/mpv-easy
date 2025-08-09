@@ -60,5 +60,5 @@ declare global {
   function dump(...args: any[]): void
   function exit(): void
 }
-// biome-ignore lint/complexity/noUselessEmptyExport: <explanation>
+// biome-ignore lint/complexity/noUselessEmptyExport: hack
 export type {}

@@ -250,7 +250,7 @@ function renderNodeToMpv(node: MpDom) {
       textOverlay.hidden = false
       textOverlay.computeBounds = true
     }
-    const textRect = textOverlay.update(1 / assScale)
+    const _textRect = textOverlay.update(1 / assScale)
 
     // bg ovl
     if (
@@ -377,7 +377,7 @@ export class MpFlex extends Flex<MpAttrs, MpProps, MpEvent> {
     // FIXME: custom mouse click event
     return e.event.arg === "click"
   }
-  constructor(config: Partial<RenderConfig> = {}) {
+  constructor(_config: Partial<RenderConfig> = {}) {
     super()
     // TODO: abstract method not work?
     // console.log("rootNode1", this.rootNode)

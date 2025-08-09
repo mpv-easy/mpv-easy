@@ -1,7 +1,6 @@
 import { useEffect, useLayoutEffect } from "react"
 
 declare namespace globalThis {
-  // biome-ignore lint/style/noVar: <explanation>
   var window: any
 }
 

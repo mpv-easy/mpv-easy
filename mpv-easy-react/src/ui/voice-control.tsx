@@ -124,7 +124,7 @@ export const VoiceControl: ForwardRefExoticComponent<
                 volumeStyle.previewCursorSize / 2 / height,
             )
           }}
-          onMouseLeave={(e) => {
+          onMouseLeave={(_e) => {
             setPreviewHide(true)
           }}
         >

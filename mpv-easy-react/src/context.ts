@@ -1,5 +1,4 @@
 declare namespace globalThis {
-  // biome-ignore lint/style/noVar: <explanation>
   var version: string
 }
 
@@ -66,7 +65,7 @@ import cropPlugin, {
   pluginName as cropName,
 } from "@mpv-easy/crop"
 
-import { type PluginContext, SystemApi } from "@mpv-easy/plugin"
+import { type PluginContext } from "@mpv-easy/plugin"
 import {
   clone,
   ConfigDir,

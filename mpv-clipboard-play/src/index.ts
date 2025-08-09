@@ -15,7 +15,7 @@ import {
   isSubtitle,
   subAdd,
 } from "@mpv-easy/tool"
-import { type SystemApi, definePlugin } from "@mpv-easy/plugin"
+import { definePlugin } from "@mpv-easy/plugin"
 import type { PluginContext } from "@mpv-easy/plugin"
 import { pluginName as autoloadName, getPlayableList } from "@mpv-easy/autoload"
 import { normalize, jellyfin } from "@mpv-easy/tool"

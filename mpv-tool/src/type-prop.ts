@@ -1144,7 +1144,7 @@ export type VideoFormat = "h264" | (string & {})
 
 export type AudioCodecName = "dts" | (string & {})
 
-// biome-ignore lint/suspicious/noEmptyInterface: <explanation>
+// biome-ignore lint/suspicious/noEmptyInterface: hack
 export interface UserData {}
 
 export type Menu = {

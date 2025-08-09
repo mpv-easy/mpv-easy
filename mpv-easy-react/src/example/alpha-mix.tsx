@@ -1,4 +1,4 @@
-import { Box, render } from "@mpv-easy/react"
+import { Box } from "@mpv-easy/react"
 import React from "react"
 
 const size = 400

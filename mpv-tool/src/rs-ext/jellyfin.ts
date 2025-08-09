@@ -3,19 +3,19 @@ import { JSONParse } from "../json"
 import { getRsExtExePath } from "./share"
 
 export const MoviesReg =
-  /^(https?):\/\/(.*?)\/web\/index.html#\!?\/movies.html\?topParentId=(.*?)/
+  /^(https?):\/\/(.*?)\/web\/index.html#!?\/movies.html\?topParentId=(.*?)/
 
 export const ListReg =
-  /^(https?):\/\/(.*?)\/web\/index.html#\!?\/list.html\?parentId=(.*?)&serverId=(.*?)$/
+  /^(https?):\/\/(.*?)\/web\/index.html#!?\/list.html\?parentId=(.*?)&serverId=(.*?)$/
 
 export const detailsReg =
-  /^(https?):\/\/(.*?)\/web\/index.html#\!?\/details\?id=(.*?)&serverId=(.*?)$/
+  /^(https?):\/\/(.*?)\/web\/index.html#!?\/details\?id=(.*?)&serverId=(.*?)$/
 
-export const videoReg = /^(https?):\/\/(.*?)\/web\/index.html#\!?\/video$/
+export const videoReg = /^(https?):\/\/(.*?)\/web\/index.html#!?\/video$/
 
 export const StreamReg = /^(https?):\/\/(.*?)\/Videos\/(.*?)\/stream/
 
-export const HomeReg = /^(https?):\/\/(.*?)\/web\/index.html#\!?\/home.html/
+export const HomeReg = /^(https?):\/\/(.*?)\/web\/index.html#!?\/home.html/
 
 export type Info = {
   topParentId?: string

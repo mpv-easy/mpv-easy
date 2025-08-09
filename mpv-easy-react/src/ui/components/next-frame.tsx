@@ -14,7 +14,7 @@ export const NextFrame = () => {
       id="mpv-easy-button-next-frame"
       title={i18n.nextFrame}
       text={ICON.FastForward}
-      onMouseDown={(e) => {
+      onMouseDown={(_e) => {
         frameStep()
       }}
     />

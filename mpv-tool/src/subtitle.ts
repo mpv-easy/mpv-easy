@@ -221,7 +221,7 @@ export async function convertSubtitle(
   // console.log('cmd: ',cmd.join(' '))
   try {
     await execAsync(cmd)
-  } catch (e) {
+  } catch (_e) {
     return undefined
   }
   return readFile(outputPath)
@@ -267,7 +267,7 @@ export async function saveSrt(
   // console.log('cmd: ',cmd.join(' '))
   try {
     await execAsync(cmd)
-  } catch (e) {
+  } catch (_e) {
     return undefined
   }
   return readFile(outputPath)

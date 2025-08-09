@@ -1,45 +1,32 @@
 {
-  "$schema": "https://biomejs.dev/schemas/1.9.4/schema.json",
-  "organizeImports": {
-    "enabled": true
+  "$schema": "https://biomejs.dev/schemas/2.1.4/schema.json",
+  "vcs": {
+    "enabled": false,
+    "clientKind": "git",
+    "useIgnoreFile": false
   },
-  "javascript": {
-    "formatter": {
-      "semicolons": "asNeeded",
-      "bracketSpacing": true
-    }
+  "files": {
+    "ignoreUnknown": false,
+    "includes": [
+      "**",
+      "!**/*.js",
+      "!**/dist",
+      "!**/bundle",
+      "!**/node_modules",
+      "!**/target",
+      "!**/es5",
+      "!**/es6"
+    ]
   },
   "formatter": {
     "enabled": true,
     "indentStyle": "space",
     "indentWidth": 2
   },
-  "files": {
-    "ignore": [
-      "metafile.json",
-      "*.sh",
-      "*.css",
-      "target",
-      "output",
-      "*.stackdump",
-      "*.ps1",
-      "*.yaml",
-      "*.js",
-      "./mpv-*/dist/**",
-      "./mpv-*/es/**",
-      "./mpv-*/bundle/**",
-      "node_modules",
-      ".vscode",
-      ".github",
-      "./common",
-      "./coverage",
-      "./html",
-      "CHANGELOG.json"
-    ]
-  },
   "linter": {
     "enabled": true,
     "rules": {
+      "recommended": true,
       "style": {
         "useImportType": "off",
         "noNonNullAssertion": "off",
@@ -61,7 +48,26 @@
       "correctness": {
         "useExhaustiveDependencies": "off"
       },
-      "recommended": true
+      "a11y": {
+        "useGenericFontNames": "off",
+        "noStaticElementInteractions": "off"
+      }
+    }
+  },
+  "javascript": {
+    "jsxRuntime": "reactClassic",
+    "formatter": {
+      "semicolons": "asNeeded",
+      "bracketSpacing": true,
+      "quoteStyle": "double"
+    }
+  },
+  "assist": {
+    "enabled": true,
+    "actions": {
+      "source": {
+        "organizeImports": "on"
+      }
     }
   }
 }

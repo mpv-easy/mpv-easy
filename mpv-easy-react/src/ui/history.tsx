@@ -23,7 +23,7 @@ export const History = () => {
   const history = useSelector(historySelector)
   const historyRef = useRef<MpDom>(null)
   const historyHide = useSelector(historyHideSelector)
-  let pos: undefined | { x: number; y: number } = undefined
+  let pos: undefined | { x: number; y: number }
   const osd = useSelector(osdDimensionsSelector)
   if (historyRef.current) {
     const w = historyRef.current.layoutNode.width

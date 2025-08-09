@@ -14,7 +14,7 @@ export const Mute = () => {
       id="mpv-easy-button-mute"
       title={mute ? i18n.unmute : i18n.mute}
       text={mute ? ICON.Unmute : ICON.Mute}
-      onMouseDown={(e) => {
+      onMouseDown={(_e) => {
         dispatch.setMute(!mute)
       }}
     />

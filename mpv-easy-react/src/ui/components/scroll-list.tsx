@@ -110,12 +110,12 @@ export const ScrollList = ({
       padding={normalFontSize.padding}
       borderSize={normalFontSize.padding}
       borderColor={button.backgroundColorHover}
-      onWheelDown={(e) => {
+      onWheelDown={(_e) => {
         if (startIndex + maxItemCount < items.length) {
           setStartIndex(startIndex + 1)
         }
       }}
-      onWheelUp={(e) => {
+      onWheelUp={(_e) => {
         if (startIndex > 0) {
           setStartIndex(startIndex - 1)
         }

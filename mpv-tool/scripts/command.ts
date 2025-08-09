@@ -34,7 +34,7 @@ type Cmd = {
 function parseType(s: string): Type {
   // console.log("parseType", s)
   let type = "any"
-  let def = undefined
+  let def
   if (s.startsWith("OPT_BOOL")) {
     if (s.includes("OPTDEF_INT(0)")) {
       def = "false"
@@ -222,7 +222,7 @@ export function ${name}(${argStr}): ${ret} {
 `.trim()
 }
 
-const test = `
+const _test = `
 
     { "playlist-clear", cmd_playlist_clear },
 

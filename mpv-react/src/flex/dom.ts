@@ -1,11 +1,5 @@
 import { KeyEvent, OsdOverlay, type Overlay } from "@mpv-easy/tool"
-import {
-  type BaseDomProps,
-  type BaseDom,
-  type EventName,
-  LayoutNode,
-  type BaseMouseEvent,
-} from "@mpv-easy/flex"
+import { type BaseDom, LayoutNode, type BaseMouseEvent } from "@mpv-easy/flex"
 
 export const TextName = "@mpv-easy/text"
 export const RootName = "@mpv-easy/root"

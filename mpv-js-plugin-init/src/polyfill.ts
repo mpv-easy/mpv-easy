@@ -88,51 +88,51 @@ const __mp: MpApi = {
   },
   __command_native_async: (id, table: any, cb?: any) => {
     const { name, args = [] } = table
-    const ret = ops.op_command_native_async(name, args)
+    const _ret = ops.op_command_native_async(name, args)
     if (typeof cb !== "function") {
       return id
     }
     // FIXME: get return value
     try {
       cb(true, { status: 0, stderr: "", stdout: "" }, undefined)
-    } catch (e) {
+    } catch (_e) {
       cb(false, { status: -1, stderr: "", stdout: "" }, undefined)
     }
     return id
   },
-  __get_property_native: (name: string) => {
+  __get_property_native: (_name: string) => {
     throw new Error("Function not implemented.")
   },
-  __get_property_number: (name: string): number => {
+  __get_property_number: (_name: string): number => {
     throw new Error("Function not implemented.")
   },
-  __get_property_bool: (name: string): boolean => {
+  __get_property_bool: (_name: string): boolean => {
     throw new Error("Function not implemented.")
   },
-  __set_property_native: (name: string, v: string): true | undefined => {
+  __set_property_native: (_name: string, _v: string): true | undefined => {
     throw new Error("Function not implemented.")
   },
-  __request_event: (name: string, flag: boolean) => {
+  __request_event: (_name: string, _flag: boolean) => {
     throw new Error("Function not implemented.")
   },
   __observe_property: (
-    id: number,
-    name: string,
-    format?: string | undefined,
+    _id: number,
+    _name: string,
+    _format?: string | undefined,
   ) => {
     throw new Error("Function not implemented.")
   },
-  __unobserve_property: (id: number) => {
+  __unobserve_property: (_id: number) => {
     throw new Error("Function not implemented.")
   },
 
-  __abort_async_command: (id: number): void => {
+  __abort_async_command: (_id: number): void => {
     throw new Error("Function not implemented.")
   },
-  __set_last_error: (s: string): void => {
+  __set_last_error: (_s: string): void => {
     throw new Error("Function not implemented.")
   },
-  __wait_event: (wait: number): MpvWaitEvent => {
+  __wait_event: (_wait: number): MpvWaitEvent => {
     throw new Error("Function not implemented.")
   },
 }

@@ -23,7 +23,7 @@ export const Playlist = () => {
   const playlist = useSelector(playlistSelector)
   const playlistRef = useRef<MpDom>(null)
   const playlistHide = useSelector(playlistHideSelector)
-  let pos: undefined | { x: number; y: number } = undefined
+  let pos: undefined | { x: number; y: number }
   const osd = useSelector(osdDimensionsSelector)
   if (playlistRef.current) {
     const w = playlistRef.current.layoutNode.width

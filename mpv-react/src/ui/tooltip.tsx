@@ -145,7 +145,7 @@ export const Tooltip = ({
     y: 0,
   })
   const tooltipRef = useRef<MpDom>(null)
-  let targetRef: MpDom | undefined = undefined
+  let targetRef: MpDom | undefined
   if (!mousePos) {
     targetRef = undefined
   } else {

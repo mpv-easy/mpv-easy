@@ -345,7 +345,7 @@ const store = defineStore({
       }
       return { ...state }
     },
-    resetConfig(state) {
+    resetConfig(_state) {
       return createDefaultContext()
     },
     setProtocolHook(state, exePath: string) {
@@ -453,7 +453,7 @@ export function syncPlayer(store: Store) {
     i.observe(updateProp)
   }
 
-  playlistCountProp.observe((_, v) => {
+  playlistCountProp.observe((_, _v) => {
     const p = pathProp.value
     const list = getMpvPlaylist()
     const i = list.indexOf(p)
@@ -483,7 +483,7 @@ export function syncPlayer(store: Store) {
     }
   })
 
-  mediaTitleProp.observe((_, v) => {
+  mediaTitleProp.observe((_, _v) => {
     // wait yt-dlp update media-title
     dispatch.addHistory(pathProp.value)
   })

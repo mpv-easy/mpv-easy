@@ -4,7 +4,7 @@ import { error, fileInfo, getPropertyBool, setPropertyBool } from "./mpv"
 export function existsSync(path: string): boolean {
   try {
     return !!fileInfo(path)
-  } catch (e) {
+  } catch (_e) {
     return false
   }
 }

@@ -6,11 +6,10 @@ import type { MP } from "@mpv-easy/tool"
 import FontFaceObserver from "fontfaceobserver"
 
 declare namespace globalThis {
-  // biome-ignore lint/style/noVar: <explanation>
   var isBrowser: boolean
-  // biome-ignore lint/style/noVar: <explanation>
+
   var mp: MP & { renderAll: () => void }
-  // biome-ignore lint/style/noVar: <explanation>
+
   var print: (...args: any[]) => void
 }
 

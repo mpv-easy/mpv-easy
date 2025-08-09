@@ -1,7 +1,7 @@
 {
   "name": "mpv-easy-piano",
   "description": "play piano in mpv player",
-  "version": "v0.1.15-alpha.6",
+  "version": "v0.1.15-alpha.12",
   "author": "mpv-easy",
   "download": "https://github.com/mpv-easy/mpv-easy/releases/latest/download/mpv-easy-piano.zip",
   "homepage": "https://github.com/mpv-easy/mpv-easy/tree/main/mpv-easy-react/scripts/piano.ts"

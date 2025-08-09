@@ -8,11 +8,7 @@ import {
   commonDropdownStyleSelector,
   commonDropdownItemStyleSelector,
 } from "../../store"
-import {
-  type TrackItem,
-  getPropertyNative,
-  setPropertyNative,
-} from "@mpv-easy/tool"
+import { getPropertyNative } from "@mpv-easy/tool"
 import { dispatch, useSelector } from "../../models"
 
 function getAudioTracks() {
