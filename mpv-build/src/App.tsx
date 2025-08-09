@@ -138,32 +138,25 @@ function downloadBinaryFile(fileName: string, content: Uint8Array): void {
   URL.revokeObjectURL(url)
 }
 
+function getDownloadUrl(user: string, repo: string, tag: string, file: string) {
+  return `https://raw.githubusercontent.com/${user}/${repo}/${tag}/${file}`
+}
+
+function getCdnFileUrl(fileName: string) {
+  return getDownloadUrl("ahaoboy", "mpv-easy-cdn", "main", fileName)
+}
+
 function getPlayWithUrl() {
-  return getDownloadUrl(
-    "mpv-easy",
-    "mpv-easy-cdn",
-    "main",
-    "mpv-easy-play-with-windows.zip",
-  )
+  return getCdnFileUrl("mpv-easy-play-with-windows.zip")
 }
 function getYtdlpUrl() {
-  return getDownloadUrl("mpv-easy", "mpv-easy-cdn", "main", "yt-dlp.zip")
+  return getCdnFileUrl("yt-dlp.zip")
 }
 function getFfmpegUrl() {
-  return getDownloadUrl(
-    "mpv-easy",
-    "mpv-easy-cdn",
-    "main",
-    "ffmpeg-windows.zip",
-  )
+  return getCdnFileUrl("ffmpeg-windows.tar.xz")
 }
 function getFfmpegV3Url() {
-  return getDownloadUrl(
-    "mpv-easy",
-    "mpv-easy-cdn",
-    "main",
-    "ffmpeg-v3-windows.zip",
-  )
+  return getCdnFileUrl("ffmpeg-v3-windows.tar.xz")
 }
 
 const UI_LIST = [
@@ -209,16 +202,8 @@ async function downloadBinary(url: string): Promise<Uint8Array> {
     .then((i) => new Uint8Array(i))
 }
 
-function getDownloadUrl(user: string, repo: string, tag: string, file: string) {
-  return `https://raw.githubusercontent.com/${user}/${repo}/${tag}/${file}`
-}
-
 function getScriptDownloadURL(name: string) {
   return getCdnFileUrl(`${name}.zip`)
-}
-
-function getCdnFileUrl(fileName: string) {
-  return getDownloadUrl("mpv-easy", "mpv-easy-cdn", "main", fileName)
 }
 
 async function getScriptFiles(script: Script): Promise<File[]> {
@@ -377,12 +362,7 @@ function App() {
   }
 
   const resetData = async () => {
-    const META_URL = getDownloadUrl(
-      "mpv-easy",
-      "mpsm-scripts",
-      "main",
-      "scripts-full.json",
-    )
+    const META_URL = getCdnFileUrl("scripts-full.json")
 
     const data: Record<string, DataType> = await fetch(META_URL)
       .then((i) => i.text())
@@ -655,6 +635,13 @@ function App() {
                   {data[i].name}
                 </Tag>
               )
+            )
+          })}
+          {externalList.map((i) => {
+            return (
+              <Tag color="success" key={i}>
+                {i}
+              </Tag>
             )
           })}
           {selectedRowKeys.map((i) => {
