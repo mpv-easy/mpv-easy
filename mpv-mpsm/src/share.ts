@@ -67,6 +67,7 @@ export function installScript(
 
     const pathList = files.map((i) => i.path.split("/"))
     const prefixList = files[0].path.split("/").slice(0, 2)
+    const prefixStr = `${prefixList.join("/")}/`
     if (
       prefixList.length === 2 &&
       pathList.every(
@@ -78,8 +79,15 @@ export function installScript(
           i[1] === prefixList[1],
       )
     ) {
-    } else {
       prefixList.pop()
+    }
+
+    if (prefixList.length === 1) {
+      for (const f of files) {
+        if (f.path.startsWith(prefixStr)) {
+          f.path = f.path.replace(prefixStr, `${prefixList}/`)
+        }
+      }
     }
 
     // rename to main
@@ -198,6 +206,22 @@ export const ConflictMap: Record<string, string[]> = {
   uosc: ["mpv-easy", "ModernX cyl0", "ModernZ", "mpv.net"],
 }
 
+// Builtin scripts that includes other scripts
+export const IncludesMap: Record<string, string[]> = {
+  uosc: ["autoload", "mpv-easy-autoload"],
+  "mpv-easy": [
+    "mpv-easy-anime4k",
+    "mpv-easy-clipboard-play",
+    "mpv-easy-copy-time",
+    "mpv-easy-cut",
+    "mpv-easy-translate",
+    "mpv-easy-autoload",
+    "mpv-easy-copy-screen",
+    "mpv-easy-crop",
+    "mpv-easy-thumbfast",
+  ],
+}
+
 export function checkConflict(
   packages: string[],
   conflictMap = ConflictMap,
@@ -207,6 +231,20 @@ export function checkConflict(
 
   for (const pkg of packages) {
     const conflicts = conflictMap[pkg] || []
+    for (const conflict of conflicts) {
+      if (packageSet.has(conflict)) {
+        conflictSet.add(pkg)
+        conflictSet.add(conflict)
+      }
+    }
+  }
+
+  if (conflictSet.size > 0) {
+    return Array.from(conflictSet)
+  }
+
+  for (const pkg in IncludesMap) {
+    const conflicts = IncludesMap[pkg] || []
     for (const conflict of conflicts) {
       if (packageSet.has(conflict)) {
         conflictSet.add(pkg)

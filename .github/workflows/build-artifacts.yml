@@ -364,12 +364,6 @@ jobs:
           cp mpv-easy-react/conf/mpv.conf dist/mpv.conf
           cp mpv-easy-react/conf/input.conf dist/input.conf
 
-
-          cp -rf ./dist ./mpv-easy-script
-          cd mpv-easy-script
-          zip -r -q ../release/mpv-easy.zip .
-          cd ..
-
           chmod 777 mpv-easy-ext-dist/*
           chmod 777 mpv-easy-play-with-dist/*
 
@@ -415,29 +409,16 @@ jobs:
           # cp -r mpv-deno-dist/mpv-deno-windows.dll mpv-easy-windows-deno-full/portable_config/scripts/mpv-deno-windows.dll
 
 
-          cd mpv-easy-macos
-          zip -r -q ../release/mpv-easy-macos.zip .
-          cd ..
+          files=(mpv-easy-macos mpv-easy-linux mpv-easy-android mpv-easy-windows)
 
-          cd mpv-easy-linux
-          zip -r -q ../release/mpv-easy-linux.zip .
-          cd ..
-
-          cd mpv-easy-android
-          zip -r -q ../release/mpv-easy-android.zip .
-          cd ..
-
-          cd mpv-easy-windows
-          zip -r -q ../release/mpv-easy-windows.zip .
-          cd ..
-
-          cd mpv-easy-windows-full
-          zip -r -q ../release/mpv-easy-windows-full.zip .
-          cd ..
-
-          # cd mpv-easy-windows-deno-full
-          # zip -r -q ../release/mpv-easy-windows-deno-full.zip .
-          # cd ..
+          for name in "${files[@]}"; do
+            cd $name
+            mv ./scripts/mpv-easy/script.json ./script.json
+            mv ./scripts/mpv-easy/* ./scripts/
+            rm -d ./scripts/mpv-easy
+            zip -r -q ../release/$name.zip .
+            cd ..
+          done
 
           curl -L -o autoload.lua https://raw.githubusercontent.com/mpv-player/mpv/master/TOOLS/lua/autoload.lua
 
@@ -582,11 +563,6 @@ jobs:
         with:
           name: mpv-easy-windows
           path: release/mpv-easy-windows.zip
-      - name: Upload mpv-easy
-        uses: actions/upload-artifact@v4
-        with:
-          name: mpv-easy
-          path: release/mpv-easy.zip
       - name: Upload mpv-easy-windows-full
         uses: actions/upload-artifact@v4
         with:

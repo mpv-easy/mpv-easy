@@ -18,7 +18,12 @@ import { Radio } from "antd"
 import { decode, encode, File, Fmt, guess } from "@easy-install/easy-archive"
 import { Typography } from "antd"
 const { Title, Link } = Typography
-import { Script, checkConflict, installScript } from "@mpv-easy/mpsm"
+import {
+  IncludesMap,
+  Script,
+  checkConflict,
+  installScript,
+} from "@mpv-easy/mpsm"
 import { notification } from "antd"
 import { useMount } from "react-use"
 import { create } from "zustand"
@@ -469,6 +474,7 @@ function App() {
   }
 
   const conflicts = checkConflict(selectedRowKeys)
+  const includes = IncludesMap[ui] || []
 
   return (
     <ConfigProvider
@@ -620,7 +626,9 @@ function App() {
             },
             getCheckboxProps: (record: DataType) => {
               return {
-                disabled: uiRequires.includes(record.name),
+                disabled:
+                  uiRequires.includes(record.name) ||
+                  includes.includes(record.name),
                 name: record.name,
               }
             },
