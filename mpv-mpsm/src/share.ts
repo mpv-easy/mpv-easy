@@ -10,8 +10,12 @@ export async function downloadBinary(url: string): Promise<Uint8Array> {
 
 export async function downloadBinaryFromGithub(
   url: string,
-): Promise<Uint8Array> {
-  const buf = await fetch(convertURL(url)).then((resp) => resp.arrayBuffer())
+): Promise<Uint8Array | undefined> {
+  const resp = await fetch(convertURL(url))
+  if (resp.status !== 200) {
+    return
+  }
+  const buf = await resp.arrayBuffer()
   return new Uint8Array(buf)
 }
 
@@ -202,8 +206,6 @@ export function checkConflict(
   packages: string[],
   conflictMap = ConflictMap,
 ): string[] {
-  console.log(packages)
-
   for (const g of conflictMap) {
     const conflicts: string[] = []
     for (const pkg of packages) {

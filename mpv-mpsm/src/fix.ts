@@ -1,11 +1,15 @@
 import { decode, Fmt, File } from "@easy-install/easy-archive"
 import { downloadBinaryFromGithub, type Script } from "./index"
+import { commonPrefix } from "./tool"
 
 export async function getScriptFiles(url: string, script: Script) {
   if (url.endsWith(".py")) {
     return []
   }
   const bin = await downloadBinaryFromGithub(url)
+  if (!bin) {
+    return []
+  }
   const uint8Array = new TextEncoder().encode(JSON.stringify(script))
   if (url.endsWith(".zip")) {
     let scriptFiles = decode(Fmt.Zip, bin)
@@ -86,40 +90,24 @@ export function tryFix(
     const files = scriptFiles.filter((i) => i.path.startsWith("scripts/"))
     scriptFiles = scriptFiles.filter((i) => !i.path.startsWith("scripts/"))
 
-    const pathList = files.map((i) => i.path.split("/"))
-    const prefixList = files[0].path.split("/").slice(0, 2)
-    const prefixStr = `${prefixList.join("/")}/`
-    if (
-      prefixList.length === 2 &&
-      pathList.every(
-        (i) =>
-          i.length >= 3 &&
-          // scripts
-          i[0] === prefixList[0] &&
-          // uosc
-          i[1] === prefixList[1],
-      )
-    ) {
-      prefixList.pop()
-    }
-
-    if (prefixList.length === 1) {
-      for (const f of files) {
-        if (f.path.startsWith(prefixStr)) {
-          f.path = f.path.replace(prefixStr, `${prefixList}/`)
-        }
-      }
-    }
+    const dirList = files
+      .map((i) => i.path.split("/"))
+      .map((i) => i.slice(1, i.length - 1))
+    const commonPrefixIndex = commonPrefix(dirList)
+    const commonPrefixList = commonPrefixIndex
+      ? ["scripts", ...dirList[0].slice(0, commonPrefixIndex)]
+      : ["scripts"]
+    const commonPrefixString = `${commonPrefixList.join("/")}/`
 
     // rename to main
     const luaFiles = files.filter(
       (i) =>
-        !i.path.replace(`${prefixList.join("/")}/`, "").includes("/") &&
+        !i.path.replace(commonPrefixString, "").includes("/") &&
         i.path.endsWith(".lua"),
     )
     const jsFiles = files.filter(
       (i) =>
-        !i.path.replace(`${prefixList.join("/")}/`, "").includes("/") &&
+        !i.path.replace(commonPrefixString, "").includes("/") &&
         i.path.endsWith(".js"),
     )
     if (luaFiles.length === 1) {
@@ -129,6 +117,8 @@ export function tryFix(
     }
 
     for (const i of files) {
+      const s = i.path.replace(commonPrefixString, `scripts/`)
+      i.path = s
       fixFiles.push(i)
     }
   }
