@@ -91,6 +91,7 @@ set -x MPV_CONFIG_DIR /your_mpv_dir/portable_config/scripts ; pnpm run dev-copy
 - [mpv-build: Customize your own MPV right from your browser](./blog/customize-your-own-mpv-right-from-your-browser.md)
 - [Revolutionizing mpv Scripting: A New Package Format Proposal](./blog/Revolutionizing-mpv-Scripting-A-New-Package-Format-Proposal.md)
 - [Introduction to MPV Shaders](././blog/Introduction-to-MPV-Shaders.md)
+- [mpv-easy-piano: Can You Guess the Song?](./blog/mpv-easy-piano-Can-You-Guess-the-Song.md)
 
 ## UI
 
