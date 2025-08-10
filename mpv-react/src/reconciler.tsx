@@ -239,7 +239,7 @@ export function createCustomReconciler(customRender: () => void) {
 
 let max = 0
 let frame = 0
-const fpsList: number[] = []
+const FpsList: number[] = []
 let lastRender = 0
 let renderHandle = 0
 
@@ -248,6 +248,7 @@ export function createRender({
   fps = DefaultFps,
   flex = getRootFlex(),
   showFps = false,
+  maxFpsFrame = 64,
   throttle = true,
   customRender = () => {
     function render() {
@@ -260,11 +261,11 @@ export function createRender({
       const ed = Date.now()
       const t = ed - st
       max = Math.max(max, t)
-      fpsList.push(t)
-      if (fpsList.length > 32) {
-        fpsList.shift()
+      FpsList.push(t)
+      if (FpsList.length > maxFpsFrame) {
+        FpsList.shift()
       }
-      const avg = fpsList.reduce((a, b) => a + b, 0) / fpsList.length
+      const avg = FpsList.reduce((a, b) => a + b, 0) / FpsList.length
       if (showFps) {
         print("render time(react):", frame, t, max, avg)
       }
