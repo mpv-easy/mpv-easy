@@ -4,6 +4,11 @@
 
 The original benchmark code comes from [mozilla/arewefastyet](https://github.com/mozilla/arewefastyet/tree/master/benchmarks/v8-v7), and has been **bundled and converted into a CommonJS format** compatible with mpv using [ahaoboy/js-engine-benchmark](https://github.com/ahaoboy/js-engine-benchmark).
 
+<div style="display: flex;" align="center">
+  <img src="https://github.com/user-attachments/assets/47638d12-c6d2-4c5a-b958-71c34f1c0b5d" alt="pgo" width="45%"/>
+  <img src="https://github.com/user-attachments/assets/efb63002-7ea2-474b-b8f3-113d9cb39706" alt="origin" width="45%"/>
+</div>
+
 ---
 
 ## 📜 How It Works
@@ -48,12 +53,21 @@ This makes it especially useful for performance tuning and testing custom mpv bu
 When the benchmark runs, mpv will pause playback and display results like:
 
 ```
-v8-v7 Benchmark Results:
-Score: 12345
-Time: 678 ms
+Richards: 526
+DeltaBlue: 766
+Crypto: 366
+RayTrace: 1085
+EarleyBoyer: 1300
+RegExp: 513
+Splay: 2380
+NavierStokes: 957
+----
+Score: 838
 ```
 
 The full details are stored in `scripts/mpv-v8v7-<timestamp>.log`.
+
+
 
 ---
 
@@ -62,3 +76,4 @@ The full details are stored in `scripts/mpv-v8v7-<timestamp>.log`.
 * [mozilla/arewefastyet](https://github.com/mozilla/arewefastyet) — Original benchmark suite.
 * [ahaoboy/mpv-v8v7](https://github.com/ahaoboy/mpv-v8v7) — mpv script.
 * [ahaoboy/js-engine-benchmark](https://github.com/ahaoboy/js-engine-benchmark) — Tool used to bundle and convert the benchmark to CommonJS format.
+
