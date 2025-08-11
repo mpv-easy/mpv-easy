@@ -67,6 +67,19 @@ Score: 838
 
 The full details are stored in `scripts/mpv-v8v7-<timestamp>.log`.
 
+## bench mpv-x86_64-v3
+
+### https://github.com/zhongfly/mpv-winbuild
+
+<img width="960" height="540" alt="image" src="https://github.com/user-attachments/assets/32e37ce6-cc15-4c86-8964-afd587aae2eb" />
+
+### https://github.com/shinchiro/mpv-winbuild-cmake
+
+<img width="960" height="540" alt="image" src="https://github.com/user-attachments/assets/4c4c6988-c8d9-4906-b49c-80c059123706" />
+
+### https://github.com/Andarwinux/mpv-winbuild
+<img width="960" height="540" alt="image" src="https://github.com/user-attachments/assets/42aba3b4-d5d9-414a-8c34-b5ecef7c2b66" />
+
 
 
 ---
@@ -76,4 +89,5 @@ The full details are stored in `scripts/mpv-v8v7-<timestamp>.log`.
 * [mozilla/arewefastyet](https://github.com/mozilla/arewefastyet) — Original benchmark suite.
 * [ahaoboy/mpv-v8v7](https://github.com/ahaoboy/mpv-v8v7) — mpv script.
 * [ahaoboy/js-engine-benchmark](https://github.com/ahaoboy/js-engine-benchmark) — Tool used to bundle and convert the benchmark to CommonJS format.
+
 
