@@ -92,6 +92,7 @@ set -x MPV_CONFIG_DIR /your_mpv_dir/portable_config/scripts ; pnpm run dev-copy
 - [Revolutionizing mpv Scripting: A New Package Format Proposal](./blog/Revolutionizing-mpv-Scripting-A-New-Package-Format-Proposal.md)
 - [Introduction to MPV Shaders](././blog/Introduction-to-MPV-Shaders.md)
 - [mpv-easy-piano: Can You Guess the Song?](./blog/mpv-easy-piano-Can-You-Guess-the-Song.md)
+- [Running v8-v7 Benchmarks in mpv Player](./blog/Running-v8-v7-Benchmarks-in-mpv-Player)
 
 ## UI
 
@@ -153,6 +154,14 @@ set-executionpolicy remotesigned
 [more example](./mpv-easy-react/src/example/)
 
 [mpv-easy-tpl](https://github.com/mpv-easy/mpv-easy-tpl)
+
+
+## env
+
+| name          | description                                                     |
+| ------------- | --------------------------------------------------------------- |
+| SHOW_FPS      | Determines whether FPS information is displayed.                |
+| MAX_FPS_FRAME | Specifies the number of recent frames used for FPS calculation. |
 
 ## Q&A
 
