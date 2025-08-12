@@ -295,7 +295,7 @@ jobs:
           pnpm run build
 
           mkdir mpv-easy-scripts -p
-          cp mpv-easy-react/bundle/mpv-easy-play-with.user.js mpv-easy-scripts/mpv-easy-play-with.user.js
+          cat mpv-easy-react/conf/mpv-easy-play-with.meta mpv-easy-react/bundle/mpv-easy-play-with.user.js >> mpv-easy-scripts/mpv-easy-play-with.user.js
 
           files=(anime4k autoload clipboard-play copy-screen copy-time crop cut thumbfast translate pause-mosaic piano)
 
