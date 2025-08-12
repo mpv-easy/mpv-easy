@@ -39,6 +39,7 @@ export type RenderConfig = {
   ) => void
   showFps?: boolean
   maxFpsFrame?: number
+  frameLimit?: number
   mouseKeyBinding?: boolean
 }
 

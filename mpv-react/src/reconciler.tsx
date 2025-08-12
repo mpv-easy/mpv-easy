@@ -4,6 +4,7 @@ import {
   addKeyBinding,
   observeProperty,
   print,
+  quit,
   registerScriptMessage,
 } from "@mpv-easy/tool"
 import type { MousePos } from "@mpv-easy/tool"
@@ -250,6 +251,7 @@ export function createRender({
   showFps = false,
   maxFpsFrame = 64,
   throttle = true,
+  frameLimit = 0,
   customRender = () => {
     function render() {
       lastRender = Date.now()
@@ -268,6 +270,9 @@ export function createRender({
       const avg = FpsList.reduce((a, b) => a + b, 0) / FpsList.length
       if (showFps) {
         print("render time(react):", frame, t, max, avg)
+      }
+      if (frameLimit && frame >= frameLimit) {
+        quit()
       }
     }
 

@@ -162,6 +162,7 @@ set-executionpolicy remotesigned
 | ------------- | --------------------------------------------------------------- |
 | SHOW_FPS      | Determines whether FPS information is displayed.                |
 | MAX_FPS_FRAME | Specifies the number of recent frames used for FPS calculation. |
+| FRAME_LIMIT   | Exit the player after rendering the specified number of frames. |
 
 ## Q&A
 
