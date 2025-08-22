@@ -4,6 +4,7 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
+    "analyzer": "cross-env analyzer=true vite build",
     "dev": "vite",
     "build": "vite build"
   },
@@ -12,10 +13,12 @@
     "@ant-design/v5-patch-for-react-19": "1.0.3",
     "@easy-install/easy-archive": "0.2.6",
     "antd": "5.26.7",
+    "cross-env": "^10.0.0",
     "fuse.js": "7.1.0",
     "react": "19.1.0",
     "react-dom": "19.1.0",
     "react-use": "17.6.0",
+    "vite-bundle-analyzer": "^1.2.1",
     "zustand": "5.0.7"
   },
   "devDependencies": {
