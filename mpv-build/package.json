@@ -13,15 +13,15 @@
     "@ant-design/v5-patch-for-react-19": "1.0.3",
     "@easy-install/easy-archive": "0.2.6",
     "antd": "5.26.7",
-    "cross-env": "^10.0.0",
     "fuse.js": "7.1.0",
     "react": "19.1.0",
     "react-dom": "19.1.0",
     "react-use": "17.6.0",
-    "vite-bundle-analyzer": "^1.2.1",
     "zustand": "5.0.7"
   },
   "devDependencies": {
+    "cross-env": "^10.0.0",
+    "vite-bundle-analyzer": "^1.2.1",
     "@mpv-easy/mpsm": "workspace:*",
     "@types/node": "24.2.1",
     "@types/react": "19.1.9",
