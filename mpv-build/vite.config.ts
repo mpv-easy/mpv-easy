@@ -16,6 +16,7 @@ export default defineConfig({
       react: "https://esm.sh/react",
       "react-dom": "https://esm.sh/react-dom",
       "@easy-install/easy-archive": "https://esm.sh/@easy-install/easy-archive",
+      antd: "https://esm.sh/antd?standalone",
     },
   },
 })
