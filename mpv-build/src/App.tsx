@@ -685,7 +685,7 @@ function App() {
         </Flex>
 
         <Search
-          placeholder="input search text"
+          placeholder="input script name or https://github.com/<user>/<repo>"
           onSearch={onSearch}
           enterButton
         />
