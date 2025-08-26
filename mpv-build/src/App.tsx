@@ -723,10 +723,10 @@ function App() {
           <Tag color="processing" key={platform}>
             {platform}
           </Tag>
-          {uiRequires.map((i) => {
+          {uiRequires.map((i, index) => {
             return (
               data[i] && (
-                <Tag color="success" key={data[i]?.key}>
+                <Tag color="success" key={data[i]?.key + index}>
                   {data[i]?.name}
                 </Tag>
               )
@@ -739,12 +739,12 @@ function App() {
               </Tag>
             )
           })}
-          {selectedRowKeys.map((i) => {
+          {selectedRowKeys.map((i, index) => {
             return (
               <Tag
                 closable
                 color="success"
-                key={data[i]?.key}
+                key={data[i]?.key + index}
                 onClose={(e) => {
                   const index = selectedRowKeys.indexOf(data[i]?.key)
                   if (index !== -1) {
