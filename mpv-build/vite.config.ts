@@ -20,8 +20,12 @@ export default defineConfig({
           react: "https://esm.sh/react",
           "react-dom": "https://esm.sh/react-dom",
           "@easy-install/easy-archive":
-            "https://esm.sh/@easy-install/easy-archive",
+            "https://esm.sh/@easy-install/easy-archive?standalone",
           antd: "https://esm.sh/antd?standalone",
+          "fuse.js": "https://esm.sh/fuse.js?standalone",
+          "@ant-design/icons": "https://esm.sh/@ant-design/icons?standalone",
+          zustand: "https://esm.sh/zustand?standalone",
+          "e-color": "https://esm.sh/e-color?standalone",
         },
   },
 })

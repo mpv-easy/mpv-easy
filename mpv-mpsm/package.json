@@ -31,7 +31,6 @@
   "devDependencies": {
     "cac": "6.7.14",
     "chalk": "5.5.0",
-    "e-color": "0.1.7",
     "fs-extra": "11.3.1"
   },
   "browserslist": [
