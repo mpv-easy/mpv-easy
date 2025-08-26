@@ -142,7 +142,15 @@ export function installScript(
       (i) => !(!i.path.includes("/") && i.path.endsWith(".conf")),
     )
     for (const i of files) {
-      i.path = `${configDir}/script-opts/${i.path}`
+      // If a script with the same name can be found, it means it is a script configuration file, otherwise its relative path should be retained
+      const hasJs = scriptFiles.find(
+        (s) => s.path === i.path.replace(".conf", ".js"),
+      )
+      const hasLua = scriptFiles.find(
+        (s) => s.path === i.path.replace(".conf", ".lua"),
+      )
+      const p = hasJs || hasLua ? `${configDir}/script-opts/${i.path}` : i.path
+      i.path = p
       mpvFiles.push(i)
     }
   }

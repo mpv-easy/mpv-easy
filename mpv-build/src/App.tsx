@@ -1,8 +1,6 @@
-import React, { useRef, useState } from "react"
+import React, { useEffect, useRef, useState } from "react"
 import { Alert, Checkbox, Input, Tooltip } from "antd"
 import type { GetProps } from "antd"
-const { Search } = Input
-type SearchProps = GetProps<typeof Input.Search>
 import { Button, Flex, Spin, Table, type TableProps } from "antd"
 import {
   DownloadOutlined,
@@ -17,7 +15,6 @@ import { Tag } from "antd"
 import { Radio } from "antd"
 import { decode, encode, File, Fmt, guess } from "@easy-install/easy-archive"
 import { Typography } from "antd"
-const { Title, Link } = Typography
 import {
   IncludesMap,
   Script,
@@ -29,8 +26,14 @@ import { useMount } from "react-use"
 import { create } from "zustand"
 import { persist, StateStorage, createJSONStorage } from "zustand/middleware"
 import { ConfigProvider, theme } from "antd"
-const { defaultAlgorithm, darkAlgorithm } = theme
+import { parseGitHubUrl } from "./tool"
 import "@ant-design/v5-patch-for-react-19"
+import { download as downloadRepo } from "jdl"
+
+const { defaultAlgorithm, darkAlgorithm } = theme
+const { Search } = Input
+type SearchProps = GetProps<typeof Input.Search>
+const { Title, Link } = Typography
 
 const hashStorage: StateStorage = {
   getItem: (key): string => {
@@ -49,6 +52,12 @@ const hashStorage: StateStorage = {
     location.hash = searchParams.toString()
   },
 }
+
+type Repo = {
+  user: string
+  repo: string
+}
+
 interface Store {
   data: Record<string, DataType>
   tableData: DataType[]
@@ -57,6 +66,7 @@ interface Store {
   externalList: string[]
   ui: UI
   platform: Platform
+  repos: Repo[]
   setData: (data: Record<string, DataType>) => void
   setTableData: (tableData: DataType[]) => void
   setSpinning: (spinning: boolean) => void
@@ -65,6 +75,7 @@ interface Store {
   setUI: (ui: UI) => void
   setPlatform: (platform: Platform) => void
   setState: (state: State) => void
+  setRepos: (repos: Repo[]) => void
 }
 
 // TODO: support liunx
@@ -83,6 +94,7 @@ const DEFAULT_STATE: State = {
   externalList: [],
   ui: "osc",
   platform: "mpv-v3",
+  repos: [],
 }
 
 const useMpvStore = create<Store>()(
@@ -101,6 +113,7 @@ const useMpvStore = create<Store>()(
       setState: (state: State) => {
         set({ ...get(), ...state })
       },
+      setRepos: (repos: Repo[]) => set({ ...get(), repos }),
     }),
     {
       name: "mpv-build",
@@ -123,10 +136,13 @@ const NAME_WIDTH = 250
 
 interface DataType extends Script {
   key: string
+  repo?: Repo
 }
 
 function downloadBinaryFile(fileName: string, content: Uint8Array): void {
-  const blob = new Blob([content], { type: "application/octet-stream" })
+  const blob = new Blob([new Uint8Array(content)], {
+    type: "application/octet-stream",
+  })
   const url = URL.createObjectURL(blob)
   const a = document.createElement("a")
   const name = fileName.split("/").at(-1) ?? fileName
@@ -206,7 +222,16 @@ function getScriptDownloadURL(name: string) {
   return getCdnFileUrl(`${name}.zip`)
 }
 
-async function getScriptFiles(script: Script): Promise<File[]> {
+async function getScriptFiles(script: DataType): Promise<File[]> {
+  if (script.repo) {
+    const files = await downloadRepo(script.repo.user, script.repo.repo)
+    return files
+      .filter((i) => !i.isDir)
+      .map(
+        ({ path, buffer }) => new File(path, buffer!, undefined, false, null),
+      )
+  }
+
   const { download } = script
   if (![".js", ".lua", ".zip"].some((i) => download.endsWith(i))) {
     console.log("not support script: ", script)
@@ -252,6 +277,8 @@ function App() {
     platform,
     setPlatform,
     setState,
+    repos,
+    setRepos,
   } = store
   const downloadName = ui === "mpv-easy" ? "mpv-easy" : `mpv-${ui}`
   const [isDark, setIsDark] = useState(
@@ -271,17 +298,39 @@ function App() {
     ...selectedRowKeys,
     ...(UI_LIST.find((i) => i.name === ui)?.requires || []),
   ]
-  const zipPortableConfig = async () => {
-    const files: File[] = []
+
+  const installDeps = async (files: File[]) => {
     // scripts
     // deps and requires
     for (const i of allDeps) {
-      const scriptFiles = await getScriptFiles(data[i])
-      installScript(files, scriptFiles, data[i])
+      const script = data[i]
+      if (script.repo) {
+        const { user, repo } = script.repo
+        const repoFiles = await downloadRepo(user, repo)
+        const v = repoFiles
+          .filter((i) => !i.isDir)
+          .map(
+            ({ path, buffer }) =>
+              new File(path, buffer!, undefined, false, null),
+          )
+        const key = `${user}-${repo}`
+        installScript(files, v, data[key])
+      } else {
+        const scriptFiles = await getScriptFiles(data[i])
+        installScript(files, scriptFiles, data[i])
+      }
     }
+  }
+
+  const zipPortableConfig = async () => {
+    const files: File[] = []
+
+    await installDeps(files)
+
     for (const i of files) {
       i.path = i.path.replace("portable_config/", "")
     }
+
     // encode to zip
     const zipBinary = encode(Fmt.Zip, files)
     if (!zipBinary) {
@@ -324,12 +373,7 @@ function App() {
       }
     }
 
-    // scripts
-    // requires is already included in the zip
-    for (const i of allDeps) {
-      const scriptFiles = await getScriptFiles(data[i])
-      installScript(mpvFiles, scriptFiles, data[i])
-    }
+    installDeps(mpvFiles)
 
     // encode to zip
     const zipBinary = encode(Fmt.Zip, mpvFiles)
@@ -372,6 +416,22 @@ function App() {
       data[i].key = i
     }
 
+    // repos
+    for (const { user, repo } of repos) {
+      const key = `${user}-${repo}`
+      const homepage = `https://github.com/${user}/${repo}`
+      const info: DataType = {
+        key,
+        name: key,
+        download: key,
+        author: user,
+        description: homepage,
+        homepage,
+        repo: { user, repo },
+      }
+      data[key] = info
+    }
+
     setData(data)
 
     const selectedData = selectedRowKeys.map((i) => data[i])
@@ -386,6 +446,10 @@ function App() {
   }
 
   useMount(resetData)
+
+  useEffect(() => {
+    resetData()
+  }, [repos])
 
   const columns: TableProps<DataType>["columns"] = [
     {
@@ -421,6 +485,26 @@ function App() {
             key={script.download}
             icon={<DownloadOutlined />}
             onClick={async () => {
+              if (script.repo) {
+                const files = await downloadRepo(
+                  script.repo.user,
+                  script.repo.repo,
+                )
+                const v = files
+                  .filter((i) => !i.isDir)
+                  .map(
+                    ({ path, buffer }) =>
+                      new File(path, buffer!, undefined, false, null),
+                  )
+
+                const zipBinary = encode(Fmt.Zip, v)
+
+                if (zipBinary) {
+                  downloadBinaryFile(`${script.repo.repo}.zip`, zipBinary)
+                }
+                return
+              }
+
               const bin = await downloadBinary(
                 getScriptDownloadURL(script.name),
               )
@@ -433,6 +517,15 @@ function App() {
   ]
 
   const onSearch: SearchProps["onSearch"] = (value, _e, _info) => {
+    const gh = parseGitHubUrl(value)
+    if (gh) {
+      setSelectedKeys([
+        ...new Set([...selectedRowKeys, `${gh.user}-${gh.repo}`]),
+      ])
+      setRepos([...new Set([...repos, gh])])
+      return
+    }
+
     const v = fuseRef.current?.search(value)
     if (v?.length) {
       setTableData(v.map((i) => i.item))
@@ -628,11 +721,11 @@ function App() {
           <Tag color="processing" key={platform}>
             {platform}
           </Tag>
-          {uiRequires.map((i) => {
+          {uiRequires.map((i, index) => {
             return (
               data[i] && (
-                <Tag color="success" key={data[i].key}>
-                  {data[i].name}
+                <Tag color="success" key={data[i]?.key + index}>
+                  {data[i]?.name}
                 </Tag>
               )
             )
@@ -644,14 +737,14 @@ function App() {
               </Tag>
             )
           })}
-          {selectedRowKeys.map((i) => {
+          {selectedRowKeys.map((i, index) => {
             return (
               <Tag
                 closable
                 color="success"
-                key={data[i].key}
+                key={data[i]?.key + index}
                 onClose={(e) => {
-                  const index = selectedRowKeys.indexOf(data[i].key)
+                  const index = selectedRowKeys.indexOf(data[i]?.key)
                   if (index !== -1) {
                     const v = [...selectedRowKeys]
                     v.splice(index, 1)
@@ -660,7 +753,7 @@ function App() {
                   e.preventDefault()
                 }}
               >
-                {data[i].name}
+                {data[i]?.name}
               </Tag>
             )
           })}

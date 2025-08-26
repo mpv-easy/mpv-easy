@@ -14,21 +14,22 @@
     "@easy-install/easy-archive": "0.2.6",
     "antd": "5.26.7",
     "fuse.js": "7.1.0",
+    "jdl": "^0.1.4",
     "react": "19.1.0",
     "react-dom": "19.1.0",
     "react-use": "17.6.0",
     "zustand": "5.0.7"
   },
   "devDependencies": {
-    "cross-env": "^10.0.0",
-    "vite-bundle-analyzer": "^1.2.1",
     "@mpv-easy/mpsm": "workspace:*",
     "@types/node": "24.2.1",
     "@types/react": "19.1.9",
     "@types/react-dom": "19.1.7",
     "@vitejs/plugin-react": "5.0.0",
+    "cross-env": "^10.0.0",
     "globals": "16.3.0",
     "typescript": "5.9.2",
-    "vite": "7.1.1"
+    "vite": "7.1.1",
+    "vite-bundle-analyzer": "^1.2.1"
   }
 }
