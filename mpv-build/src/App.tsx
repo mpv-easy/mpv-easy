@@ -418,8 +418,6 @@ function App() {
 
     // repos
     for (const { user, repo } of repos) {
-      const files = await downloadRepo(user, repo)
-      console.log("downloadRepo files", files)
       const key = `${user}-${repo}`
       const homepage = `https://github.com/${user}/${repo}`
       const info: DataType = {
