@@ -7,6 +7,7 @@
     "readme.md",
     "package.json"
   ],
+  "sideEffects": false,
   "description": "@mpv-easy/tool",
   "main": "dist/index.js",
   "types": "./dist/index.d.ts",
@@ -23,7 +24,7 @@
     "@mpv-easy/assdraw": "workspace:*",
     "@mpv-easy/polyfill": "workspace:*",
     "crypto-js": "4.2.0",
-    "e-color": "0.1.7",
+    "e-color": "0.1.8",
     "type-fest": "4.41.0"
   },
   "devDependencies": {

@@ -25,7 +25,7 @@
     "@mpv-easy/flex": "workspace:*",
     "@mpv-easy/tool": "workspace:*",
     "dequal": "2.0.3",
-    "e-color": "0.1.7",
+    "e-color": "0.1.8",
     "lodash-es": "4.17.21",
     "react-use": "17.6.0"
   },
