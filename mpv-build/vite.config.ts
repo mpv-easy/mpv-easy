@@ -2,6 +2,8 @@ import { defineConfig } from "vite"
 import react from "@vitejs/plugin-react"
 import analyzer from "vite-bundle-analyzer"
 
+const isDev = process.env.NODE_ENV === "development"
+
 // https://vite.dev/config/
 export default defineConfig({
   base: "https://mpv-easy.github.io/mpv-build/",
@@ -12,7 +14,7 @@ export default defineConfig({
     }),
   ],
   resolve: {
-    alias: {
+    alias: isDev ? {} : {
       react: "https://esm.sh/react",
       "react-dom": "https://esm.sh/react-dom",
       "@easy-install/easy-archive": "https://esm.sh/@easy-install/easy-archive",
