@@ -373,7 +373,7 @@ function App() {
       }
     }
 
-    installDeps(mpvFiles)
+    await installDeps(mpvFiles)
 
     // encode to zip
     const zipBinary = encode(Fmt.Zip, mpvFiles)
