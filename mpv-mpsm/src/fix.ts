@@ -62,10 +62,26 @@ function isFont(url: string) {
   const lowerUrl: string = url.toLowerCase()
   return fontExtensions.some((ext) => lowerUrl.endsWith(ext))
 }
-export function tryFix(
-  scriptFiles: File[],
-  script: Record<string, string>,
-): File[] {
+
+function removeCommonPrefix(scriptFiles: File[]) {
+  const dirList = scriptFiles
+    .map((i) => i.path.split("/"))
+    .map((i) => i.slice(0, i.length - 1))
+
+  const commonPrefixIndex = commonPrefix(dirList)
+  if (commonPrefixIndex) {
+    const commonPrefixList = dirList[0].slice(0, commonPrefixIndex)
+    const commonPrefixString = `${commonPrefixList.join("/")}/`
+    for (const i of scriptFiles) {
+      i.path = i.path.replace(commonPrefixString, "")
+    }
+  }
+  return scriptFiles
+}
+
+export function tryFix(scriptFiles: File[], script: Script): File[] {
+  removeCommonPrefix(scriptFiles)
+
   const fixFiles: File[] = []
   // remove .github docs
   for (const dir of [".github", "docs"]) {
@@ -184,6 +200,7 @@ export function tryFix(
     const jsFiles = scriptFiles.filter(
       (i) => !i.path.includes("/") && i.path.endsWith(".js"),
     )
+
     if (luaFiles.length === 1) {
       const index = scriptFiles.findIndex((i) => i === luaFiles[0])
       scriptFiles.splice(index, 1)

@@ -1,6 +1,6 @@
 {
   "name": "@mpv-easy/anime4k",
-  "version": "v0.1.15-alpha.12",
+  "version": "0.1.15-alpha.17",
   "homepage": "https://github.com/mpv-easy/mpv-easy#readme",
   "description": "",
   "main": "dist/index.js",

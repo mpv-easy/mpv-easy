@@ -17,18 +17,39 @@ import { decode, encode, File, Fmt, guess } from "@easy-install/easy-archive"
 import { Typography } from "antd"
 import {
   IncludesMap,
-  Script,
   checkConflict,
   installScript,
+  tryFix,
 } from "@mpv-easy/mpsm"
 import { notification } from "antd"
 import { useMount } from "react-use"
 import { create } from "zustand"
 import { persist, StateStorage, createJSONStorage } from "zustand/middleware"
 import { ConfigProvider, theme } from "antd"
-import { parseGitHubUrl } from "./tool"
+import { parseGitHubUrl, Repo } from "@mpv-easy/tool"
 import "@ant-design/v5-patch-for-react-19"
 import { download as downloadRepo } from "jdl"
+import {
+  DataType,
+  DEFAULT_STATE,
+  downloadBinary,
+  downloadBinaryFile,
+  ExternalList,
+  getCdnFileUrl,
+  getFfmpegUrl,
+  getFfmpegV3Url,
+  getMpvFiles,
+  getPlayWithUrl,
+  getScriptDownloadURL,
+  getScriptFiles,
+  getYtdlpUrl,
+  Platform,
+  PLATFORM_LIST,
+  State,
+  Store,
+  UI,
+  UI_LIST,
+} from "./tool"
 
 const { defaultAlgorithm, darkAlgorithm } = theme
 const { Search } = Input
@@ -53,49 +74,10 @@ const hashStorage: StateStorage = {
   },
 }
 
-type Repo = {
-  user: string
-  repo: string
-}
-
-interface Store {
-  data: Record<string, DataType>
-  tableData: DataType[]
-  spinning: boolean
-  selectedRowKeys: string[]
-  externalList: string[]
-  ui: UI
-  platform: Platform
-  repos: Repo[]
-  setData: (data: Record<string, DataType>) => void
-  setTableData: (tableData: DataType[]) => void
-  setSpinning: (spinning: boolean) => void
-  setSelectedKeys: (selectedRowKeys: string[]) => void
-  setExternalList: (externalList: string[]) => void
-  setUI: (ui: UI) => void
-  setPlatform: (platform: Platform) => void
-  setState: (state: State) => void
-  setRepos: (repos: Repo[]) => void
-}
-
-// TODO: support liunx
-const PLATFORM_LIST = ["mpv", "mpv-v3", "mpv.net"] as const
-type Platform = (typeof PLATFORM_LIST)[number]
-
-type State = {
-  [K in keyof Store as Store[K] extends Function ? never : K]: Store[K]
-}
-
-const DEFAULT_STATE: State = {
-  data: {},
-  tableData: [],
-  spinning: false,
-  selectedRowKeys: [],
-  externalList: [],
-  ui: "osc",
-  platform: "mpv-v3",
-  repos: [],
-}
+// const MAX_SCRIPT_COUNT = 32
+const TITLE_WIDTH = 150
+const ITEM_WIDTH = 150
+const NAME_WIDTH = 250
 
 const useMpvStore = create<Store>()(
   persist(
@@ -128,135 +110,6 @@ const useMpvStore = create<Store>()(
     },
   ),
 )
-
-// const MAX_SCRIPT_COUNT = 32
-const TITLE_WIDTH = 150
-const ITEM_WIDTH = 150
-const NAME_WIDTH = 250
-
-interface DataType extends Script {
-  key: string
-  repo?: Repo
-}
-
-function downloadBinaryFile(fileName: string, content: Uint8Array): void {
-  const blob = new Blob([new Uint8Array(content)], {
-    type: "application/octet-stream",
-  })
-  const url = URL.createObjectURL(blob)
-  const a = document.createElement("a")
-  const name = fileName.split("/").at(-1) ?? fileName
-  a.download = name
-  a.href = url
-  document.body.appendChild(a)
-  a.click()
-  document.body.removeChild(a)
-  URL.revokeObjectURL(url)
-}
-
-function getDownloadUrl(user: string, repo: string, tag: string, file: string) {
-  return `https://raw.githubusercontent.com/${user}/${repo}/${tag}/${file}`
-}
-
-function getCdnFileUrl(fileName: string) {
-  return getDownloadUrl("ahaoboy", "mpv-easy-cdn", "main", fileName)
-}
-
-function getPlayWithUrl() {
-  return getCdnFileUrl("mpv-easy-play-with-windows.zip")
-}
-function getYtdlpUrl() {
-  return getCdnFileUrl("yt-dlp.zip")
-}
-function getFfmpegUrl() {
-  return getCdnFileUrl("ffmpeg-windows.tar.xz")
-}
-function getFfmpegV3Url() {
-  return getCdnFileUrl("ffmpeg-v3-windows.tar.xz")
-}
-
-const UI_LIST = [
-  {
-    name: "osc",
-    repo: "https://github.com/mpv-player/mpv",
-    deps: ["autoload", "thumbfast"],
-    requires: [],
-  },
-  {
-    name: "uosc",
-    repo: "https://github.com/tomasklaen/uosc",
-    deps: ["thumbfast"],
-    requires: ["uosc"],
-  },
-  {
-    name: "mpv-easy",
-    repo: "https://github.com/mpv-easy/mpv-easy",
-    deps: [],
-    requires: ["mpv-easy"],
-  },
-  {
-    name: "modernx",
-    repo: "https://github.com/cyl0/ModernX",
-    deps: ["thumbfast", "autoload"],
-    requires: ["ModernX cyl0"],
-  },
-  {
-    name: "modernz",
-    repo: "https://github.com/Samillion/ModernZ",
-    deps: ["thumbfast", "autoload"],
-    requires: ["ModernZ"],
-  },
-] as const
-
-type UI = (typeof UI_LIST)[number]["name"]
-
-const ExternalList = ["ffmpeg", "yt-dlp", "play-with"]
-
-async function downloadBinary(url: string): Promise<Uint8Array> {
-  return fetch(url)
-    .then((resp) => resp.arrayBuffer())
-    .then((i) => new Uint8Array(i))
-}
-
-function getScriptDownloadURL(name: string) {
-  return getCdnFileUrl(`${name}.zip`)
-}
-
-async function getScriptFiles(script: DataType): Promise<File[]> {
-  if (script.repo) {
-    const files = await downloadRepo(script.repo.user, script.repo.repo)
-    return files
-      .filter((i) => !i.isDir)
-      .map(
-        ({ path, buffer }) => new File(path, buffer!, undefined, false, null),
-      )
-  }
-
-  const { download } = script
-  if (![".js", ".lua", ".zip"].some((i) => download.endsWith(i))) {
-    console.log("not support script: ", script)
-    return []
-  }
-
-  const url = getScriptDownloadURL(script.name)
-  const bin = await downloadBinary(url)
-
-  const v = decode(guess(url)!, bin)!.filter((i) => !i.isDir)
-  return v
-}
-
-async function getMpvFiles(platform: Platform, _ui: UI) {
-  let mpvUrl = getCdnFileUrl("mpv-windows.tar.xz")
-  if (platform === "mpv.net") {
-    mpvUrl = getCdnFileUrl("mpv.net.tar.xz")
-  } else if (platform === "mpv-v3") {
-    getCdnFileUrl("mpv-v3-windows.tar.xz")
-  }
-
-  const bin = await downloadBinary(mpvUrl)
-  const files = decode(guess(mpvUrl)!, bin) || []
-  return files
-}
 
 function App() {
   const store = useMpvStore()
@@ -304,6 +157,7 @@ function App() {
     // deps and requires
     for (const i of allDeps) {
       const script = data[i]
+      const fixFiles = tryFix(files, script)
       if (script.repo) {
         const { user, repo } = script.repo
         const repoFiles = await downloadRepo(user, repo)
@@ -314,10 +168,10 @@ function App() {
               new File(path, buffer!, undefined, false, null),
           )
         const key = `${user}-${repo}`
-        installScript(files, v, data[key])
+        installScript(fixFiles, v, data[key])
       } else {
         const scriptFiles = await getScriptFiles(data[i])
-        installScript(files, scriptFiles, data[i])
+        installScript(fixFiles, scriptFiles, data[i])
       }
     }
   }
@@ -341,7 +195,7 @@ function App() {
   }
 
   const zipAll = async () => {
-    const mpvFiles = await getMpvFiles(platform, ui)
+    const mpvFiles = await getMpvFiles(platform)
 
     // ffmpeg
     if (externalList.includes("ffmpeg")) {

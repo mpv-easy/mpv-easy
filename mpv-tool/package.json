@@ -1,6 +1,6 @@
 {
   "name": "@mpv-easy/tool",
-  "version": "v0.1.15-alpha.12",
+  "version": "0.1.15-alpha.17",
   "homepage": "https://github.com/mpv-easy/mpv-easy#readme",
   "files": [
     "dist",
@@ -25,6 +25,7 @@
     "@mpv-easy/polyfill": "workspace:*",
     "crypto-js": "4.2.0",
     "e-color": "0.1.8",
+    "lodash-es": "4.17.21",
     "type-fest": "4.41.0"
   },
   "devDependencies": {

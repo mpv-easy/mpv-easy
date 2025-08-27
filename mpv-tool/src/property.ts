@@ -1,4 +1,4 @@
-import isEq from "lodash-es/isEqual"
+import { isEqual as isEq } from "lodash-es"
 import {
   getPropertyBool,
   getPropertyNative,

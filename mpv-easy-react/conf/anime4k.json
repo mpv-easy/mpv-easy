@@ -1,7 +1,7 @@
 {
   "name": "mpv-easy-anime4k",
   "description": "mpv player anime4k script",
-  "version": "v0.1.15-alpha.12",
+  "version": "0.1.15-alpha.17",
   "author": "mpv-easy",
   "download": "https://github.com/mpv-easy/mpv-easy/releases/latest/download/mpv-easy-anime4k.zip",
   "homepage": "https://github.com/mpv-easy/mpv-easy/tree/main/mpv-anime4k"

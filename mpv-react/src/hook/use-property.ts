@@ -14,7 +14,7 @@ import {
   getPropertyBool,
   getPropertyNative,
 } from "@mpv-easy/tool"
-import isEqual from "lodash-es/isEqual"
+import { isEqual } from "lodash-es"
 import { useState } from "react"
 
 const setMpvProp = (name: string, type: keyof MpvType, value: any) => {

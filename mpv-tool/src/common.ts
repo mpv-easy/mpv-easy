@@ -21,7 +21,7 @@ import {
 } from "./mpv"
 import { normalize } from "./path"
 import { DEFAULT_ASS_HEIGHT } from "./const"
-import isEqual from "lodash-es/isEqual"
+import { isEqual } from "lodash-es"
 
 export const VideoTypes =
   "3g2,3gp,asf,avi,f4v,flv,h264,h265,m2ts,m4v,mkv,mov,mp4,mp4v,mpeg,mpg,ogm,ogv,rm,rmvb,ts,vob,webm,wmv,y4m,m4s".split(

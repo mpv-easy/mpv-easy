@@ -1,6 +1,9 @@
 {
   "name": "mpv-easy",
-  "version": "v0.1.15-alpha.12",
+  "version": "0.1.15-alpha.17",
+  "workspaces": [
+    "mpv-*"
+  ],
   "homepage": "https://github.com/mpv-easy/mpv-easy#readme",
   "files": [
     "dist",

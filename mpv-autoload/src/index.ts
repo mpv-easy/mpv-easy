@@ -20,7 +20,7 @@ import {
   readdir,
 } from "@mpv-easy/tool"
 import { registerEvent } from "@mpv-easy/tool"
-import isEqual from "lodash-es/isEqual"
+import { isEqual } from "lodash-es"
 export const pluginName = "@mpv-easy/autoload"
 
 export type AutoloadConfig = {

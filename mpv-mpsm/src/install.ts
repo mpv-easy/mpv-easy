@@ -13,6 +13,8 @@ import chalk from "chalk"
 import { existsSync, readFileSync } from "fs-extra"
 import { ScriptRemoteUrl } from "./const"
 import { File, Fmt, decode } from "@easy-install/easy-archive"
+import { parseGitHubUrl, Repo } from "@mpv-easy/tool"
+import { tryFix } from "./fix"
 
 export async function installFromJSON(url: string) {
   const text = await downloadText(url)
@@ -110,6 +112,27 @@ async function installFromZip(url: string) {
   return script
 }
 
+async function installFromGithub({
+  user,
+  repo,
+  bracnch = "main",
+}: Repo): Promise<Script> {
+  const url = `https://github.com/${user}/${repo}/archive/refs/heads/${bracnch}.zip`
+  const zip = await downloadBinary(url)
+  const files = decode(Fmt.Zip, zip)
+  if (!files) {
+    throw new Error("installFromGithub: failed to decode zip")
+  }
+  const script = {
+    name: repo,
+    author: user,
+    download: url,
+  }
+  const fixFiles = tryFix(files, script)
+  installFromFiles(script, fixFiles)
+  return script
+}
+
 export async function install(scripts: string[]) {
   const names = [...getAllScript().map((i) => i.name), ...scripts]
   const c = checkConflict(names)
@@ -120,11 +143,13 @@ export async function install(scripts: string[]) {
 
   for (const name of scripts) {
     let meta: Script
-
+    const repo = parseGitHubUrl(name)
     if (name.endsWith(".json")) {
       meta = await installFromJSON(name)
     } else if (name.endsWith(".zip")) {
       meta = await installFromZip(name)
+    } else if (repo) {
+      meta = await installFromGithub(repo)
     } else {
       meta = await installFromMpsm(name)
     }
