@@ -84,7 +84,7 @@ export function isImage(s: string, types = ImageTypes) {
   return endsWith(s.toLocaleLowerCase(), types)
 }
 
-export function isFont(s: string, types = ImageTypes) {
+export function isFont(s: string, types = FontTypes) {
   return endsWith(s.toLocaleLowerCase(), types)
 }
 
