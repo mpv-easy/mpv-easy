@@ -69,7 +69,7 @@ function removeCommonPrefix(scriptFiles: File[]) {
     .map((i) => i.slice(0, i.length - 1))
 
   const commonPrefixIndex = commonPrefix(dirList)
-  if (commonPrefixIndex) {
+  if (commonPrefixIndex && dirList.length) {
     const commonPrefixList = dirList[0].slice(0, commonPrefixIndex)
     const commonPrefixString = `${commonPrefixList.join("/")}/`
     for (const i of scriptFiles) {

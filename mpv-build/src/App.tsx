@@ -157,7 +157,6 @@ function App() {
     // deps and requires
     for (const i of allDeps) {
       const script = data[i]
-      const fixFiles = tryFix(files, script)
       if (script.repo) {
         const { user, repo } = script.repo
         const repoFiles = await downloadRepo(user, repo)
@@ -167,11 +166,13 @@ function App() {
             ({ path, buffer }) =>
               new File(path, buffer!, undefined, false, null),
           )
+        const fixFiles = tryFix(v, script)
         const key = `${user}-${repo}`
-        installScript(fixFiles, v, data[key])
+        installScript(files, fixFiles, data[key])
       } else {
         const scriptFiles = await getScriptFiles(data[i])
-        installScript(fixFiles, scriptFiles, data[i])
+        const fixFiles = tryFix(scriptFiles, script)
+        installScript(files, fixFiles, data[i])
       }
     }
   }
