@@ -164,6 +164,10 @@ set-executionpolicy remotesigned
 | MAX_FPS_FRAME | Specifies the number of recent frames used for FPS calculation. |
 | FRAME_LIMIT   | Exit the player after rendering the specified number of frames. |
 
+## nightly.link
+
+https://nightly.link/mpv-easy/mpv-easy/workflows/release/main?preview
+
 ## Q&A
 
 ### mujs stack overflow
