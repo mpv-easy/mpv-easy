@@ -158,7 +158,7 @@ export function App() {
           zIndex: MAX_ZINDEX,
           opacity,
           cursor: "pointer",
-          // @ts-ignore
+          // @ts-expect-error
           WebkitUserDrag: "element",
           filter: loading ? "grayscale(100%)" : "",
         }}

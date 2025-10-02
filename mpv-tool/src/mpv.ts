@@ -23,7 +23,6 @@ import { MousePos } from "./type-prop"
 import { dirname, existsSync } from "./fs"
 
 export function getMP(): MP {
-  // @ts-ignore
   return globalThis.mp
 }
 

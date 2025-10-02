@@ -62,7 +62,7 @@ export function defineStore<
 
   const dispatch = {} as ReducersToDispatch<R, S>
   for (const i in store.reducers) {
-    // @ts-ignore
+    // @ts-expect-error
     dispatch[i] = (...payload: any[]) => {
       state = store.reducers[i](state, ...payload)
       rerender()

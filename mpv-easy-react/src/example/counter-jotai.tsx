@@ -31,7 +31,7 @@ function LtTen() {
 
 const App = () => (
   // FIXME: react19
-  // @ts-ignore
+
   <Provider>
     <Counter />
     <Double />

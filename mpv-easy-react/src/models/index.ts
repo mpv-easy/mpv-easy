@@ -443,7 +443,7 @@ export function syncPlayer(store: Store) {
       ...state[pluginName].player,
     }
     for (const i of propList) {
-      // @ts-ignore
+      // @ts-expect-error
       state[pluginName].player[i.name] = i.value
     }
     store.setState({ ...state })

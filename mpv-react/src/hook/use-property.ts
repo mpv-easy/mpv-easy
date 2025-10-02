@@ -74,7 +74,7 @@ function useProp<T>(name: string, type: keyof MpvType, defaultValue?: T) {
     prop,
     (fn: T | ((oldValue: T) => T)) => {
       // TODO: https://github.com/microsoft/TypeScript/issues/37663#issuecomment-1827885694
-      // @ts-ignore
+      // @ts-expect-error
       const v = typeof fn === "function" ? fn(prop) : fn
       if (prop !== v) {
         setProp(v)

@@ -43,7 +43,7 @@ export function setMouseStyle(cursor: MouseCursorType) {
   const code = `Set-ItemProperty -Path 'HKCU:\\Control Panel\\Cursors' -Name 'Arrow' -Value '${s}';
 Add-Type -TypeDefinition @'
 public class SysParamsInfo {
-    [System.Runtime.InteropServices.DllImport(\"user32.dll\", EntryPoint = \"SystemParametersInfo\")]
+    [System.Runtime.InteropServices.DllImport("user32.dll", EntryPoint = "SystemParametersInfo")]
     public static extern bool SystemParametersInfo(uint uiAction, uint uiParam, uint pvParam, uint fWinIni);
 
     const int SPI_SETCURSORS = 0x0057;

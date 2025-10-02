@@ -894,7 +894,8 @@ export function createMpvMock(
         return () => {}
       },
     },
-    // @ts-ignore
+
+    // @ts-expect-error
     observe_property: (
       name: string,
       _type: "native",

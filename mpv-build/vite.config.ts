@@ -6,7 +6,7 @@ const isDev = process.env.NODE_ENV === "development"
 
 // https://vite.dev/config/
 export default defineConfig({
-  base: "https://mpv-easy.github.io/mpv-build/",
+  base: "/mpv-build/",
   plugins: [
     react(),
     analyzer({

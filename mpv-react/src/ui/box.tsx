@@ -11,7 +11,7 @@ export const Box: ForwardRefExoticComponent<
     RefAttributes<MpDom>
 > = forwardRef<MpDom, Partial<MpDomProps & { children: React.ReactNode }>>(
   (props, ref) => {
-    // @ts-ignore
+    // @ts-expect-error
     return props.display !== "none" && <mpv-box ref={ref} {...props} />
   },
 )

@@ -31,7 +31,7 @@ import "core-js/stable/set"
 import "core-js/stable/map"
 import "core-js/stable/weak-map"
 import "core-js/stable/weak-set"
-// @ts-ignore
+// @ts-expect-error
 import Symbol from "es-symbol"
 import { TextDecoder, TextEncoder } from "textcodec"
 import { encodeURIComponent, decodeURIComponent } from "uri-component"
@@ -47,11 +47,11 @@ import {
   Uint8ClampedArray,
   Uint16Array,
   Uint32Array,
-  // @ts-ignore
+  // @ts-expect-error
 } from "typedarray"
 import { MessageChannel } from "./message-channel"
 import { patch } from "./tool"
-// @ts-ignore
+// @ts-expect-error
 import URL from "url-parse"
 patch({
   TextEncoder,

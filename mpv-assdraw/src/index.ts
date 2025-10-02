@@ -353,24 +353,20 @@ for (const i in COLORS) {
   const rgb = new Rgb(COLORS[i as ColorName])
 
   // TODO: maybe transform to es5 cause this problem, prototype break
-  // @ts-ignore
   if (typeof rgb.color === "undefined") {
-    // @ts-ignore
-    rgb.color = COLORS[i]
+    rgb.color = COLORS[i as keyof typeof COLORS]
   }
 
   // const hex = Bgr.fromName(i as ColorName).toHex()
   const hex = rgb.toHex()
 
-  // @ts-ignore
+  // @ts-expect-error
   AssDraw.prototype[name] = function () {
-    // @ts-ignore
     return this.color(hex)
   }
 
-  // @ts-ignore
+  // @ts-expect-error
   AssDraw.prototype[`${name}Text`] = function (text: string) {
-    // @ts-ignore
     return this.colorText(hex, text)
   }
 }

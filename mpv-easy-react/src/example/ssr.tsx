@@ -14,14 +14,13 @@ const RecursiveDiv: React.FC<RecursiveDivProps> = ({ deep, count }) => {
   const children = Array.from({ length: count }, (_, index) => (
     <RecursiveDiv key={index} deep={deep - 1} count={count} />
   ))
-  // @ts-ignore
+
   return (
     <div
       id={`${deep}-${count}`}
       key={`${deep}-${count}`}
-      // @ts-ignore
+      // @ts-expect-error
       width={`${deep}-${count}`}
-      // @ts-ignore
       height={`${deep}-${count}`}
     >
       {children}

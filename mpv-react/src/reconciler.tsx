@@ -53,19 +53,19 @@ export function createCustomReconciler(customRender: () => void) {
     supportsMutation: true,
     supportsPersistence: false,
     supportsMicrotasks: false,
-    // @ts-ignore
+
     resolveUpdatePriority() {
       return DiscreteEventPriority
     },
-    // @ts-ignore
+
     getCurrentUpdatePriority() {
       return DiscreteEventPriority
     },
-    // @ts-ignore
+
     setCurrentUpdatePriority() {
       return DiscreteEventPriority
     },
-    // @ts-ignore
+
     maySuspendCommit() {
       return false
     },
@@ -211,13 +211,13 @@ export function createCustomReconciler(customRender: () => void) {
       throw new Error("Function not implemented.")
     },
     trackSchedulerEvent: (): void => {
-      throw new Error("Function not implemented.")
+      console.error("Function trackSchedulerEvent not implemented.")
     },
     resolveEventType: (): null | string => {
-      throw new Error("Function not implemented.")
+      return null
     },
     resolveEventTimeStamp: (): number => {
-      throw new Error("Function not implemented.")
+      return Date.now()
     },
     preloadInstance: (_type: unknown, _props: unknown): boolean => {
       throw new Error("Function not implemented.")

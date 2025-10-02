@@ -26,18 +26,18 @@ export function getBV(url: string) {
 }
 
 export function getAid(): string | undefined {
-  // @ts-ignore
+  // @ts-expect-error
   return globalThis?.__INITIAL_STATE__.aid
 }
 
 export function getBvid(): string | undefined {
-  // @ts-ignore
+  // @ts-expect-error
   return globalThis?.__INITIAL_STATE__.bvid
 }
 
 export function getCids(): Record<number, string> | undefined {
   const bvid = getBvid()
-  // @ts-ignore
+  // @ts-expect-error
   return globalThis?.__INITIAL_STATE__.cidMap[bvid].cids
 }
 
@@ -47,7 +47,7 @@ export type Section = {
   title: string
 }
 export function getSections(): Section[] {
-  // @ts-ignore
+  // @ts-expect-error
   return globalThis?.__INITIAL_STATE__.sections as any
 }
 
@@ -85,6 +85,6 @@ export type VideoData = {
 }
 
 export function getVideoData(): VideoData {
-  // @ts-ignore
+  // @ts-expect-error
   return globalThis?.__INITIAL_STATE__.videoData as any
 }

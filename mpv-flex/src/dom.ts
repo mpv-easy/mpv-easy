@@ -211,7 +211,7 @@ export function setLayoutNode<
   D extends BaseDom<any, any, any>,
   K extends keyof D["layoutNode"],
 >(node: D, key: K, value: D["layoutNode"][K]): void {
-  // @ts-ignore
+  // @ts-expect-error
   node.layoutNode[key] = value
 }
 

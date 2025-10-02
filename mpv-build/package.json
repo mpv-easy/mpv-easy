@@ -9,28 +9,28 @@
     "build": "vite build"
   },
   "dependencies": {
-    "@ant-design/icons": "6.0.0",
+    "@ant-design/icons": "6.1.0",
     "@ant-design/v5-patch-for-react-19": "1.0.3",
     "@easy-install/easy-archive": "0.2.6",
-    "antd": "5.26.7",
+    "antd": "5.27.4",
     "fuse.js": "7.1.0",
-    "jdl": "^0.1.4",
-    "react": "19.1.0",
-    "react-dom": "19.1.0",
+    "jdl": "0.1.4",
+    "react": "19.2.0",
+    "react-dom": "19.2.0",
     "react-use": "17.6.0",
-    "zustand": "5.0.7"
+    "zustand": "5.0.8"
   },
   "devDependencies": {
     "@mpv-easy/mpsm": "workspace:*",
     "@mpv-easy/tool": "workspace:*",
-    "@types/node": "24.2.1",
-    "@types/react": "19.1.9",
-    "@types/react-dom": "19.1.7",
-    "@vitejs/plugin-react": "5.0.0",
-    "cross-env": "^10.0.0",
-    "globals": "16.3.0",
-    "typescript": "5.9.2",
-    "vite": "7.1.1",
-    "vite-bundle-analyzer": "^1.2.1"
+    "@types/node": "24.6.1",
+    "@types/react": "19.2.0",
+    "@types/react-dom": "19.2.0",
+    "@vitejs/plugin-react": "5.0.4",
+    "cross-env": "10.1.0",
+    "globals": "16.4.0",
+    "typescript": "5.9.3",
+    "vite": "7.1.7",
+    "vite-bundle-analyzer": "1.2.3"
   }
 }

@@ -18,7 +18,7 @@ export function applyAttributes<
   // const oldAttrs = node.attributes
   // for (const name in oldAttrs) {
   //   if (name in oldAttrs && !(name in attributes)) {
-  //     // @ts-ignore
+  //
   //     setAttribute(node, name, undefined)
   //   }
   // }

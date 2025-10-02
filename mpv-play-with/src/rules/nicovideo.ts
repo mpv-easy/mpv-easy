@@ -18,7 +18,7 @@ export const Nicovideo: Rule = {
             ?.getAttribute("data-watchlater-item-id")
           const title = i.querySelector(".NC-CardTitle")?.textContent?.trim()
           if (!url || !title) {
-            return
+            return undefined
           }
           return {
             video: { url: `https://www.nicovideo.jp/watch/${url}`, title },

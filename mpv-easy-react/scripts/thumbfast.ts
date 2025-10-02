@@ -147,7 +147,7 @@ function initThumb() {
     maxWidth,
     lifetime,
     // FIXME: support enum
-    // @ts-ignore
+
     format,
     startTime,
     network,

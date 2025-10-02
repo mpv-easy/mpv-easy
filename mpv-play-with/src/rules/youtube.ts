@@ -77,7 +77,7 @@ export const Youtube: Rule = {
       const list: PlayItem[] = []
 
       const browser = Array.from(document.querySelectorAll("ytd-browse")).find(
-        // @ts-ignore
+        // @ts-expect-error
         (i) => !i.hidden,
       )
 

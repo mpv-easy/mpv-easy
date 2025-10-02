@@ -1,6 +1,6 @@
 import React from "react"
 
-// @ts-ignore
+// @ts-expect-error
 import FontFaceObserver from "fontfaceobserver"
 import { getRootFlex } from "@mpv-easy/react"
 import { createRender } from "@mpv-easy/react"
@@ -16,7 +16,6 @@ export function renderToCanvas(
 ) {
   const mp = createMpvMock(canvas, width, height)
 
-  // @ts-ignore
   globalThis.mp = mp
 
   const render = () => {

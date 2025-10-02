@@ -11,7 +11,7 @@ export * from "./type-cmd"
 
 declare global {
   var mp: MP
-  // @ts-ignore
+
   function print(...args: any[]): void
   function dump(...args: any[]): void
   function exit(): void

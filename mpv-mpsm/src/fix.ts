@@ -202,12 +202,12 @@ export function tryFix(scriptFiles: File[], script: Script): File[] {
     )
 
     if (luaFiles.length === 1) {
-      const index = scriptFiles.findIndex((i) => i === luaFiles[0])
+      const index = scriptFiles.indexOf(luaFiles[0])
       scriptFiles.splice(index, 1)
       luaFiles[0].path = "scripts/main.lua"
       fixFiles.push(luaFiles[0])
     } else if (jsFiles.length === 1) {
-      const index = scriptFiles.findIndex((i) => i === jsFiles[0])
+      const index = scriptFiles.indexOf(jsFiles[0])
       scriptFiles.splice(index, 1)
       jsFiles[0].path = "scripts/main.js"
       fixFiles.push(jsFiles[0])

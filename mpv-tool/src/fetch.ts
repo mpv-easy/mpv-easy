@@ -29,7 +29,7 @@ function generateHeader(options: FetchOption = {}): {
     headerParam.push("-L")
   }
 
-  Object.keys(headers).map((name) => {
+  Object.keys(headers).forEach((name) => {
     if (name.toLocaleLowerCase() !== "content-length") {
       headerParam.push("-H")
       headerParam.push(getHeaderString(name, headers[name]))
