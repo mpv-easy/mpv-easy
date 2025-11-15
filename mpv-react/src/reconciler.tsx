@@ -297,10 +297,17 @@ export function createRender({
       null,
       false,
       null,
-      "",
+      "mpv-easy",
       (e) => {
         throw e
       },
+      (e) => {
+        throw e
+      },
+      (e) => {
+        throw e
+      },
+      () => {},
       null,
     )
 
