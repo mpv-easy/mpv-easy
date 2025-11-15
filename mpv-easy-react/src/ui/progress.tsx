@@ -39,6 +39,7 @@ import {
   cellSizeSelector,
   mousePosSelector,
   osdDimensionsSelector,
+  fontSizeScaleSelector,
 } from "../store"
 import { ThumbFast } from "@mpv-easy/thumbfast"
 import { appendPoint, getCutVideoPath, getVideoSegment } from "@mpv-easy/cut"
@@ -71,6 +72,7 @@ export const Progress = ({ width, ...props }: MpDomProps) => {
   const cellSize = useSelector(cellSizeSelector)
   const mousePos = useSelector(mousePosSelector)
   const osd = useSelector(osdDimensionsSelector)
+  const scale = useSelector(fontSizeScaleSelector)
   const curCutPoint = mouseOut ? timePos : duration * leftPreview
 
   const cutRef = useRef<(() => void) | null>(null)
@@ -251,8 +253,10 @@ export const Progress = ({ width, ...props }: MpDomProps) => {
       ...thumbfast,
       videoWidth: videoParams.w,
       videoHeight: videoParams.h,
+      maxWidth: thumbfast.maxHeight * scale,
+      maxHeight: thumbfast.maxHeight * scale,
     })
-  }, [videoParams?.w, videoParams?.h, isSeekable])
+  }, [videoParams?.w, videoParams?.h, isSeekable, scale])
 
   useEffect(() => {
     registerScriptMessage(cutConfig.cutEventName, () => {
