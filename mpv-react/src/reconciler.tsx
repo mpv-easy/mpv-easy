@@ -240,6 +240,7 @@ export function createCustomReconciler(customRender: () => void) {
 
 let max = 0
 let frame = 0
+const MAX_FPS_LIST_SIZE = 64
 const FpsList: number[] = []
 let lastRender = 0
 let renderHandle = 0
@@ -263,10 +264,10 @@ export function createRender({
       const ed = Date.now()
       const t = ed - st
       max = Math.max(max, t)
-      FpsList.push(t)
-      if (FpsList.length > maxFpsFrame) {
+      if (FpsList.length >= Math.min(maxFpsFrame, MAX_FPS_LIST_SIZE)) {
         FpsList.shift()
       }
+      FpsList.push(t)
       const avg = FpsList.reduce((a, b) => a + b, 0) / FpsList.length
       if (showFps) {
         print("render time(react):", frame, t, max, avg)
@@ -312,7 +313,7 @@ export function createRender({
     )
 
     let lastMousePos: MousePos = { x: 0, y: 0, hover: false }
-    observeProperty("mouse-pos", "native", (_, value: MousePos) => {
+    const mousePosCallback = (_: string, value: MousePos) => {
       lastMousePos = value
       if (enableMouseMoveEvent) {
         customDispatch(flex.rootNode, lastMousePos, {
@@ -324,7 +325,8 @@ export function createRender({
           arg: "",
         })
       }
-    })
+    }
+    observeProperty("mouse-pos", "native", mousePosCallback)
 
     function dispatchEvent(
       name: string,
@@ -476,7 +478,18 @@ export function createRender({
       reconciler.updateContainer(reactNode, container, null, null)
     }
 
-    dim.observe(updateRootNode)
+    const dimCallback = dim.observe(updateRootNode)
+
+    // Return cleanup function
+    return () => {
+      clearTimeout(renderHandle)
+      try {
+        dim.unobserve(dimCallback)
+        mp.unobserve_property(mousePosCallback)
+      } catch (_e) {
+        // Ignore cleanup errors
+      }
+    }
   }
 }
 

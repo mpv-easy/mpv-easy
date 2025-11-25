@@ -83,6 +83,7 @@ function scaleToFit(
   return [w | 0, h | 0]
 }
 
+const MAX_THUMBFAST_INSTANCES = 50
 const ThumbFastSet = new Set<ThumbFast>()
 
 export function getThumbFastVideoPath(network: boolean) {
@@ -178,6 +179,15 @@ export class ThumbFast {
     this.network = network
     this.mpvPath = normalize(getMpvExePath())
     this.subprocessId = this.startIpc()
+
+    if (ThumbFastSet.size >= MAX_THUMBFAST_INSTANCES) {
+      // Clean up oldest instance
+      const oldest = ThumbFastSet.values().next().value
+      if (oldest) {
+        oldest.exit()
+        ThumbFastSet.delete(oldest)
+      }
+    }
     ThumbFastSet.add(this)
   }
 
@@ -294,8 +304,8 @@ export class ThumbFast {
 
   exit() {
     try {
-      // await this.runAsync("quit")
       abortAsyncCommand(this.subprocessId)
+      ThumbFastSet.delete(this)
     } catch (e) {
       console.error("ThumbFast abortAsyncCommand error: ", e)
     }
@@ -311,12 +321,10 @@ export default definePlugin((context, _api) => ({
     }
   },
   destroy() {
-    for (const i of ThumbFastSet) {
+    const instances = Array.from(ThumbFastSet)
+    for (const i of instances) {
       i.exit()
-      // try{
-      //   removeFile(i.path)
-      // }catch(e){
-      // }
     }
+    ThumbFastSet.clear()
   },
 }))
