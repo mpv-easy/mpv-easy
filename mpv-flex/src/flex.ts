@@ -49,13 +49,13 @@ function getAxisAttrSize<D extends BaseDom>(n: D, isX: boolean) {
 function getAxisSize<D extends BaseDom>(n: D, isX: boolean) {
   return isX ? n.layoutNode.width : n.layoutNode.height
 }
-function _setAxisPosition<D extends BaseDom>(n: D, x: number, isX: boolean) {
-  if (isX) {
-    n.layoutNode.x = x
-  } else {
-    n.layoutNode.y = x
-  }
-}
+// function setAxisPosition<D extends BaseDom>(n: D, x: number, isX: boolean) {
+//   if (isX) {
+//     n.layoutNode.x = x
+//   } else {
+//     n.layoutNode.y = x
+//   }
+// }
 function setAxisSize<D extends BaseDom>(n: D, x: number, isX: boolean) {
   if (isX) {
     n.layoutNode.width = x
