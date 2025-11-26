@@ -32,19 +32,25 @@ import {
 
 const NO_CONTEXT = {}
 
-function detachDeletedInstance(node: MpDom) {
+// Recursively cleanup node resources
+function detachDeletedInstance(node: MpDom): void {
+  // Cleanup children first
   for (const c of node.childNodes) {
     detachDeletedInstance(c)
   }
 
+  // Remove OSD overlays
   for (const ovl of node.props.osdOverlays) {
     ovl.remove()
   }
 
-  const { backgroundImage } = node.attributes
-  if (typeof backgroundImage === "string") {
-    node.props.imageOverlay?.remove()
-    node.props.imageOverlay?.destroy()
+  // Cleanup image overlay if exists
+  if (
+    typeof node.attributes.backgroundImage === "string" &&
+    node.props.imageOverlay
+  ) {
+    node.props.imageOverlay.remove()
+    node.props.imageOverlay.destroy()
   }
 }
 
@@ -54,21 +60,13 @@ export function createCustomReconciler(customRender: () => void) {
     supportsPersistence: false,
     supportsMicrotasks: false,
 
-    resolveUpdatePriority() {
-      return DiscreteEventPriority
-    },
+    // Priority methods - use constants for better performance
+    resolveUpdatePriority: () => DiscreteEventPriority,
+    getCurrentUpdatePriority: () => DiscreteEventPriority,
+    setCurrentUpdatePriority: () => DiscreteEventPriority,
+    maySuspendCommit: () => false,
 
-    getCurrentUpdatePriority() {
-      return DiscreteEventPriority
-    },
-
-    setCurrentUpdatePriority() {
-      return DiscreteEventPriority
-    },
-
-    maySuspendCommit() {
-      return false
-    },
+    // Mutation methods
     appendChildToContainer(root: MpDom, node: MpDom) {
       appendChildNode(root, node)
       customRender()
@@ -78,8 +76,8 @@ export function createCustomReconciler(customRender: () => void) {
       applyAttributes(node, newProps)
       customRender()
     },
-    commitTextUpdate(_node, _oldText, _newText) {
-      throw new Error("not support Text Component update")
+    commitTextUpdate() {
+      throw new Error("Text components not supported")
     },
     commitMount() {},
     removeChildFromContainer(root: MpDom, node: MpDom) {
@@ -112,138 +110,116 @@ export function createCustomReconciler(customRender: () => void) {
     ): unknown => {
       throw new Error("not support Text components")
     },
-    hideTextInstance(_node) {},
-    unhideTextInstance(_node, _text) {},
-    hideInstance(_node) {},
-    unhideInstance(_node) {},
-    appendInitialChild: (parentInstance: MpDom, child: MpDom): void => {
-      appendChildNode(parentInstance, child)
+    // Visibility methods (no-ops for this renderer)
+    hideTextInstance() {},
+    unhideTextInstance() {},
+    hideInstance() {},
+    unhideInstance() {},
+
+    // Child manipulation
+    appendInitialChild(parent: MpDom, child: MpDom) {
+      appendChildNode(parent, child)
       customRender()
     },
-    appendChild(parentInstance: MpDom, child: MpDom): void {
-      appendChildNode(parentInstance, child)
+    appendChild(parent: MpDom, child: MpDom) {
+      appendChildNode(parent, child)
       customRender()
     },
-    insertBefore(
-      parentInstance: MpDom,
-      child: MpDom,
-      beforeChild: MpDom,
-    ): void {
-      insertBeforeNode(parentInstance, child, beforeChild)
+    insertBefore(parent: MpDom, child: MpDom, beforeChild: MpDom) {
+      insertBeforeNode(parent, child, beforeChild)
       customRender()
     },
-    finalizeInitialChildren: (
-      _instance: unknown,
-      _type: unknown,
-      _props: unknown,
-      _rootContainer: unknown,
-      _hostContext: unknown,
-    ): boolean => {
-      return false
+    removeChild(parent: MpDom, child: MpDom) {
+      removeChildNode(parent, child)
+      customRender()
     },
-    shouldSetTextContent: (_type: unknown, _props: unknown): boolean => {
-      return false
-    },
-    getRootHostContext: (_rootContainer: unknown): unknown => {
-      return NO_CONTEXT
-    },
-    getChildHostContext: (
-      _parentHostContext: unknown,
-      _type: unknown,
-      _rootContainer: unknown,
-    ): unknown => {
-      return NO_CONTEXT
-    },
-    getPublicInstance: (instance: unknown): unknown => {
-      return instance
-    },
-    prepareForCommit: (_containerInfo: unknown): Record<string, any> | null => {
-      return null
-    },
-    resetTextContent(_instance: unknown) {},
-    // shouldDeprioritizeSubtree() {
-    // },
-    clearContainer: () => {},
-    resetAfterCommit: (_containerInfo: unknown): void => {},
-    preparePortalMount: (_containerInfo: unknown): void => {},
-    scheduleTimeout: (
-      fn: (...args: unknown[]) => unknown,
-      delay?: number | undefined,
-    ): unknown => {
-      return setTimeout(fn, delay)
-    },
-    cancelTimeout: (id: number) => {
-      return clearTimeout(id)
-    },
+    // Configuration methods
+    finalizeInitialChildren: () => false,
+    shouldSetTextContent: () => false,
+    getRootHostContext: () => NO_CONTEXT,
+    getChildHostContext: () => NO_CONTEXT,
+    getPublicInstance: (instance: unknown) => instance,
+
+    // Commit lifecycle
+    prepareForCommit: () => null,
+    resetTextContent() {},
+    clearContainer() {},
+    resetAfterCommit() {},
+    preparePortalMount() {},
+
+    // Timing
+    scheduleTimeout: setTimeout,
+    cancelTimeout: clearTimeout,
     noTimeout: -1,
-    // isXRenderer: true,
+
+    // Renderer config
     isPrimaryRenderer: true,
-    // warnsIfNotActing: true,
-    // getCurrentEventPriority: (): number => {
-    //   return DiscreteEventPriority
-    // },
-    getInstanceFromNode: (_node: any): null => {
-      return null
-    },
-    beforeActiveInstanceBlur: (): void => {},
-    afterActiveInstanceBlur: (): void => {},
-    prepareScopeUpdate: (_scopeInstance: any, _instance: any): void => {},
-    getInstanceFromScope: (_scopeInstance: any): unknown => {
-      return null
-    },
-    detachDeletedInstance(node: MpDom): void {
-      detachDeletedInstance(node)
-    },
-    removeChild(parentInstance: MpDom, child: MpDom) {
-      removeChildNode(parentInstance, child)
-      customRender()
-    },
     supportsHydration: false,
+
+    // Instance management
+    getInstanceFromNode: () => null,
+    beforeActiveInstanceBlur() {},
+    afterActiveInstanceBlur() {},
+    prepareScopeUpdate() {},
+    getInstanceFromScope: () => null,
+    detachDeletedInstance,
+
+    // Transition context
     NotPendingTransition: undefined,
     HostTransitionContext: {} as any,
-    resetFormInstance: (_form: unknown): void => {
-      throw new Error("Function not implemented.")
+
+    // Event handling
+    resolveEventType: () => null,
+    resolveEventTimeStamp: Date.now,
+    trackSchedulerEvent() {
+      // Silent no-op for performance
     },
-    requestPostPaintCallback: (_callback: (time: number) => void): void => {
-      throw new Error("Function not implemented.")
+
+    // Unimplemented methods (throw errors)
+    resetFormInstance() {
+      throw new Error("Forms not supported")
     },
-    shouldAttemptEagerTransition: (): boolean => {
-      throw new Error("Function not implemented.")
+    requestPostPaintCallback() {
+      throw new Error("Post-paint callbacks not supported")
     },
-    trackSchedulerEvent: (): void => {
-      console.error("Function trackSchedulerEvent not implemented.")
+    shouldAttemptEagerTransition() {
+      throw new Error("Eager transitions not supported")
     },
-    resolveEventType: (): null | string => {
-      return null
+    preloadInstance() {
+      throw new Error("Preloading not supported")
     },
-    resolveEventTimeStamp: (): number => {
-      return Date.now()
+    startSuspendingCommit() {
+      throw new Error("Suspending commits not supported")
     },
-    preloadInstance: (_type: unknown, _props: unknown): boolean => {
-      throw new Error("Function not implemented.")
+    suspendInstance() {
+      throw new Error("Suspending instances not supported")
     },
-    startSuspendingCommit: (): void => {
-      throw new Error("Function not implemented.")
-    },
-    suspendInstance: (_type: unknown, _props: unknown): void => {
-      throw new Error("Function not implemented.")
-    },
-    waitForCommitToBeReady: ():
-      | ((
-          initiateCommit: (...args: unknown[]) => unknown,
-        ) => (...args: unknown[]) => unknown)
-      | null => {
-      throw new Error("Function not implemented.")
+    waitForCommitToBeReady() {
+      throw new Error("Commit waiting not supported")
     },
   })
 }
 
-let max = 0
-let frame = 0
+// Performance tracking state
+interface RenderStats {
+  frame: number
+  max: number
+  lastRender: number
+  renderHandle: number
+  fpsList: number[]
+}
+
 const MAX_FPS_LIST_SIZE = 64
-const FpsList: number[] = []
-let lastRender = 0
-let renderHandle = 0
+
+function createRenderStats(): RenderStats {
+  return {
+    frame: 0,
+    max: 0,
+    lastRender: 0,
+    renderHandle: 0,
+    fpsList: [],
+  }
+}
 
 export function createRender({
   enableMouseMoveEvent = true,
@@ -253,45 +229,75 @@ export function createRender({
   maxFpsFrame = 64,
   throttle = true,
   frameLimit = 0,
-  customRender = () => {
-    function render() {
-      lastRender = Date.now()
-      clearTimeout(renderHandle)
-      renderHandle = 0
-      frame++
-      const st = Date.now()
+  customRender,
+  customDispatch = dispatchEvent,
+  mouseKeyBinding = false,
+}: Partial<RenderConfig> = {}) {
+  // Create default render function if not provided
+  if (!customRender) {
+    const stats = createRenderStats()
+    const fpsListSize = Math.min(maxFpsFrame, MAX_FPS_LIST_SIZE)
+    const frameDuration = 1000 / fps
+
+    function executeRender() {
+      stats.lastRender = Date.now()
+      clearTimeout(stats.renderHandle)
+      stats.renderHandle = 0
+      stats.frame++
+
+      const startTime = Date.now()
       renderNode()
-      const ed = Date.now()
-      const t = ed - st
-      max = Math.max(max, t)
-      if (FpsList.length >= Math.min(maxFpsFrame, MAX_FPS_LIST_SIZE)) {
-        FpsList.shift()
+      const renderTime = Date.now() - startTime
+
+      // Update stats
+      stats.max = Math.max(stats.max, renderTime)
+
+      // Maintain fixed-size FPS list
+      if (stats.fpsList.length >= fpsListSize) {
+        stats.fpsList.shift()
       }
-      FpsList.push(t)
-      const avg = FpsList.reduce((a, b) => a + b, 0) / FpsList.length
+      stats.fpsList.push(renderTime)
+
       if (showFps) {
-        print("render time(react):", frame, t, max, avg)
+        const avg =
+          stats.fpsList.reduce((a, b) => a + b, 0) / stats.fpsList.length
+        print("render time(react):", stats.frame, renderTime, stats.max, avg)
       }
-      if (frameLimit && frame >= frameLimit) {
+
+      if (frameLimit && stats.frame >= frameLimit) {
         quit()
       }
     }
 
-    const dur = 1000 / fps
-    const now = Date.now()
-    if (throttle && now - lastRender < dur) {
-      const timeout = dur - (now - lastRender)
-      clearTimeout(renderHandle)
-      renderHandle = +setTimeout(render, timeout)
-      return
+    customRender = function throttledRender() {
+      if (!throttle) {
+        executeRender()
+        return
+      }
+
+      const now = Date.now()
+      const timeSinceLastRender = now - stats.lastRender
+
+      if (timeSinceLastRender >= frameDuration) {
+        executeRender()
+      } else {
+        // Schedule render for next frame
+        clearTimeout(stats.renderHandle)
+        stats.renderHandle = +setTimeout(
+          executeRender,
+          frameDuration - timeSinceLastRender,
+        )
+      }
     }
-    render()
-  },
-  customDispatch = dispatchEvent,
-  mouseKeyBinding = false,
-}: Partial<RenderConfig> = {}) {
+  }
   const reconciler = createCustomReconciler(customRender)
+
   return (reactNode: React.ReactNode) => {
+    // Error handler for container
+    const throwError = (e: Error) => {
+      throw e
+    }
+
     const container = reconciler.createContainer(
       flex.rootNode,
       0,
@@ -299,20 +305,16 @@ export function createRender({
       false,
       null,
       "mpv-easy",
-      (e) => {
-        throw e
-      },
-      (e) => {
-        throw e
-      },
-      (e) => {
-        throw e
-      },
+      throwError,
+      throwError,
+      throwError,
       () => {},
       null,
     )
 
+    // Mouse event handling
     let lastMousePos: MousePos = { x: 0, y: 0, hover: false }
+
     const mousePosCallback = (_: string, value: MousePos) => {
       lastMousePos = value
       if (enableMouseMoveEvent) {
@@ -326,12 +328,14 @@ export function createRender({
         })
       }
     }
+
     observeProperty("mouse-pos", "native", mousePosCallback)
 
-    function dispatchEvent(
+    // Helper to dispatch mouse events
+    const createMouseEvent = (
       name: string,
       event: "down" | "up" | "press" = "down",
-    ) {
+    ) => {
       customDispatch(flex.rootNode, lastMousePos, {
         key_name: name,
         key: name,
@@ -342,139 +346,104 @@ export function createRender({
       })
     }
 
-    // It is recommended to use script-message. Multiple scripts using KeyBinding will conflict with each other.
-    // Mixing the two may also cause duplicate triggering of events.
+    // Shared key binding options
+    const keyBindingOpts = { complex: true, repeatable: true, forced: false }
+
+    // Setup mouse input handling
+    // Note: script-message is recommended over KeyBinding to avoid conflicts
     if (mouseKeyBinding) {
+      const createKeyHandler = (event: any) =>
+        customDispatch(flex.rootNode, lastMousePos, event)
+
       addKeyBinding(
         "MOUSE_BTN0",
         "MPV_EASY_MOUSE_LEFT",
-        (event) => {
-          // console.log("MPV_EASY_MOUSE_LEFT", JSON.stringify(event))
-          customDispatch(flex.rootNode, lastMousePos, event)
-        },
-        {
-          complex: true,
-          repeatable: true,
-          forced: false,
-        },
+        createKeyHandler,
+        keyBindingOpts,
       )
       addKeyBinding(
         "MOUSE_BTN1",
         "MPV_EASY_MOUSE_MID",
-        (event) => {
-          customDispatch(flex.rootNode, lastMousePos, event)
-        },
-        {
-          complex: true,
-          repeatable: true,
-          forced: false,
-        },
+        createKeyHandler,
+        keyBindingOpts,
       )
-      // addKeyBinding(
-      //   "MOUSE_BTN2",
-      //   "MPV_EASY_MOUSE_RIGHT",
-      //   (event) => {
-      //     customDispatch(flex.rootNode, lastMousePos, event)
-      //   },
-      //   {
-      //     complex: true,
-      //     repeatable: true,
-      //     forced: false,
-      //   },
-      // )
       addKeyBinding(
         "MOUSE_BTN3",
         "MPV_EASY_WHEEL_UP",
-        (event) => {
-          customDispatch(flex.rootNode, lastMousePos, event)
-        },
-        {
-          complex: true,
-          repeatable: true,
-          forced: false,
-        },
+        createKeyHandler,
+        keyBindingOpts,
       )
-      // addKeyBinding(
-      //   "MBTN_LEFT_DBL",
-      //   "MPV_EASY_LEFT_DBL",
-      //   (event) => {
-      //     console.log("MPV_EASY_LEFT_DBL", JSON.stringify(event))
-      //     customDispatch(flex.rootNode, lastMousePos, event)
-      //   },
-      //   {
-      //     complex: true,
-      //     repeatable: true,
-      //     forced: false,
-      //   },
-      // )
-
       addKeyBinding(
         "MOUSE_BTN4",
         "MPV_EASY_WHEEL_DOWN",
-        (event) => {
-          customDispatch(flex.rootNode, lastMousePos, event)
-        },
-        {
-          complex: true,
-          repeatable: true,
-          forced: false,
-        },
+        createKeyHandler,
+        keyBindingOpts,
       )
     } else {
+      // Use script messages for better compatibility
       registerScriptMessage("mouse-left-click", () => {
-        // dispatchEvent("MOUSE_BTN0", "click")
-        dispatchEvent("MBTN_LEFT", "down")
-        dispatchEvent("MBTN_LEFT", "up")
+        createMouseEvent("MBTN_LEFT", "down")
+        createMouseEvent("MBTN_LEFT", "up")
       })
       registerScriptMessage("mouse-mid-click", () => {
-        // dispatchEvent("MOUSE_BTN1", "click")
-        dispatchEvent("MBTN_MID", "down")
-        dispatchEvent("MBTN_MID", "up")
+        createMouseEvent("MBTN_MID", "down")
+        createMouseEvent("MBTN_MID", "up")
       })
       registerScriptMessage("mouse-right-click", () => {
-        // dispatchEvent("MOUSE_BTN2", "click")
-        dispatchEvent("MOUSE_RIGHT", "down")
-        dispatchEvent("MOUSE_RIGHT", "up")
+        createMouseEvent("MOUSE_RIGHT", "down")
+        createMouseEvent("MOUSE_RIGHT", "up")
       })
-      registerScriptMessage("mouse-wheel-up", () => {
-        dispatchEvent("WHEEL_UP")
-      })
-      registerScriptMessage("mouse-wheel-down", () => {
-        dispatchEvent("WHEEL_DOWN")
-      })
+      registerScriptMessage("mouse-wheel-up", () =>
+        createMouseEvent("WHEEL_UP"),
+      )
+      registerScriptMessage("mouse-wheel-down", () =>
+        createMouseEvent("WHEEL_DOWN"),
+      )
     }
+    // Root node dimension tracking
     let lastW = 0
     let lastH = 0
     const dim = new PropertyNative("osd-dimensions")
+
+    // Batch attribute updates for better performance
+    const initializeRootNode = (w: number, h: number) => {
+      const root = flex.rootNode
+
+      // Batch attribute updates
+      setAttribute(root, "id", RootName)
+      setAttribute(root, "width", w)
+      setAttribute(root, "height", h)
+      setAttribute(root, "position", "relative")
+      setAttribute(root, "color", "#FFFFFF")
+      setAttribute(root, "backgroundColor", "#000000FF")
+      setAttribute(root, "display", "flex")
+      setAttribute(root, "padding", 0)
+      setAttribute(root, "borderSize", 0)
+      setAttribute(root, "x", 0)
+      setAttribute(root, "y", 0)
+      setAttribute(root, "zIndex", 0)
+      setAttribute(root, "fontSize", 16)
+
+      // Batch layout updates
+      setLayoutNode(root, "x", 0)
+      setLayoutNode(root, "y", 0)
+      setLayoutNode(root, "width", w)
+      setLayoutNode(root, "height", h)
+      setLayoutNode(root, "padding", 0)
+      setLayoutNode(root, "border", 0)
+    }
+
     function updateRootNode() {
       const { w, h } = dim.value || { w: 0, h: 0 }
+
+      // Skip if dimensions unchanged or invalid
       if (!w || !h || (lastW === w && lastH === h)) {
         return
       }
+
       lastW = w
       lastH = h
-      setAttribute(flex.rootNode, "id", RootName)
-      setAttribute(flex.rootNode, "width", w)
-      setAttribute(flex.rootNode, "height", h)
-      setAttribute(flex.rootNode, "position", "relative")
-      setAttribute(flex.rootNode, "color", "#FFFFFF")
-      setAttribute(flex.rootNode, "backgroundColor", "#000000FF")
-      setAttribute(flex.rootNode, "display", "flex")
-      setAttribute(flex.rootNode, "padding", 0)
-      setAttribute(flex.rootNode, "borderSize", 0)
-      setAttribute(flex.rootNode, "x", 0)
-      setAttribute(flex.rootNode, "y", 0)
-      setAttribute(flex.rootNode, "zIndex", 0)
-      // setAttribute(flex.rootNode, "alignContent", "stretch")
-      setAttribute(flex.rootNode, "fontSize", 16)
-
-      setLayoutNode(flex.rootNode, "x", 0)
-      setLayoutNode(flex.rootNode, "y", 0)
-      setLayoutNode(flex.rootNode, "width", w)
-      setLayoutNode(flex.rootNode, "height", h)
-      setLayoutNode(flex.rootNode, "padding", 0)
-      setLayoutNode(flex.rootNode, "border", 0)
-
+      initializeRootNode(w, h)
       reconciler.updateContainer(reactNode, container, null, null)
     }
 
@@ -482,12 +451,11 @@ export function createRender({
 
     // Return cleanup function
     return () => {
-      clearTimeout(renderHandle)
       try {
         dim.unobserve(dimCallback)
         mp.unobserve_property(mousePosCallback)
-      } catch (_e) {
-        // Ignore cleanup errors
+      } catch {
+        // Silently ignore cleanup errors
       }
     }
   }
