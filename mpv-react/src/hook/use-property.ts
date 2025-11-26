@@ -15,7 +15,7 @@ import {
   getPropertyNative,
 } from "@mpv-easy/tool"
 import { isEqual } from "lodash-es"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 
 const setMpvProp = (name: string, type: keyof MpvType, value: any) => {
   switch (type) {
@@ -66,9 +66,21 @@ function useProp<T>(name: string, type: keyof MpvType, defaultValue?: T) {
     typeof defaultValue === "undefined" ? getMpvProp(name, type) : defaultValue,
   )
 
-  observeProperty(name, type, (_, value) => {
-    if (!isEqual(prop, value)) setProp(value)
-  })
+  useEffect(() => {
+    const callback = (_: string, value: T) => {
+      if (!isEqual(prop, value)) setProp(value)
+    }
+    observeProperty(name, type, callback)
+
+    return () => {
+      // Clean up observer on unmount
+      try {
+        mp.unobserve_property(callback)
+      } catch (_e) {
+        // Ignore errors during cleanup
+      }
+    }
+  }, [name, type])
 
   return [
     prop,

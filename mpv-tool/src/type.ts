@@ -205,7 +205,7 @@ export type MP = {
     fn: (name: string) => void,
   ): void
 
-  unobserve_property(fn: (...args: unknown[]) => void): void
+  unobserve_property(fn: (...args: any[]) => void): void
 
   get_opt(key: string, def?: string): string
 

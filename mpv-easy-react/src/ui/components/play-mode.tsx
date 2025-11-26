@@ -28,15 +28,15 @@ export const PlayMode = () => {
       key: i,
       onSelect: (_, e) => {
         dispatch.setPlayMode(i)
-        if (i === i18n.loopOne) {
+        if (i === "loopOne") {
           setPropertyBool("loop-playlist", false)
           setPropertyBool("loop-file", true)
           setPropertyBool("shuffle", false)
-        } else if (i === i18n.loopAll) {
+        } else if (i === "loopAll") {
           setPropertyBool("loop-file", false)
           setPropertyBool("loop-playlist", true)
           setPropertyBool("shuffle", false)
-        } else if (i === i18n.shuffle) {
+        } else if (i === "shuffle") {
           setPropertyBool("shuffle", true)
           setPropertyBool("loop-file", false)
           setPropertyBool("loop-playlist", true)

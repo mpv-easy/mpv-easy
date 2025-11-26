@@ -27,7 +27,6 @@ import { create } from "zustand"
 import { persist, StateStorage, createJSONStorage } from "zustand/middleware"
 import { ConfigProvider, theme } from "antd"
 import { parseGitHubUrl, Repo } from "@mpv-easy/tool"
-import "@ant-design/v5-patch-for-react-19"
 import { download as downloadRepo } from "jdl"
 import {
   DataType,

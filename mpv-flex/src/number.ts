@@ -6,7 +6,8 @@ export function parsePercentage(s: string): number {
 }
 
 export function isPercentage(s: string) {
-  return s.endsWith("%")
+  // return s.endsWith("%")
+  return s.charCodeAt(s.length - 1) === 37
 }
 
 export function assertPercentage(s: string) {

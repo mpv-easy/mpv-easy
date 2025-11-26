@@ -2,10 +2,12 @@ import { Rect, type CoordRect } from "./common"
 import { createOsdOverlay } from "./mpv"
 import type { MpvOsdOverlay } from "./type"
 
+// const MAX_OVERLAY_POOL_SIZE = 100
 const overlayPool: {
   overlay: MpvOsdOverlay
   busy: boolean
 }[] = []
+
 function getOverlay(): MpvOsdOverlay {
   for (let i = 0; i < overlayPool.length; i++) {
     const item = overlayPool[i]
@@ -15,13 +17,22 @@ function getOverlay(): MpvOsdOverlay {
     }
   }
 
+  // if (overlayPool.length >= MAX_OVERLAY_POOL_SIZE) {
+  //   throw new Error(
+  //     `Overlay pool size exceeded maximum limit: ${MAX_OVERLAY_POOL_SIZE}`,
+  //   )
+  // }
+
   const overlay = createOsdOverlay()
   overlay.remove = () => {
     overlay.hidden = true
     overlay.data = ""
     overlay.compute_bounds = false
     overlay.update()
-    overlayPool[overlay.id - 1].busy = false
+    const poolItem = overlayPool[overlay.id - 1]
+    if (poolItem) {
+      poolItem.busy = false
+    }
   }
   // MPV overlay id starts from 1
   overlayPool[overlay.id - 1] = { overlay, busy: true }
