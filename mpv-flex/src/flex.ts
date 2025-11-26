@@ -5,15 +5,13 @@ import { isPercentage, parsePercentage } from "./number"
 import { Len } from "./type"
 
 function hasTLBR<D extends BaseDom>(node: D): boolean {
-  if (
-    typeof node.attributes.top !== "undefined" ||
-    typeof node.attributes.left !== "undefined" ||
-    typeof node.attributes.bottom !== "undefined" ||
-    typeof node.attributes.right !== "undefined"
-  ) {
-    return true
-  }
-  return false
+  const attr = node.attributes
+  return (
+    attr.top !== undefined ||
+    attr.left !== undefined ||
+    attr.bottom !== undefined ||
+    attr.right !== undefined
+  )
 }
 
 export function lenToNumber<D extends BaseDom>(
@@ -22,31 +20,24 @@ export function lenToNumber<D extends BaseDom>(
   isX: boolean,
   defaultValue = 0,
 ): number {
-  switch (typeof len) {
-    case "number": {
-      return len
+  if (len === undefined) return defaultValue
+  if (typeof len === "number") return len
+  if (typeof len === "string") {
+    if (isPercentage(len)) {
+      return getAxisSize(node.parentNode!, isX) * parsePercentage(len)
     }
-    case "undefined": {
-      break
-    }
-    case "string": {
-      return isPercentage(len)
-        ? getAxisSize(node.parentNode!, isX) * parsePercentage(len)
-        : +len
-    }
-    default: {
-      throw new Error(`len type error: ${len}`)
-    }
+    return +len
   }
-  return defaultValue
+  throw new Error(`len type error: ${len}`)
 }
 
 function skipFlexLayout<D extends BaseDom>(node: D): boolean {
+  const attr = node.attributes
   return (
-    node.attributes.position === "absolute" ||
+    attr.position === "absolute" ||
     hasTLBR(node) ||
-    typeof node.attributes.x !== "undefined" ||
-    typeof node.attributes.y !== "undefined"
+    attr.x !== undefined ||
+    attr.y !== undefined
   )
 }
 
@@ -55,13 +46,10 @@ const defaultZIndexStep = 1
 function getAxisAttrSize<D extends BaseDom>(n: D, isX: boolean) {
   return isX ? n.attributes.width : n.attributes.height
 }
-function getAxisPosition<D extends BaseDom>(n: D, isX: boolean) {
-  return isX ? n.layoutNode.x : n.layoutNode.y
-}
 function getAxisSize<D extends BaseDom>(n: D, isX: boolean) {
   return isX ? n.layoutNode.width : n.layoutNode.height
 }
-function setAxisPosition<D extends BaseDom>(n: D, x: number, isX: boolean) {
+function _setAxisPosition<D extends BaseDom>(n: D, x: number, isX: boolean) {
   if (isX) {
     n.layoutNode.x = x
   } else {
@@ -78,14 +66,12 @@ function setAxisSize<D extends BaseDom>(n: D, x: number, isX: boolean) {
 
 export abstract class Flex<A extends {}, P extends {}, E extends {} = {}> {
   rootNode: BaseDom<A, P, E>
-  // abstract customCreateNode(): BaseDom<A, P, E>
   abstract customIsRootNode(node: BaseDom<A, P, E>): boolean
   abstract customCreateRootNode(): BaseDom<A, P, E>
   abstract customRenderRoot(node: BaseDom<A, P, E>): void
   abstract customMeasureNode(node: BaseDom<A, P, E>): Shape
   abstract customComputeZIndex(node: BaseDom<A, P, E>, zIndex: number): void
 
-  // event
   abstract customCreateMouseEvent(
     node: BaseDom<A, P, E> | undefined,
     x: number,
@@ -105,172 +91,99 @@ export abstract class Flex<A extends {}, P extends {}, E extends {} = {}> {
   }
 
   renderRoot() {
-    // const t1 = Date.now()
-    this.computeNodeSize(this.rootNode)
-
-    // const t2 = Date.now()
+    this.computeNodeSize(this.rootNode, 0)
     this.computeNodeLayout(this.rootNode)
-    // const t3 = Date.now()
     this.customRenderRoot(this.rootNode)
-    // const t4 = Date.now()
-    // console.log('renderRoot: ', t2 - t1, t3 - t2, t4 - t3)
   }
+
   private computedNodeTLBR(node: BaseDom<A, P, E>) {
     const { attributes, layoutNode } = node
-    let parent = node.parentNode ? node.parentNode : node
+    let parent = node.parentNode || node
     while (parent && parent.attributes.position === "absolute") {
       parent = parent.parentNode!
     }
 
-    assert(
-      !(
-        typeof attributes.left !== "undefined" &&
-        typeof attributes.right !== "undefined"
-      ),
-      "absolute position: do not set both left and right",
-    )
+    const { left, right, top, bottom } = attributes
+    const pLayout = parent.layoutNode
 
     assert(
-      !(
-        typeof attributes.top !== "undefined" &&
-        typeof attributes.bottom !== "undefined"
-      ),
+      !(left !== undefined && right !== undefined),
+      "absolute position: do not set both left and right",
+    )
+    assert(
+      !(top !== undefined && bottom !== undefined),
       "absolute position: do not set both top and bottom",
     )
 
-    setAxisPosition(node, parent.layoutNode.x, true)
-    setAxisPosition(node, parent.layoutNode.y, false)
+    layoutNode.x = pLayout.x
+    layoutNode.y = pLayout.y
 
-    switch (typeof attributes.left) {
-      case "number": {
-        layoutNode.x = parent.layoutNode.x + attributes.left
+    switch (typeof left) {
+      case "number":
+        layoutNode.x = pLayout.x + left
         break
-      }
-      case "undefined": {
+      case "string":
+        layoutNode.x = pLayout.x + pLayout.width * parsePercentage(left)
         break
-      }
-      case "string": {
-        layoutNode.x =
-          parent.layoutNode.x +
-          parent.layoutNode.width * parsePercentage(attributes.left)
-
-        break
-      }
-      default: {
-        throw new Error(`left type error: ${attributes.left}`)
-      }
     }
 
-    switch (typeof attributes.right) {
-      case "number": {
-        layoutNode.x =
-          parent.layoutNode.x +
-          parent.layoutNode.width -
-          attributes.right -
-          layoutNode.width
+    switch (typeof right) {
+      case "number":
+        layoutNode.x = pLayout.x + pLayout.width - right - layoutNode.width
         break
-      }
-      case "string": {
+      case "string":
         layoutNode.x =
-          parent.layoutNode.x +
-          parent.layoutNode.width -
+          pLayout.x +
+          pLayout.width -
           layoutNode.width -
-          parent.layoutNode.width * parsePercentage(attributes.right)
+          pLayout.width * parsePercentage(right)
         break
-      }
-      case "undefined": {
-        break
-      }
-      default: {
-        throw new Error(`right type error: ${attributes.right}`)
-      }
     }
 
-    switch (typeof attributes.top) {
-      case "number": {
-        layoutNode.y = parent.layoutNode.y + attributes.top
+    switch (typeof top) {
+      case "number":
+        layoutNode.y = pLayout.y + top
         break
-      }
-      case "string": {
-        layoutNode.y =
-          parent.layoutNode.y +
-          parent.layoutNode.height * parsePercentage(attributes.top)
+      case "string":
+        layoutNode.y = pLayout.y + pLayout.height * parsePercentage(top)
         break
-      }
-      case "undefined": {
-        break
-      }
-
-      default: {
-        throw new Error(`bottom type top: ${attributes.top}`)
-      }
     }
 
-    switch (typeof attributes.bottom) {
-      case "number": {
-        layoutNode.y =
-          parent.layoutNode.y +
-          parent.layoutNode.height -
-          attributes.bottom -
-          layoutNode.height
+    switch (typeof bottom) {
+      case "number":
+        layoutNode.y = pLayout.y + pLayout.height - bottom - layoutNode.height
         break
-      }
-      case "string": {
+      case "string":
         layoutNode.y =
-          parent.layoutNode.y +
-          parent.layoutNode.height -
+          pLayout.y +
+          pLayout.height -
           layoutNode.height -
-          parent.layoutNode.height * parsePercentage(attributes.bottom)
+          pLayout.height * parsePercentage(bottom)
         break
-      }
-      case "undefined": {
-        break
-      }
-      default: {
-        throw new Error(`bottom type bottom: ${attributes.bottom}`)
-      }
     }
   }
 
-  private computeZIndex(node: BaseDom<A, P, E>) {
-    const { attributes } = node
-
-    if (typeof attributes.zIndex === "number") {
-      return attributes.zIndex
-    }
-    let parent = node.parentNode
-
-    let deep = 1
-    while (parent) {
-      if (typeof parent.attributes.zIndex === "undefined") {
-        parent = parent.parentNode
-        deep += defaultZIndexStep
-      }
-      if (parent && typeof parent?.attributes?.zIndex === "number") {
-        return parent.attributes.zIndex + deep
-      }
-    }
-    return deep
+  // Pass parentZIndex to avoid traversing up the tree
+  private computeZIndex(node: BaseDom<A, P, E>, parentZIndex: number): number {
+    const zIndex = node.attributes.zIndex
+    return typeof zIndex === "number"
+      ? zIndex
+      : parentZIndex + defaultZIndexStep
   }
 
-  private computeNodeSize(node: BaseDom<A, P, E>) {
-    // console.log('computeNodeSize', node.attributes.id, node.dirty, isDirty(node))
-    const { attributes, layoutNode } = node
-
+  private computeNodeSize(node: BaseDom<A, P, E>, parentZIndex: number) {
+    const { attributes, layoutNode, childNodes } = node
+    const childCount = childNodes.length
     const isX = attributes.flexDirection !== "row"
 
-    // const st1 = Date.now()
-    const zIndex = this.computeZIndex(node)
-    // const st2 = Date.now()
-    // console.log('computeZIndex', node.attributes.id, st2 - st1)
-
+    const zIndex = this.computeZIndex(node, parentZIndex)
     this.customComputeZIndex(node, zIndex)
 
     const paddingSize = lenToNumber(node, attributes.padding, isX)
     layoutNode.padding = paddingSize
     const borderSize = lenToNumber(node, attributes.borderSize, isX)
     layoutNode.border = borderSize
-    const extraSize = paddingSize * 2 + borderSize * 2
+    const extraSize = (paddingSize + borderSize) * 2
 
     const xAttr = getAxisAttrSize(node, isX)
     const yAttr = getAxisAttrSize(node, !isX)
@@ -279,7 +192,6 @@ export abstract class Flex<A extends {}, P extends {}, E extends {} = {}> {
 
     if (typeof attributes.text === "string") {
       const { width, height } = this.customMeasureNode(node)
-
       layoutNode.width = xIsAuto
         ? extraSize + width
         : extraSize + lenToNumber(node, xAttr, true)
@@ -289,93 +201,50 @@ export abstract class Flex<A extends {}, P extends {}, E extends {} = {}> {
 
       // The size of the text node is not affected by its child nodes
       // making it convenient for calculating offsets in child nodes.
-      for (const c of node.childNodes) {
-        this.computeNodeSize(c)
+      for (let i = 0; i < childCount; i++) {
+        this.computeNodeSize(childNodes[i], zIndex)
       }
       return
     }
 
-    if (xIsAuto || yIsAuto) {
-      let maxXAxisLen = 0
-      let maxYAxisLen = 0
-      let sumXAxisLen = 0
-      let _sumYAxisLen = 0
+    if (!xIsAuto) this.computeNodeSizeAxis(node, xAttr, isX, extraSize)
+    if (!yIsAuto) this.computeNodeSizeAxis(node, yAttr, !isX, extraSize)
 
-      if (!xIsAuto) {
-        this.computeNodeSizeAxis(node, xAttr, isX, extraSize)
-      }
-      if (!yIsAuto) {
-        this.computeNodeSizeAxis(node, yAttr, !isX, extraSize)
-      }
+    let maxXAxisLen = 0
+    let maxYAxisLen = 0
+    let sumXAxisLen = 0
 
-      for (const c of node.childNodes) {
-        this.computeNodeSize(c)
+    for (let i = 0; i < childCount; i++) {
+      const c = childNodes[i]
+      this.computeNodeSize(c, zIndex)
 
-        if (c.attributes.position === "absolute") {
-          continue
-        }
-
-        const childXSize = getAxisSize(c, isX)
-        const childYSize = getAxisSize(c, !isX)
-        maxXAxisLen = Math.max(maxXAxisLen, childXSize)
-        maxYAxisLen = Math.max(maxYAxisLen, childYSize)
+      if (c.attributes.position !== "absolute") {
+        const cLayout = c.layoutNode
+        const childXSize = isX ? cLayout.width : cLayout.height
+        const childYSize = isX ? cLayout.height : cLayout.width
+        if (childXSize > maxXAxisLen) maxXAxisLen = childXSize
+        if (childYSize > maxYAxisLen) maxYAxisLen = childYSize
         sumXAxisLen += childXSize
-        _sumYAxisLen += childYSize
       }
+    }
 
-      if (xIsAuto) {
+    if (xIsAuto) {
+      setAxisSize(node, (isX ? sumXAxisLen : maxYAxisLen) + extraSize, true)
+    }
+    if (yIsAuto) {
+      setAxisSize(node, (isX ? maxYAxisLen : sumXAxisLen) + extraSize, false)
+    }
+
+    if (attributes.alignContent === "stretch") {
+      const stretchSize =
+        (isX ? node.layoutNode.height : node.layoutNode.width) - extraSize
+      for (let i = 0; i < childCount; i++) {
+        const c = childNodes[i]
         if (isX) {
-          setAxisSize(node, sumXAxisLen + extraSize, true)
+          if (c.attributes.height === undefined)
+            c.layoutNode.height = stretchSize
         } else {
-          setAxisSize(node, maxYAxisLen + extraSize, true)
-        }
-      }
-      if (yIsAuto) {
-        if (isX) {
-          setAxisSize(node, maxYAxisLen + extraSize, false)
-        } else {
-          setAxisSize(node, sumXAxisLen + extraSize, false)
-        }
-      }
-
-      if (node.attributes.alignContent === "stretch") {
-        for (const c of node.childNodes) {
-          if (isX) {
-            if (typeof c.attributes.height === "undefined") {
-              c.layoutNode.height = node.layoutNode.height - extraSize
-            }
-          } else {
-            if (typeof c.attributes.width === "undefined") {
-              c.layoutNode.width = node.layoutNode.width - extraSize
-            }
-          }
-        }
-      }
-    } else {
-      this.computeNodeSizeAxis(node, xAttr, isX, extraSize)
-      this.computeNodeSizeAxis(node, yAttr, !isX, extraSize)
-      let maxXAxisLen = 0
-      let maxYAxisLen = 0
-
-      for (const c of node.childNodes) {
-        this.computeNodeSize(c)
-        const childXSize = getAxisSize(c, isX)
-        const childYSize = getAxisSize(c, !isX)
-        maxXAxisLen = Math.max(maxXAxisLen, childXSize)
-        maxYAxisLen = Math.max(maxYAxisLen, childYSize)
-      }
-
-      if (node.attributes.alignContent === "stretch") {
-        for (const c of node.childNodes) {
-          if (isX) {
-            if (typeof c.attributes.height === "undefined") {
-              c.layoutNode.height = node.layoutNode.height - extraSize
-            }
-          } else {
-            if (typeof c.attributes.width === "undefined") {
-              c.layoutNode.width = node.layoutNode.width - extraSize
-            }
-          }
+          if (c.attributes.width === undefined) c.layoutNode.width = stretchSize
         }
       }
     }
@@ -408,438 +277,162 @@ export abstract class Flex<A extends {}, P extends {}, E extends {} = {}> {
     throw new Error(`computeNodeSize error, not support length: ${v}`)
   }
 
-  private computedNodeAlign(node: BaseDom<A, P, E>) {
-    const { attributes } = node
-    const isX = attributes.flexDirection !== "row"
+  // Helper to position a single flex child
+  private positionFlexChild(
+    c: BaseDom<A, P, E>,
+    xPos: number,
+    yPos: number,
+    isX: boolean,
+  ) {
+    if (isX) {
+      c.layoutNode.x = xPos
+      c.layoutNode.y = yPos
+    } else {
+      c.layoutNode.y = xPos
+      c.layoutNode.x = yPos
+    }
+  }
 
+  private computedNodeAlign(node: BaseDom<A, P, E>) {
+    const { attributes, childNodes } = node
+    const childCount = childNodes.length
+    if (childCount === 0) return
+
+    const isX = attributes.flexDirection !== "row"
     const { justifyContent = "start", alignItems = "start" } = attributes
 
-    const flexNodes = node.childNodes.filter((i) => !skipFlexLayout(i))
+    const nodeLayout = node.layoutNode
+    const nodeExtraSize = nodeLayout.padding + nodeLayout.border
+    const extraSize2 = nodeExtraSize * 2
 
-    if (justifyContent === "end") {
-      flexNodes.reverse()
-    }
-
-    const nodeExtraSize = node.layoutNode.padding + node.layoutNode.border
-    const nodeXPos = getAxisPosition(node, isX) + nodeExtraSize
-    const nodeYPos = getAxisPosition(node, !isX) + nodeExtraSize
-    const nodeXSize = getAxisSize(node, isX) - nodeExtraSize * 2
-    const nodeYSize = getAxisSize(node, !isX) - nodeExtraSize * 2
-    const nodeEndSize = nodeXPos + nodeXSize
+    const nodeXPos = (isX ? nodeLayout.x : nodeLayout.y) + nodeExtraSize
+    const nodeYPos = (isX ? nodeLayout.y : nodeLayout.x) + nodeExtraSize
+    const nodeXSize = (isX ? nodeLayout.width : nodeLayout.height) - extraSize2
+    const nodeYSize = (isX ? nodeLayout.height : nodeLayout.width) - extraSize2
     const nodeXEnd = nodeXPos + nodeXSize
     const nodeYEnd = nodeYPos + nodeYSize
-    let xAxisStart = 0
-    let yAxisStart = 0
-    // const xAxisSize = 0
-    // const yAxisSize = 0
-    let maxXAxisSize = 0
-    let maxYAxisSize = 0
+
+    // Pre-calculate flex children metrics in single pass
     let sumXAxisSize = 0
-    // const sumYAxisSize = 0
+    let maxYAxisSize = 0
+    let flexCount = 0
 
-    switch (justifyContent) {
-      case "start": {
-        switch (alignItems) {
-          case "space-between":
-          case "start": {
-            xAxisStart = nodeXPos
-            yAxisStart = nodeYPos
-            for (const c of flexNodes) {
-              const childXSize = getAxisSize(c, isX)
-              const childYSize = getAxisSize(c, !isX)
-              maxYAxisSize = Math.max(maxYAxisSize, childYSize)
-              maxXAxisSize = Math.max(maxXAxisSize, childXSize)
-              const nextXStart = xAxisStart + childXSize
-
-              if (nextXStart > nodeXEnd) {
-                yAxisStart += maxYAxisSize
-                setAxisPosition(c, nodeXPos, isX)
-                setAxisPosition(c, yAxisStart, !isX)
-                xAxisStart = nodeXPos + childXSize
-              } else {
-                setAxisPosition(c, xAxisStart, isX)
-                setAxisPosition(c, yAxisStart, !isX)
-                xAxisStart += childXSize
-              }
-            }
-            return
-          }
-          case "end": {
-            xAxisStart = nodeXPos
-            yAxisStart = nodeYEnd
-            for (const c of flexNodes) {
-              const childXSize = getAxisSize(c, isX)
-              const childYSize = getAxisSize(c, !isX)
-              maxYAxisSize = Math.max(maxYAxisSize, childYSize)
-              maxXAxisSize = Math.max(maxXAxisSize, childXSize)
-              const nextXStart = xAxisStart + childXSize
-              if (nextXStart > nodeXEnd) {
-                yAxisStart += maxYAxisSize
-                setAxisPosition(c, nodeXPos, isX)
-                setAxisPosition(c, yAxisStart - childYSize, !isX)
-                xAxisStart = nodeXPos + childXSize
-              } else {
-                setAxisPosition(c, xAxisStart, isX)
-                setAxisPosition(c, yAxisStart - childYSize, !isX)
-                xAxisStart += childXSize
-              }
-            }
-            return
-          }
-          case "center": {
-            for (const c of flexNodes) {
-              const childXSize = getAxisSize(c, isX)
-              const childYSize = getAxisSize(c, !isX)
-              // const childXPos = getAxisPosition(c, isX)
-              // const childYPos = getAxisPosition(c, !isX)
-
-              sumXAxisSize += childXSize
-              maxYAxisSize = Math.max(maxYAxisSize, childYSize)
-            }
-
-            xAxisStart = nodeXPos
-            yAxisStart = nodeYPos
-
-            for (const c of flexNodes) {
-              const childXSize = getAxisSize(c, isX)
-              const childYSize = getAxisSize(c, !isX)
-              // const childXPos = getAxisPosition(c, isX)
-              // const childYPos = getAxisPosition(c, !isX)
-
-              const nextStart = xAxisStart + childXSize
-              if (nextStart > nodeEndSize) {
-                yAxisStart += maxYAxisSize
-                setAxisPosition(c, nodeXPos, isX)
-                setAxisPosition(c, yAxisStart, !isX)
-                xAxisStart = nodeXPos + childXSize
-              } else {
-                setAxisPosition(c, xAxisStart, isX)
-                setAxisPosition(
-                  c,
-                  yAxisStart + (nodeYSize - childYSize) / 2,
-                  !isX,
-                )
-                xAxisStart += childXSize
-              }
-            }
-            return
-          }
-        }
-      }
-      case "end": {
-        switch (alignItems) {
-          case "space-between":
-          case "start": {
-            xAxisStart = nodeXEnd
-            yAxisStart = nodeYPos
-            for (const c of flexNodes) {
-              const childXSize = getAxisSize(c, isX)
-              const childYSize = getAxisSize(c, !isX)
-              maxYAxisSize = Math.max(maxYAxisSize, childYSize)
-              maxXAxisSize = Math.max(maxXAxisSize, childXSize)
-
-              const nextXStart = xAxisStart - childXSize
-
-              if (nextXStart < nodeXPos) {
-                yAxisStart -= maxYAxisSize
-                setAxisPosition(c, nodeXEnd - childXSize, isX)
-                setAxisPosition(c, yAxisStart, !isX)
-                xAxisStart -= childXSize
-              } else {
-                setAxisPosition(c, xAxisStart - childXSize, isX)
-                setAxisPosition(c, yAxisStart, !isX)
-                xAxisStart -= childXSize
-              }
-            }
-            return
-          }
-          case "end": {
-            xAxisStart = nodeXEnd
-            yAxisStart = nodeYEnd
-            for (const c of flexNodes) {
-              const childXSize = getAxisSize(c, isX)
-              const childYSize = getAxisSize(c, !isX)
-              maxYAxisSize = Math.max(maxYAxisSize, childYSize)
-              maxXAxisSize = Math.max(maxXAxisSize, childXSize)
-
-              const nextXStart = xAxisStart - childXSize
-
-              if (nextXStart < nodeXPos) {
-                yAxisStart -= maxYAxisSize
-                setAxisPosition(c, nodeXEnd - childXSize, isX)
-                setAxisPosition(c, yAxisStart - childYSize, !isX)
-                xAxisStart -= childXSize
-              } else {
-                setAxisPosition(c, xAxisStart - childXSize, isX)
-                setAxisPosition(c, yAxisStart - childYSize, !isX)
-                xAxisStart -= childXSize
-              }
-            }
-            return
-          }
-          case "center": {
-            xAxisStart = nodeXEnd
-            yAxisStart = nodeYPos
-            for (const c of flexNodes) {
-              const childXSize = getAxisSize(c, isX)
-              const childYSize = getAxisSize(c, !isX)
-              maxYAxisSize = Math.max(maxYAxisSize, childYSize)
-              maxXAxisSize = Math.max(maxXAxisSize, childXSize)
-            }
-
-            for (const c of flexNodes) {
-              const childXSize = getAxisSize(c, isX)
-              const childYSize = getAxisSize(c, !isX)
-              // const childXPos = getAxisPosition(c, isX)
-              // const childYPos = getAxisPosition(c, !isX)
-
-              const nextStart = xAxisStart - childXSize
-              if (nextStart < nodeXPos) {
-                // print("warn: not support flex wrap", c.attributes.id)
-              } else {
-                setAxisPosition(c, nextStart, isX)
-
-                setAxisPosition(
-                  c,
-                  yAxisStart + (maxYAxisSize - childYSize) / 2,
-                  !isX,
-                )
-                xAxisStart -= childXSize
-              }
-            }
-            return
-          }
-        }
-      }
-      case "center": {
-        switch (alignItems) {
-          case "space-between":
-          case "start": {
-            yAxisStart = nodeYPos
-            for (const c of flexNodes) {
-              const childXSize = getAxisSize(c, isX)
-              const childYSize = getAxisSize(c, !isX)
-              maxYAxisSize = Math.max(maxYAxisSize, childYSize)
-              maxXAxisSize = Math.max(maxXAxisSize, childXSize)
-              sumXAxisSize += childXSize
-            }
-            xAxisStart = nodeXPos + (nodeXSize - sumXAxisSize) / 2
-            for (const c of flexNodes) {
-              const childXSize = getAxisSize(c, isX)
-              // const childYSize = getAxisSize(c, !isX)
-              // const childXPos = getAxisPosition(c, isX)
-              // const childYPos = getAxisPosition(c, !isX)
-
-              const nextStart = xAxisStart + childXSize
-              if (nextStart > nodeXEnd) {
-                // print("warn: not support flex wrap", c.attributes.id)
-              } else {
-                setAxisPosition(c, xAxisStart, isX)
-                setAxisPosition(c, yAxisStart, !isX)
-                xAxisStart += childXSize
-              }
-            }
-            return
-          }
-          case "end": {
-            yAxisStart = nodeYEnd
-            for (const c of flexNodes) {
-              const childXSize = getAxisSize(c, isX)
-              const childYSize = getAxisSize(c, !isX)
-              maxYAxisSize = Math.max(maxYAxisSize, childYSize)
-              maxXAxisSize = Math.max(maxXAxisSize, childXSize)
-              sumXAxisSize += childXSize
-            }
-            xAxisStart = nodeXPos + (nodeXSize - sumXAxisSize) / 2
-            for (const c of flexNodes) {
-              const childXSize = getAxisSize(c, isX)
-              const childYSize = getAxisSize(c, !isX)
-              // const childXPos = getAxisPosition(c, isX)
-              // const childYPos = getAxisPosition(c, !isX)
-
-              const nextStart = xAxisStart + childXSize
-              if (nextStart > nodeXEnd) {
-                // print("warn: not support flex wrap", c.attributes.id)
-              } else {
-                setAxisPosition(c, xAxisStart, isX)
-                setAxisPosition(c, yAxisStart - childYSize, !isX)
-                xAxisStart += childXSize
-              }
-            }
-            return
-          }
-          case "center": {
-            yAxisStart = nodeYPos
-            for (const c of flexNodes) {
-              const childXSize = getAxisSize(c, isX)
-              const childYSize = getAxisSize(c, !isX)
-              maxYAxisSize = Math.max(maxYAxisSize, childYSize)
-              maxXAxisSize = Math.max(maxXAxisSize, childXSize)
-              sumXAxisSize += childXSize
-            }
-            xAxisStart = nodeXPos + (nodeXSize - sumXAxisSize) / 2
-            for (const c of flexNodes) {
-              const childXSize = getAxisSize(c, isX)
-              const childYSize = getAxisSize(c, !isX)
-              // const childXPos = getAxisPosition(c, isX)
-              // const childYPos = getAxisPosition(c, !isX)
-
-              const nextStart = xAxisStart + childXSize
-              if (nextStart > nodeXEnd) {
-                // print("warn: not support flex wrap", c.attributes.id)
-              } else {
-                setAxisPosition(c, xAxisStart, isX)
-
-                setAxisPosition(
-                  c,
-                  yAxisStart + (nodeYSize - childYSize) / 2,
-                  !isX,
-                )
-                xAxisStart += childXSize
-              }
-            }
-            return
-          }
-        }
-      }
-      case "space-between": {
-        switch (alignItems) {
-          case "space-between":
-          case "start": {
-            yAxisStart = nodeYPos
-            for (const c of flexNodes) {
-              const childXSize = getAxisSize(c, isX)
-              const childYSize = getAxisSize(c, !isX)
-              maxYAxisSize = Math.max(maxYAxisSize, childYSize)
-              maxXAxisSize = Math.max(maxXAxisSize, childXSize)
-              sumXAxisSize += childXSize
-            }
-
-            xAxisStart = nodeXPos
-            const xGap = (nodeXSize - sumXAxisSize) / (flexNodes.length - 1)
-
-            for (let i = 0; i < flexNodes.length; i++) {
-              const c = flexNodes[i]
-              const childXSize = getAxisSize(c, isX)
-              // const childYSize = getAxisSize(c, !isX)
-              // const childXPos = getAxisPosition(c, isX)
-              // const childYPos = getAxisPosition(c, !isX)
-
-              const nextStart = xAxisStart + childXSize
-              if (nextStart > nodeXEnd) {
-                // print("warn: not support flex wrap", c.attributes.id)
-              } else {
-                setAxisPosition(c, xAxisStart, isX)
-                setAxisPosition(c, yAxisStart, !isX)
-                xAxisStart += childXSize + xGap
-              }
-            }
-            return
-          }
-          case "end": {
-            yAxisStart = nodeYEnd
-            for (const c of flexNodes) {
-              const childXSize = getAxisSize(c, isX)
-              const childYSize = getAxisSize(c, !isX)
-              maxYAxisSize = Math.max(maxYAxisSize, childYSize)
-              maxXAxisSize = Math.max(maxXAxisSize, childXSize)
-              sumXAxisSize += childXSize
-            }
-            xAxisStart = nodeXPos
-            const xGap = (nodeXSize - sumXAxisSize) / (flexNodes.length - 1)
-
-            for (let i = 0; i < flexNodes.length; i++) {
-              const c = flexNodes[i]
-              const childXSize = getAxisSize(c, isX)
-              const childYSize = getAxisSize(c, !isX)
-              // const childXPos = getAxisPosition(c, isX)
-              // const childYPos = getAxisPosition(c, !isX)
-
-              const nextStart = xAxisStart + childXSize
-              if (nextStart > nodeXEnd) {
-                // print("warn: not support flex wrap", c.attributes.id)
-              } else {
-                setAxisPosition(c, xAxisStart, isX)
-                setAxisPosition(c, yAxisStart - childYSize, !isX)
-                xAxisStart += childXSize + xGap
-              }
-            }
-            return
-          }
-          case "center": {
-            yAxisStart = nodeYPos
-            for (const c of flexNodes) {
-              const childXSize = getAxisSize(c, isX)
-              const childYSize = getAxisSize(c, !isX)
-              maxYAxisSize = Math.max(maxYAxisSize, childYSize)
-              maxXAxisSize = Math.max(maxXAxisSize, childXSize)
-              sumXAxisSize += childXSize
-            }
-            xAxisStart = nodeXPos
-            const xGap = (nodeXSize - sumXAxisSize) / (flexNodes.length - 1)
-            for (let i = 0; i < flexNodes.length; i++) {
-              const c = flexNodes[i]
-              const childXSize = getAxisSize(c, isX)
-              const childYSize = getAxisSize(c, !isX)
-              // const childXPos = getAxisPosition(c, isX)
-              // const childYPos = getAxisPosition(c, !isX)
-
-              const nextStart = xAxisStart + childXSize
-              if (nextStart > nodeXEnd) {
-                // print("warn: not support flex wrap", c.attributes.id)
-              } else {
-                setAxisPosition(c, xAxisStart, isX)
-
-                setAxisPosition(
-                  c,
-                  yAxisStart + (nodeYSize - childYSize) / 2,
-                  !isX,
-                )
-                xAxisStart += childXSize + xGap
-              }
-            }
-            return
-          }
-        }
-      }
+    for (let i = 0; i < childCount; i++) {
+      const c = childNodes[i]
+      if (skipFlexLayout(c)) continue
+      flexCount++
+      const cLayout = c.layoutNode
+      const childXSize = isX ? cLayout.width : cLayout.height
+      const childYSize = isX ? cLayout.height : cLayout.width
+      sumXAxisSize += childXSize
+      if (childYSize > maxYAxisSize) maxYAxisSize = childYSize
     }
 
-    throw new Error(`not support flex align: ${justifyContent} ${alignItems}`)
+    if (flexCount === 0) return
+
+    // Calculate starting position and gap
+    let xAxisStart: number
+    let xGap = 0
+
+    switch (justifyContent) {
+      case "end":
+        xAxisStart = nodeXEnd
+        break
+      case "center":
+        xAxisStart = nodeXPos + (nodeXSize - sumXAxisSize) / 2
+        break
+      case "space-between":
+        xAxisStart = nodeXPos
+        xGap = flexCount > 1 ? (nodeXSize - sumXAxisSize) / (flexCount - 1) : 0
+        break
+      default: // "start"
+        xAxisStart = nodeXPos
+    }
+
+    // Calculate Y axis base position
+    const yAxisStart = alignItems === "end" ? nodeYEnd : nodeYPos
+
+    // Position children based on justifyContent direction
+    if (justifyContent === "end") {
+      // Reverse iteration for "end" alignment
+      for (let i = childCount - 1; i >= 0; i--) {
+        const c = childNodes[i]
+        if (skipFlexLayout(c)) continue
+
+        const cLayout = c.layoutNode
+        const childXSize = isX ? cLayout.width : cLayout.height
+        const childYSize = isX ? cLayout.height : cLayout.width
+
+        const xPos = xAxisStart - childXSize
+        let yPos: number
+
+        switch (alignItems) {
+          case "end":
+            yPos = yAxisStart - childYSize
+            break
+          case "center":
+            yPos = nodeYPos + (maxYAxisSize - childYSize) / 2
+            break
+          default: // "start", "space-between"
+            yPos = yAxisStart
+        }
+
+        this.positionFlexChild(c, xPos, yPos, isX)
+        xAxisStart = xPos
+      }
+    } else {
+      // Forward iteration for other alignments
+      for (let i = 0; i < childCount; i++) {
+        const c = childNodes[i]
+        if (skipFlexLayout(c)) continue
+
+        const cLayout = c.layoutNode
+        const childXSize = isX ? cLayout.width : cLayout.height
+        const childYSize = isX ? cLayout.height : cLayout.width
+
+        let yPos: number
+        switch (alignItems) {
+          case "end":
+            yPos = yAxisStart - childYSize
+            break
+          case "center":
+            yPos = nodeYPos + (nodeYSize - childYSize) / 2
+            break
+          default: // "start", "space-between"
+            yPos = yAxisStart
+        }
+
+        this.positionFlexChild(c, xAxisStart, yPos, isX)
+        xAxisStart += childXSize + xGap
+      }
+    }
   }
+
   private computeNodeLayout(node: BaseDom<A, P, E>) {
-    // console.log('computeNodeLayout', node.attributes.id, node.dirty, isDirty(node))
-    const { layoutNode, attributes } = node
+    const { layoutNode, attributes, childNodes } = node
 
     if (hasTLBR(node)) {
       this.computedNodeTLBR(node)
     }
-    if (typeof attributes.x === "number") {
-      layoutNode.x = attributes.x
+
+    if (typeof attributes.x === "number") layoutNode.x = attributes.x
+    if (typeof attributes.y === "number") layoutNode.y = attributes.y
+
+    const position = attributes.position
+    if (
+      position !== "relative" &&
+      position !== undefined &&
+      position !== "absolute"
+    ) {
+      throw new Error(`error position: ${position}`)
     }
-    if (typeof attributes.y === "number") {
-      layoutNode.y = attributes.y
+
+    if (childNodes.length && attributes.display === "flex") {
+      this.computedNodeAlign(node)
     }
-    switch (attributes.position) {
-      case "relative": {
-      }
-      case undefined: {
-        if (node.childNodes.length && attributes.display === "flex") {
-          this.computedNodeAlign(node)
-        }
-        break
-      }
-      case "absolute": {
-        if (node.childNodes.length && attributes.display === "flex") {
-          this.computedNodeAlign(node)
-        }
-        break
-      }
-      default: {
-        throw new Error(`error position: ${attributes.position}`)
-      }
-    }
-    for (const i of node.childNodes) {
-      this.computeNodeLayout(i)
+
+    for (let i = 0, len = childNodes.length; i < len; i++) {
+      this.computeNodeLayout(childNodes[i])
     }
   }
 
@@ -848,14 +441,16 @@ export abstract class Flex<A extends {}, P extends {}, E extends {} = {}> {
     event: BaseMouseEvent<A, P, E>,
     dispatchMap: Record<EventName, BaseDom<A, P, E>[]>,
   ) {
-    if (node.attributes.hide || node.attributes.pointerEvents === "none") {
-      return
-    }
-    for (const c of node.childNodes) {
-      this.dispatchMouseEventInner(c, event, dispatchMap)
+    const attr = node.attributes
+    if (attr.hide || attr.pointerEvents === "none") return
+
+    const childNodes = node.childNodes
+    for (let i = 0, len = childNodes.length; i < len; i++) {
+      this.dispatchMouseEventInner(childNodes[i], event, dispatchMap)
     }
     this.dispatchMouseEventForNode(node, event, dispatchMap)
   }
+
   dispatchMouseEvent(node: BaseDom<A, P, E>, event: BaseMouseEvent<A, P, E>) {
     const dm: Record<EventName, BaseDom<A, P, E>[]> = {
       onMouseDown: [],
@@ -872,21 +467,19 @@ export abstract class Flex<A extends {}, P extends {}, E extends {} = {}> {
     }
     this.dispatchMouseEventInner(node, event, dm)
 
-    for (const name of EventNameList) {
+    for (let i = 0, len = EventNameList.length; i < len; i++) {
+      const name = EventNameList[i]
       const nodes = dm[name]
-      if (!nodes.length) {
-        continue
-      }
+      if (!nodes.length) continue
 
-      const sorted = nodes.sort(
+      nodes.sort(
         (a, b) => (b.attributes.zIndex || 0) - (a.attributes.zIndex || 0),
       )
-      for (const n of sorted) {
-        if (!event.bubbles) {
-          continue
-        }
+
+      for (let j = 0, jlen = nodes.length; j < jlen; j++) {
+        if (!event.bubbles) continue
+        const n = nodes[j]
         if (name === "onMouseLeave" || name === "onMouseEnter") {
-          // https://github.com/mpv-easy/mpv-easy/issues/40
           event.target = n
         }
         n.attributes[name]?.(event)
@@ -899,18 +492,15 @@ export abstract class Flex<A extends {}, P extends {}, E extends {} = {}> {
     event: BaseMouseEvent<A, P, E>,
     dispatchMap: Record<EventName, BaseDom<A, P, E>[]>,
   ) {
-    if (!event.bubbles) {
-      return
-    }
-    if (node.attributes.pointerEvents === "none") {
-      return
-    }
-    if (node.attributes.hide) {
-      return
-    }
+    if (!event.bubbles) return
+
+    const attr = node.attributes
+    if (attr.pointerEvents === "none" || attr.hide) return
+
     const { layoutNode } = node
-    if (node.layoutNode.hasPoint(event.x, event.y)) {
-      if (typeof event.target === "undefined") {
+
+    if (layoutNode.hasPoint(event.x, event.y)) {
+      if (event.target === undefined) {
         event.target = node
       }
 
@@ -929,7 +519,6 @@ export abstract class Flex<A extends {}, P extends {}, E extends {} = {}> {
             dispatchMap.onMousePress.push(node)
           } else if (!layoutNode._mouseIn) {
             dispatchMap.onMouseEnter.push(node)
-
             layoutNode._mouseIn = true
           } else {
             dispatchMap.onMouseMove.push(node)
@@ -938,29 +527,25 @@ export abstract class Flex<A extends {}, P extends {}, E extends {} = {}> {
           !layoutNode._mouseDown &&
           (this.customIsMouseDown(event) || this.customIsMouseClick(event))
         ) {
-          if (!layoutNode._mouseDown) {
-            dispatchMap.onMouseDown.push(node)
-            dispatchMap.onClick.push(node)
-            layoutNode._mouseDown = true
-            layoutNode._mouseUp = false
-            if (!layoutNode._focus) {
-              layoutNode._focus = true
-              dispatchMap.onFocus.push(node)
-            }
-            if (this.customIsMouseClick(event)) {
-              layoutNode._mouseDown = false
-              dispatchMap.onMouseUp.push(node)
-            }
+          dispatchMap.onMouseDown.push(node)
+          dispatchMap.onClick.push(node)
+          layoutNode._mouseDown = true
+          layoutNode._mouseUp = false
+          if (!layoutNode._focus) {
+            layoutNode._focus = true
+            dispatchMap.onFocus.push(node)
           }
-        } else if (this.customIsMouseUp(event)) {
-          if (!layoutNode._mouseUp) {
-            dispatchMap.onMouseUp.push(node)
+          if (this.customIsMouseClick(event)) {
             layoutNode._mouseDown = false
-            layoutNode._mouseUp = true
-            if (!layoutNode._focus) {
-              dispatchMap.onFocus.push(node)
-              layoutNode._focus = true
-            }
+            dispatchMap.onMouseUp.push(node)
+          }
+        } else if (this.customIsMouseUp(event) && !layoutNode._mouseUp) {
+          dispatchMap.onMouseUp.push(node)
+          layoutNode._mouseDown = false
+          layoutNode._mouseUp = true
+          if (!layoutNode._focus) {
+            dispatchMap.onFocus.push(node)
+            layoutNode._focus = true
           }
         }
       } else if (layoutNode._mouseIn) {
@@ -968,11 +553,9 @@ export abstract class Flex<A extends {}, P extends {}, E extends {} = {}> {
         layoutNode._mouseIn = false
       }
     } else {
-      // mouseEvent.target = undefined
       if (layoutNode._mouseIn) {
         dispatchMap.onMouseLeave.push(node)
         layoutNode._mouseIn = false
-        // layoutNode._mouseUp = false
       }
 
       if (
@@ -981,8 +564,6 @@ export abstract class Flex<A extends {}, P extends {}, E extends {} = {}> {
       ) {
         dispatchMap.onBlur.push(node)
         layoutNode._focus = false
-        // layoutNode._mouseIn = false
-        // layoutNode._mouseUp = false
       }
     }
   }
