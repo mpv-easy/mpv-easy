@@ -456,7 +456,8 @@ export function createDefaultThemeConfig(): EasyConfig {
       saveConfigThrottle: defaultSaveConfigThrottle,
       protocolHook: "",
     },
-    tooltip: true,
+    // tooltip: true,
+    tooltip: false,
   } satisfies EasyConfig)
 }
 export const defaultState: EasyConfig["state"] = {
