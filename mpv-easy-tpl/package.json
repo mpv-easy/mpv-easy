@@ -23,7 +23,7 @@
     "@mpv-easy/polyfill": "workspace:*",
     "@mpv-easy/react": "workspace:*",
     "@mpv-easy/tool": "workspace:*",
-    "react": "19.2.0"
+    "react": "19.2.3"
   },
   "devDependencies": {
     "@babel/cli": "7.28.3",
@@ -31,10 +31,10 @@
     "@babel/preset-env": "7.28.5",
     "@babel/preset-typescript": "7.28.5",
     "@chokidar-napi/chokidar": "0.1.3",
-    "@types/node": "24.10.1",
+    "@types/node": "25.0.2",
     "@types/react": "19.2.7",
     "@types/react-dom": "19.2.3",
-    "esbuild": "0.27.0",
-    "tsx": "4.20.6"
+    "esbuild": "0.27.1",
+    "tsx": "4.21.0"
   }
 }

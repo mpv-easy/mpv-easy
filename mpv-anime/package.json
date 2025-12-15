@@ -19,8 +19,8 @@
   "author": "ahaoboy <504595380@qq.com> (https://github.com/ahaoboy)",
   "license": "MIT",
   "dependencies": {
-    "react": "19.2.0",
-    "react-dom": "19.2.0",
+    "react": "19.2.3",
+    "react-dom": "19.2.3",
     "react-reconciler": "0.33.0",
     "react-redux": "9.2.0",
     "react-use": "17.6.0"
