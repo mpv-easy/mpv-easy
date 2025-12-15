@@ -9,7 +9,7 @@ const overlay = new OsdOverlay()
 new PropertyBool("pause").observe((_, v) => {
   console.log("pause: ", v)
   overlay.data = new AssDraw()
-    .font("JetBrainsMono NFM Regular")
+    .font("FiraCode Nerd Font Mono")
     .fontSize(32)
     .redText("pause: ")
     .blueText(v ? ICON.Pause : ICON.Play)

@@ -54,7 +54,7 @@ function Counter() {
   }, [])
 
   return (
-    <Box font="JetBrainsMono NFM Regular" fontSize={128} id="box_0">
+    <Box font="FiraCode Nerd Font Mono" fontSize={128} id="box_0">
       <Box
         id="box_1"
         text={ICON.Minus}

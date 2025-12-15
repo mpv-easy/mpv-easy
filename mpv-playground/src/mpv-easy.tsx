@@ -8,7 +8,7 @@ setTimeout(() => {
   store.setState(config)
   renderToBrowser(
     <Easy fontSize={24} initHide={false} />,
-    "JetBrainsMono NFM Regular",
+    "FiraCode Nerd Font Mono",
   )
   console.log("render: ", store)
 }, 1000)

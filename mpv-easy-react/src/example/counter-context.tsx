@@ -58,7 +58,7 @@ function Counter() {
   console.log("============count: ", count)
   return (
     <Box
-      font="JetBrainsMono NFM Regular"
+      font="FiraCode Nerd Font Mono"
       fontSize={128}
       flexDirection="column"
       justifyContent="end"

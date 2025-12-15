@@ -11,7 +11,7 @@ Download the latest release script for your platform(eg: mpv-easy-windows.zip) a
 ```txt
 portable_config
 ├── fonts
-│   └── JetBrainsMonoNerdFontMono-Regular.ttf
+│   └── FiraCodeNerdFontMono-Regular.ttf
 ├── scripts
 │   ├── mpv-easy.js
 └── shaders

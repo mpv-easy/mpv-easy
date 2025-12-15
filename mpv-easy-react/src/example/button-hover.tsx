@@ -9,7 +9,7 @@ export function ButtonHover() {
   return (
     <Button
       id="1"
-      font="JetBrainsMono NFM Regular"
+      font="FiraCode Nerd Font Mono"
       backgroundColor="#000000"
       backgroundColorHover="#00FF00"
       fontSize={128}

@@ -15,7 +15,7 @@ export function DropdownBox() {
   return (
     <Box
       id="counter-main"
-      font="JetBrainsMono NFM Regular"
+      font="FiraCode Nerd Font Mono"
       fontSize={boxSize / 4}
       display="flex"
       flexDirection="column"

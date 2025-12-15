@@ -38,7 +38,7 @@ export function Counter() {
         justifyContent="center"
         alignItems="center"
         text={Plus}
-        font="JetBrainsMono NFM Regular"
+        font="FiraCode Nerd Font Mono"
         color="#0000FF"
         width={100}
         height={100}
