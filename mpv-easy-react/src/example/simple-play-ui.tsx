@@ -30,7 +30,7 @@ export function SimplePlay() {
       onMouseLeave={() => {
         setColor(iconColor)
       }}
-      font="JetBrainsMono NFM Regular"
+      font="FiraCode Nerd Font Mono"
       fontSize={64}
       color={color}
       text={!pause ? pauseIcon : playIcon}

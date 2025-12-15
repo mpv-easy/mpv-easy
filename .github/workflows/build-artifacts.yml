@@ -148,7 +148,7 @@ jobs:
           name: mpv-easy-play-with-macos-arm64
           path: mpv-easy-play-with-macos-arm64
   build-ext-ubuntu:
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - uses: actions-rust-lang/setup-rust-toolchain@v1
@@ -156,7 +156,7 @@ jobs:
           rustflags: "-A warnings"
           toolchain: "nightly"
 
-      - name: build ubuntu-24.04
+      - name: build ubuntu-latest
         run: |
           cd mpv-easy-ext
           cargo build -q --release --out-dir=output -Z unstable-options
@@ -176,7 +176,7 @@ jobs:
           path: mpv-easy-play-with-linux
 
   build-ext-android:
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - uses: actions-rust-lang/setup-rust-toolchain@v1
@@ -184,7 +184,7 @@ jobs:
           rustflags: "-A warnings"
           toolchain: "nightly"
 
-      - name: build ubuntu-24.04
+      - name: build ubuntu-latest
         run: |
 
           cd mpv-easy-ext
@@ -215,7 +215,7 @@ jobs:
         build-ext-android,
       ]
     name: release
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - uses: actions/download-artifact@v4
