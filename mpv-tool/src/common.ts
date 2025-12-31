@@ -41,6 +41,7 @@ export const SubtitleTypes =
   )
 
 export const FontTypes = "ttf,otf,woff,woff2,eot".split(",")
+export const DllTypes = "dll,so,dylib".split(",")
 
 export function endsWith(s: string | undefined, exts: string[]) {
   if (!s?.length) {
@@ -85,6 +86,9 @@ export function isImage(s: string, types = ImageTypes) {
 }
 
 export function isFont(s: string, types = FontTypes) {
+  return endsWith(s.toLocaleLowerCase(), types)
+}
+export function isDll(s: string, types = DllTypes) {
   return endsWith(s.toLocaleLowerCase(), types)
 }
 

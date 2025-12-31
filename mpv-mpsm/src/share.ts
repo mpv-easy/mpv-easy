@@ -1,4 +1,4 @@
-import { isFont } from "@mpv-easy/tool"
+import { isDll, isFont } from "@mpv-easy/tool"
 import { Script } from "./meta"
 import { File } from "@easy-install/easy-archive"
 import { appendScriptConf, commonPrefix, convertURL } from "./tool"
@@ -165,6 +165,20 @@ export function installScript(
     )
     for (const i of files) {
       i.path = `${configDir}/fonts/${i.path}`
+      mpvFiles.push(i)
+    }
+  }
+
+  // dll file
+  if (scriptFiles.find((i) => !i.path.includes("/") && isDll(i.path))) {
+    const files = scriptFiles.filter(
+      (i) => !i.path.includes("/") && isDll(i.path),
+    )
+    scriptFiles = scriptFiles.filter(
+      (i) => !(!i.path.includes("/") && isDll(i.path)),
+    )
+    for (const i of files) {
+      i.path = `${configDir}/scripts/${i.path}`
       mpvFiles.push(i)
     }
   }
