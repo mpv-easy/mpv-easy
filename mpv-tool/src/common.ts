@@ -5,7 +5,6 @@ import {
   NumberKeys,
   loadfile,
   playlistClear,
-  playlistMove,
   playlistPlayIndex,
   playlistRemove,
 } from "./type"
@@ -434,67 +433,64 @@ export function getMpvPlaylist(): string[] {
   return list
 }
 
+/**
+ * Update mpv playlist with a new list and play the item at playIndex.
+ * Attempts to preserve current playback when possible.
+ *
+ * @param list - New playlist items (normalized paths)
+ * @param playIndex - Index in new list to play (default: 0, use -1 to keep current or play last)
+ */
 export function updatePlaylist(list: string[], playIndex = 0) {
   const oldList = getMpvPlaylist()
   const oldCount = oldList.length
-  const path = normalize(getPropertyString("path") || "")
+  const _currentPath = normalize(getPropertyString("path") || "")
 
+  // Handle empty new list: clear playlist
+  if (list.length === 0) {
+    playlistClear()
+    return
+  }
+
+  // Handle empty old list: just append all and play
   if (oldCount === 0) {
-    // replace all
-    for (const i of list) {
-      loadfile(i, "append")
+    for (const item of list) {
+      loadfile(item, "append")
     }
-    playlistPlayIndex(playIndex)
+    const targetIndex = playIndex === -1 ? list.length - 1 : playIndex
+    playlistPlayIndex(Math.min(targetIndex, list.length - 1))
     return
   }
 
-  const oldListIndex = oldList.indexOf(path)
-  if (playIndex === -1) {
-    // clear and replace
-    for (const i of list) {
-      loadfile(i, "append")
-    }
-    playlistPlayIndex(playIndex + oldList.length)
-    for (let i = 0; i < oldList.length; i++) {
-      playlistRemove(0)
-    }
-    return
-  }
+  // Normalize playIndex: -1 means play last item
+  const normalizedPlayIndex =
+    playIndex === -1 ? list.length - 1 : Math.min(playIndex, list.length - 1)
+
+  // If lists are identical, just switch to target index if needed
   if (isEqual(oldList, list)) {
-    if (oldListIndex !== playIndex) {
-      playlistPlayIndex(playIndex)
+    const currentPos = getPropertyNumber("playlist-pos") ?? -1
+    if (currentPos !== normalizedPlayIndex) {
+      playlistPlayIndex(normalizedPlayIndex)
     }
     return
   }
-  if (oldListIndex === -1) {
-    for (const i of list) {
-      loadfile(i, "append")
-    }
-    playlistPlayIndex(playIndex + oldCount)
-    for (let i = 0; i < oldList.length; i++) {
-      playlistRemove(0)
-    }
-  } else {
-    for (let i = 0; i < oldListIndex; i++) {
-      playlistRemove(0)
-    }
-    for (let i = 0; i < oldCount - oldListIndex - 1; i++) {
-      playlistRemove(1)
-    }
-    for (let i = 0; i < list.length; i++) {
-      if (i === playIndex) {
-        // loadfile(list[i], "append-play")
-      } else {
-        loadfile(list[i], "append")
-      }
-    }
-    if (oldListIndex !== playIndex) {
-      const targetIndex = oldListIndex < playIndex ? playIndex + 1 : playIndex
-      playlistMove(oldListIndex, targetIndex)
-    }
-    if (getPropertyNumber("playlist-pos") !== playIndex) {
-      playlistPlayIndex(playIndex)
-    }
+
+  // Strategy: append new list, then remove old items
+  // This ensures smooth transition without playback interruption
+
+  // Append all new items
+  for (const item of list) {
+    loadfile(item, "append")
+  }
+
+  // Calculate target position in combined list
+  const targetPos = normalizedPlayIndex + oldCount
+
+  // Switch to target item in new list
+  playlistPlayIndex(targetPos)
+
+  // Remove all old items (they are now at positions 0 to oldCount-1)
+  for (let i = 0; i < oldCount; i++) {
+    playlistRemove(0)
   }
 }
 
