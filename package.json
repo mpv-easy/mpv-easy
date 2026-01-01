@@ -60,6 +60,7 @@
     "esbuild": "0.27.2",
     "fflate": "0.8.2",
     "lefthook": "2.0.13",
+    "less": "^4.5.1",
     "lodash-es": "4.17.22",
     "react": "19.2.3",
     "react-dom": "19.2.3",

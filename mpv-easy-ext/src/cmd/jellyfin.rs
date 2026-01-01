@@ -26,11 +26,10 @@ pub fn get_user_id(server: &str, api_key: &str, username: &str) -> Option<String
         .unwrap();
 
     for i in users {
-        if let (Some(name), Some(id)) = (i.name, i.id) {
-            if name == username {
+        if let (Some(name), Some(id)) = (i.name, i.id)
+            && name == username {
                 return Some(id);
-            }
-        };
+            };
     }
     None
 }

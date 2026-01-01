@@ -34,6 +34,7 @@ jobs:
           cd ..
           mv mpv-easy-ext/output/mpv-easy-ext.exe mpv-easy-ext-windows.exe
           mv mpv-easy-ext/output/mpv-easy-play-with.exe mpv-easy-play-with-windows.exe
+          mv mpv-easy-ext/output/mpv-easy-remote.exe mpv-easy-remote-windows.exe
 
       - name: build deno
         if: false
@@ -101,7 +102,11 @@ jobs:
         with:
           name: mpv-easy-play-with-windows
           path: mpv-easy-play-with-windows.exe
-
+      - name: Upload windows Artifact remote
+        uses: actions/upload-artifact@v4
+        with:
+          name: mpv-easy-remote-windows
+          path: mpv-easy-remote-windows.exe
       # - name: Upload windows Artifact deno
       #   uses: actions/upload-artifact@v4
       #   with:
@@ -234,7 +239,11 @@ jobs:
           path: mpv-easy-play-with-dist
           pattern: mpv-easy-play-with-*
           merge-multiple: true
-
+      - uses: actions/download-artifact@v4
+        with:
+          path: mpv-easy-remote-dist
+          pattern: mpv-easy-remote-*
+          merge-multiple: true
       # - uses: actions/download-artifact@v4
       #   with:
       #     path: deno-dll
@@ -465,10 +474,15 @@ jobs:
           cp mpv-easy-ext-dist/mpv-easy-ext-linux release/mpv-easy-ext-linux
           cp mpv-easy-ext-dist/mpv-easy-ext-android release/mpv-easy-ext-android
           cp mpv-easy-ext-dist/mpv-easy-ext-windows.exe release/mpv-easy-ext-windows.exe
+
+          # play-with
           cp mpv-easy-play-with-dist/mpv-easy-play-with-macos-arm64 release/mpv-easy-play-with-macos-arm64
           cp mpv-easy-play-with-dist/mpv-easy-play-with-linux release/mpv-easy-play-with-linux
           cp mpv-easy-play-with-dist/mpv-easy-play-with-android release/mpv-easy-play-with-android
           cp mpv-easy-play-with-dist/mpv-easy-play-with-windows.exe release/mpv-easy-play-with-windows.exe
+
+          # remote
+          cp mpv-easy-remote-dist/mpv-easy-remote-windows.exe release/mpv-easy-remote-windows.exe
 
           7z x mpv-v3-win.7z -ompv-v3-windows -y
           cd mpv-v3-windows
