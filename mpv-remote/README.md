@@ -13,17 +13,16 @@ A web-based remote control for MPV media player using IPC (Inter-Process Communi
 - Fullscreen and OSD toggle
 - Subtitle and audio track cycling
 
-## Requirements
+## Quick Start (Windows)
 
-- MPV player with `--input-ipc-server` support
-- `mpv-easy-remote` protocol handler registered
+1. Download [mpv-easy-remote-windows.exe](https://github.com/mpv-easy/mpv-easy/releases/latest/download/mpv-easy-remote-windows.exe)
+2. Move it to the same directory as `mpv.exe`
+3. Double-click `mpv-easy-remote-windows.exe` to register the `mpv-remote://` protocol (first run only)
+4. Open https://mpv-easy.github.io/mpv-remote in your browser
+5. Enter a local file path or YouTube URL (requires yt-dlp configured)
+6. Click "Start MPV" and control playback from the web interface
 
-## Usage
-
-1. Set the IPC server name (default: `mpv_remote_7780`)
-2. Optionally enter a media path or URL
-3. Click "Start MPV" to launch the player
-4. Use the control panel to control playback
+## Features
 
 ## Development
 
