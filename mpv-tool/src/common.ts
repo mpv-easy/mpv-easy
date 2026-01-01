@@ -5,6 +5,7 @@ import {
   NumberKeys,
   loadfile,
   playlistClear,
+  playlistMove,
   playlistPlayIndex,
   playlistRemove,
 } from "./type"
@@ -434,63 +435,79 @@ export function getMpvPlaylist(): string[] {
 }
 
 /**
- * Update mpv playlist with a new list and play the item at playIndex.
- * Attempts to preserve current playback when possible.
+ * Update mpv playlist with minimal changes, preserving current playback.
+ * Uses append-play to avoid duplicate playback triggers.
  *
  * @param list - New playlist items (normalized paths)
- * @param playIndex - Index in new list to play (default: 0, use -1 to keep current or play last)
+ * @param playIndex - Index in new list to play (default: 0)
  */
 export function updatePlaylist(list: string[], playIndex = 0) {
   const oldList = getMpvPlaylist()
   const oldCount = oldList.length
-  const _currentPath = normalize(getPropertyString("path") || "")
+  const currentPath = normalize(getPropertyString("path") || "")
 
-  // Handle empty new list: clear playlist
+  // Handle empty new list
   if (list.length === 0) {
     playlistClear()
     return
   }
 
-  // Handle empty old list: just append all and play
+  // Clamp playIndex to valid range
+  const targetIndex = Math.max(0, Math.min(playIndex, list.length - 1))
+
+  // Handle empty old list: append all, use append-play for target
   if (oldCount === 0) {
-    for (const item of list) {
-      loadfile(item, "append")
+    for (let i = 0; i < list.length; i++) {
+      loadfile(list[i], i === targetIndex ? "append-play" : "append")
     }
-    const targetIndex = playIndex === -1 ? list.length - 1 : playIndex
-    playlistPlayIndex(Math.min(targetIndex, list.length - 1))
     return
   }
 
-  // Normalize playIndex: -1 means play last item
-  const normalizedPlayIndex =
-    playIndex === -1 ? list.length - 1 : Math.min(playIndex, list.length - 1)
-
-  // If lists are identical, just switch to target index if needed
+  // If lists are identical, just adjust position if needed
   if (isEqual(oldList, list)) {
     const currentPos = getPropertyNumber("playlist-pos") ?? -1
-    if (currentPos !== normalizedPlayIndex) {
-      playlistPlayIndex(normalizedPlayIndex)
+    if (currentPos !== targetIndex) {
+      playlistPlayIndex(targetIndex)
     }
     return
   }
 
-  // Strategy: append new list, then remove old items
-  // This ensures smooth transition without playback interruption
+  // Find current video's position in old and new lists
+  const oldListIndex = oldList.indexOf(currentPath)
+  const newListIndex = currentPath ? list.indexOf(currentPath) : -1
 
-  // Append all new items
-  for (const item of list) {
-    loadfile(item, "append")
-  }
+  // Check if current video is the target in new list (no need to reload)
+  const currentIsTarget = newListIndex === targetIndex && newListIndex !== -1
 
-  // Calculate target position in combined list
-  const targetPos = normalizedPlayIndex + oldCount
-
-  // Switch to target item in new list
-  playlistPlayIndex(targetPos)
-
-  // Remove all old items (they are now at positions 0 to oldCount-1)
-  for (let i = 0; i < oldCount; i++) {
-    playlistRemove(0)
+  if (currentIsTarget && oldListIndex !== -1) {
+    // Current video will remain playing, just update playlist around it
+    // Remove items before current
+    for (let i = 0; i < oldListIndex; i++) {
+      playlistRemove(0)
+    }
+    // Remove items after current (now at index 0)
+    for (let i = 0; i < oldCount - oldListIndex - 1; i++) {
+      playlistRemove(1)
+    }
+    // Append new items except current
+    for (let i = 0; i < list.length; i++) {
+      if (i !== newListIndex) {
+        loadfile(list[i], "append")
+      }
+    }
+    // Move current to correct position if needed
+    if (newListIndex !== 0) {
+      playlistMove(0, newListIndex + 1)
+    }
+  } else {
+    // Need to switch to different video, use append-play for target
+    for (let i = 0; i < list.length; i++) {
+      loadfile(list[i], i === targetIndex ? "append-play" : "append")
+    }
+    // Remove old items (now at positions 0 to oldCount-1)
+    for (let i = 0; i < oldCount; i++) {
+      playlistRemove(0)
+    }
   }
 }
 
