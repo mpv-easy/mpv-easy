@@ -152,6 +152,13 @@ impl Player {
 
     pub fn ipc(&self, name: &str, cmd: &str) -> anyhow::Result<String> {
         let mut c = std::process::Command::new("cmd");
+
+        #[cfg(target_os = "windows")]
+        {
+            const CREATE_NO_WINDOW: u32 = 0x08000000;
+            c.creation_flags(CREATE_NO_WINDOW);
+        }
+
         let subcmd = format!("echo {cmd} > \\\\.\\pipe\\{name}");
         let output = c.args(["/c", &subcmd]).output()?;
         let s = String::from_utf8_lossy(&output.stdout).to_string();
