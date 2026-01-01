@@ -1,17 +1,6 @@
 # mpv-remote
 
-A web-based remote control for MPV media player using IPC (Inter-Process Communication).
-
-## Features
-
-- Start MPV with a media file, folder, URL, or in idle mode
-- Playback controls: play, pause, stop
-- Seek forward/backward (10s, 60s)
-- Volume adjustment with mute toggle
-- Playback speed presets (0.5x - 2x)
-- Playlist and chapter navigation
-- Fullscreen and OSD toggle
-- Subtitle and audio track cycling
+A web-based remote control for MPV media player using IPC. Inspired by https://github.com/wpdevelopment11/remote_mpv
 
 ## Quick Start (Windows)
 
@@ -22,7 +11,6 @@ A web-based remote control for MPV media player using IPC (Inter-Process Communi
 5. Enter a local file path or YouTube URL (requires yt-dlp configured)
 6. Click "Start MPV" and control playback from the web interface
 
-## Features
 
 ## Development
 
