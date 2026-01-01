@@ -141,7 +141,7 @@ export async function clipboardPlay(
     }
     if (isSubtitle(s)) {
       subAdd(s, "cached")
-      return
+      continue
     }
     const v = getList(s, context)
     if (v?.length) {
