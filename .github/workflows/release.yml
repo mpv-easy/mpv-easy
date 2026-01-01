@@ -25,6 +25,17 @@ jobs:
             -H "Accept: application/vnd.github+json" \
             -d '{"ref":"main","inputs":{"branch":"main"}}' \
             https://api.github.com/repos/mpv-easy/mpv-build/actions/workflows/update.yml/dispatches
+  update_mpv_remote:
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+    steps:
+      - name: update-mpv-build
+        run: |
+          curl -X POST \
+            -H "Authorization: Bearer ${{ secrets.MPV_BUILD }}" \
+            -H "Accept: application/vnd.github+json" \
+            -d '{"ref":"main","inputs":{"branch":"main"}}' \
+            https://api.github.com/repos/mpv-easy/mpv-remote/actions/workflows/update.yml/dispatches
 
   build-artifacts:
     uses: ./.github/workflows/build-artifacts.yml

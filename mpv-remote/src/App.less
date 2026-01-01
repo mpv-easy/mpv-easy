@@ -1,0 +1,253 @@
+// MPV Remote Control Styles
+
+// Variables
+@primary-color: #4a90d9;
+@primary-hover: #357abd;
+@danger-color: #d9534f;
+@danger-hover: #c9302c;
+@active-color: #5cb85c;
+@bg-color: #1a1a2e;
+@panel-bg: #16213e;
+@input-bg: #0f3460;
+@text-color: #e8e8e8;
+@text-muted: #a0a0a0;
+@border-radius: 6px;
+@transition: all 0.2s ease;
+
+// Reset & Base
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  background: @bg-color;
+  color: @text-color;
+  min-height: 100vh;
+}
+
+// App Container
+.app-container {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.title {
+  text-align: center;
+  margin-bottom: 24px;
+  font-size: 1.8rem;
+  color: @primary-color;
+}
+
+// Input Section
+.input-section {
+  background: @panel-bg;
+  padding: 20px;
+  border-radius: @border-radius;
+  margin-bottom: 20px;
+}
+
+.input-group {
+  margin-bottom: 16px;
+
+  label {
+    display: block;
+    margin-bottom: 6px;
+    font-size: 0.9rem;
+    color: @text-muted;
+  }
+
+  input[type="text"] {
+    width: 100%;
+    padding: 10px 12px;
+    background: @input-bg;
+    border: 1px solid transparent;
+    border-radius: @border-radius;
+    color: @text-color;
+    font-size: 1rem;
+    transition: @transition;
+
+    &:focus {
+      outline: none;
+      border-color: @primary-color;
+    }
+
+    &::placeholder {
+      color: @text-muted;
+      opacity: 0.6;
+    }
+  }
+}
+
+// Buttons
+.btn {
+  padding: 10px 16px;
+  background: @input-bg;
+  border: none;
+  border-radius: @border-radius;
+  color: @text-color;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: @transition;
+
+  &:hover:not(:disabled) {
+    background: lighten(@input-bg, 10%);
+  }
+
+  &:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+  }
+
+  &.btn-primary {
+    background: @primary-color;
+
+    &:hover:not(:disabled) {
+      background: @primary-hover;
+    }
+  }
+
+  &.btn-danger {
+    background: @danger-color;
+
+    &:hover:not(:disabled) {
+      background: @danger-hover;
+    }
+  }
+
+  &.btn-active {
+    background: @active-color;
+  }
+
+  &.btn-start {
+    width: 100%;
+    padding: 14px;
+    font-size: 1.1rem;
+    font-weight: 600;
+  }
+}
+
+// Control Panel
+.control-panel {
+  background: @panel-bg;
+  padding: 20px;
+  border-radius: @border-radius;
+  transition: @transition;
+
+  &.disabled {
+    opacity: 0.5;
+    pointer-events: none;
+  }
+
+  &.active {
+    opacity: 1;
+  }
+
+  h2 {
+    text-align: center;
+    margin-bottom: 20px;
+    font-size: 1.3rem;
+    color: @primary-color;
+  }
+}
+
+// Control Groups
+.control-group {
+  margin-bottom: 20px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+
+  &:last-child {
+    margin-bottom: 0;
+    padding-bottom: 0;
+    border-bottom: none;
+  }
+
+  h3 {
+    font-size: 0.95rem;
+    color: @text-muted;
+    margin-bottom: 10px;
+  }
+}
+
+// Button Row
+.btn-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+
+  .btn {
+    flex: 1;
+    min-width: 70px;
+  }
+}
+
+// Slider Row
+.slider-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+
+  .slider {
+    flex: 1;
+    height: 6px;
+    -webkit-appearance: none;
+    appearance: none;
+    background: @input-bg;
+    border-radius: 3px;
+    outline: none;
+
+    &::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 18px;
+      height: 18px;
+      background: @primary-color;
+      border-radius: 50%;
+      cursor: pointer;
+      transition: @transition;
+
+      &:hover {
+        background: @primary-hover;
+        transform: scale(1.1);
+      }
+    }
+
+    &::-moz-range-thumb {
+      width: 18px;
+      height: 18px;
+      background: @primary-color;
+      border: none;
+      border-radius: 50%;
+      cursor: pointer;
+    }
+
+    &:disabled {
+      opacity: 0.4;
+
+      &::-webkit-slider-thumb {
+        cursor: not-allowed;
+      }
+    }
+  }
+}
+
+// Responsive
+@media (max-width: 480px) {
+  .app-container {
+    padding: 12px;
+  }
+
+  .title {
+    font-size: 1.4rem;
+  }
+
+  .btn-row .btn {
+    min-width: 60px;
+    padding: 8px 10px;
+    font-size: 0.8rem;
+  }
+}

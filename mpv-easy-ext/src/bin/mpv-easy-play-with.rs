@@ -2,7 +2,7 @@
 
 use base64::{Engine, prelude::BASE64_STANDARD};
 use flate2::read::GzDecoder;
-use mpv_easy_ext::common::{CHUNK_PREFIX, M3U_NAME, PlayWith, Player, set_protocol_hook};
+use mpv_easy_ext::common::{CHUNK_PREFIX, M3U_NAME, PlayWith, Player, set_play_with_hook};
 use std::io::Read;
 use strum::IntoEnumIterator;
 
@@ -16,8 +16,8 @@ fn play_with(exe_path: String, mut b64: String) {
     }
 
     for i in Player::iter() {
-        if b64.starts_with(i.header()) {
-            b64 = b64[i.header().len()..].to_string();
+        if b64.starts_with(i.play_with_header()) {
+            b64 = b64[i.play_with_header().len()..].to_string();
             break;
         }
     }
@@ -69,7 +69,7 @@ fn play_with(exe_path: String, mut b64: String) {
     let m3u = player.stringify(play_with.playlist);
     let m3u_path = tmp_dir.join(M3U_NAME);
     std::fs::write(&m3u_path, m3u).unwrap();
-    player.start(&exe_path, &m3u_path, play_with.args, play_with.start);
+    player.start(&exe_path, Some(&m3u_path), play_with.args, play_with.start);
 }
 
 fn main() {
@@ -79,7 +79,7 @@ fn main() {
             play_with(exe_path, b64);
         }
         (exe_path, None) => {
-            set_protocol_hook(exe_path);
+            set_play_with_hook(exe_path);
         }
         _ => {
             todo!("mpv-easy-play-with not support yet!")

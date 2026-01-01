@@ -20,9 +20,9 @@
     "@mpv-easy/react": "workspace:*",
     "@mpv-easy/tool": "workspace:*",
     "e-color": "0.1.8",
-    "fabric": "6.9.0",
+    "fabric": "7.1.0",
     "fontfaceobserver": "2.3.0",
-    "lodash-es": "4.17.21"
+    "lodash-es": "4.17.22"
   },
   "peerDependencies": {
     "react": "19.2.3",
