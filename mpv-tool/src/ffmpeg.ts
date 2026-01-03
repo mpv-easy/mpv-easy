@@ -1,11 +1,11 @@
 import { execAsync, getOs, isRemote, Rect } from "./common"
-import { getMpvExeDir, getMpvExePath, joinPath } from "./mpv"
+import { getMpvExeDir, getMpvExePath, joinPath, readdir } from "./mpv"
 import { screenshotToFile } from "./type"
 import { existsSync } from "./fs"
 import { detectCmd } from "./ext"
 import { getTmpDir } from "./tmp"
 import { randomId } from "./math"
-import { replaceExt } from "./path"
+import { normalize, replaceExt } from "./path"
 import { getCurrentSubtitle } from "./subtitle"
 // import { getCurrentSubtitle, getSubtitleTracks } from "./subtitle"
 
@@ -249,4 +249,77 @@ export async function cropVideo(
     return false
   }
   return true
+}
+
+export function detectWhisperModel(): string | undefined {
+  const d = getMpvExeDir()
+  for (const i of readdir(d) || []) {
+    if (i.startsWith("ggml-") && i.endsWith(".bin")) {
+      return normalize(joinPath(d, i))
+    }
+  }
+}
+
+function formatFFmpegPath(path: string): string {
+  return path.replace(/^([a-zA-Z]):(?=[/\\])/, "$1\\:")
+}
+
+export type whisperConfig = {
+  model: string
+  destination: string
+  gpu?: boolean
+  language?: string
+  format: "srt" | "vtt"
+}
+
+function getWhisperVf(config: whisperConfig): string {
+  const v: string[] = []
+  const { model, destination, format, gpu, language } = config
+  if (model) {
+    v.push(`model='${formatFFmpegPath(model)}'`)
+  }
+  if (destination) {
+    v.push(`destination='${formatFFmpegPath(destination)}'`)
+  }
+  if (format) {
+    v.push(`format=${format}`)
+  }
+  if (language) {
+    v.push(`language=${language}`)
+  }
+  if (gpu !== undefined) {
+    v.push(`use_gpu=${+gpu}`)
+  }
+
+  return v.join(":")
+}
+
+export async function whisper(
+  videoPath: string,
+  config: whisperConfig,
+  ffmpeg: string,
+) {
+  const cmd = [
+    ffmpeg,
+    "-y",
+    "-nostdin",
+    "-i",
+    videoPath,
+    "-vn",
+    "-af",
+    `whisper=${getWhisperVf(config)}`,
+    "-f",
+    "null",
+    "-",
+  ]
+
+  console.log("cmd: ", cmd.join(" "))
+  try {
+    await execAsync(cmd)
+  } catch (_e) {
+    console.log(_e)
+    return false
+  }
+  return true
+  // ffmpeg -i 01.mp4  -vn -af "whisper=model=ggml-small.bin:language=en:destination=output.srt:format=srt:use_gpu=1" -f null -
 }
