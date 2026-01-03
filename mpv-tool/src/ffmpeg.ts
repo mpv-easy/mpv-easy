@@ -354,13 +354,11 @@ export async function whisper(
     "-",
   ]
 
-  console.log("cmd: ", cmd.join(" "))
+  // console.log("cmd: ", cmd.join(" "))
   try {
     await execAsync(cmd)
   } catch (_e) {
-    console.log(_e)
     return false
   }
   return true
-  // ffmpeg -i 01.mp4  -vn -af "whisper=model=ggml-small.bin:language=en:destination=output.srt:format=srt:use_gpu=1" -f null -
 }
