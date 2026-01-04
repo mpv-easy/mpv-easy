@@ -29,16 +29,16 @@ async function downloadMpv() {
   ).browser_download_url;
   await download(mpvUrl, "./mpv-win.7z");
 
-  const ffmpegV3Url = assets.find((i) =>
-    i.name.startsWith("ffmpeg-x86_64-v3-")
-  ).browser_download_url;
-  await download(ffmpegV3Url, "./ffmpeg-v3.7z");
+//   const ffmpegV3Url = assets.find((i) =>
+//     i.name.startsWith("ffmpeg-x86_64-v3-")
+//   ).browser_download_url;
+//   await download(ffmpegV3Url, "./ffmpeg-v3.7z");
 
-  const ffmpegUrl = assets.find((i) =>
-    i.name.startsWith("ffmpeg-x86_64-git")
-  ).browser_download_url;
-  await download(ffmpegUrl, "./ffmpeg.7z");
-}
+//   const ffmpegUrl = assets.find((i) =>
+//     i.name.startsWith("ffmpeg-x86_64-git")
+//   ).browser_download_url;
+//   await download(ffmpegUrl, "./ffmpeg.7z");
+// }
 
 async function downloadYtdl() {
   // https://github.com/yt-dlp/yt-dlp/releases
@@ -49,6 +49,18 @@ async function downloadYtdl() {
     i.name.startsWith("yt-dlp.exe")
   ).browser_download_url;
   await download(ytUrl, "./yt-dlp.exe");
+}
+
+
+async function downloadFfmpeg() {
+  // https://github.com/BtbN/FFmpeg-Builds/releases
+  const { assets } = await fetch(
+    "https://api.github.com/repos/BtbN/FFmpeg-Builds/releases/latest", headers
+  ).then((r) => r.json());
+  const ytUrl = assets.find((i) =>
+    i.name.startsWith("ffmpeg-master-latest-win64-lgpl.zip")
+  ).browser_download_url;
+  await download(ytUrl, "./ffmpeg.zip");
 }
 
 downloadMpv();
