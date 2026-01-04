@@ -67,6 +67,7 @@ registerScriptMessage("whisper", async () => {
     language,
   }
   const r = await whisper(p, config, ffmpeg)
+  showNotification("Whisper start", 5)
   if (r) {
     showNotification("Whisper success", 5)
     subAdd(destination)
