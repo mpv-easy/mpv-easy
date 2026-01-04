@@ -41,6 +41,14 @@ import {
   showNotification,
   getOptions,
   setPropertyBool,
+  VideoTypes,
+  getProperty,
+  whisper,
+  detectFfmpeg,
+  whisperConfig,
+  detectWhisperModel,
+  normalize,
+  subAdd,
 } from "@mpv-easy/tool"
 import clamp from "lodash-es/clamp"
 import { Playlist } from "./playlist"
@@ -151,6 +159,41 @@ export const Easy = (props: Partial<EasyProps>) => {
     registerScriptMessage("toggle-tooltip", () => {
       dispatch.toggleTooltip()
     })
+
+    registerScriptMessage("whisper", async () => {
+      const p = normalize(getProperty("path") || "")
+      if (!p) {
+        return
+      }
+      const videoType = VideoTypes.find((i) => p?.endsWith(`.${i}`))
+      if (!videoType) {
+        return
+      }
+
+      const ffmpeg = detectFfmpeg()
+      if (!ffmpeg) {
+        return
+      }
+
+      const destination = p.replace(`.${videoType}`, ".srt")
+      const model = detectWhisperModel()
+      if (!model) {
+        return
+      }
+      const config: whisperConfig = {
+        model,
+        destination,
+        format: "srt",
+      }
+      const r = await whisper(p, config, ffmpeg)
+      if (r) {
+        showNotification("Whisper success", 5)
+        subAdd(destination)
+      } else {
+        showNotification("Whisper failed", 5)
+      }
+    })
+
     // FIXME: update thumbfast when pause
     const h = setInterval(update, 1000 / (props.fps || DefaultFps))
 

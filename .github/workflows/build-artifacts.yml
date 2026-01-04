@@ -277,7 +277,7 @@ jobs:
           mkdir mpv-easy-scripts -p
           cat mpv-easy-react/conf/mpv-easy-play-with.meta mpv-easy-react/bundle/mpv-easy-play-with.user.js >> mpv-easy-scripts/mpv-easy-play-with.user.js
 
-          files=(anime4k autoload clipboard-play copy-screen copy-time crop cut thumbfast translate pause-mosaic piano)
+          files=(anime4k autoload clipboard-play copy-screen copy-time crop cut thumbfast translate pause-mosaic piano whisper)
 
           git clone https://github.com/ahaoboy/free-piano --depth=1
 
@@ -328,12 +328,16 @@ jobs:
           name: mpv-easy-scripts
           path: mpv-easy-scripts/*
 
+      - uses: robinraju/release-downloader@v1
+        with:
+          repository: 'ahaoboy/mpv-assets'
+          latest: true
+          fileName: '*'
+
       - name: "create dist"
         run: |
           sudo apt install p7zip-full tree -y
           mkdir release -p
-
-          node .github/download.js
 
           mkdir dist/scripts/mpv-easy/mpv-easy-config/mpv-easy-ext -p
           # mkdir dist/script-opts -p
@@ -352,15 +356,17 @@ jobs:
           cp -r dist mpv-easy-android
           cp -r dist mpv-easy-windows
 
-          7z x ffmpeg-v3.7z -offmpeg-v3 -y
-          cd ffmpeg-v3
-          zip -r -q ../release/ffmpeg-v3-windows.zip .
-          cd ..
-
-          7z x ffmpeg.7z -offmpeg -y
+          unzip ffmpeg.zip -d ffmpeg-full
+          mkdir ffmpeg -p
+          cp ffmpeg-full/ffmpeg-master-latest-win64-lgpl/bin/ffmpeg.exe ffmpeg/ffmpeg.exe
           cd ffmpeg
           zip -r -q ../release/ffmpeg-windows.zip .
           cd ..
+
+          # 7z x ffmpeg.7z -offmpeg -y
+          # cd ffmpeg
+          # zip -r -q ../release/ffmpeg-windows.zip .
+          # cd ..
 
           cp mpv-easy-ext-dist/mpv-easy-ext-macos-arm64 mpv-easy-macos/scripts/mpv-easy/mpv-easy-config/mpv-easy-ext/mpv-easy-ext-macos-arm64
           cp mpv-easy-ext-dist/mpv-easy-ext-linux mpv-easy-linux/scripts/mpv-easy/mpv-easy-config/mpv-easy-ext/mpv-easy-ext-linux
@@ -513,11 +519,11 @@ jobs:
         with:
           name: ffmpeg-windows
           path: release/ffmpeg-windows.zip
-      - name: Upload ffmpeg-v3-windows
-        uses: actions/upload-artifact@v4
-        with:
-          name: ffmpeg-v3-windows
-          path: release/ffmpeg-v3-windows.zip
+      # - name: Upload ffmpeg-v3-windows
+      #   uses: actions/upload-artifact@v4
+      #   with:
+      #     name: ffmpeg-v3-windows
+      #     path: release/ffmpeg-v3-windows.zip
       - name: Upload mpv-windows
         uses: actions/upload-artifact@v4
         with:
