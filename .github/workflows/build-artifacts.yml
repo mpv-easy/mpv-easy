@@ -378,7 +378,9 @@ jobs:
           cp mpv-easy-play-with-dist/mpv-easy-play-with-android mpv-easy-android/scripts/mpv-easy/mpv-easy-config/mpv-easy-ext/mpv-easy-play-with-android
           cp mpv-easy-play-with-dist/mpv-easy-play-with-windows.exe mpv-easy-windows/scripts/mpv-easy/mpv-easy-config/mpv-easy-ext/mpv-easy-play-with-windows.exe
 
-          7z x mpv-v3-win.7z -ompv-easy-windows-full -y
+          7z x mpv-v3-win.7z -ompv-v3-win -y
+
+          cp -rf mpv-v3-win mpv-easy-windows-full
           cp -r mpv-easy-windows mpv-easy-windows-full/portable_config
           cp yt-dlp.exe mpv-easy-windows-full/yt-dlp.exe
           cp ffmpeg/ffmpeg.exe mpv-easy-windows-full/ffmpeg.exe
@@ -411,7 +413,8 @@ jobs:
           curl -L -o autoload.lua https://raw.githubusercontent.com/mpv-player/mpv/master/TOOLS/lua/autoload.lua
 
           # uosc
-          7z x mpv-v3-win.7z -ompv-uosc-windows-full -y
+          cp -rf mpv-v3-win mpv-uosc-windows-full
+
           curl -L -o uosc.zip https://github.com/tomasklaen/uosc/releases/latest/download/uosc.zip
           curl -L -o uosc.conf https://github.com/tomasklaen/uosc/releases/latest/download/uosc.conf
           curl -L -o thumbfast.lua https://raw.githubusercontent.com/po5/thumbfast/refs/heads/master/thumbfast.lua
@@ -431,7 +434,8 @@ jobs:
           cd ..
 
           # modernx https://github.com/cyl0/ModernX
-          7z x mpv-v3-win.7z -ompv-modernx-windows-full -y
+          cp -rf mpv-v3-win mpv-modernx-windows-full
+
           curl -L -o modernx.lua https://github.com/cyl0/ModernX/raw/refs/heads/main/modernx.lua
           curl -L -o Material-Design-Iconic-Font.ttf https://github.com/cyl0/ModernX/raw/refs/heads/main/Material-Design-Iconic-Font.ttf
           cd mpv-modernx-windows-full
@@ -452,7 +456,8 @@ jobs:
 
 
           # modernz https://github.com/Samillion/ModernZ
-          7z x mpv-v3-win.7z -ompv-modernz-windows-full -y
+          cp -rf mpv-v3-win mpv-modernz-windows-full
+
           curl -L -o modernz.lua https://github.com/Samillion/ModernZ/releases/latest/download/modernz.lua
           curl -L -o modernz.conf https://github.com/Samillion/ModernZ/releases/latest/download/modernz.conf
           curl -L -o fluent-system-icons.ttf https://github.com/Samillion/ModernZ/releases/latest/download/fluent-system-icons.ttf
@@ -490,7 +495,8 @@ jobs:
           # remote
           cp mpv-easy-remote-dist/mpv-easy-remote-windows.exe release/mpv-easy-remote-windows.exe
 
-          7z x mpv-v3-win.7z -ompv-v3-windows -y
+          cp -rf mpv-v3-win mpv-v3-windows
+
           cd mpv-v3-windows
           zip -r -q ../release/mpv-v3-windows.zip .
           cd ..
