@@ -328,12 +328,16 @@ jobs:
           name: mpv-easy-scripts
           path: mpv-easy-scripts/*
 
+      - uses: robinraju/release-downloader@v1
+        with:
+          repository: 'ahaoboy/mpv-assets'
+          latest: true
+          fileName: '*'
+
       - name: "create dist"
         run: |
           sudo apt install p7zip-full tree -y
           mkdir release -p
-
-          node .github/download.js
 
           mkdir dist/scripts/mpv-easy/mpv-easy-config/mpv-easy-ext -p
           # mkdir dist/script-opts -p
