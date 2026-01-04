@@ -28,6 +28,7 @@ async function downloadMpv() {
     i.name.startsWith("mpv-x86_64-2")
   ).browser_download_url;
   await download(mpvUrl, "./mpv-win.7z");
+}
 
 //   const ffmpegV3Url = assets.find((i) =>
 //     i.name.startsWith("ffmpeg-x86_64-v3-")
