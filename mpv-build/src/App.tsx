@@ -36,7 +36,6 @@ import {
   ExternalList,
   getCdnFileUrl,
   getFfmpegUrl,
-  getFfmpegV3Url,
   getMpvFiles,
   getPlayWithUrl,
   getScriptDownloadURL,
@@ -199,7 +198,8 @@ function App() {
 
     // ffmpeg
     if (externalList.includes("ffmpeg")) {
-      const url = platform === "mpv-v3" ? getFfmpegV3Url() : getFfmpegUrl()
+      // const url = platform === "mpv-v3" ? getFfmpegV3Url() : getFfmpegUrl()
+      const url = getFfmpegUrl()
       const ffmpegBinary = await downloadBinary(url)
       const files = decode(guess(url)!, ffmpegBinary)!
       for (const i of files) {
