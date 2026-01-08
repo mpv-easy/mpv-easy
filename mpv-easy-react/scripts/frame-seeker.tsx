@@ -9,6 +9,7 @@ import {
 import {
   Frame,
   defaultConfig,
+  getFPS,
   getFrame,
   getOffset,
   seekFrame,
@@ -76,14 +77,20 @@ function App() {
     })
   }, [])
   const clickX = useRef(0)
+  const fpsRef = useRef(0)
+  const fps = getFPS()
+  if (fps !== 0) {
+    fpsRef.current = fps
+  }
   const [base, setBase] = useState(0)
   const { x = 0 } = useMousePos()
   const offset = getOffset(w, clickX.current, x)
   if (active) {
     const target = (base + (offset * frames) / 2) | 0
     console.log(offset, base, target)
-    seekFrame(target)
+    seekFrame(target, fpsRef.current)
   }
+  console.log("fps", getFPS())
   return (
     <Box
       position="absolute"
@@ -100,7 +107,7 @@ function App() {
         clickX.current = x
         setPropertyBool("pause", true)
         setActive((v) => !v)
-        setBase(getFrame())
+        setBase(getFrame(fpsRef.current))
       }}
     >
       {show && ui && (

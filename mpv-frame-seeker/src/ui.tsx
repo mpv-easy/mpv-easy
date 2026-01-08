@@ -46,20 +46,18 @@ export function getFPS(): number {
   return mp.get_property_number("estimated-vf-fps", 0)
 }
 
-export function getFrame(): number {
-  const fps = getFPS()
+export function getFrame(fps: number): number {
   const pos = mp.get_property_number("time-pos", 0)
   if (fps <= 0) return 0
   return Math.floor(pos * fps + 0.5)
 }
 
-export function seekFrame(frameNum: number): void {
-  const fps = getFPS()
+export function seekFrame(target: number, fps: number): void {
   if (fps <= 0) {
     mp.osd_message("Error: Cannot determine framerate")
     return
   }
-  const timestamp = frameNum / fps
+  const timestamp = target / fps
   mp.commandv("seek", timestamp.toString(), "absolute+exact")
 }
 

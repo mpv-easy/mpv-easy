@@ -4,8 +4,8 @@ export * from "./ui"
 export const pluginName = "@mpv-easy/frame-seeker"
 
 export const defaultConfig: FrameConfig = {
-  color: "FFFFFFFF",
-  activeColor: "FF00FF00",
+  color: "FFFFFF",
+  activeColor: "00FF00",
   borderSize: 2,
   frames: 120,
   bottom: 100,
