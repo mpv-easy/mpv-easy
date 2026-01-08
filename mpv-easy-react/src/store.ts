@@ -6,6 +6,7 @@ import { pluginName as thumbfastName } from "@mpv-easy/thumbfast"
 import { pluginName as translateName } from "@mpv-easy/translate"
 import { pluginName as cutName } from "@mpv-easy/cut"
 import { pluginName as cropName } from "@mpv-easy/crop"
+import { pluginName as frameSeekerName } from "@mpv-easy/frame-seeker"
 import { clamp, normalize } from "@mpv-easy/tool"
 import { PluginContext } from "@mpv-easy/plugin"
 import * as ICON from "./icon"
@@ -182,6 +183,8 @@ export const translateSelector = (state: PluginContext) => state[translateName]
 export const cutSelector = (state: PluginContext) => state[cutName]
 
 export const cropSelector = (state: PluginContext) => state[cropName]
+export const frameSeekerSelector = (state: PluginContext) =>
+  state[frameSeekerName]
 
 export const iconButtonStyle = (state: PluginContext): Partial<ButtonProps> => {
   const button = buttonStyleSelector(state)

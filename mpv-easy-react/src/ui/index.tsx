@@ -3,7 +3,13 @@ import { Uosc } from "./uosc"
 import { Osc } from "./osc"
 import { Oscx } from "./oscx"
 import { Toolbar } from "./toolbar"
-import { Box, DefaultFps, type MpDom, Tooltip } from "@mpv-easy/react"
+import {
+  Box,
+  DefaultFps,
+  type MpDom,
+  Tooltip,
+  useMousePos,
+} from "@mpv-easy/react"
 import {
   modeSelector,
   mousePosSelector,
@@ -27,6 +33,7 @@ import {
   subScaleSelector,
   pathSelector,
   tooltipSelector,
+  frameSeekerSelector,
 } from "../store"
 import {
   getMpvExePath,
@@ -49,6 +56,7 @@ import {
   detectWhisperModel,
   normalize,
   subAdd,
+  getAssScale,
 } from "@mpv-easy/tool"
 import clamp from "lodash-es/clamp"
 import { Playlist } from "./playlist"
@@ -59,6 +67,13 @@ import { Translation } from "@mpv-easy/translate"
 import { Crop } from "@mpv-easy/crop"
 import { dispatch, useSelector } from "../models"
 import { Logo } from "./components/logo"
+import {
+  Frame,
+  getFPS,
+  getFrame,
+  getOffset,
+  seekFrame,
+} from "@mpv-easy/frame-seeker"
 export * from "./progress"
 export * from "./toolbar"
 export * from "./voice-control"
@@ -159,7 +174,9 @@ export const Easy = (props: Partial<EasyProps>) => {
     registerScriptMessage("toggle-tooltip", () => {
       dispatch.toggleTooltip()
     })
-
+    registerScriptMessage("frame-seeker", () => {
+      dispatch.toggleShowFrameSeeker()
+    })
     registerScriptMessage("whisper", async () => {
       const p = normalize(getProperty("path") || "")
       if (!p) {
@@ -232,15 +249,18 @@ export const Easy = (props: Partial<EasyProps>) => {
   }[uiName]
 
   const tooltipStyle = style[mode].tooltip
-
   const toolbarRef = useRef<MpDom>(null)
   const elementRef = useRef<MpDom>(null)
   const menuRef = useRef<{ setHide: (v: boolean) => void }>(null)
   const volumeDomRef = useRef<MpDom>(null)
   const playerState = useSelector(playerStateSelector)
-  const { cropPoints, showCrop } = playerState
+  const { cropPoints, showCrop, showFrameSeeker } = playerState
   const cropConfig = useSelector(cropSelector)
-
+  const fsConfig = useSelector(frameSeekerSelector)
+  const [fsActive, setFsActive] = useState(false)
+  const scale = getAssScale()
+  const leftOffset = ((osdDimensions.w - fsConfig.radius) / 2) * scale
+  const topOffset = (osdDimensions.h - fsConfig.bottom) * scale
   const { x, y, hover } = mousePos
   const [hide, setHide] = useState(!!props.initHide)
   const hideHandle = useRef(-1)
@@ -297,7 +317,25 @@ export const Easy = (props: Partial<EasyProps>) => {
   const path = useSelector(pathSelector)
   const showLogo =
     !path && !showCrop && playerState.historyHide && playerState.playlistHide
+  const clickX = useRef(0)
+  const fpsRef = useRef(0)
+  const [base, setBase] = useState(0)
+  const offsetRef = useRef(0)
 
+  const { x: mouseX } = useMousePos()
+  if (showFrameSeeker) {
+    const fps = getFPS()
+    if (fps !== 0) {
+      fpsRef.current = fps
+    }
+    offsetRef.current = getOffset(osdDimensions.w, clickX.current, mouseX)
+    if (fsActive) {
+      const target = (base + (offsetRef.current * fsConfig.frames) / 2) | 0
+      if (target !== getFrame(fpsRef.current)) {
+        seekFrame(target, fpsRef.current)
+      }
+    }
+  }
   return (
     <Box
       id="mpv-easy-main"
@@ -334,6 +372,13 @@ export const Easy = (props: Partial<EasyProps>) => {
           dispatch.setPlaylistHide(true)
           dispatch.setHistoryHide(true)
         }
+
+        if (showFrameSeeker) {
+          clickX.current = e.clientX
+          setPropertyBool("pause", true)
+          setFsActive((v) => !v)
+          setBase(getFrame(fpsRef.current))
+        }
       }}
     >
       {tooltip && (
@@ -355,9 +400,16 @@ export const Easy = (props: Partial<EasyProps>) => {
         />
       )}
 
-      <Toolbar ref={toolbarRef} hide={hide || showCrop} />
-      <Element ref={elementRef} hide={hide || showCrop} width={"100%"} />
-      <VoiceControl ref={volumeDomRef} hide={hide || showCrop} />
+      <Toolbar ref={toolbarRef} hide={hide || showCrop || showFrameSeeker} />
+      <Element
+        ref={elementRef}
+        hide={hide || showCrop || showFrameSeeker}
+        width={"100%"}
+      />
+      <VoiceControl
+        ref={volumeDomRef}
+        hide={hide || showCrop || showFrameSeeker}
+      />
       {/* {!clickMenuStyle.disable && <ClickMenu ref={menuRef} hide={menuHide} />} */}
       <Playlist />
       <History />
@@ -377,6 +429,17 @@ export const Easy = (props: Partial<EasyProps>) => {
           zIndex={cropConfig.cropZIndex}
           onChange={dispatch.setCropPoints}
           labelFontSize={smallFontSize.fontSize}
+        />
+      )}
+      {showFrameSeeker && fsConfig.ui && (
+        <Frame
+          top={topOffset}
+          left={leftOffset}
+          color={fsActive ? fsConfig.activeColor : fsConfig.color}
+          radius={fsConfig.radius}
+          offset={fsActive ? offsetRef.current : 0}
+          zIndex={fsConfig.zIndex}
+          borderSize={fsConfig.borderSize}
         />
       )}
       <Translation

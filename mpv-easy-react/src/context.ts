@@ -64,6 +64,10 @@ import cropPlugin, {
   defaultConfig as cropConfig,
   pluginName as cropName,
 } from "@mpv-easy/crop"
+import {
+  defaultConfig as frameSeekerConfig,
+  pluginName as frameSeekerName,
+} from "@mpv-easy/frame-seeker"
 
 import { type PluginContext } from "@mpv-easy/plugin"
 import {
@@ -113,6 +117,7 @@ export interface EnablePlugin {
   [jellyfinName]: boolean
   [cutName]: boolean
   [cropName]: boolean
+  [frameSeekerName]: boolean
 }
 
 declare module "@mpv-easy/plugin" {
@@ -152,6 +157,7 @@ export function createDefaultContext() {
     [translateName]: translateConfig,
     [cutName]: cutConfig,
     [cropName]: cropConfig,
+    [frameSeekerName]: frameSeekerConfig,
     enablePlugins: {
       [i18nName]: true,
       [easyName]: true,
@@ -165,6 +171,7 @@ export function createDefaultContext() {
       [translateName]: true,
       [cutName]: true,
       [cropName]: true,
+      [frameSeekerName]: true,
     },
     version,
     experimental,

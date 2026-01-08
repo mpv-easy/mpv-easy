@@ -187,6 +187,7 @@ export type EasyConfig = {
     cutPoints: number[]
     cropPoints: [number, number][]
     showCrop: boolean
+    showFrameSeeker: boolean
     preview: boolean
   }
   config: {
@@ -467,6 +468,7 @@ export const defaultState: EasyConfig["state"] = {
   cutPoints: [],
   cropPoints: [],
   showCrop: false,
+  showFrameSeeker: false,
   preview: false,
   mountIndex: -1,
 }
