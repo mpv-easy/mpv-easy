@@ -5,6 +5,7 @@ import {
   registerScriptMessage,
   getAssScale,
   setPropertyBool,
+  PropertyBool,
 } from "@mpv-easy/tool"
 import {
   Frame,
@@ -64,6 +65,8 @@ const {
   }),
 }
 
+const oscProp = new PropertyBool("osc")
+
 function App() {
   const [show, setShow] = useState(false)
   const [active, setActive] = useState(false)
@@ -71,9 +74,19 @@ function App() {
   const scale = getAssScale()
   const leftOffset = ((w - radius) / 2) * scale
   const topOffset = (h - bottom) * scale
+  const oscRef = useRef(false)
   useEffect(() => {
     registerScriptMessage(frameSeekerEventName, () => {
-      setShow((v) => !v)
+      setShow((v) => {
+        if (v) {
+          oscProp.value = oscRef.current
+          oscRef.current = false
+        } else {
+          oscRef.current = oscProp.value
+          oscProp.value = false
+        }
+        return !v
+      })
     })
   }, [])
   const clickX = useRef(0)
