@@ -47,7 +47,8 @@
       "@mpv-easy/easy-react-tpl": ["./mpv-easy-tpl/src"],
       "@mpv-easy/cut": ["./mpv-cut/src"],
       "@mpv-easy/crop": ["./mpv-crop/src"],
-      "@mpv-easy/mpv-build": ["./mpv-build/src"]
+      "@mpv-easy/mpv-build": ["./mpv-build/src"],
+      "@mpv-easy/frame-seeker": ["./mpv-frame-seeker/src"]
     }
   },
   "include": ["**/src", "**/test", "**/example", "**/scripts"],

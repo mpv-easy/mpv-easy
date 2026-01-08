@@ -1,0 +1,8 @@
+{
+  "name": "mpv-easy-frame-seeker",
+  "description": "mpv player frame-seeker script",
+  "version": "0.1.15-alpha.17",
+  "author": "mpv-easy",
+  "download": "https://github.com/mpv-easy/mpv-easy/releases/latest/download/mpv-easy-frame-seeker.zip",
+  "homepage": "https://github.com/mpv-easy/mpv-easy/tree/main/mpv-frame-seeker"
+}

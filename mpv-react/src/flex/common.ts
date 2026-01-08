@@ -86,8 +86,21 @@ function maxWidth(
   }
 }
 
-export function getAssText(node: MpDom, x: number, y: number) {
-  const { text = "" } = node.attributes
+export function getAssText(
+  node: MpDom,
+  rawX: number,
+  rawY: number,
+  assScale: number = getAssScale(),
+): string {
+  const x = assScale * rawX
+  const y = assScale * rawY
+  const { text = "", draw } = node.attributes
+  if (typeof draw === "string") {
+    return draw
+  }
+  if (typeof draw === "function") {
+    return draw(assScale)
+  }
   const t = maxWidth(
     text.replaceAll("\r\n", "\n"),
     node.attributes.maxWidth,
@@ -95,7 +108,6 @@ export function getAssText(node: MpDom, x: number, y: number) {
   )
     .replaceAll("\n", "\\N")
     .replaceAll("\t", "    ")
-  const assScale = getAssScale()
   const font = getFirstValidAttribute(node, "font") ?? ""
   let color = getFirstValidAttribute(node, "color") ?? "#FFFFFFFF"
   const fontSize = getFirstValidAttribute(node, "fontSize") ?? "5%"
@@ -133,7 +145,7 @@ let MeasureOverlay: OsdOverlay
 // const _measureCache: Record<string, Shape> = {}
 export function measureText(node: MpDom): Shape {
   const assScale = getAssScale()
-  const textCache = getAssText(node, 0, 0)
+  const textCache = getAssText(node, 0, 0, assScale)
   // if (_measureCache[textCache]) {
   //   return _measureCache[textCache]
   // }

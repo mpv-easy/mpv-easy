@@ -1,7 +1,7 @@
 import { Rgb, COLORS } from "e-color"
 import type { ColorName } from "e-color"
 
-const c = 0.551915024494 // 圆形近似值
+export const C = 0.551915024494
 
 export class AssDraw {
   private _scale: number
@@ -73,7 +73,9 @@ export class AssDraw {
   lineTo(x: number, y: number) {
     return this.append(" l").coord(x, y)
   }
-
+  frz(degree: number) {
+    return this.append(`{\\frz${degree}}`)
+  }
   bezierCurve(
     x1: number,
     y1: number,
@@ -210,8 +212,8 @@ export class AssDraw {
     r1: number,
     r2: number = r1,
   ) {
-    const c1 = c * r1 // circle approximation
-    const c2 = c * r2 // circle approximation
+    const c1 = C * r1 // circle approximation
+    const c2 = C * r2 // circle approximation
     this.moveTo(x0 + r1, y0)
     this.lineTo(x1 - r2, y0) // top line
     if (r2 > 0) {
@@ -240,8 +242,8 @@ export class AssDraw {
     r1: number,
     r2: number = r1,
   ) {
-    const c1 = c * r1 // circle approximation
-    const c2 = c * r2 // circle approximation
+    const c1 = C * r1 // circle approximation
+    const c2 = C * r2 // circle approximation
     this.moveTo(x0 + r1, y0)
     if (r1 > 0) {
       this.bezierCurve(x0 + r1 - c1, y0, x0, y0 + r1 - c1, x0, y0 + r1) // top left corner

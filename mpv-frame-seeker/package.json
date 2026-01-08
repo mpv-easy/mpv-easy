@@ -1,0 +1,28 @@
+{
+  "name": "@mpv-easy/frame-seeker",
+  "version": "0.1.15-alpha.17",
+  "homepage": "https://github.com/mpv-easy/mpv-easy#readme",
+  "files": [
+    "dist",
+    "readme.md",
+    "package.json"
+  ],
+  "description": "",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "es5": "babel ./dist -d es5",
+    "build": "tsc -p ./tsconfig.build.json",
+    "dev": "tsc -p ./tsconfig.build.json -w"
+  },
+  "keywords": [],
+  "author": "ahaoboy <504595380@qq.com> (https://github.com/ahaoboy)",
+  "license": "MIT",
+  "dependencies": {
+    "@mpv-easy/assdraw": "workspace:*",
+    "@mpv-easy/react": "workspace:*",
+    "@mpv-easy/tool": "workspace:*",
+    "@mpv-easy/plugin": "workspace:*"
+  },
+  "devDependencies": {}
+}

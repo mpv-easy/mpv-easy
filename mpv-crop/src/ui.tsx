@@ -97,7 +97,7 @@ function getLabelPos(
   }
 }
 
-type CropProps = {
+export type CropProps = {
   mouseX: number
   mouseY: number
   lineWidth: number

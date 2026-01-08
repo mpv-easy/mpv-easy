@@ -1,0 +1,1 @@
+mpv-frame-seeker

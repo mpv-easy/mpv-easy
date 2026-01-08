@@ -140,7 +140,9 @@ function renderNodeToMpv(node: MpDom) {
     borderSize = borderSize || 0
 
     // text ovl
-    const hasText = typeof attributes.text !== "undefined"
+    const hasText =
+      typeof attributes.text !== "undefined" ||
+      typeof attributes.draw !== "undefined"
     if (hasText) {
       let textX = 0 + paddingSize + layoutNode.x + borderSize
       let textY = 0 + paddingSize + layoutNode.y + borderSize
@@ -247,7 +249,7 @@ function renderNodeToMpv(node: MpDom) {
           )
         }
       }
-      const text = getAssText(node, textX * assScale, textY * assScale)
+      const text = getAssText(node, textX, textY, assScale)
       textOverlay.data = text
       textOverlay.hidden = false
       textOverlay.computeBounds = true

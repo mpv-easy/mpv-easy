@@ -149,6 +149,7 @@ export interface BaseDom<
       onWheelUp?: (e: BaseMouseEvent<A, P, E>) => void
       onBlur?: (e: BaseMouseEvent<A, P, E>) => void
       onFocus?: (e: BaseMouseEvent<A, P, E>) => void
+      draw?: string | ((scale: number) => string)
     } & A
   >
   childNodes: this[]
