@@ -100,7 +100,9 @@ function App() {
   const offset = getOffset(w, clickX.current, x)
   if (active) {
     const target = (base + (offset * frames) / 2) | 0
-    seekFrame(target, fpsRef.current)
+    if (target !== getFrame(fpsRef.current)) {
+      seekFrame(target, fpsRef.current)
+    }
   }
   return (
     <Box

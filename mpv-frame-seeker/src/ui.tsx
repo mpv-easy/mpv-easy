@@ -1,6 +1,7 @@
 import React from "react"
 import { Box } from "@mpv-easy/react"
 import { AssDraw, C } from "@mpv-easy/assdraw"
+import { commandv, getPropertyNumber, osdMessage } from "@mpv-easy/tool"
 
 export function getOffset(
   width: number,
@@ -43,22 +44,22 @@ type DrawConfig = {
 }
 
 export function getFPS(): number {
-  return mp.get_property_number("estimated-vf-fps", 0)
+  return getPropertyNumber("estimated-vf-fps", 0)
 }
 
 export function getFrame(fps: number): number {
-  const pos = mp.get_property_number("time-pos", 0)
+  const pos = getPropertyNumber("time-pos", 0)
   if (fps <= 0) return 0
   return Math.floor(pos * fps + 0.5)
 }
 
 export function seekFrame(target: number, fps: number): void {
   if (fps <= 0) {
-    mp.osd_message("Error: Cannot determine framerate")
+    osdMessage("Error: Cannot determine framerate")
     return
   }
   const timestamp = target / fps
-  mp.commandv("seek", timestamp.toString(), "absolute+exact")
+  commandv("seek", timestamp, "absolute+exact")
 }
 
 function drawPointer({
