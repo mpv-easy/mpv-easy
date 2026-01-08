@@ -87,10 +87,8 @@ function App() {
   const offset = getOffset(w, clickX.current, x)
   if (active) {
     const target = (base + (offset * frames) / 2) | 0
-    console.log(offset, base, target)
     seekFrame(target, fpsRef.current)
   }
-  console.log("fps", getFPS())
   return (
     <Box
       position="absolute"
