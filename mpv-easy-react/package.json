@@ -30,6 +30,7 @@
   "dependencies": {
     "@mpv-easy/anime": "workspace:*",
     "@mpv-easy/anime4k": "workspace:*",
+    "@mpv-easy/frame-seeker": "workspace:*",
     "@mpv-easy/assdraw": "workspace:*",
     "@mpv-easy/autoload": "workspace:*",
     "@mpv-easy/clipboard-play": "workspace:*",

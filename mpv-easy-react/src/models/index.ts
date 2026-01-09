@@ -345,6 +345,14 @@ const store = defineStore({
       }
       return { ...state }
     },
+    toggleShowFrameSeeker(state) {
+      const showFrameSeeker = !state[pluginName].state.showFrameSeeker
+      state[pluginName].state = {
+        ...state[pluginName].state,
+        showFrameSeeker,
+      }
+      return { ...state }
+    },
     resetConfig(_state) {
       return createDefaultContext()
     },
@@ -439,6 +447,12 @@ export function syncPlayer(store: Store) {
   ]
   function updateProp() {
     const state = store.getState()
+
+    // HACK: Stop sync properties to improve performance.
+    if (state[pluginName].state.showFrameSeeker) {
+      return
+    }
+
     state[pluginName].player = {
       ...state[pluginName].player,
     }

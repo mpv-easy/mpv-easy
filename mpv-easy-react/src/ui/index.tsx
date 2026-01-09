@@ -27,6 +27,7 @@ import {
   subScaleSelector,
   pathSelector,
   tooltipSelector,
+  frameSeekerSelector,
 } from "../store"
 import {
   getMpvExePath,
@@ -59,6 +60,7 @@ import { Translation } from "@mpv-easy/translate"
 import { Crop } from "@mpv-easy/crop"
 import { dispatch, useSelector } from "../models"
 import { Logo } from "./components/logo"
+import { FrameSeeker, FrameSeekerRef } from "@mpv-easy/frame-seeker"
 export * from "./progress"
 export * from "./toolbar"
 export * from "./voice-control"
@@ -159,7 +161,9 @@ export const Easy = (props: Partial<EasyProps>) => {
     registerScriptMessage("toggle-tooltip", () => {
       dispatch.toggleTooltip()
     })
-
+    registerScriptMessage("frame-seeker", () => {
+      dispatch.toggleShowFrameSeeker()
+    })
     registerScriptMessage("whisper", async () => {
       const p = normalize(getProperty("path") || "")
       if (!p) {
@@ -232,15 +236,14 @@ export const Easy = (props: Partial<EasyProps>) => {
   }[uiName]
 
   const tooltipStyle = style[mode].tooltip
-
   const toolbarRef = useRef<MpDom>(null)
   const elementRef = useRef<MpDom>(null)
   const menuRef = useRef<{ setHide: (v: boolean) => void }>(null)
   const volumeDomRef = useRef<MpDom>(null)
   const playerState = useSelector(playerStateSelector)
-  const { cropPoints, showCrop } = playerState
+  const { cropPoints, showCrop, showFrameSeeker } = playerState
   const cropConfig = useSelector(cropSelector)
-
+  const fsConfig = useSelector(frameSeekerSelector)
   const { x, y, hover } = mousePos
   const [hide, setHide] = useState(!!props.initHide)
   const hideHandle = useRef(-1)
@@ -298,6 +301,7 @@ export const Easy = (props: Partial<EasyProps>) => {
   const showLogo =
     !path && !showCrop && playerState.historyHide && playerState.playlistHide
 
+  const fsRef = useRef<FrameSeekerRef>(null)
   return (
     <Box
       id="mpv-easy-main"
@@ -334,6 +338,10 @@ export const Easy = (props: Partial<EasyProps>) => {
           dispatch.setPlaylistHide(true)
           dispatch.setHistoryHide(true)
         }
+
+        if (showFrameSeeker) {
+          fsRef.current?.click(e.clientX)
+        }
       }}
     >
       {tooltip && (
@@ -355,9 +363,16 @@ export const Easy = (props: Partial<EasyProps>) => {
         />
       )}
 
-      <Toolbar ref={toolbarRef} hide={hide || showCrop} />
-      <Element ref={elementRef} hide={hide || showCrop} width={"100%"} />
-      <VoiceControl ref={volumeDomRef} hide={hide || showCrop} />
+      <Toolbar ref={toolbarRef} hide={hide || showCrop || showFrameSeeker} />
+      <Element
+        ref={elementRef}
+        hide={hide || showCrop || showFrameSeeker}
+        width={"100%"}
+      />
+      <VoiceControl
+        ref={volumeDomRef}
+        hide={hide || showCrop || showFrameSeeker}
+      />
       {/* {!clickMenuStyle.disable && <ClickMenu ref={menuRef} hide={menuHide} />} */}
       <Playlist />
       <History />
@@ -377,6 +392,20 @@ export const Easy = (props: Partial<EasyProps>) => {
           zIndex={cropConfig.cropZIndex}
           onChange={dispatch.setCropPoints}
           labelFontSize={smallFontSize.fontSize}
+        />
+      )}
+      {showFrameSeeker && fsConfig.ui && (
+        <FrameSeeker
+          ref={fsRef}
+          bottom={fsConfig.bottom}
+          color={fsConfig.color}
+          activeColor={fsConfig.activeColor}
+          radius={fsConfig.radius}
+          zIndex={fsConfig.zIndex}
+          borderSize={fsConfig.borderSize}
+          text={fsConfig.text}
+          frames={fsConfig.frames}
+          fontSize={fontSize.fontSize}
         />
       )}
       <Translation

@@ -44,7 +44,7 @@ export class PropertyNumber {
     observePropertyNumber(this.name, callback)
     return callback
   }
-  unobserve(fn: (...args: unknown[]) => void) {
+  unobserve(fn: (...args: any[]) => void) {
     this._lastValue = undefined
     return unobserveProperty(fn)
   }
@@ -87,7 +87,7 @@ export class PropertyBool {
     observePropertyBool(this.name, callback)
     return callback
   }
-  unobserve(fn: (...args: unknown[]) => void) {
+  unobserve(fn: (...args: any[]) => void) {
     this._lastValue = undefined
     return unobserveProperty(fn)
   }
@@ -121,7 +121,7 @@ export class PropertyString {
     observePropertyString(this.name, callback)
     return callback
   }
-  unobserve(fn: (...args: unknown[]) => void) {
+  unobserve(fn: (...args: any[]) => void) {
     this._lastValue = undefined
     return unobserveProperty(fn)
   }
