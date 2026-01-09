@@ -40,8 +40,10 @@ export function stop(
   return mp.commandv("stop", ...args)
 }
 
-export function frameStep(): true | undefined {
-  return mp.commandv("frame-step")
+export function frameStep(
+  ...args: [frame?: number, flags?: "play" | "mute" | "seek"]
+): true | undefined {
+  return mp.commandv("frame-step", ...args)
 }
 
 export function frameBackStep(): true | undefined {

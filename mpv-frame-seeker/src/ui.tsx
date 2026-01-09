@@ -10,10 +10,9 @@ import React, {
 import { Box, useProperty } from "@mpv-easy/react"
 import { AssDraw, C } from "@mpv-easy/assdraw"
 import {
-  commandv,
+  frameStep,
   getAssScale,
-  getPropertyNumber,
-  osdMessage,
+  PropertyNumber,
   setPropertyBool,
 } from "@mpv-easy/tool"
 
@@ -58,25 +57,6 @@ type DrawConfig = {
   degree: number
   color: string
   scale: number
-}
-
-export function getFPS(): number {
-  return getPropertyNumber("estimated-vf-fps", 0)
-}
-
-export function getFrame(fps: number): number {
-  const pos = getPropertyNumber("time-pos", 0)
-  if (fps <= 0) return 0
-  return Math.floor(pos * fps + 0.5)
-}
-
-export function seekFrame(target: number, fps: number): void {
-  if (fps <= 0) {
-    osdMessage("Error: Cannot determine framerate")
-    return
-  }
-  const timestamp = target / fps
-  commandv("seek", timestamp, "absolute+exact")
 }
 
 function drawPointer({
@@ -146,6 +126,7 @@ export type FrameSeekerRef = {
   click: (x: number) => void
 }
 
+const frameProp = new PropertyNumber("estimated-frame-number")
 export const FrameSeeker: ForwardRefExoticComponent<
   PropsWithoutRef<FrameSeekerProps> & RefAttributes<FrameSeekerRef>
 > = forwardRef<FrameSeekerRef, FrameSeekerProps>((props, ref) => {
@@ -157,7 +138,7 @@ export const FrameSeeker: ForwardRefExoticComponent<
   const left = (osd.w - props.radius) / 2
   const top = osd.h - props.bottom
   const [active, setActive] = useState(false)
-  const fpsRef = useRef(0)
+  const _fpsRef = useRef(0)
   const [base, setBase] = useState(0)
   const color = active ? props.activeColor : props.color
   useImperativeHandle(ref, () => {
@@ -166,7 +147,7 @@ export const FrameSeeker: ForwardRefExoticComponent<
         clickX.current = x
         setPropertyBool("pause", true)
         setActive((v) => !v)
-        setBase(getFrame(fpsRef.current))
+        setBase(frameProp.value)
       },
     }
   }, [])
@@ -191,15 +172,11 @@ export const FrameSeeker: ForwardRefExoticComponent<
     scale,
   })
   const offsetFrame = (offset * (frames / 2)) | 0
-  const fps = getFPS()
-  if (fps !== 0) {
-    fpsRef.current = fps
-  }
   if (active) {
     const target = (base + (offset * frames) / 2) | 0
-    const currentFrame = getFrame(fpsRef.current)
+    const currentFrame = frameProp.value
     if (target !== currentFrame) {
-      seekFrame(target, fpsRef.current)
+      frameStep(target - currentFrame, "seek")
     }
   }
   const frameText = `${base}${offsetFrame > 0 ? `+${offsetFrame}` : offsetFrame}`
