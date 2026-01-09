@@ -9,9 +9,11 @@ export const defaultConfig: FrameConfig = {
   borderSize: 2,
   frames: 120,
   bottom: 100,
-  radius: 100,
+  radius: 200,
   zIndex: 1000,
   ui: true,
+  text: true,
+  fontSize: 24,
   frameSeekerEventName: "frame-seeker",
 }
 
@@ -24,6 +26,8 @@ export type FrameConfig = {
   radius: number
   zIndex: number
   ui: boolean
+  text: boolean
+  fontSize: number
   frameSeekerEventName: string
 }
 

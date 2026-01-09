@@ -1,21 +1,12 @@
 import "@mpv-easy/polyfill"
 import React, { useEffect, useRef, useState } from "react"
+import { getOptions, registerScriptMessage, PropertyBool } from "@mpv-easy/tool"
 import {
-  getOptions,
-  registerScriptMessage,
-  getAssScale,
-  setPropertyBool,
-  PropertyBool,
-} from "@mpv-easy/tool"
-import {
-  Frame,
+  FrameSeeker,
+  FrameSeekerRef,
   defaultConfig,
-  getFPS,
-  getFrame,
-  getOffset,
-  seekFrame,
 } from "@mpv-easy/frame-seeker"
-import { Box, render, useMousePos, useProperty } from "@mpv-easy/react"
+import { Box, render, useProperty } from "@mpv-easy/react"
 
 const {
   frameSeekerEventName,
@@ -27,6 +18,8 @@ const {
   borderSize,
   zIndex,
   ui,
+  text,
+  fontSize,
 } = {
   ...defaultConfig,
   ...getOptions("mpv-easy-frame", {
@@ -62,6 +55,14 @@ const {
       type: "boolean",
       key: "ui",
     },
+    text: {
+      type: "boolean",
+      key: "text",
+    },
+    fontSize: {
+      type: "number",
+      key: "font-size",
+    },
   }),
 }
 
@@ -69,11 +70,8 @@ const oscProp = new PropertyBool("osc")
 
 function App() {
   const [show, setShow] = useState(false)
-  const [active, setActive] = useState(false)
+  const fsRef = useRef<FrameSeekerRef>(null)
   const { w, h } = useProperty("osd-dimensions")[0]
-  const scale = getAssScale()
-  const leftOffset = ((w - radius) / 2) * scale
-  const topOffset = (h - bottom) * scale
   const oscRef = useRef(false)
   useEffect(() => {
     registerScriptMessage(frameSeekerEventName, () => {
@@ -89,21 +87,7 @@ function App() {
       })
     })
   }, [])
-  const clickX = useRef(0)
-  const fpsRef = useRef(0)
-  const fps = getFPS()
-  if (fps !== 0) {
-    fpsRef.current = fps
-  }
-  const [base, setBase] = useState(0)
-  const { x = 0 } = useMousePos()
-  const offset = getOffset(w, clickX.current, x)
-  if (active) {
-    const target = (base + (offset * frames) / 2) | 0
-    if (target !== getFrame(fpsRef.current)) {
-      seekFrame(target, fpsRef.current)
-    }
-  }
+
   return (
     <Box
       position="absolute"
@@ -113,25 +97,25 @@ function App() {
       zIndex={zIndex}
       left={0}
       top={0}
-      onClick={() => {
+      onClick={(e) => {
         if (!show) {
           return
         }
-        clickX.current = x
-        setPropertyBool("pause", true)
-        setActive((v) => !v)
-        setBase(getFrame(fpsRef.current))
+        fsRef.current?.click(e.clientX)
       }}
     >
       {show && ui && (
-        <Frame
-          left={leftOffset}
-          top={topOffset}
-          color={active ? activeColor : color}
+        <FrameSeeker
+          ref={fsRef}
+          bottom={bottom}
+          color={color}
+          activeColor={activeColor}
           radius={radius}
-          offset={active ? offset : 0}
           zIndex={zIndex}
           borderSize={borderSize}
+          fontSize={fontSize}
+          text={text}
+          frames={frames}
         />
       )}
     </Box>

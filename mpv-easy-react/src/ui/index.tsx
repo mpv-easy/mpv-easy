@@ -3,13 +3,7 @@ import { Uosc } from "./uosc"
 import { Osc } from "./osc"
 import { Oscx } from "./oscx"
 import { Toolbar } from "./toolbar"
-import {
-  Box,
-  DefaultFps,
-  type MpDom,
-  Tooltip,
-  useMousePos,
-} from "@mpv-easy/react"
+import { Box, DefaultFps, type MpDom, Tooltip } from "@mpv-easy/react"
 import {
   modeSelector,
   mousePosSelector,
@@ -56,7 +50,6 @@ import {
   detectWhisperModel,
   normalize,
   subAdd,
-  getAssScale,
 } from "@mpv-easy/tool"
 import clamp from "lodash-es/clamp"
 import { Playlist } from "./playlist"
@@ -67,13 +60,7 @@ import { Translation } from "@mpv-easy/translate"
 import { Crop } from "@mpv-easy/crop"
 import { dispatch, useSelector } from "../models"
 import { Logo } from "./components/logo"
-import {
-  Frame,
-  getFPS,
-  getFrame,
-  getOffset,
-  seekFrame,
-} from "@mpv-easy/frame-seeker"
+import { FrameSeeker, FrameSeekerRef } from "@mpv-easy/frame-seeker"
 export * from "./progress"
 export * from "./toolbar"
 export * from "./voice-control"
@@ -257,10 +244,6 @@ export const Easy = (props: Partial<EasyProps>) => {
   const { cropPoints, showCrop, showFrameSeeker } = playerState
   const cropConfig = useSelector(cropSelector)
   const fsConfig = useSelector(frameSeekerSelector)
-  const [fsActive, setFsActive] = useState(false)
-  const scale = getAssScale()
-  const leftOffset = ((osdDimensions.w - fsConfig.radius) / 2) * scale
-  const topOffset = (osdDimensions.h - fsConfig.bottom) * scale
   const { x, y, hover } = mousePos
   const [hide, setHide] = useState(!!props.initHide)
   const hideHandle = useRef(-1)
@@ -317,25 +300,8 @@ export const Easy = (props: Partial<EasyProps>) => {
   const path = useSelector(pathSelector)
   const showLogo =
     !path && !showCrop && playerState.historyHide && playerState.playlistHide
-  const clickX = useRef(0)
-  const fpsRef = useRef(0)
-  const [base, setBase] = useState(0)
-  const offsetRef = useRef(0)
 
-  const { x: mouseX } = useMousePos()
-  if (showFrameSeeker) {
-    const fps = getFPS()
-    if (fps !== 0) {
-      fpsRef.current = fps
-    }
-    offsetRef.current = getOffset(osdDimensions.w, clickX.current, mouseX)
-    if (fsActive) {
-      const target = (base + (offsetRef.current * fsConfig.frames) / 2) | 0
-      if (target !== getFrame(fpsRef.current)) {
-        seekFrame(target, fpsRef.current)
-      }
-    }
-  }
+  const fsRef = useRef<FrameSeekerRef>(null)
   return (
     <Box
       id="mpv-easy-main"
@@ -374,10 +340,7 @@ export const Easy = (props: Partial<EasyProps>) => {
         }
 
         if (showFrameSeeker) {
-          clickX.current = e.clientX
-          setPropertyBool("pause", true)
-          setFsActive((v) => !v)
-          setBase(getFrame(fpsRef.current))
+          fsRef.current?.click(e.clientX)
         }
       }}
     >
@@ -432,14 +395,17 @@ export const Easy = (props: Partial<EasyProps>) => {
         />
       )}
       {showFrameSeeker && fsConfig.ui && (
-        <Frame
-          top={topOffset}
-          left={leftOffset}
-          color={fsActive ? fsConfig.activeColor : fsConfig.color}
+        <FrameSeeker
+          ref={fsRef}
+          bottom={fsConfig.bottom}
+          color={fsConfig.color}
+          activeColor={fsConfig.activeColor}
           radius={fsConfig.radius}
-          offset={fsActive ? offsetRef.current : 0}
           zIndex={fsConfig.zIndex}
           borderSize={fsConfig.borderSize}
+          text={fsConfig.text}
+          frames={fsConfig.frames}
+          fontSize={fontSize.fontSize}
         />
       )}
       <Translation
