@@ -134,7 +134,7 @@ export const FrameSeeker: ForwardRefExoticComponent<
   const osd = useProperty("osd-dimensions")[0]
   const mouseX = useProperty("mouse-pos")[0].x
   const clickX = useRef(0)
-  const offset = getOffset(osd.w, clickX.current, mouseX)
+  const offset = getOffset(osd.w - 1, clickX.current, mouseX)
   const left = (osd.w - props.radius) / 2
   const top = osd.h - props.bottom
   const [active, setActive] = useState(false)
@@ -151,7 +151,7 @@ export const FrameSeeker: ForwardRefExoticComponent<
     }
   }, [])
 
-  const degree = 360 - (offset * 90 + 270)
+  const degree = (360 - (offset * 90 + 270)) | 0
   const scale = getAssScale()
   const circleAss = drawCircle({
     left,
@@ -171,9 +171,9 @@ export const FrameSeeker: ForwardRefExoticComponent<
     scale,
   })
   const offsetFrame = (offset * (frames / 2)) | 0
+  const currentFrame = frameProp.value
   if (active) {
     const target = (base + (offset * frames) / 2) | 0
-    const currentFrame = frameProp.value
     if (target !== currentFrame) {
       frameStep(target - currentFrame, "seek")
     }
@@ -214,7 +214,7 @@ export const FrameSeeker: ForwardRefExoticComponent<
           justifyContent="center"
           alignItems="center"
           textAlign="center"
-          text={active ? frameText : frameProp.value.toString()}
+          text={active ? frameText : currentFrame.toString()}
           color={color}
           fontSize={fontSize}
         />
