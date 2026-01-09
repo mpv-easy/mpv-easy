@@ -138,7 +138,6 @@ export const FrameSeeker: ForwardRefExoticComponent<
   const left = (osd.w - props.radius) / 2
   const top = osd.h - props.bottom
   const [active, setActive] = useState(false)
-  const _fpsRef = useRef(0)
   const [base, setBase] = useState(0)
   const color = active ? props.activeColor : props.color
   useImperativeHandle(ref, () => {
@@ -166,7 +165,7 @@ export const FrameSeeker: ForwardRefExoticComponent<
     left,
     top,
     radius,
-    degree,
+    degree: active ? degree : 90,
     color,
     borderSize,
     scale,
@@ -179,7 +178,7 @@ export const FrameSeeker: ForwardRefExoticComponent<
       frameStep(target - currentFrame, "seek")
     }
   }
-  const frameText = `${base}${offsetFrame > 0 ? `+${offsetFrame}` : offsetFrame}`
+  const frameText = `${base}${offsetFrame >= 0 ? `+${offsetFrame}` : offsetFrame}`
   return (
     <Box
       width={radius * 2}
