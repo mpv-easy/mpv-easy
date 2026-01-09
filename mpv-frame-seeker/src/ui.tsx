@@ -214,7 +214,7 @@ export const FrameSeeker: ForwardRefExoticComponent<
           justifyContent="center"
           alignItems="center"
           textAlign="center"
-          text={frameText}
+          text={active ? frameText : frameProp.value.toString()}
           color={color}
           fontSize={fontSize}
         />
