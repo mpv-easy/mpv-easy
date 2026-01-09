@@ -2,6 +2,11 @@
 
 A script for frame-by-frame video navigation using mouse control.
 
+
+https://github.com/user-attachments/assets/fe5bb251-7179-4cc2-a761-89392f39eeef
+
+
+
 ## Usage
 
 Activate with `Ctrl+F`:
