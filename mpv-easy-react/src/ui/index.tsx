@@ -154,7 +154,6 @@ export const Easy = (props: Partial<EasyProps>) => {
     registerScriptMessage("preview", () => {
       dispatch.preview()
     })
-
     registerScriptMessage("mouse-right-click", () => {
       dispatch.setPause(!getPropertyBool("pause"))
     })
