@@ -24,10 +24,6 @@ import {
   quit,
   playlistPlayIndex,
   setPropertyString,
-  getPropertyNumber,
-  playlistPrev,
-  playlistNext,
-  add,
 } from "@mpv-easy/tool"
 import type { Language } from "@mpv-easy/i18n"
 import { type ThemeMode, type UIName, PlayMode } from "../mpv-easy-theme"
@@ -362,23 +358,6 @@ const store = defineStore({
     },
     setProtocolHook(state, exePath: string) {
       state[pluginName].config.protocolHook = exePath
-      return { ...state }
-    },
-    chapterSeek(state, direction: number) {
-      // https://github.com/mpv-player/mpv/issues/4738#issuecomment-321298846
-      const chapters = getPropertyNumber("chapters")
-      const chapter = getPropertyNumber("chapter")
-      if (chapters === undefined || chapter === undefined) {
-        return state
-      }
-      const target = chapter + direction
-      if (target < 0) {
-        playlistPrev()
-      } else if (target >= chapters) {
-        playlistNext()
-      } else {
-        add("chapter", direction)
-      }
       return { ...state }
     },
     changeFontSize(state, n: number) {

@@ -154,12 +154,6 @@ export const Easy = (props: Partial<EasyProps>) => {
     registerScriptMessage("preview", () => {
       dispatch.preview()
     })
-    registerScriptMessage("chapter-next", () => {
-      dispatch.chapterSeek(1)
-    })
-    registerScriptMessage("chapter-prev", () => {
-      dispatch.chapterSeek(-1)
-    })
     registerScriptMessage("mouse-right-click", () => {
       dispatch.setPause(!getPropertyBool("pause"))
     })
