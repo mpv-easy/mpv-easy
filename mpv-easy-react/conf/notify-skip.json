@@ -1,0 +1,8 @@
+{
+  "name": "mpv-easy-notify-skip",
+  "description": "mpv player chapter skip notification script",
+  "version": "0.1.15-alpha.17",
+  "author": "mpv-easy",
+  "download": "https://github.com/mpv-easy/mpv-easy/releases/latest/download/mpv-easy-notify-skip.zip",
+  "homepage": "https://github.com/mpv-easy/mpv-easy/tree/main/mpv-notify-skip"
+}

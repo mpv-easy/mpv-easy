@@ -1013,7 +1013,7 @@ export type ChapterScriptdata = {
 export type VfScriptdata = {}
 export type AfScriptdata = {}
 export type Chapter = {
-  title: number
+  title: string
   count: number
   time: number
 }
