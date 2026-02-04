@@ -4,7 +4,7 @@ import { download as downloadRepo } from "jdl"
 import { decode, File, guess } from "@easy-install/easy-archive"
 
 // TODO: support liunx
-export const PLATFORM_LIST = ["mpv", "mpv-v3", "mpv.net"] as const
+export const PLATFORM_LIST = ["mpv", "mpv-v3", "mpv.net", "mpv-qjs"] as const
 export type Platform = (typeof PLATFORM_LIST)[number]
 
 export type State = {
@@ -167,6 +167,8 @@ export async function getMpvFiles(platform: Platform) {
     mpvUrl = getCdnFileUrl("mpv.net.tar.xz")
   } else if (platform === "mpv-v3") {
     getCdnFileUrl("mpv-v3-windows.tar.xz")
+  } else if (platform === "mpv-qjs") {
+    getCdnFileUrl("mpv-qjs.tar.xz")
   }
 
   const bin = await downloadBinary(mpvUrl)

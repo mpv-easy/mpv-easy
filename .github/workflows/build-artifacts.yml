@@ -506,6 +506,8 @@ jobs:
           zip -r -q ../release/mpv-windows.zip .
           cd ..
 
+          cp mpv-qjs-win.zip ./release/mpv-qjs-win.zip
+
           # mkdir yt-dlp-windows
           # cd yt-dlp-windows
           # cp yt-dlp.exe yt-dlp-windows/yt-dlp.exe
