@@ -399,6 +399,14 @@ export function createMpvMock(
     selection: false,
   })
 
+  // Reset fabric.js wrapper positioning to fix UI offset
+  const wrapper = dom.parentElement
+  if (wrapper) {
+    wrapper.style.position = "static"
+    wrapper.style.left = ""
+    wrapper.style.top = ""
+  }
+  dom.style.position = "static"
   dom.style.left = ""
   dom.style.top = ""
 

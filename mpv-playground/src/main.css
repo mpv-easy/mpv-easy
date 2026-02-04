@@ -1,3 +1,29 @@
+:root {
+  --bg-color: #ffffff;
+  --text-color: #213547;
+  --border-color: blue;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg-color: #1a1a1a;
+    --text-color: rgba(255, 255, 255, 0.87);
+    --border-color: #4a9eff;
+  }
+}
+
+[data-theme="dark"] {
+  --bg-color: #1a1a1a;
+  --text-color: rgba(255, 255, 255, 0.87);
+  --border-color: #4a9eff;
+}
+
+[data-theme="light"] {
+  --bg-color: #ffffff;
+  --text-color: #213547;
+  --border-color: blue;
+}
+
 body,
 html {
   padding: 0;
@@ -7,11 +33,16 @@ html {
   align-items: center;
   width: 100vw;
   height: 100vh;
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  transition:
+    background-color 0.3s ease,
+    color 0.3s ease;
 }
 
 canvas {
   display: flex;
-  border: 2px solid blue;
+  border: 2px solid var(--border-color);
   box-sizing: content-box;
 }
 
@@ -23,4 +54,28 @@ canvas {
 body,
 canvas {
   font-family: "FiraCode Nerd Font Mono";
+}
+
+/* Theme toggle button */
+.theme-toggle {
+  position: fixed;
+  top: 1rem;
+  right: 1rem;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 2px solid var(--border-color);
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  cursor: pointer;
+  font-size: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: all 0.3s ease;
+  z-index: 1000;
+}
+
+.theme-toggle:hover {
+  transform: scale(1.1);
 }
