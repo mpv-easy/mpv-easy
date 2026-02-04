@@ -40,7 +40,7 @@ html {
     color 0.3s ease;
 }
 
-canvas {
+#mpv-canvas {
   display: flex;
   border: 2px solid var(--border-color);
   box-sizing: content-box;

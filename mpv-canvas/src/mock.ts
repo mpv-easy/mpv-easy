@@ -232,14 +232,14 @@ function assToDom(s: string) {
     color: _color,
     borderSize: _borderSize,
     fontSize: _fontSize,
-    x: posX,
-    y: posY,
+    x: posX + rect.width / 2,
+    y: posY + rect.height / 2,
     fontName: _fontName,
     text: getText(s),
     isRect: isRectNode(s),
     rect: {
-      x: posX + rect.x,
-      y: posY + rect.y,
+      x: posX + rect.x + rect.width / 2,
+      y: posY + rect.y + rect.height / 2,
       width: rect.width,
       height: rect.height,
       rx: rect.rx,
@@ -328,6 +328,8 @@ function createOsdOverlay(
           fontSize: fontSize,
           fill: color,
           selectable: false,
+          originX: "left",
+          originY: "top",
         })
         fabricCanvas.add(this.fabricNode)
         if (dom.fontName) {
@@ -342,6 +344,8 @@ function createOsdOverlay(
         this.fabricNode.set("fill", color)
         this.fabricNode.set("fontSize", fontSize)
         this.fabricNode.set("text", dom.text)
+        this.fabricNode.set("originX", "left")
+        this.fabricNode.set("originY", "top")
 
         if (dom.fontName) {
           this.fabricNode.set("fontFamily", dom.fontName)
