@@ -2,7 +2,7 @@ import "./polyfill"
 import "./main.css"
 import { createRender, renderNode } from "@mpv-easy/react"
 import type { MP } from "@mpv-easy/tool"
-
+// @ts-expect-error
 import FontFaceObserver from "fontfaceobserver"
 
 declare namespace globalThis {

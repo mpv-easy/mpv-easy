@@ -6,8 +6,9 @@
   "author": "ahaoboy <504595380@qq.com> (https://github.com/ahaoboy)",
   "license": "MIT",
   "scripts": {
-    "dev": "rsbuild dev --open",
-    "build": "rsbuild build"
+    "dev": "vite --open",
+    "build": "vite build",
+    "preview": "vite preview"
   },
   "dependencies": {
     "@mpv-easy/canvas": "workspace:*",
@@ -22,5 +23,12 @@
     "react-redux": "9.2.0",
     "react-use": "17.6.0",
     "redux": "5.0.1"
+  },
+  "devDependencies": {
+    "@types/react": "19.2.10",
+    "@types/react-dom": "19.2.3",
+    "@vitejs/plugin-react": "5.1.3",
+    "typescript": "5.9.3",
+    "vite": "7.3.1"
   }
 }
