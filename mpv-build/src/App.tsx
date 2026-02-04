@@ -582,15 +582,17 @@ function App() {
           value={searchValue}
           onChange={(e) => setSearchValue(e.target.value)}
           onKeyDown={handleKeyDown}
-          sx={{ width: "100%", maxWidth: 800 }}
-          InputProps={{
-            endAdornment: (
-              <InputAdornment position="end">
-                <IconButton onClick={handleSearch} edge="end">
-                  <Search />
-                </IconButton>
-              </InputAdornment>
-            ),
+          sx={{ width: "100%", maxWidth: 1000 }}
+          slotProps={{
+            input: {
+              endAdornment: (
+                <InputAdornment position="end">
+                  <IconButton onClick={handleSearch} edge="end">
+                    <Search />
+                  </IconButton>
+                </InputAdornment>
+              ),
+            },
           }}
         />
 
