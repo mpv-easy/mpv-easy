@@ -164,6 +164,15 @@ function App() {
         palette: {
           mode: isDark ? "dark" : "light",
         },
+        components: {
+          MuiButton: {
+            styleOverrides: {
+              root: {
+                textTransform: "none",
+              },
+            },
+          },
+        },
       }),
     [isDark],
   )

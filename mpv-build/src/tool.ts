@@ -166,9 +166,9 @@ export async function getMpvFiles(platform: Platform) {
   if (platform === "mpv.net") {
     mpvUrl = getCdnFileUrl("mpv.net.tar.xz")
   } else if (platform === "mpv-v3") {
-    getCdnFileUrl("mpv-v3-windows.tar.xz")
+    mpvUrl = getCdnFileUrl("mpv-v3-windows.tar.xz")
   } else if (platform === "mpv-qjs") {
-    getCdnFileUrl("mpv-qjs.tar.xz")
+    mpvUrl = getCdnFileUrl("mpv-qjs-windows.tar.xz")
   }
 
   const bin = await downloadBinary(mpvUrl)
