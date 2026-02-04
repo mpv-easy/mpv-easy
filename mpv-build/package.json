@@ -9,14 +9,13 @@
     "build": "vite build"
   },
   "dependencies": {
-    "@ant-design/icons": "6.1.0",
     "@easy-install/easy-archive": "0.2.6",
-    "antd": "6.2.3",
+    "@mui/icons-material": "7.3.7",
+    "@mui/material": "7.3.7",
     "fuse.js": "7.1.0",
     "jdl": "0.1.4",
     "react": "19.2.4",
     "react-dom": "19.2.4",
-    "react-use": "17.6.0",
     "zustand": "5.0.11"
   },
   "devDependencies": {

@@ -21,9 +21,10 @@ export default defineConfig({
           "react-dom": "https://esm.sh/react-dom",
           "@easy-install/easy-archive":
             "https://esm.sh/@easy-install/easy-archive?standalone",
-          antd: "https://esm.sh/antd?standalone",
           "fuse.js": "https://esm.sh/fuse.js?standalone",
-          "@ant-design/icons": "https://esm.sh/@ant-design/icons?standalone",
+          "@mui/material": "https://esm.sh/@mui/material?standalone",
+          "@mui/icons-material":
+            "https://esm.sh/@mui/icons-material?standalone",
         },
   },
 })

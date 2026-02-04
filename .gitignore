@@ -4,6 +4,8 @@ bun.lock
 bun.lockb
 Cargo.lock
 
+.agent
+
 # Logs
 dist
 es5
