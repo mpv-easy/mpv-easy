@@ -333,10 +333,6 @@ function createOsdOverlay(
         if (dom.fontName) {
           this.fabricNode.set("fontFamily", dom.fontName)
         }
-
-        if (dom.fontName) {
-          this.fabricNode.set("fontFamily", dom.fontName)
-        }
         if (dom.fontSize) {
           this.fabricNode.set("fontSize", dom.fontSize)
         }

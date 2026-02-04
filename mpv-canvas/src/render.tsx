@@ -1,6 +1,5 @@
 import React from "react"
 
-// @ts-expect-error
 import FontFaceObserver from "fontfaceobserver"
 import { getRootFlex } from "@mpv-easy/react"
 import { createRender } from "@mpv-easy/react"
