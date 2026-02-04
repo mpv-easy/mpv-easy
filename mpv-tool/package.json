@@ -25,8 +25,8 @@
     "@mpv-easy/polyfill": "workspace:*",
     "crypto-js": "4.2.0",
     "e-color": "0.1.8",
-    "lodash-es": "4.17.22",
-    "type-fest": "5.3.1"
+    "lodash-es": "4.17.23",
+    "type-fest": "5.4.3"
   },
   "devDependencies": {
     "@types/crypto-js": "4.2.2",

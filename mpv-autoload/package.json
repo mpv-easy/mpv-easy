@@ -21,6 +21,6 @@
   "dependencies": {
     "@mpv-easy/plugin": "workspace:*",
     "@mpv-easy/tool": "workspace:*",
-    "lodash-es": "4.17.22"
+    "lodash-es": "4.17.23"
   }
 }

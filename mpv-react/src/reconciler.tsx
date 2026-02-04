@@ -309,7 +309,6 @@ export function createRender({
       throwError,
       throwError,
       () => {},
-      null,
     )
 
     // Mouse event handling

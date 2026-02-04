@@ -22,7 +22,7 @@
     "e-color": "0.1.8",
     "fabric": "7.1.0",
     "fontfaceobserver": "2.3.0",
-    "lodash-es": "4.17.22"
+    "lodash-es": "4.17.23"
   },
   "peerDependencies": {
     "react": "19.2.3",
