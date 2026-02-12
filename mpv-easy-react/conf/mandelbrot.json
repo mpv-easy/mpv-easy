@@ -1,0 +1,8 @@
+{
+  "name": "mpv-easy-mandelbrot",
+  "description": "mpv player interactive Mandelbrot fractal shader script, toggle with 'f' key, zoom with mouse wheel or arrow keys",
+  "version": "0.1.15-alpha.17",
+  "author": "mpv-easy",
+  "download": "https://github.com/mpv-easy/mpv-easy/releases/latest/download/mpv-easy-mandelbrot.zip",
+  "homepage": "https://github.com/mpv-easy/mpv-easy/tree/main/mpv-easy-react/scripts/mandelbrot.ts"
+}
