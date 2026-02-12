@@ -10,7 +10,7 @@ import {
   verbose,
 } from "@mpv-easy/tool"
 
-const SHADER_FILE = "~~/shaders/mandelbrot/mandelbrot.glsl"
+const SHADER_FILE = "~~/shaders/mandelbrot.glsl"
 
 // ============ Tunable parameters ============
 const ZOOM_SPEED = 1.3 // Zoom multiplier per step
