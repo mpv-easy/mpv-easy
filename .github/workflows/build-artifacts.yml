@@ -30,7 +30,7 @@ jobs:
         shell: powershell
         run: |
           cd mpv-easy-ext
-          cargo build -q --target x86_64-pc-windows-msvc --release --out-dir=output -Z unstable-options
+          cargo build -q --target x86_64-pc-windows-msvc --release --artifact-dir=output -Z unstable-options
           cd ..
           mv mpv-easy-ext/output/mpv-easy-ext.exe mpv-easy-ext-windows.exe
           mv mpv-easy-ext/output/mpv-easy-play-with.exe mpv-easy-play-with-windows.exe
@@ -48,7 +48,7 @@ jobs:
           rustc --version
 
           cd mpv-deno
-          cargo build -q --release --out-dir=output -Z unstable-options
+          cargo build -q --release --artifact-dir=output -Z unstable-options
           cd ..
           mv mpv-deno/output/mpv_deno.dll mpv-deno-windows.dll
 
@@ -74,7 +74,7 @@ jobs:
       #     rustc --version
 
       #     cd mpv-qjs
-      #     cargo build -q --release --out-dir=output -Z unstable-options
+      #     cargo build -q --release --artifact-dir=output -Z unstable-options
       #     cd ..
       #     mv mpv-qjs/output/mpv_qjs.dll mpv-qjs-windows.dll
 
@@ -88,7 +88,7 @@ jobs:
       #     rustc --version
 
       #     cd mpv-boa
-      #     cargo build -q --release --out-dir=output -Z unstable-options
+      #     cargo build -q --release --artifact-dir=output -Z unstable-options
       #     cd ..
       #     mv mpv-boa/output/mpv_boa.dll mpv-boa-windows.dll
 
@@ -136,7 +136,7 @@ jobs:
       - name: build macos-arm64
         run: |
           cd mpv-easy-ext
-          cargo build -q --release --out-dir=output -Z unstable-options
+          cargo build -q --release --artifact-dir=output -Z unstable-options
           cd ..
 
           mv mpv-easy-ext/output/mpv-easy-ext mpv-easy-ext-macos-arm64
@@ -164,7 +164,7 @@ jobs:
       - name: build ubuntu-latest
         run: |
           cd mpv-easy-ext
-          cargo build -q --release --out-dir=output -Z unstable-options
+          cargo build -q --release --artifact-dir=output -Z unstable-options
           cd ..
 
           mv mpv-easy-ext/output/mpv-easy-ext mpv-easy-ext-linux
@@ -195,7 +195,7 @@ jobs:
           cd mpv-easy-ext
 
           cargo install -q cross --git https://github.com/cross-rs/cross
-          cross build -q --release --target aarch64-linux-android --out-dir=output -Z unstable-options
+          cross build -q --release --target aarch64-linux-android --artifact-dir=output -Z unstable-options
           cd ..
 
           mv mpv-easy-ext/output/mpv-easy-ext mpv-easy-ext-android
