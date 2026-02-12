@@ -6,7 +6,6 @@ import type {
   AddKeyBindingFlags,
   FileInfo,
   LogLevel,
-  MP,
   MpvType,
   OSDMargins,
   MpvOsdOverlay,
@@ -22,22 +21,18 @@ import { expandPath } from "./type"
 import { MousePos } from "./type-prop"
 import { dirname, existsSync } from "./fs"
 
-export function getMP(): MP {
-  return globalThis.mp
-}
-
 export function command(command: string): true | undefined {
   // console.log("command: ", command)
-  return getMP().command(command)
+  return mp.command(command)
 }
 
 export function commandv(...args: (string | number)[]): true | undefined {
   // console.log("commandv: ", args)
-  return getMP().commandv(...args)
+  return mp.commandv(...args)
 }
 
 export function commandNative<T = CommandResult>(table: unknown): T {
-  return getMP().command_native<T>(table)
+  return mp.command_native<T>(table)
 }
 
 export function commandNativeAsync<T = CommandResult>(
@@ -50,14 +45,14 @@ export function commandNativeAsync<T = CommandResult>(
   },
   fn?: (success: boolean, result: T, error: string | undefined) => void,
 ): number {
-  return getMP().command_native_async<T>(table, fn)
+  return mp.command_native_async<T>(table, fn)
 }
 
 export function abortAsyncCommand(t: number) {
-  return getMP().abort_async_command(t)
+  return mp.abort_async_command(t)
 }
 
-// export const getProperty = getMP().get_property
+// export const getProperty = mp.get_property
 export function getProperty(
   name: StringProp | (string & {}),
 ): string | undefined
@@ -69,17 +64,17 @@ export function getProperty(
   name: StringProp | (string & {}),
   def?: string,
 ): string | undefined {
-  return getMP().get_property(name) ?? def
+  return mp.get_property(name) ?? def
 }
 
-// export const getPropertyOsd = getMP().get_property_osd
+// export const getPropertyOsd = mp.get_property_osd
 export function getPropertyOsd(name: string): string | undefined
 export function getPropertyOsd(name: string, def: string): string
 export function getPropertyOsd(name: string, def?: string): string | undefined {
-  return getMP().get_property_osd(name, def)
+  return mp.get_property_osd(name, def)
 }
 
-// export const getPropertyBool = getMP().get_property_bool
+// export const getPropertyBool = mp.get_property_bool
 export function getPropertyBool(
   name: BoolProp | (string & {}),
 ): boolean | undefined
@@ -91,10 +86,10 @@ export function getPropertyBool(
   name: BoolProp | (string & {}),
   def?: boolean,
 ): boolean | undefined {
-  return getMP().get_property_bool(name) ?? def
+  return mp.get_property_bool(name) ?? def
 }
 
-// export const getPropertyString = getMP().get_property_string
+// export const getPropertyString = mp.get_property_string
 export function getPropertyString(
   name: StringProp | (string & {}),
 ): string | undefined
@@ -106,10 +101,10 @@ export function getPropertyString(
   name: StringProp | (string & {}),
   def?: string,
 ): string | undefined {
-  return getMP().get_property_native<string>(name) ?? def
+  return mp.get_property_native<string>(name) ?? def
 }
 
-// export const getPropertyNumber = getMP().get_property_number
+// export const getPropertyNumber = mp.get_property_number
 export function getPropertyNumber(
   name: NumberProp | (string & {}),
 ): number | undefined
@@ -121,7 +116,7 @@ export function getPropertyNumber(
   name: NumberProp | (string & {}),
   def?: number,
 ): number | undefined {
-  return getMP().get_property_number(name) ?? def
+  return mp.get_property_number(name) ?? def
 }
 export function getPropertyNative<
   K extends keyof NativeProp,
@@ -137,42 +132,42 @@ export function getPropertyNative<
   K extends keyof NativeProp,
   T = NativeProp[K],
 >(name: K, def?: NoInfer<T>): T | undefined {
-  return getMP().get_property_native(name) ?? def
+  return mp.get_property_native(name) ?? def
 }
 
 export function setProperty(name: string, value: string): true | undefined {
-  return getMP().set_property(name, value)
+  return mp.set_property(name, value)
 }
 
 export function setPropertyBool(
   name: BoolProp | (string & {}),
   value: boolean,
 ): true | undefined {
-  return getMP().set_property_bool(name, value)
+  return mp.set_property_bool(name, value)
 }
 export function setPropertyString(
   name: StringProp | (string & {}),
   value: string,
 ): true | undefined {
-  return getMP().set_property(name, value)
+  return mp.set_property(name, value)
 }
 
 export function setPropertyNumber(
   name: NumberProp | (string & {}),
   value: number,
 ): true | undefined {
-  return getMP().set_property_number(name, value)
+  return mp.set_property_number(name, value)
 }
 
 export function setPropertyNative(
   name: string,
   value: unknown,
 ): true | undefined {
-  return getMP().set_property_native(name, value)
+  return mp.set_property_native(name, value)
 }
 
 export function getTime(): number {
-  return getMP().get_time()
+  return mp.get_time()
 }
 
 export type KeyEvent = {
@@ -197,7 +192,7 @@ export function addKeyBinding(
   fn?: (event: KeyEvent) => void,
   flags?: AddKeyBindingFlags,
 ) {
-  return getMP().add_key_binding(key, name, fn, flags)
+  return mp.add_key_binding(key, name, fn, flags)
 }
 
 export function addForcedKeyBinding(
@@ -206,22 +201,22 @@ export function addForcedKeyBinding(
   fn?: (event: KeyEvent) => void,
   flags?: AddKeyBindingFlags,
 ) {
-  return getMP().add_forced_key_binding(key, name, fn, flags)
+  return mp.add_forced_key_binding(key, name, fn, flags)
 }
 
 export function removeKeyBinding(name: string) {
-  return getMP().remove_key_binding(name)
+  return mp.remove_key_binding(name)
 }
 
 export function registerEvent(
   name: string,
   fn: (event: Record<string, unknown>) => void,
 ) {
-  return getMP().register_event(name, fn)
+  return mp.register_event(name, fn)
 }
 
 export function unregisterEvent(fn: (...args: unknown[]) => void) {
-  return getMP().unregister_event(fn)
+  return mp.unregister_event(fn)
 }
 
 export function observeProperty<
@@ -229,7 +224,7 @@ export function observeProperty<
   T extends keyof MpvType,
   P = K extends keyof NativeProp ? NativeProp[K] : StrToType<T>,
 >(name: K, type: T, fn: (name: string, value: P) => void) {
-  return getMP().observe_property(name, type as any, fn as any)
+  return mp.observe_property(name, type as any, fn as any)
 }
 
 export function observePropertyNumber(
@@ -260,83 +255,83 @@ export function observePropertyString(
 }
 
 export function unobserveProperty(fn: (...args: unknown[]) => void) {
-  return getMP().unobserve_property(fn)
+  return mp.unobserve_property(fn)
 }
 
 export function getOpt(key: string): string {
-  return getMP().get_opt(key)
+  return mp.get_opt(key)
 }
 
 export function getScriptName(): string {
-  return getMP().get_script_name()
+  return mp.get_script_name()
 }
 
 export function osdMessage(text: string, seconds?: number) {
-  return getMP().osd_message(text, seconds)
+  return mp.osd_message(text, seconds)
 }
 
 export function registerIdle(fn: () => void) {
-  return getMP().register_idle(fn)
+  return mp.register_idle(fn)
 }
 
 export function unregisterIdle(fn: () => void) {
-  return getMP().unregister_idle(fn)
+  return mp.unregister_idle(fn)
 }
 
 export function enableMessages(level: LogLevel) {
-  return getMP().enable_messages(level)
+  return mp.enable_messages(level)
 }
 
 export function registerScriptMessage(
   name: string,
   fn: (...args: string[]) => void,
 ) {
-  return getMP().register_script_message(name, fn)
+  return mp.register_script_message(name, fn)
 }
 
 export function unregisterScriptMessage(name: string) {
-  return getMP().unregister_script_message(name)
+  return mp.unregister_script_message(name)
 }
 
 export function createOsdOverlay(
   format: "ass-events" = "ass-events",
 ): MpvOsdOverlay {
-  return getMP().create_osd_overlay(format)
+  return mp.create_osd_overlay(format)
 }
 
 export function setOsdAss(res_x: number, res_y: number, data: string) {
-  getMP().set_osd_ass(res_x, res_y, data)
+  mp.set_osd_ass(res_x, res_y, data)
 }
 
 export function getOsdSize(): OSDSize | undefined {
-  return getMP().get_osd_size()
+  return mp.get_osd_size()
 }
 
 export function getOsdMargins(): OSDMargins | undefined {
-  return getMP().get_osd_margins()
+  return mp.get_osd_margins()
 }
 
 export function addHook(name: string, priority: number, fn: () => void) {
-  return getMP().add_hook(name, priority, fn)
+  return mp.add_hook(name, priority, fn)
 }
 
 export function lastError(): string {
-  return getMP().last_error()
+  return mp.last_error()
 }
 
 export function getTimeMs(): number {
-  return getMP().get_time_ms()
+  return mp.get_time_ms()
 }
 
 export function getScriptFile(): string {
-  return getMP().get_script_file()
+  return mp.get_script_file()
 }
 
 let _scriptDirCache: string
 export function getScriptDir(): string {
   if (_scriptDirCache) return _scriptDirCache
   _scriptDirCache = normalize(
-    getMP().get_script_file().split("/").slice(0, -1).join("/"),
+    mp.get_script_file().split("/").slice(0, -1).join("/"),
   )
   return _scriptDirCache
 }
@@ -350,39 +345,39 @@ export function getScriptConfigDir(): string {
   return _scriptConfigDirCache
 }
 export function getModulePaths(): string[] {
-  return getMP().module_paths
+  return mp.module_paths
 }
 
 export function log(level: LogLevel, ...msg: unknown[]) {
-  return getMP().msg.log(level, ...msg)
+  return mp.msg.log(level, ...msg)
 }
 
 export function fatal(...msg: unknown[]) {
-  return getMP().msg.fatal(...msg)
+  return mp.msg.fatal(...msg)
 }
 
 export function error(...msg: unknown[]) {
-  return getMP().msg.error(...msg)
+  return mp.msg.error(...msg)
 }
 
 export function warn(...msg: unknown[]) {
-  return getMP().msg.warn(...msg)
+  return mp.msg.warn(...msg)
 }
 
 export function info(...msg: unknown[]) {
-  return getMP().msg.info(...msg)
+  return mp.msg.info(...msg)
 }
 
 export function verbose(...msg: unknown[]) {
-  return getMP().msg.verbose(...msg)
+  return mp.msg.verbose(...msg)
 }
 
 export function debug(...msg: unknown[]) {
-  return getMP().msg.debug(...msg)
+  return mp.msg.debug(...msg)
 }
 
 export function trace(...msg: unknown[]) {
-  return getMP().msg.trace(...msg)
+  return mp.msg.trace(...msg)
 }
 
 export function readOptions(
@@ -391,63 +386,61 @@ export function readOptions(
   onUpdate?: (changelist: Record<string, boolean | undefined>) => void,
 ) {
   if (typeof onUpdate === "function")
-    return getMP().options.read_options(table, identifier, onUpdate)
-  return getMP().options.read_options(table, identifier)
+    return mp.options.read_options(table, identifier, onUpdate)
+  return mp.options.read_options(table, identifier)
 }
 
 export function getcwd(): string | undefined {
-  return getMP().utils.getcwd()
+  return mp.utils.getcwd()
 }
 
 export function readdir(
   path: string,
   filter?: "files" | "dirs" | "normal" | "all",
 ): string[] | undefined {
-  return getMP().utils.readdir(path, filter)
+  return mp.utils.readdir(path, filter)
 }
 
 export function fileInfo(path: string): FileInfo | undefined {
-  return getMP().utils.file_info(path)
+  return mp.utils.file_info(path)
 }
 
 export function splitPath(path: string): [string, string] {
-  return getMP().utils.split_path(path)
+  return mp.utils.split_path(path)
 }
 
 export function joinPath(...paths: string[]): string {
-  return normalize(
-    paths.reduce((cur, pre) => getMP().utils.join_path(cur, pre)),
-  )
+  return normalize(paths.reduce((cur, pre) => mp.utils.join_path(cur, pre)))
 }
 
 export function getpid(): number {
-  return getMP().utils.getpid()
+  return mp.utils.getpid()
 }
 
 export function getenv(name: string): string | undefined {
-  return getMP().utils.getenv(name)
+  return mp.utils.getenv(name)
 }
 
 export function getUserPath(path: string): string {
-  return getMP().utils.get_user_path(path)
+  return mp.utils.get_user_path(path)
 }
 
 // export function getSc
 
 export function readFile(fname: string, max?: number): string {
-  return getMP().utils.read_file(fname, max)
+  return mp.utils.read_file(fname, max)
 }
 
 export function writeFile(filePath: string, str: string, prefix = "file://") {
   const p = prefix + normalize(filePath)
-  return getMP().utils.write_file(p, str)
+  return mp.utils.write_file(p, str)
 }
 
 export function compileJs(
   fname: string,
   content_str: string,
 ): (...args: unknown[]) => unknown {
-  return getMP().utils.compile_js(fname, content_str)
+  return mp.utils.compile_js(fname, content_str)
 }
 
 export function print(...msg: any[]) {
@@ -489,11 +482,11 @@ export function clearTimeout(id: number) {
 // }
 
 // export function getOptions() {
-//   return getMP().options
+//   return mp.options
 // }
 
 export function getMousePos(): MousePos {
-  return getMP().get_mouse_pos()
+  return mp.get_mouse_pos()
 }
 
 export function getGeometry() {
