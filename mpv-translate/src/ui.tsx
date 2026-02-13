@@ -1,6 +1,5 @@
 import {
   getLang,
-  getPropertyBool,
   observeProperty,
   registerScriptMessage,
   setPropertyBool,
@@ -10,13 +9,26 @@ import {
   detectFfmpeg,
   showNotification,
   getPropertyNative,
+  setTimeout,
+  hideNotification,
 } from "@mpv-easy/tool"
 import React, { useEffect, useRef, useState } from "react"
-import { Box, Button, MpDomProps } from "@mpv-easy/react"
+import { Box, Button, MpDomProps, usePropertyString } from "@mpv-easy/react"
 import { google } from "./google"
-import { TrackInfoBackup, TrackInfoBackupMix, translate } from "./tool"
+import {
+  TrackInfoBackup,
+  TrackInfoBackupMix,
+  translate,
+  resetTrackInfo,
+} from "./tool"
 import { defaultSubConfig, SubConfig } from "./const"
 import { de2en, en2zh, WordInfo } from "./interactive-translate"
+
+export enum TranslateMode {
+  None,
+  Translate,
+  Mix,
+}
 
 async function getWordInfo(
   word: string,
@@ -219,6 +231,21 @@ export function Translation(props: Partial<TranslationProps>) {
   const [text, setText] = useState("")
   const textCache = useRef("")
 
+  const [mode, setMode] = useState<TranslateMode>(TranslateMode.None)
+  const [interactive, setInteractive] = useState(false)
+  const [autoTranslate, setAutoTranslate] = useState(false)
+  const modeRef = useRef(TranslateMode.None)
+  const interactiveRef = useRef(false)
+  const autoTranslateRef = useRef(false)
+  const path = usePropertyString("path", "")[0]
+
+  // Sync refs
+  useEffect(() => {
+    modeRef.current = mode
+    interactiveRef.current = interactive
+    autoTranslateRef.current = autoTranslate
+  }, [mode, interactive, autoTranslate])
+
   const update = useRef<((s: string) => void) | null>(null)
   update.current = (s: string) => {
     if (active) {
@@ -269,21 +296,24 @@ export function Translation(props: Partial<TranslationProps>) {
   const sx = scaleW / videoParams.w
   const sy = scaleH / videoParams.h
   const videoScale = Math.min(sx, sy)
-  useEffect(() => {
-    registerScriptMessage("translate", () => {
-      const sub = getCurrentSubtitle()
-      if (!sub) {
-        showNotification("subtitle not found")
-      }
-      if (!detectFfmpeg()) {
-        showNotification("ffmpeg not found")
-        return
-      }
-      if (!detectCmd("curl")) {
-        showNotification("curl not found")
-        return
-      }
-      translate({
+
+  const updateVisibility = (m: TranslateMode, i: boolean) => {
+    const shouldBeInteractive = m !== TranslateMode.None && i
+    setActive(shouldBeInteractive)
+    if (m !== TranslateMode.None) {
+      setPropertyBool("sub-visibility", !shouldBeInteractive)
+    } else {
+      setPropertyBool("sub-visibility", true)
+    }
+  }
+
+  const applyMode = async (newMode: TranslateMode) => {
+    const currentMode = modeRef.current
+    if (currentMode === newMode && newMode !== TranslateMode.None) return
+
+    // Disable current
+    if (currentMode === TranslateMode.Translate) {
+      await translate({
         targetLang,
         sourceLang,
         mix: false,
@@ -294,21 +324,8 @@ export function Translation(props: Partial<TranslationProps>) {
         secondSubFontface,
         secondSubColor,
       })
-    })
-    registerScriptMessage("mix-translate", () => {
-      const sub = getCurrentSubtitle()
-      if (!sub) {
-        showNotification("subtitle not found")
-      }
-      if (!detectFfmpeg()) {
-        showNotification("ffmpeg not found")
-        return
-      }
-      if (!detectCmd("curl")) {
-        showNotification("curl not found")
-        return
-      }
-      translate({
+    } else if (currentMode === TranslateMode.Mix) {
+      await translate({
         targetLang,
         sourceLang,
         mix: true,
@@ -319,26 +336,146 @@ export function Translation(props: Partial<TranslationProps>) {
         secondSubFontface,
         secondSubColor,
       })
-    })
-    registerScriptMessage("interactive-translate", () => {
+    }
+
+    // Enable new
+    if (newMode === TranslateMode.Translate) {
+      showNotification("Translating...", 0)
+      await translate({
+        targetLang,
+        sourceLang,
+        mix: false,
+        firstFontSize,
+        secondFontSize,
+        firstSubColor,
+        firstSubFontface,
+        secondSubFontface,
+        secondSubColor,
+      })
+      hideNotification()
+    } else if (newMode === TranslateMode.Mix) {
+      showNotification("Translating...", 0)
+      await translate({
+        targetLang,
+        sourceLang,
+        mix: true,
+        firstFontSize,
+        secondFontSize,
+        firstSubColor,
+        firstSubFontface,
+        secondSubFontface,
+        secondSubColor,
+      })
+      hideNotification()
+    }
+    setMode(newMode)
+    updateVisibility(newMode, interactiveRef.current)
+  }
+
+  useEffect(() => {
+    registerScriptMessage("translate", () => {
       const sub = getCurrentSubtitle()
       if (!sub) {
         showNotification("subtitle not found")
+        return
+      }
+      if (!detectFfmpeg()) {
+        showNotification("ffmpeg not found")
+        return
       }
       if (!detectCmd("curl")) {
         showNotification("curl not found")
         return
       }
-      setText(textCache.current)
-      setActive((v) => !v)
-      setPropertyBool("sub-visibility", !getPropertyBool("sub-visibility"))
+
+      // Cycle: None -> Translate -> Mix -> None
+      let nextMode = TranslateMode.None
+      switch (modeRef.current) {
+        case TranslateMode.None:
+          nextMode = TranslateMode.Translate
+          showNotification(`Mode: Translate`)
+          break
+        case TranslateMode.Translate:
+          nextMode = TranslateMode.Mix
+          showNotification(`Mode: Mix`)
+          break
+        case TranslateMode.Mix:
+          nextMode = TranslateMode.None
+          showNotification(`Mode: None`)
+          break
+      }
+      applyMode(nextMode)
     })
 
+    registerScriptMessage("interactive-translate", () => {
+      const next = !interactiveRef.current
+      setInteractive(next)
+      updateVisibility(modeRef.current, next)
+      showNotification(`Interactive: ${next ? "On" : "Off"}`)
+    })
+
+    registerScriptMessage("toggle-auto-translate", () => {
+      const next = !autoTranslateRef.current
+      setAutoTranslate(next)
+      showNotification(`Auto Translate: ${next ? "On" : "Off"}`)
+    })
+
+    // We still observe sub-text for interactive mode
     observeProperty("sub-text", "string", (_, value) => {
       update.current?.(value)
       textCache.current = value
     })
   }, [])
+
+  useEffect(() => {
+    if (!path) return
+    // Hide previous notification if any
+    hideNotification()
+    resetTrackInfo()
+    if (!autoTranslateRef.current) {
+      setMode(TranslateMode.None)
+      updateVisibility(TranslateMode.None, interactiveRef.current)
+      return
+    }
+
+    const timer = setTimeout(async () => {
+      const m = modeRef.current
+      if (m !== TranslateMode.None) {
+        showNotification(`Auto Translating...`, 0)
+        if (m === TranslateMode.Translate) {
+          await translate({
+            targetLang,
+            sourceLang,
+            mix: false,
+            firstFontSize,
+            secondFontSize,
+            firstSubColor,
+            firstSubFontface,
+            secondSubFontface,
+            secondSubColor,
+          })
+        } else if (m === TranslateMode.Mix) {
+          await translate({
+            targetLang,
+            sourceLang,
+            mix: true,
+            firstFontSize,
+            secondFontSize,
+            firstSubColor,
+            firstSubFontface,
+            secondSubFontface,
+            secondSubColor,
+          })
+        }
+        hideNotification()
+      }
+    }, 1000)
+
+    return () => {
+      clearTimeout(timer)
+      hideNotification()
+    }
+  }, [path])
   const isMix = !!TrackInfoBackupMix
   return (
     active && (

@@ -60,6 +60,11 @@ async function translateSrt(
 export let TrackInfoBackup: SubtitleTrack | undefined
 export let TrackInfoBackupMix: SubtitleTrack | undefined
 
+export function resetTrackInfo() {
+  TrackInfoBackup = undefined
+  TrackInfoBackupMix = undefined
+}
+
 export type TranslateOption = {
   targetLang: string
   sourceLang: string

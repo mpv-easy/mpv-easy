@@ -7,6 +7,7 @@ let ovl: OsdOverlay
 let ovlHandle = 0
 
 export function hideNotification() {
+  if (!ovl) return
   ovl.data = ""
   ovl.hidden = true
   ovl.update()
