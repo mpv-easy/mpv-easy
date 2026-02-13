@@ -7,6 +7,7 @@ import {
   playlistHideSelector,
 } from "../../store"
 import { dispatch, useSelector } from "../../models"
+import { useTitle } from "../../hooks"
 
 export const Playlist = () => {
   const i18n = useSelector(i18nSelector)
@@ -17,7 +18,7 @@ export const Playlist = () => {
       {...style}
       text={ICON.PlaylistPlay}
       id="mpv-easy-button-playlist"
-      title={i18n.playlist}
+      title={useTitle(i18n.playlist)}
       onMouseDown={(e) => {
         dispatch.setHistoryHide(true)
         dispatch.setPlaylistHide(!playlistHide)

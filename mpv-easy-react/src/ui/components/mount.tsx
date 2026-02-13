@@ -22,6 +22,7 @@ import {
 import { dispatch, store, useSelector } from "../../models"
 import { getPlayableList, pluginName as AutoloadName } from "@mpv-easy/autoload"
 import { Playlist } from "serde-m3u"
+import { useTitle } from "../../hooks"
 
 export const Mount = () => {
   const itemStyle = useSelector(commonDropdownItemStyleSelector)
@@ -97,7 +98,7 @@ export const Mount = () => {
       id="mpv-easy-button-mount"
       items={items}
       text={ICON.Web}
-      title={i18n.mount}
+      title={useTitle(i18n.mount)}
       direction="top"
     />
   )

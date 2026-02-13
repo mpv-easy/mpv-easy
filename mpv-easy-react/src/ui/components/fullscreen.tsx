@@ -3,6 +3,7 @@ import { Button } from "@mpv-easy/react"
 import * as ICON from "../../icon"
 import { i18nSelector, iconButtonStyle } from "../../store"
 import { dispatch, useSelector } from "../../models"
+import { useTitle } from "../../hooks"
 
 export const Fullscreen = () => {
   const i18n = useSelector(i18nSelector)
@@ -11,7 +12,7 @@ export const Fullscreen = () => {
     <Button
       {...style}
       id="mpv-easy-button-fullscreen"
-      title={i18n.fullscreen}
+      title={useTitle(i18n.fullscreen)}
       text={ICON.ChromeMaximize}
       onMouseDown={(_e) => {
         dispatch.setFullscreen(true)

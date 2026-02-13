@@ -10,6 +10,7 @@ import {
 } from "../../store"
 import { ThemeModeList } from "../../mpv-easy-theme"
 import { dispatch, useSelector } from "../../models"
+import { useTitle } from "../../hooks"
 
 export const Theme = () => {
   const i18n = useSelector(i18nSelector)
@@ -39,7 +40,7 @@ export const Theme = () => {
       id="mpv-easy-button-theme"
       // text={mode === 'dark' ? ICON.Sun : ICON.Moon}
       text={ICON.ThemeLightDark}
-      title={i18n.theme}
+      title={useTitle(i18n.theme)}
       items={items}
       direction="bottom"
     />

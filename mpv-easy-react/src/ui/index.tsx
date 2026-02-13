@@ -26,7 +26,6 @@ import {
   osdDimensionsSelector,
   subScaleSelector,
   pathSelector,
-  tooltipSelector,
   frameSeekerSelector,
 } from "../store"
 import {
@@ -108,7 +107,6 @@ export const Easy = (props: Partial<EasyProps>) => {
   const speedMax = Math.max(...speedList)
   const speedMin = Math.min(...speedList)
   const osdDimensions = useSelector(osdDimensionsSelector)
-  const tooltip = useSelector(tooltipSelector)
 
   useEffect(() => {
     const mpvExe = getMpvExePath()
@@ -344,24 +342,22 @@ export const Easy = (props: Partial<EasyProps>) => {
         }
       }}
     >
-      {tooltip && (
-        <Tooltip
-          id="tooltip"
-          backgroundColor={tooltipStyle.backgroundColor}
-          font={font}
-          fontSize={smallFontSize.fontSize}
-          color={tooltipStyle.color}
-          padding={smallFontSize.padding}
-          display="flex"
-          justifyContent="center"
-          alignItems="center"
-          zIndex={style[mode].tooltip.zIndex}
-          maxWidth={style[mode].tooltip.maxWidth}
-          mousePos={mousePos}
-          height="auto"
-          width="auto"
-        />
-      )}
+      <Tooltip
+        id="tooltip"
+        backgroundColor={tooltipStyle.backgroundColor}
+        font={font}
+        fontSize={smallFontSize.fontSize}
+        color={tooltipStyle.color}
+        padding={smallFontSize.padding}
+        display="flex"
+        justifyContent="center"
+        alignItems="center"
+        zIndex={style[mode].tooltip.zIndex}
+        maxWidth={style[mode].tooltip.maxWidth}
+        mousePos={mousePos}
+        height="auto"
+        width="auto"
+      />
 
       <Toolbar ref={toolbarRef} hide={hide || showCrop || showFrameSeeker} />
       <Element

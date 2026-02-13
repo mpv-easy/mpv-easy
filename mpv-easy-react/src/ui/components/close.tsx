@@ -3,6 +3,7 @@ import { Button } from "@mpv-easy/react"
 import * as ICON from "../../icon"
 import { i18nSelector, iconButtonStyle } from "../../store"
 import { dispatch, useSelector } from "../../models"
+import { useTitle } from "../../hooks"
 
 export const Close = () => {
   const i18n = useSelector(i18nSelector)
@@ -11,7 +12,7 @@ export const Close = () => {
     <Button
       {...style}
       id="mpv-easy-button-close"
-      title={i18n.close}
+      title={useTitle(i18n.close)}
       text={ICON.ChromeClose}
       onMouseDown={() => {
         dispatch.exit()

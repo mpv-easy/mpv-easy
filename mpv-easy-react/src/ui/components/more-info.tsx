@@ -4,6 +4,7 @@ import { i18nSelector, iconButtonStyle } from "../../store"
 import { scriptMessageTo } from "@mpv-easy/tool"
 import { useSelector } from "../../models"
 import { Button } from "@mpv-easy/react"
+import { useTitle } from "../../hooks"
 
 export const MoreInfo = () => {
   const i18n = useSelector(i18nSelector)
@@ -14,7 +15,7 @@ export const MoreInfo = () => {
       {...style}
       id="mpv-easy-button-more-info"
       text={ICON.Info}
-      title={i18n.moreInfo}
+      title={useTitle(i18n.moreInfo)}
       onMouseDown={() => {
         scriptMessageTo("console", consoleShow ? "disable" : "enable")
         setConsoleShow((c) => !c)

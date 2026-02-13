@@ -11,6 +11,7 @@ import {
 import { setPropertyBool } from "@mpv-easy/tool"
 import { PlayModeList } from "../../mpv-easy-theme"
 import { dispatch, useSelector } from "../../models"
+import { useTitle } from "../../hooks"
 
 export const PlayMode = () => {
   const i18n = useSelector(i18nSelector)
@@ -51,7 +52,7 @@ export const PlayMode = () => {
       {...style}
       id="mpv-easy-button-play-mode"
       items={items}
-      title={i18n.playMode}
+      title={useTitle(i18n.playMode)}
       text={LoopIcon[playMode]}
       direction="top"
     />

@@ -3,6 +3,7 @@ import { Button } from "@mpv-easy/react"
 import * as ICON from "../../icon"
 import { i18nSelector, iconButtonStyle, muteSelector } from "../../store"
 import { dispatch, useSelector } from "../../models"
+import { useTitle } from "../../hooks"
 
 export const Mute = () => {
   const mute = useSelector(muteSelector)
@@ -12,7 +13,7 @@ export const Mute = () => {
     <Button
       {...style}
       id="mpv-easy-button-mute"
-      title={mute ? i18n.unmute : i18n.mute}
+      title={useTitle(mute ? i18n.unmute : i18n.mute)}
       text={mute ? ICON.Unmute : ICON.Mute}
       onMouseDown={(_e) => {
         dispatch.setMute(!mute)

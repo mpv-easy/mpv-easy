@@ -10,6 +10,7 @@ import {
   commonDropdownItemStyleSelector,
 } from "../../store"
 import { dispatch, useSelector } from "../../models"
+import { useTitle } from "../../hooks"
 
 export const SubtitleTrack = () => {
   const i18n = useSelector(i18nSelector)
@@ -37,7 +38,7 @@ export const SubtitleTrack = () => {
       {...style}
       id="mpv-easy-button-subtitle-track"
       direction="top"
-      title={i18n.subtitleTrack}
+      title={useTitle(i18n.subtitleTrack)}
       items={items}
       text={ICON.Subtitles}
     />

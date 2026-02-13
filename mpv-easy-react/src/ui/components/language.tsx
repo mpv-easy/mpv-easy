@@ -12,6 +12,7 @@ import { LanguageList } from "@mpv-easy/i18n"
 import { getMaxStringLength } from "../../common"
 import { ThemeModeList } from "../../mpv-easy-theme"
 import { dispatch, useSelector } from "../../models"
+import { useTitle } from "../../hooks"
 
 export const Language = () => {
   const i18n = useSelector(i18nSelector)
@@ -36,7 +37,7 @@ export const Language = () => {
       // TODO: language switch icon
       text={language === "cn" ? "中" : "A"}
       id="mpv-easy-button-language"
-      title={i18n.language}
+      title={useTitle(i18n.language)}
       direction="bottom"
       items={items}
     />

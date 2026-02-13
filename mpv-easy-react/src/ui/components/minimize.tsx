@@ -3,6 +3,7 @@ import { Button } from "@mpv-easy/react"
 import * as ICON from "../../icon"
 import { i18nSelector, iconButtonStyle } from "../../store"
 import { dispatch, useSelector } from "../../models"
+import { useTitle } from "../../hooks"
 
 export const Minimize = () => {
   const i18n = useSelector(i18nSelector)
@@ -11,7 +12,7 @@ export const Minimize = () => {
     <Button
       {...style}
       id="mpv-easy-button-minimize"
-      title={i18n.minimize}
+      title={useTitle(i18n.minimize)}
       text={ICON.ChromeMinimize}
       onMouseDown={() => {
         dispatch.setWindowMinimized(true)

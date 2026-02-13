@@ -10,6 +10,7 @@ import {
 } from "../../store"
 import { getPropertyNative } from "@mpv-easy/tool"
 import { dispatch, useSelector } from "../../models"
+import { useTitle } from "../../hooks"
 
 function getAudioTracks() {
   const trackList = getPropertyNative("track-list") || []
@@ -44,7 +45,7 @@ export const AudioTrack = () => {
       id="mpv-easy-button-audio-track"
       items={items}
       text={ICON.Waveform}
-      title={i18n.audioTrack}
+      title={useTitle(i18n.audioTrack)}
       direction="top"
     />
   )

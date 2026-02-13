@@ -3,6 +3,7 @@ import { Button } from "@mpv-easy/react"
 import * as ICON from "../../icon"
 import { i18nSelector, iconButtonStyle } from "../../store"
 import { dispatch, useSelector } from "../../models"
+import { useTitle } from "../../hooks"
 
 export const Restore = () => {
   const i18n = useSelector(i18nSelector)
@@ -11,7 +12,7 @@ export const Restore = () => {
     <Button
       {...style}
       id="mpv-easy-button-restore"
-      title={i18n.restore}
+      title={useTitle(i18n.restore)}
       text={ICON.ChromeRestore}
       onMouseDown={() => {
         dispatch.setFullscreen(false)

@@ -3,6 +3,7 @@ import { Button } from "@mpv-easy/react"
 import * as ICON from "../../icon"
 import { i18nSelector, iconButtonStyle } from "../../store"
 import { dispatch, useSelector } from "../../models"
+import { useTitle } from "../../hooks"
 
 export const Screenshot = () => {
   const i18n = useSelector(i18nSelector)
@@ -11,7 +12,7 @@ export const Screenshot = () => {
     <Button
       {...style}
       id="mpv-easy-button-screenshot"
-      title={i18n.screenshot}
+      title={useTitle(i18n.screenshot)}
       text={ICON.Camera}
       onMouseDown={() => {
         dispatch.screenshot()

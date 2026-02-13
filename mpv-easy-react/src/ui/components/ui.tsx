@@ -12,6 +12,7 @@ import {
 import { UINameList } from "../../mpv-easy-theme"
 import { getMaxStringLength } from "../../common"
 import { dispatch, useSelector } from "../../models"
+import { useTitle } from "../../hooks"
 export const UI = () => {
   const i18n = useSelector(i18nSelector)
   const itemStyle = useSelector(commonDropdownItemStyleSelector)
@@ -37,7 +38,7 @@ export const UI = () => {
       {...style}
       id="mpv-easy-button-ui"
       direction="bottom"
-      title={i18n.ui}
+      title={useTitle(i18n.ui)}
       items={items}
       text={ICON.PaletteColor}
     />

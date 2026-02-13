@@ -3,6 +3,7 @@ import { Button } from "@mpv-easy/react"
 import * as ICON from "../../icon"
 import { i18nSelector, iconButtonStyle } from "../../store"
 import { dispatch, useSelector } from "../../models"
+import { useTitle } from "../../hooks"
 
 export const Previous = () => {
   const i18n = useSelector(i18nSelector)
@@ -11,7 +12,7 @@ export const Previous = () => {
     <Button
       {...style}
       id="mpv-easy-button-previous"
-      title={i18n.previous}
+      title={useTitle(i18n.previous)}
       text={ICON.ChevronLeft}
       onMouseDown={() => {
         dispatch.previous()

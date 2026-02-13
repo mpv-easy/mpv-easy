@@ -4,6 +4,7 @@ import * as ICON from "../../icon"
 import { i18nSelector, iconButtonStyle } from "../../store"
 import { frameBackStep } from "@mpv-easy/tool"
 import { useSelector } from "../../models"
+import { useTitle } from "../../hooks"
 
 export const PreviousFrame = () => {
   const i18n = useSelector(i18nSelector)
@@ -12,7 +13,7 @@ export const PreviousFrame = () => {
     <Button
       {...style}
       id="mpv-easy-button-previous-frame"
-      title={i18n.previousFrame}
+      title={useTitle(i18n.previousFrame)}
       text={ICON.FastBackward}
       onMouseDown={() => {
         frameBackStep()
