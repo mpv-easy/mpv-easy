@@ -259,6 +259,11 @@ export async function translate(option: Partial<TranslateOption> = {}) {
   writeFile(srtOutputPath, srt)
 
   const copyToVideoDir = (src: string, suffix: string) => {
+    // If it is a network path, write to the temp folder
+    if (!existsSync(videoPath)) {
+      return src
+    }
+
     if (subSaveMode === "video-folder") {
       const dir = dirname(videoPath)
       const lastDotIndex = videoName.lastIndexOf(".")
