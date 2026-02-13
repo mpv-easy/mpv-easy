@@ -2,7 +2,9 @@
 
 use base64::{Engine, prelude::BASE64_STANDARD};
 use flate2::read::GzDecoder;
-use mpv_easy_ext::common::{CHUNK_PREFIX, M3U_NAME, PlayWith, Player, set_play_with_hook};
+use mpv_easy_ext::common::{
+    CHUNK_PREFIX, M3U_NAME, PlayWith, Player, set_play_with_hook,
+};
 use std::io::Read;
 use strum::IntoEnumIterator;
 
@@ -66,10 +68,38 @@ fn play_with(exe_path: String, mut b64: String) {
         return;
     }
 
-    let m3u = player.stringify(play_with.playlist);
-    let m3u_path = tmp_dir.join(M3U_NAME);
-    std::fs::write(&m3u_path, m3u).unwrap();
-    player.start(&exe_path, Some(&m3u_path), play_with.args, play_with.start);
+    const MAX_CMD_LEN: usize = 8192;
+    let mut args_len = exe_path.len() + 64; // base len for --script-opts and --playlist-start
+    for arg in &play_with.args {
+        args_len += arg.len() + 1;
+    }
+    let mut urls = Vec::new();
+    let mut has_subs = false;
+
+    for item in &play_with.playlist.list {
+        if !item.subtitles.is_empty() {
+            has_subs = true;
+            break;
+        }
+        let url = format!("\"{}\"", item.video.url);
+        args_len += item.video.url.len() + 3;
+        urls.push(url);
+
+        if args_len >= MAX_CMD_LEN {
+            break;
+        }
+    }
+
+    if !has_subs && args_len < MAX_CMD_LEN {
+        let mut args = play_with.args;
+        args.extend(urls);
+        player.start(&exe_path, None, args, play_with.start);
+    } else {
+        let m3u = player.stringify(play_with.playlist);
+        let m3u_path = tmp_dir.join(M3U_NAME);
+        std::fs::write(&m3u_path, m3u).unwrap();
+        player.start(&exe_path, Some(&m3u_path), play_with.args, play_with.start);
+    }
 }
 
 fn main() {

@@ -35,9 +35,9 @@ pub struct Subtitle {
 
 #[derive(Debug, Clone, serde::Serialize, serde::Deserialize, Default)]
 pub struct PlayItem {
-    video: Entry,
+    pub video: Entry,
     #[serde(default, skip_serializing_if = "Vec::is_empty")]
-    subtitles: Vec<Subtitle>,
+    pub subtitles: Vec<Subtitle>,
 }
 
 #[derive(Debug, Clone, serde::Serialize, serde::Deserialize, Default)]
