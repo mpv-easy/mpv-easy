@@ -1,7 +1,7 @@
 import Cac from "cac"
 import { install } from "./install"
 import { uninstall } from "./uninstall"
-import { configDetect, getScriptsDir, setConfigDir } from "./config"
+import { configDetect, getConfigDir, setConfigDir } from "./config"
 import { list } from "./list"
 import { update, updateAll } from "./update"
 import { version } from "../package.json"
@@ -29,9 +29,9 @@ cli
     setConfigDir(dir)
   })
 
-cli.command("get-script-dir", "get mpv script dir").action(() => {
+cli.command("get-config-dir", "get mpv config dir").action(() => {
   configDetect()
-  const dir = getScriptsDir()
+  const dir = getConfigDir()
   console.log(dir)
 })
 

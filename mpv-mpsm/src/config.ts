@@ -24,7 +24,6 @@ export function setConfigDir(configDir: string) {
 }
 
 export function getScriptsDir(): string {
-  const _config = readJsonSync(ConfigPath)
   return join(getConfigDir(), "scripts")
 }
 
