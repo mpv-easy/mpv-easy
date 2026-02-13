@@ -502,6 +502,12 @@ function App() {
                     control={<Radio />}
                     label={i}
                     sx={{ width: ITEM_WIDTH }}
+                    checked={platform === i}
+                    onChange={(e) =>
+                      setPlatform(
+                        (e.target as HTMLInputElement).value as Platform,
+                      )
+                    }
                   />
                 </Tooltip>
               ))}
@@ -517,16 +523,7 @@ function App() {
             >
               UI:
             </Typography>
-            <RadioGroup
-              row
-              value={ui}
-              onChange={(e) => {
-                const newUI = e.target.value as UI
-                setUI(newUI)
-                const deps = UI_LIST.find((i) => i.name === newUI)?.deps || []
-                setSelectedKeys([...deps])
-              }}
-            >
+            <RadioGroup row value={ui}>
               {UI_LIST.map((i) => (
                 <FormControlLabel
                   key={i.name}
@@ -538,6 +535,14 @@ function App() {
                     </Link>
                   }
                   sx={{ width: ITEM_WIDTH }}
+                  checked={ui === i.name}
+                  onChange={(e) => {
+                    const newUI = (e.target as HTMLInputElement).value as UI
+                    setUI(newUI)
+                    const deps =
+                      UI_LIST.find((i) => i.name === newUI)?.deps || []
+                    setSelectedKeys([...deps])
+                  }}
                 />
               ))}
             </RadioGroup>
