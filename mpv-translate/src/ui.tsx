@@ -9,8 +9,8 @@ import {
   detectFfmpeg,
   showNotification,
   getPropertyNative,
-  setTimeout,
   hideNotification,
+  PropertyNative,
 } from "@mpv-easy/tool"
 import React, { useEffect, useRef, useState } from "react"
 import { Box, Button, MpDomProps, usePropertyString } from "@mpv-easy/react"
@@ -238,6 +238,18 @@ export function Translation(props: Partial<TranslationProps>) {
   const modeRef = useRef(TranslateMode.None)
   const interactiveRef = useRef(false)
   const autoTranslateRef = useRef(false)
+  const pendingAutoTranslate = useRef(false)
+  const translateOptionsRef = useRef<{
+    targetLang: string
+    sourceLang: string
+    firstFontSize: number
+    secondFontSize: number
+    firstSubColor: string
+    firstSubFontface: string
+    secondSubFontface: string
+    secondSubColor: string
+    subSaveMode: string
+  } | null>(null)
   const path = usePropertyString("path", "")[0]
 
   // Sync refs
@@ -430,7 +442,45 @@ export function Translation(props: Partial<TranslationProps>) {
       update.current?.(value)
       textCache.current = value
     })
+
+    // Observe track-list once; use pendingAutoTranslate flag to control when to translate
+    const trackListProp = new PropertyNative("track-list")
+    trackListProp.observe(async (_name, _value) => {
+      if (!pendingAutoTranslate.current) return
+
+      const sub = getCurrentSubtitle()
+      if (!sub) return
+
+      // Mark as handled before translating to prevent self-loop
+      // (translate() modifies track-list via subAdd/subRemove)
+      pendingAutoTranslate.current = false
+
+      const opts = translateOptionsRef.current
+      if (!opts) return
+
+      const m = modeRef.current
+      showNotification(`Auto Translating...`, 0)
+      if (m === TranslateMode.Translate) {
+        await translate({ ...opts, mix: false })
+      } else if (m === TranslateMode.Mix) {
+        await translate({ ...opts, mix: true })
+      }
+      hideNotification()
+    })
   }, [])
+
+  // Keep translateOptionsRef up to date with current render values
+  translateOptionsRef.current = {
+    targetLang,
+    sourceLang,
+    firstFontSize,
+    secondFontSize,
+    firstSubColor,
+    firstSubFontface,
+    secondSubFontface,
+    secondSubColor,
+    subSaveMode,
+  }
 
   useEffect(() => {
     if (!path) return
@@ -443,43 +493,14 @@ export function Translation(props: Partial<TranslationProps>) {
       return
     }
 
-    const timer = setTimeout(async () => {
-      const m = modeRef.current
-      if (m !== TranslateMode.None) {
-        showNotification(`Auto Translating...`, 0)
-        if (m === TranslateMode.Translate) {
-          await translate({
-            targetLang,
-            sourceLang,
-            mix: false,
-            firstFontSize,
-            secondFontSize,
-            firstSubColor,
-            firstSubFontface,
-            secondSubFontface,
-            secondSubColor,
-            subSaveMode,
-          })
-        } else if (m === TranslateMode.Mix) {
-          await translate({
-            targetLang,
-            sourceLang,
-            mix: true,
-            firstFontSize,
-            secondFontSize,
-            firstSubColor,
-            firstSubFontface,
-            secondSubFontface,
-            secondSubColor,
-            subSaveMode,
-          })
-        }
-        hideNotification()
-      }
-    }, 1000)
+    const m = modeRef.current
+    if (m === TranslateMode.None) return
+
+    // Signal the track-list observer to auto-translate when subtitles appear
+    pendingAutoTranslate.current = true
 
     return () => {
-      clearTimeout(timer)
+      pendingAutoTranslate.current = false
       hideNotification()
     }
   }, [path])
