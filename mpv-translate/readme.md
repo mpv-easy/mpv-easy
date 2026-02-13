@@ -7,7 +7,7 @@ You need to install [ffmpeg](https://www.ffmpeg.org/download.html) and curl and 
 - Download the latest version of [translate.js](https://github.com/mpv-easy/mpv-easy/releases) and copy it to the mpv script directory
 - Add shortcut keys  ```ctrl+t    script-message cycle-translate-mode```, ```ctrl+i    script-message toggle-interactive-translate``` and ```Alt+t      script-message toggle-auto-translate``` to your ```input.conf```
 - If everything goes well, you can use ```ctrl+t``` to cycle translation modes (None -> Translate -> Mix -> None), ```ctrl+i``` to toggle interactive translation, and ```Alt+t``` to toggle auto-translate.
-- You can customize the styles of subtitles and tooltips, see [translate.conf](./translate.conf)
+- You can customize the styles of subtitles and tooltips, see [translate.conf](../mpv-easy-react/conf/translate.conf)
 
 ## support language
 
@@ -24,6 +24,7 @@ https://cloud.google.com/translate/docs/languages
 ```
 
 ## short key
+[input.conf](../mpv-easy-react/conf/translate.input.conf)
 
 | key    | command                                 |
 | ------ | --------------------------------------- |
