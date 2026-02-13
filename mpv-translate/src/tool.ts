@@ -19,6 +19,7 @@ import {
   normalizePath,
   fetch,
   getTmpPath,
+  dirname,
 } from "@mpv-easy/tool"
 import { google } from "./google"
 import { readFile } from "@mpv-easy/tool"
@@ -75,6 +76,7 @@ export type TranslateOption = {
   secondSubColor: string
   firstSubFontface: string
   secondSubFontface: string
+  subSaveMode: string
 }
 
 function mixSrt(
@@ -151,7 +153,6 @@ export async function translate(option: Partial<TranslateOption> = {}) {
     return
   }
   const targetLang = option.targetLang?.length ? option.targetLang : getLang()
-  const sourceLang = option.sourceLang?.length ? option.sourceLang : sub.lang
   if (mix && TrackInfoBackupMix && sub.title === `${targetLang}-mix`) {
     setPropertyNative("sid", TrackInfoBackupMix.id)
     subRemove(sub.id)
@@ -184,20 +185,35 @@ export async function translate(option: Partial<TranslateOption> = {}) {
     return
   }
 
+  // Detect if current sub is a generated one and fallback to backup
+  let sourceTrack = sub
+  if (sub.title === targetLang && TrackInfoBackup) {
+    sourceTrack = TrackInfoBackup
+  } else if (sub.title === `${targetLang}-mix` && TrackInfoBackupMix) {
+    sourceTrack = TrackInfoBackupMix
+  }
+
   if (mix) {
-    TrackInfoBackupMix = sub
+    TrackInfoBackupMix = sourceTrack
   } else {
-    TrackInfoBackup = sub
+    TrackInfoBackup = sourceTrack
   }
 
   const tmpDir = getTmpDir()
   const videoName = getFileName(videoPath)
+  if (!videoName) {
+    printAndOsd("videoName not found")
+    return
+  }
+  const sourceLang = option.sourceLang?.length
+    ? option.sourceLang
+    : sourceTrack.lang
   const hash = md5(
     [
       videoPath,
       sourceLang,
       targetLang,
-      sub.id,
+      sourceTrack.id,
       firstFontSize,
       secondFontSize,
       firstSubColor,
@@ -206,15 +222,16 @@ export async function translate(option: Partial<TranslateOption> = {}) {
       secondSubFontface,
     ].join("-"),
   )
-  const subOriginPath = sub.external
-    ? normalizePath(sub.externalFilename!)
-    : normalize(`${tmpDir}/${hash}.${videoName}.${sourceLang}.srt`)
-  const srtSubPath = normalize(
-    `${tmpDir}/${hash}.${videoName}.${sourceLang}.srt`,
-  )
-  const srtOutputPath = normalize(
-    `${tmpDir}/${hash}.${videoName}.${sourceLang}.${targetLang}.srt`,
-  )
+  const subSaveMode = option.subSaveMode || "temporary"
+  const getPath = (ext: string) => {
+    return normalize(`${tmpDir}/${hash}.${videoName}.${ext}`)
+  }
+
+  const subOriginPath = sourceTrack.external
+    ? normalizePath(sourceTrack.externalFilename!)
+    : getPath(`${sourceLang}.srt`)
+  const srtSubPath = getPath(`${sourceLang}.srt`)
+  const srtOutputPath = getPath(`${sourceLang}.${targetLang}.srt`)
 
   const pattern = /https?:\/\/[^\s]+/
   const match = subOriginPath.match(pattern)
@@ -225,12 +242,12 @@ export async function translate(option: Partial<TranslateOption> = {}) {
     writeFile(tmp, text)
     await convertSubtitle(tmp, srtSubPath)
   }
-  if (sub.external && !existsSync(srtSubPath)) {
+  if (sourceTrack.external && !existsSync(srtSubPath)) {
     await convertSubtitle(subOriginPath, srtSubPath)
   }
   if (!existsSync(srtSubPath)) {
     if (
-      !(await saveSrt(videoPath, sub.id, srtSubPath)) ||
+      !(await saveSrt(videoPath, sourceTrack.id, srtSubPath)) ||
       !existsSync(srtSubPath)
     ) {
       printAndOsd("save subtitle error")
@@ -240,10 +257,22 @@ export async function translate(option: Partial<TranslateOption> = {}) {
   const text = readFile(srtSubPath)
   const srt = await translateSrt(text, targetLang as Lang, sourceLang as Lang)
   writeFile(srtOutputPath, srt)
+
+  const copyToVideoDir = (src: string, suffix: string) => {
+    if (subSaveMode === "video-folder") {
+      const dir = dirname(videoPath)
+      const lastDotIndex = videoName.lastIndexOf(".")
+      const name =
+        lastDotIndex === -1 ? videoName : videoName.substring(0, lastDotIndex)
+      const dest = normalizePath(`${dir}/${name}.${suffix}`)
+      writeFile(dest, readFile(src))
+      return dest
+    }
+    return src
+  }
+
   if (mix) {
-    const srtMixPath = normalize(
-      `${tmpDir}/${hash}.${videoName}.${sourceLang}.${targetLang}.mix.srt`,
-    )
+    const srtMixPath = getPath(`${sourceLang}.${targetLang}.mix.srt`)
     if (!existsSync(srtMixPath)) {
       mixSrt(
         srtOutputPath,
@@ -257,8 +286,10 @@ export async function translate(option: Partial<TranslateOption> = {}) {
         secondSubFontface,
       )
     }
-    subAdd(srtMixPath, "select", `${targetLang}-mix`, targetLang)
+    const finalPath = copyToVideoDir(srtMixPath, `srt`)
+    subAdd(finalPath, "select", `${targetLang}-mix`, targetLang)
   } else {
-    subAdd(srtOutputPath, "select", targetLang, targetLang)
+    const finalPath = copyToVideoDir(srtOutputPath, `srt`)
+    subAdd(finalPath, "select", targetLang, targetLang)
   }
 }

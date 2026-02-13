@@ -39,42 +39,38 @@ CTRL+i     script-message toggle-interactive-translate
 Alt+t      script-message toggle-auto-translate
 ```
 
-## translate (ctrl+t)
+## translate (Cycle Mode)
 
-Default subtitle is English
+Press `CTRL+t` to cycle through modes: **None** -> **Translate** -> **Mix**.
 
-<div style="display: flex;">
-  <img src="../assets/img/translate-en.png" alt="English subtitle"/>
-</div>
-
-Translate to Chinese (Cycle mode to Translate)
+### 1. Translate Mode
+Displays only the translated subtitle.
 
 <div style="display: flex;">
   <img src="../assets/img/translate-en-cn.png" alt="Chinese subtitle"/>
 </div>
 
-## mix-translate (Cycle mode to Mix)
-
-Display Chinese and English
+### 2. Mix Mode
+Displays both original and translated subtitles.
 
 <div style="display: flex;">
   <img src="../assets/img/translate-en-cn-mix.png" alt="mix-translate"/>
 </div>
 
-## interactive-translate (ctrl+i)
+## interactive-translate (CTRL+i)
 
-Click left mouse button to play the audio, and click the wheel to display the full sentence translation. Toggles global interactive mode.
+Press `CTRL+i` to toggle **Interactive Mode** globally.
+- **On**: Translation is shown as an interactive overlay. You can click words to hear pronunciation or see details.
+- **Off**: Translation is shown as standard subtitles (ass).
+
 <div style="display: flex;">
   <img src="../assets/img/translate-en-interactive.png" alt="interactive-translate"/>
 </div>
 
-## mix-translate and interactive-translate
+## auto-translate (Alt+t)
 
-Mix translation and interactive translation can be used at the same time
-
-<div style="display: flex;">
-  <img src="../assets/img/translate-en-interactive-mix.png" alt="mix-translate and interactive-translate"/>
-</div>
+Press `Alt+t` to toggle **Auto-Translate**.
+When enabled, the current translation mode will be automatically applied when a new video is loaded.
 
 
 ## todo

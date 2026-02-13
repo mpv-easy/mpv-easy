@@ -223,6 +223,7 @@ export function Translation(props: Partial<TranslationProps>) {
     firstSubFontface,
     secondSubFontface,
     secondSubColor,
+    subSaveMode,
   } = {
     ...defaultSubConfig,
     ...props,
@@ -323,6 +324,7 @@ export function Translation(props: Partial<TranslationProps>) {
         firstSubFontface,
         secondSubFontface,
         secondSubColor,
+        subSaveMode,
       })
     } else if (currentMode === TranslateMode.Mix) {
       await translate({
@@ -335,6 +337,7 @@ export function Translation(props: Partial<TranslationProps>) {
         firstSubFontface,
         secondSubFontface,
         secondSubColor,
+        subSaveMode,
       })
     }
 
@@ -351,6 +354,7 @@ export function Translation(props: Partial<TranslationProps>) {
         firstSubFontface,
         secondSubFontface,
         secondSubColor,
+        subSaveMode,
       })
       hideNotification()
     } else if (newMode === TranslateMode.Mix) {
@@ -365,6 +369,7 @@ export function Translation(props: Partial<TranslationProps>) {
         firstSubFontface,
         secondSubFontface,
         secondSubColor,
+        subSaveMode,
       })
       hideNotification()
     }
@@ -453,6 +458,7 @@ export function Translation(props: Partial<TranslationProps>) {
             firstSubFontface,
             secondSubFontface,
             secondSubColor,
+            subSaveMode,
           })
         } else if (m === TranslateMode.Mix) {
           await translate({
@@ -465,6 +471,7 @@ export function Translation(props: Partial<TranslationProps>) {
             firstSubFontface,
             secondSubFontface,
             secondSubColor,
+            subSaveMode,
           })
         }
         hideNotification()
@@ -518,6 +525,7 @@ export function Translation(props: Partial<TranslationProps>) {
                 firstSubFontface,
                 secondSubFontface,
                 secondSubColor,
+                subSaveMode,
               }}
             />
           ))}

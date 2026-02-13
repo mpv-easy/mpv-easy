@@ -285,6 +285,7 @@ export const Easy = (props: Partial<EasyProps>) => {
     secondSubColor,
     firstSubFontface,
     secondSubFontface,
+    subSaveMode,
   } = translateStyle
 
   const subFontSize = getPropertyNumber("sub-font-size")
@@ -425,6 +426,7 @@ export const Easy = (props: Partial<EasyProps>) => {
         secondSubFontface={secondSubFontface}
         secondSubColor={secondSubColor}
         subSrtScale={translateStyle.subSrtScale}
+        subSaveMode={subSaveMode}
       />
     </Box>
   )

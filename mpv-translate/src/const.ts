@@ -18,6 +18,7 @@ export type SubConfig = {
   secondSubColor: string
   firstSubFontface: string
   secondSubFontface: string
+  subSaveMode: string
 }
 export type TooltipConfig = {
   tooltioFontSize: number
@@ -51,6 +52,7 @@ export const defaultSubConfig: SubConfig = {
   secondSubColor: "",
   firstSubFontface: "",
   secondSubFontface: "",
+  subSaveMode: "temporary",
 }
 
 export const defaultTooltipConfig: TooltipConfig = {

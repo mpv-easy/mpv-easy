@@ -59,9 +59,9 @@ set -x MPV_CONFIG_DIR /your_mpv_dir/portable_config/scripts ; pnpm run dev-copy
 | ctrl+UP    | script-message change-fontSize +0.25 |
 | ctrl+DOWN  | script-message change-fontSize -0.25 |
 | ctrl+o     | script-message open-dialog           |
-| ctrl+t     | script-message cycle-translate-mode     |
+| ctrl+t     | script-message cycle-translate-mode    |
 | ctrl+i     | script-message toggle-interactive-translate |
-| Alt+t      | script-message toggle-auto-translate    |
+| Alt+t      | script-message toggle-auto-translate   |
 | CTRL+0     | script-message Anime4K-Clear         |
 | CTRL+1     | script-message Anime4K-AA-HQ         |
 | CTRL+2     | script-message Anime4K-B-HQ          |
