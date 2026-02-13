@@ -63,7 +63,7 @@ fn remote(exe_path: &str, b64: &str) -> Result<()> {
         }
         None => {
             // Start player with arguments
-            player.start(exe_path, None, args, None);
+            player.start(exe_path, None, args, None)?;
         }
     }
 
@@ -80,8 +80,16 @@ fn main() {
         }
         (exe_path, None) => {
             // Register protocol handler when no b64 payload provided
-            if set_remote_hook(exe_path).is_none() {
-                eprintln!("Failed to set remote hook: player not found");
+            match set_remote_hook(exe_path) {
+                Ok(Some(_)) => {
+                    println!("Remote hook set successfully");
+                }
+                Ok(None) => {
+                    eprintln!("Failed to set remote hook: player not found");
+                }
+                Err(e) => {
+                    eprintln!("Failed to set remote hook: {}", e);
+                }
             }
         }
         _ => {

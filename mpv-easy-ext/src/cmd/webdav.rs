@@ -17,57 +17,61 @@ pub struct Webdav {
     auth: Option<String>,
 }
 
-fn custom_header(name: &str, value: &str) -> header::HeaderMap {
+fn custom_header(name: &str, value: &str) -> anyhow::Result<header::HeaderMap> {
     let mut headers = header::HeaderMap::new();
     headers.insert(
-        header::HeaderName::from_bytes(name.as_bytes()).unwrap(),
-        header::HeaderValue::from_bytes(value.as_bytes()).unwrap(),
+        header::HeaderName::from_bytes(name.as_bytes())?,
+        header::HeaderValue::from_bytes(value.as_bytes())?,
     );
-    headers
+    Ok(headers)
 }
 
 #[tokio::main]
-async fn fetch_remote(path: &str, auth: Option<String>) -> Multistatus {
+async fn fetch_remote(path: &str, auth: Option<String>) -> anyhow::Result<Multistatus> {
     let c = reqwest::Client::new();
     let body = r#"<?xml version="1.0" encoding="utf-8" ?>
             <D:propfind xmlns:D="DAV:">
                 <D:allprop/>
             </D:propfind>
         "#;
-    let method = Method::from_bytes(b"PROPFIND").unwrap();
+    let method = Method::from_bytes(b"PROPFIND")?;
     let depth = "1";
     let mut resp = c
-        .request(method, Url::parse(path).unwrap())
-        .headers(custom_header("depth", depth));
+        .request(method, Url::parse(path)?)
+        .headers(custom_header("depth", depth)?);
 
     if let Some(auth) = auth {
         let b64 = BASE64_STANDARD.encode(&auth);
         let s = format!("Basic {}", b64);
-        resp = resp.headers(custom_header("Authorization", &s))
+        resp = resp.headers(custom_header("Authorization", &s)?)
     }
 
-    let resp = resp.body(body).send().await.unwrap();
-    let xml = resp.text().await.unwrap();
-    let status: Multistatus = from_str(&xml).unwrap();
-    status
+    let resp = resp.body(body).send().await?;
+    let xml = resp.text().await?;
+    let status: Multistatus = from_str(&xml)?;
+    Ok(status)
 }
 
 impl Cmd for Webdav {
-    fn call(&self) {
+    fn call(&self) -> anyhow::Result<()> {
         let Webdav { cmd, auth, url } = self;
 
-        let url = serde_json::from_str(url).unwrap();
-        let auth = auth.clone().map(|i| serde_json::from_str::<String>(&i).unwrap());
+        let url: String = serde_json::from_str(url)?;
+        let auth: Option<String> = match auth {
+            Some(i) => Some(serde_json::from_str::<String>(i)?),
+            None => None,
+        };
 
         match cmd.as_str() {
             "list" => {
-                let status = fetch_remote(url, auth);
-                let s = serde_json::to_string(&status).unwrap();
+                let status = fetch_remote(&url, auth)?;
+                let s = serde_json::to_string(&status)?;
                 println!("{}", s);
             }
             _ => {
-                panic!("webdav not support cmd: {} {}", cmd, url)
+                anyhow::bail!("webdav not support cmd: {} {}", cmd, url);
             }
         }
+        Ok(())
     }
 }

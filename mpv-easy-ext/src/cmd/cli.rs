@@ -3,7 +3,7 @@ use enum_dispatch::enum_dispatch;
 
 #[enum_dispatch(SubCommand)]
 pub trait Cmd {
-    fn call(&self);
+    fn call(&self) -> anyhow::Result<()>;
 }
 
 use super::{
@@ -34,9 +34,9 @@ pub struct Cli {
     pub subcmd: SubCommand,
 }
 
-pub fn start() {
+pub fn start() -> anyhow::Result<()> {
     let cli = Cli::parse();
 
     let cmd: SubCommand = cli.subcmd;
-    cmd.call();
+    cmd.call()
 }

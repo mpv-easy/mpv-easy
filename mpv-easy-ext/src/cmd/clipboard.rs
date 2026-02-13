@@ -12,23 +12,27 @@ pub struct Clipboard {
 #[cfg(not(target_os = "android"))]
 mod clip {
     use clipboard_rs::{Clipboard as _, ClipboardContext, common::RustImage};
-    pub fn set_text(text: &str) {
-        let ctx = ClipboardContext::new().unwrap();
-        ctx.set_text(text.to_string()).unwrap();
+    use anyhow::Context;
+
+    pub fn set_text(text: &str) -> anyhow::Result<()> {
+        let ctx = ClipboardContext::new().map_err(|e| anyhow::anyhow!("{}", e)).context("Failed to create clipboard context")?;
+        ctx.set_text(text.to_string()).map_err(|e| anyhow::anyhow!("{}", e)).context("Failed to set text")?;
+        Ok(())
     }
 
-    pub fn get_text() -> String {
-        let ctx = ClipboardContext::new().unwrap();
-        ctx.get_text()
+    pub fn get_text() -> anyhow::Result<String> {
+        let ctx = ClipboardContext::new().map_err(|e| anyhow::anyhow!("{}", e)).context("Failed to create clipboard context")?;
+        Ok(ctx.get_text()
             .ok()
-            .or_else(|| ctx.get_files().ok().map(|v| v.join("\n")))
-            .unwrap_or_default()
+            .or_else(|| ctx.get_files().ok().map(|v: Vec<String>| v.join("\n")))
+            .unwrap_or_default())
     }
 
-    pub fn set_image(path: &str) {
-        let ctx = ClipboardContext::new().unwrap();
-        let img = RustImage::from_path(path).unwrap();
-        ctx.set_image(img).unwrap();
+    pub fn set_image(path: &str) -> anyhow::Result<()> {
+        let ctx = ClipboardContext::new().map_err(|e| anyhow::anyhow!("{}", e)).context("Failed to create clipboard context")?;
+        let img = RustImage::from_path(path).map_err(|e| anyhow::anyhow!("{}", e)).context("Failed to load image")?;
+        ctx.set_image(img).map_err(|e| anyhow::anyhow!("{}", e)).context("Failed to set image")?;
+        Ok(())
     }
 }
 #[cfg(target_os = "android")]
@@ -51,33 +55,34 @@ pub fn get_image() {
 }
 
 impl Cmd for Clipboard {
-    fn call(&self) {
+    fn call(&self) -> anyhow::Result<()> {
         use base64::prelude::*;
 
         let cmd = self.cmd.as_str();
 
         match cmd {
             "set" => {
-                let bin: Vec<u8> = BASE64_STANDARD.decode(&self.text).unwrap();
+                let bin: Vec<u8> = BASE64_STANDARD.decode(&self.text)?;
                 let text = String::from_utf8_lossy(&bin);
-                clip::set_text(&text)
+                clip::set_text(&text)?;
             }
             "get" => {
-                let s = clip::get_text();
-                println!("{}", serde_json::to_string(&s).unwrap());
+                let s = clip::get_text()?;
+                println!("{}", serde_json::to_string(&s)?);
             }
             "set-image" => {
-                let bin: Vec<u8> = BASE64_STANDARD.decode(&self.text).unwrap();
+                let bin: Vec<u8> = BASE64_STANDARD.decode(&self.text)?;
                 let text = String::from_utf8_lossy(&bin).to_string();
-                clip::set_image(&text);
+                clip::set_image(&text)?;
             }
             "get-image" => {
                 get_image();
             }
             _ => {
-                let text: &str = serde_json::from_str(self.text.as_str()).unwrap();
-                panic!("clipboard not support cmd: {} {}", cmd, text);
+                let text: &str = serde_json::from_str(self.text.as_str())?;
+                anyhow::bail!("clipboard not support cmd: {} {}", cmd, text);
             }
         }
+        Ok(())
     }
 }

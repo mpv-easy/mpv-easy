@@ -48,6 +48,7 @@ openssl = { version = "0.10", features = ["vendored"] }
 urlencoding = { version = "2" }
 strum_macros = "0.27"
 strum = "0.27"
+thiserror  = "2"
 
 [profile.release]
 debug = false

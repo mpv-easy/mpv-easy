@@ -8,9 +8,9 @@ use mpv_easy_ext::common::{
 use std::io::Read;
 use strum::IntoEnumIterator;
 
-fn play_with(exe_path: String, mut b64: String) {
+fn play_with(exe_path: String, mut b64: String) -> anyhow::Result<()> {
     let Some(player) = Player::from_path(&exe_path) else {
-        return;
+        return Ok(());
     };
 
     if b64.ends_with('/') {
@@ -29,13 +29,13 @@ fn play_with(exe_path: String, mut b64: String) {
     let tmp_dir = std::env::temp_dir();
 
     if let (Some(chunk_index), Some(count_index)) = (chunk_index, count_index) {
-        let chunk_id: u32 = b64[chunk_index + 1..count_index].parse().unwrap();
-        let chunk_count: u32 = b64[count_index + 1..].parse().unwrap();
+        let chunk_id: u32 = b64[chunk_index + 1..count_index].parse()?;
+        let chunk_count: u32 = b64[count_index + 1..].parse()?;
         let chunk = &b64[0..chunk_index];
         let chunk_name = format!("{}-{}", CHUNK_PREFIX, chunk_id);
         let chunk_path = tmp_dir.join(chunk_name);
 
-        std::fs::write(chunk_path, chunk).unwrap();
+        std::fs::write(chunk_path, chunk)?;
 
         let file_list: Vec<_> = (0..chunk_count)
             .map(|i| tmp_dir.join(format!("{}-{}", CHUNK_PREFIX, i)))
@@ -47,25 +47,25 @@ fn play_with(exe_path: String, mut b64: String) {
             b64 = file_list
                 .iter()
                 .map(|i| {
-                    let s = std::fs::read_to_string(i).unwrap();
-                    std::fs::remove_file(i).unwrap();
-                    s
+                    let s = std::fs::read_to_string(i)?;
+                    let _ = std::fs::remove_file(i);
+                    Ok(s)
                 })
-                .collect();
+                .collect::<anyhow::Result<String>>()?;
         } else {
-            return;
+            return Ok(());
         }
     }
 
-    let gzip = BASE64_STANDARD.decode(b64).unwrap();
+    let gzip = BASE64_STANDARD.decode(b64)?;
 
     let mut decoder = GzDecoder::new(&gzip[..]);
     let mut json_str = String::new();
-    decoder.read_to_string(&mut json_str).unwrap();
+    decoder.read_to_string(&mut json_str)?;
 
-    let play_with: PlayWith = serde_json::from_str(&json_str).unwrap();
+    let play_with: PlayWith = serde_json::from_str(&json_str)?;
     if play_with.playlist.list.is_empty() {
-        return;
+        return Ok(());
     }
 
     const MAX_CMD_LEN: usize = 8192;
@@ -93,26 +93,33 @@ fn play_with(exe_path: String, mut b64: String) {
     if !has_subs && args_len < MAX_CMD_LEN {
         let mut args = play_with.args;
         args.extend(urls);
-        player.start(&exe_path, None, args, play_with.start);
+        player.start(&exe_path, None, args, play_with.start)?;
     } else {
         let m3u = player.stringify(play_with.playlist);
         let m3u_path = tmp_dir.join(M3U_NAME);
-        std::fs::write(&m3u_path, m3u).unwrap();
-        player.start(&exe_path, Some(&m3u_path), play_with.args, play_with.start);
+        std::fs::write(&m3u_path, m3u)?;
+        player.start(
+            &exe_path,
+            Some(&m3u_path),
+            play_with.args,
+            play_with.start,
+        )?;
     }
+    Ok(())
 }
 
-fn main() {
+fn main() -> anyhow::Result<()> {
     let mut args = std::env::args().skip(1);
     match (args.next(), args.next()) {
         (Some(exe_path), Some(b64)) => {
-            play_with(exe_path, b64);
+            play_with(exe_path, b64)?;
         }
         (exe_path, None) => {
-            set_play_with_hook(exe_path);
+            set_play_with_hook(exe_path)?;
         }
         _ => {
-            todo!("mpv-easy-play-with not support yet!")
+            anyhow::bail!("mpv-easy-play-with not support yet!")
         }
     };
+    Ok(())
 }

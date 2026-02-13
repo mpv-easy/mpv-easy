@@ -30,7 +30,7 @@ pub struct FetchResponse {
 }
 
 #[tokio::main]
-async fn fetch(url: &str, option: FetchOption) -> Result<(), Box<dyn std::error::Error>> {
+async fn fetch(url: &str, option: FetchOption) -> anyhow::Result<()> {
     let client = match option.redirect {
         Some(r) => match r.as_str() {
             "follow" => Client::builder().redirect(Policy::default()).build()?,
@@ -44,7 +44,7 @@ async fn fetch(url: &str, option: FetchOption) -> Result<(), Box<dyn std::error:
                 }))
                 .build()?,
             "error" => Client::builder().redirect(Policy::none()).build()?,
-            _ => panic!("redirect value is invalid"),
+            _ => anyhow::bail!("redirect value is invalid"),
         },
         None => Client::builder().redirect(Policy::default()).build()?,
     };
@@ -52,8 +52,8 @@ async fn fetch(url: &str, option: FetchOption) -> Result<(), Box<dyn std::error:
     if let Some(headers) = option.headers {
         for (k, v) in headers {
             header_map.insert(
-                HeaderName::from_bytes(k.as_bytes()).unwrap(),
-                HeaderValue::from_bytes(v.as_bytes()).unwrap(),
+                HeaderName::from_bytes(k.as_bytes())?,
+                HeaderValue::from_bytes(v.as_bytes())?,
             );
         }
     }
@@ -61,17 +61,18 @@ async fn fetch(url: &str, option: FetchOption) -> Result<(), Box<dyn std::error:
     let status = resp.status().as_u16();
     let text = resp.text().await?;
     let r = FetchResponse { text, status };
-    println!("{}", serde_json::to_string(&r).unwrap());
+    println!("{}", serde_json::to_string(&r)?);
     Ok(())
 }
 
 impl Cmd for Fetch {
-    fn call(&self) {
-        let url: String = serde_json::from_str(self.params.as_str()).unwrap();
+    fn call(&self) -> anyhow::Result<()> {
+        let url: String = serde_json::from_str(self.params.as_str())?;
         let option: FetchOption = match self.option {
-            Some(ref s) => serde_json::from_str(s.as_str()).unwrap(),
+            Some(ref s) => serde_json::from_str(s.as_str())?,
             None => Default::default(),
         };
-        fetch(&url, option).unwrap();
+        fetch(&url, option)?;
+        Ok(())
     }
 }

@@ -12,10 +12,11 @@ pub struct Completion {
 }
 
 impl Cmd for Completion {
-    fn call(&self) {
+    fn call(&self) -> anyhow::Result<()> {
         let mut cmd = Cli::command();
         let name = cmd.get_name().to_string();
 
         generate(self.shell, &mut cmd, name, &mut io::stdout());
+        Ok(())
     }
 }
