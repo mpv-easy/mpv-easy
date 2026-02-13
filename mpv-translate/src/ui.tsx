@@ -373,7 +373,7 @@ export function Translation(props: Partial<TranslationProps>) {
   }
 
   useEffect(() => {
-    registerScriptMessage("translate", () => {
+    registerScriptMessage("cycle-translate-mode", () => {
       const sub = getCurrentSubtitle()
       if (!sub) {
         showNotification("subtitle not found")
@@ -407,7 +407,7 @@ export function Translation(props: Partial<TranslationProps>) {
       applyMode(nextMode)
     })
 
-    registerScriptMessage("interactive-translate", () => {
+    registerScriptMessage("toggle-interactive-translate", () => {
       const next = !interactiveRef.current
       setInteractive(next)
       updateVisibility(modeRef.current, next)
