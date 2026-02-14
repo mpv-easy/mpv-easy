@@ -15,7 +15,7 @@ function generateMethod(options: FetchOption): string[] {
 }
 
 const getHeaderString = (name: string, val: string) =>
-  `"${name}: ${`${val}`.replace(/(\\|")/g, "\\$1")}"`
+  `${name}: ${`${val}`.replace(/(\\|")/g, "\\$1")}`
 
 function generateHeader(options: FetchOption = {}): {
   params: string[]
@@ -68,6 +68,7 @@ const fetchToCurl = (url: string, options: FetchOption = {}): string[] => {
   const headers = generateHeader(options)
   return [
     "curl",
+    "-k", // disable SSL
     `${url}`,
     ...generateMethod(options),
     ...headers.params,
@@ -98,16 +99,16 @@ export async function fetch(
   url: string,
   options: FetchOption = {},
 ): Promise<FetchResponse> {
-  if (typeof globalThis.fetch === "function") {
-    return options ? globalThis.fetch(url, options) : globalThis.fetch(url)
+  if (detectCmd("curl")) {
+    return fetchByCurl(url, options)
   }
 
   if (existsSync(getRsExtExePath())) {
     return fetchByExt(url, options)
   }
 
-  if (detectCmd("curl")) {
-    return fetchByCurl(url, options)
+  if (typeof globalThis.fetch === "function") {
+    return options ? globalThis.fetch(url, options) : globalThis.fetch(url)
   }
 
   throw new Error("fetch command not found")

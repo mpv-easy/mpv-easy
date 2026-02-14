@@ -12,7 +12,10 @@ export async function cacheAsync(
   const hash = md5(key)
   const path = normalize(`${tmpDir}/${hash}`)
   if (existsSync(path)) {
-    return readFile(path)
+    const cache = readFile(path)
+    if (cache) {
+      return cache
+    }
   }
   const value = await getDate()
   writeFile(path, value)
@@ -24,7 +27,10 @@ export function cacheSync(key: string, getDate: () => string): string {
   const hash = md5(key)
   const path = normalize(`${tmpDir}/${hash}`)
   if (existsSync(path)) {
-    return readFile(path)
+    const cache = readFile(path)
+    if (cache) {
+      return cache
+    }
   }
   const value = getDate()
   writeFile(path, value)
