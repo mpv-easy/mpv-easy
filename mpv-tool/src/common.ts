@@ -113,12 +113,26 @@ export function clearPlayList() {
   playlistClear()
 }
 
+function checkWindowsCommandLength(args: string[]) {
+  if (getOs() === "windows") {
+    const cmdLen = args.reduce((acc, s) => acc + s.length + 1, 0)
+    if (cmdLen > 8191) {
+      throw new Error(
+        `Command length (${cmdLen}) exceeds Windows limit (8191).\nCommand starts with: ${args
+          .join(" ")
+          .substring(0, 200)}...`,
+      )
+    }
+  }
+}
+
 export function execSync(
   args: string[],
   playback_only = false,
   capture_stdout = true,
   capture_stderr = true,
 ): string {
+  checkWindowsCommandLength(args)
   const r = commandNative({
     name: "subprocess",
     args,
@@ -139,6 +153,12 @@ export function execAsync(
   capture_stderr = true,
 ): Promise<string> {
   return new Promise((resolve, reject) => {
+    try {
+      checkWindowsCommandLength(args)
+    } catch (e) {
+      reject(e)
+      return
+    }
     commandNativeAsync(
       {
         name: "subprocess",
