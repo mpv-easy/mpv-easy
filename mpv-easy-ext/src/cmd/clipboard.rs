@@ -37,15 +37,15 @@ mod clip {
 }
 #[cfg(target_os = "android")]
 mod clip {
-    pub fn set_text(text: &str) {
+    pub fn set_text(text: &str) -> anyhow::Result<()> {
         todo!()
     }
 
-    pub fn get_text() -> String {
+    pub fn get_text() -> anyhow::Result<String> {
         todo!()
     }
 
-    pub fn set_image(path: &str) {
+    pub fn set_image(path: &str) -> anyhow::Result<()> {
         todo!()
     }
 }
