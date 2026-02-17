@@ -353,11 +353,10 @@ export function Translation(props: Partial<TranslationProps>) {
       })
     }
 
-    let success = true
     // Enable new
     if (newMode === TranslateMode.Translate) {
       showNotification("Translating...", 0)
-      success = await translate({
+      await translate({
         targetLang,
         sourceLang,
         mix: false,
@@ -372,7 +371,7 @@ export function Translation(props: Partial<TranslationProps>) {
       hideNotification()
     } else if (newMode === TranslateMode.Mix) {
       showNotification("Translating...", 0)
-      success = await translate({
+      await translate({
         targetLang,
         sourceLang,
         mix: true,
@@ -387,14 +386,32 @@ export function Translation(props: Partial<TranslationProps>) {
       hideNotification()
     }
 
-    if (!success) {
-      setMode(TranslateMode.None)
-      updateVisibility(TranslateMode.None, interactiveRef.current)
-      return
-    }
-
     setMode(newMode)
     updateVisibility(newMode, interactiveRef.current)
+  }
+
+  const checkAndTranslate = async () => {
+    if (!pendingAutoTranslate.current) return
+
+    const sub = getCurrentSubtitle()
+    if (!sub) return
+
+    // Mark as handled before translating to prevent self-loop
+    pendingAutoTranslate.current = false
+
+    const opts = translateOptionsRef.current
+    if (!opts) return
+
+    const m = modeRef.current
+    if (m === TranslateMode.None) return
+
+    showNotification(`Auto Translating...`, 0)
+    if (m === TranslateMode.Translate) {
+      await translate({ ...opts, mix: false })
+    } else if (m === TranslateMode.Mix) {
+      await translate({ ...opts, mix: true })
+    }
+    hideNotification()
   }
 
   useEffect(() => {
@@ -451,30 +468,11 @@ export function Translation(props: Partial<TranslationProps>) {
       textCache.current = value
     })
 
-    // Observe track-list once; use pendingAutoTranslate flag to control when to translate
+    // Observe track-list and sid to control when to translate
     const trackListProp = new PropertyNative("track-list")
-    trackListProp.observe(async (_name, _value) => {
-      if (!pendingAutoTranslate.current) return
+    trackListProp.observe(checkAndTranslate)
 
-      const sub = getCurrentSubtitle()
-      if (!sub) return
-
-      // Mark as handled before translating to prevent self-loop
-      // (translate() modifies track-list via subAdd/subRemove)
-      pendingAutoTranslate.current = false
-
-      const opts = translateOptionsRef.current
-      if (!opts) return
-
-      const m = modeRef.current
-      showNotification(`Auto Translating...`, 0)
-      if (m === TranslateMode.Translate) {
-        await translate({ ...opts, mix: false })
-      } else if (m === TranslateMode.Mix) {
-        await translate({ ...opts, mix: true })
-      }
-      hideNotification()
-    })
+    observeProperty("sid", "native", checkAndTranslate)
   }, [])
 
   // Keep translateOptionsRef up to date with current render values
@@ -504,14 +502,17 @@ export function Translation(props: Partial<TranslationProps>) {
     const m = modeRef.current
     if (m === TranslateMode.None) return
 
-    // Signal the track-list observer to auto-translate when subtitles appear
+    // Signal the observers to auto-translate
     pendingAutoTranslate.current = true
+    // Try immediate check in case sub is already selected
+    checkAndTranslate()
 
     return () => {
       pendingAutoTranslate.current = false
       hideNotification()
     }
   }, [path])
+
   const isMix = !!TrackInfoBackupMix
   return (
     active && (

@@ -287,16 +287,19 @@ export async function translate(
   }
   const text = readFile(srtSubPath)
   const guessedLang = await guessLanguage(text)
+  let srt: string | undefined
   if (guessedLang) {
     const gl = guessedLang.split("-")[0].toLowerCase()
     const tl = (targetLang as string).split("-")[0].toLowerCase()
     if (gl === tl) {
-      printAndOsd(`Subtitle is already in ${targetLang}, skip translation`)
-      return false
+      printAndOsd(`Subtitle already in ${targetLang}, reusing content`)
+      srt = text
     }
   }
 
-  const srt = await translateSrt(text, targetLang as Lang, sourceLang as Lang)
+  if (srt === undefined) {
+    srt = await translateSrt(text, targetLang as Lang, sourceLang as Lang)
+  }
   writeFile(srtOutputPath, srt)
 
   const copyToVideoDir = (src: string, suffix: string) => {
