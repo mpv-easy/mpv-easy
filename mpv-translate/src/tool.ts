@@ -21,7 +21,7 @@ import {
   getTmpPath,
   dirname,
 } from "@mpv-easy/tool"
-import { google } from "./google"
+import { google, googleDetect } from "./google"
 import { readFile } from "@mpv-easy/tool"
 import { normalize } from "@mpv-easy/tool"
 
@@ -33,10 +33,13 @@ async function translateSrt(
 ): Promise<string> {
   const s = new Srt(srt)
   const blocks = s.blocks
+  const chunks: { st: number; text: string }[] = []
   let textList = []
   let charLength = 0
   let i = 0
   const blockLength = blocks.length
+  const marker = "\n\n\n"
+
   while (i < blockLength) {
     const st = i
     while (i < blockLength && charLength + blocks[i].text.length < MAX_CHARS) {
@@ -44,18 +47,44 @@ async function translateSrt(
       textList.push(blocks[i].text)
       i++
     }
-    const marker = "\n\n\n"
-    const text = textList.join(marker)
-
-    const ret = (await google(text, targetaLang, sourceLang)).split(marker)
-    for (let k = 0; k < ret.length; k++) {
-      blocks[st + k].text = ret[k]
-    }
+    chunks.push({ st, text: textList.join(marker) })
     textList = []
     charLength = 0
   }
+
+  const results = await Promise.all(
+    chunks.map(async (chunk) => {
+      const ret = (await google(chunk.text, targetaLang, sourceLang)).split(
+        marker,
+      )
+      return { st: chunk.st, ret }
+    }),
+  )
+
+  for (const res of results) {
+    for (let k = 0; k < res.ret.length; k++) {
+      if (blocks[res.st + k]) {
+        blocks[res.st + k].text = res.ret[k]
+      }
+    }
+  }
+
   const str = s.toString()
   return str
+}
+
+export async function guessLanguage(
+  content: string,
+): Promise<string | undefined> {
+  const s = new Srt(content)
+  const blocks = s.blocks
+  if (blocks.length === 0) return undefined
+  const text = blocks
+    .filter((b) => b.text.trim().length > 0)
+    .slice(0, 10)
+    .map((b) => b.text)
+    .join(" ")
+  return await googleDetect(text)
 }
 
 export let TrackInfoBackup: SubtitleTrack | undefined
@@ -131,7 +160,9 @@ function mixSrt(
   writeFile(output, outputString)
 }
 
-export async function translate(option: Partial<TranslateOption> = {}) {
+export async function translate(
+  option: Partial<TranslateOption> = {},
+): Promise<boolean> {
   const {
     mix,
     firstFontSize = 22,
@@ -144,26 +175,26 @@ export async function translate(option: Partial<TranslateOption> = {}) {
   let sub = getCurrentSubtitle()
   if (!sub) {
     printAndOsd("subtitle not found")
-    return
+    return false
   }
   const videoPath = getPropertyString("path")!
 
   if (!existsSync(videoPath) && !sub.external) {
     printAndOsd("not support remote video with embedded subtitles")
-    return
+    return false
   }
   const targetLang = option.targetLang?.length ? option.targetLang : getLang()
   if (mix && TrackInfoBackupMix && sub.title === `${targetLang}-mix`) {
     setPropertyNative("sid", TrackInfoBackupMix.id)
     subRemove(sub.id)
     TrackInfoBackupMix = undefined
-    return
+    return true
   }
   if (!mix && TrackInfoBackup && sub.title === targetLang) {
     setPropertyNative("sid", TrackInfoBackup.id)
     subRemove(sub.id)
     TrackInfoBackup = undefined
-    return
+    return true
   }
 
   if (mix && TrackInfoBackup) {
@@ -182,7 +213,7 @@ export async function translate(option: Partial<TranslateOption> = {}) {
   sub = getCurrentSubtitle()
   if (!sub) {
     printAndOsd("subtitle not found")
-    return
+    return false
   }
 
   // Detect if current sub is a generated one and fallback to backup
@@ -203,7 +234,7 @@ export async function translate(option: Partial<TranslateOption> = {}) {
   const videoName = getFileName(videoPath)
   if (!videoName) {
     printAndOsd("videoName not found")
-    return
+    return false
   }
   const sourceLang = option.sourceLang?.length
     ? option.sourceLang
@@ -251,10 +282,20 @@ export async function translate(option: Partial<TranslateOption> = {}) {
       !existsSync(srtSubPath)
     ) {
       printAndOsd("save subtitle error")
-      return
+      return false
     }
   }
   const text = readFile(srtSubPath)
+  const guessedLang = await guessLanguage(text)
+  if (guessedLang) {
+    const gl = guessedLang.split("-")[0].toLowerCase()
+    const tl = (targetLang as string).split("-")[0].toLowerCase()
+    if (gl === tl) {
+      printAndOsd(`Subtitle is already in ${targetLang}, skip translation`)
+      return false
+    }
+  }
+
   const srt = await translateSrt(text, targetLang as Lang, sourceLang as Lang)
   writeFile(srtOutputPath, srt)
 
@@ -297,4 +338,5 @@ export async function translate(option: Partial<TranslateOption> = {}) {
     const finalPath = copyToVideoDir(srtOutputPath, `srt`)
     subAdd(finalPath, "select", targetLang, targetLang)
   }
+  return true
 }

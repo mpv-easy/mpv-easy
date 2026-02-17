@@ -353,10 +353,11 @@ export function Translation(props: Partial<TranslationProps>) {
       })
     }
 
+    let success = true
     // Enable new
     if (newMode === TranslateMode.Translate) {
       showNotification("Translating...", 0)
-      await translate({
+      success = await translate({
         targetLang,
         sourceLang,
         mix: false,
@@ -371,7 +372,7 @@ export function Translation(props: Partial<TranslationProps>) {
       hideNotification()
     } else if (newMode === TranslateMode.Mix) {
       showNotification("Translating...", 0)
-      await translate({
+      success = await translate({
         targetLang,
         sourceLang,
         mix: true,
@@ -385,6 +386,13 @@ export function Translation(props: Partial<TranslationProps>) {
       })
       hideNotification()
     }
+
+    if (!success) {
+      setMode(TranslateMode.None)
+      updateVisibility(TranslateMode.None, interactiveRef.current)
+      return
+    }
+
     setMode(newMode)
     updateVisibility(newMode, interactiveRef.current)
   }

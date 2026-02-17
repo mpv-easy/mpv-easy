@@ -11,6 +11,21 @@ const headers = {
   "x-browser-copyright": "Copyright 2024 Google LLC. All rights reserved.",
 }
 
+export async function googleDetect(text: string): Promise<string | undefined> {
+  if (text.trim().length === 0) return undefined
+  try {
+    const url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl=en&dt=t&q=${encodeURIComponent(text)}`
+    const resp = await fetch(url, {
+      headers,
+    }).then((r) => r.text())
+    const data = JSON.parse(resp)
+    return data[2]
+  } catch (e) {
+    console.log("detect error: ", e)
+    return undefined
+  }
+}
+
 export async function google(
   text: string,
   targetaLang: string,
@@ -34,9 +49,9 @@ export async function google(
         headers,
       }).then((r) => r.text()),
     )
-    const cn = JSON.parse(resp)[0]
-      .map((v: any) => v[0])
-      .join("")
+    const data = JSON.parse(resp)
+    if (!data || !data[0]) return ""
+    const cn = data[0].map((v: any) => v[0]).join("")
     return cn
   } catch (e) {
     console.log("translate error: ", e)
