@@ -20,6 +20,7 @@ import {
   fetch,
   getTmpPath,
   dirname,
+  LangList,
 } from "@mpv-easy/tool"
 import { google, googleDetect } from "./google"
 import { readFile } from "@mpv-easy/tool"
@@ -95,10 +96,21 @@ export function resetTrackInfo() {
   TrackInfoBackupMix = undefined
 }
 
+export function getLanguageFromFilename(filename: string): string | undefined {
+  const parts = filename.split(".")
+  if (parts.length < 2) return undefined
+  const lang = parts[parts.length - 2].toLowerCase()
+  const found = LangList.find((i) => i.toLowerCase().startsWith(lang))
+  if (found) {
+    return found
+  }
+  return undefined
+}
+
 export type TranslateOption = {
   targetLang: string
   sourceLang: string
-  mix: boolean
+  dual: boolean
   firstFontSize: number
   secondFontSize: number
   firstSubColor: string
@@ -164,7 +176,7 @@ export async function translate(
   option: Partial<TranslateOption> = {},
 ): Promise<boolean> {
   const {
-    mix,
+    dual,
     firstFontSize = 22,
     secondFontSize = 11,
     firstSubColor = "",
@@ -184,26 +196,26 @@ export async function translate(
     return false
   }
   const targetLang = option.targetLang?.length ? option.targetLang : getLang()
-  if (mix && TrackInfoBackupMix && sub.title === `${targetLang}-mix`) {
+  if (dual && TrackInfoBackupMix && sub.title === `dual.${targetLang}`) {
     setPropertyNative("sid", TrackInfoBackupMix.id)
     subRemove(sub.id)
     TrackInfoBackupMix = undefined
     return true
   }
-  if (!mix && TrackInfoBackup && sub.title === targetLang) {
+  if (!dual && TrackInfoBackup && sub.title === targetLang) {
     setPropertyNative("sid", TrackInfoBackup.id)
     subRemove(sub.id)
     TrackInfoBackup = undefined
     return true
   }
 
-  if (mix && TrackInfoBackup) {
+  if (dual && TrackInfoBackup) {
     setPropertyNative("sid", TrackInfoBackup.id)
     subRemove(sub.id)
     TrackInfoBackup = undefined
     // return
   }
-  if (!mix && TrackInfoBackupMix) {
+  if (!dual && TrackInfoBackupMix) {
     setPropertyNative("sid", TrackInfoBackupMix.id)
     subRemove(sub.id)
     TrackInfoBackupMix = undefined
@@ -220,11 +232,11 @@ export async function translate(
   let sourceTrack = sub
   if (sub.title === targetLang && TrackInfoBackup) {
     sourceTrack = TrackInfoBackup
-  } else if (sub.title === `${targetLang}-mix` && TrackInfoBackupMix) {
+  } else if (sub.title === `dual.${targetLang}` && TrackInfoBackupMix) {
     sourceTrack = TrackInfoBackupMix
   }
 
-  if (mix) {
+  if (dual) {
     TrackInfoBackupMix = sourceTrack
   } else {
     TrackInfoBackup = sourceTrack
@@ -286,7 +298,14 @@ export async function translate(
     }
   }
   const text = readFile(srtSubPath)
-  const guessedLang = await guessLanguage(text)
+  let guessedLang = sourceTrack.external
+    ? getLanguageFromFilename(sourceTrack.externalFilename!)
+    : undefined
+
+  if (!guessedLang) {
+    guessedLang = await guessLanguage(text)
+  }
+
   let srt: string | undefined
   if (guessedLang) {
     const gl = guessedLang.split("-")[0].toLowerCase()
@@ -320,8 +339,8 @@ export async function translate(
     return src
   }
 
-  if (mix) {
-    const srtMixPath = getPath(`${sourceLang}.${targetLang}.mix.srt`)
+  if (dual) {
+    const srtMixPath = getPath(`dual.${sourceLang}.${targetLang}.srt`)
     if (!existsSync(srtMixPath)) {
       mixSrt(
         srtOutputPath,
@@ -335,10 +354,10 @@ export async function translate(
         secondSubFontface,
       )
     }
-    const finalPath = copyToVideoDir(srtMixPath, `srt`)
-    subAdd(finalPath, "select", `${targetLang}-mix`, targetLang)
+    const finalPath = copyToVideoDir(srtMixPath, `dual.${targetLang}.srt`)
+    subAdd(finalPath, "select", `dual.${targetLang}`, targetLang)
   } else {
-    const finalPath = copyToVideoDir(srtOutputPath, `srt`)
+    const finalPath = copyToVideoDir(srtOutputPath, `${targetLang}.srt`)
     subAdd(finalPath, "select", targetLang, targetLang)
   }
   return true

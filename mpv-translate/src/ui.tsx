@@ -27,7 +27,7 @@ import { de2en, en2zh, WordInfo } from "./interactive-translate"
 export enum TranslateMode {
   None,
   Translate,
-  Mix,
+  Dual,
 }
 
 async function getWordInfo(
@@ -329,7 +329,7 @@ export function Translation(props: Partial<TranslationProps>) {
       await translate({
         targetLang,
         sourceLang,
-        mix: false,
+        dual: false,
         firstFontSize,
         secondFontSize,
         firstSubColor,
@@ -338,11 +338,11 @@ export function Translation(props: Partial<TranslationProps>) {
         secondSubColor,
         subSaveMode,
       })
-    } else if (currentMode === TranslateMode.Mix) {
+    } else if (currentMode === TranslateMode.Dual) {
       await translate({
         targetLang,
         sourceLang,
-        mix: true,
+        dual: true,
         firstFontSize,
         secondFontSize,
         firstSubColor,
@@ -359,7 +359,7 @@ export function Translation(props: Partial<TranslationProps>) {
       await translate({
         targetLang,
         sourceLang,
-        mix: false,
+        dual: false,
         firstFontSize,
         secondFontSize,
         firstSubColor,
@@ -369,12 +369,12 @@ export function Translation(props: Partial<TranslationProps>) {
         subSaveMode,
       })
       hideNotification()
-    } else if (newMode === TranslateMode.Mix) {
+    } else if (newMode === TranslateMode.Dual) {
       showNotification("Translating...", 0)
       await translate({
         targetLang,
         sourceLang,
-        mix: true,
+        dual: true,
         firstFontSize,
         secondFontSize,
         firstSubColor,
@@ -407,9 +407,9 @@ export function Translation(props: Partial<TranslationProps>) {
 
     showNotification(`Auto Translating...`, 0)
     if (m === TranslateMode.Translate) {
-      await translate({ ...opts, mix: false })
-    } else if (m === TranslateMode.Mix) {
-      await translate({ ...opts, mix: true })
+      await translate({ ...opts, dual: false })
+    } else if (m === TranslateMode.Dual) {
+      await translate({ ...opts, dual: true })
     }
     hideNotification()
   }
@@ -430,7 +430,7 @@ export function Translation(props: Partial<TranslationProps>) {
         return
       }
 
-      // Cycle: None -> Translate -> Mix -> None
+      // Cycle: None -> Translate -> Dual -> None
       let nextMode = TranslateMode.None
       switch (modeRef.current) {
         case TranslateMode.None:
@@ -438,10 +438,10 @@ export function Translation(props: Partial<TranslationProps>) {
           showNotification(`Mode: Translate`)
           break
         case TranslateMode.Translate:
-          nextMode = TranslateMode.Mix
-          showNotification(`Mode: Mix`)
+          nextMode = TranslateMode.Dual
+          showNotification(`Mode: Dual`)
           break
-        case TranslateMode.Mix:
+        case TranslateMode.Dual:
           nextMode = TranslateMode.None
           showNotification(`Mode: None`)
           break
