@@ -6,7 +6,7 @@ You need to install [ffmpeg](https://www.ffmpeg.org/download.html) and curl and 
 
 - Download the latest version of [translate.js](https://github.com/mpv-easy/mpv-easy/releases) and copy it to the mpv script directory
 - Add shortcut keys  ```ctrl+t    script-message cycle-translate-mode```, ```ctrl+i    script-message toggle-interactive-translate``` and ```Alt+t      script-message toggle-auto-translate``` to your ```input.conf```
-- If everything goes well, you can use ```ctrl+t``` to cycle translation modes (None -> Translate -> Mix -> None), ```ctrl+i``` to toggle interactive translation, and ```Alt+t``` to toggle auto-translate.
+- If everything goes well, you can use ```ctrl+t``` to cycle translation modes (None -> Translate -> Dual -> None), ```ctrl+i``` to toggle interactive translation, and ```Alt+t``` to toggle auto-translate.
 - You can customize the styles of subtitles and tooltips, see [translate.conf](../mpv-easy-react/conf/translate.conf)
 
 ## support language
@@ -42,7 +42,7 @@ Alt+t      script-message toggle-auto-translate
 
 ## translate (Cycle Mode)
 
-Press `CTRL+t` to cycle through modes: **None** -> **Translate** -> **Mix**.
+Press `CTRL+t` to cycle through modes: **None** -> **Translate** -> **Dual**.
 
 ### 1. Translate Mode
 Displays only the translated subtitle.
@@ -51,11 +51,11 @@ Displays only the translated subtitle.
   <img src="../assets/img/translate-en-cn.png" alt="Chinese subtitle"/>
 </div>
 
-### 2. Mix Mode
+### 2. Dual Mode
 Displays both original and translated subtitles.
 
 <div style="display: flex;">
-  <img src="../assets/img/translate-en-cn-mix.png" alt="mix-translate"/>
+  <img src="../assets/img/translate-en-cn-dual.png" alt="dual-translate"/>
 </div>
 
 ## interactive-translate (CTRL+i)
