@@ -15,6 +15,8 @@ import {
   getProperty,
   getPropertyNumber,
   getPropertyString,
+  getScriptConfigDir,
+  joinPath,
   observePropertyNumber,
   osdMessage,
   setPropertyBool,
@@ -144,6 +146,10 @@ export function execSync(
     throw new Error(`subprocess error status:${r.status} stderr:${r.stderr}`)
   }
   return r.stdout.replaceAll("\r\n", "\n")
+}
+
+export function getLogoPath() {
+  return joinPath(getScriptConfigDir(), "logo.bgra")
 }
 
 export function execAsync(

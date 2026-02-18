@@ -8,7 +8,7 @@ pub trait Cmd {
 
 use super::{
     clipboard::Clipboard, completion::Completion, fetch::Fetch, fs::Fs, jellyfin::Jellyfin,
-    webdav::Webdav,
+    webdav::Webdav, img::Img,
 };
 
 #[derive(clap::Parser, Debug)]
@@ -25,6 +25,7 @@ pub enum SubCommand {
     Webdav(Webdav),
 
     Jellyfin(Jellyfin),
+    Img(Img),
 }
 
 #[derive(clap::Parser, Debug)]

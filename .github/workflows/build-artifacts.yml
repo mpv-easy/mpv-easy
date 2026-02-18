@@ -358,6 +358,7 @@ jobs:
           mkdir release -p
 
           mkdir dist/scripts/mpv-easy/mpv-easy-config/mpv-easy-ext -p
+          cp mpv-build/public/logo.bgra dist/scripts/mpv-easy/mpv-easy-config/logo.bgra
           # mkdir dist/script-opts -p
 
           cp mpv-easy-react/es5/mpv-easy.js dist/scripts/mpv-easy/main.js

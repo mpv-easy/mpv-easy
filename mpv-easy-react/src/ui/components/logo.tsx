@@ -2,8 +2,13 @@ import React, { useRef } from "react"
 import { Box } from "@mpv-easy/react"
 import * as ICON from "../../icon"
 import { dispatch, iconButtonStyle, logoStyle, useSelector } from "../../store"
-import { openDialog } from "@mpv-easy/tool"
+import { openDialog, existsSync, getLogoPath } from "@mpv-easy/tool"
+import { LOGO_IMAGE_ID } from "../../const"
 const TEXT = "Drop files or URLs to play here."
+
+const logoPath = getLogoPath()
+const hasLogo = existsSync(logoPath)
+const logoSize = 256
 export const Logo = () => {
   const style = useSelector(logoStyle)
   const buttonStyle = useSelector(iconButtonStyle)
@@ -29,7 +34,18 @@ export const Logo = () => {
       alignItems="center"
       flexDirection="row"
     >
-      <Box text={ICON.Play} {...style} onClick={select} />
+      {hasLogo ? (
+        <Box
+          id={LOGO_IMAGE_ID}
+          width={logoSize}
+          height={logoSize}
+          backgroundImage={logoPath}
+          backgroundImageFormat="bgra"
+          pointerEvents="none"
+        />
+      ) : (
+        <Box text={ICON.Play} {...style} onClick={select} />
+      )}
       <Box
         text={TEXT}
         font={buttonStyle.font}

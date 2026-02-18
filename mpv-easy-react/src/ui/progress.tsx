@@ -45,6 +45,7 @@ import { ThumbFast } from "@mpv-easy/thumbfast"
 import { appendPoint, getCutVideoPath, getVideoSegment } from "@mpv-easy/cut"
 import { dispatch, useSelector } from "../models"
 import { getCropImagePath, getCropRect } from "@mpv-easy/crop"
+import { THUMBFAST_IMAGE_ID } from "../const"
 
 export const Progress = ({ width, ...props }: MpDomProps) => {
   const [leftPreview, setLeftPreview] = useState(0)
@@ -486,7 +487,7 @@ export const Progress = ({ width, ...props }: MpDomProps) => {
         />
         <Box
           hide={!showThumbfast}
-          id={42}
+          id={THUMBFAST_IMAGE_ID}
           position="absolute"
           x={thumbPos?.x || 0}
           y={thumbPos?.y || 0}
