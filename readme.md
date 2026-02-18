@@ -1,6 +1,11 @@
 ## mpv-easy
 
 TS and React toolkit for mpv script
+
+<div align="center">
+  <img src="https://github.com/ahaoboy/musicfree-tauri/blob/main/mpv-build/public/logo.png?raw=true" alt="mpv-easy icon" width="256" height="256">
+</div>
+
 ![mpv-easy](./assets/img/mpv-easy.gif)
 
 ## install
