@@ -41,7 +41,7 @@ export const Logo = () => {
           height={logoSize}
           backgroundImage={logoPath}
           backgroundImageFormat="bgra"
-          pointerEvents="none"
+          onClick={select}
         />
       ) : (
         <Box text={ICON.Play} {...style} onClick={select} />
