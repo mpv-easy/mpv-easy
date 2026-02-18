@@ -581,7 +581,7 @@ export function createMpvMock(
     duration: 60 * 66,
     "time-pos": 0,
     "window-maximized": false,
-
+    platform: "linux",
     aid: 0,
     vid: 0,
     sid: 0,
