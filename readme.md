@@ -6,6 +6,8 @@ TS and React toolkit for mpv script
   <img src="https://github.com/mpv-easy/mpv-easy/blob/main/mpv-build/public/logo.png?raw=true" alt="mpv-easy icon" width="256" height="256">
 </div>
 
+![uosc-logo](./assets/img/uosc-logo.png)
+
 ![mpv-easy](./assets/img/mpv-easy.gif)
 
 ## install
