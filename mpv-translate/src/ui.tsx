@@ -17,7 +17,7 @@ import { Box, Button, MpDomProps, usePropertyString } from "@mpv-easy/react"
 import { google } from "./google"
 import {
   TrackInfoBackup,
-  TrackInfoBackupMix,
+  TrackInfoBackupDual,
   translate,
   resetTrackInfo,
 } from "./tool"
@@ -146,13 +146,13 @@ function Line({
   line,
   subConfig,
   lineIndex,
-  isMix,
+  isDual,
   videoScale,
 }: {
   line: string
   subConfig: SubConfig
   lineIndex: number
-  isMix: boolean
+  isDual: boolean
   videoScale: number
 }) {
   const words = split(line)
@@ -160,7 +160,7 @@ function Line({
   const loading = useRef(false)
   const [title, setTitle] = useState("")
 
-  const skipTranslate = isMix && !(lineIndex & 1)
+  const skipTranslate = isDual && !(lineIndex & 1)
   useEffect(() => {
     if (loading.current || !line.length || skipTranslate) return
     loading.current = true
@@ -223,7 +223,7 @@ export function Translation(props: Partial<TranslationProps>) {
     firstSubFontface,
     secondSubFontface,
     secondSubColor,
-    subSaveMode,
+    subOutputPath,
   } = {
     ...defaultSubConfig,
     ...props,
@@ -248,7 +248,7 @@ export function Translation(props: Partial<TranslationProps>) {
     firstSubFontface: string
     secondSubFontface: string
     secondSubColor: string
-    subSaveMode: string
+    subOutputPath: string
   } | null>(null)
   const path = usePropertyString("path", "")[0]
 
@@ -273,8 +273,8 @@ export function Translation(props: Partial<TranslationProps>) {
       sourceLang = TrackInfoBackup.lang || TrackInfoBackup.title || ""
     }
 
-    if (TrackInfoBackupMix) {
-      sourceLang = TrackInfoBackupMix.lang || TrackInfoBackupMix.title || ""
+    if (TrackInfoBackupDual) {
+      sourceLang = TrackInfoBackupDual.lang || TrackInfoBackupDual.title || ""
     }
 
     if (!sourceLang.length) {
@@ -336,7 +336,7 @@ export function Translation(props: Partial<TranslationProps>) {
         firstSubFontface,
         secondSubFontface,
         secondSubColor,
-        subSaveMode,
+        subOutputPath,
       })
     } else if (currentMode === TranslateMode.Dual) {
       await translate({
@@ -349,7 +349,7 @@ export function Translation(props: Partial<TranslationProps>) {
         firstSubFontface,
         secondSubFontface,
         secondSubColor,
-        subSaveMode,
+        subOutputPath,
       })
     }
 
@@ -366,7 +366,7 @@ export function Translation(props: Partial<TranslationProps>) {
         firstSubFontface,
         secondSubFontface,
         secondSubColor,
-        subSaveMode,
+        subOutputPath,
       })
       hideNotification()
     } else if (newMode === TranslateMode.Dual) {
@@ -381,7 +381,7 @@ export function Translation(props: Partial<TranslationProps>) {
         firstSubFontface,
         secondSubFontface,
         secondSubColor,
-        subSaveMode,
+        subOutputPath,
       })
       hideNotification()
     }
@@ -485,7 +485,7 @@ export function Translation(props: Partial<TranslationProps>) {
     firstSubFontface,
     secondSubFontface,
     secondSubColor,
-    subSaveMode,
+    subOutputPath,
   }
 
   useEffect(() => {
@@ -513,7 +513,7 @@ export function Translation(props: Partial<TranslationProps>) {
     }
   }, [path])
 
-  const isMix = !!TrackInfoBackupMix
+  const isDual = !!TrackInfoBackupDual
   return (
     active && (
       <Box
@@ -533,7 +533,7 @@ export function Translation(props: Partial<TranslationProps>) {
           .map((i, k) => (
             <Line
               videoScale={videoScale}
-              isMix={isMix}
+              isDual={isDual}
               key={[i, k].join()}
               line={i}
               lineIndex={k}
@@ -555,7 +555,7 @@ export function Translation(props: Partial<TranslationProps>) {
                 firstSubFontface,
                 secondSubFontface,
                 secondSubColor,
-                subSaveMode,
+                subOutputPath,
               }}
             />
           ))}

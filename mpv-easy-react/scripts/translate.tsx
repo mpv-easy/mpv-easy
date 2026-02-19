@@ -36,7 +36,7 @@ const {
   secondSubColor,
   firstSubFontface,
   secondSubFontface,
-  subSaveMode,
+  subOutputPath,
 } = {
   ...defaultSubConfig,
   ...defaultTooltipConfig,
@@ -97,7 +97,7 @@ const {
     "second-sub-color": { type: "string", key: "secondSubColor" },
     "first-sub-fontface": { type: "string", key: "firstSubFontface" },
     "second-sub-fontface": { type: "string", key: "secondSubFontface" },
-    "sub-save-mode": { type: "string", key: "subSaveMode" },
+    "sub-output-path": { type: "string", key: "subOutputPath" },
   }),
   subScale: getPropertyNumber("sub-scale", 1),
   subFontSize: getPropertyNumber("sub-font-size", 38),
@@ -138,7 +138,7 @@ function App() {
         secondSubColor={secondSubColor}
         firstSubFontface={firstSubFontface}
         secondSubFontface={secondSubFontface}
-        subSaveMode={subSaveMode}
+        subOutputPath={subOutputPath}
       />
     </>
   )

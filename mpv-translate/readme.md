@@ -20,17 +20,82 @@ https://cloud.google.com/translate/docs/languages
 {
   "sourceLang": "en-US",
   "targetLang": "zh-CN",
+  "subOutputPath": ""
 }
 ```
+
+### Subtitle Output Path
+
+The `subOutputPath` option controls where translated subtitles are saved using a template system.
+
+- Empty (default): Saves to temp directory using `$TMP/$NAME.$LANG.srt`
+- Custom template: Use variables to define a custom path
+
+#### Template Variables
+
+You can use the following variables in your custom template:
+
+| Variable       | Description                                            |
+| -------------- | ------------------------------------------------------ |
+| `$HOME`        | Home/temp directory                                    |
+| `$NAME`        | Video filename without extension                       |
+| `$LANG`        | Target language code (e.g., zh-CN, en-US, zh-CN.en-US) |
+| `$SOURCE_LANG` | Source language code (e.g., en-US)                     |
+| `$TARGET_LANG` | Target language code (e.g., zh-CN)                     |
+| `$TMP`         | Temporary directory                                    |
+| `$FOLDER`      | Video file directory                                   |
+| `$MPV`         | MPV installation directory                             |
+| `$MPV_CONFIG`  | MPV config directory                                   |
+| `$DESKTOP`     | Desktop directory                                      |
+
+#### Examples
+
+```conf
+# Save to video folder
+output_template=$FOLDER/$NAME.$LANG.srt
+
+# Save to subfolder named after video
+output_template=$FOLDER/$NAME/$NAME.$LANG.srt
+
+# Save to temp directory
+output_template=$TMP/$NAME.srt
+
+# Save to custom subtitles folder
+output_template=$HOME/subtitles/$NAME.$LANG.srt
+
+# Save to desktop
+output_template=$DESKTOP/$NAME.$LANG.srt
+
+# Use source and target language codes
+output_template=$FOLDER/$NAME.$SOURCE_LANG-$TARGET_LANG.srt
+```
+
+#### Template Examples
+
+```conf
+# Save to video folder with language suffix
+sub-output-path=$FOLDER/$NAME.$LANG.srt
+
+# Save to subfolder named after video
+sub-output-path=$FOLDER/$NAME/$NAME.$LANG.srt
+
+# Save to temp directory (same as default)
+sub-output-path=$TMP/$NAME.srt
+
+# Save to custom subtitles folder
+sub-output-path=$HOME/subtitles/$NAME.$LANG.srt
+```
+
+Note: If the source and destination paths are the same, the copy operation will be skipped automatically.
 
 ## short key
 [input.conf](../mpv-easy-react/conf/translate.input.conf)
 
-| key    | command                                 |
-| ------ | --------------------------------------- |
-| ctrl+t | script-message cycle-translate-mode     |
+| key    | command                                     |
+| ------ | ------------------------------------------- |
+| ctrl+t | script-message cycle-translate-mode         |
 | ctrl+i | script-message toggle-interactive-translate |
-| Alt+t  | script-message toggle-auto-translate    |
+| Alt+t  | script-message toggle-auto-translate        |
 
 `input.conf`
 

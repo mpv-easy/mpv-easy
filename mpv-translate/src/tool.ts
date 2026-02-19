@@ -21,10 +21,18 @@ import {
   getTmpPath,
   dirname,
   LangList,
+  getHomeDir,
+  getMpvExeDir,
+  getDesktopDir,
+  expandPath,
 } from "@mpv-easy/tool"
 import { google, googleDetect } from "./google"
 import { readFile } from "@mpv-easy/tool"
 import { normalize } from "@mpv-easy/tool"
+
+function compile(str: string, vars: Record<string, string>) {
+  return str.replace(/\$(\w+)/g, (_, key) => vars[key] ?? "")
+}
 
 const MAX_CHARS = 4000
 async function translateSrt(
@@ -89,11 +97,11 @@ export async function guessLanguage(
 }
 
 export let TrackInfoBackup: SubtitleTrack | undefined
-export let TrackInfoBackupMix: SubtitleTrack | undefined
+export let TrackInfoBackupDual: SubtitleTrack | undefined
 
 export function resetTrackInfo() {
   TrackInfoBackup = undefined
-  TrackInfoBackupMix = undefined
+  TrackInfoBackupDual = undefined
 }
 
 export function getLanguageFromFilename(filename: string): string | undefined {
@@ -117,10 +125,10 @@ export type TranslateOption = {
   secondSubColor: string
   firstSubFontface: string
   secondSubFontface: string
-  subSaveMode: string
+  subOutputPath: string
 }
 
-function mixSrt(
+function DualSrt(
   first: string,
   second: string,
   output: string,
@@ -196,10 +204,10 @@ export async function translate(
     return false
   }
   const targetLang = option.targetLang?.length ? option.targetLang : getLang()
-  if (dual && TrackInfoBackupMix && sub.title === `dual.${targetLang}`) {
-    setPropertyNative("sid", TrackInfoBackupMix.id)
+  if (dual && TrackInfoBackupDual && sub.title === `dual.${targetLang}`) {
+    setPropertyNative("sid", TrackInfoBackupDual.id)
     subRemove(sub.id)
-    TrackInfoBackupMix = undefined
+    TrackInfoBackupDual = undefined
     return true
   }
   if (!dual && TrackInfoBackup && sub.title === targetLang) {
@@ -215,10 +223,10 @@ export async function translate(
     TrackInfoBackup = undefined
     // return
   }
-  if (!dual && TrackInfoBackupMix) {
-    setPropertyNative("sid", TrackInfoBackupMix.id)
+  if (!dual && TrackInfoBackupDual) {
+    setPropertyNative("sid", TrackInfoBackupDual.id)
     subRemove(sub.id)
-    TrackInfoBackupMix = undefined
+    TrackInfoBackupDual = undefined
     // return
   }
 
@@ -232,12 +240,12 @@ export async function translate(
   let sourceTrack = sub
   if (sub.title === targetLang && TrackInfoBackup) {
     sourceTrack = TrackInfoBackup
-  } else if (sub.title === `dual.${targetLang}` && TrackInfoBackupMix) {
-    sourceTrack = TrackInfoBackupMix
+  } else if (sub.title === `dual.${targetLang}` && TrackInfoBackupDual) {
+    sourceTrack = TrackInfoBackupDual
   }
 
   if (dual) {
-    TrackInfoBackupMix = sourceTrack
+    TrackInfoBackupDual = sourceTrack
   } else {
     TrackInfoBackup = sourceTrack
   }
@@ -265,7 +273,7 @@ export async function translate(
       secondSubFontface,
     ].join("-"),
   )
-  const subSaveMode = option.subSaveMode || "temporary"
+  const subOutputPath = option.subOutputPath || ""
   const getPath = (ext: string) => {
     return normalize(`${tmpDir}/${hash}.${videoName}.${ext}`)
   }
@@ -321,31 +329,62 @@ export async function translate(
   }
   writeFile(srtOutputPath, srt)
 
-  const copyToVideoDir = (src: string, suffix: string) => {
-    // If it is a network path, write to the temp folder
+  const resolveOutputPath = (src: string, lang: string) => {
+    // If it is a network path, use temp folder
     if (!existsSync(videoPath)) {
       return src
     }
 
-    if (subSaveMode === "video-folder") {
-      const dir = dirname(videoPath)
+    try {
+      const dir = dirname(videoPath)!
       const lastDotIndex = videoName.lastIndexOf(".")
       const name =
         lastDotIndex === -1 ? videoName : videoName.substring(0, lastDotIndex)
-      const dest = normalizePath(`${dir}/${name}.${suffix}`)
+
+      // Default template when empty: use temp directory
+      const pathTemplate = subOutputPath || "$TMP/$NAME.$LANG.srt"
+
+      // Get various directory paths
+      const homeDir = getHomeDir() || getTmpDir()
+      const mpvDir = getMpvExeDir() || tmpDir
+      const mpvConfigDir = expandPath("~~home/") || tmpDir
+      const desktopDir = getDesktopDir() || tmpDir
+
+      // Prepare template variables
+      const templateVars = {
+        HOME: homeDir,
+        NAME: name,
+        LANG: lang,
+        SOURCE_LANG: sourceLang || "en-US",
+        TARGET_LANG: targetLang || "en-US",
+        TMP: tmpDir,
+        FOLDER: dir,
+        MPV: mpvDir,
+        MPV_CONFIG: mpvConfigDir,
+        DESKTOP: desktopDir,
+      }
+      const dest = normalizePath(compile(pathTemplate, templateVars))
+
+      // Skip copy if source and destination are the same
+      if (normalizePath(src) === dest) {
+        return src
+      }
+
       writeFile(dest, readFile(src))
       return dest
+    } catch (error) {
+      printAndOsd(`Template error: ${error}, using temp path`)
+      return src
     }
-    return src
   }
 
   if (dual) {
-    const srtMixPath = getPath(`dual.${sourceLang}.${targetLang}.srt`)
-    if (!existsSync(srtMixPath)) {
-      mixSrt(
-        srtOutputPath,
+    const srtDualPath = getPath(`dual.${sourceLang}.${targetLang}.srt`)
+    if (!existsSync(srtDualPath)) {
+      DualSrt(
         srtSubPath,
-        srtMixPath,
+        srtOutputPath,
+        srtDualPath,
         firstFontSize,
         secondFontSize,
         firstSubColor,
@@ -354,10 +393,11 @@ export async function translate(
         secondSubFontface,
       )
     }
-    const finalPath = copyToVideoDir(srtMixPath, `dual.${targetLang}.srt`)
-    subAdd(finalPath, "select", `dual.${targetLang}`, targetLang)
+    const dualLang = `${sourceLang}.${targetLang}`
+    const finalPath = resolveOutputPath(srtDualPath, dualLang)
+    subAdd(finalPath, "select", `dual.${targetLang}`, dualLang)
   } else {
-    const finalPath = copyToVideoDir(srtOutputPath, `${targetLang}.srt`)
+    const finalPath = resolveOutputPath(srtOutputPath, targetLang)
     subAdd(finalPath, "select", targetLang, targetLang)
   }
   return true

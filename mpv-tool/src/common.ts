@@ -12,6 +12,7 @@ import {
 import {
   commandNative,
   commandNativeAsync,
+  getenv,
   getProperty,
   getPropertyNumber,
   getPropertyString,
@@ -592,4 +593,8 @@ export function getDisplayResolutionType(
   if (w >= 1280 || h >= 720) {
     return "720P"
   }
+}
+
+export function getHomeDir() {
+  return getenv("HOME")
 }
