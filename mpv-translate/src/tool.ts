@@ -382,8 +382,8 @@ export async function translate(
     const srtDualPath = getPath(`dual.${sourceLang}.${targetLang}.srt`)
     if (!existsSync(srtDualPath)) {
       DualSrt(
-        srtSubPath,
         srtOutputPath,
+        srtSubPath,
         srtDualPath,
         firstFontSize,
         secondFontSize,
