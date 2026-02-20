@@ -48,7 +48,7 @@ function App() {
       justifyContent="center"
       alignItems="center"
       display="flex"
-      flexDirection="row"
+      flexDirection="column"
     >
       <Box id="zustand-count" text={`count:${count}`} />
       <Box id="zustand-double" text={`double:${double}`} />

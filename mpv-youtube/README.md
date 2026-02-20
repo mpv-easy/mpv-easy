@@ -21,6 +21,12 @@ https://github.com/user-attachments/assets/a7b266c3-89e9-4467-b043-c04978077bef
 - **ffmpeg**: Used for thumbnail processing.
 - **curl**: Used for downloading thumbnails.
 
+## Installation
+
+1. Open the [mpv-easy-youtube build page](https://mpv-easy.github.io/mpv-build/#mpv-build=%22%7B%5C%22state%5C%22%3A%7B%5C%22selectedRowKeys%5C%22%3A%5B%5C%22mpv-easy-youtube%5C%22%5D%2C%5C%22externalList%5C%22%3A%5B%5D%2C%5C%22ui%5C%22%3A%5C%22osc%5C%22%2C%5C%22platform%5C%22%3A%5C%22mpv-v3%5C%22%2C%5C%22repos%5C%22%3A%5B%5D%7D%7D%22).
+2. Click the download button to get `portable_config`.
+3. Copy the `portable_config` folder into your mpv installation directory.
+
 ## Configuration
 
 You can customize the plugin via `script-opts/mpv-easy-youtube.conf`:

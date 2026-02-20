@@ -306,7 +306,7 @@ export const Easy = (props: Partial<EasyProps>) => {
       display="flex"
       width={"100%"}
       height={"100%"}
-      flexDirection="row"
+      flexDirection="column"
       justifyContent="space-between"
       alignItems="start"
       position="relative"

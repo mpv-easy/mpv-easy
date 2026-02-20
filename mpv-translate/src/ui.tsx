@@ -521,7 +521,7 @@ export function Translation(props: Partial<TranslationProps>) {
         position="absolute"
         width="100%"
         height="100%"
-        flexDirection="row"
+        flexDirection="column"
         justifyContent="end"
         alignItems="center"
         {...props}

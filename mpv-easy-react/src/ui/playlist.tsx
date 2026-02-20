@@ -42,7 +42,7 @@ export const Playlist = () => {
       hide={playlistHide || !pos}
       display="flex"
       position="relative"
-      flexDirection="row"
+      flexDirection="column"
       justifyContent="start"
       alignContent="stretch"
       alignItems="start"

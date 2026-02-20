@@ -82,7 +82,7 @@ export function ProgressDouble() {
       height={"20%"}
       bottom={0}
       display="flex"
-      flexDirection="row"
+      flexDirection="column"
       justifyContent="end"
       alignItems="center"
       backgroundColor="#0000FFA0"

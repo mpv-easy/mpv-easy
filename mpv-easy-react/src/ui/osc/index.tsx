@@ -22,7 +22,7 @@ export const Osc: ForwardRefExoticComponent<
       width={"100%"}
       height={h * 2}
       display="flex"
-      flexDirection="row"
+      flexDirection="column"
       hide={props.hide}
       ref={ref}
       justifyContent="end"

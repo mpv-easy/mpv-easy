@@ -101,7 +101,7 @@ export const Dropdown = (props: Partial<ButtonProps & DropdownProps>) => {
         <Box
           id="dropdown-list"
           display="flex"
-          flexDirection="row"
+          flexDirection="column"
           justifyContent="start"
           alignItems="start"
           {...offsetProps}
