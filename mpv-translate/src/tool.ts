@@ -27,7 +27,10 @@ import {
   expandPath,
 } from "@mpv-easy/tool"
 import { google, googleDetect } from "./google"
-import { DEFAULT_MAX_CHUNK_CHARS } from "./const"
+import {
+  DEFAULT_MAX_CHUNK_CHARS,
+  DEFAULT_MAX_CHUNK_ENCODE_CHARS,
+} from "./const"
 import { readFile } from "@mpv-easy/tool"
 import { normalize } from "@mpv-easy/tool"
 
@@ -40,6 +43,7 @@ async function translateSrt(
   targetaLang: Lang,
   sourceLang: Lang,
   maxChars = DEFAULT_MAX_CHUNK_CHARS,
+  maxEncodeChars = DEFAULT_MAX_CHUNK_ENCODE_CHARS,
 ): Promise<string> {
   const s = new Srt(srt)
   const blocks = s.blocks
@@ -52,8 +56,23 @@ async function translateSrt(
 
   while (i < blockLength) {
     const st = i
-    while (i < blockLength && charLength + blocks[i].text.length < maxChars) {
-      charLength += blocks[i].text.length
+    while (i < blockLength) {
+      const currentBlockText = blocks[i].text
+      const nextCharLength = charLength + currentBlockText.length
+      if (nextCharLength >= maxChars) break
+
+      const nextTextList = [...textList, currentBlockText]
+      const nextEncodedLength = encodeURIComponent(
+        nextTextList.join(marker),
+      ).length
+      if (nextEncodedLength >= maxEncodeChars) break
+
+      charLength = nextCharLength
+      textList.push(currentBlockText)
+      i++
+    }
+    // If a single block exceeds limits, we must still process it or we'll loop infinitely
+    if (textList.length === 0 && i < blockLength) {
       textList.push(blocks[i].text)
       i++
     }
@@ -129,6 +148,7 @@ export type TranslateOption = {
   secondSubFontface: string
   subOutputPath: string
   maxChunkChars: number
+  maxChunkEncodeChars: number
 }
 
 function DualSrt(
@@ -195,6 +215,7 @@ export async function translate(
     firstSubFontface = "",
     secondSubFontface = "",
     maxChunkChars = DEFAULT_MAX_CHUNK_CHARS,
+    maxChunkEncodeChars = DEFAULT_MAX_CHUNK_ENCODE_CHARS,
   } = option
   let sub = getCurrentSubtitle()
   if (!sub) {
@@ -334,6 +355,7 @@ export async function translate(
       targetLang as Lang,
       sourceLang as Lang,
       maxChunkChars,
+      maxChunkEncodeChars,
     )
   }
   writeFile(srtOutputPath, srt)
