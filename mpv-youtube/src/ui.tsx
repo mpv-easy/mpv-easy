@@ -47,6 +47,7 @@ export type YoutubeUIProps = MpDomProps & {
   loadingColor?: string
   loadingBackgroundColor?: string
   overlayBackgroundColor?: string
+  tooltip?: boolean
 }
 
 // BGRA color constants (alpha: 00=show, FF=hide)
@@ -78,6 +79,7 @@ export const defaultYoutubeConfig = {
   loadingColor: White + AlphaMedium,
   loadingBackgroundColor: `#333333${AlphaMedium}`,
   overlayBackgroundColor: `#1a1a1a${AlphaMedium}`,
+  tooltip: false,
 }
 
 // ============================================================================

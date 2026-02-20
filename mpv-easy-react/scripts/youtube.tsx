@@ -38,7 +38,7 @@ function App() {
         <Tooltip
           mousePos={mousePos}
           zIndex={2048}
-          maxWidth={256}
+          maxWidth={48}
           backgroundColor={options.titleBackgroundColor}
           fontSize={options.titleFontSize}
           color={options.titleColor}
