@@ -93,7 +93,7 @@ export async function guessLanguage(
     .slice(0, 10)
     .map((b) => b.text)
     .join(" ")
-  return await googleDetect(text)
+  return await googleDetect(text.slice(0, MAX_CHARS))
 }
 
 export let TrackInfoBackup: SubtitleTrack | undefined
