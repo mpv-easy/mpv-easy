@@ -20,6 +20,9 @@ https://github.com/user-attachments/assets/a7b266c3-89e9-4467-b043-c04978077bef
 - **yt-dlp**: Used to fetch recommendation data.
 - **ffmpeg**: Used for thumbnail processing.
 - **curl**: Used for downloading thumbnails.
+- **Cookies File**: Required for personalized recommendations. The plugin automatically searches for `cookies.txt` or `cookie.txt` in:
+  - The directory containing `mpv.exe`.
+  - The directory containing the `yt-dlp` executable.
 
 ## Installation
 
