@@ -9,6 +9,8 @@ export interface MpAttrs {
   title: string
   backgroundImageFormat: "rgba" | "bgra"
   backgroundImage: string
+  displayWidth: number
+  displayHeight: number
   backgroundColor: string
   color: string
   hide: boolean

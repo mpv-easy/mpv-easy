@@ -443,35 +443,35 @@ export function compileJs(
   return mp.utils.compile_js(fname, content_str)
 }
 
-export function print(...msg: any[]) {
-  // TODO: error TS2556
-  // return globalThis.print(...msg)
-  return globalThis.print(...msg)
-}
+// export function print(...msg: any[]) {
+//   // TODO: error TS2556
+//   // return print(...msg)
+//   return print(...msg)
+// }
 
-export function dump(...msg: unknown[]) {
-  return globalThis.dump(...msg)
-}
+// export function dump(...msg: unknown[]) {
+//   return dump(...msg)
+// }
 
-export function exit() {
-  return globalThis.exit()
-}
+// export function exit() {
+//   return exit()
+// }
 
-export function setTimeout(fn: () => void, dur = 16): number {
-  return +globalThis.setTimeout(fn, dur)
-}
+// export function setTimeout(fn: () => void, dur = 16): number {
+//   return +setTimeout(fn, dur)
+// }
 
-export function setInterval(fn: () => void, dur = 16): number {
-  return +globalThis.setInterval(fn, dur)
-}
+// export function setInterval(fn: () => void, dur = 16): number {
+//   return +setInterval(fn, dur)
+// }
 
-export function clearInterval(id: number) {
-  return globalThis.clearInterval(id)
-}
+// export function clearInterval(id: number) {
+//   return clearInterval(id)
+// }
 
-export function clearTimeout(id: number) {
-  return globalThis.clearTimeout(id)
-}
+// export function clearTimeout(id: number) {
+//   return clearTimeout(id)
+// }
 
 // export function JsonStringify(obj: any) {
 //   return JSON.stringify(obj)

@@ -44,7 +44,8 @@
         "noExplicitAny": "off",
         "noImplicitAnyLet": "off",
         "noFallthroughSwitchClause": "off",
-        "noAssignInExpressions": "off"
+        "noAssignInExpressions": "off",
+        "noTsIgnore": "off"
       },
       "correctness": {
         "useUniqueElementIds": "off",

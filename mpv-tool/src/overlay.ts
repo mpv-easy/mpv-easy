@@ -12,6 +12,8 @@ export class Overlay {
   public w = 0
   public h = 0
   public stride = 0
+  public dw: number | undefined = undefined
+  public dh: number | undefined = undefined
 
   constructor(public id: number) {
     if (overlayIdUsed[id]) {
@@ -34,8 +36,8 @@ export class Overlay {
       this.w,
       this.h,
       this.stride,
-      this.w,
-      this.h,
+      this.dw != null ? this.dw : this.w,
+      this.dh != null ? this.dh : this.h,
     )
   }
 

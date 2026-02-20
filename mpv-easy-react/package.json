@@ -47,6 +47,7 @@
     "@mpv-easy/react": "workspace:*",
     "@mpv-easy/thumbfast": "workspace:*",
     "@mpv-easy/tool": "workspace:*",
+    "@mpv-easy/youtube": "workspace:*",
     "@mpv-easy/translate": "workspace:*",
     "@react-spring/rafz": "10.0.3",
     "@reduxjs/toolkit": "2.11.2",

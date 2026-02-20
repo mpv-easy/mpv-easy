@@ -1,6 +1,6 @@
 import { getConfig, getPlugins, saveConfig } from "./context"
 import type { EnablePlugin } from "./context"
-import { print, registerEvent } from "@mpv-easy/tool"
+import { registerEvent } from "@mpv-easy/tool"
 import type { SystemApi } from "@mpv-easy/plugin"
 import { pluginName } from "./main"
 import { createDefaultThemeConfig } from "./mpv-easy-theme"

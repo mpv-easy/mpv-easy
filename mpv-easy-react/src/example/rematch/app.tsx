@@ -3,7 +3,6 @@ import { Provider, useDispatch, useSelector } from "react-redux"
 import { store } from "./store"
 import { Box, render } from "@mpv-easy/react"
 import type { RootState, Dispatch } from "./store"
-import { print } from "@mpv-easy/tool"
 
 function CounterText({ c }: { c: number }) {
   print("CounterText")

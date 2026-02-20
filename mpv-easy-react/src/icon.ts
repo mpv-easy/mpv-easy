@@ -88,3 +88,4 @@ export const ChevronUp = "󰅃" //   󰅃
 export const TriangleDown = ""
 export const TriangleUp = ""
 export const Web = "󰖟"
+export const Youtube = "󰗃"

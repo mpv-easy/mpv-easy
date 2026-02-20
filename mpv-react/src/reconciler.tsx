@@ -3,7 +3,6 @@ import {
   PropertyNative,
   addKeyBinding,
   observeProperty,
-  print,
   quit,
   registerScriptMessage,
 } from "@mpv-easy/tool"

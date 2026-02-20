@@ -32,13 +32,13 @@ clap_complete = "4"
 anyhow = "1"
 color-eyre = "0.6"
 # petgraph = { version = "0.7", features = ["serde", "serde-1"] }
+image = {version = "0.25" }
 crossbeam = "0.8"
 tokio = { version = "1", features = ["full"] }
 enum_dispatch = "0.3"
 reqwest = { version = "0.12", features = ["json", "blocking"] }
 serde-xml-rs = "0.8"
 webdav-serde = "0.1"
-image = "0.25"
 rand = "0.9"
 glob = "0.3"
 serde-jellyfin = { version = "0.1" }
@@ -48,7 +48,7 @@ openssl = { version = "0.10", features = ["vendored"] }
 urlencoding = { version = "2" }
 strum_macros = "0.27"
 strum = "0.27"
-thiserror  = "2"
+thiserror = "2"
 
 [profile.release]
 debug = false

@@ -5,7 +5,6 @@ import {
   type MousePos,
   type KeyEvent,
   Rect,
-  print,
   fileInfo,
   Overlay,
 } from "@mpv-easy/tool"
@@ -338,6 +337,12 @@ function renderNodeToMpv(node: MpDom) {
           overlay.h = h | 0
           overlay.offset = 0
           overlay.stride = (w | 0) << 2
+          const displayWidth = attributes.displayWidth
+          const displayHeight = attributes.displayHeight
+          overlay.dw =
+            typeof displayWidth === "number" ? displayWidth | 0 : undefined
+          overlay.dh =
+            typeof displayHeight === "number" ? displayHeight | 0 : undefined
           overlay.update()
         }
       }

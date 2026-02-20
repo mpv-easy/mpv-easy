@@ -1,0 +1,35 @@
+{
+  "name": "@mpv-easy/youtube",
+  "version": "0.1.15-alpha.17",
+  "homepage": "https://github.com/mpv-easy/mpv-easy#readme",
+  "files": [
+    "dist",
+    "readme.md",
+    "package.json"
+  ],
+  "description": "@mpv-easy/youtube",
+  "main": "dist/index.js",
+  "types": "./dist/index.d.ts",
+  "scripts": {
+    "es5": "babel ./dist -d es5",
+    "build": "tsc -p ./tsconfig.build.json",
+    "dev": "tsc -p ./tsconfig.build.json -w"
+  },
+  "keywords": [],
+  "author": "ahaoboy <504595380@qq.com> (https://github.com/ahaoboy)",
+  "license": "MIT",
+  "dependencies": {
+    "@mpv-easy/plugin": "workspace:*",
+    "@mpv-easy/polyfill": "workspace:*",
+    "@mpv-easy/tool": "workspace:*",
+    "e-color": "0.1.8"
+  },
+  "devDependencies": {
+    "@mpv-easy/react": "workspace:*",
+    "react": "19.2.4"
+  },
+  "peerDependencies": {
+    "@mpv-easy/react": "workspace:*",
+    "react": "19.2.4"
+  }
+}

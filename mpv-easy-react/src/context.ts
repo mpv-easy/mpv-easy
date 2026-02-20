@@ -68,6 +68,10 @@ import {
   defaultConfig as frameSeekerConfig,
   pluginName as frameSeekerName,
 } from "@mpv-easy/frame-seeker"
+import {
+  defaultConfig as youtubeConfig,
+  pluginName as youtubeName,
+} from "@mpv-easy/youtube"
 
 import { type PluginContext } from "@mpv-easy/plugin"
 import {
@@ -79,7 +83,6 @@ import {
   getScriptDir,
   joinPath,
   mkdir,
-  print,
   readFile,
   writeFile,
 } from "@mpv-easy/tool"
@@ -158,6 +161,7 @@ export function createDefaultContext() {
     [cutName]: cutConfig,
     [cropName]: cropConfig,
     [frameSeekerName]: frameSeekerConfig,
+    [youtubeName]: youtubeConfig,
     enablePlugins: {
       [i18nName]: true,
       [easyName]: true,
@@ -172,6 +176,7 @@ export function createDefaultContext() {
       [cutName]: true,
       [cropName]: true,
       [frameSeekerName]: true,
+      [youtubeName]: true,
     },
     version,
     experimental,
