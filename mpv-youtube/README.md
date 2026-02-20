@@ -2,6 +2,8 @@
 
 YouTube plugin for mpv-easy. It provides a visual grid of YouTube videos that you can browse and play directly within mpv.
 
+https://github.com/user-attachments/assets/a7b266c3-89e9-4467-b043-c04978077bef
+
 ## Features
 
 - **Visual Grid**: Displays YouTube videos with thumbnails.
