@@ -19,6 +19,7 @@ export type SubConfig = {
   firstSubFontface: string
   secondSubFontface: string
   subOutputPath: string
+  maxChunkChars: number
 }
 export type TooltipConfig = {
   tooltioFontSize: number
@@ -33,6 +34,8 @@ export type TooltipConfig = {
   tooltipBottom: number
   tooltipMaxWidth: number
 }
+
+export const DEFAULT_MAX_CHUNK_CHARS = 3500
 
 export const defaultSubConfig: SubConfig = {
   subFontSize: 38,
@@ -53,6 +56,7 @@ export const defaultSubConfig: SubConfig = {
   firstSubFontface: "",
   secondSubFontface: "",
   subOutputPath: "",
+  maxChunkChars: DEFAULT_MAX_CHUNK_CHARS,
 }
 
 export const defaultTooltipConfig: TooltipConfig = {

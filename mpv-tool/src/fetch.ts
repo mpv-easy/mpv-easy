@@ -1,6 +1,6 @@
 import { execAsync, execSync } from "./common"
 import { FetchMethod, FetchOption, FetchResponse } from "./const"
-import { detectCmd } from "./ext"
+import { detectCurl } from "./curl"
 import { existsSync } from "./fs"
 import { fetchByExt, getRsExtExePath } from "./rs-ext"
 
@@ -63,11 +63,15 @@ function generateCompress(isEncode: boolean): string {
   return isEncode ? " --compressed" : ""
 }
 
-const fetchToCurl = (url: string, options: FetchOption = {}): string[] => {
+const fetchToCurl = (
+  url: string,
+  options: FetchOption = {},
+  curl = "curl",
+): string[] => {
   const { body = "" } = options
   const headers = generateHeader(options)
   return [
-    "curl",
+    curl,
     "-k", // disable SSL
     `${url}`,
     ...generateMethod(options),
@@ -77,14 +81,22 @@ const fetchToCurl = (url: string, options: FetchOption = {}): string[] => {
   ].filter((i) => !!i.length)
 }
 
-export function fetchByCurlSync(url: string, options: FetchOption = {}) {
-  const cmd = fetchToCurl(url, options)
+export function fetchByCurlSync(
+  url: string,
+  options: FetchOption = {},
+  curl = "curl",
+) {
+  const cmd = fetchToCurl(url, options, curl)
   const s = decodeURIComponent(execSync(cmd))
   return s
 }
 
-export async function fetchByCurl(url: string, options: FetchOption = {}) {
-  const cmd = fetchToCurl(url, options)
+export async function fetchByCurl(
+  url: string,
+  options: FetchOption = {},
+  curl = "curl",
+) {
+  const cmd = fetchToCurl(url, options, curl)
   const text = await execAsync(cmd)
   const status = 200
   return {
@@ -99,8 +111,9 @@ export async function fetch(
   url: string,
   options: FetchOption = {},
 ): Promise<FetchResponse> {
-  if (detectCmd("curl")) {
-    return fetchByCurl(url, options)
+  const curlPath = detectCurl()
+  if (curlPath) {
+    return fetchByCurl(url, options, curlPath)
   }
 
   if (existsSync(getRsExtExePath())) {

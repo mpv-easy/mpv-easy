@@ -224,6 +224,7 @@ export function Translation(props: Partial<TranslationProps>) {
     secondSubFontface,
     secondSubColor,
     subOutputPath,
+    maxChunkChars,
   } = {
     ...defaultSubConfig,
     ...props,
@@ -249,6 +250,7 @@ export function Translation(props: Partial<TranslationProps>) {
     secondSubFontface: string
     secondSubColor: string
     subOutputPath: string
+    maxChunkChars: number
   } | null>(null)
   const path = usePropertyString("path", "")[0]
 
@@ -337,6 +339,7 @@ export function Translation(props: Partial<TranslationProps>) {
         secondSubFontface,
         secondSubColor,
         subOutputPath,
+        maxChunkChars,
       })
     } else if (currentMode === TranslateMode.Dual) {
       await translate({
@@ -350,6 +353,7 @@ export function Translation(props: Partial<TranslationProps>) {
         secondSubFontface,
         secondSubColor,
         subOutputPath,
+        maxChunkChars,
       })
     }
 
@@ -367,6 +371,7 @@ export function Translation(props: Partial<TranslationProps>) {
         secondSubFontface,
         secondSubColor,
         subOutputPath,
+        maxChunkChars,
       })
       hideNotification()
     } else if (newMode === TranslateMode.Dual) {
@@ -486,6 +491,7 @@ export function Translation(props: Partial<TranslationProps>) {
     secondSubFontface,
     secondSubColor,
     subOutputPath,
+    maxChunkChars,
   }
 
   useEffect(() => {
@@ -556,6 +562,7 @@ export function Translation(props: Partial<TranslationProps>) {
                 secondSubFontface,
                 secondSubColor,
                 subOutputPath,
+                maxChunkChars,
               }}
             />
           ))}

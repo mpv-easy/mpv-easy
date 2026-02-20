@@ -27,6 +27,7 @@ import {
   expandPath,
 } from "@mpv-easy/tool"
 import { google, googleDetect } from "./google"
+import { DEFAULT_MAX_CHUNK_CHARS } from "./const"
 import { readFile } from "@mpv-easy/tool"
 import { normalize } from "@mpv-easy/tool"
 
@@ -34,11 +35,11 @@ function compile(str: string, vars: Record<string, string>) {
   return str.replace(/\$(\w+)/g, (_, key) => vars[key] ?? "")
 }
 
-const MAX_CHARS = 4000
 async function translateSrt(
   srt: string,
   targetaLang: Lang,
   sourceLang: Lang,
+  maxChars = DEFAULT_MAX_CHUNK_CHARS,
 ): Promise<string> {
   const s = new Srt(srt)
   const blocks = s.blocks
@@ -51,7 +52,7 @@ async function translateSrt(
 
   while (i < blockLength) {
     const st = i
-    while (i < blockLength && charLength + blocks[i].text.length < MAX_CHARS) {
+    while (i < blockLength && charLength + blocks[i].text.length < maxChars) {
       charLength += blocks[i].text.length
       textList.push(blocks[i].text)
       i++
@@ -84,6 +85,7 @@ async function translateSrt(
 
 export async function guessLanguage(
   content: string,
+  maxChars = DEFAULT_MAX_CHUNK_CHARS,
 ): Promise<string | undefined> {
   const s = new Srt(content)
   const blocks = s.blocks
@@ -93,7 +95,7 @@ export async function guessLanguage(
     .slice(0, 10)
     .map((b) => b.text)
     .join(" ")
-  return await googleDetect(text.slice(0, MAX_CHARS))
+  return await googleDetect(text.slice(0, maxChars))
 }
 
 export let TrackInfoBackup: SubtitleTrack | undefined
@@ -126,6 +128,7 @@ export type TranslateOption = {
   firstSubFontface: string
   secondSubFontface: string
   subOutputPath: string
+  maxChunkChars: number
 }
 
 function DualSrt(
@@ -191,6 +194,7 @@ export async function translate(
     secondSubColor = "",
     firstSubFontface = "",
     secondSubFontface = "",
+    maxChunkChars = DEFAULT_MAX_CHUNK_CHARS,
   } = option
   let sub = getCurrentSubtitle()
   if (!sub) {
@@ -311,7 +315,7 @@ export async function translate(
     : undefined
 
   if (!guessedLang) {
-    guessedLang = await guessLanguage(text)
+    guessedLang = await guessLanguage(text, maxChunkChars)
   }
 
   let srt: string | undefined
@@ -325,7 +329,12 @@ export async function translate(
   }
 
   if (srt === undefined) {
-    srt = await translateSrt(text, targetLang as Lang, sourceLang as Lang)
+    srt = await translateSrt(
+      text,
+      targetLang as Lang,
+      sourceLang as Lang,
+      maxChunkChars,
+    )
   }
   writeFile(srtOutputPath, srt)
 
