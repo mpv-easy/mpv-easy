@@ -302,15 +302,24 @@ function renderNodeToMpv(node: MpDom) {
 
     // image
     if (typeof backgroundImage === "string" && !hide) {
-      const h = attributes.height
-      const w = attributes.width
+      const dh = attributes.height || attributes.imageHeight
+      const dw = attributes.width || attributes.imageWidth
+      const iw = attributes.imageWidth || dw
+      const ih = attributes.imageHeight || dh
       const id = attributes.id
 
       if (typeof id !== "number" || id < 0 || id > 63) {
         throw new Error("backgroundImage'id must be a number in [0, 63]")
       }
-      if (typeof w !== "number" || typeof h !== "number") {
-        throw new Error("backgroundImage's width and height must be number")
+      if (
+        typeof dw !== "number" ||
+        typeof dh !== "number" ||
+        typeof iw !== "number" ||
+        typeof ih !== "number"
+      ) {
+        throw new Error(
+          "backgroundImage's width/imageWidth and height/imageHeight must be number",
+        )
       }
 
       if (!node.props.imageOverlay) {
@@ -325,24 +334,20 @@ function renderNodeToMpv(node: MpDom) {
         print(`backgroundImage file not found: ${backgroundImage}`)
       } else {
         const { size } = info
-        const pixels = w * h * 4
+        const pixels = iw * ih * 4
         if (pixels !== size) {
-          print(`backgroundImage size error: ${w}-${h}-${size}`)
+          print(`backgroundImage size error: ${iw}-${ih}-${size}`)
         } else {
           overlay.x = x | 0
           overlay.y = y | 0
           overlay.file = backgroundImage
           overlay.fmt = backgroundImageFormat
-          overlay.w = w | 0
-          overlay.h = h | 0
+          overlay.w = iw
+          overlay.h = ih
           overlay.offset = 0
-          overlay.stride = (w | 0) << 2
-          const displayWidth = attributes.displayWidth
-          const displayHeight = attributes.displayHeight
-          overlay.dw =
-            typeof displayWidth === "number" ? displayWidth | 0 : undefined
-          overlay.dh =
-            typeof displayHeight === "number" ? displayHeight | 0 : undefined
+          overlay.stride = (iw | 0) << 2
+          overlay.dw = dw
+          overlay.dh = dh
           overlay.update()
         }
       }

@@ -1,5 +1,5 @@
 import "@mpv-easy/polyfill"
-import { render, Tooltip } from "@mpv-easy/react"
+import { render, Tooltip, useProperty } from "@mpv-easy/react"
 import {
   Translation,
   defaultSubConfig,
@@ -104,9 +104,11 @@ const {
 }
 
 function App() {
+  const mousePos = useProperty("mouse-pos")[0]
   return (
     <>
       <Tooltip
+        mousePos={mousePos}
         zIndex={tooltipZIndex}
         maxWidth={tooltipMaxWidth}
         backgroundColor={tooltipBackColor}

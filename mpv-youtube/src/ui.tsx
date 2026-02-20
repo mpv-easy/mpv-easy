@@ -13,6 +13,8 @@ import {
   textEllipsis,
   setPropertyBool,
   getPropertyBool,
+  formatTime,
+  getTimeFormat,
 } from "@mpv-easy/tool"
 import React, { useCallback, useEffect, useMemo, useRef, useState } from "react"
 import { Box, Button, type MpDomProps, useProperty } from "@mpv-easy/react"
@@ -508,6 +510,12 @@ function VideoCard({
     }
   }, [entry.url, onClose])
 
+  // Calculate duration position (bottom-right of the image)
+  const durationText = entry.duration
+    ? formatTime(entry.duration, getTimeFormat(entry.duration))
+    : ""
+  const title = [durationText, entry.title].join("\n")
+
   return (
     <>
       {/* Full-cell transparent overlay for hover detection */}
@@ -522,6 +530,7 @@ function VideoCard({
         onMouseEnter={() => setHover(true)}
         onMouseLeave={() => setHover(false)}
         onClick={handleClick}
+        title={title}
       />
       {thumbPath ? (
         <Box
@@ -529,10 +538,10 @@ function VideoCard({
           position="absolute"
           x={imgX}
           y={imgY}
-          width={rawW}
-          height={rawH}
-          displayWidth={displayW}
-          displayHeight={displayH}
+          width={displayW}
+          height={displayH}
+          imageWidth={rawW}
+          imageHeight={rawH}
           backgroundImage={thumbPath}
           backgroundImageFormat="bgra"
           zIndex={10}
