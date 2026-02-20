@@ -135,7 +135,7 @@ export const FrameSeeker: ForwardRefExoticComponent<
   const mouseX = useProperty("mouse-pos")[0].x
   const clickX = useRef(0)
   const offset = getOffset(osd.w - 1, clickX.current, mouseX)
-  const left = (osd.w - props.radius) / 2
+  const left = osd.w / 2
   const top = osd.h - props.bottom
   const [active, setActive] = useState(false)
   const [base, setBase] = useState(0)
@@ -171,14 +171,14 @@ export const FrameSeeker: ForwardRefExoticComponent<
     scale,
   })
   const offsetFrame = (offset * (frames / 2)) | 0
-  const currentFrame = frameProp.value
+  const currentFrame = frameProp.value || 0
   if (active) {
     const target = (base + (offset * frames) / 2) | 0
     if (target !== currentFrame) {
       frameStep(target - currentFrame, "seek")
     }
   }
-  const frameText = `${base}${offsetFrame >= 0 ? `+${offsetFrame}` : offsetFrame}`
+  const frameText = `${base || 0}${offsetFrame >= 0 ? `+${offsetFrame || 0}` : offsetFrame || 0}`
   return (
     <Box
       width={radius * 2}

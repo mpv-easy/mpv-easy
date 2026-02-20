@@ -66,7 +66,7 @@ export const VoiceControl: ForwardRefExoticComponent<
         }}
         position="relative"
         display="flex"
-        flexDirection="row"
+        flexDirection="column"
         alignItems="center"
         justifyContent="center"
         padding={fontSize.padding}
@@ -95,7 +95,7 @@ export const VoiceControl: ForwardRefExoticComponent<
           width={fontSize.fontSize - fontSize.padding * 2}
           display="flex"
           position="relative"
-          flexDirection="row"
+          flexDirection="column"
           justifyContent="center"
           alignItems="center"
           borderSize={fontSize.padding}

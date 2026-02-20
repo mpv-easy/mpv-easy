@@ -20,7 +20,7 @@ export const Uosc: ForwardRefExoticComponent<
       width={props.width}
       height={h * 2}
       display="flex"
-      flexDirection="row"
+      flexDirection="column"
       hide={props.hide}
       ref={ref}
       id="uosc"

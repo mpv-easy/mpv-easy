@@ -32,7 +32,7 @@ export const Logo = () => {
       height="100%"
       justifyContent="center"
       alignItems="center"
-      flexDirection="row"
+      flexDirection="column"
     >
       {hasLogo ? (
         <Box
