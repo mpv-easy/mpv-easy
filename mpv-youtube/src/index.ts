@@ -17,6 +17,8 @@ export type YoutubeConfig = {
   overlayBackgroundColor: string
   titleFontSize: number
   titleFont: string
+  sidebarWidth: number
+  sidebarPinned: boolean
 }
 
 export const defaultConfig: YoutubeConfig = {

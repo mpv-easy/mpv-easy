@@ -24,6 +24,8 @@ const options = {
     },
     "title-font-size": { type: "number", key: "titleFontSize" },
     "title-font": { type: "string", key: "titleFont" },
+    "sidebar-width": { type: "number", key: "sidebarWidth" },
+    "sidebar-pinned": { type: "boolean", key: "sidebarPinned" },
   }),
 }
 
@@ -41,6 +43,8 @@ function App() {
       overlayBackgroundColor={options.overlayBackgroundColor}
       titleFontSize={options.titleFontSize}
       titleFont={options.titleFont}
+      sidebarWidth={options.sidebarWidth}
+      sidebarPinned={options.sidebarPinned}
     />
   )
 }

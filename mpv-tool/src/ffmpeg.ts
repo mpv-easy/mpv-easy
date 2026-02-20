@@ -362,3 +362,30 @@ export async function whisper(
   }
   return true
 }
+
+export async function imageToRaw(
+  inputPath: string,
+  outputPath: string,
+  pixFmt: string,
+  ffmpeg: string,
+) {
+  const cmd = [
+    ffmpeg,
+    "-y",
+    "-nostdin",
+    "-i",
+    inputPath,
+    "-f",
+    "rawvideo",
+    "-pix_fmt",
+    pixFmt,
+    outputPath,
+  ]
+
+  try {
+    await execAsync(cmd)
+  } catch (_e) {
+    return false
+  }
+  return true
+}

@@ -9,9 +9,9 @@ import {
   osdDimensionsSelector,
 } from "../store"
 import { ScrollList } from "./components/scroll-list"
-import { getVideoName, textEllipsis } from "../common"
+import { getVideoName } from "../common"
 import { dispatch, useSelector } from "../models"
-import { isRemote } from "@mpv-easy/tool"
+import { isRemote, textEllipsis } from "@mpv-easy/tool"
 
 export type PlaylistProps = {
   list: string[]

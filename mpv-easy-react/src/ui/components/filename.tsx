@@ -5,13 +5,14 @@ import {
   pathSelector,
   toolbarStyleSelector,
 } from "../../store"
-import { getVideoName, getVideoTitle, textEllipsis } from "../../common"
+import { getVideoName, getVideoTitle } from "../../common"
 import {
   existsSync,
   isRemote,
   isYtdlp,
   openBrowser,
   openExplorer,
+  textEllipsis,
 } from "@mpv-easy/tool"
 import { dispatch, useSelector } from "../../models"
 import { useTitle } from "../../hooks"

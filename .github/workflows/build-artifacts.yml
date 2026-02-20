@@ -295,6 +295,7 @@ jobs:
             pip
             notify-skip
             mandelbrot
+            youtube
           )
 
           git clone https://github.com/ahaoboy/free-piano --depth=1

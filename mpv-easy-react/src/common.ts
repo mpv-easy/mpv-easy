@@ -8,18 +8,6 @@ import {
   jellyfin,
 } from "@mpv-easy/tool"
 
-export function textEllipsis(
-  text: string,
-  maxLength: number,
-  ellipsis = "...",
-) {
-  if (text.length <= maxLength) {
-    return text
-  }
-
-  return text.slice(0, maxLength - ellipsis.length) + ellipsis
-}
-
 export function getVideoTitle(p: string) {
   const c = getPropertyNumber("playlist-count") || 0
   for (let i = 0; i < c; i++) {
