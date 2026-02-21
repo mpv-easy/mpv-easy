@@ -1,5 +1,7 @@
 import { execAsync } from "./common"
+import { getProperty } from "./mpv"
 import { getLang } from "./os"
+import { getSubtitleTracks } from "./subtitle"
 import { loadfile, subAdd } from "./type"
 
 export const YoutubeRegex =
@@ -117,12 +119,14 @@ function getSub(
   }
 }
 
-export async function playYoutubeVideo(
-  url: string,
-  cookiesPath?: string,
-): Promise<void> {
-  loadfile(url, "replace")
+export async function loadYoutubeSubtitles(url: string, cookiesPath?: string) {
   const lang = getLang()
+  const hasSub = getSubtitleTracks().find(
+    (i) => i.lang?.toLowerCase() === lang.toLowerCase(),
+  )
+  if (hasSub) {
+    return
+  }
   try {
     const result = await getYoutubeSubtitles(url, cookiesPath)
     if (!result) {
@@ -130,10 +134,20 @@ export async function playYoutubeVideo(
     }
     const subs = { ...result.automatic_captions, ...result.subtitles }
     const sub = getSub(subs, lang)
-    if (sub) {
+    // Prevent the video from changing when asynchronous return
+    if (sub && getProperty("path") === url) {
+      // FIXME: Should we always load en-US?
       subAdd(sub.format.url, "cached", sub.format.name, sub.lang)
     }
   } catch (e) {
     print("getYoutubeSubtitles error:", e)
   }
+}
+
+export async function playYoutubeVideo(
+  url: string,
+  cookiesPath?: string,
+): Promise<void> {
+  loadfile(url, "replace")
+  await loadYoutubeSubtitles(url, cookiesPath)
 }

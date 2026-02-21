@@ -49,6 +49,7 @@ import {
   detectWhisperModel,
   normalize,
   subAdd,
+  detectCookies,
 } from "@mpv-easy/tool"
 import clamp from "lodash-es/clamp"
 import { Playlist } from "./playlist"
@@ -60,6 +61,7 @@ import { Crop } from "@mpv-easy/crop"
 import { dispatch, useSelector } from "../models"
 import { Logo } from "./components/logo"
 import { FrameSeeker, FrameSeekerRef } from "@mpv-easy/frame-seeker"
+import { isYoutube, loadYoutubeSubtitles } from "../../../mpv-tool/src/youtube"
 export * from "./progress"
 export * from "./toolbar"
 export * from "./voice-control"
@@ -87,7 +89,7 @@ export type EasyProps = {
   fontSize: number
   fps: number
 }
-
+const cookiePath = detectCookies()
 export const Easy = (props: Partial<EasyProps>) => {
   const frameTime = useSelector(frameTimeSelector)
   const protocolHook = useSelector(protocolHookSelector)
@@ -300,6 +302,13 @@ export const Easy = (props: Partial<EasyProps>) => {
     !path && !showCrop && playerState.historyHide && playerState.playlistHide
 
   const fsRef = useRef<FrameSeekerRef>(null)
+
+  useEffect(() => {
+    if (path && isYoutube(path)) {
+      loadYoutubeSubtitles(path, cookiePath)
+    }
+  }, [path])
+
   return (
     <Box
       id="mpv-easy-main"

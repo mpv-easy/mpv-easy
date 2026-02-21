@@ -158,10 +158,11 @@ const store = defineStore({
       return { ...state }
     },
     setPlaylist(state: PluginContext, playlist: string[], playIndex: number) {
+      const path = playlist[playIndex]
       state[pluginName].player = {
         ...state[pluginName].player,
         playlist,
-        path: playlist[playIndex],
+        path,
       }
       updatePlaylist(playlist, playIndex)
       return { ...state }
