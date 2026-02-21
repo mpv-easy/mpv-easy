@@ -20,9 +20,11 @@ https://github.com/user-attachments/assets/a7b266c3-89e9-4467-b043-c04978077bef
 - **yt-dlp**: Used to fetch recommendation data.
 - **ffmpeg**: Used for thumbnail processing.
 - **curl**: Used for downloading thumbnails.
-- **Cookies File**: Required for personalized recommendations. **Note: Without cookies, the plugin cannot fetch YouTube recommendation data.** The plugin automatically searches for `cookies.txt` or `cookie.txt` in:
-  - The directory containing `mpv.exe`.
-  - The directory containing the `yt-dlp` executable.
+- **Cookies File**: Required for personalized recommendations. **Note: Without cookies, the plugin cannot fetch YouTube recommendation data.**
+  - **How to export**: Use a browser extension like [Get cookies.txt LOCALLY](https://chrome.google.com/webstore/detail/get-cookiestxt-locally/ccmgnabdoocebeocplebhdeidnecontext) to export your YouTube cookies in **Netscape** format. Save the file as `cookies.txt`. For more details, see [this guide](https://www.reddit.com/r/youtubedl/comments/1l9lmyk/comment/mxyzwin/).
+  - The plugin automatically searches for `cookies.txt` or `cookie.txt` in:
+    - The directory containing `mpv.exe`.
+    - The directory containing the `yt-dlp` executable.
 - **Fonts**: Download [FiraCode Nerd Font](https://www.nerdfonts.com/font-downloads) and add `FiraCodeNerdFontMono-Regular.ttf` to the `portable_config/fonts` directory. **This is required for Nerd Font icon support used in the UI.**
 
 ## Installation
@@ -31,6 +33,7 @@ https://github.com/user-attachments/assets/a7b266c3-89e9-4467-b043-c04978077bef
 
 1. Open the [mpv-easy-youtube Build Page](https://mpv-easy.github.io/mpv-build/#mpv-build=%22%7B%5C%22state%5C%22%3A%7B%5C%22selectedRowKeys%5C%22%3A%5B%5C%22thumbfast%5C%22%2C%5C%22mpv-easy-youtube%5C%22%2C%5C%22mpv-easy-firacode%5C%22%5D%2C%5C%22externalList%5C%22%3A%5B%5C%22ffmpeg%5C%22%2C%5C%22yt-dlp%5C%22%5D%2C%5C%22ui%5C%22%3A%5C%22uosc%5C%22%2C%5C%22platform%5C%22%3A%5C%22mpv-v3%5C%22%2C%5C%22repos%5C%22%3A%5B%7B%5C%22user%5C%22%3A%5C%22ahaoboy%5C%22%2C%5C%22repo%5C%22%3A%5C%22mpv-firacode%5C%22%7D%5D%7D%7D%22).
 2. Download `mpv-uosc.zip` directly from the link and extract it.
+3. Place your `cookies.txt` into the directory containing `mpv.exe`.
 
 ### Manual Installation
 

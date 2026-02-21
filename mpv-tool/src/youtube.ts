@@ -50,16 +50,13 @@ export type YoutubeRecommendationsResult = {
 }
 
 export async function getYoutubeRecommendations(
-  cookiesPath: string,
+  cookiesPath?: string,
   url = "https://www.youtube.com/",
 ): Promise<YoutubeEntry[]> {
-  const args = [
-    "yt-dlp",
-    "--flat-playlist",
-    "-J",
-    url,
-    `--cookies=${cookiesPath}`,
-  ]
+  const args = ["yt-dlp", "--flat-playlist", "-J", url]
+  if (cookiesPath) {
+    args.push(`--cookies=${cookiesPath}`)
+  }
   const stdout = await execAsync(args)
   const result: YoutubeRecommendationsResult = JSON.parse(stdout)
   return result.entries

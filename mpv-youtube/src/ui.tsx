@@ -4,7 +4,6 @@ import {
   hideNotification,
   registerScriptMessage,
   existsSync,
-  getScriptConfigDir,
   joinPath,
   loadfile,
   md5,
@@ -15,6 +14,7 @@ import {
   getPropertyBool,
   formatTime,
   getTimeFormat,
+  detectCookies,
 } from "@mpv-easy/tool"
 import React, { useCallback, useEffect, useMemo, useRef, useState } from "react"
 import { Box, Button, type MpDomProps, useProperty } from "@mpv-easy/react"
@@ -90,7 +90,7 @@ export const defaultYoutubeConfig = {
  * Hook: manages fetching YouTube recommendations and caching all entries.
  * Returns allEntries (full list), a fetch function, a loading flag, and a filtered page.
  */
-function useYoutubeData(cookiesPath: string) {
+function useYoutubeData(cookiesPath?: string) {
   const [allEntries, setAllEntries] = useState<YoutubeEntry[]>([])
   const loadingRef = useRef(false)
 
@@ -101,9 +101,7 @@ function useYoutubeData(cookiesPath: string) {
     print(`[youtube] cookiesPath=${cookiesPath}`)
     showNotification("Loading YouTube...", 0)
     try {
-      if (!existsSync(cookiesPath)) {
-        print(`[youtube] cookies file NOT found: ${cookiesPath}`)
-        hideNotification()
+      if (cookiesPath && !existsSync(cookiesPath)) {
         showNotification(`cookies file not found: ${cookiesPath}`, 3)
         loadingRef.current = false
         return
@@ -122,8 +120,6 @@ function useYoutubeData(cookiesPath: string) {
       setAllEntries(filtered)
       hideNotification()
     } catch (e) {
-      print(`[youtube] ERROR in fetchRecommendations: ${e}`)
-      hideNotification()
       showNotification(`YouTube recommendations failed: ${e}`, 3)
     }
     loadingRef.current = false
@@ -310,8 +306,6 @@ function Sidebar({
   showClose: boolean
   showOpen: boolean
 }) {
-  const iconFontSize = sidebarWidth
-  const btnFontSize = Math.round(sidebarWidth * 1)
   const baseBtnStyle = {
     font: titleFont,
     color: White + AlphaShow,
@@ -320,9 +314,12 @@ function Sidebar({
     display: "flex" as const,
     position: "relative" as const,
     zIndex: 1002,
-  }
-  const btnStyle = { ...baseBtnStyle, fontSize: btnFontSize }
-  const ytBtnStyle = { ...baseBtnStyle, fontSize: iconFontSize }
+    width: sidebarWidth,
+    height: sidebarWidth,
+    justifyContent: "center",
+    alignItems: "start",
+    fontSize: sidebarWidth,
+  } as const
 
   return (
     <Box
@@ -338,25 +335,27 @@ function Sidebar({
       backgroundColor={Black + AlphaMedium}
       zIndex={1001}
       padding={4}
+      alignItems="center"
     >
       <Button
         id="youtube-sidebar-home"
         text={ICON_YOUTUBE}
         onClick={() => openBrowser("https://www.youtube.com/")}
-        {...ytBtnStyle}
+        {...baseBtnStyle}
+        // red
         color="#0000FF"
       />
       <Button
         id="youtube-sidebar-refresh"
         text={ICON_REFRESH}
         onClick={onRefresh}
-        {...btnStyle}
+        {...baseBtnStyle}
       />
       <Button
         id="youtube-sidebar-shuffle"
         text={ICON_SHUFFLE}
         onClick={onShuffle}
-        {...btnStyle}
+        {...baseBtnStyle}
       />
       {/* Exit button: closes the YouTube page, hidden when YouTube info is not shown */}
       {showClose && (
@@ -364,7 +363,7 @@ function Sidebar({
           id="youtube-sidebar-exit"
           text={ICON_EXIT}
           onClick={onClose}
-          {...btnStyle}
+          {...baseBtnStyle}
         />
       )}
 
@@ -374,7 +373,7 @@ function Sidebar({
           id="youtube-sidebar-open"
           text={ICON_OPEN}
           onClick={onOpen}
-          {...btnStyle}
+          {...baseBtnStyle}
         />
       )}
     </Box>
@@ -627,8 +626,7 @@ export function Youtube(props: Partial<YoutubeUIProps>) {
       : defaultYoutubeConfig.sidebarWidth
   const sidebarPinned = propSidebarPinned ?? defaultYoutubeConfig.sidebarPinned
 
-  const cookiesPath =
-    propCookiesPath || joinPath(getScriptConfigDir(), "cookies.txt")
+  const cookiesPath = propCookiesPath || detectCookies()
 
   // Use reactive OSD dimensions
   const { w, h } = useProperty("osd-dimensions")[0]
