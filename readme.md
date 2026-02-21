@@ -50,41 +50,41 @@ set -x MPV_CONFIG_DIR /your_mpv_dir/portable_config/scripts ; pnpm run dev-copy
 
 ## short key
 
-| key        | command                              |
-| ---------- | ------------------------------------ |
-| ENTER      | cycle fullscreen                     |
-| [          | script-message change-speed -0.25    |
-| ]          | script-message change-speed +0.25    |
-| c          | script-message cut                   |
-| C          | script-message crop                  |
-| o          | script-message output                |
-| g          | script-message output-gif            |
-| p          | script-message preview               |
-| ESC        | script-message cancel                |
-| UP         | script-message change-volume +10     |
-| DOWN       | script-message change-volume -10     |
-| ctrl+UP    | script-message change-fontSize +0.25 |
-| ctrl+DOWN  | script-message change-fontSize -0.25 |
-| ctrl+o     | script-message open-dialog           |
-| ctrl+t     | script-message cycle-translate-mode    |
+| key        | command                                     |
+| ---------- | ------------------------------------------- |
+| ENTER      | cycle fullscreen                            |
+| [          | script-message change-speed -0.25           |
+| ]          | script-message change-speed +0.25           |
+| c          | script-message cut                          |
+| C          | script-message crop                         |
+| o          | script-message output                       |
+| g          | script-message output-gif                   |
+| p          | script-message preview                      |
+| ESC        | script-message cancel                       |
+| UP         | script-message change-volume +10            |
+| DOWN       | script-message change-volume -10            |
+| ctrl+UP    | script-message change-fontSize +0.25        |
+| ctrl+DOWN  | script-message change-fontSize -0.25        |
+| ctrl+o     | script-message open-dialog                  |
+| ctrl+t     | script-message cycle-translate-mode         |
 | ctrl+i     | script-message toggle-interactive-translate |
-| Alt+t      | script-message toggle-auto-translate   |
-| CTRL+0     | script-message Anime4K-Clear         |
-| CTRL+1     | script-message Anime4K-AA-HQ         |
-| CTRL+2     | script-message Anime4K-B-HQ          |
-| CTRL+3     | script-message Anime4K-C-HQ          |
-| CTRL+4     | script-message Anime4K-A-HQ          |
-| CTRL+5     | script-message Anime4K-BB-HQ         |
-| CTRL+6     | script-message Anime4K-CA-HQ         |
-| CTRL+v     | script-message clipboard-play        |
-| CTRL+c     | script-message copy-screen           |
-| CTRL+C     | script-message copy-time             |
-| CTRL+F1    | script-message toggle-tooltip        |
-| MOUSE_BTN0 | script-message mouse-left-click      |
-| MOUSE_BTN1 | script-message mouse-mid-click       |
-| MOUSE_BTN2 | script-message mouse-right-click     |
-| MOUSE_BTN3 | script-message mouse-wheel-up        |
-| MOUSE_BTN4 | script-message mouse-wheel-down      |
+| Alt+t      | script-message toggle-auto-translate        |
+| CTRL+0     | script-message Anime4K-Clear                |
+| CTRL+1     | script-message Anime4K-AA-HQ                |
+| CTRL+2     | script-message Anime4K-B-HQ                 |
+| CTRL+3     | script-message Anime4K-C-HQ                 |
+| CTRL+4     | script-message Anime4K-A-HQ                 |
+| CTRL+5     | script-message Anime4K-BB-HQ                |
+| CTRL+6     | script-message Anime4K-CA-HQ                |
+| CTRL+v     | script-message clipboard-play               |
+| CTRL+c     | script-message copy-screen                  |
+| CTRL+C     | script-message copy-time                    |
+| CTRL+F1    | script-message toggle-tooltip               |
+| MOUSE_BTN0 | script-message mouse-left-click             |
+| MOUSE_BTN1 | script-message mouse-mid-click              |
+| MOUSE_BTN2 | script-message mouse-right-click            |
+| MOUSE_BTN3 | script-message mouse-wheel-up               |
+| MOUSE_BTN4 | script-message mouse-wheel-down             |
 
 
 ## blogs
@@ -176,6 +176,25 @@ set-executionpolicy remotesigned
 https://nightly.link/mpv-easy/mpv-easy/workflows/release/main?preview
 
 ## Q&A
+
+### Color Config
+
+The color configuration format used in `mpv.conf` is **ARGB** (Alpha Red Green Blue).
+
+- **Alpha channel**: `00` represents completely transparent, and `FF` represents completely opaque.
+
+| Color                  | ARGB String | Description            | Example Usage                      |
+| :--------------------- | :---------- | :--------------------- | :--------------------------------- |
+| White                  | `#FFFFFFFF` | Opaque White           | `tooltip-color='#FFFFFFFF'`        |
+| Black                  | `#FF000000` | Opaque Black           | `tooltip-back-color='#FF000000'`   |
+| Yellow                 | `#FFFFFF00` | Opaque Yellow          | `sub-color-hover='#FFFFFF00'`      |
+| Semi-transparent Black | `#80000000` | 50% Alpha Black        | `sub-back-color-hover='#80000000'` |
+| Red                    | `#FFFF0000` | Opaque Red             | `sub-color='#FFFF0000'`            |
+| Green                  | `#FF00FF00` | Opaque Green           | `sub-color='#FF00FF00'`            |
+| Blue                   | `#FF0000FF` | Opaque Blue            | `sub-color='#FF0000FF'`            |
+| Cyan                   | `#FF00FFFF` | Opaque Cyan            | `sub-color='#FF00FFFF'`            |
+| Magenta                | `#FFFF00FF` | Opaque Magenta         | `sub-color='#FFFF00FF'`            |
+| Transparent            | `#00000000` | Completely Transparent | `background-color='#00000000'`     |
 
 ### mujs stack overflow
 
