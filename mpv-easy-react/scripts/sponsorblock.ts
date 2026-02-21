@@ -49,7 +49,7 @@ const ServerList = servers
   .map((s) => s.trim())
   .filter(Boolean)
 const RangesMap: Record<string, [number, number][]> = {}
-let active = false
+let active = true
 
 function extractYoutubeId(videoPath: string, purl: string): string | undefined {
   const patterns = [
@@ -150,16 +150,18 @@ function sponsorblockOn() {
   observePropertyNumber("time-pos", skip)
   registerEvent("file-loaded", cacheRanges)
   cacheRanges()
+  print("[Sponsorblock] on")
 }
+
 function sponsorblockOff() {
   unobserveProperty(skip)
   unregisterEvent(cacheRanges)
   IdCache = undefined
+  print("[Sponsorblock] off")
 }
 
 registerScriptMessage(sponsorblockEventName, () => {
   active = !active
-  print(active ? "[Sponsorblock] on" : "[Sponsorblock] off")
   if (active) {
     sponsorblockOn()
   } else {
