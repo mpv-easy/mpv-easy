@@ -26,7 +26,7 @@
     "crypto-js": "4.2.0",
     "e-color": "0.1.8",
     "lodash-es": "4.17.23",
-    "type-fest": "5.4.3"
+    "type-fest": "5.4.4"
   },
   "devDependencies": {
     "@types/crypto-js": "4.2.2",
