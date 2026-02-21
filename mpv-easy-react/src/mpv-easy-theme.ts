@@ -26,7 +26,7 @@ export const DefaultPlayMode: PlayMode = "loopAll"
 export const DefaultClickMenuDisable = true
 export const DefaultFontSizeScale = 1
 export const DefaultStackSize = 24
-export const DefaultMaxTitleLength = 48
+export const DefaultMaxWidthRatio = 0.7
 
 export type ButtonStyle = {
   color: string
@@ -71,7 +71,6 @@ export type ThemeStyle = {
   toolbar: {
     backgroundColor: string
     autoHideDelay: number
-    maxTitleLength: number
   }
   scrollList: {
     maxItemCount: number
@@ -94,12 +93,12 @@ export type ThemeStyle = {
   playlist: {
     backgroundColor: string
     zIndex: number
-    maxTitleLength: number
+    maxWidthRatio: number
   }
   history: {
     backgroundColor: string
     zIndex: number
-    maxTitleLength: number
+    maxWidthRatio: number
     stackSize: number
   }
   tooltip: {
@@ -276,7 +275,6 @@ export function createDefaultThemeConfig(): EasyConfig {
         toolbar: {
           backgroundColor: Black + AlphaLow,
           autoHideDelay: defaultHideUIDelay,
-          maxTitleLength: DefaultMaxTitleLength,
         },
         volume: {
           backgroundColor: Black + AlphaLow,
@@ -293,12 +291,12 @@ export function createDefaultThemeConfig(): EasyConfig {
         playlist: {
           backgroundColor: Black + AlphaLow,
           zIndex: defaultPlaylistZIndex,
-          maxTitleLength: DefaultMaxTitleLength,
+          maxWidthRatio: DefaultMaxWidthRatio,
         },
         history: {
           backgroundColor: Black + AlphaLow,
           zIndex: defaultPlaylistZIndex,
-          maxTitleLength: DefaultMaxTitleLength,
+          maxWidthRatio: DefaultMaxWidthRatio,
           stackSize: DefaultStackSize,
         },
         tooltip: {
@@ -380,7 +378,6 @@ export function createDefaultThemeConfig(): EasyConfig {
         toolbar: {
           backgroundColor: White + AlphaLow,
           autoHideDelay: defaultHideUIDelay,
-          maxTitleLength: DefaultMaxTitleLength,
         },
         scrollList: {
           maxItemCount: defaultMaxItemCount,
@@ -400,12 +397,12 @@ export function createDefaultThemeConfig(): EasyConfig {
         playlist: {
           backgroundColor: White + AlphaLow,
           zIndex: defaultPlaylistZIndex,
-          maxTitleLength: DefaultMaxTitleLength,
+          maxWidthRatio: DefaultMaxWidthRatio,
         },
         history: {
           backgroundColor: White + AlphaLow,
           zIndex: defaultPlaylistZIndex,
-          maxTitleLength: DefaultMaxTitleLength,
+          maxWidthRatio: DefaultMaxWidthRatio,
           stackSize: DefaultStackSize,
         },
         tooltip: {

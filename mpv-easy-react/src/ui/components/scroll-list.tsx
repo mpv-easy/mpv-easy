@@ -18,14 +18,15 @@ import {
 } from "../../store"
 import { measureText, type MouseEvent } from "@mpv-easy/react"
 import { useSelector } from "../../models"
-import { fitTextToWidth, textEllipsis } from "@mpv-easy/tool"
+import { fitTextToWidth } from "@mpv-easy/tool"
+import { useDeepCompareMemo } from "use-deep-compare"
 
 export type ScrollListProps = {
+  maxWidthRatio: number
   items: {
     key: string
     onClick: (e: MouseEvent) => void
     title: string
-    maxTextLength: number
     prefix: string
   }[]
 }
@@ -57,6 +58,7 @@ function getMaxWidth(
 
 export const ScrollList = ({
   items,
+  maxWidthRatio,
   ...props
 }: ScrollListProps & Partial<MpDomProps>) => {
   const button = useSelector(buttonStyleSelector)
@@ -84,21 +86,39 @@ export const ScrollList = ({
   const visibleList = items.slice(startIndex, startIndex + maxItemCount)
   const ref = useRef<MpDom | null>(null)
 
-  const max =
-    getMaxWidth(
-      items.map((i) => textEllipsis(`${i.prefix} ${i.title}`, i.maxTextLength)),
-      {
-        fontSize: normalFontSize.fontSize,
-        // padding: normalFontSize.padding,
-        padding: 0,
-        font,
-        height: cellSize,
-        ...button,
-      },
-      ref.current,
-    ) +
-    // hack: allow some measurement error to ensure that the width can accommodate all the text
-    normalFontSize.padding * 2
+  // Both expensive operations computed together, only when deps deeply change.
+  const { labels, max } = useDeepCompareMemo(() => {
+    const labels = items.map((i) => {
+      const maxLength = osd.w * maxWidthRatio
+      const s = `${i.prefix} ${i.title}`
+      return fitTextToWidth(s, maxLength, normalFontSize.fontSize)
+    })
+
+    const max =
+      getMaxWidth(
+        labels,
+        {
+          fontSize: normalFontSize.fontSize,
+          padding: 0,
+          font,
+          height: cellSize,
+          ...button,
+        },
+        ref.current,
+      ) +
+      // hack: allow some measurement error to ensure that the width can accommodate all the text
+      normalFontSize.padding * 2
+
+    return { labels, max }
+  }, [
+    items.map(({ key, title, prefix }) => ({ key, title, prefix })),
+    osd.w,
+    maxWidthRatio,
+    normalFontSize,
+    font,
+    cellSize,
+    button,
+  ])
 
   return (
     <Box
@@ -135,12 +155,8 @@ export const ScrollList = ({
           backgroundColor={button.color}
         />
       )}
-      {visibleList.map(({ key, title, onClick, prefix }) => {
-        const label = fitTextToWidth(
-          `${prefix} ${title}`,
-          max,
-          normalFontSize.fontSize,
-        )
+      {visibleList.map(({ key, title, onClick, prefix }, index) => {
+        const label = labels[index + startIndex]
         const showTitle = label !== `${prefix} ${title}`
         return (
           <Button

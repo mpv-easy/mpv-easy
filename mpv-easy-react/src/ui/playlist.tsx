@@ -52,6 +52,7 @@ export const Playlist = () => {
         <ScrollList
           id="playlist-scroll-list"
           zIndex={playlistStyle.zIndex}
+          maxWidthRatio={playlistStyle.maxWidthRatio}
           items={playlist.map((i) => {
             const prefix =
               i === path ? ICON.Ok : ICON.CheckboxBlankCircleOutline
@@ -66,7 +67,6 @@ export const Playlist = () => {
               key: i,
               title,
               prefix,
-              maxTextLength: playlistStyle.maxTitleLength,
               onClick: (e) => {
                 const index = playlist.indexOf(i)
                 if (index >= 0) {

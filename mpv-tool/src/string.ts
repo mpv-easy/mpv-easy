@@ -7,11 +7,12 @@ export function textEllipsis(
   maxLength: number,
   ellipsis = "...",
 ) {
-  if (text.length <= maxLength) {
+  const chars = text.split("")
+  if (chars.length <= maxLength) {
     return text
   }
   // HACK: In MuJS, text iteration requires splitting before iterating over the array; otherwise, multi-byte text will be split.
-  return text.split("").slice(0, maxLength - ellipsis.length) + ellipsis
+  return chars.slice(0, maxLength - ellipsis.length) + ellipsis
 }
 
 /**

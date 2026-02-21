@@ -51,6 +51,7 @@ export const History = () => {
         <ScrollList
           id={"history-scroll-list"}
           zIndex={historyStyle.zIndex}
+          maxWidthRatio={historyStyle.maxWidthRatio}
           items={history.map((i) => {
             const prefix =
               i.path === path ? ICON.Ok : ICON.CheckboxBlankCircleOutline
@@ -65,7 +66,6 @@ export const History = () => {
               key: i.path,
               title: i.name,
               prefix,
-              maxTextLength: historyStyle.maxTitleLength,
               onClick: (e) => {
                 const index = history.indexOf(i)
                 if (index >= 0) {
