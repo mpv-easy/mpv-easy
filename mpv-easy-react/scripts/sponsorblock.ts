@@ -9,23 +9,25 @@ import {
   registerEvent,
   registerScriptMessage,
   setProperty,
+  showNotification,
   unobserveProperty,
   unregisterEvent,
 } from "@mpv-easy/tool"
 
 const defaultConfig = {
-  server: "https://api.sponsor.ajay.app/api/skipSegments",
+  servers:
+    "https://sponsor.ajay.app/api/skipSegments,https://api.sponsor.ajay.app/api/skipSegments",
   categories: "sponsor,outro,selfpromo",
   sponsorblockEventName: "sponsorblock",
   cacheTtl: 86400,
 }
 
-const { server, categories, sponsorblockEventName, cacheTtl } = {
+const { servers, categories, sponsorblockEventName, cacheTtl } = {
   ...defaultConfig,
   ...getOptions("mpv-easy-sponsorblock", {
-    server: {
+    servers: {
       type: "string",
-      key: "server",
+      key: "servers",
     },
     categories: {
       type: "string",
@@ -42,6 +44,10 @@ const { server, categories, sponsorblockEventName, cacheTtl } = {
   }),
 }
 
+const ServerList = servers
+  .split(",")
+  .map((s) => s.trim())
+  .filter(Boolean)
 const RangesMap: Record<string, [number, number][]> = {}
 let active = false
 
@@ -87,25 +93,31 @@ const CategoriesString = encodeURIComponent(
 async function fetchRanges(
   videoId: string,
 ): Promise<[number, number][] | undefined> {
-  const url = `${server}?categories=${CategoriesString}&videoID=${videoId}`
-  try {
-    const text = await cacheAsync(
-      url,
-      () => fetch(url, { redirect: "follow" }).then((r) => r.text()),
-      cacheTtl,
-    )
-    if (!text || text.startsWith("Not Found")) {
-      return
+  for (const s of ServerList) {
+    const url = `${s}?categories=${CategoriesString}&videoID=${videoId}`
+    try {
+      const text = await cacheAsync(
+        url,
+        () => fetch(url, { redirect: "follow" }).then((r) => r.text()),
+        cacheTtl,
+      )
+      if (!text || text.startsWith("Not Found")) {
+        continue
+      }
+      const data: { segment: [number, number] }[] = JSON.parse(text)
+      if (!Array.isArray(data) || data.length === 0) {
+        continue
+      }
+      return data.map((item) => item.segment)
+    } catch (e) {
+      print(`[Sponsorblock] request failed for ${s}: ${e}`)
     }
-    const data: { segment: [number, number] }[] = JSON.parse(text)
-    if (!Array.isArray(data) || data.length === 0) {
-      return
-    }
-    return data.map((item) => item.segment)
-  } catch (e) {
-    print(e)
-    return
   }
+  showNotification(
+    `[Sponsorblock] all servers failed\nplease check if the servers are available: ${ServerList.join("\n")}\nand your network connection`,
+    5,
+  )
+  return
 }
 
 let IdCache: string | undefined
