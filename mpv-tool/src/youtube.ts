@@ -94,28 +94,44 @@ export async function getYoutubeSubtitles(
   }
 }
 
+function getSub(
+  subs: Record<string, YoutubeSubtitleFormat[]>,
+  lang: string,
+): undefined | { lang: string; format: YoutubeSubtitleFormat } {
+  const langPrefix = lang.split("-")[0]
+  const enLang = "en"
+  let enFormat: undefined | YoutubeSubtitleFormat
+  for (const [code, formats] of Object.entries(subs)) {
+    const format = formats.find((f) => f.ext === "srt")
+    if (code.startsWith(langPrefix)) {
+      if (format) {
+        return { lang, format }
+      }
+    }
+    if (!enFormat && enLang === code) {
+      enFormat = format
+    }
+  }
+  if (enFormat) {
+    return { lang: enLang, format: enFormat }
+  }
+}
+
 export async function playYoutubeVideo(
   url: string,
   cookiesPath?: string,
 ): Promise<void> {
   loadfile(url, "replace")
   const lang = getLang()
-  const langPrefix = lang.split("-")[0]
-
   try {
     const result = await getYoutubeSubtitles(url, cookiesPath)
     if (!result) {
       return
     }
-    const allSubs = { ...result.subtitles, ...result.automatic_captions }
-
-    for (const [code, formats] of Object.entries(allSubs)) {
-      if (code.startsWith(langPrefix)) {
-        const srtFormat = formats.find((f) => f.ext === "srt")
-        if (srtFormat) {
-          subAdd(srtFormat.url, "cached", srtFormat.name, code)
-        }
-      }
+    const subs = { ...result.automatic_captions, ...result.subtitles }
+    const sub = getSub(subs, lang)
+    if (sub) {
+      subAdd(sub.format.url, "cached", sub.format.name, sub.lang)
     }
   } catch (e) {
     print("getYoutubeSubtitles error:", e)
