@@ -36,8 +36,8 @@ export type TooltipConfig = {
   tooltipMaxWidth: number
 }
 
-export const DEFAULT_MAX_CHUNK_CHARS = 3500
-export const DEFAULT_MAX_CHUNK_ENCODE_CHARS = 7000
+export const DEFAULT_MAX_CHUNK_CHARS = 7500
+export const DEFAULT_MAX_CHUNK_ENCODE_CHARS = 7500
 
 export const defaultSubConfig: SubConfig = {
   subFontSize: 38,

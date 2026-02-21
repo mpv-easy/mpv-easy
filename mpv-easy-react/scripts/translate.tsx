@@ -37,6 +37,8 @@ const {
   firstSubFontface,
   secondSubFontface,
   subOutputPath,
+  maxChunkChars,
+  maxChunkEncodeChars,
 } = {
   ...defaultSubConfig,
   ...defaultTooltipConfig,
@@ -98,6 +100,8 @@ const {
     "first-sub-fontface": { type: "string", key: "firstSubFontface" },
     "second-sub-fontface": { type: "string", key: "secondSubFontface" },
     "sub-output-path": { type: "string", key: "subOutputPath" },
+    "max-chunk-chars": { type: "number", key: "maxChunkChars" },
+    "max-chunk-encode-chars": { type: "number", key: "maxChunkEncodeChars" },
   }),
   subScale: getPropertyNumber("sub-scale", 1),
   subFontSize: getPropertyNumber("sub-font-size", 38),
@@ -141,6 +145,8 @@ function App() {
         firstSubFontface={firstSubFontface}
         secondSubFontface={secondSubFontface}
         subOutputPath={subOutputPath}
+        maxChunkChars={maxChunkChars}
+        maxChunkEncodeChars={maxChunkEncodeChars}
       />
     </>
   )
