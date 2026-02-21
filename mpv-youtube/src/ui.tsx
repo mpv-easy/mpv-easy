@@ -21,7 +21,7 @@ import { downloadAndConvertThumbnail } from "./tool"
 const thumbCache = new Map<string, string>() // hash -> outPath
 
 const MAX_COLS = 6
-const MAX_ROWS = 4
+const MAX_ROWS = 6
 // Maximum visible rows for performance — scroll if user requests more
 const MAX_VISIBLE_ROWS = 3
 
