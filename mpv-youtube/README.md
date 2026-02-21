@@ -23,10 +23,11 @@ https://github.com/user-attachments/assets/a7b266c3-89e9-4467-b043-c04978077bef
 - **Cookies File**: Required for personalized recommendations. The plugin automatically searches for `cookies.txt` or `cookie.txt` in:
   - The directory containing `mpv.exe`.
   - The directory containing the `yt-dlp` executable.
+- **Fonts**: Download [FiraCode Nerd Font](https://www.nerdfonts.com/font-downloads) and add `FiraCodeNerdFontMono-Regular.ttf` to the `portable_config/fonts` directory.
 
 ## Installation
 
-1. Open the [mpv-easy-youtube build page](https://mpv-easy.github.io/mpv-build/#mpv-build=%22%7B%5C%22state%5C%22%3A%7B%5C%22selectedRowKeys%5C%22%3A%5B%5C%22mpv-easy-youtube%5C%22%5D%2C%5C%22externalList%5C%22%3A%5B%5D%2C%5C%22ui%5C%22%3A%5C%22osc%5C%22%2C%5C%22platform%5C%22%3A%5C%22mpv-v3%5C%22%2C%5C%22repos%5C%22%3A%5B%5D%7D%7D%22).
+1. Open the [mpv-easy-youtube](https://mpv-easy.github.io/mpv-build/#mpv-build=%22%7B%5C%22state%5C%22%3A%7B%5C%22selectedRowKeys%5C%22%3A%5B%5C%22mpv-easy-youtube%5C%22%5D%2C%5C%22externalList%5C%22%3A%5B%5C%22ffmpeg%5C%22%2C%5C%22yt-dlp%5C%22%5D%2C%5C%22ui%5C%22%3A%5C%22osc%5C%22%2C%5C%22platform%5C%22%3A%5C%22mpv-v3%5C%22%2C%5C%22repos%5C%22%3A%5B%5D%7D%7D%22).
 2. Click the download button to get `portable_config`.
 3. Copy the `portable_config` folder into your mpv installation directory.
 
