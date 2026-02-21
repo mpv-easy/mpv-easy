@@ -2,32 +2,36 @@ import React from "react"
 import { Button } from "@mpv-easy/react"
 import {
   iconButtonStyle,
+  normalFontSizeSelector,
+  osdDimensionsSelector,
   pathSelector,
-  toolbarStyleSelector,
 } from "../../store"
 import { getVideoName, getVideoTitle } from "../../common"
 import {
   existsSync,
+  fitTextToWidth,
   isRemote,
   isYtdlp,
   openBrowser,
   openExplorer,
-  textEllipsis,
 } from "@mpv-easy/tool"
 import { dispatch, useSelector } from "../../models"
-import { useTitle } from "../../hooks"
 
 export const Filename = () => {
   const path = useSelector(pathSelector)
   const titleText =
     (isRemote(path) ? getVideoTitle(path) : getVideoName(path)) || ""
-
-  // TODO: text-overflow: ellipsis;
-  const maxLen = useSelector(toolbarStyleSelector).maxTitleLength
-  const text = textEllipsis(titleText, maxLen)
-  const showTitle = text !== titleText
+  const fontSize = useSelector(normalFontSizeSelector).fontSize
+  const w = useSelector(osdDimensionsSelector).w
   const style = useSelector(iconButtonStyle)
-  const title = useTitle(showTitle ? titleText : "")
+  const text = fitTextToWidth(
+    titleText,
+    // 6 toolbar buttons and some padding
+    w - fontSize * 8,
+    fontSize,
+  )
+  const showTitle = text !== titleText
+  const title = showTitle ? titleText : ""
   return (
     (text?.length ?? 0) > 0 && (
       <Button
