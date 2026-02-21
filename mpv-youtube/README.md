@@ -21,7 +21,7 @@ https://github.com/user-attachments/assets/a7b266c3-89e9-4467-b043-c04978077bef
 - **ffmpeg**: Used for thumbnail processing.
 - **curl**: Used for downloading thumbnails.
 - **Cookies File**: Required for personalized recommendations. **Note: Without cookies, the plugin cannot fetch YouTube recommendation data.**
-  - **How to export**: Use a browser extension like [Get cookies.txt LOCALLY](https://chrome.google.com/webstore/detail/get-cookiestxt-locally/ccmgnabdoocebeocplebhdeidnecontext) to export your YouTube cookies in **Netscape** format. Save the file as `cookies.txt`. For more details, see [this guide](https://www.reddit.com/r/youtubedl/comments/1l9lmyk/comment/mxyzwin/).
+  - **How to export**: Use a browser extension like [Get cookies.txt LOCALLY](https://chromewebstore.google.com/detail/get-cookiestxt-locally/cclelndahbckbenkjhflpdbgdldlbecc) to export your YouTube cookies in **Netscape** format. Save the file as `cookies.txt`. For more details, see [this guide](https://www.reddit.com/r/youtubedl/comments/1l9lmyk/comment/mxyzwin/).
   - The plugin automatically searches for `cookies.txt` or `cookie.txt` in:
     - The directory containing `mpv.exe`.
     - The directory containing the `yt-dlp` executable.

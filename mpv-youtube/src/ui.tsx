@@ -1,7 +1,6 @@
 import {
   youtube,
   showNotification,
-  hideNotification,
   registerScriptMessage,
   existsSync,
   joinPath,
@@ -9,12 +8,12 @@ import {
   md5,
   getTmpDir,
   openBrowser,
-  textEllipsis,
   setPropertyBool,
   getPropertyBool,
   formatTime,
   getTimeFormat,
   detectCookies,
+  fitTextToWidth,
 } from "@mpv-easy/tool"
 import React, { useCallback, useEffect, useMemo, useRef, useState } from "react"
 import { Box, Button, type MpDomProps, useProperty } from "@mpv-easy/react"
@@ -92,18 +91,19 @@ export const defaultYoutubeConfig = {
  */
 function useYoutubeData(cookiesPath?: string) {
   const [allEntries, setAllEntries] = useState<YoutubeEntry[]>([])
+  const [loading, setLoading] = useState(false)
   const loadingRef = useRef(false)
 
   const fetchRecommendations = useCallback(async () => {
     if (loadingRef.current) return
     loadingRef.current = true
+    setLoading(true)
     print(`[youtube] fetchRecommendations called`)
     print(`[youtube] cookiesPath=${cookiesPath}`)
-    showNotification("Loading YouTube...", 0)
+
     try {
       if (cookiesPath && !existsSync(cookiesPath)) {
         showNotification(`cookies file not found: ${cookiesPath}`, 3)
-        loadingRef.current = false
         return
       }
       print(`[youtube] cookies file found, calling yt-dlp...`)
@@ -118,11 +118,12 @@ function useYoutubeData(cookiesPath?: string) {
       )
       print(`[youtube] filtered to ${filtered.length} entries with thumbnails`)
       setAllEntries(filtered)
-      hideNotification()
     } catch (e) {
       showNotification(`YouTube recommendations failed: ${e}`, 3)
+    } finally {
+      loadingRef.current = false
+      setLoading(false)
     }
-    loadingRef.current = false
   }, [cookiesPath])
 
   const shuffleEntries = useCallback(() => {
@@ -133,7 +134,7 @@ function useYoutubeData(cookiesPath?: string) {
     print(`[youtube] shuffled ${shuffled.length} entries`)
   }, [allEntries])
 
-  return { allEntries, fetchRecommendations, shuffleEntries, loadingRef }
+  return { allEntries, fetchRecommendations, shuffleEntries, loading }
 }
 
 /**
@@ -174,9 +175,8 @@ function useVisibility(
       } else {
         // Not both visible → show all
         setSidebarVisible(true)
-        if (allEntries.length > 0) {
-          setContentVisible(true)
-        } else {
+        setContentVisible(true)
+        if (allEntries.length === 0) {
           fetcherRef.current()
         }
       }
@@ -241,15 +241,15 @@ function useScroll(totalRows: number, visibleRows: number) {
 }
 
 /**
- * Hook: manages thumbnail loading for currently visible cards.
+ * Hook: manages thumbnail loading for display entries.
  * Uses a cache to avoid re-downloading and reuses imageIds optimally.
  */
-function useThumbnails(visibleEntries: YoutubeEntry[], _cols: number) {
+function useThumbnails(entries: YoutubeEntry[]) {
   const [, setTick] = useState(0)
   const loadingSet = useRef<Set<string>>(new Set())
 
   useEffect(() => {
-    for (const entry of visibleEntries) {
+    for (const entry of entries) {
       if (!entry.thumbnails?.length) continue
       const thumb = entry.thumbnails[0]
       const url = thumb.url
@@ -271,7 +271,7 @@ function useThumbnails(visibleEntries: YoutubeEntry[], _cols: number) {
         print(`[youtube] thumb: set bgra ${outPath}`)
       })
     }
-  }, [visibleEntries])
+  }, [entries])
 
   const getThumbPath = useCallback((entry: YoutubeEntry): string | null => {
     if (!entry.thumbnails?.length) return null
@@ -476,11 +476,7 @@ function VideoCard({
   const imageId = THUMBNAIL_ID_START + slotIndex
 
   const titleHeight = titleFontSize * 2
-  const maxTitleLength = Math.max(
-    ((cellWidth - 8) / (titleFontSize * 0.6)) | 0,
-    4,
-  )
-  const titleText = textEllipsis(entry.title || "", maxTitleLength)
+  const titleText = fitTextToWidth(entry.title, cellWidth, titleFontSize)
 
   // Available area for the image (cell minus title bar)
   const imageAreaWidth = cellWidth
@@ -632,7 +628,7 @@ export function Youtube(props: Partial<YoutubeUIProps>) {
   const { w, h } = useProperty("osd-dimensions")[0]
 
   // --- Hooks ---
-  const { allEntries, fetchRecommendations, shuffleEntries } =
+  const { allEntries, fetchRecommendations, shuffleEntries, loading } =
     useYoutubeData(cookiesPath)
 
   const {
@@ -657,8 +653,8 @@ export function Youtube(props: Partial<YoutubeUIProps>) {
     return displayEntries.slice(startIdx, startIdx + totalPerPage)
   }, [displayEntries, scrollOffset, cols, totalPerPage])
 
-  // Thumbnail loading – only loads visible entries
-  const { getThumbPath } = useThumbnails(visibleEntries, cols)
+  // Thumbnail loading – loads all display entries to avoid flickering during scroll
+  const { getThumbPath } = useThumbnails(displayEntries)
 
   const titleFont = propTitleFont || defaultYoutubeConfig.titleFont
 
@@ -677,9 +673,8 @@ export function Youtube(props: Partial<YoutubeUIProps>) {
 
   // ICON_OPEN click: show content (or fetch if no entries)
   const handleShowContent = useCallback(() => {
-    if (allEntries.length > 0) {
-      setContentVisible(true)
-    } else {
+    setContentVisible(true)
+    if (allEntries.length === 0) {
       fetchRecommendations()
     }
   }, [allEntries, setContentVisible, fetchRecommendations])
@@ -688,7 +683,7 @@ export function Youtube(props: Partial<YoutubeUIProps>) {
   if (!sidebarVisible && !contentVisible) return null
 
   // Sidebar only (no content)
-  if (sidebarVisible && (!contentVisible || allEntries.length === 0)) {
+  if (sidebarVisible && !contentVisible) {
     return (
       <Sidebar
         sidebarWidth={sidebarWidth}
@@ -748,32 +743,73 @@ export function Youtube(props: Partial<YoutubeUIProps>) {
       />
 
       {/* Video cards — only render visible rows, reuse imageIds */}
-      {visibleEntries.map((entry, slotIndex) => {
-        const col = slotIndex % cols
-        const row = (slotIndex / cols) | 0
-        const cellX = sidebarTotalWidth + col * cellWidth
-        const cellY = row * cellHeight
-        return (
-          <VideoCard
-            key={`slot-${slotIndex}`}
-            entry={entry}
-            slotIndex={slotIndex}
-            cellX={cellX}
-            cellY={cellY}
-            cellWidth={cellWidth}
-            cellHeight={cellHeight}
-            titleFontSize={titleFontSize}
-            titleFont={titleFont}
-            titleColor={titleColor}
-            titleColorHover={titleColorHover}
-            titleBackgroundColor={titleBackgroundColor}
-            loadingColor={loadingColor}
-            loadingBackgroundColor={loadingBackgroundColor}
-            thumbPath={getThumbPath(entry)}
-            onClose={handleCardClose}
+      {allEntries.length > 0 ? (
+        visibleEntries.map((entry, slotIndex) => {
+          const col = slotIndex % cols
+          const row = (slotIndex / cols) | 0
+          const cellX = sidebarTotalWidth + col * cellWidth
+          const cellY = row * cellHeight
+          return (
+            <VideoCard
+              key={`slot-${slotIndex}`}
+              entry={entry}
+              slotIndex={slotIndex}
+              cellX={cellX}
+              cellY={cellY}
+              cellWidth={cellWidth}
+              cellHeight={cellHeight}
+              titleFontSize={titleFontSize}
+              titleFont={titleFont}
+              titleColor={titleColor}
+              titleColorHover={titleColorHover}
+              titleBackgroundColor={titleBackgroundColor}
+              loadingColor={loadingColor}
+              loadingBackgroundColor={loadingBackgroundColor}
+              thumbPath={getThumbPath(entry)}
+              onClose={handleCardClose}
+            />
+          )
+        })
+      ) : (
+        <Box
+          id="youtube-empty-hint"
+          position="absolute"
+          x={sidebarTotalWidth}
+          y={0}
+          width={w - sidebarTotalWidth}
+          height={h}
+          zIndex={10}
+        >
+          <Box
+            text={
+              loading
+                ? "Loading YouTube recommendations..."
+                : "No recommendations found"
+            }
+            font={titleFont}
+            fontSize={titleFontSize * 1.5}
+            color={White + AlphaShow}
+            x={0}
+            y={(h / 2 - titleFontSize) | 0}
+            width={w - sidebarTotalWidth}
+            justifyContent="center"
+            display="flex"
           />
-        )
-      })}
+          {!loading && (
+            <Box
+              text="Please check your cookies, yt-dlp, or network connection."
+              font={titleFont}
+              fontSize={titleFontSize}
+              color={White + AlphaMedium}
+              x={0}
+              y={(h / 2 + titleFontSize) | 0}
+              width={w - sidebarTotalWidth}
+              justifyContent="center"
+              display="flex"
+            />
+          )}
+        </Box>
+      )}
 
       {/* Scrollbar (right side) */}
       {needScroll && (
