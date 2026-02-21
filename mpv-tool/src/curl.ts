@@ -2,16 +2,18 @@ import { execAsync, getOs } from "./common"
 import { existsSync } from "./fs"
 import { detectCmd } from "./ext"
 
+let CURL_PATH: string | undefined | false
 export function detectCurl(): false | string {
+  if (CURL_PATH) return CURL_PATH
   const os = getOs()
   if (os === "windows") {
-    const system32Curl = "C:/Windows/System32/curl.exe"
-    if (existsSync(system32Curl)) {
-      return system32Curl
+    CURL_PATH = "C:/Windows/System32/curl.exe"
+    if (existsSync(CURL_PATH)) {
+      return CURL_PATH
     }
   }
-
-  return detectCmd("curl")
+  CURL_PATH = detectCmd("curl")
+  return CURL_PATH
 }
 
 export async function download(url: string, outputPath: string, curl = "curl") {

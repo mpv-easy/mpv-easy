@@ -34,15 +34,15 @@ export function getFfmpegPath() {
     }
   }
 }
-
+let FFMPEG_PATH: string | false | undefined
 export function detectFfmpeg(): false | string {
-  const ffmpegExt = getFfmpegPath()
-
-  if (existsSync(ffmpegExt)) {
-    return ffmpegExt
+  if (FFMPEG_PATH) return FFMPEG_PATH
+  FFMPEG_PATH = getFfmpegPath()
+  if (existsSync(FFMPEG_PATH)) {
+    return FFMPEG_PATH
   }
-
-  return detectCmd("ffmpeg")
+  FFMPEG_PATH = detectCmd("ffmpeg")
+  return FFMPEG_PATH
 }
 
 export type GifConfig = {

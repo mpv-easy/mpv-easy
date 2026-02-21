@@ -11,6 +11,13 @@ export function isYtdlp(path: string) {
 
 const CookieFileNames = ["cookies.txt", "cookie.txt"]
 
+let YTDLP_PATH: string | undefined | false
+export function detectYtdlp(): false | string {
+  if (YTDLP_PATH) return YTDLP_PATH
+  YTDLP_PATH = detectCmd("yt-dlp")
+  return YTDLP_PATH
+}
+
 export function detectCookies(): string | undefined {
   const dirs: string[] = []
 
@@ -22,7 +29,7 @@ export function detectCookies(): string | undefined {
 
   // 2. yt-dlp executable directory
   try {
-    const ytdlpPath = detectCmd("yt-dlp")
+    const ytdlpPath = detectYtdlp()
     if (ytdlpPath) {
       const ytdlpDir = dirname(ytdlpPath)
       if (ytdlpDir) dirs.push(ytdlpDir)
