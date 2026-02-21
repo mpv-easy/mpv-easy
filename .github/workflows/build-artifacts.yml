@@ -296,6 +296,7 @@ jobs:
             notify-skip
             mandelbrot
             youtube
+            sponsorblock
           )
 
           git clone https://github.com/ahaoboy/free-piano --depth=1

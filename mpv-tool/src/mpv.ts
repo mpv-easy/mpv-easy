@@ -215,7 +215,7 @@ export function registerEvent(
   return mp.register_event(name, fn)
 }
 
-export function unregisterEvent(fn: (...args: unknown[]) => void) {
+export function unregisterEvent(fn: (...args: any[]) => void) {
   return mp.unregister_event(fn)
 }
 
@@ -254,7 +254,7 @@ export function observePropertyString(
   )
 }
 
-export function unobserveProperty(fn: (...args: unknown[]) => void) {
+export function unobserveProperty(fn: (...args: any[]) => void) {
   return mp.unobserve_property(fn)
 }
 
