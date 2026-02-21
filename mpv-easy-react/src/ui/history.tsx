@@ -10,7 +10,7 @@ import {
 } from "../store"
 import { ScrollList } from "./components/scroll-list"
 import { dispatch, useSelector } from "../models"
-import { isRemote, textEllipsis } from "@mpv-easy/tool"
+import { isRemote } from "@mpv-easy/tool"
 
 export type PlaylistProps = {
   list: string[]
@@ -60,15 +60,12 @@ export const History = () => {
                 name = decodeURIComponent(name)
               } catch {}
             }
-            const s = `${prefix} ${i.name}`
-            const label = textEllipsis(s, historyStyle.maxTitleLength)
-            const showTitle = s !== label
             return {
               id: i.path,
               key: i.path,
-              label,
               title: i.name,
-              showTitle,
+              prefix,
+              maxTextLength: historyStyle.maxTitleLength,
               onClick: (e) => {
                 const index = history.indexOf(i)
                 if (index >= 0) {

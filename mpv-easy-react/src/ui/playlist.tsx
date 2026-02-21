@@ -11,7 +11,7 @@ import {
 import { ScrollList } from "./components/scroll-list"
 import { getVideoName } from "../common"
 import { dispatch, useSelector } from "../models"
-import { isRemote, textEllipsis } from "@mpv-easy/tool"
+import { isRemote } from "@mpv-easy/tool"
 
 export type PlaylistProps = {
   list: string[]
@@ -61,15 +61,12 @@ export const Playlist = () => {
                 title = decodeURIComponent(title)
               } catch {}
             }
-            const s = `${prefix} ${title}`
-            const label = textEllipsis(s, playlistStyle.maxTitleLength)
-            const showTitle = s !== label
             return {
               id: i,
               key: i,
-              label,
-              showTitle,
               title,
+              prefix,
+              maxTextLength: playlistStyle.maxTitleLength,
               onClick: (e) => {
                 const index = playlist.indexOf(i)
                 if (index >= 0) {

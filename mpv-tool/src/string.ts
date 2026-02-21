@@ -10,8 +10,8 @@ export function textEllipsis(
   if (text.length <= maxLength) {
     return text
   }
-
-  return text.slice(0, maxLength - ellipsis.length) + ellipsis
+  // HACK: In MuJS, text iteration requires splitting before iterating over the array; otherwise, multi-byte text will be split.
+  return text.split("").slice(0, maxLength - ellipsis.length) + ellipsis
 }
 
 /**
@@ -50,7 +50,7 @@ function estimateTextWidth(
   wideScale: number,
 ): number {
   let width = 0
-  for (const char of text) {
+  for (const char of text.split("")) {
     width += estimateCharWidth(char, fontSize, narrowScale, wideScale)
   }
   return width
@@ -103,21 +103,15 @@ export function fitTextToWidth(
   }
 
   let currentWidth = 0
-  let end = 0
-  const chars = [...text]
-  for (let i = 0; i < chars.length; i++) {
-    const charWidth = estimateCharWidth(
-      chars[i],
-      fontSize,
-      narrowScale,
-      wideScale,
-    )
+  const chars = []
+  for (const i of text.split("")) {
+    chars.push(i)
+    const charWidth = estimateCharWidth(i, fontSize, narrowScale, wideScale)
     if (currentWidth + charWidth > available) {
       break
     }
     currentWidth += charWidth
-    end = i + 1
   }
 
-  return chars.slice(0, end).join("") + ellipsis
+  return chars.join("") + ellipsis
 }

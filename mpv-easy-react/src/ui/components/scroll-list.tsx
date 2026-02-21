@@ -18,14 +18,15 @@ import {
 } from "../../store"
 import { measureText, type MouseEvent } from "@mpv-easy/react"
 import { useSelector } from "../../models"
+import { fitTextToWidth, textEllipsis } from "@mpv-easy/tool"
 
 export type ScrollListProps = {
   items: {
     key: string
-    label: string
     onClick: (e: MouseEvent) => void
-    showTitle: boolean
     title: string
+    maxTextLength: number
+    prefix: string
   }[]
 }
 
@@ -85,7 +86,7 @@ export const ScrollList = ({
 
   const max =
     getMaxWidth(
-      items.map((i) => i.label),
+      items.map((i) => textEllipsis(`${i.prefix} ${i.title}`, i.maxTextLength)),
       {
         fontSize: normalFontSize.fontSize,
         // padding: normalFontSize.padding,
@@ -134,7 +135,13 @@ export const ScrollList = ({
           backgroundColor={button.color}
         />
       )}
-      {visibleList.map(({ key, label, title, onClick, showTitle }) => {
+      {visibleList.map(({ key, title, onClick, prefix }) => {
+        const label = fitTextToWidth(
+          `${prefix} ${title}`,
+          max,
+          normalFontSize.fontSize,
+        )
+        const showTitle = label !== `${prefix} ${title}`
         return (
           <Button
             id={`scroll-list-${key}`}
