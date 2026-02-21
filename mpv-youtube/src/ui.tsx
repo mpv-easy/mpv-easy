@@ -4,7 +4,6 @@ import {
   registerScriptMessage,
   existsSync,
   joinPath,
-  loadfile,
   md5,
   getTmpDir,
   openBrowser,
@@ -455,6 +454,7 @@ function VideoCard({
   loadingBackgroundColor,
   thumbPath,
   onClose,
+  cookiesPath,
 }: {
   entry: YoutubeEntry
   slotIndex: number
@@ -471,6 +471,7 @@ function VideoCard({
   loadingBackgroundColor: string
   thumbPath: string | null
   onClose: () => void
+  cookiesPath?: string
 }) {
   const [hover, setHover] = useState(false)
   const imageId = THUMBNAIL_ID_START + slotIndex
@@ -502,7 +503,7 @@ function VideoCard({
 
   const handleClick = useCallback(() => {
     if (entry.url) {
-      loadfile(entry.url, "replace")
+      youtube.playYoutubeVideo(entry.url, cookiesPath)
       onClose()
     }
   }, [entry.url, onClose])
@@ -767,6 +768,7 @@ export function Youtube(props: Partial<YoutubeUIProps>) {
               loadingBackgroundColor={loadingBackgroundColor}
               thumbPath={getThumbPath(entry)}
               onClose={handleCardClose}
+              cookiesPath={cookiesPath}
             />
           )
         })
