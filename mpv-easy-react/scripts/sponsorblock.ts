@@ -141,6 +141,11 @@ async function cacheRanges() {
     return
   }
   if (RangesMap[videoId]) {
+    print(
+      `[Sponsorblock] video id: ${videoId} ranges found in cache: ${JSON.stringify(
+        RangesMap[videoId],
+      )}`,
+    )
     return
   }
   const ranges = await fetchRanges(videoId)
