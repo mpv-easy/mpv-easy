@@ -21,6 +21,9 @@ You can customize the plugin's behavior by editing `sponsorblock.conf`:
 # Default: https://sponsor.ajay.app/api/skipSegments,https://api.sponsor.ajay.app/api/skipSegments
 servers=https://sponsor.ajay.app/api/skipSegments,https://api.sponsor.ajay.app/api/skipSegments
 
+# whether to enable the plugin at startup
+active=yes
+
 # Categories to skip, separated by commas
 # Options: sponsor, intro, outro, selfpromo, interaction, music_offtopic, preview, filler
 # Default: sponsor,outro,selfpromo
