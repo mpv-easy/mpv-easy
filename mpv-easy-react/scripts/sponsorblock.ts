@@ -4,6 +4,10 @@ import { defaultConfig, sponsorblock } from "@mpv-easy/sponsorblock"
 const config = {
   ...defaultConfig,
   ...getOptions("mpv-easy-sponsorblock", {
+    active: {
+      type: "boolean",
+      key: "active",
+    },
     servers: {
       type: "string",
       key: "servers",

@@ -14,12 +14,14 @@ import {
 } from "@mpv-easy/tool"
 export const pluginName = "@mpv-easy/sponsorblock"
 export type SponsorblockConfig = {
+  active: boolean
   servers: string
   categories: string
   sponsorblockEventName: string
   cacheTtl: number
 }
 export const defaultConfig: SponsorblockConfig = {
+  active: true,
   servers:
     "https://sponsor.ajay.app/api/skipSegments,https://api.sponsor.ajay.app/api/skipSegments",
   categories: "sponsor,outro,selfpromo",
@@ -47,11 +49,13 @@ let ServerList: string[] = []
 let CacheTtl = 0
 
 export function sponsorblock({
+  active: startActive,
   servers,
   categories,
   sponsorblockEventName,
   cacheTtl,
 }: SponsorblockConfig) {
+  active = startActive
   CacheTtl = cacheTtl
   CategoriesString = encodeURIComponent(JSON.stringify(categories.split(",")))
 
