@@ -136,13 +136,21 @@ function getId() {
 async function cacheRanges() {
   IdCache = undefined
   const videoId = getId()
-  if (!videoId) return
+  if (!videoId) {
+    print("[Sponsorblock] video id not found")
+    return
+  }
   if (RangesMap[videoId]) {
     return
   }
   const ranges = await fetchRanges(videoId)
   if (ranges) {
     RangesMap[videoId] = ranges
+    print(
+      `[Sponsorblock] video id: ${videoId} ranges: ${JSON.stringify(ranges)}`,
+    )
+  } else {
+    print(`[Sponsorblock] video id: ${videoId} no ranges found`)
   }
 }
 
