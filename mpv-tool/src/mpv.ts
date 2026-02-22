@@ -231,27 +231,21 @@ export function observePropertyNumber(
   name: NumberProp | (string & {}),
   fn: (name: string, value: number) => void,
 ) {
-  return observeProperty(name, "number", (name: string, v: number) =>
-    fn(name, v),
-  )
+  return observeProperty(name, "number", fn)
 }
 
 export function observePropertyBool(
   name: BoolProp | (string & {}),
   fn: (name: string, value: boolean) => void,
 ) {
-  return observeProperty(name, "bool", (name: string, v: boolean) =>
-    fn(name, v),
-  )
+  return observeProperty(name, "bool", fn)
 }
 
 export function observePropertyString(
   name: StringProp | (string & {}),
   fn: (name: string, value: string) => void,
 ) {
-  return observeProperty(name, "string", (name: string, v: string) =>
-    fn(name, v),
-  )
+  return observeProperty(name, "string", fn)
 }
 
 export function unobserveProperty(fn: (...args: any[]) => void) {
