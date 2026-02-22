@@ -72,6 +72,10 @@ import {
   defaultConfig as youtubeConfig,
   pluginName as youtubeName,
 } from "@mpv-easy/youtube"
+import sponsorblockPlugin, {
+  defaultConfig as sponsorblockConfig,
+  pluginName as sponsorblockName,
+} from "@mpv-easy/sponsorblock"
 
 import { type PluginContext } from "@mpv-easy/plugin"
 import {
@@ -106,6 +110,7 @@ export const getPlugins = () => [
   translatePlugin,
   cutPlugin,
   cropPlugin,
+  sponsorblockPlugin,
 ]
 
 export interface EnablePlugin {
@@ -121,6 +126,7 @@ export interface EnablePlugin {
   [cutName]: boolean
   [cropName]: boolean
   [frameSeekerName]: boolean
+  [sponsorblockName]: boolean
 }
 
 declare module "@mpv-easy/plugin" {
@@ -162,6 +168,7 @@ export function createDefaultContext() {
     [cropName]: cropConfig,
     [frameSeekerName]: frameSeekerConfig,
     [youtubeName]: youtubeConfig,
+    [sponsorblockName]: sponsorblockConfig,
     enablePlugins: {
       [i18nName]: true,
       [easyName]: true,
@@ -176,7 +183,8 @@ export function createDefaultContext() {
       [cutName]: true,
       [cropName]: true,
       [frameSeekerName]: true,
-      [youtubeName]: true,
+      [youtubeName]: false,
+      [sponsorblockName]: true,
     },
     version,
     experimental,

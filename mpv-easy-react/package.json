@@ -46,6 +46,7 @@
     "@mpv-easy/polyfill": "workspace:*",
     "@mpv-easy/react": "workspace:*",
     "@mpv-easy/thumbfast": "workspace:*",
+    "@mpv-easy/sponsorblock": "workspace:*",
     "@mpv-easy/tool": "workspace:*",
     "@mpv-easy/translate": "workspace:*",
     "@mpv-easy/youtube": "workspace:*",
