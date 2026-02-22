@@ -222,6 +222,7 @@ export const IncludesMap: Record<string, string[]> = {
     "mpv-easy-crop",
     "mpv-easy-thumbfast",
     "mpv-easy-frame-seeker",
+    "mpv-easy-sponsorblock",
   ],
 }
 
