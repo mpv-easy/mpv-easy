@@ -196,6 +196,20 @@ The color configuration format used in `mpv.conf` is **ARGB** (Alpha Red Green B
 | Magenta                | `#FFFF00FF` | Opaque Magenta         | `sub-color='#FFFF00FF'`            |
 | Transparent            | `#00000000` | Completely Transparent | `background-color='#00000000'`     |
 
+You can also modify subtitle colors at runtime via `input.conf` keybindings:
+
+Cycle through multiple colors (e.g. White → Red → Blue):
+
+```
+c cycle-values sub-color "#FFFFFF" "#FF0000" "#0000FF"
+```
+
+Set text and border color simultaneously:
+
+```
+r set sub-color "#FF0000" ; set sub-border-color "#000000"
+```
+
 ### mujs stack overflow
 
 If your code throw a stack overflow error with mujs, you need to use the babel plugin [hack.js](./mpv-easy-react/src//babel//hack.js)
