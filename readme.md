@@ -210,6 +210,22 @@ Set text and border color simultaneously:
 r set sub-color "#FF0000" ; set sub-border-color "#000000"
 ```
 
+### How to enable context-menu
+
+The mpv-easy style context menu has been removed due to performance reasons. Currently, mpv supports a native menu plugin on the Windows platform: [mpv-menu-plugin](https://github.com/tsl0922/mpv-menu-plugin).
+
+You can enable the right-click menu using the `mpv-dialog` and `mpv-menu` plugins.
+
+**Download Plugins:**
+Download the integrated plugin package (includes mpv-dialog and mpv-menu) via the following link:
+[Click to Download](https://mpv-easy.github.io/mpv-build/#mpv-build=%22%7B%5C%22state%5C%22%3A%7B%5C%22selectedRowKeys%5C%22%3A%5B%5C%22mpv-dialog%5C%22%2C%5C%22mpv-menu%5C%22%5D%2C%5C%22externalList%5C%22%3A%5B%5D%2C%5C%22ui%5C%22%3A%5C%22mpv-easy%5C%22%2C%5C%22platform%5C%22%3A%5C%22mpv-v3%5C%22%2C%5C%22repos%5C%22%3A%5B%5D%7D%7D%22)
+
+**Note:**
+By default, mpv-easy uses the right mouse button to pause the video. If you want to use the context menu, you need to delete or comment out the following line in `input.conf`:
+```conf
+MOUSE_BTN2 script-message mouse-right-click
+```
+
 ### mujs stack overflow
 
 If your code throw a stack overflow error with mujs, you need to use the babel plugin [hack.js](./mpv-easy-react/src//babel//hack.js)

@@ -378,7 +378,6 @@ export const Easy = (props: Partial<EasyProps>) => {
         ref={volumeDomRef}
         hide={hide || showCrop || showFrameSeeker}
       />
-      {/* {!clickMenuStyle.disable && <ClickMenu ref={menuRef} hide={menuHide} />} */}
       <Playlist />
       <History />
       <Speed />

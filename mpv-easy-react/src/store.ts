@@ -124,9 +124,6 @@ export const volumeStyleSelector = (state: PluginContext) =>
 export const dropdownStyleSelector = (state: PluginContext) =>
   styleSelector(state)[modeSelector(state)].dropdown
 
-export const clickMenuStyleSelector = (state: PluginContext) =>
-  styleSelector(state)[modeSelector(state)].clickMenu
-
 export const controlStyleSelector = (state: PluginContext) =>
   styleSelector(state)[modeSelector(state)].control
 export const progressStyleSelector = (state: PluginContext) =>

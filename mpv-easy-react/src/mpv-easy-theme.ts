@@ -23,7 +23,6 @@ export type ThemeMode = (typeof ThemeModeList)[number]
 export const UINameList = ["osc", "uosc", "oscx"] as const
 export type UIName = (typeof UINameList)[number]
 export const DefaultPlayMode: PlayMode = "loopAll"
-export const DefaultClickMenuDisable = true
 export const DefaultFontSizeScale = 1
 export const DefaultStackSize = 24
 export const DefaultMaxWidthRatio = 0.7
@@ -131,11 +130,6 @@ export type ThemeStyle = {
       backgroundColorHover: string
     }
   }
-  clickMenu: {
-    zIndex: number
-    backgroundColor: string
-    disable: boolean
-  }
 }
 export type EasyConfig = {
   mode: ThemeMode
@@ -202,7 +196,6 @@ export const defaultTooltipZIndex = 1024
 export const defaultDropdownZIndex = 512
 export const defaultToolbarZIndex = 256
 export const defaultPreviewZIndex = 256
-export const defaultClickMenuZIndex = 256
 export const defaultVolumeZIndex = 128
 export const defaultPlaylistZIndex = 512
 export const defaultFont = "FiraCode Nerd Font Mono"
@@ -329,11 +322,6 @@ export function createDefaultThemeConfig(): EasyConfig {
             zIndex: defaultDropdownZIndex + 2,
           },
         },
-        clickMenu: {
-          backgroundColor: Black + AlphaLow,
-          zIndex: defaultClickMenuZIndex,
-          disable: DefaultClickMenuDisable,
-        },
       },
       light: {
         fontSizeScale: DefaultFontSizeScale,
@@ -434,11 +422,6 @@ export function createDefaultThemeConfig(): EasyConfig {
             backgroundColorHover: Black + AlphaMedium,
             zIndex: defaultDropdownZIndex + 2,
           },
-        },
-        clickMenu: {
-          backgroundColor: White + AlphaLow,
-          zIndex: defaultClickMenuZIndex,
-          disable: DefaultClickMenuDisable,
         },
       },
     },
