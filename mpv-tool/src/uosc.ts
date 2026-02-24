@@ -1,7 +1,7 @@
 import { registerScriptMessage } from "./mpv"
 let UOSC_VERSION: string | undefined
 const UOSC_VERSION_P: Promise<string | undefined> = new Promise((r) => {
-  if (mp) {
+  if (typeof mp !== "undefined") {
     registerScriptMessage("uosc-version", (v) => {
       r(v)
     })
