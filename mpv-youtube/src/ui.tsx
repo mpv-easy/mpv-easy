@@ -17,6 +17,7 @@ import {
 import React, { useCallback, useEffect, useMemo, useRef, useState } from "react"
 import { Box, Button, type MpDomProps, useProperty } from "@mpv-easy/react"
 import { downloadAndConvertThumbnail } from "./tool"
+import { YoutubeConfig } from "."
 
 const thumbCache = new Map<string, string>() // hash -> outPath
 
@@ -46,6 +47,7 @@ export type YoutubeUIProps = MpDomProps & {
   loadingBackgroundColor?: string
   overlayBackgroundColor?: string
   tooltip?: boolean
+  zIndex?: number
 }
 
 // BGRA color constants (alpha: 00=show, FF=hide)
@@ -63,7 +65,7 @@ const ICON_SHUFFLE = ""
 const ICON_OPEN = "󰊓"
 const ICON_EXIT = ""
 
-export const defaultYoutubeConfig = {
+export const defaultYoutubeConfig: YoutubeConfig = {
   cookiesPath: "",
   cols: 4,
   rows: 4,
@@ -73,11 +75,12 @@ export const defaultYoutubeConfig = {
   sidebarPinned: false,
   titleColor: White + AlphaShow,
   titleColorHover: Yellow + AlphaShow,
-  titleBackgroundColor: Black + AlphaMedium,
-  loadingColor: White + AlphaMedium,
-  loadingBackgroundColor: `#333333${AlphaMedium}`,
-  overlayBackgroundColor: `#1a1a1a${AlphaMedium}`,
-  tooltip: false,
+  titleBackgroundColor: Black + AlphaShow,
+  loadingColor: White + AlphaShow,
+  loadingBackgroundColor: `#000000${AlphaShow}`,
+  overlayBackgroundColor: `#000000${AlphaShow}`,
+  // uosc: 2000
+  zIndex: 3333,
 }
 
 // ============================================================================
@@ -312,7 +315,6 @@ function Sidebar({
     backgroundColor: Black + AlphaHide,
     display: "flex" as const,
     position: "relative" as const,
-    zIndex: 1002,
     width: sidebarWidth,
     height: sidebarWidth,
     justifyContent: "center",
@@ -331,8 +333,7 @@ function Sidebar({
       display="flex"
       flexDirection="column"
       justifyContent="start"
-      backgroundColor={Black + AlphaMedium}
-      zIndex={1001}
+      backgroundColor={Black + AlphaShow}
       padding={4}
       alignItems="center"
     >
@@ -417,7 +418,6 @@ function Scrollbar({
         width={barWidth}
         height={barAreaHeight}
         backgroundColor={`#444444${AlphaMedium}`}
-        zIndex={1003}
       />
       {/* Scrollbar thumb */}
       <Box
@@ -428,7 +428,6 @@ function Scrollbar({
         width={barWidth}
         height={thumbHeight}
         backgroundColor={White + AlphaMedium}
-        zIndex={1004}
       />
     </>
   )
@@ -515,21 +514,17 @@ function VideoCard({
   const title = [durationText, entry.title].join("\n")
 
   return (
-    <>
-      {/* Full-cell transparent overlay for hover detection */}
-      <Box
-        position="absolute"
-        x={cellX}
-        y={cellY}
-        width={cellWidth}
-        height={cellHeight}
-        backgroundColor={Black + AlphaHide}
-        zIndex={12}
-        onMouseEnter={() => setHover(true)}
-        onMouseLeave={() => setHover(false)}
-        onClick={handleClick}
-        title={title}
-      />
+    <Box
+      x={cellX}
+      y={cellY}
+      width={cellWidth}
+      height={cellHeight}
+      backgroundColor={Black + AlphaHide}
+      onMouseEnter={() => setHover(true)}
+      onMouseLeave={() => setHover(false)}
+      onClick={handleClick}
+      title={title}
+    >
       {thumbPath ? (
         <Box
           id={imageId}
@@ -542,7 +537,6 @@ function VideoCard({
           imageHeight={rawH}
           backgroundImage={thumbPath}
           backgroundImageFormat="bgra"
-          zIndex={10}
         />
       ) : (
         <Box
@@ -559,7 +553,6 @@ function VideoCard({
           justifyContent="center"
           alignItems="center"
           display="flex"
-          zIndex={10}
         />
       )}
       <Box
@@ -577,9 +570,8 @@ function VideoCard({
         alignItems="center"
         display="flex"
         padding={4}
-        zIndex={11}
       />
-    </>
+    </Box>
   )
 }
 
@@ -602,6 +594,7 @@ export function Youtube(props: Partial<YoutubeUIProps>) {
     loadingColor = defaultYoutubeConfig.loadingColor,
     loadingBackgroundColor = defaultYoutubeConfig.loadingBackgroundColor,
     overlayBackgroundColor = defaultYoutubeConfig.overlayBackgroundColor,
+    zIndex,
     ...restProps
   } = props
 
@@ -725,7 +718,7 @@ export function Youtube(props: Partial<YoutubeUIProps>) {
       width={"100%"}
       height={"100%"}
       backgroundColor={overlayBackgroundColor}
-      zIndex={1000}
+      zIndex={zIndex ?? defaultYoutubeConfig.zIndex}
       onWheelUp={scrollUp}
       onWheelDown={scrollDown}
       {...restProps}
@@ -780,7 +773,6 @@ export function Youtube(props: Partial<YoutubeUIProps>) {
           y={0}
           width={w - sidebarTotalWidth}
           height={h}
-          zIndex={10}
         >
           <Box
             text={

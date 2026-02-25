@@ -19,6 +19,7 @@ export type YoutubeConfig = {
   titleFont: string
   sidebarWidth: number
   sidebarPinned: boolean
+  zIndex: number
 }
 
 export const defaultConfig: YoutubeConfig = {

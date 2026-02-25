@@ -26,6 +26,7 @@ const options = {
     "title-font": { type: "string", key: "titleFont" },
     "sidebar-width": { type: "number", key: "sidebarWidth" },
     "sidebar-pinned": { type: "boolean", key: "sidebarPinned" },
+    "z-index": { type: "number", key: "zIndex" },
     tooltip: { type: "boolean", key: "tooltip" },
   }),
 }
@@ -61,6 +62,7 @@ function App() {
         titleFont={options.titleFont}
         sidebarWidth={options.sidebarWidth}
         sidebarPinned={options.sidebarPinned}
+        zIndex={options.zIndex}
       />
     </>
   )
