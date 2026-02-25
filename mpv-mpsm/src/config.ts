@@ -23,8 +23,8 @@ export function setConfigDir(configDir: string) {
   })
 }
 
-export function getScriptsDir(): string {
-  return join(getConfigDir(), "scripts")
+export function getScriptsDir(configDir?: string): string {
+  return join(configDir ?? getConfigDir(), "scripts")
 }
 
 export function getConfigDir(): string {
@@ -32,8 +32,8 @@ export function getConfigDir(): string {
   return config.configDir
 }
 
-export function getMpsmDir(): string {
-  return getScriptsDir()
+export function getMpsmDir(configDir?: string): string {
+  return getScriptsDir(configDir)
 }
 
 export function configDetect() {
@@ -47,8 +47,10 @@ export function configDetect() {
   }
 }
 
-export function getAllScript(): (Script & { filePath: string })[] {
-  const dir = getMpsmDir()
+export function getAllScript(
+  configDir?: string,
+): (Script & { filePath: string })[] {
+  const dir = getMpsmDir(configDir)
   const metaList: (Script & { filePath: string })[] = []
 
   if (!existsSync(dir)) {

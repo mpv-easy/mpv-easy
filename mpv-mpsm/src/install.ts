@@ -16,18 +16,22 @@ import { File, Fmt, decode } from "@easy-install/easy-archive"
 import { parseGitHubUrl, Repo } from "@mpv-easy/tool"
 import { tryFix } from "./fix"
 
-export async function installFromJSON(url: string) {
+export async function installFromJSON(url: string, configDir?: string) {
   const text = await downloadText(url)
   const script: Script = JSON.parse(text)
-  return installFromScript(script)
+  return installFromScript(script, configDir)
 }
 
-export async function installFromFiles(script: Script, scriptFiles: File[]) {
+export async function installFromFiles(
+  script: Script,
+  scriptFiles: File[],
+  configDir?: string,
+) {
   const mpvFiles: File[] = []
-  const configDir = getConfigDir()
+  const resolvedConfigDir = configDir ?? getConfigDir()
 
   for (const i of ["input.conf", "mpv.conf"]) {
-    const filePath = join(configDir, i).replaceAll("\\", "/")
+    const filePath = join(resolvedConfigDir, i).replaceAll("\\", "/")
     if (existsSync(filePath)) {
       const buf = readFileSync(filePath)
       const file = new File(filePath, buf, undefined, false, BigInt(Date.now()))
@@ -35,15 +39,18 @@ export async function installFromFiles(script: Script, scriptFiles: File[]) {
     }
   }
 
-  installScript(mpvFiles, scriptFiles, script, configDir)
+  installScript(mpvFiles, scriptFiles, script, resolvedConfigDir)
 
   for (const i of mpvFiles) {
     outputFileSync(i.path, i.buffer)
   }
 }
 
-export async function installFromScript(script: Script): Promise<Script> {
-  const dir = getMpsmDir()
+export async function installFromScript(
+  script: Script,
+  configDir?: string,
+): Promise<Script> {
+  const dir = getMpsmDir(configDir)
   const bin = await downloadBinary(script.download)
 
   const scriptDir = join(dir, script.name)
@@ -55,7 +62,7 @@ export async function installFromScript(script: Script): Promise<Script> {
       console.log(`zip decode error ${chalk.green(ext)}`)
       process.exit()
     }
-    installFromFiles(script, files)
+    installFromFiles(script, files, configDir)
   } else if (["json", "lua"].includes(ext)) {
     const scriptPath = join(scriptDir, `main.${ext}`)
     const scriptJsonPath = join(scriptDir, "script.json")
@@ -69,14 +76,14 @@ export async function installFromScript(script: Script): Promise<Script> {
   return script
 }
 
-export async function installFromMpsm(name: string) {
+export async function installFromMpsm(name: string, configDir?: string) {
   const json = await downloadJson<Record<string, Script>>(ScriptRemoteUrl)
   const script = json[name]
   if (!script) {
     console.log(`not found script ${chalk.green(name)}`)
     process.exit()
   }
-  return installFromScript(script)
+  return installFromScript(script, configDir)
 }
 
 // export async function installFromScript(url: string): Promise<Script> {
@@ -93,7 +100,7 @@ export async function installFromMpsm(name: string) {
 //   return meta
 // }
 
-async function installFromZip(url: string) {
+async function installFromZip(url: string, configDir?: string) {
   const bin = existsSync(url)
     ? new Uint8Array(readFileSync(url))
     : await downloadBinary(url)
@@ -108,15 +115,14 @@ async function installFromZip(url: string) {
   const decoder = new TextDecoder("utf-8")
   const string = decoder.decode(file.clone().buffer)
   const script: Script = JSON.parse(string)
-  installFromFiles(script, files)
+  installFromFiles(script, files, configDir)
   return script
 }
 
-async function installFromGithub({
-  user,
-  repo,
-  bracnch = "main",
-}: Repo): Promise<Script> {
+async function installFromGithub(
+  { user, repo, bracnch = "main" }: Repo,
+  configDir?: string,
+): Promise<Script> {
   const url = `https://github.com/${user}/${repo}/archive/refs/heads/${bracnch}.zip`
   const zip = await downloadBinary(url)
   const files = decode(Fmt.Zip, zip)
@@ -129,12 +135,12 @@ async function installFromGithub({
     download: url,
   }
   const fixFiles = tryFix(files, script)
-  installFromFiles(script, fixFiles)
+  installFromFiles(script, fixFiles, configDir)
   return script
 }
 
-export async function install(scripts: string[]) {
-  const names = [...getAllScript().map((i) => i.name), ...scripts]
+export async function install(scripts: string[], configDir?: string) {
+  const names = [...getAllScript(configDir).map((i) => i.name), ...scripts]
   const c = checkConflict(names)
   if (c.length) {
     console.error("Conflict:", c.join(" "))
@@ -145,13 +151,13 @@ export async function install(scripts: string[]) {
     let meta: Script
     const repo = parseGitHubUrl(name)
     if (name.endsWith(".json")) {
-      meta = await installFromJSON(name)
+      meta = await installFromJSON(name, configDir)
     } else if (name.endsWith(".zip")) {
-      meta = await installFromZip(name)
+      meta = await installFromZip(name, configDir)
     } else if (repo) {
-      meta = await installFromGithub(repo)
+      meta = await installFromGithub(repo, configDir)
     } else {
-      meta = await installFromMpsm(name)
+      meta = await installFromMpsm(name, configDir)
     }
 
     const v: string[] = [chalk.green(meta.name)]

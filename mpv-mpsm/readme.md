@@ -21,6 +21,11 @@ mpsm get-config-dir
 mpsm install mpv-easy-crop
 mpsm uninstall mpv-easy-crop
 
+# install script with custom config dir
+mpsm install -c '<your-mpv-dir>/portable_config' mpv-easy-youtube
+# or
+mpsm install --config-dir '<your-mpv-dir>/portable_config' "https://github.com/mpv-easy/mpv-easy/releases/latest/download/mpv-easy-translate.zip"
+
 # install script from url
 mpsm install "<your-script-url>"
 

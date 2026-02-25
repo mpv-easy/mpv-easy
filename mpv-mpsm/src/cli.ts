@@ -1,3 +1,4 @@
+import { resolve } from "node:path"
 import Cac from "cac"
 import { install } from "./install"
 import { uninstall } from "./uninstall"
@@ -35,10 +36,18 @@ cli.command("get-config-dir", "get mpv config dir").action(() => {
   console.log(dir)
 })
 
-cli.command("install <...scripts>", "install script").action((scripts) => {
-  configDetect()
-  install(scripts)
-})
+cli
+  .command("install <...scripts>", "install script")
+  .option("-c, --config-dir <dir>", "set mpv config dir (portable_config path)")
+  .action((scripts, options) => {
+    const configDir = options.configDir
+      ? resolve(options.configDir).replaceAll("\\", "/")
+      : undefined
+    if (!configDir) {
+      configDetect()
+    }
+    install(scripts, configDir)
+  })
 
 cli
   .command("update [...scripts]", "install script")
@@ -84,6 +93,10 @@ cli
     configDetect()
     restore(file)
   })
+
+cli.command("").action(() => {
+  cli.outputHelp()
+})
 
 cli.version(version)
 
