@@ -1,6 +1,6 @@
 {
   "name": "mpv-easy",
-  "version": "0.1.15-alpha.17",
+  "version": "0.1.15-alpha.20",
   "workspaces": [
     "mpv-*"
   ],
@@ -58,7 +58,7 @@
     "esbuild": "0.27.3",
     "fflate": "0.8.2",
     "lefthook": "2.1.1",
-    "less": "^4.5.1",
+    "less": "4.5.1",
     "lodash-es": "4.17.23",
     "react": "19.2.4",
     "react-dom": "19.2.4",

@@ -13,7 +13,7 @@ build({
   },
   charset: "utf8",
   define: {
-    "globalThis.version": '"0.1.15-alpha.17"',
+    "globalThis.version": '"0.1.15-alpha.20"',
     "process.env.NODE_ENV": '"production"',
   },
   metafile: true,

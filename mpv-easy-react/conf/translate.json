@@ -1,7 +1,7 @@
 {
   "name": "mpv-easy-translate",
   "description": "mpv player translation script",
-  "version": "0.1.15-alpha.17",
+  "version": "0.1.15-alpha.20",
   "author": "mpv-easy",
   "download": "https://github.com/mpv-easy/mpv-easy/releases/latest/download/mpv-easy-translate.zip",
   "homepage": "https://github.com/mpv-easy/mpv-easy/tree/main/mpv-translate"
