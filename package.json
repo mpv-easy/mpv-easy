@@ -1,5 +1,6 @@
 {
   "name": "mpv-easy",
+  "private": "true",
   "version": "0.1.15-alpha.20",
   "workspaces": [
     "mpv-*"
