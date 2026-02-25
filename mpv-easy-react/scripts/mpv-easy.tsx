@@ -1,16 +1,21 @@
 import "@mpv-easy/polyfill"
-import { uoscVersion } from "@mpv-easy/tool"
+import { runMpvEasy } from "../src/mpv-easy"
+import { DefaultFps } from "@mpv-easy/react"
+import { getenv } from "@mpv-easy/tool"
 
-console.log(
-  "uoscVersion",
-  uoscVersion().then((i) => {
-    console.log("iiii---", i)
-  }),
-)
+const SHOW_FPS = !!getenv("SHOW_FPS")
+const MAX_FPS_FRAME = getenv("MAX_FPS_FRAME")
+const FRAME_LIMIT = getenv("FRAME_LIMIT")
+runMpvEasy({
+  fps: DefaultFps,
+  showFps: SHOW_FPS,
+  maxFpsFrame: MAX_FPS_FRAME ? +MAX_FPS_FRAME : 64,
+  frameLimit: FRAME_LIMIT ? +FRAME_LIMIT : 0,
+})
+// import React from "react"
+// import { ColorBoxDirty } from "./example/color-box-dirty"
+// import { createRender } from "@mpv-easy/react"
 
-async function r() {
-  console.log("v---1", await uoscVersion())
-  console.log("v---2", await uoscVersion())
-}
-
-r()
+// createRender({
+//   showFps: true,
+// })(<ColorBoxDirty />)

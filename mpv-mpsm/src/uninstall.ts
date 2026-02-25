@@ -4,8 +4,8 @@ import chalk from "chalk"
 import { existsSync } from "node:fs"
 import { join } from "node:path"
 
-export async function uninstall(scripts: string[]) {
-  const dir = await getConfigDir()
+export async function uninstall(scripts: string[], configDir?: string) {
+  const dir = configDir ?? (await getConfigDir())
   for (const name of scripts) {
     const scriptPath = join(dir, name)
     if (existsSync(scriptPath)) {

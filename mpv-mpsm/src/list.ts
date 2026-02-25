@@ -1,8 +1,8 @@
 import chalk from "chalk"
 import { getAllScript } from "./config"
 
-export function list() {
-  const metaList = getAllScript()
+export function list(configDir?: string) {
+  const metaList = getAllScript(configDir)
   for (const meta of metaList) {
     const v: string[] = []
     v.push(chalk.green(meta.name))

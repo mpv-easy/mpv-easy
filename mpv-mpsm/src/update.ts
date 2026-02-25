@@ -5,7 +5,11 @@ import { downloadJson } from "./share"
 import { Script } from "./meta"
 import { ScriptRemoteUrl } from "./const"
 
-export async function updateByName(name: string, metaList = getAllScript()) {
+export async function updateByName(
+  name: string,
+  metaList = getAllScript(),
+  configDir?: string,
+) {
   const meta = metaList.find((i) => i.name === name)
 
   if (!meta) {
@@ -17,7 +21,7 @@ export async function updateByName(name: string, metaList = getAllScript()) {
   const newScript = json[name]
 
   if (newScript.version !== meta.version) {
-    await installFromScript(meta)
+    await installFromScript(meta, configDir)
     const v = [`update ${chalk.green(meta.name)}`]
     if (newScript.version) {
       v.push(`from ${meta.version} to ${newScript.version}`)
@@ -32,15 +36,23 @@ export async function updateByName(name: string, metaList = getAllScript()) {
   }
 }
 
-export async function update(list: string[], metaList = getAllScript()) {
+export async function update(
+  list: string[],
+  configDir?: string,
+  metaList = getAllScript(configDir),
+) {
   for (const name of list) {
-    await updateByName(name, metaList)
+    await updateByName(name, metaList, configDir)
   }
 }
 
-export async function updateAll(metaList = getAllScript()) {
+export async function updateAll(
+  configDir?: string,
+  metaList = getAllScript(configDir),
+) {
   update(
     metaList.map((i) => i.name),
+    configDir,
     metaList,
   )
 }

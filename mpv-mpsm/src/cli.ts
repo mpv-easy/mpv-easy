@@ -50,10 +50,16 @@ cli
   })
 
 cli
-  .command("update [...scripts]", "install script")
+  .command("update [...scripts]", "update script")
   .option("--all", "update all script")
+  .option("-c, --config-dir <dir>", "set mpv config dir (portable_config path)")
   .action((scripts, option) => {
-    configDetect()
+    const configDir = option.configDir
+      ? resolve(option.configDir).replaceAll("\\", "/")
+      : undefined
+    if (!configDir) {
+      configDetect()
+    }
     if (!scripts?.length && !option.all) {
       console.log(
         `run ${chalk.green("mpsm update <script>")} or ${chalk.green(
@@ -64,34 +70,62 @@ cli
     }
 
     if (option.all) {
-      updateAll()
+      updateAll(configDir)
     } else {
-      update(scripts)
+      update(scripts, configDir)
     }
   })
 
-cli.command("uninstall <...scripts>", "uninstall script").action((scripts) => {
-  configDetect()
-  uninstall(scripts)
-})
+cli
+  .command("uninstall <...scripts>", "uninstall script")
+  .option("-c, --config-dir <dir>", "set mpv config dir (portable_config path)")
+  .action((scripts, options) => {
+    const configDir = options.configDir
+      ? resolve(options.configDir).replaceAll("\\", "/")
+      : undefined
+    if (!configDir) {
+      configDetect()
+    }
+    uninstall(scripts, configDir)
+  })
 
-cli.command("list", "list installed scripts").action(() => {
-  configDetect()
-  list()
-})
+cli
+  .command("list", "list installed scripts")
+  .option("-c, --config-dir <dir>", "set mpv config dir (portable_config path)")
+  .action((options) => {
+    const configDir = options.configDir
+      ? resolve(options.configDir).replaceAll("\\", "/")
+      : undefined
+    if (!configDir) {
+      configDetect()
+    }
+    list(configDir)
+  })
 
 cli
   .command("backup [file]", "backup all installed scripts to json file")
-  .action((file) => {
-    configDetect()
-    backup(file)
+  .option("-c, --config-dir <dir>", "set mpv config dir (portable_config path)")
+  .action((file, options) => {
+    const configDir = options.configDir
+      ? resolve(options.configDir).replaceAll("\\", "/")
+      : undefined
+    if (!configDir) {
+      configDetect()
+    }
+    backup(file, configDir)
   })
 
 cli
   .command("restore <file>", "restore scripts from json file")
-  .action((file) => {
-    configDetect()
-    restore(file)
+  .option("-c, --config-dir <dir>", "set mpv config dir (portable_config path)")
+  .action((file, options) => {
+    const configDir = options.configDir
+      ? resolve(options.configDir).replaceAll("\\", "/")
+      : undefined
+    if (!configDir) {
+      configDetect()
+    }
+    restore(file, configDir)
   })
 
 cli.command("").action(() => {
