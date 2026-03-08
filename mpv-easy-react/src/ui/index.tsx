@@ -166,21 +166,25 @@ export const Easy = (props: Partial<EasyProps>) => {
     registerScriptMessage("whisper", async () => {
       const p = normalize(getProperty("path") || "")
       if (!p) {
+        showNotification("no video file found", 5)
         return
       }
       const videoType = VideoTypes.find((i) => p?.endsWith(`.${i}`))
       if (!videoType) {
+        showNotification("unsupported video format", 5)
         return
       }
 
       const ffmpeg = detectFfmpeg()
       if (!ffmpeg) {
+        showNotification("ffmpeg not found", 5)
         return
       }
 
       const destination = p.replace(`.${videoType}`, ".srt")
       const model = detectWhisperModel()
       if (!model) {
+        showNotification("whisper model not found", 5)
         return
       }
       const config: whisperConfig = {
