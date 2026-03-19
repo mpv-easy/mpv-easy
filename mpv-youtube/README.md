@@ -61,3 +61,9 @@ You can customize the plugin via `script-opts/mpv-easy-youtube.conf`:
 2. Use the mouse wheel to scroll through rows.
 3. Click on a video card to play it.
 4. Use the sidebar buttons to refresh or shuffle the list.
+
+### Keyboard Shortcuts
+
+| Shortcut | Command | Description |
+| :--- | :--- | :--- |
+| `CTRL+y` | `script-message youtube` | Toggle the YouTube UI on/off |
