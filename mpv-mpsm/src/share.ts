@@ -41,22 +41,28 @@ export function installScript(
   script: Script,
   configDir = "portable_config",
 ) {
+  const scriptDir = script.scriptName || script.name
+  const isLua = (p: string) => p.toLowerCase().endsWith(".lua")
+  const isJs = (p: string) => p.toLowerCase().endsWith(".js")
+
   // fonts, script-opts, shaders
   for (const dir of ["fonts", "script-opts", "shaders"]) {
-    if (scriptFiles.find((i) => i.path.startsWith(`${dir}/`))) {
-      const files = scriptFiles.filter((i) => i.path.startsWith(`${dir}/`))
-      scriptFiles = scriptFiles.filter((i) => !i.path.startsWith(`${dir}/`))
-      for (const i of files) {
-        i.path = `${configDir}/${dir}/${i.path.replace(`${dir}/`, "")}`
-        mpvFiles.push(i)
-      }
+    const prefix = `${dir}/`
+    const files = scriptFiles.filter((i) => i.path.startsWith(prefix))
+    if (files.length === 0) continue
+    scriptFiles = scriptFiles.filter((i) => !i.path.startsWith(prefix))
+    for (const i of files) {
+      i.path = `${configDir}/${dir}/${i.path.slice(prefix.length)}`
+      mpvFiles.push(i)
     }
   }
 
   // scripts
-  if (scriptFiles.find((i) => i.path.startsWith("scripts/"))) {
-    const files = scriptFiles.filter((i) => i.path.startsWith("scripts/"))
-    scriptFiles = scriptFiles.filter((i) => !i.path.startsWith("scripts/"))
+  const isInScripts = (i: File) => i.path.startsWith("scripts/")
+  const scriptPrefixFiles = scriptFiles.filter(isInScripts)
+  if (scriptPrefixFiles.length > 0) {
+    const files = scriptPrefixFiles
+    scriptFiles = scriptFiles.filter((i) => !isInScripts(i))
 
     const dirList = files
       .map((i) => i.path.split("/"))
@@ -66,38 +72,43 @@ export function installScript(
       ? ["scripts", ...dirList[0].slice(0, commonPrefixIndex)]
       : ["scripts"]
     const commonPrefixString = `${commonPrefixList.join("/")}/`
-    const luaFiles = files.filter(
-      (i) =>
-        !i.path.replace(commonPrefixString, "").includes("/") &&
-        i.path.endsWith(".lua"),
-    )
-    const jsFiles = files.filter(
-      (i) =>
-        !i.path.replace(commonPrefixString, "").includes("/") &&
-        i.path.endsWith(".js"),
-    )
+
+    const isTopLevel = (i: File) =>
+      !i.path.replace(commonPrefixString, "").includes("/")
+
+    const luaFiles = files.filter((i) => isTopLevel(i) && isLua(i.path))
+    const jsFiles = files.filter((i) => isTopLevel(i) && isJs(i.path))
     if (luaFiles.length === 1) {
-      luaFiles[0].path = `${script.scriptName || script.name}/main.lua`
+      luaFiles[0].path = `${scriptDir}/main.lua`
     } else if (jsFiles.length === 1) {
-      jsFiles[0].path = `${script.scriptName || script.name}/main.js`
+      jsFiles[0].path = `${scriptDir}/main.js`
+    } else {
+      const nameLower = scriptDir.toLowerCase()
+      const mainIndex = files.findIndex((i) => {
+        const p = i.path.toLowerCase()
+        return p.endsWith(`${nameLower}.lua`) || p.endsWith(`${nameLower}.js`)
+      })
+      if (mainIndex !== -1) {
+        const mainFile = files.splice(mainIndex, 1)[0]
+        const ext = mainFile.path.slice(mainFile.path.lastIndexOf("."))
+        mainFile.path = `${configDir}/scripts/${scriptDir}/main${ext}`
+        mpvFiles.push(mainFile)
+      }
     }
 
     for (const i of files) {
-      const s = i.path.replace(
-        commonPrefixString,
-        `${script.scriptName || script.name}/`,
-      )
-      i.path = `${configDir}/scripts/${s}`
+      i.path = `${configDir}/scripts/${i.path.replace(commonPrefixString, `${scriptDir}/`)}`
       mpvFiles.push(i)
     }
   }
 
   // externals
-  if (scriptFiles.find((i) => i.path.startsWith("externals/"))) {
-    const files = scriptFiles.filter((i) => i.path.startsWith("externals/"))
-    scriptFiles = scriptFiles.filter((i) => !i.path.startsWith("externals/"))
-    for (const i of files) {
-      i.path = i.path.replace("externals/", "")
+  const isInExternals = (i: File) => i.path.startsWith("externals/")
+  const externalFiles = scriptFiles.filter(isInExternals)
+  if (externalFiles.length > 0) {
+    scriptFiles = scriptFiles.filter((i) => !isInExternals(i))
+    for (const i of externalFiles) {
+      i.path = i.path.slice("externals/".length)
       mpvFiles.push(i)
     }
   }
@@ -105,26 +116,22 @@ export function installScript(
   // input.conf and mpv.conf
   for (const name of ["input.conf", "mpv.conf"]) {
     const scriptConfIndex = scriptFiles.findIndex((i) => i.path === name)
-    if (scriptConfIndex === -1) {
-      continue
-    }
+    if (scriptConfIndex === -1) continue
     const scriptConf = scriptFiles.splice(scriptConfIndex, 1)[0]
 
     const fileIndex = mpvFiles.findIndex(
       (i) => i.path === `${configDir}/${name}`,
     )
-    let file: File
-    if (fileIndex === -1) {
-      file = new File(
-        `${configDir}/${name}`,
-        new Uint8Array(),
-        undefined,
-        false,
-        BigInt(Date.now()),
-      )
-    } else {
-      file = mpvFiles.splice(fileIndex, 1)[0]
-    }
+    const file =
+      fileIndex === -1
+        ? new File(
+            `${configDir}/${name}`,
+            new Uint8Array(),
+            undefined,
+            false,
+            BigInt(Date.now()),
+          )
+        : mpvFiles.splice(fileIndex, 1)[0]
 
     const { path, mode, isDir, lastModified, buffer } = file
     const newBuffer = appendScriptConf(buffer, scriptConf.buffer, script)
@@ -132,52 +139,37 @@ export function installScript(
   }
 
   // conf
-  if (
-    scriptFiles.find((i) => !i.path.includes("/") && i.path.endsWith(".conf"))
-  ) {
-    const files = scriptFiles.filter(
-      (i) => !i.path.includes("/") && i.path.endsWith(".conf"),
-    )
-    scriptFiles = scriptFiles.filter(
-      (i) => !(!i.path.includes("/") && i.path.endsWith(".conf")),
-    )
-    for (const i of files) {
-      // If a script with the same name can be found, it means it is a script configuration file, otherwise its relative path should be retained
-      const hasJs = scriptFiles.find(
-        (s) => s.path === i.path.replace(".conf", ".js"),
-      )
-      const hasLua = scriptFiles.find(
-        (s) => s.path === i.path.replace(".conf", ".lua"),
-      )
-      const p = hasJs || hasLua ? `${configDir}/script-opts/${i.path}` : i.path
-      i.path = p
+  const isRootConf = (i: File) =>
+    !i.path.includes("/") && i.path.endsWith(".conf")
+  const confFiles = scriptFiles.filter(isRootConf)
+  if (confFiles.length > 0) {
+    scriptFiles = scriptFiles.filter((i) => !isRootConf(i))
+    for (const i of confFiles) {
+      const hasScript =
+        scriptFiles.some((s) => s.path === i.path.replace(".conf", ".js")) ||
+        scriptFiles.some((s) => s.path === i.path.replace(".conf", ".lua"))
+      i.path = hasScript ? `${configDir}/script-opts/${i.path}` : i.path
       mpvFiles.push(i)
     }
   }
 
   // font file
-  if (scriptFiles.find((i) => !i.path.includes("/") && isFont(i.path))) {
-    const files = scriptFiles.filter(
-      (i) => !i.path.includes("/") && isFont(i.path),
-    )
-    scriptFiles = scriptFiles.filter(
-      (i) => !(!i.path.includes("/") && isFont(i.path)),
-    )
-    for (const i of files) {
+  const isRootFont = (i: File) => !i.path.includes("/") && isFont(i.path)
+  const fontFiles = scriptFiles.filter(isRootFont)
+  if (fontFiles.length > 0) {
+    scriptFiles = scriptFiles.filter((i) => !isRootFont(i))
+    for (const i of fontFiles) {
       i.path = `${configDir}/fonts/${i.path}`
       mpvFiles.push(i)
     }
   }
 
   // dll file
-  if (scriptFiles.find((i) => !i.path.includes("/") && isDll(i.path))) {
-    const files = scriptFiles.filter(
-      (i) => !i.path.includes("/") && isDll(i.path),
-    )
-    scriptFiles = scriptFiles.filter(
-      (i) => !(!i.path.includes("/") && isDll(i.path)),
-    )
-    for (const i of files) {
+  const isRootDll = (i: File) => !i.path.includes("/") && isDll(i.path)
+  const dllFiles = scriptFiles.filter(isRootDll)
+  if (dllFiles.length > 0) {
+    scriptFiles = scriptFiles.filter((i) => !isRootDll(i))
+    for (const i of dllFiles) {
       i.path = `${configDir}/scripts/${i.path}`
       mpvFiles.push(i)
     }
@@ -185,10 +177,10 @@ export function installScript(
 
   // rename to main
   const luaFiles = scriptFiles.filter(
-    (i) => !i.path.includes("/") && i.path.endsWith(".lua"),
+    (i) => !i.path.includes("/") && isLua(i.path),
   )
   const jsFiles = scriptFiles.filter(
-    (i) => !i.path.includes("/") && i.path.endsWith(".js"),
+    (i) => !i.path.includes("/") && isJs(i.path),
   )
   if (luaFiles.length === 1) {
     luaFiles[0].path = "main.lua"
@@ -197,7 +189,7 @@ export function installScript(
   }
 
   for (const i of scriptFiles) {
-    i.path = `${configDir}/scripts/${script.scriptName || script.name}/${i.path}`
+    i.path = `${configDir}/scripts/${scriptDir}/${i.path}`
     mpvFiles.push(i)
   }
 }
