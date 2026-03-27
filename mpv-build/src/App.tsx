@@ -304,6 +304,7 @@ function App() {
       const info: DataType = {
         key,
         name: key,
+        scriptName: repo,
         download: key,
         author: user,
         description: homepage,
