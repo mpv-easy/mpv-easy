@@ -14,7 +14,6 @@ import easyPlugin from "./main"
 import {
   defaultConfig as easyConfig,
   pluginName as easyName,
-  pluginName,
 } from "./const"
 
 import anime4kPlugin, {
@@ -193,6 +192,79 @@ export function createDefaultContext() {
 
 export const defaultContext: PluginContext = createDefaultContext()
 
+function deepDiff(current: any, defaults: any): any {
+  if (
+    typeof current !== "object" ||
+    current === null ||
+    Array.isArray(current) ||
+    typeof defaults !== "object" ||
+    defaults === null ||
+    Array.isArray(defaults)
+  ) {
+    return current
+  }
+
+  const result: any = {}
+  for (const key of Object.keys(current)) {
+    const val = current[key]
+    const defVal = defaults[key]
+
+    if (val === null || val === undefined) {
+      continue
+    }
+
+    if (
+      typeof val === "object" &&
+      !Array.isArray(val) &&
+      typeof defVal === "object" &&
+      !Array.isArray(defVal) &&
+      defVal !== null
+    ) {
+      const nested = deepDiff(val, defVal)
+      if (Object.keys(nested).length > 0) {
+        result[key] = nested
+      }
+    } else if (JSON.stringify(val) !== JSON.stringify(defVal)) {
+      result[key] = val
+    }
+  }
+  return result
+}
+
+function deepMerge(defaults: any, saved: any): any {
+  if (
+    typeof defaults !== "object" ||
+    defaults === null ||
+    Array.isArray(defaults)
+  ) {
+    return saved ?? defaults
+  }
+  if (typeof saved !== "object" || saved === null || Array.isArray(saved)) {
+    return saved ?? defaults
+  }
+
+  const result: any = { ...defaults }
+  for (const key of Object.keys(saved)) {
+    const val = saved[key]
+    if (val === null || val === undefined) {
+      continue
+    }
+
+    if (
+      typeof val === "object" &&
+      !Array.isArray(val) &&
+      typeof result[key] === "object" &&
+      !Array.isArray(result[key]) &&
+      result[key] !== null
+    ) {
+      result[key] = deepMerge(result[key], val)
+    } else {
+      result[key] = val
+    }
+  }
+  return result
+}
+
 export function saveConfig(c: PluginContext) {
   if (!existsSync(configDir)) {
     try {
@@ -203,7 +275,12 @@ export function saveConfig(c: PluginContext) {
   }
 
   try {
-    writeFile(configPath, JSON.stringify(c, null, 2))
+    const diff = deepDiff(c, defaultContext)
+    // skip player state
+    if (diff[easyName] && diff[easyName]['player']) {
+      delete diff[easyName]['player']
+    }
+    writeFile(configPath, JSON.stringify(diff, null, 2))
   } catch {
     print(`write config file error: ${configPath}`)
   }
@@ -211,11 +288,12 @@ export function saveConfig(c: PluginContext) {
 
 function readConfig(): PluginContext {
   try {
-    return JSON.parse(readFile(configPath))
+    const saved = JSON.parse(readFile(configPath))
+    return deepMerge(createDefaultContext(), saved) as PluginContext
   } catch {
     print(`parse or read config file error: ${configPath}`)
   }
-  return defaultContext
+  return createDefaultContext()
 }
 
 export function getConfig() {
@@ -248,8 +326,8 @@ export function getConfig() {
         break
       }
     }
-    customConfig[pluginName].style.dark.fontSizeScale = scale
-    customConfig[pluginName].style.light.fontSizeScale = scale
+    customConfig[easyName].style.dark.fontSizeScale = scale
+    customConfig[easyName].style.light.fontSizeScale = scale
     saveConfig(customConfig)
   }
 
