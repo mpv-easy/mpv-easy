@@ -152,7 +152,12 @@ const experimental: Experimental = {
 export function createDefaultContext() {
   const isWin = getOs() === "windows"
   return cloneDeep({
-    renderConfig: {},
+    renderConfig: {
+      "fps": 30,
+      "frameLimit": 0,
+      "maxFpsFrame": 64,
+      "showFps": false
+    },
     [clipboardPlayName]: clipboardPlayConfig,
     [anime4kName]: anime4kConfig,
     [copyTimeName]: copyTimeConfig,
@@ -328,6 +333,7 @@ export function getConfig() {
     }
     customConfig[easyName].style.dark.fontSizeScale = scale
     customConfig[easyName].style.light.fontSizeScale = scale
+    customConfig
     saveConfig(customConfig)
   }
 
