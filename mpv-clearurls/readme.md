@@ -24,26 +24,6 @@ Automatically removes tracking parameters from video URLs when loading files in 
 3. Click **Download portable_config.zip**.
 4. Extract the downloaded ZIP file and move its contents to your mpv configuration directory (usually `portable_config` or `~/.config/mpv/`).
 
-## Configuration
-You can customize the plugin's behavior by editing `clearurls.conf`:
-
-```ini
-# Whether to enable the plugin at startup
-# Default: yes
-active=yes
-
-# Script message event name, used for keybinding to toggle the plugin status
-# Default: clearurls
-clearurls-event-name=clearurls
-```
-
-## Keybindings
-By default, the plugin can be toggled using the following key (configurable in `input.conf`):
-
-```
-c     script-message clearurls
-```
-
 ## Adding a New Site
 
 1. Create a new rule file in `src/rules/` (e.g., `tiktok.ts`):
