@@ -244,7 +244,7 @@ export const Progress = ({ width, ...props }: MpDomProps) => {
     if (!isSeekable) {
       return
     }
-    if (!videoParams || !videoParams.w || !videoParams.h) {
+    if (!videoParams?.w || !videoParams.h) {
       return
     }
     if (thumbRef.current) {

@@ -4,7 +4,7 @@ import fs from "node:fs"
 import { camelCase } from "change-case"
 
 const filePath = process.argv[2]
-if (!filePath || !filePath.endsWith("command.c") || !fs.existsSync(filePath)) {
+if (!filePath?.endsWith("command.c") || !fs.existsSync(filePath)) {
   // console.log(`npm run autogen "<mpv>/player/command.c"`)
   process.exit(0)
 }

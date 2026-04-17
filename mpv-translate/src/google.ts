@@ -50,7 +50,7 @@ export async function google(
       }).then((r) => r.text()),
     )
     const data = JSON.parse(resp)
-    if (!data || !data[0]) return ""
+    if (!data?.[0]) return ""
     const cn = data[0].map((v: any) => v[0]).join("")
     return cn
   } catch (e) {

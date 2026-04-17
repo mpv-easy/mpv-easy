@@ -25,7 +25,7 @@
   },
   "devDependencies": {
     "@mpv-easy/react": "workspace:*",
-    "react": "19.2.4"
+    "react": "19.2.5"
   },
   "peerDependencies": {
     "@mpv-easy/react": "workspace:*",

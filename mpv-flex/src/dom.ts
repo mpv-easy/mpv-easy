@@ -242,7 +242,7 @@ export function getProp<
 export function getNextSibling<D extends BaseDom<any, any, any>>(
   node: D,
 ): D | undefined {
-  if (!node || !node.parentNode) return
+  if (!node?.parentNode) return
   const childNodes = node.parentNode.childNodes
   const i = childNodes.indexOf(node)
   if (i < 0 || i >= childNodes.length) return

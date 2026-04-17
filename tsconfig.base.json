@@ -4,7 +4,8 @@
     "useDefineForClassFields": true,
     "lib": ["ESNext", "ES2022", "es2021", "DOM"],
     "allowJs": true,
-    "esModuleInterop": false,
+    // "esModuleInterop": false,
+    // "ignoreDeprecations": "6.0",
     "allowSyntheticDefaultImports": true,
     "strict": true,
     "forceConsistentCasingInFileNames": true,
@@ -52,7 +53,8 @@
       "@mpv-easy/mpv-sponsorblock": ["./mpv-sponsorblock/src"],
       "@mpv-easy/clearurls": ["./mpv-clearurls/src"],
       "@mpv-easy/frame-seeker": ["./mpv-frame-seeker/src"]
-    }
+    },
+    "types": ["node"]
   },
   "include": ["**/src", "**/test", "**/example", "**/scripts"],
   "exclude": ["**/dist"]
