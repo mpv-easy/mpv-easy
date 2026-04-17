@@ -297,6 +297,7 @@ jobs:
             mandelbrot
             youtube
             sponsorblock
+            clearurls
           )
 
           git clone https://github.com/ahaoboy/free-piano --depth=1

@@ -11,10 +11,7 @@ import clipboardPlayPlugin, {
 
 import easyPlugin from "./main"
 
-import {
-  defaultConfig as easyConfig,
-  pluginName as easyName,
-} from "./const"
+import { defaultConfig as easyConfig, pluginName as easyName } from "./const"
 
 import anime4kPlugin, {
   defaultConfig as anime4kConfig,
@@ -149,14 +146,14 @@ const experimental: Experimental = {
   toolbar: true,
 }
 
-export function createDefaultContext() {
+export function createDefaultContext(): PluginContext {
   const isWin = getOs() === "windows"
   return cloneDeep({
     renderConfig: {
-      "fps": 30,
-      "frameLimit": 0,
-      "maxFpsFrame": 64,
-      "showFps": false
+      fps: 30,
+      frameLimit: 0,
+      maxFpsFrame: 64,
+      showFps: false,
     },
     [clipboardPlayName]: clipboardPlayConfig,
     [anime4kName]: anime4kConfig,
@@ -282,8 +279,8 @@ export function saveConfig(c: PluginContext) {
   try {
     const diff = deepDiff(c, defaultContext)
     // skip player state
-    if (diff[easyName] && diff[easyName]['player']) {
-      delete diff[easyName]['player']
+    if (diff[easyName]?.player) {
+      delete diff[easyName].player
     }
     writeFile(configPath, JSON.stringify(diff, null, 2))
   } catch {
