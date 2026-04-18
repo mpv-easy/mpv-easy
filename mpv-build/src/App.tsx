@@ -405,12 +405,14 @@ function App() {
         <CssBaseline />
         <Box
           className="main"
-          display="flex"
-          flexDirection="column"
-          gap={1}
-          justifyContent="center"
-          alignItems="center"
-          minHeight="100vh"
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            gap: 1,
+            justifyContent: "center",
+            alignItems: "center",
+            minHeight: "100vh",
+          }}
         >
           <Typography variant="h5">Loading...</Typography>
         </Box>
@@ -433,20 +435,27 @@ function App() {
       <CssBaseline />
       <Box
         className={["main", isDark ? "main-dark" : "main-light"].join(" ")}
-        display="flex"
-        flexDirection="column"
-        gap={1}
-        justifyContent="center"
-        alignItems="center"
-        minHeight="100vh"
-        p={2}
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+          gap: 1,
+          justifyContent: "center",
+          alignItems: "center",
+          minHeight: "100vh",
+          p: 2,
+        }}
       >
         {/* Header with social links and theme toggle */}
         <Stack
-          direction="row"
-          gap={1}
-          alignItems="center"
-          sx={{ position: "absolute", top: "1rem", right: "1rem" }}
+          sx={{
+            display: "flex",
+            flexDirection: "row",
+            gap: 1,
+            alignItems: "center",
+            position: "absolute",
+            top: "1rem",
+            right: "1rem",
+          }}
         >
           <Link
             href="https://github.com/mpv-easy/mpv-easy"
@@ -471,14 +480,27 @@ function App() {
         </Stack>
 
         {/* Configuration section */}
-        <Stack gap={1} alignItems="flex-start">
+        <Stack
+          sx={{
+            gap: 1,
+            alignItems: "flex-start",
+          }}
+        >
           {/* Platform selection */}
-          <Stack direction="row" gap={1} alignItems="center">
+          <Stack
+            sx={{
+              flexDirection: "row",
+              gap: 1,
+              alignItems: "center",
+            }}
+          >
             <Tooltip title="mpv-v3 is for newer CPUs (usually after 2005). If it doesn't run, please use mpv">
               <Typography
+                sx={{
+                  fontWeight: "bold",
+                  width: TITLE_WIDTH,
+                }}
                 variant="subtitle1"
-                fontWeight="bold"
-                sx={{ width: TITLE_WIDTH }}
               >
                 Platform:
               </Typography>
@@ -516,11 +538,19 @@ function App() {
           </Stack>
 
           {/* UI selection */}
-          <Stack direction="row" gap={1} alignItems="center">
+          <Stack
+            sx={{
+              flexDirection: "row",
+              gap: 1,
+              alignItems: "center",
+            }}
+          >
             <Typography
               variant="subtitle1"
-              fontWeight="bold"
-              sx={{ width: TITLE_WIDTH }}
+              sx={{
+                width: TITLE_WIDTH,
+                fontWeight: "bold",
+              }}
             >
               UI:
             </Typography>
@@ -550,11 +580,19 @@ function App() {
           </Stack>
 
           {/* External tools selection */}
-          <Stack direction="row" gap={1} alignItems="center">
+          <Stack
+            sx={{
+              flexDirection: "row",
+              gap: 1,
+              alignItems: "center",
+            }}
+          >
             <Typography
               variant="subtitle1"
-              fontWeight="bold"
-              sx={{ width: TITLE_WIDTH }}
+              sx={{
+                width: TITLE_WIDTH,
+                fontWeight: "bold",
+              }}
             >
               External:
             </Typography>
@@ -681,7 +719,14 @@ function App() {
         </Backdrop>
 
         {/* Selected items chips */}
-        <Stack direction="row" flexWrap="wrap" gap={1} justifyContent="center">
+        <Stack
+          sx={{
+            flexDirection: "row",
+            flexWrap: "wrap",
+            gap: 1,
+            justifyContent: "center",
+          }}
+        >
           <Chip label={platform} color="primary" variant="outlined" />
           {uiRequires.map(
             (i, index) =>
@@ -716,7 +761,12 @@ function App() {
         </Stack>
 
         {/* Action buttons */}
-        <Stack direction="row" gap={1}>
+        <Stack
+          sx={{
+            flexDirection: "row",
+            gap: 1,
+          }}
+        >
           <Button
             variant="contained"
             color="error"
