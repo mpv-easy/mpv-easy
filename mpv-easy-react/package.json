@@ -32,6 +32,7 @@
     "@mpv-easy/anime4k": "workspace:*",
     "@mpv-easy/assdraw": "workspace:*",
     "@mpv-easy/autoload": "workspace:*",
+    "@mpv-easy/clearurls": "workspace:*",
     "@mpv-easy/clipboard-play": "workspace:*",
     "@mpv-easy/copy-screen": "workspace:*",
     "@mpv-easy/copy-time": "workspace:*",
@@ -47,7 +48,6 @@
     "@mpv-easy/react": "workspace:*",
     "@mpv-easy/sponsorblock": "workspace:*",
     "@mpv-easy/thumbfast": "workspace:*",
-    "@mpv-easy/clearurls": "workspace:*",
     "@mpv-easy/tool": "workspace:*",
     "@mpv-easy/translate": "workspace:*",
     "@mpv-easy/youtube": "workspace:*",
@@ -81,5 +81,8 @@
     "last 2 versions",
     "> 0.2%",
     "not dead"
-  ]
+  ],
+  "devDependencies": {
+    "@types/node": "25.6.0"
+  }
 }

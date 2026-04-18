@@ -10,10 +10,6 @@ import { Bilibili, Youtube, Twitter, Default } from "./rules"
 
 export const pluginName = "@mpv-easy/clearurls"
 
-declare module "@mpv-easy/plugin" {
-  interface PluginContext {}
-}
-
 // ---------------------------------------------------------------------------
 // Rule registry — add new site rules here, default rule goes last
 // ---------------------------------------------------------------------------

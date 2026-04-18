@@ -51,8 +51,6 @@ import {
   subAdd,
   detectCookies,
   youtube,
-  registerEvent,
-  unregisterEvent,
 } from "@mpv-easy/tool"
 import clamp from "lodash-es/clamp"
 import { Playlist } from "./playlist"
@@ -64,7 +62,6 @@ import { Crop } from "@mpv-easy/crop"
 import { dispatch, useSelector } from "../models"
 import { Logo } from "./components/logo"
 import { FrameSeeker, FrameSeekerRef } from "@mpv-easy/frame-seeker"
-import { clearurls } from "@mpv-easy/clearurls"
 
 export * from "./progress"
 export * from "./toolbar"
@@ -224,11 +221,9 @@ export const Easy = (props: Partial<EasyProps>) => {
         setPropertyBool("ontop", oldOntop)
       })
     }
-    registerEvent("file-loaded", clearurls)
 
     return () => {
       clearInterval(h)
-      unregisterEvent(clearurls)
     }
   }, [])
 
