@@ -75,6 +75,7 @@ jobs:
           name: "nightly"
           token: ${{ secrets.GITHUB_TOKEN }}
           commit: main
+          makeLatest: true
 
   update-cdn:
     runs-on: ubuntu-latest
