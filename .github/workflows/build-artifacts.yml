@@ -261,9 +261,12 @@ jobs:
       #     path: boa-dll
       #     pattern: mpv-boa-*
       #     merge-multiple: true
+      - uses: actions/setup-node@v4
+        with:
+          node-version: latest
       - uses: pnpm/action-setup@v4
         with:
-          version: 10
+          version: 11
 
       - uses: oven-sh/setup-bun@v2
         with:
@@ -271,7 +274,7 @@ jobs:
 
       - name: "build ts"
         run: |
-          pnpm i
+          pnpm install --ignore-scripts=false
           pnpm run build
 
           mkdir mpv-easy-scripts -p
