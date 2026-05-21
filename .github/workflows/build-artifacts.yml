@@ -274,7 +274,8 @@ jobs:
 
       - name: "build ts"
         run: |
-          pnpm install --ignore-scripts=false
+          pnpm approve-builds --all
+          pnpm i
           pnpm run build
 
           mkdir mpv-easy-scripts -p
