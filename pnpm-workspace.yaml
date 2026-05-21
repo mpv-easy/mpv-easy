@@ -1,2 +1,7 @@
 packages:
   - 'mpv-*'
+allowBuilds:
+  canvas: true
+  core-js: true
+  esbuild: true
+  lefthook: true
