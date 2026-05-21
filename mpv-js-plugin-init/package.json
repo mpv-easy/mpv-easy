@@ -10,7 +10,7 @@
   "author": "ahaoboy <504595380@qq.com> (https://github.com/ahaoboy)",
   "license": "MIT",
   "scripts": {
-    "build": "esbuild ./src/*.(ts|tsx) --bundle --outdir=./dist --charset=utf8 --format=iife && pnpm run copy",
+    "build": "esbuild ./src/*.ts --bundle --outdir=./dist --charset=utf8 --format=iife && pnpm run copy",
     "build-minify": "esbuild ./src/*.(ts|tsx) --bundle --outdir=./dist --charset=utf8 --format=iife --minify",
     "copy": "pnpm run copy:boa && pnpm run copy:qjs && pnpm run copy:deno",
     "copy:boa": "rm -rf ../mpv-boa/dist && cp -r ./dist ../mpv-boa/dist",
