@@ -1,8 +1,6 @@
 use super::cli::Cmd;
 use base64::{Engine, prelude::BASE64_STANDARD};
 use reqwest::{Method, Url, header};
-use serde_xml_rs::from_str;
-
 use webdav_serde::Multistatus;
 
 #[derive(clap::Parser, Debug)]
@@ -48,7 +46,7 @@ async fn fetch_remote(path: &str, auth: Option<String>) -> anyhow::Result<Multis
 
     let resp = resp.body(body).send().await?;
     let xml = resp.text().await?;
-    let status: Multistatus = from_str(&xml)?;
+    let status = Multistatus::from_xml(&xml)?;
     Ok(status)
 }
 

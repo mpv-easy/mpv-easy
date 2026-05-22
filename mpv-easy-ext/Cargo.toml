@@ -22,7 +22,6 @@ tokio = { workspace = true }
 once_cell = { workspace = true }
 enum_dispatch = { workspace = true }
 reqwest = { workspace = true }
-serde-xml-rs = { workspace = true }
 webdav-serde = { workspace = true }
 image = { workspace = true }
 rand = { workspace = true }
