@@ -310,6 +310,7 @@ jobs:
             youtube
             sponsorblock
             clearurls
+            mount
           )
 
           git clone https://github.com/ahaoboy/free-piano --depth=1
