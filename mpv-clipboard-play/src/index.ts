@@ -26,10 +26,10 @@ export type ClipboardPlayContext = Pick<
   typeof autoloadName | typeof jellyfinName | typeof pluginName
 >
 
-function getList(
+async function getList(
   s: string | undefined,
   context: ClipboardPlayContext,
-): string[] {
+): Promise<string[]> {
   const v: string[] = []
   if (!s?.length) {
     return v
@@ -57,7 +57,7 @@ function getList(
 
     try {
       const origin = new URL(s).origin
-      return webdavList(s)
+      return (await webdavList(s))
         .map((i) =>
           normalize(
             origin +
@@ -143,7 +143,7 @@ export async function clipboardPlay(
       subAdd(s, "cached")
       continue
     }
-    const v = getList(s, context)
+    const v = await getList(s, context)
     if (v?.length) {
       const index = v.indexOf(s)
       if (index !== -1) {
