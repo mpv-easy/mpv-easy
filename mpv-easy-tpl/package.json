@@ -10,16 +10,18 @@
   "description": "mpv-easy-tpl",
   "main": "./dist/index.js",
   "scripts": {
-    "bundle": "tsx build.ts",
+    "bundle": "tsx scripts/build.ts",
     "es5": "babel --presets  @babel/preset-env ./bundle -d es5",
     "dev": "chokidar '../mpv-*/src/**/*' -c 'pnpm run build && pnpm run copy' -d 2000 --initial",
     "build": "pnpm run bundle && pnpm run es5",
+    "build:osc": "pnpm run build && tsx scripts/build-osc.ts",
     "copy": "cp es5/mpv-easy-tpl.js $MPV_CONFIG_DIR"
   },
   "keywords": [],
   "author": "ahaoboy <504595380@qq.com> (https://github.com/ahaoboy)",
   "license": "MIT",
   "dependencies": {
+    "@easy-install/easy-archive": "0.2.6",
     "@mpv-easy/polyfill": "workspace:*",
     "@mpv-easy/react": "workspace:*",
     "@mpv-easy/tool": "workspace:*",
