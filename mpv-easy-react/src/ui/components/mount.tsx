@@ -19,7 +19,7 @@ import { useTitle } from "../../hooks"
 export const Mount = () => {
   const itemStyle = useSelector(commonDropdownItemStyleSelector)
   const i18n = useSelector(i18nSelector)
-  const mount = useSelector(mountSelector)
+  const mount = useSelector(mountSelector)?.mount || []
   const mountIndex = useSelector(mountIndexSelector)
   const style = useSelector(commonDropdownStyleSelector)
   const playlistHide = useSelector(playlistHideSelector)

@@ -7,6 +7,7 @@ import { pluginName as translateName } from "@mpv-easy/translate"
 import { pluginName as cutName } from "@mpv-easy/cut"
 import { pluginName as cropName } from "@mpv-easy/crop"
 import { pluginName as frameSeekerName } from "@mpv-easy/frame-seeker"
+import { pluginName as mountName } from "@mpv-easy/mount"
 import { clamp, normalize } from "@mpv-easy/tool"
 import { PluginContext } from "@mpv-easy/plugin"
 import * as ICON from "./icon"
@@ -170,7 +171,7 @@ export const enablePluginsStyleSelector = (state: PluginContext) =>
 export const protocolHookSelector = (state: PluginContext) =>
   state[pluginName].config.protocolHook
 
-export const mountSelector = (state: PluginContext) => state[pluginName].mount
+export const mountSelector = (state: PluginContext) => state[mountName]
 export const mountIndexSelector = (state: PluginContext) =>
   state[pluginName].state.mountIndex
 export const thumbfastSelector = (state: PluginContext) => state[thumbfastName]

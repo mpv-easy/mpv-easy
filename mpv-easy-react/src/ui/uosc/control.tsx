@@ -30,7 +30,7 @@ export const UoscControl = (props: Partial<MpDomProps>) => {
   const fontSize = useSelector(normalFontSizeSelector)
   const font = useSelector(fontSelector)
   const fullscreen = useSelector(fullscreenSelector)
-  const mount = useSelector(mountSelector)
+  const mount = useSelector(mountSelector)?.mount || []
   return (
     <Box
       id="uosc-control"
@@ -70,7 +70,7 @@ export const UoscControl = (props: Partial<MpDomProps>) => {
       >
         <PlayMode />
         <Previous />
-        {!!mount?.length && <Mount />}
+        {!!mount.length && <Mount />}
         <Playlist />
         <Next />
         {fullscreen ? <Restore /> : <Fullscreen />}

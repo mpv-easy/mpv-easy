@@ -85,7 +85,7 @@ export async function resolveMountPlaylist(
 
   const authList = v.map((i) => {
     const authStr = `${username}:${password}`
-    return i.replace("://", `://${authStr}@`)
+    return auth ? i.replace("://", `://${authStr}@`) : i
   })
 
   return authList

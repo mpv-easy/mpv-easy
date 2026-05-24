@@ -143,7 +143,6 @@ export type EasyConfig = {
     time: number
   }
   history: { path: string; name: string }[]
-  mount: Mount[]
   player: {
     "media-title": string
     "playlist-play-index": number
@@ -220,7 +219,6 @@ export function createDefaultThemeConfig(): EasyConfig {
     mode: "dark",
     uiName: defaultName,
     history: [],
-    mount: [],
     style: {
       dark: {
         fontSizeScale: DefaultFontSizeScale,
