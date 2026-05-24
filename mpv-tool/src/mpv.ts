@@ -496,7 +496,7 @@ export function setGeometry(w: number, h: number, x: number, y: number) {
 }
 
 export function getMpvExePath() {
-  const configPath = expandPath("~~home/")
+  const configPath = getMpvConfigDir()
 
   const exeName = getOs() === "windows" ? "mpv.exe" : "mpv"
 
@@ -505,6 +505,31 @@ export function getMpvExePath() {
     return normalize(exePath)
   }
   return exePath
+}
+
+/** Get the mpv configuration directory (~~home/) */
+export function getMpvConfigDir(): string {
+  return normalize(expandPath("~~home/"))
+}
+
+/** Get the mpv script-opts directory (~~home/script-opts) */
+export function getMpvScriptOptsDir(): string {
+  return joinPath(getMpvConfigDir(), "script-opts")
+}
+
+/** Get the mpv scripts directory (~~home/scripts) */
+export function getMpvScriptsDir(): string {
+  return joinPath(getMpvConfigDir(), "scripts")
+}
+
+/** Get the mpv fonts directory (~~home/fonts) */
+export function getMpvFontsDir(): string {
+  return joinPath(getMpvConfigDir(), "fonts")
+}
+
+/** Get the mpv cache directory (~~home/cache) */
+export function getMpvCacheDir(): string {
+  return joinPath(getMpvConfigDir(), "cache")
 }
 
 export function getMpvExeDir() {

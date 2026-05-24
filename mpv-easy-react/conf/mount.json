@@ -1,0 +1,8 @@
+{
+  "name": "mpv-easy-mount",
+  "description": "Quickly mount local directories, m3u playlists, and WebDAV remotes via keyboard shortcuts",
+  "version": "0.1.15-alpha.20",
+  "author": "mpv-easy",
+  "download": "https://github.com/mpv-easy/mpv-easy/releases/latest/download/mpv-easy-mount.zip",
+  "homepage": "https://github.com/mpv-easy/mpv-easy/tree/main/mpv-mount"
+}
