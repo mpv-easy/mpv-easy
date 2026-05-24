@@ -1,6 +1,5 @@
-import { execAsync, execSync } from "../common"
+import { execAsync } from "../common"
 import { FetchOption, FetchResponse } from "../const"
-import { getFileName } from "../path"
 import { getRsExtExePath } from "./share"
 
 export async function fetchByExt(
@@ -21,35 +20,4 @@ export async function fetchByExt(
     text: () => Promise.resolve(text),
     json: () => Promise.resolve(JSON.parse(text)),
   }
-}
-
-export function webdavList(
-  url: string,
-  auth?: string,
-  exe = getRsExtExePath(),
-) {
-  const args = [exe, "webdav", "list", JSON.stringify(url)]
-  if (auth) {
-    args.push(JSON.stringify(auth))
-  }
-  const s = execSync(args)
-  const status = JSON.parse(s)
-  const response = status.response as { href: string }[]
-  const list = response
-    .map((i) => decodeURIComponent(i.href))
-    .filter((i) => !!getFileName(i)?.length)
-  return list
-}
-
-export async function webdavListAsync(
-  url: string,
-  exe = getRsExtExePath(),
-): Promise<string[]> {
-  const s = await execAsync([exe, "webdav", "list", JSON.stringify(url)])
-  const status = JSON.parse(s)
-  const response = status.response as { href: string }[]
-  const list = response
-    .map((i) => decodeURIComponent(i.href))
-    .filter((i) => !!getFileName(i)?.length)
-  return list
 }

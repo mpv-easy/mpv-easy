@@ -72,6 +72,10 @@ import sponsorblockPlugin, {
   defaultConfig as sponsorblockConfig,
   pluginName as sponsorblockName,
 } from "@mpv-easy/sponsorblock"
+import mountPlugin, {
+  defaultConfig as mountConfig,
+  pluginName as mountName,
+} from "@mpv-easy/mount"
 import clearUrlsPlugin, {
   pluginName as clearUrlsName,
 } from "@mpv-easy/clearurls"
@@ -110,6 +114,7 @@ export const getPlugins = () => [
   cutPlugin,
   cropPlugin,
   sponsorblockPlugin,
+  mountPlugin,
   clearUrlsPlugin,
 ]
 
@@ -128,6 +133,7 @@ export interface EnablePlugin {
   [frameSeekerName]: boolean
   [sponsorblockName]: boolean
   [clearUrlsName]: boolean
+  [mountName]: boolean
 }
 
 declare module "@mpv-easy/plugin" {
@@ -175,6 +181,7 @@ export function createDefaultContext(): PluginContext {
     [frameSeekerName]: frameSeekerConfig,
     [youtubeName]: youtubeConfig,
     [sponsorblockName]: sponsorblockConfig,
+    [mountName]: mountConfig,
     enablePlugins: {
       [i18nName]: true,
       [easyName]: true,
@@ -192,6 +199,7 @@ export function createDefaultContext(): PluginContext {
       [youtubeName]: false,
       [sponsorblockName]: true,
       [clearUrlsName]: true,
+      [mountName]: true,
     },
     version,
     experimental,

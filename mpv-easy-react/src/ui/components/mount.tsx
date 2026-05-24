@@ -10,18 +10,10 @@ import {
   mountIndexSelector,
   playlistHideSelector,
 } from "../../store"
-import {
-  existsSync,
-  isDir,
-  isPlayable,
-  normalize,
-  readFile,
-  showNotification,
-  webdavList,
-} from "@mpv-easy/tool"
+import { showNotification } from "@mpv-easy/tool"
 import { dispatch, store, useSelector } from "../../models"
-import { getPlayableList, pluginName as AutoloadName } from "@mpv-easy/autoload"
-import { Playlist } from "serde-m3u"
+import { pluginName as AutoloadName } from "@mpv-easy/autoload"
+import { resolveMountPlaylist } from "@mpv-easy/mount"
 import { useTitle } from "../../hooks"
 
 export const Mount = () => {
@@ -38,50 +30,18 @@ export const Mount = () => {
       const prefix =
         mountIndex === k ? ICON.Ok : ICON.CheckboxBlankCircleOutline
       const label = `${prefix} ${name}`
-      const auth = username && password ? `${username}:${password}` : undefined
       return {
         label,
         key,
         onSelect: async (_, e) => {
-          const exists = existsSync(url)
-          if (exists && isDir(url)) {
-            // local dir
-            const videoList = getPlayableList(
+          try {
+            const videoList = await resolveMountPlaylist(
+              { name, url, username, password },
               store.getState()[AutoloadName],
-              undefined,
-              url,
-              undefined,
             )
             dispatch.setPlaylist(videoList, 0)
-          } else if (exists && url.endsWith(".m3u")) {
-            // m3u
-            const s = readFile(url)
-            const m3u = Playlist.fromString(s)
-            const videoList = m3u.list.map((i) => i.url)
-            dispatch.setPlaylist(videoList, 0)
-          } else {
-            // try webdav
-            const origin = new URL(url).origin
-            try {
-              const v = webdavList(url, auth)
-                .map((i) =>
-                  normalize(
-                    origin +
-                      i
-                        .split("/")
-                        .map((k) => encodeURIComponent(k))
-                        .join("/"),
-                  ),
-                )
-                .filter((p) => isPlayable(p))
-              const authList = v.map((i) => {
-                const auth = `${username}:${password}`
-                return i.replace("://", `://${auth}@`)
-              })
-              dispatch.setPlaylist(authList, 0)
-            } catch {
-              showNotification(`mount error: ${name} ${url}`)
-            }
+          } catch {
+            showNotification(`mount error: ${name} ${url}`)
           }
           dispatch.setHistoryHide(true)
           dispatch.setPlaylistHide(!playlistHide)

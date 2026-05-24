@@ -43,6 +43,7 @@
     "@mpv-easy/i18n": "workspace:*",
     "@mpv-easy/jellyfin": "workspace:*",
     "@mpv-easy/mock": "workspace:*",
+    "@mpv-easy/mount": "workspace:*",
     "@mpv-easy/plugin": "workspace:*",
     "@mpv-easy/polyfill": "workspace:*",
     "@mpv-easy/react": "workspace:*",

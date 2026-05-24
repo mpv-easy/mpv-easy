@@ -27,7 +27,8 @@
     "crypto-js": "4.2.0",
     "e-color": "0.1.8",
     "lodash-es": "4.18.1",
-    "type-fest": "5.6.0"
+    "type-fest": "5.6.0",
+    "webdav-parser": "0.1.0"
   },
   "devDependencies": {
     "@types/crypto-js": "4.2.2",
