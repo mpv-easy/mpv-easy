@@ -43,8 +43,8 @@ const config = getOptions("mpv-easy-mount", {
 const { mount: mounts, mountEventName = "mount", ...autoloadConfig } = config
 
 for (let i = 0; i <= 9; i++) {
-  registerScriptMessage(`${mountEventName} ${i}`, async () => {
-    const m = mounts[i]
+  registerScriptMessage(mountEventName, async (i) => {
+    const m = mounts[+i]
     if (!m) {
       showNotification(`[mount] no mount point at index ${i}`)
       return
