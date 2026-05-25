@@ -16,6 +16,7 @@ import type {
   BoolProp,
   NumberProp,
   NativeProp,
+  InputKey,
 } from "./type"
 import { expandPath } from "./type"
 import { MousePos } from "./type-prop"
@@ -187,7 +188,7 @@ export type KeyEvent = {
 }
 
 export function addKeyBinding(
-  key: string,
+  key: InputKey | (string & {}),
   name?: string,
   fn?: (event: KeyEvent) => void,
   flags?: AddKeyBindingFlags,
@@ -196,7 +197,7 @@ export function addKeyBinding(
 }
 
 export function addForcedKeyBinding(
-  key: string,
+  key: InputKey | (string & {}),
   name?: string,
   fn?: (event: KeyEvent) => void,
   flags?: AddKeyBindingFlags,

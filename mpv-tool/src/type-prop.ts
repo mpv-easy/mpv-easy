@@ -1499,7 +1499,7 @@ export const InputKeyList = [
   "ANY_UNICODE",
 ] as const
 
-export type InputKey = keyof typeof InputKeyList
+export type InputKey = (typeof InputKeyList)[number]
 
 export type InputKeyBinding =
   | NumberKey

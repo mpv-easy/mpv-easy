@@ -5,6 +5,7 @@ import {
   NumberProp,
   NativeProp,
   StringProp,
+  InputKey,
 } from "./type-prop"
 export * from "./type-prop"
 export * from "./type-cmd"
@@ -158,14 +159,14 @@ export type MP = {
   get_mouse_pos(): MousePos
 
   add_key_binding(
-    key: string,
+    key: InputKey | (string & {}),
     name?: string,
     fn?: (event: KeyEvent) => void,
     flags?: AddKeyBindingFlags,
   ): void
 
   add_forced_key_binding(
-    key: string,
+    key: InputKey | (string & {}),
     name?: string,
     fn?: (event: KeyEvent) => void,
     flags?: AddKeyBindingFlags,
