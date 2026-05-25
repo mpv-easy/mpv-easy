@@ -7,15 +7,19 @@
     "readme.md",
     "package.json"
   ],
+  "engines": {
+    "node": "20"
+  },
   "description": "mpv-easy-tpl",
   "main": "./dist/index.js",
   "scripts": {
     "bundle": "tsx scripts/build.ts",
     "es5": "babel --presets  @babel/preset-env ./bundle -d es5",
-    "dev": "chokidar '../mpv-*/src/**/*' -c 'pnpm run build && pnpm run copy' -d 2000 --initial",
+    "dev": "chokidar '../mpv-*/src/**/*' -c 'pnpm run build' -d 2000 --initial",
     "build": "pnpm run bundle && pnpm run es5",
     "build:osc": "pnpm run build && tsx scripts/build-osc.ts",
-    "copy": "cp es5/mpv-easy-tpl.js $MPV_CONFIG_DIR"
+    "copy": "cp es5/mpv-easy-tpl.js $MPV_CONFIG_DIR",
+    "download": "tsx scripts/download.ts"
   },
   "keywords": [],
   "author": "ahaoboy <504595380@qq.com> (https://github.com/ahaoboy)",
@@ -32,7 +36,7 @@
     "@babel/core": "7.29.0",
     "@babel/preset-env": "7.29.5",
     "@babel/preset-typescript": "7.28.5",
-    "@chokidar-napi/chokidar": "0.1.3",
+    "chokidar-cli": "3.0.0",
     "@types/node": "25.9.1",
     "@types/react": "19.2.15",
     "@types/react-dom": "19.2.3",
