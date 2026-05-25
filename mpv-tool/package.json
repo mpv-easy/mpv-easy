@@ -23,7 +23,7 @@
   "dependencies": {
     "@mpv-easy/assdraw": "workspace:*",
     "@mpv-easy/polyfill": "workspace:*",
-    "@types/node": "25.6.0",
+    "@types/node": "25.9.1",
     "crypto-js": "4.2.0",
     "e-color": "0.1.8",
     "lodash-es": "4.18.1",
