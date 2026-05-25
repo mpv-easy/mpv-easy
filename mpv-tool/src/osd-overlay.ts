@@ -119,7 +119,7 @@ export class OsdOverlay {
   private _lastZ: number | undefined = undefined
   private _lastRect: Rect | undefined = undefined
   update(scale = 1): Rect {
-    if (!!this.option.data && !this.overlay) {
+    if (this.option.data && !this.overlay) {
       this.overlay = getOverlay()
     }
     if (!this.overlay) {
