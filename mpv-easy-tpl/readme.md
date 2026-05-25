@@ -1,12 +1,12 @@
 ## dev
 bash
 ```bash
-export MPV_CONFIG_DIR=/your_mpv_dir/portable_config/scripts && pnpm run dev
+export MPV_CONFIG_DIR=/your_mpv_dir/portable_config/scripts && ppnpm dev
 ```
 
 fish
 ```fish
-set -x MPV_CONFIG_DIR /your_mpv_dir/portable_config/scripts ; pnpm run dev
+set -x MPV_CONFIG_DIR /your_mpv_dir/portable_config/scripts ; ppnpm dev
 ```
 ## Online Editor (StackBlitz)
 
