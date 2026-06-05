@@ -12,7 +12,7 @@ set -x MPV_CONFIG_DIR /your_mpv_dir/portable_config/scripts ; ppnpm dev
 
 You can write and build mpv scripts directly in your browser via StackBlitz — no local setup required.
 
-1. Open the project in StackBlitz:
+1. Open the [mpv-easy-tpl](https://github.com/mpv-easy/mpv-easy-tpl) in StackBlitz:
 
    [stackblitz](https://stackblitz.com/github/mpv-easy/mpv-easy-tpl?file=src%2Findex.tsx)
 
