@@ -402,8 +402,8 @@ jobs:
           sudo apt install p7zip-full tree -y
           mkdir release -p
 
-          mkdir dist/scripts/mpv-easy/mpv-easy-config/mpv-easy-ext -p
-          cp mpv-build/public/logo.bgra dist/scripts/mpv-easy/mpv-easy-config/logo.bgra
+          mkdir dist/scripts/mpv-easy -p
+          cp mpv-build/public/logo.bgra dist/scripts/mpv-easy/logo.bgra
           # mkdir dist/script-opts -p
 
           cp mpv-easy-react/es5/mpv-easy.js dist/scripts/mpv-easy/main.js
@@ -433,17 +433,17 @@ jobs:
           # zip -r -q ../release/ffmpeg-windows.zip .
           # cd ..
 
-          cp mpv-easy-ext-dist/mpv-easy-ext-macos-arm64 mpv-easy-macos/scripts/mpv-easy/mpv-easy-config/mpv-easy-ext/mpv-easy-ext-macos-arm64
-          cp mpv-easy-ext-dist/mpv-easy-ext-linux mpv-easy-linux/scripts/mpv-easy/mpv-easy-config/mpv-easy-ext/mpv-easy-ext-linux
-          cp mpv-easy-ext-dist/mpv-easy-ext-linux-arm64 mpv-easy-linux-arm64/scripts/mpv-easy/mpv-easy-config/mpv-easy-ext/mpv-easy-ext-linux-arm64
-          cp mpv-easy-ext-dist/mpv-easy-ext-android mpv-easy-android/scripts/mpv-easy/mpv-easy-config/mpv-easy-ext/mpv-easy-ext-android
-          cp mpv-easy-ext-dist/mpv-easy-ext-windows.exe mpv-easy-windows/scripts/mpv-easy/mpv-easy-config/mpv-easy-ext/mpv-easy-ext-windows.exe
+          cp mpv-easy-ext-dist/mpv-easy-ext-macos-arm64 mpv-easy-macos/scripts/mpv-easy/mpv-easy-ext-macos-arm64
+          cp mpv-easy-ext-dist/mpv-easy-ext-linux mpv-easy-linux/scripts/mpv-easy/mpv-easy-ext-linux
+          cp mpv-easy-ext-dist/mpv-easy-ext-linux-arm64 mpv-easy-linux-arm64/scripts/mpv-easy/mpv-easy-ext-linux-arm64
+          cp mpv-easy-ext-dist/mpv-easy-ext-android mpv-easy-android/scripts/mpv-easy/mpv-easy-ext-android
+          cp mpv-easy-ext-dist/mpv-easy-ext-windows.exe mpv-easy-windows/scripts/mpv-easy/mpv-easy-ext-windows.exe
 
-          cp mpv-easy-play-with-dist/mpv-easy-play-with-macos-arm64 mpv-easy-macos/scripts/mpv-easy/mpv-easy-config/mpv-easy-ext/mpv-easy-play-with-macos-arm64
-          cp mpv-easy-play-with-dist/mpv-easy-play-with-linux mpv-easy-linux/scripts/mpv-easy/mpv-easy-config/mpv-easy-ext/mpv-easy-play-with-linux
-          cp mpv-easy-play-with-dist/mpv-easy-play-with-linux-arm64 mpv-easy-linux-arm64/scripts/mpv-easy/mpv-easy-config/mpv-easy-ext/mpv-easy-play-with-linux-arm64
-          cp mpv-easy-play-with-dist/mpv-easy-play-with-android mpv-easy-android/scripts/mpv-easy/mpv-easy-config/mpv-easy-ext/mpv-easy-play-with-android
-          cp mpv-easy-play-with-dist/mpv-easy-play-with-windows.exe mpv-easy-windows/scripts/mpv-easy/mpv-easy-config/mpv-easy-ext/mpv-easy-play-with-windows.exe
+          cp mpv-easy-play-with-dist/mpv-easy-play-with-macos-arm64 mpv-easy-macos/scripts/mpv-easy/mpv-easy-play-with-macos-arm64
+          cp mpv-easy-play-with-dist/mpv-easy-play-with-linux mpv-easy-linux/scripts/mpv-easy/mpv-easy-play-with-linux
+          cp mpv-easy-play-with-dist/mpv-easy-play-with-linux-arm64 mpv-easy-linux-arm64/scripts/mpv-easy/mpv-easy-play-with-linux-arm64
+          cp mpv-easy-play-with-dist/mpv-easy-play-with-android mpv-easy-android/scripts/mpv-easy/mpv-easy-play-with-android
+          cp mpv-easy-play-with-dist/mpv-easy-play-with-windows.exe mpv-easy-windows/scripts/mpv-easy/mpv-easy-play-with-windows.exe
 
           7z x mpv-v3-win.7z -ompv-v3-win -y
 
