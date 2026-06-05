@@ -1,6 +1,6 @@
 import { execAsync, execSync, getOs } from "../common"
 import { existsSync } from "../fs"
-import { readFile, writeFile } from "../mpv"
+import { debug, readFile, writeFile } from "../mpv"
 
 export function readFileBase64() {}
 
@@ -30,7 +30,9 @@ export function shellExecString(cmd: string) {
 const _cmdCache: Record<string, false | string> = {}
 
 export function detectCmd(cmdName: string): false | string {
-  if (cmdName in _cmdCache) return _cmdCache[cmdName]
+  if (typeof _cmdCache[cmdName] !== "undefined") {
+    return _cmdCache[cmdName]
+  }
 
   const cmd = `where ${cmdName}`
   try {
@@ -39,8 +41,9 @@ export function detectCmd(cmdName: string): false | string {
     const result = existsSync(p) ? p : false
     _cmdCache[cmdName] = result
     return result
-  } catch {
+  } catch (e) {
     _cmdCache[cmdName] = false
+    debug(`detectCmd(${cmdName}) error: ${e}`)
     return false
   }
 }
