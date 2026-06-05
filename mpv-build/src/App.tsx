@@ -1,4 +1,4 @@
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
 import {
   ThemeProvider,
   CssBaseline,
@@ -23,6 +23,7 @@ import { LoadingScreen } from "./components/LoadingScreen"
 function App() {
   const store = useMpvStore()
   const { isDark, theme, toggleTheme } = useAppTheme()
+  const [errorMsg, setErrorMsg] = useState<string | null>(null)
 
   const {
     data,
@@ -47,7 +48,7 @@ function App() {
     resetData,
     handleSearch,
     handleDownloadScript,
-  } = useAppActions(store, (msg) => console.error(msg))
+  } = useAppActions(store, setErrorMsg)
 
   useEffect(() => {
     resetData()
@@ -148,6 +149,12 @@ function App() {
           data={data}
           onDeleteSelected={handleDeleteSelected}
         />
+
+        {errorMsg && (
+          <Alert severity="error" onClose={() => setErrorMsg(null)}>
+            {errorMsg}
+          </Alert>
+        )}
 
         <ActionButtons
           downloadName={downloadName}
