@@ -31,7 +31,7 @@ import {
 import {
   getMpvExePath,
   setProtocolHook,
-  getPlayWithExePath,
+  detectPlayWith,
   openDialog,
   registerScriptMessage,
   setPropertyNumber,
@@ -114,7 +114,7 @@ export const Easy = (props: Partial<EasyProps>) => {
   useEffect(() => {
     const mpvExe = getMpvExePath()
     if (protocolHook !== mpvExe) {
-      const playPath = getPlayWithExePath()
+      const playPath = detectPlayWith()
       if (setProtocolHook(mpvExe, playPath)) {
         dispatch.setProtocolHook(mpvExe)
         showNotification("protocol install successfully")

@@ -27,14 +27,20 @@ export function shellExecString(cmd: string) {
   execSync(["sh", "-c", cmd])
 }
 
+const _cmdCache: Record<string, false | string> = {}
+
 export function detectCmd(cmdName: string): false | string {
-  const _os = getOs()
+  if (cmdName in _cmdCache) return _cmdCache[cmdName]
+
   const cmd = `where ${cmdName}`
   try {
     const s = runCmdSync(cmd).stdout
     const p = s.trim().split("\n")[0]
-    return existsSync(p) ? p : false
+    const result = existsSync(p) ? p : false
+    _cmdCache[cmdName] = result
+    return result
   } catch {
+    _cmdCache[cmdName] = false
     return false
   }
 }

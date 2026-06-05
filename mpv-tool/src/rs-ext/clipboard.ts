@@ -4,9 +4,9 @@ import { randomId } from "../math"
 import { error, joinPath, writeFile } from "../mpv"
 import { normalize } from "../path"
 import { getTmpDir } from "../tmp"
-import { getRsExtExePath } from "./share"
+import { detectExt } from "./share"
 
-export async function getClipboard(exe = getRsExtExePath()): Promise<string> {
+export async function getClipboard(exe = detectExt()): Promise<string> {
   if (!existsSync(exe)) {
     switch (getOs()) {
       case "windows": {
@@ -37,7 +37,7 @@ export async function getClipboard(exe = getRsExtExePath()): Promise<string> {
 
 export async function setClipboard(
   text: string,
-  exe = getRsExtExePath(),
+  exe = detectExt(),
 ): Promise<boolean> {
   if (!existsSync(exe)) {
     switch (getOs()) {
@@ -77,7 +77,7 @@ export async function setClipboard(
 
 export async function setClipboardImage(
   path: string,
-  exe = getRsExtExePath(),
+  exe = detectExt(),
 ): Promise<boolean> {
   if (!existsSync(exe)) {
     switch (getOs()) {

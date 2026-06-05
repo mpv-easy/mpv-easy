@@ -1,11 +1,11 @@
 import { execAsync } from "../common"
 import { FetchOption, FetchResponse } from "../const"
-import { getRsExtExePath } from "./share"
+import { detectExt } from "./share"
 
 export async function fetchByExt(
   url: string,
   options?: FetchOption,
-  exe = getRsExtExePath(),
+  exe = detectExt(),
 ): Promise<FetchResponse> {
   const cmd = options
     ? [exe, "fetch", JSON.stringify(url), JSON.stringify(options)]

@@ -1,7 +1,7 @@
 import { fetch } from "./fetch"
 import { existsSync } from "./fs"
 import { getFileName } from "./path"
-import { getRsExtExePath } from "./rs-ext"
+import { detectExt } from "./rs-ext"
 import { webdavListAsync as webdavListAsyncByExt } from "./rs-ext/webdav"
 import { parseWebDav } from "webdav-parser"
 
@@ -16,7 +16,7 @@ export async function webdavList(
   auth?: string,
   depth = 1,
 ): Promise<string[]> {
-  const exe = getRsExtExePath()
+  const exe = detectExt()
   if (existsSync(exe)) {
     return webdavListAsyncByExt(url, exe, exe)
   }

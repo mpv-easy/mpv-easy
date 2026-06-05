@@ -1,12 +1,8 @@
 import { execAsync, execSync } from "../common"
 import { getFileName } from "../path"
-import { getRsExtExePath } from "./share"
+import { detectExt } from "./share"
 
-export function webdavList(
-  url: string,
-  auth?: string,
-  exe = getRsExtExePath(),
-) {
+export function webdavList(url: string, auth?: string, exe = detectExt()) {
   const args = [exe, "webdav", "list", JSON.stringify(url)]
   if (auth) {
     args.push(JSON.stringify(auth))
@@ -23,7 +19,7 @@ export function webdavList(
 export async function webdavListAsync(
   url: string,
   auth?: string,
-  exe = getRsExtExePath(),
+  exe = detectExt(),
 ): Promise<string[]> {
   const args = [exe, "webdav", "list", JSON.stringify(url)]
   if (auth) {

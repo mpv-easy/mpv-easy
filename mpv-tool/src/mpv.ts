@@ -1,5 +1,4 @@
 import { getOs } from "./common"
-import { ConfigDir } from "./const"
 import { getFileName, normalize } from "./path"
 import { Argb } from "e-color"
 import type {
@@ -331,14 +330,6 @@ export function getScriptDir(): string {
   return _scriptDirCache
 }
 
-let _scriptConfigDirCache: string
-export function getScriptConfigDir(): string {
-  if (_scriptConfigDirCache) {
-    return _scriptConfigDirCache
-  }
-  _scriptConfigDirCache = joinPath(getScriptDir(), ConfigDir)
-  return _scriptConfigDirCache
-}
 export function getModulePaths(): string[] {
   return mp.module_paths
 }

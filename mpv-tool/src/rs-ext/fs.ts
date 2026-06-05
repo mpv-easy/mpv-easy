@@ -1,9 +1,9 @@
 import { execAsync, execSync, getOs } from "../common"
 import { existsSync } from "../fs"
 import { normalize } from "../path"
-import { getRsExtExePath } from "./share"
+import { detectExt } from "./share"
 
-export function mkdir(dir: string, exe = getRsExtExePath()) {
+export function mkdir(dir: string, exe = detectExt()) {
   if (!existsSync(exe)) {
     switch (getOs()) {
       case "windows": {
@@ -26,7 +26,7 @@ export function mkdir(dir: string, exe = getRsExtExePath()) {
   return execSync([exe, "fs", "mkdir", JSON.stringify(dir)])
 }
 
-export function removeDir(dir: string, exe = getRsExtExePath()) {
+export function removeDir(dir: string, exe = detectExt()) {
   if (!existsSync(exe)) {
     switch (getOs()) {
       case "windows": {
@@ -46,7 +46,7 @@ export function removeDir(dir: string, exe = getRsExtExePath()) {
   }
   return execSync([exe, "fs", "remove_dir", JSON.stringify(dir)])
 }
-export function removeFile(dir: string, exe = getRsExtExePath()) {
+export function removeFile(dir: string, exe = detectExt()) {
   if (!existsSync(exe)) {
     switch (getOs()) {
       case "windows": {
@@ -67,7 +67,7 @@ export function removeFile(dir: string, exe = getRsExtExePath()) {
   }
   return execSync([exe, "fs", "remove_file", JSON.stringify(dir)])
 }
-export function removeDirAll(dir: string, exe = getRsExtExePath()) {
+export function removeDirAll(dir: string, exe = detectExt()) {
   if (!existsSync(exe)) {
     switch (getOs()) {
       case "windows": {
@@ -89,7 +89,7 @@ export function removeDirAll(dir: string, exe = getRsExtExePath()) {
   return execSync([exe, "fs", "remove_dir_all", JSON.stringify(dir)])
 }
 
-export async function mkdirAsync(dir: string, exe = getRsExtExePath()) {
+export async function mkdirAsync(dir: string, exe = detectExt()) {
   if (!existsSync(exe)) {
     switch (getOs()) {
       case "windows": {

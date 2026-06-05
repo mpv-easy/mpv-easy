@@ -16,7 +16,7 @@ import {
   getProperty,
   getPropertyNumber,
   getPropertyString,
-  getScriptConfigDir,
+  getScriptDir,
   joinPath,
   observePropertyNumber,
   osdMessage,
@@ -150,7 +150,7 @@ export function execSync(
 }
 
 export function getLogoPath() {
-  return joinPath(getScriptConfigDir(), "logo.bgra")
+  return joinPath(getScriptDir(), "logo.bgra")
 }
 
 export function execAsync(

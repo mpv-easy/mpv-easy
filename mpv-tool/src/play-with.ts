@@ -1,11 +1,5 @@
-import { getOs } from "./common"
-import { joinPath } from "./mpv"
-import { getDefaultBinDirPath } from "./rs-ext"
-
-const defaultMacExeName = "mpv-easy-play-with-macos"
-const defaultWindowsExeName = "mpv-easy-play-with-windows.exe"
-const defaultAndroidExeName = "mpv-easy-play-with-android"
-const defaultLinuxExeName = "mpv-easy-play-with-linux"
+import { getScriptDir, getMpvExeDir } from "./mpv"
+import { findByPrefix } from "./fs"
 
 export type Subtitle = {
   url: string
@@ -29,26 +23,22 @@ export type Playlist = {
   list: PlayItem[]
 }
 
-export function getPlayWithExePath() {
-  const os = getOs()
-  switch (os) {
-    case "darwin": {
-      return joinPath(getDefaultBinDirPath(), defaultMacExeName)
-    }
-    case "linux": {
-      return joinPath(getDefaultBinDirPath(), defaultLinuxExeName)
-    }
-    case "windows": {
-      return joinPath(getDefaultBinDirPath(), defaultWindowsExeName).replaceAll(
-        "/",
-        "\\\\",
-      )
-    }
-    case "android": {
-      return joinPath(getDefaultBinDirPath(), defaultAndroidExeName)
-    }
-    default: {
-      throw new Error(`mpv-easy-ext not support os: ${os}`)
-    }
+let _playWithPathCache: string | undefined
+
+/** Detect the mpv-easy-play-with binary via prefix search (cached) */
+export function detectPlayWith(): string {
+  if (_playWithPathCache) return _playWithPathCache
+
+  _playWithPathCache =
+    findByPrefix(getScriptDir(), "mpv-easy-play-with") ??
+    findByPrefix(getMpvExeDir(), "mpv-easy-play-with")
+
+  if (!_playWithPathCache) {
+    throw new Error(
+      `mpv-easy-play-with binary not found in:
+  - ${getScriptDir()}
+  - ${getMpvExeDir()}`,
+    )
   }
+  return _playWithPathCache
 }

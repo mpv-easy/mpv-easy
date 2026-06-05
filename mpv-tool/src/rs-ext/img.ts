@@ -1,5 +1,5 @@
 import { execAsync, execSync } from "../common"
-import { getRsExtExePath } from "./share"
+import { detectExt } from "./share"
 
 export type ImageSize = {
   width: number
@@ -32,7 +32,7 @@ function buildArgs(
 export function convertImage(
   input: string,
   output: string,
-  exe = getRsExtExePath(),
+  exe = detectExt(),
   width?: number,
   height?: number,
 ): ImageSize | undefined {
@@ -43,7 +43,7 @@ export function convertImage(
 export async function convertImageAsync(
   input: string,
   output: string,
-  exe = getRsExtExePath(),
+  exe = detectExt(),
   width?: number,
   height?: number,
 ): Promise<ImageSize | undefined> {

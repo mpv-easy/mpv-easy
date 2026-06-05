@@ -1,5 +1,21 @@
 import { getOs, execSync } from "./common"
-import { error, fileInfo, getPropertyBool, setPropertyBool } from "./mpv"
+import {
+  error,
+  fileInfo,
+  getPropertyBool,
+  setPropertyBool,
+  readdir,
+  joinPath,
+} from "./mpv"
+
+/** Search a directory for a file whose name starts with the given prefix */
+export function findByPrefix(dir: string, prefix: string): string | undefined {
+  const files = readdir(dir, "files")
+  if (!files) return
+  const found = files.find((f) => f.startsWith(prefix))
+  if (found) return joinPath(dir, found)
+  return undefined
+}
 
 export function existsSync(path: string): boolean {
   try {

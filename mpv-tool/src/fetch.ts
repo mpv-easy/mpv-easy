@@ -2,7 +2,7 @@ import { execAsync, execSync } from "./common"
 import { FetchMethod, FetchOption, FetchResponse } from "./const"
 import { detectCurl } from "./curl"
 import { existsSync } from "./fs"
-import { fetchByExt, getRsExtExePath } from "./rs-ext"
+import { fetchByExt, detectExt } from "./rs-ext"
 
 function generateMethod(options: FetchOption): string[] {
   const method = options.method
@@ -116,7 +116,7 @@ export async function fetch(
     return fetchByCurl(url, options, curlPath)
   }
 
-  if (existsSync(getRsExtExePath())) {
+  if (existsSync(detectExt())) {
     return fetchByExt(url, options)
   }
 

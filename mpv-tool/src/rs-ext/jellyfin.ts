@@ -1,6 +1,6 @@
 import { execAsync, execSync } from "../common"
 import { JSONParse } from "../json"
-import { getRsExtExePath } from "./share"
+import { detectExt } from "./share"
 
 export const MoviesReg =
   /^(https?):\/\/(.*?)\/web\/index.html#!?\/movies.html\?topParentId=(.*?)/
@@ -114,7 +114,7 @@ export function getUserId(
   server: string,
   apiKey: string,
   userName: string,
-  exe = getRsExtExePath(),
+  exe = detectExt(),
 ) {
   return execSync([exe, CommandName, "userid", server, apiKey, userName])
 }
@@ -123,7 +123,7 @@ export function getUserIdAsync(
   server: string,
   apiKey: string,
   userName: string,
-  exe = getRsExtExePath(),
+  exe = detectExt(),
 ) {
   return execAsync([exe, CommandName, "userid", server, apiKey, userName])
 }
@@ -132,7 +132,7 @@ export function getView(
   server: string,
   apiKey: string,
   userName: string,
-  exe = getRsExtExePath(),
+  exe = detectExt(),
 ): View {
   const txt = execSync([exe, CommandName, "view", server, apiKey, userName])
   return JSON.parse(txt) as View
@@ -142,7 +142,7 @@ export async function getViewAsync(
   server: string,
   apiKey: string,
   userName: string,
-  exe = getRsExtExePath(),
+  exe = detectExt(),
 ): Promise<View> {
   const txt = await execAsync([
     exe,
@@ -160,7 +160,7 @@ export function getPlaylist(
   apiKey: string,
   userName: string,
   parentId: string,
-  exe = getRsExtExePath(),
+  exe = detectExt(),
 ): PlayList {
   const txt = execSync([
     exe,
@@ -179,7 +179,7 @@ export async function getPlaylistAsync(
   apiKey: string,
   userName: string,
   parentId: string,
-  exe = getRsExtExePath(),
+  exe = detectExt(),
 ): Promise<PlayList> {
   const txt = await execAsync([
     exe,
@@ -198,7 +198,7 @@ export function getPlaybackinfo(
   apiKey: string,
   userName: string,
   id: string,
-  exe = getRsExtExePath(),
+  exe = detectExt(),
 ): PlaybackInfo {
   const txt = execSync([
     exe,
@@ -217,7 +217,7 @@ export async function getPlaybackinfoAsync(
   apiKey: string,
   userName: string,
   id: string,
-  exe = getRsExtExePath(),
+  exe = detectExt(),
 ): Promise<PlaybackInfo> {
   const txt = await execAsync([
     exe,
