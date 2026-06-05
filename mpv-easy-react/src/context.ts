@@ -83,7 +83,6 @@ import clearUrlsPlugin, {
 import { type PluginContext } from "@mpv-easy/plugin"
 import {
   clone,
-  ConfigDir,
   existsSync,
   getDisplayResolutionType,
   getOs,
@@ -149,7 +148,7 @@ declare module "@mpv-easy/plugin" {
 }
 
 const fileName = "mpv-easy.config.json"
-const configDir = joinPath(getScriptDir(), ConfigDir)
+const configDir = getScriptDir()
 const configPath = joinPath(configDir, fileName)
 
 const experimental: Experimental = {
