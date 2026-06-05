@@ -1,3 +1,8 @@
 {
+  "outDir": "${configDir}/dist",
+  "compilerOptions": {
+    "jsx": "react-jsx",
+    "types": ["vite/client"]
+  },
   "extends": "../tsconfig.base.json"
 }
