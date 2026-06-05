@@ -43,7 +43,7 @@ export function detectCmd(cmdName: string): false | string {
     return result
   } catch (e) {
     _cmdCache[cmdName] = false
-    debug(`detectCmd(${cmdName}) error: ${e}`)
+    debug(`[detectCmd](${cmdName}) error: ${e}`)
     return false
   }
 }
@@ -59,6 +59,7 @@ export function runCmdSync(cmd: string): {
     const stdout = execSync([sh, shArg, cmd]).replaceAll("\r\n", "\n")
     return { ok: true, stdout, stderr: "" }
   } catch (e) {
+    debug(`[runCmdSync] ${cmd} failed: ${e}`)
     return { ok: false, stderr: String(e).replaceAll("\r\n", "\n"), stdout: "" }
   }
 }
@@ -74,6 +75,7 @@ export async function runCmdAsync(cmd: string): Promise<{
     const stdout = await execAsync([sh, shArg, cmd])
     return { ok: true, stdout, stderr: "" }
   } catch (e) {
+    debug(`[runCmdAsync] ${cmd} failed: ${e}`)
     return { ok: false, stderr: String(e), stdout: "" }
   }
 }
