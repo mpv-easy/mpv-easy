@@ -1,4 +1,4 @@
-import { getOs } from "../common"
+import { getArch, getOs } from "../common"
 import { joinPath, getScriptConfigDir } from "../mpv"
 
 export const defaultBinDirName = "mpv-easy-ext"
@@ -9,6 +9,7 @@ const defaultMacExeName = "mpv-easy-ext-macos"
 const defaultWindowsExeName = "mpv-easy-ext-windows.exe"
 const defaultAndroidExeName = "mpv-easy-ext-android"
 const defaultLinuxExeName = "mpv-easy-ext-linux"
+const defaultLinuxArm64ExeName = "mpv-easy-ext-linux-arm64"
 
 export function getRsExtExePath() {
   // TODO: custom path
@@ -23,11 +24,15 @@ export function getRsExtExePath() {
   // }
 
   const os = getOs()
+  const arch = getArch()
   switch (os) {
     case "darwin": {
       return joinPath(getDefaultBinDirPath(), defaultMacExeName)
     }
     case "linux": {
+      if (arch === "arm64") {
+        return joinPath(getDefaultBinDirPath(), defaultLinuxArm64ExeName)
+      }
       return joinPath(getDefaultBinDirPath(), defaultLinuxExeName)
     }
     case "windows": {

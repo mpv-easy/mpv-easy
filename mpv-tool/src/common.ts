@@ -242,6 +242,51 @@ export function getOs(): OsType {
   return osCache
 }
 
+const ArchPatterns = {
+  x86_64: "x86_64",
+  amd64: "x86_64",
+  aarch64: "arm64",
+  arm64: "arm64",
+  armv7l: "armv7",
+  armv7: "armv7",
+} as const
+
+export type ArchType = (typeof ArchPatterns)[keyof typeof ArchPatterns]
+
+export const X86_64 = "x86_64"
+export const ARM64 = "arm64"
+export const ARMV7 = "armv7"
+
+let archCache: ArchType
+export function getArch(): ArchType {
+  if (archCache) {
+    return archCache
+  }
+  let _archName: undefined | string
+  function getUname() {
+    if (_archName) {
+      return _archName
+    }
+
+    // mpv-mock execSync maybe undefined
+    const uname = execSync(["uname", "-m"]) || ""
+    const rawArch = uname.toLowerCase().trim()
+
+    // Default to "x86_64"
+    _archName = "x86_64"
+
+    for (const [pattern, value] of Object.entries(ArchPatterns)) {
+      if (rawArch === pattern) {
+        _archName = value
+        break
+      }
+    }
+    return _archName
+  }
+  archCache = getUname() as ArchType
+  return archCache
+}
+
 export function replacePlaylist(videoList: string[], play?: number) {
   setPropertyBool("pause", true)
   playlistClear()
