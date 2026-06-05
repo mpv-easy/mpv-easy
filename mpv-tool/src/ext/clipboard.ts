@@ -1,11 +1,10 @@
 import { getOs, Windows } from "../common"
-import { ConfigDir } from "../const"
 import { getScriptDir, joinPath } from "../mpv"
 import { pwshExecCode } from "./shell"
 
 export function setClipboard(text: string): boolean {
   const scriptName = "mpv_easy_tool_clipboard.ps1"
-  const scriptPath = joinPath(getScriptDir(), ConfigDir, scriptName)
+  const scriptPath = joinPath(getScriptDir(), scriptName)
 
   const platform = getOs()
   switch (platform) {
@@ -27,7 +26,7 @@ Set-Clipboard "${text}"
 
 export function setClipboardImage(path: string): boolean {
   const scriptName = "mpv_easy_tool_clipboard_image.ps1"
-  const scriptPath = joinPath(getScriptDir(), ConfigDir, scriptName)
+  const scriptPath = joinPath(getScriptDir(), scriptName)
 
   const platform = getOs()
   switch (platform) {
@@ -58,8 +57,8 @@ $image.Dispose()
 export function getClipboard(): string {
   const scriptName = "mpv_easy_tool_clipboard.ps1"
   const outputName = "mpv_easy_tool_getClipboard.txt"
-  const outputPath = joinPath(getScriptDir(), ConfigDir, outputName)
-  const scriptPath = joinPath(getScriptDir(), ConfigDir, scriptName)
+  const outputPath = joinPath(getScriptDir(), outputName)
+  const scriptPath = joinPath(getScriptDir(), scriptName)
   const platform = getOs()
   switch (platform) {
     case Windows: {

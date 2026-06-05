@@ -31,7 +31,7 @@ Ctrl+1     script-message mount 1
 
 When using within the mpv-easy project, the configuration file is located at:
 
-`portable_config\scripts\mpv-easy\mpv-easy-config\mpv-easy.config.json`
+`portable_config\scripts\mpv-easy\mpv-easy.config.json`
 
 Use the following format to add mount sources (mpv-easy includes built-in UI controls, so keyboard shortcuts are not needed):
 

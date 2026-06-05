@@ -2,7 +2,7 @@
 
 mpv-easy now supports mounting playable links, such as webdav, local folders, m3u playlists, etc.
 
-You can add data in JSON format to the `mount` field in the `portable_config/scripts/mpv-easy-config/mpv-easy.config.json` file. Please make sure that the added data complies with the JSON specification, there is no comma in the last object in the array, and the string uses double quotes, etc.
+You can add data in JSON format to the `mount` field in the `portable_config/scripts/mpv-easy.config.json` file. Please make sure that the added data complies with the JSON specification, there is no comma in the last object in the array, and the string uses double quotes, etc.
 
 ## webdav
 

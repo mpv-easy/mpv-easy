@@ -1,5 +1,4 @@
 import { execSync } from "../common"
-import { ConfigDir } from "../const"
 import { getScriptDir, joinPath } from "../mpv"
 import { pwshExecCode } from "./shell"
 
@@ -57,6 +56,6 @@ public class SysParamsInfo {
 '@
 [SysParamsInfo]::CursorHasChanged()`
   const scriptName = "mpv_easy_tool_set_mouse_style.ps1"
-  const scriptPath = joinPath(getScriptDir(), ConfigDir, scriptName)
+  const scriptPath = joinPath(getScriptDir(), scriptName)
   pwshExecCode(scriptPath, code)
 }

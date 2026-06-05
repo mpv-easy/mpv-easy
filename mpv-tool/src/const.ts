@@ -1,5 +1,3 @@
-export const ConfigDir = "mpv-easy-config"
-
 export const EPSILON = 1e-10
 
 export const DEFAULT_ASS_HEIGHT = 720

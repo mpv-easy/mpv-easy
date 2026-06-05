@@ -30,7 +30,7 @@ export function getFfmpegPath() {
       return joinPath(getMpvExeDir(), defaultAndroidExeName)
     }
     default: {
-      throw new Error(`mpv-easy-ext not support os: ${os}`)
+      throw new Error(`ffmpeg not found for os: ${os}`)
     }
   }
 }
