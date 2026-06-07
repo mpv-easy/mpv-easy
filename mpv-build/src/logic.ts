@@ -31,7 +31,6 @@ export function useAppActions(
 ) {
   const {
     data,
-    tableData,
     selectedRowKeys,
     externalList,
     ui,

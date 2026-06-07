@@ -104,11 +104,15 @@ function useYoutubeData(cookiesPath?: string) {
     print(`[youtube] cookiesPath=${cookiesPath}`)
 
     try {
-      if (cookiesPath && !existsSync(cookiesPath)) {
-        showNotification(`cookies file not found: ${cookiesPath}`, 3)
-        return
+      if (cookiesPath) {
+        if (!existsSync(cookiesPath)) {
+          showNotification(`cookies file not found: ${cookiesPath}`, 3)
+          return
+        }
+        print(`[youtube] cookies file found, calling yt-dlp...`)
+      } else {
+        print(`[youtube] no cookies path provided, calling yt-dlp...`)
       }
-      print(`[youtube] cookies file found, calling yt-dlp...`)
       const result = await youtube.getYoutubeRecommendations(cookiesPath)
       print(`[youtube] yt-dlp returned, got ${result.length} entries`)
       const filtered = result.filter(

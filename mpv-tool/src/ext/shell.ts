@@ -34,18 +34,28 @@ export function detectCmd(cmdName: string): false | string {
     return _cmdCache[cmdName]
   }
 
-  const cmd = `where ${cmdName}`
-  try {
-    const s = runCmdSync(cmd).stdout
-    const p = s.trim().split("\n")[0]
-    const result = existsSync(p) ? p : false
-    _cmdCache[cmdName] = result
-    return result
-  } catch (e) {
-    _cmdCache[cmdName] = false
-    debug(`[detectCmd](${cmdName}) error: ${e}`)
-    return false
+  const probes = [
+    `where ${cmdName}`,
+    `which ${cmdName}`,
+    `command -v ${cmdName}`,
+  ]
+
+  for (const probe of probes) {
+    try {
+      const s = runCmdSync(probe).stdout
+      if (!s) continue
+      const p = s.trim().split("\n")[0]
+      if (p && existsSync(p)) {
+        _cmdCache[cmdName] = p
+        return p
+      }
+    } catch (e) {
+      debug(`[detectCmd](${cmdName}) probe '${probe}' error: ${e}`)
+    }
   }
+
+  _cmdCache[cmdName] = false
+  return false
 }
 
 export function runCmdSync(cmd: string): {
