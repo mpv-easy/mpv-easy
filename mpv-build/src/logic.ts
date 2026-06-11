@@ -14,6 +14,7 @@ import {
   getCdnFileUrl,
   getFfmpegUrl,
   getPlayWithUrl,
+  getDenoUrl,
   getYtdlpUrl,
   UI_LIST,
 } from "./constants"
@@ -104,6 +105,11 @@ export function useAppActions(
     }
     if (externalList.includes("play-with")) {
       const files = await downloadExternal(getPlayWithUrl())
+      for (const i of files) mpvFiles.push(i)
+    }
+
+    if (externalList.includes("deno")) {
+      const files = await downloadExternal(getDenoUrl())
       for (const i of files) mpvFiles.push(i)
     }
 

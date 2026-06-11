@@ -35,7 +35,7 @@ export const UI_LIST = [
   },
 ] as const
 
-export const ExternalList = ["ffmpeg", "yt-dlp", "play-with"]
+export const ExternalList = ["ffmpeg", "yt-dlp", "deno", "play-with"]
 
 export const DEFAULT_STATE: State = {
   data: {},
@@ -75,6 +75,10 @@ export function getFfmpegUrl() {
 
 export function getFfmpegV3Url() {
   return getCdnFileUrl("ffmpeg-v3-windows.tar.xz")
+}
+
+export function getDenoUrl() {
+  return getCdnFileUrl("deno.zip")
 }
 
 // Layout constants
