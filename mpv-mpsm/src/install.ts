@@ -39,7 +39,8 @@ export async function installFromFiles(
     }
   }
 
-  installScript(mpvFiles, scriptFiles, script, resolvedConfigDir)
+  const fixFiles = tryFix(scriptFiles, script)
+  installScript(mpvFiles, fixFiles, script, resolvedConfigDir)
 
   for (const i of mpvFiles) {
     outputFileSync(i.path, i.buffer)

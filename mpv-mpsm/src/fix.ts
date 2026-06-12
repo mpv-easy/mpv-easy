@@ -80,6 +80,9 @@ function removeCommonPrefix(scriptFiles: File[]) {
 }
 
 export function tryFix(scriptFiles: File[], script: Script): File[] {
+  // skip empty dir
+  scriptFiles = scriptFiles.filter((i) => !i.isDir)
+
   removeCommonPrefix(scriptFiles)
 
   const fixFiles: File[] = []
