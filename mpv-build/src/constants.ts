@@ -78,7 +78,7 @@ export function getFfmpegV3Url() {
 }
 
 export function getDenoUrl() {
-  return getCdnFileUrl("deno.zip")
+  return getCdnFileUrl("deno.tar.xz")
 }
 
 // Layout constants

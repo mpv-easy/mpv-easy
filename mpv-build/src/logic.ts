@@ -53,26 +53,36 @@ export function useAppActions(
 
   const installDeps = useCallback(
     async (files: File[]) => {
-      for (const i of allDeps) {
+      const depPromises = allDeps.map(async (i) => {
         const script = data[i]
-        if (!script) continue
-        if (script.repo) {
-          const { user, repo } = script.repo
-          const repoFiles = await downloadRepo(user, repo)
-          const v = repoFiles
-            .filter((i) => !i.isDir)
-            .map(
-              ({ path, buffer }) =>
-                new File(path, buffer!, undefined, false, null),
-            )
-          const fixFiles = tryFix(v, script)
-          const key = `${user}-${repo}`
-          installScript(files, fixFiles, data[key])
-        } else {
-          const scriptFiles = await getScriptFiles(data[i])
-          const fixFiles = tryFix(scriptFiles, script)
-          installScript(files, fixFiles, data[i])
+        if (!script) return null
+        try {
+          if (script.repo) {
+            const { user, repo } = script.repo
+            const repoFiles = await downloadRepo(user, repo)
+            const v = repoFiles
+              .filter((f) => !f.isDir)
+              .map(
+                ({ path, buffer }) =>
+                  new File(path, buffer!, undefined, false, null),
+              )
+            return { key: i, script, files: v }
+          }
+
+          const scriptFiles = await getScriptFiles(script)
+          return { key: i, script, files: scriptFiles }
+        } catch (e) {
+          console.error("installDeps download failed for", i, e)
+          return null
         }
+      })
+
+      const results = await Promise.all(depPromises)
+      for (const res of results) {
+        if (!res) continue
+        const { key, script, files: fetchedFiles } = res
+        const fixFiles = tryFix(fetchedFiles, script)
+        installScript(files, fixFiles, data[key])
       }
     },
     [allDeps, data],
@@ -93,24 +103,40 @@ export function useAppActions(
   }, [installDeps])
 
   const zipAll = useCallback(async () => {
-    const mpvFiles = await getMpvFiles(platform)
+    const mpvPromise = getMpvFiles(platform)
 
+    // Download external tools in parallel to speed up the process
+    const externalPromises: Promise<File[]>[] = []
     if (externalList.includes("ffmpeg")) {
-      const files = await downloadExternal(getFfmpegUrl())
-      for (const i of files) mpvFiles.push(i)
+      externalPromises.push(downloadExternal(getFfmpegUrl()))
     }
     if (externalList.includes("yt-dlp")) {
-      const files = await downloadExternal(getYtdlpUrl())
-      for (const i of files) mpvFiles.push(i)
+      externalPromises.push(downloadExternal(getYtdlpUrl()))
     }
     if (externalList.includes("play-with")) {
-      const files = await downloadExternal(getPlayWithUrl())
-      for (const i of files) mpvFiles.push(i)
+      externalPromises.push(downloadExternal(getPlayWithUrl()))
+    }
+    if (externalList.includes("deno")) {
+      externalPromises.push(downloadExternal(getDenoUrl()))
     }
 
-    if (externalList.includes("deno")) {
-      const files = await downloadExternal(getDenoUrl())
-      for (const i of files) mpvFiles.push(i)
+    const allPromises = [
+      mpvPromise.catch((e) => {
+        console.error("mpv download failed:", e)
+        return [] as File[]
+      }),
+      ...externalPromises.map((p) =>
+        p.catch((e) => {
+          console.error("external download failed:", e)
+          return [] as File[]
+        }),
+      ),
+    ]
+
+    const results = await Promise.all(allPromises)
+    const mpvFiles = results[0] as File[]
+    for (let index = 1; index < results.length; index += 1) {
+      for (const f of results[index]!) mpvFiles.push(f)
     }
 
     await installDeps(mpvFiles)
@@ -221,28 +247,37 @@ export function useAppActions(
   )
 
   const handleDownloadScript = useCallback(
-    async (script: DataType) => {
-      try {
-        if (script.repo) {
-          const files = await downloadRepo(script.repo.user, script.repo.repo)
-          const v = files
-            .filter((i) => !i.isDir)
-            .map(
-              ({ path, buffer }) =>
-                new File(path, buffer!, undefined, false, null),
-            )
-          const zipBinary = encode(Fmt.Zip, v)
-          if (zipBinary) {
-            downloadBinaryFile(`${script.repo.repo}.zip`, zipBinary)
+    async (script: DataType | DataType[]) => {
+      const downloadOne = async (s: DataType) => {
+        try {
+          if (s.repo) {
+            const files = await downloadRepo(s.repo.user, s.repo.repo)
+            const v = files
+              .filter((i) => !i.isDir)
+              .map(
+                ({ path, buffer }) =>
+                  new File(path, buffer!, undefined, false, null),
+              )
+            const zipBinary = encode(Fmt.Zip, v)
+            if (zipBinary) {
+              downloadBinaryFile(`${s.repo!.repo}.zip`, zipBinary)
+            }
+            return
           }
-          return
-        }
 
-        const bin = await downloadBinary(getScriptDownloadURL(script.name))
-        downloadBinaryFile(`${script.name}.zip`, bin)
-      } catch (e) {
-        console.error("handleDownloadScript error:", e)
-        setErrorMsg(String(e))
+          const bin = await downloadBinary(getScriptDownloadURL(s.name))
+          downloadBinaryFile(`${s.name}.zip`, bin)
+        } catch (e) {
+          console.error("handleDownloadScript error for", s.name || s, e)
+          // report the first error to UI
+          setErrorMsg(String(e))
+        }
+      }
+
+      if (Array.isArray(script)) {
+        await Promise.all(script.map((s) => downloadOne(s)))
+      } else {
+        await downloadOne(script)
       }
     },
     [setErrorMsg],

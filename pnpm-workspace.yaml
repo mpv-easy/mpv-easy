@@ -7,3 +7,4 @@ allowBuilds:
   lefthook: true
 minimumReleaseAgeExclude:
   - webdav-parser@0.1.0
+  - jdl@0.1.5

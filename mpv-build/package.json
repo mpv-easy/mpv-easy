@@ -15,7 +15,7 @@
     "@mui/icons-material": "9.0.1",
     "@mui/material": "9.0.1",
     "fuse.js": "7.3.0",
-    "jdl": "0.1.4",
+    "jdl": "0.1.5",
     "react": "19.2.6",
     "react-dom": "19.2.6",
     "zustand": "5.0.13"
