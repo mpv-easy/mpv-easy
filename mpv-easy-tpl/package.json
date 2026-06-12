@@ -25,7 +25,7 @@
   "author": "ahaoboy <504595380@qq.com> (https://github.com/ahaoboy)",
   "license": "MIT",
   "dependencies": {
-    "@easy-install/easy-archive": "0.2.6",
+    "@easy-install/easy-archive": "0.2.7",
     "@mpv-easy/polyfill": "workspace:*",
     "@mpv-easy/react": "workspace:*",
     "@mpv-easy/tool": "workspace:*",

@@ -9,7 +9,7 @@
     "build": "vite build"
   },
   "dependencies": {
-    "@easy-install/easy-archive": "0.2.6",
+    "@easy-install/easy-archive": "0.2.7",
     "@emotion/react": "11.14.0",
     "@emotion/styled": "11.14.1",
     "@mui/icons-material": "9.0.1",
