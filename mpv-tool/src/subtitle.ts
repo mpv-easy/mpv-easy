@@ -21,6 +21,9 @@ import { isYtdlp } from "./yt-dlp"
 import { detectFfmpeg } from "./ffmpeg"
 import type { Subtitle } from "./play-with"
 import { jellyfin } from "./rs-ext"
+import { createLogger } from "./logger"
+
+const log = createLogger("subtitle")
 
 export function loadLocalSubtitle(path: string) {
   const list = SubtitleTypes.map((i) => {
@@ -118,15 +121,20 @@ export async function loadRemoteSubtitleAsync(path = getProperty("path")) {
     return
   }
   if (hasJellyfinSubtitle(path)) {
+    log.debug("loadRemoteSubtitle: jellyfin subtitle detected")
     loadJellyfinSubtitle(path)
     return
   }
   if (isJellyfinStream(path)) {
+    log.debug("loadRemoteSubtitle: jellyfin stream, skip")
     return
   }
   const list = SubtitleTypes.map((i) => {
     return replaceExt(path, i)
   })
+  log.debug(
+    `loadRemoteSubtitle: probing ${list.length} subtitle urls for ${path}`,
+  )
   for (const url of list) {
     const name = getFileName(url)
     if (!name?.length) {
@@ -139,9 +147,11 @@ export async function loadRemoteSubtitleAsync(path = getProperty("path")) {
     }
 
     try {
+      log.verbose(`loadRemoteSubtitle: fetching ${url}`)
       const resp = await fetch(url)
 
       if (resp.status !== 200 || !resp.text?.length) {
+        log.verbose(`loadRemoteSubtitle: ${url} returned status ${resp.status}`)
         continue
       }
       const text = await resp.text()
@@ -153,8 +163,9 @@ export async function loadRemoteSubtitleAsync(path = getProperty("path")) {
       const subPath = joinPath(tmp, name)
       writeFile(subPath, text)
       subAdd(subPath, "cached")
+      log.info(`loadRemoteSubtitle: loaded ${name}`)
     } catch (e) {
-      print("loadRemoteSubtitle error:", e)
+      log.error(`loadRemoteSubtitle: failed ${url}`, e)
     }
   }
 }
@@ -204,6 +215,7 @@ export async function convertSubtitle(
 ): Promise<string | undefined> {
   const ffmpeg = detectFfmpeg()
   if (!ffmpeg) {
+    log.warn("convertSubtitle: ffmpeg not found")
     printAndOsd("ffmpeg not found")
     return undefined
   }
@@ -218,10 +230,11 @@ export async function convertSubtitle(
     subPath,
     outputPath,
   ]
-  // console.log('cmd: ',cmd.join(' '))
+  log.debug(`convertSubtitle: ${subPath} → ${outputPath}`)
   try {
     await execAsync(cmd)
-  } catch (_e) {
+  } catch (e) {
+    log.error(`convertSubtitle: ffmpeg failed`, e)
     return undefined
   }
   return readFile(outputPath)
@@ -234,14 +247,17 @@ export async function saveSrt(
   segment: number[] = [],
 ): Promise<string | undefined> {
   if (!videoPath) {
+    log.warn("saveSrt: no videoPath")
     return undefined
   }
   const subTrack = getSubtitleTracks().find((i) => i.id === trackId)
   if (!subTrack) {
+    log.warn(`saveSrt: track ${trackId} not found`)
     return undefined
   }
   const ffmpeg = detectFfmpeg()
   if (!ffmpeg) {
+    log.warn("saveSrt: ffmpeg not found")
     printAndOsd("ffmpeg not found")
     return undefined
   }
@@ -264,10 +280,11 @@ export async function saveSrt(
 
   cmd.push(outputPath)
 
-  // console.log('cmd: ',cmd.join(' '))
+  log.debug(`saveSrt: ${videoPath} track=${trackId} → ${outputPath}`)
   try {
     await execAsync(cmd)
-  } catch (_e) {
+  } catch (e) {
+    log.error(`saveSrt: ffmpeg failed`, e)
     return undefined
   }
   return readFile(outputPath)

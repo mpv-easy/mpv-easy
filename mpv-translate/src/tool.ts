@@ -25,6 +25,7 @@ import {
   getMpvExeDir,
   getDesktopDir,
   expandPath,
+  createLogger,
 } from "@mpv-easy/tool"
 import { google, googleDetect } from "./google"
 import {
@@ -33,6 +34,8 @@ import {
 } from "./const"
 import { readFile } from "@mpv-easy/tool"
 import { normalize } from "@mpv-easy/tool"
+
+const log = createLogger("translate")
 
 function compile(str: string, vars: Record<string, string>) {
   return str.replace(/\$(\w+)/g, (_, key) => vars[key] ?? "")
@@ -45,8 +48,12 @@ async function translateSrt(
   maxChars = DEFAULT_MAX_CHUNK_CHARS,
   maxEncodeChars = DEFAULT_MAX_CHUNK_ENCODE_CHARS,
 ): Promise<string> {
+  log.info(
+    `translateSrt: ${sourceLang} → ${targetaLang}, ${maxChars}c / ${maxEncodeChars}e`,
+  )
   const s = new Srt(srt)
   const blocks = s.blocks
+  log.debug(`translateSrt: ${blocks.length} blocks`)
   const chunks: { st: number; text: string }[] = []
   let textList = []
   let charLength = 0
@@ -81,12 +88,18 @@ async function translateSrt(
     charLength = 0
   }
 
+  log.debug(`translateSrt: ${chunks.length} chunks to translate`)
   const results = await Promise.all(
-    chunks.map(async (chunk) => {
-      const ret = (await google(chunk.text, targetaLang, sourceLang)).split(
-        marker,
-      )
-      return { st: chunk.st, ret }
+    chunks.map(async (chunk, idx) => {
+      try {
+        const raw = await google(chunk.text, targetaLang, sourceLang)
+        const ret = raw.split(marker)
+        log.verbose(`translateSrt: chunk ${idx + 1}/${chunks.length} done`)
+        return { st: chunk.st, ret }
+      } catch (e) {
+        log.error(`translateSrt: chunk ${idx + 1}/${chunks.length} failed`, e)
+        throw e
+      }
     }),
   )
 
@@ -108,13 +121,18 @@ export async function guessLanguage(
 ): Promise<string | undefined> {
   const s = new Srt(content)
   const blocks = s.blocks
-  if (blocks.length === 0) return undefined
+  if (blocks.length === 0) {
+    log.warn("guessLanguage: no blocks found")
+    return undefined
+  }
   const text = blocks
     .filter((b) => b.text.trim().length > 0)
     .slice(0, 10)
     .map((b) => b.text)
     .join(" ")
-  return await googleDetect(text.slice(0, maxChars))
+  const result = await googleDetect(text.slice(0, maxChars))
+  log.debug(`guessLanguage: detected ${result}`)
+  return result
 }
 
 export let TrackInfoBackup: SubtitleTrack | undefined
@@ -217,25 +235,37 @@ export async function translate(
     maxChunkChars = DEFAULT_MAX_CHUNK_CHARS,
     maxChunkEncodeChars = DEFAULT_MAX_CHUNK_ENCODE_CHARS,
   } = option
+  log.info(
+    `dual=${dual}, target=${option.targetLang || "auto"}, source=${option.sourceLang || "auto"}`,
+  )
   let sub = getCurrentSubtitle()
   if (!sub) {
+    log.warn("no subtitle track")
     printAndOsd("subtitle not found")
     return false
   }
+  log.debug(
+    `sub id=${sub.id} title="${sub.title}" lang=${sub.lang} external=${sub.external}`,
+  )
   const videoPath = getPropertyString("path")!
+  log.debug(`videoPath=${videoPath}`)
 
   if (!existsSync(videoPath) && !sub.external) {
+    log.warn("remote video with embedded subs, not supported")
     printAndOsd("not support remote video with embedded subtitles")
     return false
   }
   const targetLang = option.targetLang?.length ? option.targetLang : getLang()
+  log.debug(`targetLang=${targetLang}`)
   if (dual && TrackInfoBackupDual && sub.title === `dual.${targetLang}`) {
+    log.info("restore dual backup")
     setPropertyNative("sid", TrackInfoBackupDual.id)
     subRemove(sub.id)
     TrackInfoBackupDual = undefined
     return true
   }
   if (!dual && TrackInfoBackup && sub.title === targetLang) {
+    log.info("restore single backup")
     setPropertyNative("sid", TrackInfoBackup.id)
     subRemove(sub.id)
     TrackInfoBackup = undefined
@@ -243,47 +273,53 @@ export async function translate(
   }
 
   if (dual && TrackInfoBackup) {
+    log.info("clear old single backup")
     setPropertyNative("sid", TrackInfoBackup.id)
     subRemove(sub.id)
     TrackInfoBackup = undefined
-    // return
   }
   if (!dual && TrackInfoBackupDual) {
+    log.info("clear old dual backup")
     setPropertyNative("sid", TrackInfoBackupDual.id)
     subRemove(sub.id)
     TrackInfoBackupDual = undefined
-    // return
   }
 
   sub = getCurrentSubtitle()
   if (!sub) {
+    log.warn("no subtitle after restore")
     printAndOsd("subtitle not found")
     return false
   }
 
-  // Detect if current sub is a generated one and fallback to backup
   let sourceTrack = sub
   if (sub.title === targetLang && TrackInfoBackup) {
+    log.debug("fallback to backup source")
     sourceTrack = TrackInfoBackup
   } else if (sub.title === `dual.${targetLang}` && TrackInfoBackupDual) {
+    log.debug("fallback to dual backup source")
     sourceTrack = TrackInfoBackupDual
   }
 
   if (dual) {
     TrackInfoBackupDual = sourceTrack
+    log.debug(`dual backup saved id=${sourceTrack.id}`)
   } else {
     TrackInfoBackup = sourceTrack
+    log.debug(`backup saved id=${sourceTrack.id}`)
   }
 
   const tmpDir = getTmpDir()
   const videoName = getFileName(videoPath)
   if (!videoName) {
+    log.warn("videoName not found")
     printAndOsd("videoName not found")
     return false
   }
   const sourceLang = option.sourceLang?.length
     ? option.sourceLang
     : sourceTrack.lang
+  log.debug(`sourceLang=${sourceLang}`)
   const hash = md5(
     [
       videoPath,
@@ -313,22 +349,28 @@ export async function translate(
   const match = subOriginPath.match(pattern)
   if (match) {
     const url = match[0]
+    log.debug(`fetch remote sub ${url}`)
     const text = await fetch(url).then((i) => i.text())
     const tmp = getTmpPath()
     writeFile(tmp, text)
     await convertSubtitle(tmp, srtSubPath)
+    log.debug("remote sub converted")
   }
   if (sourceTrack.external && !existsSync(srtSubPath)) {
+    log.debug(`convert external sub ${subOriginPath}`)
     await convertSubtitle(subOriginPath, srtSubPath)
   }
   if (!existsSync(srtSubPath)) {
+    log.debug(`extract sub track ${sourceTrack.id}`)
     if (
       !(await saveSrt(videoPath, sourceTrack.id, srtSubPath)) ||
       !existsSync(srtSubPath)
     ) {
+      log.error(`save srt failed ${srtSubPath}`)
       printAndOsd("save subtitle error")
       return false
     }
+    log.debug(`srt saved to ${srtSubPath}`)
   }
   const text = readFile(srtSubPath)
   let guessedLang = sourceTrack.external
@@ -336,6 +378,7 @@ export async function translate(
     : undefined
 
   if (!guessedLang) {
+    log.debug("guessing source language...")
     guessedLang = await guessLanguage(text, maxChunkChars)
   }
 
@@ -344,12 +387,14 @@ export async function translate(
     const gl = guessedLang.split("-")[0].toLowerCase()
     const tl = (targetLang as string).split("-")[0].toLowerCase()
     if (gl === tl) {
+      log.info(`already in ${targetLang}, skip`)
       printAndOsd(`Subtitle already in ${targetLang}, reusing content`)
       srt = text
     }
   }
 
   if (srt === undefined) {
+    log.info(`translating ${sourceLang} → ${targetLang}`)
     srt = await translateSrt(
       text,
       targetLang as Lang,
@@ -357,12 +402,13 @@ export async function translate(
       maxChunkChars,
       maxChunkEncodeChars,
     )
+    log.debug(`translation done, writing ${srtOutputPath}`)
   }
   writeFile(srtOutputPath, srt)
 
   const resolveOutputPath = (src: string, lang: string) => {
-    // If it is a network path, use temp folder
     if (!existsSync(videoPath)) {
+      log.debug("network source, use temp output")
       return src
     }
 
@@ -372,16 +418,12 @@ export async function translate(
       const name =
         lastDotIndex === -1 ? videoName : videoName.substring(0, lastDotIndex)
 
-      // Default template when empty: use temp directory
       const pathTemplate = subOutputPath || "$TMP/$NAME.$LANG.srt"
-
-      // Get various directory paths
       const homeDir = getHomeDir() || getTmpDir()
       const mpvDir = getMpvExeDir() || tmpDir
       const mpvConfigDir = expandPath("~~home/") || tmpDir
       const desktopDir = getDesktopDir() || tmpDir
 
-      // Prepare template variables
       const templateVars = {
         HOME: homeDir,
         NAME: name,
@@ -395,8 +437,8 @@ export async function translate(
         DESKTOP: desktopDir,
       }
       const dest = normalizePath(compile(pathTemplate, templateVars))
+      log.debug(`output ${lang}: ${src} → ${dest}`)
 
-      // Skip copy if source and destination are the same
       if (normalizePath(src) === dest) {
         return src
       }
@@ -404,6 +446,7 @@ export async function translate(
       writeFile(dest, readFile(src))
       return dest
     } catch (error) {
+      log.error(`template error`, error)
       printAndOsd(`Template error: ${error}, using temp path`)
       return src
     }
@@ -412,6 +455,7 @@ export async function translate(
   if (dual) {
     const srtDualPath = getPath(`dual.${sourceLang}.${targetLang}.srt`)
     if (!existsSync(srtDualPath)) {
+      log.debug("creating dual srt")
       DualSrt(
         srtOutputPath,
         srtSubPath,
@@ -426,10 +470,13 @@ export async function translate(
     }
     const dualLang = `${sourceLang}.${targetLang}`
     const finalPath = resolveOutputPath(srtDualPath, dualLang)
+    log.info(`add dual sub dual.${targetLang} => ${finalPath}`)
     subAdd(finalPath, "select", `dual.${targetLang}`, dualLang)
   } else {
     const finalPath = resolveOutputPath(srtOutputPath, targetLang)
+    log.info(`add sub ${targetLang} => ${finalPath}`)
     subAdd(finalPath, "select", targetLang, targetLang)
   }
+  log.info("done")
   return true
 }

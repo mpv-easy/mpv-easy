@@ -170,6 +170,55 @@ set-executionpolicy remotesigned
 | SHOW_FPS      | Determines whether FPS information is displayed.                |
 | MAX_FPS_FRAME | Specifies the number of recent frames used for FPS calculation. |
 | FRAME_LIMIT   | Exit the player after rendering the specified number of frames. |
+| LOG_LEVEL     | Controls log output level (see [logging](#logging) below).      |
+
+## logging
+
+Control debug output via the `LOG_LEVEL` environment variable. Available levels (from least to most verbose):
+
+| level     | description                        |
+| --------- | ---------------------------------- |
+| `fatal`   | Unrecoverable errors only          |
+| `error`   | Errors that don't crash            |
+| `warn`    | Warnings — something may be off    |
+| `info`    | General flow (default)             |
+| `v`       | Verbose — detailed progress        |
+| `debug`   | Debug-level details                |
+| `trace`   | Everything                         |
+
+### Usage
+
+**bash / zsh:**
+```bash
+LOG_LEVEL=debug mpv video.mp4
+```
+
+**fish:**
+```fish
+set -x LOG_LEVEL debug; mpv video.mp4
+# or
+env LOG_LEVEL=debug mpv video.mp4
+```
+
+**Windows (cmd):**
+```cmd
+set LOG_LEVEL=debug && mpv video.mp4
+```
+
+**Windows (PowerShell):**
+```powershell
+$env:LOG_LEVEL="debug"; mpv video.mp4
+```
+
+Logs are written to mpv's console (`print`) and prefixed with the module namespace:
+
+```
+[translate] translate: dual=false, target=auto, source=auto
+[translate] translateSrt: en-US → zh-CN, 1500c / 1500e
+[subtitle] loadRemoteSubtitle: loaded example.ass
+```
+
+Set to `info` (default) to see flow, `debug` for troubleshooting, `trace` for everything.
 
 ## nightly.link
 

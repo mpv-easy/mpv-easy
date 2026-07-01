@@ -7,7 +7,9 @@ import { getTmpDir } from "./tmp"
 import { randomId } from "./math"
 import { normalize, replaceExt } from "./path"
 import { getCurrentSubtitle } from "./subtitle"
-// import { getCurrentSubtitle, getSubtitleTracks } from "./subtitle"
+import { createLogger } from "./logger"
+
+const log = createLogger("ffmpeg")
 
 const defaultMacExeName = "ffmpeg"
 const defaultWindowsExeName = "ffmpeg.exe"
@@ -93,11 +95,12 @@ export async function cutRemoteVideo(
   //   mpvCmd.push(`--vf-append=${vf}`)
   // }
 
-  // console.log("mpvCmd", mpvCmd.join(" "))
+  log.debug(`cutRemoteVideo: ${videoPath} [${area[0]}-${area[1]}]`)
   try {
     await execAsync(mpvCmd)
     return true
-  } catch {
+  } catch (e) {
+    log.error(`cutRemoteVideo: mpv failed`, e)
     return false
   }
 }
@@ -167,10 +170,11 @@ export async function cutLocalVideo(
     cmd.push("-c", "copy")
     cmd.push(outputPath)
   }
-  // console.log("cmd:", cmd.join(' '))
+  log.debug(`cutLocalVideo: ${videoPath} [${ss}-${to}] → ${outputPath}`)
   try {
     await execAsync(cmd)
-  } catch (_e) {
+  } catch (e) {
+    log.error(`cutLocalVideo: ffmpeg failed`, e)
     return false
   }
   return true
@@ -198,12 +202,13 @@ export async function cropImage(
     `crop=${width}:${height}:${x}:${y}`,
     outputPath,
   ]
-  // console.log("cmd", cmd.join(" "))
+  log.debug(
+    `cropImage: ${rect.width}x${rect.height}+${rect.x}+${rect.y} → ${outputPath}`,
+  )
   try {
     await execAsync(cmd)
-    // TODO: remove tmp file?
-    // removeFile(tmpPath)
-  } catch (_e) {
+  } catch (e) {
+    log.error(`cropImage: ffmpeg failed`, e)
     return false
   }
   return true
@@ -242,10 +247,11 @@ export async function cropVideo(
     cmd.push(`crop=${width}:${height}:${x}:${y}`, outputPath)
     cmd.push("-c", "copy", "-c:v", "libx265")
   }
-  // console.log("cmd: ", cmd.join(' '))
+  log.debug(`cropVideo: ${videoPath} [${ss}-${to}] ${width}x${height}`)
   try {
     await execAsync(cmd)
-  } catch (_e) {
+  } catch (e) {
+    log.error(`cropVideo: ffmpeg failed`, e)
     return false
   }
   return true
@@ -354,10 +360,13 @@ export async function whisper(
     "-",
   ]
 
-  // console.log("cmd: ", cmd.join(" "))
+  log.debug(
+    `whisper: ${videoPath} model=${config.model} lang=${config.language || "auto"}`,
+  )
   try {
     await execAsync(cmd)
-  } catch (_e) {
+  } catch (e) {
+    log.error(`whisper: ffmpeg failed`, e)
     return false
   }
   return true
@@ -382,9 +391,11 @@ export async function imageToRaw(
     outputPath,
   ]
 
+  log.debug(`imageToRaw: ${inputPath} → ${outputPath} pixFmt=${pixFmt}`)
   try {
     await execAsync(cmd)
-  } catch (_e) {
+  } catch (e) {
+    log.error(`imageToRaw: ffmpeg failed`, e)
     return false
   }
   return true

@@ -1,6 +1,7 @@
 import { definePlugin } from "@mpv-easy/plugin"
 import {
   cacheAsync,
+  createLogger,
   fetch,
   getProperty,
   getPropertyNumber,
@@ -12,6 +13,9 @@ import {
   unobserveProperty,
   unregisterEvent,
 } from "@mpv-easy/tool"
+import { youtube } from "@mpv-easy/tool"
+
+const log = createLogger("sponsorblock")
 export const pluginName = "@mpv-easy/sponsorblock"
 export type SponsorblockConfig = {
   active: boolean
@@ -99,7 +103,7 @@ function extractYoutubeId(videoPath: string, purl: string): string | undefined {
       referer = match[1]
     }
   } catch (e) {
-    print(e)
+    log.warn("extractYoutubeId: failed to parse Referer", e)
   }
 
   const sources = [videoPath, referer, purl]
@@ -136,7 +140,7 @@ async function fetchRanges(
       }
       return data.map((item) => item.segment)
     } catch (e) {
-      print(`[Sponsorblock] request failed for ${s}: ${e}`)
+      log.error(`fetchRanges: ${s} failed`, e)
     }
   }
   showNotification(
@@ -161,27 +165,25 @@ function getId() {
 
 async function cacheRanges() {
   IdCache = undefined
+  if (!youtube.isYoutube(getProperty("path") ?? "")) {
+    log.debug("skipping")
+    return
+  }
   const videoId = getId()
   if (!videoId) {
-    print("[Sponsorblock] video id not found")
+    log.warn("video id not found")
     return
   }
   if (RangesMap[videoId]) {
-    print(
-      `[Sponsorblock] video id: ${videoId} ranges found in cache: ${JSON.stringify(
-        RangesMap[videoId],
-      )}`,
-    )
+    log.debug(`${videoId} found in cache`)
     return
   }
   const ranges = await fetchRanges(videoId)
   if (ranges) {
     RangesMap[videoId] = ranges
-    print(
-      `[Sponsorblock] video id: ${videoId} ranges: ${JSON.stringify(ranges)}`,
-    )
+    log.info(`${videoId} got ${ranges.length} ranges`)
   } else {
-    print(`[Sponsorblock] video id: ${videoId} no ranges found`)
+    log.info(`${videoId} no ranges found`)
   }
 }
 
@@ -189,14 +191,14 @@ function sponsorblockOn() {
   observePropertyNumber("time-pos", skip)
   registerEvent("file-loaded", cacheRanges)
   cacheRanges()
-  print("[Sponsorblock] on")
+  log.info("sponsorblock on")
 }
 
 function sponsorblockOff() {
   unobserveProperty(skip)
   unregisterEvent(cacheRanges)
   IdCache = undefined
-  print("[Sponsorblock] off")
+  log.info("sponsorblock off")
 }
 
 function skip(_: string, pos: number) {
@@ -211,7 +213,7 @@ function skip(_: string, pos: number) {
     if (start <= pos && end > pos) {
       const currentPos = getPropertyNumber("time-pos") ?? pos
       const skipSeconds = Math.floor(end - currentPos)
-      print(`[Sponsorblock] skipping forward ${skipSeconds}s`)
+      log.info(`skipping forward ${skipSeconds}s`)
       // +0.01 to prevent mpv from spamming skip
       setProperty("time-pos", `${end + 0.01}`)
       return

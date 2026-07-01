@@ -403,8 +403,10 @@ export function getpid(): number {
   return mp.utils.getpid()
 }
 
-export function getenv(name: string): string | undefined {
-  return mp.utils.getenv(name)
+export function getenv(name: string): string | undefined
+export function getenv<T = string>(name: string, def: T): T
+export function getenv<T = string>(name: string, def?: T): T | undefined {
+  return (mp.utils.getenv(name) as T) ?? def
 }
 
 export function getUserPath(path: string): string {
