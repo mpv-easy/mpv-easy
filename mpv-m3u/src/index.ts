@@ -1,5 +1,5 @@
 /**
- * @mpv-easy/m3u-subtitles
+ * @mpv-easy/m3u
  *
  * Auto-load subtitle references from local M3U/M3U8 playlists.
  *
@@ -55,7 +55,7 @@ declare module "@mpv-easy/plugin" {
 // Logger
 // ---------------------------------------------------------------------------
 
-const log = createLogger("m3u-subtitles")
+const log = createLogger("m3u")
 
 // ---------------------------------------------------------------------------
 // Pending state
