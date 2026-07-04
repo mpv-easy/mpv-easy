@@ -1,18 +1,16 @@
 {
-  "name": "@mpv-easy/anime",
-  "version": "0.1.15-alpha.20",
-  "private": "true",
+  "name": "@mpv-easy/m3u",
+  "version": "0.1.0",
   "homepage": "https://github.com/mpv-easy/mpv-easy#readme",
   "files": [
     "dist",
     "readme.md",
     "package.json"
   ],
-  "description": "@mpv-easy/tool",
+  "description": "Auto-load subtitle references from M3U/M3U8 playlists",
   "main": "dist/index.js",
-  "types": "./dist/index.d.ts",
+  "types": "dist/index.d.ts",
   "scripts": {
-    "es5": "babel ./dist -d es5",
     "build": "tsc -p ./tsconfig.build.json",
     "dev": "tsc -p ./tsconfig.build.json -w"
   },
@@ -20,10 +18,9 @@
   "author": "ahaoboy <504595380@qq.com> (https://github.com/ahaoboy)",
   "license": "MIT",
   "dependencies": {
-    "react": "19.2.7",
-    "react-dom": "19.2.7",
-    "react-reconciler": "0.33.0",
-    "react-redux": "9.3.0",
-    "react-use": "17.6.1"
-  }
+    "@mpv-easy/tool": "workspace:*",
+    "@mpv-easy/plugin": "workspace:*",
+    "serde-m3u": "0.1.2"
+  },
+  "devDependencies": {}
 }

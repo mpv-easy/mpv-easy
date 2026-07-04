@@ -22,7 +22,7 @@
     "@mpv-easy/tool": "workspace:*",
     "@mpv-easy/plugin": "workspace:*",
     "@mpv-easy/autoload": "workspace:*",
-    "serde-m3u": "0.1.1"
+    "serde-m3u": "0.1.2"
   },
   "devDependencies": {}
 }

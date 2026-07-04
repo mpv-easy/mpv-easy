@@ -340,6 +340,7 @@ jobs:
             sponsorblock
             clearurls
             mount
+            m3u
           )
 
           git clone https://github.com/ahaoboy/free-piano --depth=1

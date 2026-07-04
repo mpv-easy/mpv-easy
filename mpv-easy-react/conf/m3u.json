@@ -1,0 +1,8 @@
+{
+  "name": "mpv-easy-m3u",
+  "description": "Auto-load subtitle references from M3U/M3U8 playlists",
+  "version": "0.1.0",
+  "author": "mpv-easy",
+  "download": "https://github.com/mpv-easy/mpv-easy/releases/latest/download/mpv-easy-m3u.zip",
+  "homepage": "https://github.com/mpv-easy/mpv-easy/tree/main/mpv-m3u"
+}

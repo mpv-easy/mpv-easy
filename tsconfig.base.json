@@ -53,6 +53,7 @@
       "@mpv-easy/mpv-sponsorblock": ["./mpv-sponsorblock/src"],
       "@mpv-easy/clearurls": ["./mpv-clearurls/src"],
       "@mpv-easy/mount": ["./mpv-mount/src"],
+      "@mpv-easy/m3u": ["./mpv-m3u/src"],
       "@mpv-easy/frame-seeker": ["./mpv-frame-seeker/src"]
     },
     "types": ["node"]

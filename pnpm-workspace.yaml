@@ -9,3 +9,4 @@ minimumReleaseAgeExclude:
   - webdav-parser@0.1.0
   - jdl@0.1.5
   - '@easy-install/easy-archive@0.2.7'
+  - serde-m3u@0.1.2

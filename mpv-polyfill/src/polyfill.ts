@@ -1,4 +1,5 @@
 function setProtoOf(obj: any, proto: any) {
+  // biome-ignore lint/suspicious/noProto: intentional use for mpv compatibility
   obj.__proto__ = proto
   return obj
 }

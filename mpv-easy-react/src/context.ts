@@ -79,6 +79,10 @@ import mountPlugin, {
 import clearUrlsPlugin, {
   pluginName as clearUrlsName,
 } from "@mpv-easy/clearurls"
+import m3uPlugin, {
+  defaultConfig as m3uConfig,
+  pluginName as m3uName,
+} from "@mpv-easy/m3u"
 
 import { type PluginContext } from "@mpv-easy/plugin"
 import {
@@ -115,6 +119,7 @@ export const getPlugins = () => [
   sponsorblockPlugin,
   mountPlugin,
   clearUrlsPlugin,
+  m3uPlugin,
 ]
 
 export interface EnablePlugin {
@@ -133,6 +138,7 @@ export interface EnablePlugin {
   [sponsorblockName]: boolean
   [clearUrlsName]: boolean
   [mountName]: boolean
+  [m3uName]: boolean
 }
 
 declare module "@mpv-easy/plugin" {
@@ -181,6 +187,7 @@ export function createDefaultContext(): PluginContext {
     [youtubeName]: youtubeConfig,
     [sponsorblockName]: sponsorblockConfig,
     [mountName]: mountConfig,
+    [m3uName]: m3uConfig,
     enablePlugins: {
       [i18nName]: true,
       [easyName]: true,
@@ -199,6 +206,7 @@ export function createDefaultContext(): PluginContext {
       [sponsorblockName]: true,
       [clearUrlsName]: true,
       [mountName]: true,
+      [m3uName]: true,
     },
     version,
     experimental,

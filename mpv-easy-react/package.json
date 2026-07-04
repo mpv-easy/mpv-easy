@@ -42,6 +42,7 @@
     "@mpv-easy/frame-seeker": "workspace:*",
     "@mpv-easy/i18n": "workspace:*",
     "@mpv-easy/jellyfin": "workspace:*",
+    "@mpv-easy/m3u": "workspace:*",
     "@mpv-easy/mock": "workspace:*",
     "@mpv-easy/mount": "workspace:*",
     "@mpv-easy/plugin": "workspace:*",
@@ -52,29 +53,29 @@
     "@mpv-easy/tool": "workspace:*",
     "@mpv-easy/translate": "workspace:*",
     "@mpv-easy/youtube": "workspace:*",
-    "@react-spring/rafz": "10.1.0",
+    "@react-spring/rafz": "10.1.2",
     "@reduxjs/toolkit": "2.12.0",
     "@rematch/core": "2.2.0",
     "@rematch/select": "3.1.2",
-    "@tanstack/react-query": "5.100.13",
+    "@tanstack/react-query": "5.101.2",
     "@types/use-sync-external-store": "1.5.0",
     "e-color": "0.1.8",
     "free-piano": "0.1.1",
-    "jotai": "2.20.0",
+    "jotai": "2.20.1",
     "lodash-es": "4.18.1",
-    "mobx": "6.15.3",
+    "mobx": "6.16.1",
     "mobx-react-lite": "4.1.1",
-    "react": "19.2.6",
-    "react-dom": "19.2.6",
+    "react": "19.2.7",
+    "react-dom": "19.2.7",
     "react-reconciler": "0.33.0",
     "react-redux": "9.3.0",
-    "react-use": "17.6.0",
+    "react-use": "17.6.1",
     "redux": "5.0.1",
-    "serde-m3u": "0.1.1",
-    "swr": "2.4.1",
+    "serde-m3u": "0.1.2",
+    "swr": "2.4.2",
     "use-deep-compare": "1.3.0",
     "use-sync-external-store": "1.6.0",
-    "zustand": "5.0.13"
+    "zustand": "5.0.14"
   },
   "browserslist": [
     "iOS >= 9",
@@ -84,6 +85,6 @@
     "not dead"
   ],
   "devDependencies": {
-    "@types/node": "25.9.1"
+    "@types/node": "26.1.0"
   }
 }

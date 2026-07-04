@@ -25,6 +25,6 @@
   },
   "devDependencies": {},
   "peerDependencies": {
-    "react": "19.2.6"
+    "react": "19.2.7"
   }
 }
