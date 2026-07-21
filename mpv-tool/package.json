@@ -22,7 +22,6 @@
   "license": "MIT",
   "dependencies": {
     "@mpv-easy/assdraw": "workspace:*",
-    "@mpv-easy/polyfill": "workspace:*",
     "@types/node": "26.1.0",
     "crypto-js": "4.2.0",
     "e-color": "0.1.8",
