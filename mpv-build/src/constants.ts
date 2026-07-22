@@ -33,6 +33,12 @@ export const UI_LIST = [
     deps: ["thumbfast", "autoload"],
     requires: ["ModernZ"],
   },
+  {
+    name: "material-osc",
+    repo: "https://github.com/brahmkshatriya/material-osc",
+    deps: ["thumbfast"],
+    requires: ["material-osc"],
+  },
 ] as const
 
 export const ExternalList = ["ffmpeg", "yt-dlp", "deno", "play-with"]
