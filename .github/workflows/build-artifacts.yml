@@ -21,8 +21,6 @@ jobs:
 
       - name: build js
         run: |
-          pnpm approve-builds --all
-          pnpm setup
           pnpm i
 
           cd mpv-js-plugin-init
