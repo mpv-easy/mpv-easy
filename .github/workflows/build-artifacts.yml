@@ -310,8 +310,6 @@ jobs:
 
       - name: "build ts"
         run: |
-          pnpm approve-builds --all
-          pnpm setup
           pnpm i
           pnpm run build
 
