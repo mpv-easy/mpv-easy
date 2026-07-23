@@ -204,8 +204,8 @@ jobs:
 
           cd ..
 
-          mv mpv-easy-ext/target/aarch64-linux-android/release/mpv-easy-ext mpv-easy-ext-android
-          mv mpv-easy-ext/target/aarch64-linux-android/release/mpv-easy-play-with mpv-easy-play-with-android
+          mv target/aarch64-linux-android/release/mpv-easy-ext mpv-easy-ext-android
+          mv target/aarch64-linux-android/release/mpv-easy-play-with mpv-easy-play-with-android
 
       - name: Upload android Artifact ext
         uses: actions/upload-artifact@v4
