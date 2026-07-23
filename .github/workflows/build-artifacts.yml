@@ -192,19 +192,21 @@ jobs:
       - uses: actions-rust-lang/setup-rust-toolchain@v1
         with:
           rustflags: "-A warnings"
-          toolchain: "nightly"
+          toolchain: "stable"
 
       - name: build ubuntu-latest
         run: |
-
           cd mpv-easy-ext
 
           cargo install -q cross --git https://github.com/cross-rs/cross
-          cross build -q --release --target aarch64-linux-android --artifact-dir=output -Z unstable-options
+
+          cross build -q --release --target aarch64-linux-android
+
           cd ..
 
-          mv mpv-easy-ext/output/mpv-easy-ext mpv-easy-ext-android
-          mv mpv-easy-ext/output/mpv-easy-play-with mpv-easy-play-with-android
+          mv mpv-easy-ext/target/aarch64-linux-android/release/mpv-easy-ext mpv-easy-ext-android
+          mv mpv-easy-ext/target/aarch64-linux-android/release/mpv-easy-play-with mpv-easy-play-with-android
+
       - name: Upload android Artifact ext
         uses: actions/upload-artifact@v4
         with:
