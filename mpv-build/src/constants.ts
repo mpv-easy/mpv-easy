@@ -1,6 +1,6 @@
 import type { State } from "./types"
 
-export const PLATFORM_LIST = ["mpv", "mpv-v3", "mpv.net", "mpv-qjs"] as const
+export const PLATFORM_LIST = ["mpv", "mpv-v3", "mpv.net"] as const
 
 export const UI_LIST = [
   {
