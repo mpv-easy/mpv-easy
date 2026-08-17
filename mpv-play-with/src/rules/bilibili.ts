@@ -30,30 +30,46 @@ export const Bilibili: Rule = {
     }
 
     if (bilibili.BangumiReg.test(url)) {
-      const list: PlayItem[] = []
-
       const name =
         document.querySelector("a[class^=mediainfo_mediaTitle_]")
           ?.textContent || ""
       let start = 0
+      const seen = new Set<string>()
+      const items: { href: string; title: string; active: boolean }[] = []
       for (const i of Array.from(
         document.querySelectorAll(
-          "div[class^=numberListItem_number_list_item__]",
+          [
+            "div[class^=numberListItem_number_list_item__]",
+            'a[class*="EpisodeVirtualList_listItem"]',
+            'a[class*="EpisodeVirtualList_numberItem"]',
+          ].join(","),
         ),
       )) {
-        const href = i.querySelector("a")?.getAttribute("href")
-        const title = i?.textContent
+        const a = i.tagName === "A" ? i : i.querySelector("a")
+        const href = a?.getAttribute("href")
+        const title = a?.getAttribute("title") || a?.textContent
 
-        if (!href?.length || !title?.length) {
+        if (!href?.length || !title?.length || href === "javascript:;") {
           continue
         }
-        if (i.getAttribute("class")?.includes("select")) {
-          start = list.length
+        if (seen.has(href)) {
+          continue
         }
+        seen.add(href)
+        const cls = i.getAttribute("class") || ""
+        const active = cls.includes("select") || cls.includes("active")
+        if (active) {
+          start = items.length
+        }
+        items.push({ href, title, active })
+      }
+
+      const list: PlayItem[] = []
+      for (const { href, title } of items) {
         list.push({
           video: {
             url: location.origin + href,
-            title: `${name} ${title}`.trim(),
+            title: items.length > 1 ? `${name}-${title}` : name || title,
           },
         })
       }
@@ -108,7 +124,41 @@ export const Bilibili: Rule = {
       return
     }
 
-    if (document.querySelector(".video-sections-content-list")) {
+    if (
+      document.querySelector(".video-sections-content-list") ||
+      document.querySelector(".video-pod__list.section")
+    ) {
+      const sectionItems = Array.from(
+        document.querySelectorAll(".video-pod__list.section .video-pod__item"),
+      )
+      if (sectionItems.length) {
+        const list: PlayItem[] = []
+        let start = 0
+        for (const i of sectionItems) {
+          const bv = i.getAttribute("data-key")
+          const title = i.querySelector(".title")?.getAttribute("title")
+
+          if (!bv?.length || !title?.length) {
+            continue
+          }
+          if (i.querySelector(".active")) {
+            start = list.length
+          }
+          list.push({
+            video: {
+              url: `${location.origin}/video/${bv}/`,
+              title,
+            },
+          })
+        }
+        if (list.length) {
+          return {
+            start,
+            playlist: { list },
+          }
+        }
+      }
+
       const episodes = bilibili.getEpisodes()
       if (!episodes.length) {
         return { playlist: { list: [] } }
@@ -131,7 +181,10 @@ export const Bilibili: Rule = {
       }
     }
 
-    if (document.querySelector("#multi_page")) {
+    if (
+      document.querySelector("#multi_page") ||
+      document.querySelector(".video-pod__list.multip")
+    ) {
       const bv = bilibili.getBvid()
       const videoData = bilibili.getVideoData()
       const pages = videoData.pages

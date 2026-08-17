@@ -324,5 +324,3 @@ Maybe should use GitHub action to automatically update this
 - [ ] es/cjs plugin module
 - [ ] real-time subtitle translation
 - [ ] sourcemap
-
-![star-history](https://api.star-history.com/svg?repos=mpv-easy/mpv-easy&type=Date)

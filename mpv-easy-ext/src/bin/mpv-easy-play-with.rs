@@ -2,9 +2,7 @@
 
 use base64::{Engine, prelude::BASE64_STANDARD};
 use flate2::read::GzDecoder;
-use mpv_easy_ext::common::{
-    CHUNK_PREFIX, M3U_NAME, PlayWith, Player, set_play_with_hook,
-};
+use mpv_easy_ext::common::{CHUNK_PREFIX, M3U_NAME, PlayWith, Player, set_play_with_hook};
 use std::io::Read;
 use strum::IntoEnumIterator;
 
@@ -75,11 +73,15 @@ fn play_with(exe_path: String, mut b64: String) -> anyhow::Result<()> {
     }
     let mut urls = Vec::new();
     let mut has_subs = false;
+    let mut has_bilibili = false;
 
     for item in &play_with.playlist.list {
         if !item.subtitles.is_empty() {
             has_subs = true;
             break;
+        }
+        if is_bilibili(&item.video.url) {
+            has_bilibili = true;
         }
         let url = format!("\"{}\"", item.video.url);
         args_len += item.video.url.len() + 3;
@@ -90,7 +92,8 @@ fn play_with(exe_path: String, mut b64: String) -> anyhow::Result<()> {
         }
     }
 
-    if !has_subs && args_len < MAX_CMD_LEN {
+    // use m3u playlist for bilibili urls, otherwise mpv only sees urls
+    if !has_subs && !has_bilibili && args_len < MAX_CMD_LEN {
         let mut args = play_with.args;
         args.extend(urls);
         player.start(&exe_path, None, args, play_with.start)?;
@@ -98,14 +101,13 @@ fn play_with(exe_path: String, mut b64: String) -> anyhow::Result<()> {
         let m3u = player.stringify(play_with.playlist);
         let m3u_path = tmp_dir.join(M3U_NAME);
         std::fs::write(&m3u_path, m3u)?;
-        player.start(
-            &exe_path,
-            Some(&m3u_path),
-            play_with.args,
-            play_with.start,
-        )?;
+        player.start(&exe_path, Some(&m3u_path), play_with.args, play_with.start)?;
     }
     Ok(())
+}
+
+fn is_bilibili(url: &str) -> bool {
+    url.contains("bilibili.com") || url.contains("b23.tv")
 }
 
 fn main() -> anyhow::Result<()> {

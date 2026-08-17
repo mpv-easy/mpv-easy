@@ -63,7 +63,7 @@ pub fn img(input: &str, output: &str, target_width: Option<u32>, target_height: 
         Some("bgra") => {
             let rgba = img.to_rgba8();
             let mut bgra = Vec::with_capacity((width * height * 4) as usize);
-            for chunk in rgba.chunks_exact(4) {
+            for chunk in rgba.as_chunks::<4>().0 {
                 // RGBA -> BGRA
                 bgra.push(chunk[2]); // B
                 bgra.push(chunk[1]); // G

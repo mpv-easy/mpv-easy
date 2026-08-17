@@ -17,6 +17,63 @@ Then install script [mpv-easy-play-with.user.js](https://github.com/mpv-easy/mpv
 
 When play-with detects videos in the page, you can add all videos to the mpv player through the mpv icon in the bottom left corner
 
+## debug with local file
+
+When developing or debugging, you can install the script from a local file instead of the release version
+
+### build local userscript
+
+```bash
+# build @mpv-easy/play-with
+cd mpv-play-with
+pnpm build
+
+# bundle userscript
+cd ../mpv-easy-react
+pnpm run bundle
+
+# combine meta header and bundle output
+cat conf/mpv-easy-play-with.meta bundle/mpv-easy-play-with.user.js > mpv-easy-play-with.user.js
+```
+
+### serve and install
+
+Tampermonkey installs scripts by url, so serve the local directory with a static file server
+
+```bash
+cd mpv-easy-react
+python -m http.server 8080
+```
+
+Open `http://localhost:8080/mpv-easy-play-with.user.js` in the browser, tampermonkey will pop up the install prompt
+
+### edit directly in tampermonkey
+
+For quick iteration, create a new script in the tampermonkey dashboard with the template below, and point `@require` to the local bundle file
+
+```js
+// ==UserScript==
+// @name         mpv-easy-play-with-dev
+// @namespace    http://tampermonkey.net/
+// @version      0.0.1
+// @description  debug mpv-easy-play-with locally
+// @match        https://*/*
+// @grant        none
+// @require      file://C://path/to/mpv-easy-react/bundle/mpv-easy-play-with.user.js
+// ==/UserScript==
+
+(function () {
+  'use strict'
+  // Your code here...
+})()
+```
+
+**note**
+
+- Chrome/Edge need to enable tampermonkey's file url access: `chrome://extensions/` -> tampermonkey -> details -> allow access to file urls
+- If `file://` is blocked, use a local http server instead: `@require http://localhost:8080/mpv-easy-play-with.user.js`
+- After modifying the source code, rebuild (`pnpm run bundle`) and refresh the page to reload the script
+
 ## install yt-dlp
 You need to make sure that mpv has been configured correctly [yt-dlp](https://github.com/yt-dlp/yt-dlp)
 You can execute the following powershell command in the folder where mpv.exe is located to test whether youtube videos can be played

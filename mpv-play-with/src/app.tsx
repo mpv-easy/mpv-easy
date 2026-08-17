@@ -75,8 +75,8 @@ export function App() {
   const [hover, setHover] = useState(false)
   const domRef = useRef<HTMLDivElement>(null)
   const [playWith, setPlayWith] = useState<PlayWith>()
+  const playWithKeyRef = useRef<string | undefined>(undefined)
   const videos = playWith?.playlist.list || []
-  // console.log('videos: ', videos)
   const opacity = hover ? 100 : 0
   const [loading, setLoading] = useState(false)
 
@@ -85,14 +85,21 @@ export function App() {
     const rule = Rules.find((i) => i.match(url))
     if (rule) {
       setDisplay(true)
-      const videoList = await rule.getVideos(url)
-      if (!videoList?.playlist.list.length) {
-        setPlayWith({ playlist: { list: [] } })
+      const videoList = (await rule.getVideos(url)) || {
+        playlist: { list: [] },
+      }
+      const key = JSON.stringify(videoList)
+      if (key === playWithKeyRef.current) {
         return
       }
+      playWithKeyRef.current = key
       setPlayWith(videoList)
     } else {
       setDisplay(false)
+      if (playWithKeyRef.current === undefined) {
+        return
+      }
+      playWithKeyRef.current = undefined
       setPlayWith({ playlist: { list: [] } })
     }
   }

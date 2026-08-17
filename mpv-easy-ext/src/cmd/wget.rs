@@ -46,12 +46,11 @@ async fn wget(url: &str, output: &str) -> anyhow::Result<()> {
         .with_context(|| format!("Failed to read response body from: {}", url))?;
 
     let output_path = PathBuf::from(output);
-    if let Some(parent) = output_path.parent() {
-        if !parent.exists() {
+    if let Some(parent) = output_path.parent()
+        && !parent.exists() {
             std::fs::create_dir_all(parent)
                 .with_context(|| format!("Failed to create directory: {}", parent.display()))?;
         }
-    }
 
     let mut file = File::create(&output_path)
         .with_context(|| format!("Failed to create output file: {}", output))?;
