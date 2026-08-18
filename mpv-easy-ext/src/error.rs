@@ -14,6 +14,8 @@ pub enum Error {
     Mpv(String),
     #[error("Other error: {0}")]
     Other(String),
+    #[error("proto-reg error: {0}")]
+    ProtoReg(#[from] proto_reg::Error),
 }
 
 pub type Result<T> = std::result::Result<T, Error>;

@@ -31,7 +31,10 @@ serde-m3u = { workspace = true }
 urlencoding = { workspace = true }
 strum_macros = { workspace = true }
 strum = { workspace = true }
-thiserror  = { workspace = true }
+thiserror = { workspace = true }
+
+[target.'cfg(target_os = "windows")'.dependencies]
+proto-reg = { workspace = true }
 
 [target.'cfg(not(target_os = "android"))'.dependencies]
 clipboard-rs = { workspace = true }

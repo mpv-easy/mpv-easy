@@ -5,6 +5,8 @@ use std::path::{Path, PathBuf};
 pub use strum::IntoEnumIterator;
 use strum_macros::EnumIter;
 use urlencoding::encode;
+#[cfg(target_os = "windows")]
+use proto_reg::{Protocol, ProtocolManager};
 use crate::error::{Error, Result};
 
 pub const JELLYFIN_SUBTITLES: &str = "jellyfin_subtitles";
@@ -225,62 +227,41 @@ impl Player {
     }
 }
 
+/// Path of the current executable, normalized to backslash separators.
 #[cfg(target_os = "windows")]
-pub fn set_play_with_hook(exe_path: Option<String>) -> Result<Option<Player>> {
-    let play_with_path = std::env::current_exe()?;
+fn current_exe_path() -> Result<String> {
+    let exe = std::env::current_exe()?;
+    Ok(exe.to_string_lossy().replace('/', "\\"))
+}
 
-    let mpv_default_path = play_with_path
+/// Finds the player executable: an explicitly passed `exe_path`, otherwise
+/// the first existing candidate next to the current executable.
+#[cfg(target_os = "windows")]
+fn find_player(
+    exe_path: Option<String>,
+    candidates: &[&str],
+) -> Result<Option<(String, Player)>> {
+    let current_exe = std::env::current_exe()?;
+    let dir = current_exe
         .parent()
-        .ok_or(Error::Other("invalid play_with_path".into()))?
-        .join("mpv.exe")
-        .to_string_lossy()
-        .to_string();
+        .ok_or(Error::Other("invalid current_exe path".into()))?;
 
-    let vlc_default_path = play_with_path
-        .parent()
-        .ok_or(Error::Other("invalid play_with_path".into()))?
-        .join("vlc.exe")
-        .to_string_lossy()
-        .to_string();
-
-    let pot_default_path = play_with_path
-        .parent()
-        .ok_or(Error::Other("invalid play_with_path".into()))?
-        .join("PotPlayerMini64.exe")
-        .to_string_lossy()
-        .to_string();
-
-    let play_with_path = play_with_path
-        .to_string_lossy()
-        .to_string()
-        .replace("\\", "\\\\");
-
-    let exe_path = exe_path
-        .map(|p| std::path::Path::new(&p).to_string_lossy().to_string())
+    let Some(exe_path) = exe_path
+        .map(|p| Path::new(&p).to_string_lossy().to_string())
         .or_else(|| {
-            if std::fs::exists(&mpv_default_path).unwrap_or(false) {
-                return Some(mpv_default_path);
-            }
-            None
+            candidates.iter().find_map(|candidate| {
+                let path = dir.join(candidate);
+                std::fs::exists(&path)
+                    .unwrap_or(false)
+                    .then(|| path.to_string_lossy().to_string())
+            })
         })
-        .or_else(|| {
-            if std::fs::exists(&vlc_default_path).unwrap_or(false) {
-                return Some(vlc_default_path);
-            }
-            None
-        })
-        .or_else(|| {
-            if std::fs::exists(&pot_default_path).unwrap_or(false) {
-                return Some(pot_default_path);
-            }
-            None
-        });
-
-    let Some(exe_path) = exe_path else {
+    else {
         return Ok(None);
     };
 
-    let exe_path = exe_path.replace("/", "\\").replace("\\", "\\\\");
+    // Normalize separators for the registry command line.
+    let exe_path = exe_path.replace('/', "\\");
 
     if !std::fs::exists(&exe_path).unwrap_or(false) {
         return Ok(None);
@@ -289,132 +270,68 @@ pub fn set_play_with_hook(exe_path: Option<String>) -> Result<Option<Player>> {
     let Some(player) = Player::from_path(&exe_path) else {
         return Ok(None);
     };
+    Ok(Some((exe_path, player)))
+}
 
-    let hkey = player.play_with_hkey();
-    let reg_code = format!(
-        r#"
-Windows Registry Editor Version 5.00
-[HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Google\Chrome]
-"ExternalProtocolDialogShowAlwaysOpenCheckbox"=dword:00000001
+/// Registers `hkey` as a URL protocol launching `hook_path` with the player
+/// `exe_path` and the original URL (`%1`).
+#[cfg(target_os = "windows")]
+fn register_hook(hkey: &str, hook_path: &str, exe_path: &str) -> Result<()> {
+    let mut protocol =
+        Protocol::new(hkey, format!("\"{hook_path}\" \"{exe_path}\" \"%1\""))?;
+    protocol.description = hkey.to_string();
+    // Keep the empty `DefaultIcon` value written by the original `.reg` files.
+    protocol.icon = Some(String::new());
+    ProtocolManager::add(&protocol)?;
+    Ok(())
+}
 
-[HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Edge]
-"ExternalProtocolDialogShowAlwaysOpenCheckbox"=dword:00000001
+/// Registers the "play with" URL protocol (`mpv-easy://`, `vlc-easy://`,
+/// `pot-easy://`) for the first supported player next to this executable,
+/// or the explicitly given `exe_path`.
+///
+/// Returns `Ok(None)` when no supported player is found. Requires an
+/// elevated process.
+#[cfg(target_os = "windows")]
+pub fn set_play_with_hook(exe_path: Option<String>) -> Result<Option<Player>> {
+    let Some((exe_path, player)) =
+        find_player(exe_path, &["mpv.exe", "vlc.exe", "PotPlayerMini64.exe"])?
+    else {
+        return Ok(None);
+    };
 
-[HKEY_CLASSES_ROOT\{hkey}]
-@="{hkey}"
-"URL Protocol"=""
-
-[HKEY_CLASSES_ROOT\{hkey}\DefaultIcon]
-@=""
-
-[HKEY_CLASSES_ROOT\{hkey}\shell]
-@=""
-
-[HKEY_CLASSES_ROOT\{hkey}\shell\open]
-@=""
-
-[HKEY_CLASSES_ROOT\{hkey}\shell\open\command]
-@="\"{play_with_path}\" \"{exe_path}\" \"%1\""
-"#
-    )
-    .trim()
-    .to_string();
-
-    let tmp_dir = std::env::temp_dir();
-    let tmp_path = tmp_dir.join("set-play-with-protocol-hook-windows.reg");
-    let tmp_path = tmp_path.to_string_lossy().to_string().replace("/", "\\");
-    std::fs::write(&tmp_path, reg_code.trim())?;
-    let mut cmd = std::process::Command::new("regedit.exe");
-    cmd.args(["/S", &tmp_path]);
-    cmd.output()?;
+    // Show the "Always open these links" checkbox in the Chrome/Edge dialog
+    // so users can allow `mpv-easy://` links permanently.
+    ProtocolManager::set_browser_policy(true)?;
+    register_hook(player.play_with_hkey(), &current_exe_path()?, &exe_path)?;
     Ok(Some(player))
 }
 
 #[cfg(not(target_os = "windows"))]
-pub fn set_play_with_hook(mpv_path: Option<String>) -> Result<Option<Player>> {
+pub fn set_play_with_hook(_exe_path: Option<String>) -> Result<Option<Player>> {
     Ok(None)
 }
 
+/// Registers the "remote" URL protocol (`mpv-remote://`, `vlc-remote://`,
+/// `pot-remote://`) for the mpv executable next to this executable, or the
+/// explicitly given `exe_path`.
+///
+/// Returns `Ok(None)` when no supported player is found. Requires an
+/// elevated process.
 #[cfg(target_os = "windows")]
 pub fn set_remote_hook(exe_path: Option<String>) -> Result<Option<Player>> {
-    let remote_path = std::env::current_exe()?;
-
-    let mpv_default_path = remote_path
-        .parent()
-        .ok_or(Error::Other("invalid remote_path".into()))?
-        .join("mpv.exe")
-        .to_string_lossy()
-        .to_string();
-
-    let remote_path = remote_path
-        .to_string_lossy()
-        .to_string()
-        .replace("\\", "\\\\");
-
-    let exe_path = exe_path
-        .map(|p| std::path::Path::new(&p).to_string_lossy().to_string())
-        .or_else(|| {
-            if std::fs::exists(&mpv_default_path).unwrap_or(false) {
-                return Some(mpv_default_path);
-            }
-            None
-        });
-
-    let Some(exe_path) = exe_path else {
+    let Some((exe_path, player)) = find_player(exe_path, &["mpv.exe"])? else {
         return Ok(None);
     };
 
-    let exe_path = exe_path.replace("/", "\\").replace("\\", "\\\\");
-
-    if !std::fs::exists(&exe_path).unwrap_or(false) {
-        return Ok(None);
-    }
-
-    let Some(player) = Player::from_path(&exe_path) else {
-        return Ok(None);
-    };
-
-    let hkey = player.remote_hkey();
-    let reg_code = format!(
-        r#"
-Windows Registry Editor Version 5.00
-[HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Google\Chrome]
-"ExternalProtocolDialogShowAlwaysOpenCheckbox"=dword:00000001
-
-[HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Edge]
-"ExternalProtocolDialogShowAlwaysOpenCheckbox"=dword:00000001
-
-[HKEY_CLASSES_ROOT\{hkey}]
-@="{hkey}"
-"URL Protocol"=""
-
-[HKEY_CLASSES_ROOT\{hkey}\DefaultIcon]
-@=""
-
-[HKEY_CLASSES_ROOT\{hkey}\shell]
-@=""
-
-[HKEY_CLASSES_ROOT\{hkey}\shell\open]
-@=""
-
-[HKEY_CLASSES_ROOT\{hkey}\shell\open\command]
-@="\"{remote_path}\" \"{exe_path}\" \"%1\""
-"#
-    )
-    .trim()
-    .to_string();
-
-    let tmp_dir = std::env::temp_dir();
-    let tmp_path = tmp_dir.join("set-remote-protocol-hook-windows.reg");
-    let tmp_path = tmp_path.to_string_lossy().to_string().replace("/", "\\");
-    std::fs::write(&tmp_path, reg_code.trim())?;
-    let mut cmd = std::process::Command::new("regedit.exe");
-    cmd.args(["/S", &tmp_path]);
-    cmd.output()?;
+    // Show the "Always open these links" checkbox in the Chrome/Edge dialog
+    // so users can allow `mpv-remote://` links permanently.
+    ProtocolManager::set_browser_policy(true)?;
+    register_hook(player.remote_hkey(), &current_exe_path()?, &exe_path)?;
     Ok(Some(player))
 }
 
 #[cfg(not(target_os = "windows"))]
-pub fn set_remote_hook(mpv_path: Option<String>) -> Result<Option<Player>> {
+pub fn set_remote_hook(_exe_path: Option<String>) -> Result<Option<Player>> {
     Ok(None)
 }
