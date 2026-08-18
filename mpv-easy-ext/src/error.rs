@@ -14,6 +14,8 @@ pub enum Error {
     Mpv(String),
     #[error("Other error: {0}")]
     Other(String),
+    // `proto-reg` is a Windows-only dependency.
+    #[cfg(target_os = "windows")]
     #[error("proto-reg error: {0}")]
     ProtoReg(#[from] proto_reg::Error),
 }
