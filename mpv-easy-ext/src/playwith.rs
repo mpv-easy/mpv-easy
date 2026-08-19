@@ -1,0 +1,113 @@
+use crate::common::{CHUNK_PREFIX, M3U_NAME, PlayWith, Player};
+use crate::error::{Error, Result};
+use base64::{Engine, prelude::BASE64_STANDARD};
+use flate2::read::GzDecoder;
+use std::io::Read;
+use strum::IntoEnumIterator;
+
+pub fn play_with(exe_path: String, mut b64: String) -> Result<Player> {
+    let Some(player) = Player::from_path(&exe_path) else {
+        return Err(Error::Other(format!(
+            "Failed to create player for path: {}",
+            exe_path
+        )));
+    };
+
+    if b64.ends_with('/') {
+        b64 = b64[..b64.len() - 1].to_string();
+    }
+
+    for i in Player::iter() {
+        if b64.starts_with(i.play_with_header()) {
+            b64 = b64[i.play_with_header().len()..].to_string();
+            break;
+        }
+    }
+
+    let chunk_index = b64.find("?");
+    let count_index = b64.find("&");
+    let tmp_dir = std::env::temp_dir();
+
+    if let (Some(chunk_index), Some(count_index)) = (chunk_index, count_index) {
+        let chunk_id: u32 = b64[chunk_index + 1..count_index].parse()?;
+        let chunk_count: u32 = b64[count_index + 1..].parse()?;
+        let chunk = &b64[0..chunk_index];
+        let chunk_name = format!("{}-{}", CHUNK_PREFIX, chunk_id);
+        let chunk_path = tmp_dir.join(chunk_name);
+
+        std::fs::write(chunk_path, chunk)?;
+
+        let file_list: Vec<_> = (0..chunk_count)
+            .map(|i| tmp_dir.join(format!("{}-{}", CHUNK_PREFIX, i)))
+            .collect();
+
+        let ready = file_list.iter().all(|i| i.exists());
+
+        if ready {
+            b64 = file_list
+                .iter()
+                .map(|i| {
+                    let s = std::fs::read_to_string(i)?;
+                    let _ = std::fs::remove_file(i);
+                    Ok(s)
+                })
+                .collect::<Result<String>>()?;
+        } else {
+            return Err(Error::Other("Failed to create all chunk files".into()));
+        }
+    }
+
+    let gzip = BASE64_STANDARD.decode(b64)?;
+
+    let mut decoder = GzDecoder::new(&gzip[..]);
+    let mut json_str = String::new();
+    decoder.read_to_string(&mut json_str)?;
+
+    let play_with: PlayWith = serde_json::from_str(&json_str)?;
+    if play_with.playlist.list.is_empty() {
+        return Err(Error::Other("Playlist is empty".into()));
+    }
+
+    const MAX_CMD_LEN: usize = 8192;
+    let mut args_len = exe_path.len() + 64; // base len for --script-opts and --playlist-start
+    for arg in &play_with.args {
+        args_len += arg.len() + 1;
+    }
+    let mut urls = Vec::new();
+    let mut has_subs = false;
+    let mut has_bilibili = false;
+
+    for item in &play_with.playlist.list {
+        if !item.subtitles.is_empty() {
+            has_subs = true;
+            break;
+        }
+        if is_bilibili(&item.video.url) {
+            has_bilibili = true;
+        }
+        let url = format!("\"{}\"", item.video.url);
+        args_len += item.video.url.len() + 3;
+        urls.push(url);
+
+        if args_len >= MAX_CMD_LEN {
+            break;
+        }
+    }
+
+    // use m3u playlist for bilibili urls, otherwise mpv only sees urls
+    if !has_subs && !has_bilibili && args_len < MAX_CMD_LEN {
+        let mut args = play_with.args;
+        args.extend(urls);
+        player.start(&exe_path, None, args, play_with.start)?;
+    } else {
+        let m3u = player.stringify(play_with.playlist);
+        let m3u_path = tmp_dir.join(M3U_NAME);
+        std::fs::write(&m3u_path, m3u)?;
+        player.start(&exe_path, Some(&m3u_path), play_with.args, play_with.start)?;
+    }
+    Ok(player)
+}
+
+pub fn is_bilibili(url: &str) -> bool {
+    url.contains("bilibili.com") || url.contains("b23.tv")
+}

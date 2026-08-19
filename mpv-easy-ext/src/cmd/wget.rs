@@ -2,10 +2,10 @@ use std::fs::File;
 use std::io::Write;
 use std::path::PathBuf;
 
-use anyhow::Context;
 use reqwest::Client;
 
 use super::cli::Cmd;
+use crate::error::{Error, Result};
 
 #[derive(clap::Parser, Debug)]
 pub struct Wget {
@@ -19,13 +19,13 @@ pub struct Wget {
 }
 
 impl Cmd for Wget {
-    fn call(&self) -> anyhow::Result<()> {
+    fn call(&self) -> Result<()> {
         wget(&self.url, &self.output)
     }
 }
 
 #[tokio::main]
-async fn wget(url: &str, output: &str) -> anyhow::Result<()> {
+async fn wget(url: &str, output: &str) -> Result<()> {
     let client = Client::builder()
         .redirect(reqwest::redirect::Policy::default())
         .build()?;
@@ -34,28 +34,30 @@ async fn wget(url: &str, output: &str) -> anyhow::Result<()> {
         .get(url)
         .send()
         .await
-        .with_context(|| format!("Failed to fetch URL: {}", url))?;
+        .map_err(|e| Error::Other(format!("Failed to fetch URL: {}: {}", url, e)))?;
 
     if !resp.status().is_success() {
-        anyhow::bail!("HTTP error: {} for URL: {}", resp.status(), url);
+        return Err(Error::Other(format!("HTTP error: {} for URL: {}", resp.status(), url)));
     }
 
     let bytes = resp
         .bytes()
         .await
-        .with_context(|| format!("Failed to read response body from: {}", url))?;
+        .map_err(|e| Error::Other(format!("Failed to read response body from: {}: {}", url, e)))?;
 
     let output_path = PathBuf::from(output);
     if let Some(parent) = output_path.parent()
         && !parent.exists() {
-            std::fs::create_dir_all(parent)
-                .with_context(|| format!("Failed to create directory: {}", parent.display()))?;
+            std::fs::create_dir_all(parent).map_err(|e| {
+                Error::Other(format!("Failed to create directory: {}: {}", parent.display(), e))
+            })?;
         }
 
-    let mut file = File::create(&output_path)
-        .with_context(|| format!("Failed to create output file: {}", output))?;
+    let mut file = File::create(&output_path).map_err(|e| {
+        Error::Other(format!("Failed to create output file: {}: {}", output, e))
+    })?;
     file.write_all(&bytes)
-        .with_context(|| format!("Failed to write to file: {}", output))?;
+        .map_err(|e| Error::Other(format!("Failed to write to file: {}: {}", output, e)))?;
 
     Ok(())
 }

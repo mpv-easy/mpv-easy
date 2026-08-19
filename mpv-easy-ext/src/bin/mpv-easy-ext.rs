@@ -1,4 +1,4 @@
 use mpv_easy_ext::cmd::cli::start;
-fn main() -> anyhow::Result<()> {
+fn main() -> mpv_easy_ext::error::Result<()> {
     start()
 }

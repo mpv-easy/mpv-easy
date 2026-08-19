@@ -1,9 +1,11 @@
 use clap::Parser;
 use enum_dispatch::enum_dispatch;
 
+use crate::error::Result;
+
 #[enum_dispatch(SubCommand)]
 pub trait Cmd {
-    fn call(&self) -> anyhow::Result<()>;
+    fn call(&self) -> Result<()>;
 }
 
 use super::{
@@ -36,7 +38,7 @@ pub struct Cli {
     pub subcmd: SubCommand,
 }
 
-pub fn start() -> anyhow::Result<()> {
+pub fn start() -> Result<()> {
     let cli = Cli::parse();
 
     let cmd: SubCommand = cli.subcmd;

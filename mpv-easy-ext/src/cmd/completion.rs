@@ -3,6 +3,8 @@ use std::io;
 use clap::CommandFactory;
 use clap_complete::{Shell, generate};
 
+use crate::error::Result;
+
 use super::cli::{Cli, Cmd};
 
 #[derive(clap::Parser, Debug)]
@@ -12,7 +14,7 @@ pub struct Completion {
 }
 
 impl Cmd for Completion {
-    fn call(&self) -> anyhow::Result<()> {
+    fn call(&self) -> Result<()> {
         let mut cmd = Cli::command();
         let name = cmd.get_name().to_string();
 

@@ -2,10 +2,10 @@ use std::fs::File;
 use std::io::Write;
 use std::path::PathBuf;
 
-use anyhow::Context;
 use image::{DynamicImage, GenericImageView};
 
 use super::cli::Cmd;
+use crate::error::{Error, Result};
 
 #[derive(clap::Parser, Debug)]
 pub struct Img {
@@ -25,16 +25,17 @@ pub struct Img {
 }
 
 impl Cmd for Img {
-    fn call(&self) -> anyhow::Result<()> {
+    fn call(&self) -> Result<()> {
         img(&self.input, &self.output, self.width, self.height)
     }
 }
 
-pub fn img(input: &str, output: &str, target_width: Option<u32>, target_height: Option<u32>) -> anyhow::Result<()> {
+pub fn img(input: &str, output: &str, target_width: Option<u32>, target_height: Option<u32>) -> Result<()> {
     let data = std::fs::read(input)
-        .with_context(|| format!("Failed to read image file: {}", input))?;
-    let img = image::load_from_memory(&data)
-        .with_context(|| format!("Failed to decode image (guessed from content): {}", input))?;
+        .map_err(|e| Error::Other(format!("Failed to read image file: {}: {}", input, e)))?;
+    let img = image::load_from_memory(&data).map_err(|e| {
+        Error::Other(format!("Failed to decode image (guessed from content): {}: {}", input, e))
+    })?;
 
     let (orig_w, orig_h) = img.dimensions();
 
@@ -70,13 +71,14 @@ pub fn img(input: &str, output: &str, target_width: Option<u32>, target_height: 
                 bgra.push(chunk[0]); // R
                 bgra.push(chunk[3]); // A
             }
-            let mut file = File::create(&output_path)
-                .with_context(|| format!("Failed to create output file: {}", output))?;
+            let mut file = File::create(&output_path).map_err(|e| {
+                Error::Other(format!("Failed to create output file: {}: {}", output, e))
+            })?;
             file.write_all(&bgra)?;
         }
         _ => {
             img.save(&output_path)
-                .with_context(|| format!("Failed to save image to: {}", output))?;
+                .map_err(|e| Error::Other(format!("Failed to save image to: {}: {}", output, e)))?;
         }
     }
 

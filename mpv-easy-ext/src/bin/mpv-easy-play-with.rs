@@ -1,127 +1,57 @@
+//! `mpv-easy-play-with`: registers the "play with" URL protocol, or opens a
+//! video via that protocol.
+//!
+//! Console behavior (resolved at runtime via [`consolex`]):
+//!
+//! * **Inside an existing terminal** — behaves as a normal CLI program; the
+//!   output goes to that terminal.
+//! * **`--show`** — always opens a new console window to display output,
+//!   even when launched from an existing terminal.
+//! * **`--hide`** — hides all output and any console window; the requested
+//!   operation still runs silently.
+//! * **No flags, no terminal** (double-clicked / third-party) — opens a new
+//!   console window to display output.
+
 #![cfg_attr(target_os = "windows", windows_subsystem = "windows")]
 
-use base64::{Engine, prelude::BASE64_STANDARD};
-use flate2::read::GzDecoder;
-use mpv_easy_ext::common::{CHUNK_PREFIX, M3U_NAME, PlayWith, Player, set_play_with_hook};
-use std::io::Read;
-use strum::IntoEnumIterator;
+use consolex::{Mode, init, wait_key};
+use mpv_easy_ext::{
+    common::{Player, set_play_with_hook},
+    error::{Error, Result},
+    playwith::play_with,
+};
 
-fn play_with(exe_path: String, mut b64: String) -> anyhow::Result<()> {
-    let Some(player) = Player::from_path(&exe_path) else {
-        return Ok(());
+fn main() -> Result<()> {
+    // Collect the console mode from the arguments (`--show`/`--hide`, or
+    // [`Mode::Auto`] by default). `--pause` is unused here. The rest stay
+    // positional. `init` applies the mode and reports whether a new console
+    // window was created.
+    let args: Vec<String> = std::env::args().skip(1).collect();
+    let mode: Mode = args.iter().collect();
+    let created = init(mode)?;
+
+    // Do the actual work regardless of the console outcome; `--hide` only
+    // suppresses output, not the operation itself.
+    let result: Result<Player> = match (args.first().cloned(), args.get(1).cloned()) {
+        (Some(exe_path), Some(b64)) => play_with(exe_path, b64),
+        (exe_path, None) => set_play_with_hook(exe_path),
+        _ => Err(Error::Other("mpv-easy-play-with not support yet!".into())),
     };
 
-    if b64.ends_with('/') {
-        b64 = b64[..b64.len() - 1].to_string();
+    if let Err(e) = &result {
+        eprintln!("{e:?}");
     }
 
-    for i in Player::iter() {
-        if b64.starts_with(i.play_with_header()) {
-            b64 = b64[i.play_with_header().len()..].to_string();
-            break;
-        }
+    let player = result?;
+    let key = player.play_with_hkey();
+    if let Ok(Some(item)) = proto_reg::ProtocolManager::query(key) {
+        println!("{item}");
     }
 
-    let chunk_index = b64.find("?");
-    let count_index = b64.find("&");
-    let tmp_dir = std::env::temp_dir();
-
-    if let (Some(chunk_index), Some(count_index)) = (chunk_index, count_index) {
-        let chunk_id: u32 = b64[chunk_index + 1..count_index].parse()?;
-        let chunk_count: u32 = b64[count_index + 1..].parse()?;
-        let chunk = &b64[0..chunk_index];
-        let chunk_name = format!("{}-{}", CHUNK_PREFIX, chunk_id);
-        let chunk_path = tmp_dir.join(chunk_name);
-
-        std::fs::write(chunk_path, chunk)?;
-
-        let file_list: Vec<_> = (0..chunk_count)
-            .map(|i| tmp_dir.join(format!("{}-{}", CHUNK_PREFIX, i)))
-            .collect();
-
-        let ready = file_list.iter().all(|i| i.exists());
-
-        if ready {
-            b64 = file_list
-                .iter()
-                .map(|i| {
-                    let s = std::fs::read_to_string(i)?;
-                    let _ = std::fs::remove_file(i);
-                    Ok(s)
-                })
-                .collect::<anyhow::Result<String>>()?;
-        } else {
-            return Ok(());
-        }
+    // Keep a newly created window open long enough to read the output.
+    if created {
+        let _ = wait_key();
     }
 
-    let gzip = BASE64_STANDARD.decode(b64)?;
-
-    let mut decoder = GzDecoder::new(&gzip[..]);
-    let mut json_str = String::new();
-    decoder.read_to_string(&mut json_str)?;
-
-    let play_with: PlayWith = serde_json::from_str(&json_str)?;
-    if play_with.playlist.list.is_empty() {
-        return Ok(());
-    }
-
-    const MAX_CMD_LEN: usize = 8192;
-    let mut args_len = exe_path.len() + 64; // base len for --script-opts and --playlist-start
-    for arg in &play_with.args {
-        args_len += arg.len() + 1;
-    }
-    let mut urls = Vec::new();
-    let mut has_subs = false;
-    let mut has_bilibili = false;
-
-    for item in &play_with.playlist.list {
-        if !item.subtitles.is_empty() {
-            has_subs = true;
-            break;
-        }
-        if is_bilibili(&item.video.url) {
-            has_bilibili = true;
-        }
-        let url = format!("\"{}\"", item.video.url);
-        args_len += item.video.url.len() + 3;
-        urls.push(url);
-
-        if args_len >= MAX_CMD_LEN {
-            break;
-        }
-    }
-
-    // use m3u playlist for bilibili urls, otherwise mpv only sees urls
-    if !has_subs && !has_bilibili && args_len < MAX_CMD_LEN {
-        let mut args = play_with.args;
-        args.extend(urls);
-        player.start(&exe_path, None, args, play_with.start)?;
-    } else {
-        let m3u = player.stringify(play_with.playlist);
-        let m3u_path = tmp_dir.join(M3U_NAME);
-        std::fs::write(&m3u_path, m3u)?;
-        player.start(&exe_path, Some(&m3u_path), play_with.args, play_with.start)?;
-    }
-    Ok(())
-}
-
-fn is_bilibili(url: &str) -> bool {
-    url.contains("bilibili.com") || url.contains("b23.tv")
-}
-
-fn main() -> anyhow::Result<()> {
-    let mut args = std::env::args().skip(1);
-    match (args.next(), args.next()) {
-        (Some(exe_path), Some(b64)) => {
-            play_with(exe_path, b64)?;
-        }
-        (exe_path, None) => {
-            set_play_with_hook(exe_path)?;
-        }
-        _ => {
-            anyhow::bail!("mpv-easy-play-with not support yet!")
-        }
-    };
     Ok(())
 }

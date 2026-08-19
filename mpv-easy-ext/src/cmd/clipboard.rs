@@ -1,4 +1,5 @@
 use super::cli::Cmd;
+use crate::error::Result;
 
 #[derive(clap::Parser, Debug)]
 pub struct Clipboard {
@@ -12,40 +13,49 @@ pub struct Clipboard {
 #[cfg(not(target_os = "android"))]
 mod clip {
     use clipboard_rs::{Clipboard as _, ClipboardContext, common::RustImage};
-    use anyhow::Context;
+    use crate::error::{Error, Result};
 
-    pub fn set_text(text: &str) -> anyhow::Result<()> {
-        let ctx = ClipboardContext::new().map_err(|e| anyhow::anyhow!("{}", e)).context("Failed to create clipboard context")?;
-        ctx.set_text(text.to_string()).map_err(|e| anyhow::anyhow!("{}", e)).context("Failed to set text")?;
+    pub fn set_text(text: &str) -> Result<()> {
+        let ctx = ClipboardContext::new()
+            .map_err(|e| Error::Other(format!("Failed to create clipboard context: {}", e)))?;
+        ctx.set_text(text.to_string())
+            .map_err(|e| Error::Other(format!("Failed to set text: {}", e)))?;
         Ok(())
     }
 
-    pub fn get_text() -> anyhow::Result<String> {
-        let ctx = ClipboardContext::new().map_err(|e| anyhow::anyhow!("{}", e)).context("Failed to create clipboard context")?;
-        Ok(ctx.get_text()
+    pub fn get_text() -> Result<String> {
+        let ctx = ClipboardContext::new()
+            .map_err(|e| Error::Other(format!("Failed to create clipboard context: {}", e)))?;
+        Ok(ctx
+            .get_text()
             .ok()
             .or_else(|| ctx.get_files().ok().map(|v: Vec<String>| v.join("\n")))
             .unwrap_or_default())
     }
 
-    pub fn set_image(path: &str) -> anyhow::Result<()> {
-        let ctx = ClipboardContext::new().map_err(|e| anyhow::anyhow!("{}", e)).context("Failed to create clipboard context")?;
-        let img = RustImage::from_path(path).map_err(|e| anyhow::anyhow!("{}", e)).context("Failed to load image")?;
-        ctx.set_image(img).map_err(|e| anyhow::anyhow!("{}", e)).context("Failed to set image")?;
+    pub fn set_image(path: &str) -> Result<()> {
+        let ctx = ClipboardContext::new()
+            .map_err(|e| Error::Other(format!("Failed to create clipboard context: {}", e)))?;
+        let img = RustImage::from_path(path)
+            .map_err(|e| Error::Other(format!("Failed to load image: {}", e)))?;
+        ctx.set_image(img)
+            .map_err(|e| Error::Other(format!("Failed to set image: {}", e)))?;
         Ok(())
     }
 }
 #[cfg(target_os = "android")]
 mod clip {
-    pub fn set_text(text: &str) -> anyhow::Result<()> {
+    use crate::error::Result;
+
+    pub fn set_text(text: &str) -> Result<()> {
         todo!()
     }
 
-    pub fn get_text() -> anyhow::Result<String> {
+    pub fn get_text() -> Result<String> {
         todo!()
     }
 
-    pub fn set_image(path: &str) -> anyhow::Result<()> {
+    pub fn set_image(path: &str) -> Result<()> {
         todo!()
     }
 }
@@ -55,8 +65,9 @@ pub fn get_image() {
 }
 
 impl Cmd for Clipboard {
-    fn call(&self) -> anyhow::Result<()> {
+    fn call(&self) -> Result<()> {
         use base64::prelude::*;
+        use crate::error::Error;
 
         let cmd = self.cmd.as_str();
 
@@ -80,7 +91,10 @@ impl Cmd for Clipboard {
             }
             _ => {
                 let text: &str = serde_json::from_str(self.text.as_str())?;
-                anyhow::bail!("clipboard not support cmd: {} {}", cmd, text);
+                return Err(Error::Other(format!(
+                    "clipboard not support cmd: {} {}",
+                    cmd, text
+                )));
             }
         }
         Ok(())

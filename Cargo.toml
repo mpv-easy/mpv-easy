@@ -49,6 +49,7 @@ strum_macros = "0.28"
 strum = "0.28"
 thiserror = "2"
 proto-reg = { version = "0.1", git = "https://github.com/ahaoboy/proto-reg", default-features = false }
+consolex = { version = "0.1", git = "https://github.com/ahaoboy/consolex", default-features = false }
 
 [profile.release]
 debug = false

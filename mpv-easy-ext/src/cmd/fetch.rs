@@ -8,6 +8,7 @@ use reqwest::{
 use serde::{Deserialize, Serialize};
 
 use super::cli::Cmd;
+use crate::error::{Error, Result};
 
 #[derive(Debug, Clone, Serialize, Deserialize, Default)]
 pub struct FetchOption {
@@ -30,7 +31,7 @@ pub struct FetchResponse {
 }
 
 #[tokio::main]
-async fn fetch(url: &str, option: FetchOption) -> anyhow::Result<()> {
+async fn fetch(url: &str, option: FetchOption) -> Result<()> {
     let client = match option.redirect {
         Some(r) => match r.as_str() {
             "follow" => Client::builder().redirect(Policy::default()).build()?,
@@ -44,7 +45,7 @@ async fn fetch(url: &str, option: FetchOption) -> anyhow::Result<()> {
                 }))
                 .build()?,
             "error" => Client::builder().redirect(Policy::none()).build()?,
-            _ => anyhow::bail!("redirect value is invalid"),
+            _ => return Err(Error::Other("redirect value is invalid".into())),
         },
         None => Client::builder().redirect(Policy::default()).build()?,
     };
@@ -66,7 +67,7 @@ async fn fetch(url: &str, option: FetchOption) -> anyhow::Result<()> {
 }
 
 impl Cmd for Fetch {
-    fn call(&self) -> anyhow::Result<()> {
+    fn call(&self) -> Result<()> {
         let url: String = serde_json::from_str(self.params.as_str())?;
         let option: FetchOption = match self.option {
             Some(ref s) => serde_json::from_str(s.as_str())?,

@@ -278,7 +278,7 @@ fn find_player(
 #[cfg(target_os = "windows")]
 fn register_hook(hkey: &str, hook_path: &str, exe_path: &str) -> Result<()> {
     let mut protocol =
-        Protocol::new(hkey, format!("\"{hook_path}\" \"{exe_path}\" \"%1\""))?;
+        Protocol::new(hkey, format!("\"{hook_path}\" \"{exe_path}\" \"%1\" --hide"))?;
     protocol.description = hkey.to_string();
     // Keep the empty `DefaultIcon` value written by the original `.reg` files.
     protocol.icon = Some(String::new());
@@ -293,23 +293,23 @@ fn register_hook(hkey: &str, hook_path: &str, exe_path: &str) -> Result<()> {
 /// Returns `Ok(None)` when no supported player is found. Requires an
 /// elevated process.
 #[cfg(target_os = "windows")]
-pub fn set_play_with_hook(exe_path: Option<String>) -> Result<Option<Player>> {
+pub fn set_play_with_hook(exe_path: Option<String>) -> Result<Player> {
     let Some((exe_path, player)) =
         find_player(exe_path, &["mpv.exe", "vlc.exe", "PotPlayerMini64.exe"])?
     else {
-        return Ok(None);
+        return Err(Error::Other("No supported player found".into()));
     };
 
     // Show the "Always open these links" checkbox in the Chrome/Edge dialog
     // so users can allow `mpv-easy://` links permanently.
     ProtocolManager::set_browser_policy(true)?;
     register_hook(player.play_with_hkey(), &current_exe_path()?, &exe_path)?;
-    Ok(Some(player))
+    Ok(player)
 }
 
 #[cfg(not(target_os = "windows"))]
-pub fn set_play_with_hook(_exe_path: Option<String>) -> Result<Option<Player>> {
-    Ok(None)
+pub fn set_play_with_hook(_exe_path: Option<String>) -> Result<Player> {
+    Err(Error::Other("mpv-easy-play-with is not supported on this platform".into()))
 }
 
 /// Registers the "remote" URL protocol (`mpv-remote://`, `vlc-remote://`,

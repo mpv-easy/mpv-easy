@@ -1,4 +1,5 @@
 use super::cli::Cmd;
+use crate::error::{Error, Result};
 
 #[derive(clap::Parser, Debug)]
 pub struct Fs {
@@ -10,7 +11,7 @@ pub struct Fs {
 }
 
 impl Cmd for Fs {
-    fn call(&self) -> anyhow::Result<()> {
+    fn call(&self) -> Result<()> {
         let cmd = self.cmd.as_str();
         let path: &str = serde_json::from_str(self.path.as_str())?;
 
@@ -29,7 +30,7 @@ impl Cmd for Fs {
                 std::fs::remove_dir(path)?;
             }
             _ => {
-                anyhow::bail!("fs not support cmd: {} {}", cmd, path);
+                return Err(Error::Other(format!("fs not support cmd: {} {}", cmd, path)));
             }
         }
         Ok(())
