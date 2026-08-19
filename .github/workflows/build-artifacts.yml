@@ -145,18 +145,18 @@ jobs:
           cd ..
 
           mv mpv-easy-ext/output/mpv-easy-ext mpv-easy-ext-macos-arm64
-          mv mpv-easy-ext/output/mpv-easy-play-with mpv-easy-play-with-macos-arm64
+          # mv mpv-easy-ext/output/mpv-easy-play-with mpv-easy-play-with-macos-arm64
 
       - name: Upload macos Artifact ext
         uses: actions/upload-artifact@v4
         with:
           name: mpv-easy-ext-macos-arm64
           path: mpv-easy-ext-macos-arm64
-      - name: Upload macos Artifact play-with
-        uses: actions/upload-artifact@v4
-        with:
-          name: mpv-easy-play-with-macos-arm64
-          path: mpv-easy-play-with-macos-arm64
+      # - name: Upload macos Artifact play-with
+      #   uses: actions/upload-artifact@v4
+      #   with:
+      #     name: mpv-easy-play-with-macos-arm64
+      #     path: mpv-easy-play-with-macos-arm64
   build-ext-ubuntu:
     runs-on: ubuntu-latest
     steps:
@@ -173,17 +173,17 @@ jobs:
           cd ..
 
           mv mpv-easy-ext/output/mpv-easy-ext mpv-easy-ext-linux
-          mv mpv-easy-ext/output/mpv-easy-play-with mpv-easy-play-with-linux
+          # mv mpv-easy-ext/output/mpv-easy-play-with mpv-easy-play-with-linux
       - name: Upload ubuntu Artifact ext
         uses: actions/upload-artifact@v4
         with:
           name: mpv-easy-ext-linux
           path: mpv-easy-ext-linux
-      - name: Upload ubuntu Artifact play-with
-        uses: actions/upload-artifact@v4
-        with:
-          name: mpv-easy-play-with-linux
-          path: mpv-easy-play-with-linux
+      # - name: Upload ubuntu Artifact play-with
+      #   uses: actions/upload-artifact@v4
+      #   with:
+      #     name: mpv-easy-play-with-linux
+      #     path: mpv-easy-play-with-linux
 
   build-ext-android:
     runs-on: ubuntu-latest
@@ -205,18 +205,18 @@ jobs:
           cd ..
 
           mv target/aarch64-linux-android/release/mpv-easy-ext mpv-easy-ext-android
-          mv target/aarch64-linux-android/release/mpv-easy-play-with mpv-easy-play-with-android
+          # mv target/aarch64-linux-android/release/mpv-easy-play-with mpv-easy-play-with-android
 
       - name: Upload android Artifact ext
         uses: actions/upload-artifact@v4
         with:
           name: mpv-easy-ext-android
           path: mpv-easy-ext-android
-      - name: Upload android Artifact play-with
-        uses: actions/upload-artifact@v4
-        with:
-          name: mpv-easy-play-with-android
-          path: mpv-easy-play-with-android
+      # - name: Upload android Artifact play-with
+      #   uses: actions/upload-artifact@v4
+      #   with:
+      #     name: mpv-easy-play-with-android
+      #     path: mpv-easy-play-with-android
 
   build-ext-linux-arm64:
     runs-on: ubuntu-24.04-arm
@@ -234,17 +234,17 @@ jobs:
           cd ..
 
           mv mpv-easy-ext/output/mpv-easy-ext mpv-easy-ext-linux-arm64
-          mv mpv-easy-ext/output/mpv-easy-play-with mpv-easy-play-with-linux-arm64
+          # mv mpv-easy-ext/output/mpv-easy-play-with mpv-easy-play-with-linux-arm64
       - name: Upload linux-arm64 Artifact ext
         uses: actions/upload-artifact@v4
         with:
           name: mpv-easy-ext-linux-arm64
           path: mpv-easy-ext-linux-arm64
-      - name: Upload linux-arm64 Artifact play-with
-        uses: actions/upload-artifact@v4
-        with:
-          name: mpv-easy-play-with-linux-arm64
-          path: mpv-easy-play-with-linux-arm64
+      # - name: Upload linux-arm64 Artifact play-with
+      #   uses: actions/upload-artifact@v4
+      #   with:
+      #     name: mpv-easy-play-with-linux-arm64
+      #     path: mpv-easy-play-with-linux-arm64
 
   build-release:
     needs:
@@ -438,10 +438,10 @@ jobs:
           cp mpv-easy-ext-dist/mpv-easy-ext-android mpv-easy-android/scripts/mpv-easy/mpv-easy-ext-android
           cp mpv-easy-ext-dist/mpv-easy-ext-windows.exe mpv-easy-windows/scripts/mpv-easy/mpv-easy-ext-windows.exe
 
-          cp mpv-easy-play-with-dist/mpv-easy-play-with-macos-arm64 mpv-easy-macos/scripts/mpv-easy/mpv-easy-play-with-macos-arm64
-          cp mpv-easy-play-with-dist/mpv-easy-play-with-linux mpv-easy-linux/scripts/mpv-easy/mpv-easy-play-with-linux
-          cp mpv-easy-play-with-dist/mpv-easy-play-with-linux-arm64 mpv-easy-linux-arm64/scripts/mpv-easy/mpv-easy-play-with-linux-arm64
-          cp mpv-easy-play-with-dist/mpv-easy-play-with-android mpv-easy-android/scripts/mpv-easy/mpv-easy-play-with-android
+          # cp mpv-easy-play-with-dist/mpv-easy-play-with-macos-arm64 mpv-easy-macos/scripts/mpv-easy/mpv-easy-play-with-macos-arm64
+          # cp mpv-easy-play-with-dist/mpv-easy-play-with-linux mpv-easy-linux/scripts/mpv-easy/mpv-easy-play-with-linux
+          # cp mpv-easy-play-with-dist/mpv-easy-play-with-linux-arm64 mpv-easy-linux-arm64/scripts/mpv-easy/mpv-easy-play-with-linux-arm64
+          # cp mpv-easy-play-with-dist/mpv-easy-play-with-android mpv-easy-android/scripts/mpv-easy/mpv-easy-play-with-android
           cp mpv-easy-play-with-dist/mpv-easy-play-with-windows.exe mpv-easy-windows/scripts/mpv-easy/mpv-easy-play-with-windows.exe
 
           7z x mpv-v3-win.7z -ompv-v3-win -y
@@ -554,10 +554,10 @@ jobs:
           cp mpv-easy-ext-dist/mpv-easy-ext-windows.exe release/mpv-easy-ext-windows.exe
 
           # play-with
-          cp mpv-easy-play-with-dist/mpv-easy-play-with-macos-arm64 release/mpv-easy-play-with-macos-arm64
-          cp mpv-easy-play-with-dist/mpv-easy-play-with-linux release/mpv-easy-play-with-linux
-          cp mpv-easy-play-with-dist/mpv-easy-play-with-linux-arm64 release/mpv-easy-play-with-linux-arm64
-          cp mpv-easy-play-with-dist/mpv-easy-play-with-android release/mpv-easy-play-with-android
+          # cp mpv-easy-play-with-dist/mpv-easy-play-with-macos-arm64 release/mpv-easy-play-with-macos-arm64
+          # cp mpv-easy-play-with-dist/mpv-easy-play-with-linux release/mpv-easy-play-with-linux
+          # cp mpv-easy-play-with-dist/mpv-easy-play-with-linux-arm64 release/mpv-easy-play-with-linux-arm64
+          # cp mpv-easy-play-with-dist/mpv-easy-play-with-android release/mpv-easy-play-with-android
           cp mpv-easy-play-with-dist/mpv-easy-play-with-windows.exe release/mpv-easy-play-with-windows.exe
 
           # remote

@@ -13,6 +13,9 @@
 //!   console window to display output.
 
 #![cfg_attr(target_os = "windows", windows_subsystem = "windows")]
+// `consolex` and `proto-reg` are Windows-only, so this binary only builds
+// on Windows.
+#![cfg(target_os = "windows")]
 
 use consolex::{Mode, init, wait_key};
 use mpv_easy_ext::{

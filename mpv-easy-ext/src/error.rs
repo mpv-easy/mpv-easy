@@ -22,10 +22,11 @@ pub enum Error {
     Mpv(String),
     #[error("Other error: {0}")]
     Other(String),
-    // `proto-reg` is a Windows-only dependency.
+    // `proto-reg` and `consolex` are Windows-only dependencies.
     #[cfg(target_os = "windows")]
     #[error("proto-reg error: {0}")]
     ProtoReg(#[from] proto_reg::Error),
+    #[cfg(target_os = "windows")]
     #[error("consolex error: {0}")]
     Consolex(#[from] consolex::Error),
 }
