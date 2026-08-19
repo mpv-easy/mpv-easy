@@ -45,10 +45,11 @@ fn main() -> Result<()> {
         eprintln!("{e:?}");
     }
 
-    let player = result?;
-    let key = player.play_with_hkey();
-    if let Ok(Some(item)) = proto_reg::ProtocolManager::query(key) {
-        println!("{item}");
+    if let Ok(player) = result {
+        let key = player.play_with_hkey();
+        if let Ok(Some(item)) = proto_reg::ProtocolManager::query(key) {
+            println!("{item}");
+        }
     }
 
     // Keep a newly created window open long enough to read the output.
