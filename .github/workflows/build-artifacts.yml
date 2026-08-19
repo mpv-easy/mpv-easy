@@ -35,7 +35,7 @@ jobs:
         shell: powershell
         run: |
           cd mpv-easy-ext
-          cargo build -q --target x86_64-pc-windows-msvc --release --artifact-dir=output -Z unstable-options
+          cargo build -q --target x86_64-pc-windows-msvc --release --bin mpv-easy-ext --bin mpv-easy-play-with --bin mpv-easy-remote --artifact-dir=output -Z unstable-options
           cd ..
           mv mpv-easy-ext/output/mpv-easy-ext.exe mpv-easy-ext-windows.exe
           mv mpv-easy-ext/output/mpv-easy-play-with.exe mpv-easy-play-with-windows.exe
@@ -141,7 +141,7 @@ jobs:
       - name: build macos-arm64
         run: |
           cd mpv-easy-ext
-          cargo build -q --release --artifact-dir=output -Z unstable-options
+          cargo build -q --release --bin mpv-easy-ext --artifact-dir=output -Z unstable-options
           cd ..
 
           mv mpv-easy-ext/output/mpv-easy-ext mpv-easy-ext-macos-arm64
@@ -169,7 +169,7 @@ jobs:
       - name: build ubuntu-latest
         run: |
           cd mpv-easy-ext
-          cargo build -q --release --artifact-dir=output -Z unstable-options
+          cargo build -q --release --bin mpv-easy-ext --artifact-dir=output -Z unstable-options
           cd ..
 
           mv mpv-easy-ext/output/mpv-easy-ext mpv-easy-ext-linux
@@ -200,7 +200,7 @@ jobs:
 
           cargo install -q cross --git https://github.com/cross-rs/cross
 
-          cross build -q --release --target aarch64-linux-android
+          cross build -q --release --bin mpv-easy-ext --target aarch64-linux-android
 
           cd ..
 
@@ -230,7 +230,7 @@ jobs:
       - name: build linux-arm64
         run: |
           cd mpv-easy-ext
-          cargo build -q --release --artifact-dir=output -Z unstable-options
+          cargo build -q --release --bin mpv-easy-ext --artifact-dir=output -Z unstable-options
           cd ..
 
           mv mpv-easy-ext/output/mpv-easy-ext mpv-easy-ext-linux-arm64
