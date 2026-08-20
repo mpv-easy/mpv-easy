@@ -27,6 +27,7 @@ import {
   subScaleSelector,
   pathSelector,
   frameSeekerSelector,
+  playlistSelector,
 } from "../store"
 import {
   getMpvExePath,
@@ -51,6 +52,7 @@ import {
   subAdd,
   detectCookies,
   youtube,
+  isYtdlp,
 } from "@mpv-easy/tool"
 import clamp from "lodash-es/clamp"
 import { Playlist } from "./playlist"
@@ -62,6 +64,7 @@ import { Crop } from "@mpv-easy/crop"
 import { dispatch, useSelector } from "../models"
 import { Logo } from "./components/logo"
 import { FrameSeeker, FrameSeekerRef } from "@mpv-easy/frame-seeker"
+import { fetchTitles } from "../common"
 
 export * from "./progress"
 export * from "./toolbar"
@@ -309,10 +312,15 @@ export const Easy = (props: Partial<EasyProps>) => {
     !path && !showCrop && playerState.historyHide && playerState.playlistHide
 
   const fsRef = useRef<FrameSeekerRef>(null)
+  const playlist = useSelector(playlistSelector)
 
   useEffect(() => {
     if (path && youtube.isYoutube(path)) {
       youtube.loadYoutubeSubtitles(path, cookiePath)
+    }
+    const v = playlist.filter(isYtdlp)
+    if (v.length) {
+      fetchTitles(v)
     }
   }, [path])
 

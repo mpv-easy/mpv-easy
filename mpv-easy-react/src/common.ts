@@ -5,8 +5,24 @@ import {
   getPlaylistPath,
   getPropertyNumber,
   getPropertyString,
+  isYtdlp,
   jellyfin,
+  getVideoTitles,
 } from "@mpv-easy/tool"
+
+const titleCache: Record<string, string> = {}
+export async function fetchTitles(urls: string[]): Promise<string[]> {
+  const titles = await getVideoTitles(urls)
+  if (titles.length !== urls.length) {
+    return []
+  }
+  for (let i = 0; i < urls.length; i++) {
+    const url = urls[i]
+    const title = titles[i]
+    titleCache[url] = title
+  }
+  return titles
+}
 
 export function getVideoTitle(p: string) {
   const c = getPropertyNumber("playlist-count") || 0
@@ -43,6 +59,14 @@ export function getVideoName(p: string): string {
   const forceTitle = getPropertyString("force-media-title")
   if (forceTitle?.length) {
     return forceTitle
+  }
+
+  // remote video link, use yt-dlp to fetch the title
+  if (isYtdlp(p)) {
+    const title = titleCache[p]
+    if (title?.length) {
+      return title
+    }
   }
 
   // jellyfin
