@@ -91,10 +91,17 @@ export function useAppActions(
   const zipPortableConfig = useCallback(async () => {
     const files: File[] = []
     await installDeps(files)
-    for (const i of files) {
+    const portableConfigFiles = files.filter((i) =>
+      i.path.startsWith("portable_config/"),
+    )
+    if (!portableConfigFiles.length) {
+      console.warn("No portable_config files found")
+      return
+    }
+    for (const i of portableConfigFiles) {
       i.path = i.path.replace("portable_config/", "")
     }
-    const zipBinary = encode(Fmt.Zip, files)
+    const zipBinary = encode(Fmt.Zip, portableConfigFiles)
     if (!zipBinary) {
       console.error("zip file error")
       return

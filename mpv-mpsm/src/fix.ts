@@ -1,4 +1,4 @@
-import { decode, Fmt, File } from "@easy-install/easy-archive"
+import { decode, Fmt, File, extensions } from "@easy-install/easy-archive"
 import { downloadBinaryFromGithub, type Script } from "./index"
 import { commonPrefix } from "./tool"
 
@@ -53,6 +53,26 @@ export async function getScriptFiles(url: string, script: Script) {
       new File("script.json", uint8Array, undefined, false, BigInt(Date.now())),
       new File(name, bin, undefined, false, BigInt(Date.now())),
     ]
+  }
+
+  for (const f of [
+    Fmt.Zip,
+    Fmt.Tar,
+    Fmt.TarGz,
+    Fmt.TarXz,
+    Fmt.TarBz,
+    Fmt.TarZstd,
+    Fmt.SevenZip,
+  ]) {
+    for (const ext of extensions(f)) {
+      if (url.endsWith(ext)) {
+        const scriptFiles = decode(f, bin)
+        if (!scriptFiles?.length) {
+          return []
+        }
+        return scriptFiles
+      }
+    }
   }
 
   return []
