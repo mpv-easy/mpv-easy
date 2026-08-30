@@ -281,7 +281,7 @@ export class ThumbFast {
   }
 
   seek(time: number) {
-    if (time === this.lastTime) {
+    if (time === this.lastTime || Number.isNaN(time)) {
       return
     }
     this.lastTime = time
