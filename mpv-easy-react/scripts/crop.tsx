@@ -34,6 +34,7 @@ const {
   lineColorHover,
   labelFontSize,
   cropZIndex,
+  "extra-args": extraArgsOption = "",
 } = {
   ...defaultConfig,
   ...getOptions("mpv-easy-crop", {
@@ -81,8 +82,13 @@ const {
       type: "number",
       key: "cropZIndex",
     },
+    "extra-args": {
+      type: "string",
+    },
   }),
 }
+
+const extraArgs = extraArgsOption.split(/\s+/).filter(Boolean)
 
 function App() {
   const [showCrop, setShowCrop] = useState(false)
@@ -127,7 +133,7 @@ function App() {
         rect,
         outputDirectory,
       )
-      const ok = await cropImage(rect, outputPath, ffmpeg)
+      const ok = await cropImage(rect, outputPath, extraArgs, ffmpeg)
       if (!ok) {
         showNotification("failed to crop image")
       } else {

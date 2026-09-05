@@ -21,6 +21,8 @@ export const defaultConfig: CutConfig = {
   // https://ffmpeg.org/ffmpeg-scaler.html#toc-Scaler-Options
   flags: "spline",
   maxWidth: 1024,
+  // extra ffmpeg args appended to the end of the ffmpeg command
+  extraArgs: [],
 }
 
 export type CutConfig = {
@@ -32,6 +34,7 @@ export type CutConfig = {
   fps: number
   flags: string
   maxWidth: number
+  extraArgs: string[]
 }
 
 declare module "@mpv-easy/plugin" {

@@ -26,6 +26,7 @@ const {
   fps,
   flags,
   maxWidth,
+  "extra-args": extraArgsOption = "",
 } = {
   ...defaultConfig,
   ...getOptions("mpv-easy-cut", {
@@ -60,6 +61,9 @@ const {
     "max-width": {
       type: "number",
       key: "maxWidth",
+    },
+    "extra-args": {
+      type: "string",
     },
   }),
 }
@@ -107,7 +111,15 @@ async function output(gitConfig?: GifConfig) {
   }
 
   const outputPath = getCutVideoPath(path, segment, undefined, outputDirectory)
-  const ok = await cutVideo(segment, path, outputPath, gitConfig, ffmpeg)
+  const extraArgs = extraArgsOption.split(/\s+/).filter(Boolean)
+  const ok = await cutVideo(
+    segment,
+    path,
+    outputPath,
+    gitConfig,
+    extraArgs,
+    ffmpeg,
+  )
   hideNotification()
   if (!ok) {
     showNotification("failed to output")

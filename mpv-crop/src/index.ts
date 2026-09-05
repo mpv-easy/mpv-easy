@@ -15,6 +15,8 @@ export const defaultConfig: CropConfig = {
   cropImageFormat: "webp",
   cropZIndex: 2048,
   labelFontSize: 24,
+  // extra ffmpeg args appended to the end of the ffmpeg command
+  extraArgs: [],
 }
 
 export type CropConfig = {
@@ -29,6 +31,7 @@ export type CropConfig = {
   cropImageFormat: string
   cropZIndex: number
   labelFontSize: number
+  extraArgs: string[]
 }
 
 declare module "@mpv-easy/plugin" {

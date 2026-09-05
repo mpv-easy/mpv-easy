@@ -147,6 +147,7 @@ export const Progress = ({ width, ...props }: MpDomProps) => {
           rect,
           outputPath,
           gifConfig,
+          cropConfig.extraArgs,
           ffmpeg,
         )
         // TODO: To reuse fragments, don't remove cutPoints, should use esc to remove
@@ -166,7 +167,12 @@ export const Progress = ({ width, ...props }: MpDomProps) => {
           cropConfig.outputDirectory,
         )
         showNotification("crop starting", -1)
-        const ok = await cropImage(rect, outputPath, ffmpeg)
+        const ok = await cropImage(
+          rect,
+          outputPath,
+          cropConfig.extraArgs,
+          ffmpeg,
+        )
         if (!ok) {
           showNotification("failed to crop image")
         } else {
@@ -195,6 +201,7 @@ export const Progress = ({ width, ...props }: MpDomProps) => {
       path,
       getCutVideoPath(path, segment, undefined, cutConfig.outputDirectory),
       gifConfig,
+      cutConfig.extraArgs,
       ffmpeg,
     )
     dispatch.setCutPoints([])
