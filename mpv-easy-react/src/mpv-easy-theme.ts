@@ -181,6 +181,7 @@ export type EasyConfig = {
     showCrop: boolean
     showFrameSeeker: boolean
     preview: boolean
+    busy: boolean
   }
   config: {
     // fps: number
@@ -448,6 +449,7 @@ export const defaultState: EasyConfig["state"] = {
   showCrop: false,
   showFrameSeeker: false,
   preview: false,
+  busy: false,
   mountIndex: -1,
 }
 

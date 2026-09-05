@@ -250,7 +250,7 @@ export const Easy = (props: Partial<EasyProps>) => {
   const menuRef = useRef<{ setHide: (v: boolean) => void }>(null)
   const volumeDomRef = useRef<MpDom>(null)
   const playerState = useSelector(playerStateSelector)
-  const { cropPoints, showCrop, showFrameSeeker } = playerState
+  const { cropPoints, showCrop, showFrameSeeker, busy } = playerState
   const cropConfig = useSelector(cropSelector)
   const fsConfig = useSelector(frameSeekerSelector)
   const { x, y, hover } = mousePos
@@ -340,7 +340,7 @@ export const Easy = (props: Partial<EasyProps>) => {
           update()
         })
 
-        if (showCrop) {
+        if (showCrop && !busy) {
           if (cropPoints.length < 2) {
             dispatch.setCropPoints([...cropPoints, [mousePos.x, mousePos.y]])
           }
@@ -411,6 +411,7 @@ export const Easy = (props: Partial<EasyProps>) => {
           zIndex={cropConfig.cropZIndex}
           onChange={dispatch.setCropPoints}
           labelFontSize={smallFontSize.fontSize}
+          disabled={busy}
         />
       )}
       {showFrameSeeker && fsConfig.ui && (

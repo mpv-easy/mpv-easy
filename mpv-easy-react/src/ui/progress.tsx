@@ -64,7 +64,7 @@ export const Progress = ({ width, ...props }: MpDomProps) => {
   const path = useSelector(pathSelector)
   const isSeekable = useSelector(seekableSelector)
   const thumbfast = useSelector(thumbfastSelector)
-  const { cutPoints, cropPoints, showCrop, preview } =
+  const { cutPoints, cropPoints, showCrop, preview, busy } =
     useSelector(playerStateSelector)
   const cutConfig = useSelector(cutSelector)
   const cropConfig = useSelector(cropSelector)
@@ -121,6 +121,9 @@ export const Progress = ({ width, ...props }: MpDomProps) => {
       showNotification("ffmpeg not found")
       return
     }
+    if (busy) {
+      return
+    }
     if (cropPoints.length === 2) {
       const rect = getCropRect(cropPoints)
       if (!rect) {
@@ -141,6 +144,7 @@ export const Progress = ({ width, ...props }: MpDomProps) => {
           cropConfig.outputDirectory,
         )
         showNotification("cut and crop starting", -1)
+        dispatch.setBusy(true)
         const ok = await cropVideo(
           path,
           segment,
@@ -152,6 +156,7 @@ export const Progress = ({ width, ...props }: MpDomProps) => {
         )
         // TODO: To reuse fragments, don't remove cutPoints, should use esc to remove
         // dispatch.setCutPoints([])
+        dispatch.setBusy(false)
         if (!ok) {
           showNotification("failed to crop video")
         } else {
@@ -167,12 +172,14 @@ export const Progress = ({ width, ...props }: MpDomProps) => {
           cropConfig.outputDirectory,
         )
         showNotification("crop starting", -1)
+        dispatch.setBusy(true)
         const ok = await cropImage(
           rect,
           outputPath,
           cropConfig.extraArgs,
           ffmpeg,
         )
+        dispatch.setBusy(false)
         if (!ok) {
           showNotification("failed to crop image")
         } else {
@@ -195,7 +202,7 @@ export const Progress = ({ width, ...props }: MpDomProps) => {
     // }
 
     showNotification("output starting", -1)
-
+    dispatch.setBusy(true)
     const ok = await cutVideo(
       segment,
       path,
@@ -205,6 +212,7 @@ export const Progress = ({ width, ...props }: MpDomProps) => {
       ffmpeg,
     )
     dispatch.setCutPoints([])
+    dispatch.setBusy(false)
     if (!ok) {
       showNotification("failed to output")
       return

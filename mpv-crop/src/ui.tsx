@@ -110,6 +110,7 @@ export type CropProps = {
   zIndex: number
   labelFontSize: number
   onChange: (points: [number, number][]) => void
+  disabled?: boolean
 }
 
 function getMask(
@@ -264,6 +265,7 @@ export function Crop({
   zIndex,
   labelFontSize,
   onChange,
+  disabled = false,
 }: CropProps) {
   const labelRef = useRef<MpDom | null>(null)
 
@@ -428,6 +430,12 @@ export function Crop({
     ]
   }
   useEffect(() => {
+    if (disabled) {
+      selectMoving.current = false
+      edgeMoving.current = false
+      vertexMoving.current = false
+      return
+    }
     if (selectMoving.current) {
       onChange(getPointSelect())
       return
@@ -440,7 +448,7 @@ export function Crop({
       onChange(getPointVertex(vertexIndex.current))
       return
     }
-  }, [mousePos.x, mousePos.y])
+  }, [mousePos.x, mousePos.y, disabled])
 
   return (
     <Box position="absolute" width={osdWidth} height={osdHeight}>
@@ -469,7 +477,7 @@ export function Crop({
           zIndex={zIndex}
           onMouseDown={(e) => {
             e.stopPropagation()
-            if (edgeMoving.current || vertexMoving.current) {
+            if (disabled || edgeMoving.current || vertexMoving.current) {
               return
             }
             if (selectMoving.current) {
@@ -540,7 +548,7 @@ export function Crop({
             zIndex={zIndex + 3}
             onMouseDown={(e) => {
               e.stopPropagation()
-              if (selectMoving.current || vertexMoving.current) {
+              if (disabled || selectMoving.current || vertexMoving.current) {
                 return
               }
               if (edgeMoving.current) {
@@ -570,7 +578,7 @@ export function Crop({
             zIndex={zIndex + 4}
             onMouseDown={(e) => {
               e.stopPropagation()
-              if (selectMoving.current || edgeMoving.current) {
+              if (disabled || selectMoving.current || edgeMoving.current) {
                 return
               }
               if (vertexMoving.current) {

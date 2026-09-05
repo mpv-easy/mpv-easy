@@ -92,6 +92,7 @@ const extraArgs = extraArgsOption.split(/\s+/).filter(Boolean)
 
 function App() {
   const [showCrop, setShowCrop] = useState(false)
+  const [busy, setBusy] = useState(false)
   const [points, setPoints] = useState<[number, number][]>([])
   const { w, h } = useProperty("osd-dimensions")[0]
 
@@ -109,6 +110,9 @@ function App() {
 
   const hack = useState(0)[1]
   cropRef.current = async () => {
+    if (busy) {
+      return
+    }
     if (!path.length) {
       showNotification("video not found")
       return
@@ -133,7 +137,9 @@ function App() {
         rect,
         outputDirectory,
       )
+      setBusy(true)
       const ok = await cropImage(rect, outputPath, extraArgs, ffmpeg)
+      setBusy(false)
       if (!ok) {
         showNotification("failed to crop image")
       } else {
@@ -184,7 +190,7 @@ function App() {
       height={h}
       zIndex={cropZIndex}
       onMouseDown={() => {
-        if (points.length >= 2) {
+        if (busy || points.length >= 2) {
           return
         }
         const newPoints = [...points]
@@ -206,6 +212,7 @@ function App() {
           labelFontSize={labelFontSize}
           zIndex={cropZIndex + 1}
           onChange={setPoints}
+          disabled={busy}
         />
       )}
     </Box>

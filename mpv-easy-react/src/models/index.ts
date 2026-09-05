@@ -346,6 +346,13 @@ const store = defineStore({
       }
       return { ...state }
     },
+    setBusy(state, busy: boolean) {
+      state[pluginName].state = {
+        ...state[pluginName].state,
+        busy,
+      }
+      return { ...state }
+    },
     toggleShowFrameSeeker(state) {
       const showFrameSeeker = !state[pluginName].state.showFrameSeeker
       state[pluginName].state = {
