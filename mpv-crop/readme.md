@@ -6,6 +6,8 @@ In order to preserve the filters added by the user, first use the mpv command `s
 
 You need to install [ffmpeg](https://www.ffmpeg.org/download.html) and add ffmpeg to ```PATH```
 
+> Note: ffmpeg must be built with `libx264` (h264) support. It is the default encoder used when exporting a cropped video segment, otherwise the export will fail. You can check with `ffmpeg -encoders | grep libx264`.
+
 - Download the latest version of [crop.js](https://github.com/mpv-easy/mpv-easy/releases) and copy it to the mpv script directory, or use [mpsm](../mpv-mpsm/readme.md) `mpsm install mpv-crop`
 
 - Add configuration to input.conf [shortkey](https://github.com/mpv-easy/mpv-easy/tree/main/mpv-crop#shortkey)
