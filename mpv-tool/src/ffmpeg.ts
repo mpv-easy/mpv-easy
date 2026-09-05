@@ -67,7 +67,6 @@ export async function cutRemoteVideo(
     `--start=${area[0]}`,
     `--end=${area[1]}`,
     "--vo=lavc",
-    `--o=${outputPath}`,
     "--of=mp4",
     "--ovc=libx264",
     "--ovcopts=crf=23,preset=medium,profile=baseline,level=3.1,tune=fastdecode",
@@ -97,6 +96,7 @@ export async function cutRemoteVideo(
   if (extraArgs.length) {
     mpvCmd.push(...extraArgs)
   }
+  mpvCmd.push(`--o=${outputPath}`)
 
   log.debug(`cutRemoteVideo: `, mpvCmd.join(" "))
   try {
@@ -165,6 +165,9 @@ export async function cutLocalVideo(
     // }
 
     cmd.push("-vf", vf.join(","))
+    if (extraArgs.length) {
+      cmd.push(...extraArgs)
+    }
     cmd.push(replaceExt(outputPath, "gif"))
   } else {
     // const vf: string[] = []
@@ -180,10 +183,10 @@ export async function cutLocalVideo(
     //   cmd.push("-vf", vf.join(","))
     // }
     cmd.push("-c", "copy")
+    if (extraArgs.length) {
+      cmd.push(...extraArgs)
+    }
     cmd.push(outputPath)
-  }
-  if (extraArgs.length) {
-    cmd.push(...extraArgs)
   }
   log.debug(`cutLocalVideo: `, cmd.join(" "))
   try {
@@ -216,11 +219,11 @@ export async function cropImage(
     tmpPath,
     "-vf",
     `crop=${width}:${height}:${x}:${y}`,
-    outputPath,
   ]
   if (extraArgs.length) {
     cmd.push(...extraArgs)
   }
+  cmd.push(outputPath)
   log.debug(`cropImage: `, cmd.join(" "))
   try {
     await execAsync(cmd)
@@ -229,6 +232,29 @@ export async function cropImage(
     return false
   }
   return true
+}
+
+// Get the video encoder set by extraArgs, e.g. `["-c:v", "libx264"]`
+// or `["-c:v=libx264"]`; returns undefined when extraArgs don't override it
+function getExtraVideoEncoder(extraArgs: string[]): string | undefined {
+  let encoder: string | undefined
+  for (let i = 0; i < extraArgs.length; i++) {
+    const arg = extraArgs[i]
+    if (
+      (arg === "-c:v" ||
+        arg === "-codec:v" ||
+        arg === "-c" ||
+        arg === "-codec") &&
+      i + 1 < extraArgs.length
+    ) {
+      encoder = extraArgs[++i]
+    } else if (arg.startsWith("-c:v=")) {
+      encoder = arg.slice("-c:v=".length)
+    } else if (arg.startsWith("-codec:v=")) {
+      encoder = arg.slice("-codec:v=".length)
+    }
+  }
+  return encoder
 }
 
 export async function cropVideo(
@@ -260,13 +286,22 @@ export async function cropVideo(
     cmd.push(
       `crop=${width}:${height}:${x}:${y},fps=${fps},scale=${maxWidth}:-1:flags=${flags}`,
     )
+    if (extraArgs.length) {
+      cmd.push(...extraArgs)
+    }
     cmd.push(replaceExt(outputPath, "gif"))
   } else {
-    cmd.push(`crop=${width}:${height}:${x}:${y}`, outputPath)
+    cmd.push(`crop=${width}:${height}:${x}:${y}`)
     cmd.push("-c:a", "copy", "-c:v", "libx264")
-  }
-  if (extraArgs.length) {
-    cmd.push(...extraArgs)
+    if (extraArgs.length) {
+      cmd.push(...extraArgs)
+    }
+    // libx264 needs an mp4 container, force the mp4 muxer
+    const encoder = getExtraVideoEncoder(extraArgs)
+    if (encoder === undefined || encoder === "libx264") {
+      cmd.push("-f", "mp4")
+    }
+    cmd.push(outputPath)
   }
   log.debug(`cropVideo: `, cmd.join(" "))
   try {

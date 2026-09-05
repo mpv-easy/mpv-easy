@@ -53,4 +53,29 @@ line-width=4
 label-font-size=24
 output-directory=""
 crop-image-format="webp"
+# extra ffmpeg args appended to the end of the ffmpeg command,
+# can override the default codec settings, disabled by default
+# example: lossless high quality
+# extra-args="-c:v libx264 -crf 0 -preset veryslow"
 ```
+
+> Note: `extra-args` are appended to the end of the ffmpeg command, so the last codec/encoder option wins.
+
+### mpv-easy json config
+
+In the [mpv-easy](https://github.com/mpv-easy/mpv-easy) project, the same options can be configured via `portable_config/scripts/mpv-easy/mpv-easy.config.json`, using camelCase keys and args as a json array:
+
+```json
+{
+  "@mpv-easy/crop": {
+    "extraArgs": [
+      "-crf",
+      "0",
+      "-preset",
+      "veryslow"
+    ]
+  }
+}
+```
+
+All `crop.conf` options are available here with camelCase keys (e.g. `outputDirectory`, `cropImageFormat`, `lineColor`).

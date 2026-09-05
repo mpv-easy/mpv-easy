@@ -56,7 +56,34 @@ output-directory=""
 max-width=600
 fps=24
 flags="spline"
+# extra ffmpeg args appended to the end of the ffmpeg command,
+# can override the default codec settings, disabled by default
+# example: lossless high quality
+# extra-args="-c:v libx264 -crf 0 -preset veryslow"
 ```
+
+> Note: `extra-args` are appended to the end of the ffmpeg command, so the last codec/encoder option wins. It also applies to the gif output, adjust it if you export gif.
+
+### mpv-easy json config
+
+In the [mpv-easy](https://github.com/mpv-easy/mpv-easy) project, the same options can be configured via `portable_config/scripts/mpv-easy/mpv-easy.config.json`, using camelCase keys and args as a json array:
+
+```json
+{
+  "@mpv-easy/cut": {
+    "extraArgs": [
+      "-c:v",
+      "libx264",
+      "-crf",
+      "0",
+      "-preset",
+      "veryslow"
+    ]
+  }
+}
+```
+
+All `cut.conf` options are available here with camelCase keys (e.g. `outputDirectory`, `maxWidth`, `fps`).
 
 ## todo
 
