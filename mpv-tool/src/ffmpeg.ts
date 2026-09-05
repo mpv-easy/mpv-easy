@@ -57,8 +57,7 @@ export async function cutRemoteVideo(
   area: [number, number],
   videoPath: string,
   outputPath: string,
-  _gifConfig: GifConfig | undefined,
-  _ffmpeg: string,
+  extraArgs: string[] = [],
 ) {
   const mpvPath = getMpvExePath()
 
@@ -95,7 +94,11 @@ export async function cutRemoteVideo(
   //   mpvCmd.push(`--vf-append=${vf}`)
   // }
 
-  log.debug(`cutRemoteVideo: ${videoPath} [${area[0]}-${area[1]}]`)
+  if (extraArgs.length) {
+    mpvCmd.push(...extraArgs)
+  }
+
+  log.debug(`cutRemoteVideo: `, mpvCmd.join(" "))
   try {
     await execAsync(mpvCmd)
     return true
@@ -110,12 +113,20 @@ export async function cutVideo(
   videoPath: string,
   outputPath: string,
   gifConfig: GifConfig | undefined,
+  extraArgs: string[] = [],
   ffmpeg: string,
 ) {
   if (isRemote(videoPath)) {
-    return cutRemoteVideo(area, videoPath, outputPath, gifConfig, ffmpeg)
+    return cutRemoteVideo(area, videoPath, outputPath, extraArgs)
   }
-  return cutLocalVideo(area, videoPath, outputPath, gifConfig, ffmpeg)
+  return cutLocalVideo(
+    area,
+    videoPath,
+    outputPath,
+    gifConfig,
+    extraArgs,
+    ffmpeg,
+  )
 }
 
 export async function cutLocalVideo(
@@ -123,6 +134,7 @@ export async function cutLocalVideo(
   videoPath: string,
   outputPath: string,
   gifConfig: GifConfig | undefined,
+  extraArgs: string[] = [],
   ffmpeg: string,
 ) {
   const [ss, to] = area.map((i) => i.toString())
@@ -170,7 +182,10 @@ export async function cutLocalVideo(
     cmd.push("-c", "copy")
     cmd.push(outputPath)
   }
-  log.debug(`cutLocalVideo: ${videoPath} [${ss}-${to}] → ${outputPath}`)
+  if (extraArgs.length) {
+    cmd.push(...extraArgs)
+  }
+  log.debug(`cutLocalVideo: `, cmd.join(" "))
   try {
     await execAsync(cmd)
   } catch (e) {
@@ -183,6 +198,7 @@ export async function cutLocalVideo(
 export async function cropImage(
   rect: Rect,
   outputPath: string,
+  extraArgs: string[] = [],
   ffmpeg: string,
 ) {
   const tmpDir = getTmpDir()
@@ -202,9 +218,10 @@ export async function cropImage(
     `crop=${width}:${height}:${x}:${y}`,
     outputPath,
   ]
-  log.debug(
-    `cropImage: ${rect.width}x${rect.height}+${rect.x}+${rect.y} → ${outputPath}`,
-  )
+  if (extraArgs.length) {
+    cmd.push(...extraArgs)
+  }
+  log.debug(`cropImage: `, cmd.join(" "))
   try {
     await execAsync(cmd)
   } catch (e) {
@@ -220,6 +237,7 @@ export async function cropVideo(
   rect: Rect,
   outputPath: string,
   gifConfig: GifConfig | undefined,
+  extraArgs: string[] = [],
   ffmpeg: string,
 ) {
   const [ss, to] = area
@@ -245,9 +263,12 @@ export async function cropVideo(
     cmd.push(replaceExt(outputPath, "gif"))
   } else {
     cmd.push(`crop=${width}:${height}:${x}:${y}`, outputPath)
-    cmd.push("-c", "copy", "-c:v", "libx265")
+    cmd.push("-c:a", "copy", "-c:v", "libx264")
   }
-  log.debug(`cropVideo: ${videoPath} [${ss}-${to}] ${width}x${height}`)
+  if (extraArgs.length) {
+    cmd.push(...extraArgs)
+  }
+  log.debug(`cropVideo: `, cmd.join(" "))
   try {
     await execAsync(cmd)
   } catch (e) {
