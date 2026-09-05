@@ -422,7 +422,9 @@ jobs:
 
           unzip ffmpeg.zip -d ffmpeg-full
           mkdir ffmpeg -p
-          cp ffmpeg-full/ffmpeg-master-latest-win64-lgpl/bin/ffmpeg.exe ffmpeg/ffmpeg.exe
+          ffmpeg_exe=$(find ffmpeg-full -name ffmpeg.exe | head -1)
+          test -n "$ffmpeg_exe" || { echo "ffmpeg.exe not found under ffmpeg-full"; exit 1; }
+          cp "$ffmpeg_exe" ffmpeg/ffmpeg.exe
           cd ffmpeg
           zip -r -q ../release/ffmpeg-windows.zip .
           cd ..
