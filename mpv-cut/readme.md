@@ -53,7 +53,8 @@ output-event-name="output"
 output-gif-event-name="output-gif"
 cancel-event-name="cancel"
 output-directory=""
-max-width=600
+max-width=1024
+# max-width=0 keeps the original resolution (no scaling)
 fps=24
 flags="spline"
 # extra ffmpeg args appended to the end of the ffmpeg command,

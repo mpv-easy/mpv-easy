@@ -49,8 +49,25 @@ export function detectFfmpeg(): false | string {
 
 export type GifConfig = {
   fps: number
+  // maxWidth <= 0 keeps the original resolution, no scaling is applied
   maxWidth: number
-  flags: string
+  // when empty, the `flags=` option is omitted and ffmpeg defaults apply
+  flags?: string
+}
+
+// Build the scale filter for gif output. Returns undefined when
+// maxWidth <= 0 (keep the original resolution, no scaling), and omits
+// the `flags=` option when flags is empty
+function buildScaleFilter(
+  maxWidth: number,
+  flags: string | undefined,
+): string | undefined {
+  if (maxWidth <= 0) {
+    return undefined
+  }
+  return flags
+    ? `scale=${maxWidth}:-1:flags=${flags}`
+    : `scale=${maxWidth}:-1`
 }
 
 export async function cutRemoteVideo(
@@ -153,7 +170,11 @@ export async function cutLocalVideo(
   // const sub = getCurrentSubtitle()
   if (gifConfig) {
     const { fps, flags, maxWidth } = gifConfig
-    const vf = [`fps=${fps}`, `scale=${maxWidth}:-1:flags=${flags}`]
+    const vf = [`fps=${fps}`]
+    const scale = buildScaleFilter(maxWidth, flags)
+    if (scale) {
+      vf.push(scale)
+    }
 
     // if (sub) {
     //   if (sub.external) {
@@ -283,9 +304,12 @@ export async function cropVideo(
   ]
   if (gifConfig) {
     const { fps, flags, maxWidth } = gifConfig
-    cmd.push(
-      `crop=${width}:${height}:${x}:${y},fps=${fps},scale=${maxWidth}:-1:flags=${flags}`,
-    )
+    const vf = [`crop=${width}:${height}:${x}:${y}`, `fps=${fps}`]
+    const scale = buildScaleFilter(maxWidth, flags)
+    if (scale) {
+      vf.push(scale)
+    }
+    cmd.push(vf.join(","))
     if (extraArgs.length) {
       cmd.push(...extraArgs)
     }

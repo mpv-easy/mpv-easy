@@ -20,6 +20,7 @@ export const defaultConfig: CutConfig = {
   fps: 24,
   // https://ffmpeg.org/ffmpeg-scaler.html#toc-Scaler-Options
   flags: "spline",
+  // maxWidth <= 0 keeps the original resolution, no scaling is applied
   maxWidth: 1024,
   // extra ffmpeg args appended to the end of the ffmpeg command
   extraArgs: [],
