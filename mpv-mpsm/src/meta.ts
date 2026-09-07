@@ -10,6 +10,7 @@ export type Script = {
   homepage?: string
   license?: string
   keywords?: string[]
+  size?: number
 }
 
 export function getScriptByLang(
@@ -39,6 +40,8 @@ export function getScriptByLang(
       const name = parts[1] as keyof Script
       if (name === "keywords") {
         meta[name] = parts[2].split(",")
+      } else if (name === "size") {
+        meta[name] = Number(parts[2])
       } else {
         meta[name] = parts[2]
       }
