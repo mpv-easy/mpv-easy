@@ -1,4 +1,4 @@
-import { Download } from "@mui/icons-material"
+import { Download, OpenInNew } from "@mui/icons-material"
 import {
   Checkbox,
   IconButton,
@@ -111,20 +111,23 @@ export function ScriptTable({
               uiRequires.includes(row.name) ||
               includes.includes(row.name)
 
-            const checkbox = (
-              <Checkbox
-                checked={isSelected}
-                disabled={isDisabled}
-                onChange={(e) => onRowSelect(row, e.target.checked)}
-              />
-            )
+            const checkboxProps = {
+              checked: isSelected,
+              disabled: isDisabled,
+              onChange: (e: React.ChangeEvent<HTMLInputElement>) =>
+                onRowSelect(row, e.target.checked),
+            }
+
+            const checkbox = <Checkbox {...checkboxProps} />
 
             return (
               <TableRow key={row.key} hover>
                 <TableCell padding="checkbox">
                   {isOverLimit ? (
                     <Tooltip title={OVER_LIMIT_MESSAGE}>
-                      <span>{checkbox}</span>
+                      <span>
+                        <Checkbox {...checkboxProps} sx={{ padding: 0 }} />
+                      </span>
                     </Tooltip>
                   ) : (
                     checkbox
@@ -156,15 +159,17 @@ export function ScriptTable({
                 <TableCell>
                   {isOverLimit ? (
                     <Tooltip title={OVER_LIMIT_MESSAGE}>
-                      <span>
-                        <IconButton
-                          size="small"
-                          disabled
-                          aria-label={`${row.name} download unavailable`}
-                        >
-                          <Download />
-                        </IconButton>
-                      </span>
+                      <IconButton
+                        component="a"
+                        href={row.download}
+                        target="_blank"
+                        rel="noreferrer"
+                        size="small"
+                        color="warning"
+                        aria-label={`${row.name} requires manual installation`}
+                      >
+                        <OpenInNew />
+                      </IconButton>
                     </Tooltip>
                   ) : (
                     <IconButton
