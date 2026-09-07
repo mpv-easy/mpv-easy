@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import { Download } from "@mui/icons-material"
 import {
   Checkbox,
   IconButton,
@@ -11,10 +11,31 @@ import {
   TableHead,
   TablePagination,
   TableRow,
+  Tooltip,
 } from "@mui/material"
-import { Download } from "@mui/icons-material"
-import { NAME_WIDTH } from "../constants"
+import React, { useState } from "react"
+import { MAX_ZIP_SIZE, NAME_WIDTH } from "../constants"
 import type { DataType } from "../types"
+
+const SIZE_WIDTH = 90
+
+/**
+ * Format a byte count into a human-readable string, e.g. 1536 -> "1.5 KB".
+ */
+function formatSize(size: number): string {
+  const units = ["B", "KB", "MB", "GB"]
+  let value = size
+  let unit = 0
+  while (value >= 1024 && unit < units.length - 1) {
+    value /= 1024
+    unit += 1
+  }
+  return `${value.toFixed(value >= 100 ? 0 : 1)} ${units[unit]}`
+}
+
+const OVER_LIMIT_MESSAGE = `Exceeds GitHub's ${formatSize(
+  MAX_ZIP_SIZE,
+)} browser limit; in-browser installation is not supported, please install manually.`
 
 interface ScriptTableProps {
   tableData: DataType[]
@@ -73,25 +94,41 @@ export function ScriptTable({
             <TableCell sx={{ width: NAME_WIDTH }}>name</TableCell>
             <TableCell>description</TableCell>
             <TableCell>author</TableCell>
+            <TableCell align="right" sx={{ width: SIZE_WIDTH }}>
+              size
+            </TableCell>
             <TableCell>download</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
           {paginatedData.map((row) => {
+            const isOverLimit = !!row.size && row.size > MAX_ZIP_SIZE
             const isSelected =
               selectedRowKeys.includes(row.name) ||
               uiRequires.includes(row.name)
             const isDisabled =
-              uiRequires.includes(row.name) || includes.includes(row.name)
+              isOverLimit ||
+              uiRequires.includes(row.name) ||
+              includes.includes(row.name)
+
+            const checkbox = (
+              <Checkbox
+                checked={isSelected}
+                disabled={isDisabled}
+                onChange={(e) => onRowSelect(row, e.target.checked)}
+              />
+            )
 
             return (
               <TableRow key={row.key} hover>
                 <TableCell padding="checkbox">
-                  <Checkbox
-                    checked={isSelected}
-                    disabled={isDisabled}
-                    onChange={(e) => onRowSelect(row, e.target.checked)}
-                  />
+                  {isOverLimit ? (
+                    <Tooltip title={OVER_LIMIT_MESSAGE}>
+                      <span>{checkbox}</span>
+                    </Tooltip>
+                  ) : (
+                    checkbox
+                  )}
                 </TableCell>
                 <TableCell sx={{ width: NAME_WIDTH }}>
                   <Link
@@ -105,13 +142,38 @@ export function ScriptTable({
                 </TableCell>
                 <TableCell>{row.description}</TableCell>
                 <TableCell>{row.author}</TableCell>
+                <TableCell
+                  align="right"
+                  sx={{
+                    width: SIZE_WIDTH,
+                    color: isOverLimit ? "warning.main" : "inherit",
+                  }}
+                >
+                  {typeof row.size === "number" && Number.isFinite(row.size)
+                    ? formatSize(row.size)
+                    : "-"}
+                </TableCell>
                 <TableCell>
-                  <IconButton
-                    size="small"
-                    onClick={() => onDownloadScript(row)}
-                  >
-                    <Download />
-                  </IconButton>
+                  {isOverLimit ? (
+                    <Tooltip title={OVER_LIMIT_MESSAGE}>
+                      <span>
+                        <IconButton
+                          size="small"
+                          disabled
+                          aria-label={`${row.name} download unavailable`}
+                        >
+                          <Download />
+                        </IconButton>
+                      </span>
+                    </Tooltip>
+                  ) : (
+                    <IconButton
+                      size="small"
+                      onClick={() => onDownloadScript(row)}
+                    >
+                      <Download />
+                    </IconButton>
+                  )}
                 </TableCell>
               </TableRow>
             )

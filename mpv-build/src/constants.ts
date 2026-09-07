@@ -91,3 +91,8 @@ export function getDenoUrl() {
 export const TITLE_WIDTH = 150
 export const ITEM_WIDTH = 150
 export const NAME_WIDTH = 250
+
+// Scripts larger than this cannot be installed in the browser and
+// must be installed manually.
+// GITHUB limit 50MB
+export const MAX_ZIP_SIZE = 50 * 1024 * 1024

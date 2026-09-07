@@ -12,8 +12,8 @@
     "@easy-install/easy-archive": "0.2.7",
     "@emotion/react": "11.14.0",
     "@emotion/styled": "11.14.1",
-    "@mui/icons-material": "9.3.1",
-    "@mui/material": "9.3.1",
+    "@mui/icons-material": "9.4.0",
+    "@mui/material": "9.4.0",
     "fuse.js": "7.5.0",
     "jdl": "0.1.5",
     "react": "19.2.8",
@@ -23,14 +23,14 @@
   "devDependencies": {
     "@mpv-easy/mpsm": "workspace:*",
     "@mpv-easy/tool": "workspace:*",
-    "@types/node": "26.2.0",
+    "@types/node": "26.4.1",
     "@types/react": "19.2.18",
-    "@types/react-dom": "19.2.4",
-    "@vitejs/plugin-react": "6.0.5",
+    "@types/react-dom": "19.2.7",
+    "@vitejs/plugin-react": "6.1.1",
     "cross-env": "10.1.0",
-    "globals": "17.11.0",
+    "globals": "17.12.0",
     "typescript": "7.0.2",
-    "vite": "8.2.1",
+    "vite": "8.2.2",
     "vite-bundle-analyzer": "1.3.9"
   }
 }

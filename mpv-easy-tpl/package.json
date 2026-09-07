@@ -36,11 +36,11 @@
     "@babel/core": "8.0.1",
     "@babel/preset-env": "8.0.2",
     "@babel/preset-typescript": "8.0.1",
-    "@types/node": "26.2.0",
+    "@types/node": "26.4.1",
     "@types/react": "19.2.18",
-    "@types/react-dom": "19.2.4",
+    "@types/react-dom": "19.2.7",
     "chokidar-cli": "3.0.0",
     "esbuild": "0.28.2",
-    "tsx": "4.23.12"
+    "tsx": "4.23.13"
   }
 }
