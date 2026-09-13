@@ -1,6 +1,7 @@
 import { Download, OpenInNew } from "@mui/icons-material"
 import {
   Checkbox,
+  Chip,
   IconButton,
   Link,
   Paper,
@@ -102,7 +103,10 @@ export function ScriptTable({
         </TableHead>
         <TableBody>
           {paginatedData.map((row) => {
-            const isOverLimit = !!row.size && row.size > MAX_ZIP_SIZE
+            // Local packages are in-memory test builds: the GitHub size limit
+            // does not apply because nothing is uploaded or downloaded.
+            const isOverLimit =
+              !row.local && !!row.size && row.size > MAX_ZIP_SIZE
             const isSelected =
               selectedRowKeys.includes(row.name) ||
               uiRequires.includes(row.name)
@@ -134,14 +138,27 @@ export function ScriptTable({
                   )}
                 </TableCell>
                 <TableCell sx={{ width: NAME_WIDTH }}>
-                  <Link
-                    href={row.homepage}
-                    target="_blank"
-                    rel="noreferrer"
-                    underline="hover"
-                  >
-                    {row.name}
-                  </Link>
+                  {row.homepage ? (
+                    <Link
+                      href={row.homepage}
+                      target="_blank"
+                      rel="noreferrer"
+                      underline="hover"
+                    >
+                      {row.name}
+                    </Link>
+                  ) : (
+                    row.name
+                  )}
+                  {row.local && (
+                    <Chip
+                      label="local"
+                      size="small"
+                      color="info"
+                      variant="outlined"
+                      sx={{ ml: 1 }}
+                    />
+                  )}
                 </TableCell>
                 <TableCell>{row.description}</TableCell>
                 <TableCell>{row.author}</TableCell>

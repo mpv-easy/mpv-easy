@@ -65,9 +65,7 @@ function buildScaleFilter(
   if (maxWidth <= 0) {
     return undefined
   }
-  return flags
-    ? `scale=${maxWidth}:-1:flags=${flags}`
-    : `scale=${maxWidth}:-1`
+  return flags ? `scale=${maxWidth}:-1:flags=${flags}` : `scale=${maxWidth}:-1`
 }
 
 export async function cutRemoteVideo(

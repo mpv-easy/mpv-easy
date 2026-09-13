@@ -1,20 +1,19 @@
-import { useCallback, useRef } from "react"
-import type Fuse from "fuse.js"
 import { encode, File, Fmt } from "@easy-install/easy-archive"
 import {
-  IncludesMap,
   checkConflict,
+  IncludesMap,
   installScript,
   tryFix,
 } from "@mpv-easy/mpsm"
 import { parseGitHubUrl } from "@mpv-easy/tool"
+import type Fuse from "fuse.js"
 import { download as downloadRepo } from "jdl"
-import type { DataType, Store, UI } from "./types"
+import { useCallback, useRef } from "react"
 import {
   getCdnFileUrl,
+  getDenoUrl,
   getFfmpegUrl,
   getPlayWithUrl,
-  getDenoUrl,
   getYtdlpUrl,
   UI_LIST,
 } from "./constants"
@@ -23,15 +22,51 @@ import {
   downloadBinaryFile,
   downloadExternal,
   getMpvFiles,
-  getScriptFiles,
   getScriptDownloadURL,
+  getScriptFiles,
 } from "./download"
+import {
+  addLocalPackage,
+  decodeArchive,
+  getLocalPackage,
+  getLocalPackages,
+  hasScriptFile,
+  isArchive,
+  readScriptJson,
+} from "./local"
+import type { DataType, Store, UI } from "./types"
+
+/** Minimal shape of a dropped DOM File (name conflicts with archive File). */
+export interface DroppedFile {
+  name: string
+  arrayBuffer: () => Promise<ArrayBuffer>
+}
+
+/**
+ * Insert a local package into a script map, taking priority over any
+ * existing entry with the same `name`. Matching on `name` (not just the map
+ * key) also drops stale remote entries whose key differs from their name.
+ */
+function setLocalPriority(
+  record: Record<string, DataType>,
+  script: DataType,
+): Record<string, DataType> {
+  for (const key of Object.keys(record)) {
+    if (key !== script.name && record[key]?.name === script.name) {
+      delete record[key]
+    }
+  }
+  record[script.name] = script
+  return record
+}
+
 export function useAppActions(
   store: Store,
   setErrorMsg: (msg: string | null) => void,
 ) {
   const {
     data,
+    tableData,
     selectedRowKeys,
     externalList,
     ui,
@@ -57,6 +92,15 @@ export function useAppActions(
         const script = data[i]
         if (!script) return null
         try {
+          // Virtual packages are decoded from the dropped archive directly.
+          if (script.local) {
+            const pkg = getLocalPackage(script.name)
+            if (!pkg) return null
+            const files = decodeArchive(pkg.fileName, pkg.bytes)
+            if (!files) return null
+            return { key: i, script, files }
+          }
+
           if (script.repo) {
             const { user, repo } = script.repo
             const repoFiles = await downloadRepo(user, repo)
@@ -217,6 +261,16 @@ export function useAppActions(
       fetched[key] = info
     }
 
+    // Dropped virtual packages take priority over same-named entries.
+    for (const { script } of getLocalPackages()) {
+      setLocalPriority(fetched, {
+        ...script,
+        key: `local-${script.name}`,
+        download: script.download ?? "",
+        local: true,
+      })
+    }
+
     setData(fetched)
 
     const selectedData = selectedRowKeys.map((i) => fetched[i])
@@ -253,10 +307,102 @@ export function useAppActions(
     [selectedRowKeys, repos, setSelectedKeys, setRepos, setTableData],
   )
 
+  /**
+   * Register dropped archives as virtual script packages.
+   * Kept in memory only, so they can be tested without publishing first.
+   */
+  const addLocalPackages = useCallback(
+    async (dropped: DroppedFile[]) => {
+      const errors: string[] = []
+      const addedMap = new Map<string, DataType>()
+
+      for (const file of dropped) {
+        // 1. Unsupported compression format.
+        if (!isArchive(file.name)) {
+          errors.push(`unsupported archive format: ${file.name}`)
+          continue
+        }
+
+        const bytes = new Uint8Array(await file.arrayBuffer())
+
+        // 2. Corrupt or unreadable archive.
+        const files = decodeArchive(file.name, bytes)
+        if (!files) {
+          errors.push(`failed to decode archive: ${file.name}`)
+          continue
+        }
+
+        // 3. Missing script.json metadata.
+        const meta = readScriptJson(files)
+        if (!meta) {
+          errors.push(`script.json not found in ${file.name}`)
+          continue
+        }
+
+        // 4. Package contains no script (.js/.lua) entry.
+        if (!hasScriptFile(files)) {
+          errors.push(`no script (.js/.lua) found in ${file.name}`)
+          continue
+        }
+
+        const script: DataType = {
+          ...meta,
+          key: `local-${meta.name}`,
+          download: meta.download ?? "",
+          size: bytes.byteLength,
+          local: true,
+        }
+        addLocalPackage({ script, fileName: file.name, bytes })
+        addedMap.set(script.name, script)
+      }
+
+      const added = [...addedMap.values()]
+      if (added.length) {
+        const nextData = { ...data }
+        for (const script of added) {
+          setLocalPriority(nextData, script)
+        }
+        setData(nextData)
+
+        // Local packages win the table: drop same-named entries and prepend.
+        const addedNames = new Set(addedMap.keys())
+        setTableData([
+          ...added,
+          ...tableData.filter((i) => !addedNames.has(i.name)),
+        ])
+        setSelectedKeys([...new Set([...selectedRowKeys, ...addedNames])])
+      }
+
+      if (errors.length) {
+        setErrorMsg(errors.join("; "))
+      }
+
+      return added
+    },
+    [
+      data,
+      tableData,
+      selectedRowKeys,
+      setData,
+      setTableData,
+      setSelectedKeys,
+      setErrorMsg,
+    ],
+  )
+
   const handleDownloadScript = useCallback(
     async (script: DataType | DataType[]) => {
       const downloadOne = async (s: DataType) => {
         try {
+          // Virtual packages: hand back the original dropped archive.
+          if (s.local) {
+            const pkg = getLocalPackage(s.name)
+            if (pkg) {
+              downloadBinaryFile(pkg.fileName, pkg.bytes)
+            }
+            return
+          }
+
           if (s.repo) {
             const files = await downloadRepo(s.repo.user, s.repo.repo)
             const v = files
@@ -299,6 +445,7 @@ export function useAppActions(
     resetData,
     handleSearch,
     handleDownloadScript,
+    addLocalPackages,
   }
 }
 

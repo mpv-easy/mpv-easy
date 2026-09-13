@@ -1,24 +1,24 @@
-import { useEffect, useState } from "react"
 import {
-  ThemeProvider,
-  CssBaseline,
-  Box,
+  Alert,
   Backdrop,
   CircularProgress,
-  Alert,
+  CssBaseline,
+  ThemeProvider,
 } from "@mui/material"
-import { useMpvStore } from "./store"
-import { useAppTheme } from "./hooks/useTheme"
-import { useAppActions, getConflicts, getIncludes } from "./logic"
-import { DEFAULT_STATE, UI_LIST } from "./constants"
-import type { UI } from "./types"
-import { HeaderBar } from "./components/HeaderBar"
-import { ConfigPanel } from "./components/ConfigPanel"
-import { SearchInput } from "./components/SearchInput"
-import { ScriptTable } from "./components/ScriptTable"
-import { SelectedChips } from "./components/SelectedChips"
+import { useEffect, useState } from "react"
 import { ActionButtons } from "./components/ActionButtons"
+import { ConfigPanel } from "./components/ConfigPanel"
+import { DropZone } from "./components/DropZone"
+import { HeaderBar } from "./components/HeaderBar"
 import { LoadingScreen } from "./components/LoadingScreen"
+import { ScriptTable } from "./components/ScriptTable"
+import { SearchInput } from "./components/SearchInput"
+import { SelectedChips } from "./components/SelectedChips"
+import { DEFAULT_STATE, UI_LIST } from "./constants"
+import { useAppTheme } from "./hooks/useTheme"
+import { getConflicts, getIncludes, useAppActions } from "./logic"
+import { useMpvStore } from "./store"
+import type { UI } from "./types"
 
 function App() {
   const store = useMpvStore()
@@ -48,6 +48,7 @@ function App() {
     resetData,
     handleSearch,
     handleDownloadScript,
+    addLocalPackages,
   } = useAppActions(store, setErrorMsg)
 
   useEffect(() => {
@@ -103,8 +104,9 @@ function App() {
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <Box
+      <DropZone
         className={["main", isDark ? "main-dark" : "main-light"].join(" ")}
+        onDropFiles={addLocalPackages}
         sx={{
           display: "flex",
           flexDirection: "column",
@@ -166,7 +168,7 @@ function App() {
         {!!conflicts.length && (
           <Alert severity="error">conflict: {conflicts.join(" ")}</Alert>
         )}
-      </Box>
+      </DropZone>
     </ThemeProvider>
   )
 }

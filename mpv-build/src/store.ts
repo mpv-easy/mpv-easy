@@ -1,11 +1,11 @@
 import { create } from "zustand"
 import {
-  persist,
   createJSONStorage,
+  persist,
   type StateStorage,
 } from "zustand/middleware"
-import type { Store } from "./types"
 import { DEFAULT_STATE } from "./constants"
+import type { Store } from "./types"
 
 const hashStorage: StateStorage = {
   getItem: (key): string => {
@@ -45,12 +45,19 @@ export const useMpvStore = create<Store>()(
       name: "mpv-build",
       storage: createJSONStorage(() => hashStorage),
       version: undefined,
-      partialize: (state) =>
-        Object.fromEntries(
+      partialize: (state) => {
+        const persisted = Object.fromEntries(
           Object.entries(state).filter(
             ([key]) => !["data", "tableData", "spinning"].includes(key),
           ),
-        ),
+        ) as Record<string, unknown>
+        // Virtual packages only exist in the current page, so they are not
+        // shareable and must be left out of the share URL.
+        persisted.selectedRowKeys = state.selectedRowKeys.filter(
+          (key) => !state.data[key]?.local,
+        )
+        return persisted
+      },
     },
   ),
 )

@@ -8,6 +8,8 @@ export type UI = (typeof UI_LIST)[number]["name"]
 export interface DataType extends Script {
   key: string
   repo?: Repo
+  /** Virtual package dropped onto the page; in-memory only, not shareable. */
+  local?: boolean
 }
 
 export type State = {
