@@ -69,7 +69,7 @@
     "tsx": "catalog:",
     "typescript": "catalog:",
     "use-sync-external-store": "catalog:",
-    "rimraf": "catalog",
+    "rimraf": "catalog:",
     "vitest": "catalog:"
   },
   "catalog": {
