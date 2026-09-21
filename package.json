@@ -23,8 +23,8 @@
     "format": "biome format --write",
     "lint:fix": "biome lint --write --unsafe",
     "test": "bun run --parallel test",
-    "clean": "rimraf node_modules && bun -r exec rimraf node_modules dist es5 bundle",
-    "clean-dist": "rimraf dist es5 && bun -r exec rimraf dist es5 bundle",
+    "clean": "rm -R node_modules */node_modules",
+    "clean-dist": "rimraf */dist */es5 */bundle",
     "release": "bun publish -r --access public",
     "release-alpha": "bun publish -r --access public --tag alpha",
     "bump": "bun up --latest"
