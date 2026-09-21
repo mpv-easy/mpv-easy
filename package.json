@@ -17,7 +17,7 @@
     "clippy": "cargo clippy --fix --allow-dirty --allow-staged",
     "dev": "bun run --parallel dev",
     "es5": "bun run --parallel es5",
-    "build": "bun run -r build",
+    "build": "bun run --filter '*' build",
     "example": "bun run --parallel dev",
     "lint": "biome check --apply-unsafe",
     "format": "biome format --write",
@@ -27,7 +27,7 @@
     "clean-dist": "rimraf dist es5 && bun -r exec rimraf dist es5 bundle",
     "release": "bun publish -r --access public",
     "release-alpha": "bun publish -r --access public --tag alpha",
-    "bump": "bun --recursive up --latest"
+    "bump": "bun up --latest"
   },
   "keywords": [
     "TS",
