@@ -1,6 +1,6 @@
 ## usage
 ```bash
-pnpm i @mpv-easy/assdraw
+bun i @mpv-easy/assdraw
 ```
 
 ## example

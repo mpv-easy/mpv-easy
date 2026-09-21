@@ -15,6 +15,6 @@ A web-based remote control for MPV media player using IPC. Inspired by https://g
 ## Development
 
 ```bash
-pnpm install
-pnpm dev
+bun install
+bun dev
 ```

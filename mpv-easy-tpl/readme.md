@@ -19,7 +19,7 @@ You can write and build mpv scripts directly in your browser via StackBlitz — 
 2. Build the script (outputs to the `es5` folder):
 
    ```bash
-   pnpm build
+   bun build
    ```
 
    This bundles and transpiles your code, generating the output script in the `es5/` directory.
@@ -27,7 +27,7 @@ You can write and build mpv scripts directly in your browser via StackBlitz — 
 3. Package and download as a zip:
 
    ```bash
-   pnpm build:osc
+   bun build:osc
    ```
 
    This creates `easy-react-tpl-osc.zip` containing the mpv portable config with your script bundled inside.
@@ -35,7 +35,7 @@ You can write and build mpv scripts directly in your browser via StackBlitz — 
    Alternatively, start a local download page to browse and download zip files:
 
    ```bash
-   pnpm download
+   bun download
    ```
 
    This starts an HTTP server at `http://localhost:3000` displaying all zip files in the project — click any file name to download it.

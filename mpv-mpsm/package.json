@@ -18,20 +18,20 @@
     "dev": "tsc -w -p ./tsconfig.build.json",
     "build:lib": "tsc -p ./tsconfig.build.json",
     "build:cli": "esbuild ./src/cli.ts --bundle --outdir=./dist --platform=node",
-    "build": "pnpm run build:lib && pnpm run build:cli"
+    "build": "bun run build:lib && bun run build:cli"
   },
   "keywords": [],
   "author": "ahaoboy <504595380@qq.com> (https://github.com/ahaoboy)",
   "license": "MIT",
   "dependencies": {
-    "@easy-install/easy-archive": "0.2.7",
+    "@easy-install/easy-archive": "catalog:",
     "@mpv-easy/tool": "workspace:*",
-    "undici": "8.10.2"
+    "undici": "catalog:"
   },
   "devDependencies": {
-    "cac": "7.0.0",
-    "chalk": "6.0.0",
-    "fs-extra": "11.4.0"
+    "cac": "catalog:",
+    "chalk": "catalog:",
+    "fs-extra": "catalog:"
   },
   "browserslist": [
     "iOS >= 9",

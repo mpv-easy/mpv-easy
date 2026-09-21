@@ -5,19 +5,19 @@ This project is still in its early stages, and API changes occur frequently. It 
 bash
 
 ```bash
-export MPV_CONFIG_DIR=/your_mpv_dir/portable_config && pnpm run dev-copy
+export MPV_CONFIG_DIR=/your_mpv_dir/portable_config && bun run dev-copy
 ```
 
 fish
 
 ```fish
-set -x MPV_CONFIG_DIR /your_mpv_dir/portable_config ; pnpm run dev-copy
+set -x MPV_CONFIG_DIR /your_mpv_dir/portable_config ; bun run dev-copy
 ```
 
 powershell
 
 ```pwsh
-$env:MPV_CONFIG_DIR = "/your_mpv_dir/portable_config"; pnpm run dev-copy
+$env:MPV_CONFIG_DIR = "/your_mpv_dir/portable_config"; bun run dev-copy
 ```
 
 ## todo

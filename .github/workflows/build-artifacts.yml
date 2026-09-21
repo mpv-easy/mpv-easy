@@ -15,16 +15,14 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: latest
-      - uses: pnpm/action-setup@v4
-        with:
-          version: 11
+      - uses: oven-sh/setup-bun@v2
 
       - name: build js
         run: |
-          pnpm i
+          bun i
 
           cd mpv-js-plugin-init
-          pnpm run build
+          bun run build
 
       - uses: actions-rust-lang/setup-rust-toolchain@v1
         with:
@@ -300,9 +298,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: latest
-      - uses: pnpm/action-setup@v4
-        with:
-          version: 11
+      - uses: oven-sh/setup-bun@v2
 
       - uses: oven-sh/setup-bun@v2
         with:
@@ -310,8 +306,8 @@ jobs:
 
       - name: "build ts"
         run: |
-          pnpm i
-          pnpm run build
+          bun i
+          bun run build
 
           mkdir mpv-easy-scripts -p
           cat mpv-easy-react/conf/mpv-easy-play-with.meta mpv-easy-react/bundle/mpv-easy-play-with.user.js >> mpv-easy-scripts/mpv-easy-play-with.user.js

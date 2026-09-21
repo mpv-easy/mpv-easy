@@ -26,11 +26,11 @@ When developing or debugging, you can install the script from a local file inste
 ```bash
 # build @mpv-easy/play-with
 cd mpv-play-with
-pnpm build
+bun build
 
 # bundle userscript
 cd ../mpv-easy-react
-pnpm run bundle
+bun run bundle
 
 # combine meta header and bundle output
 cat conf/mpv-easy-play-with.meta bundle/mpv-easy-play-with.user.js > mpv-easy-play-with.user.js
@@ -72,7 +72,7 @@ For quick iteration, create a new script in the tampermonkey dashboard with the 
 
 - Chrome/Edge need to enable tampermonkey's file url access: `chrome://extensions/` -> tampermonkey -> details -> allow access to file urls
 - If `file://` is blocked, use a local http server instead: `@require http://localhost:8080/mpv-easy-play-with.user.js`
-- After modifying the source code, rebuild (`pnpm run bundle`) and refresh the page to reload the script
+- After modifying the source code, rebuild (`bun run bundle`) and refresh the page to reload the script
 
 ## install yt-dlp
 You need to make sure that mpv has been configured correctly [yt-dlp](https://github.com/yt-dlp/yt-dlp)

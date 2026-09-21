@@ -20,7 +20,7 @@
   "dependencies": {
     "@mpv-easy/tool": "workspace:*",
     "@mpv-easy/plugin": "workspace:*",
-    "serde-m3u": "0.1.2"
+    "serde-m3u": "catalog:"
   },
   "devDependencies": {}
 }

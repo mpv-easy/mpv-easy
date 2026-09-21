@@ -15,9 +15,9 @@
   "scripts": {
     "bundle": "tsx scripts/build.ts",
     "es5": "babel --presets  @babel/preset-env ./bundle -d es5",
-    "dev": "chokidar '../mpv-*/src/**/*' -c 'pnpm run build' -d 2000 --initial",
-    "build": "pnpm run bundle && pnpm run es5",
-    "build:osc": "pnpm run build && tsx scripts/build-osc.ts",
+    "dev": "chokidar '../mpv-*/src/**/*' -c 'bun run build' -d 2000 --initial",
+    "build": "bun run bundle && bun run es5",
+    "build:osc": "bun run build && tsx scripts/build-osc.ts",
     "copy": "cp es5/mpv-easy-tpl.js $MPV_CONFIG_DIR",
     "download": "tsx scripts/download.ts"
   },
@@ -25,22 +25,22 @@
   "author": "ahaoboy <504595380@qq.com> (https://github.com/ahaoboy)",
   "license": "MIT",
   "dependencies": {
-    "@easy-install/easy-archive": "0.2.7",
+    "@easy-install/easy-archive": "catalog:",
     "@mpv-easy/polyfill": "workspace:*",
     "@mpv-easy/react": "workspace:*",
     "@mpv-easy/tool": "workspace:*",
-    "react": "19.2.8"
+    "react": "catalog:"
   },
   "devDependencies": {
-    "@babel/cli": "8.0.4",
-    "@babel/core": "8.0.1",
-    "@babel/preset-env": "8.0.2",
-    "@babel/preset-typescript": "8.0.1",
-    "@types/node": "26.4.1",
-    "@types/react": "19.2.18",
-    "@types/react-dom": "19.2.7",
-    "chokidar-cli": "3.0.0",
-    "esbuild": "0.28.2",
-    "tsx": "4.23.13"
+    "@babel/cli": "catalog:",
+    "@babel/core": "catalog:",
+    "@babel/preset-env": "catalog:",
+    "@babel/preset-typescript": "catalog:",
+    "@types/node": "catalog:",
+    "@types/react": "catalog:",
+    "@types/react-dom": "catalog:",
+    "chokidar-cli": "catalog:",
+    "esbuild": "catalog:",
+    "tsx": "catalog:"
   }
 }
