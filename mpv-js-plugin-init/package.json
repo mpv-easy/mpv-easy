@@ -13,9 +13,9 @@
     "build": "esbuild ./src/*.ts --bundle --outdir=./dist --charset=utf8 --format=iife && bun run copy",
     "build-minify": "esbuild ./src/*.(ts|tsx) --bundle --outdir=./dist --charset=utf8 --format=iife --minify",
     "copy": "bun run copy:boa && bun run copy:qjs && bun run copy:deno",
-    "copy:boa": "rm -rf ../mpv-boa/dist && cp -r ./dist ../mpv-boa/dist",
-    "copy:qjs": "rm -rf ../mpv-qjs/dist && cp -r ./dist ../mpv-qjs/dist",
-    "copy:deno": "rm -rf ../mpv-deno/dist && cp -r ./dist ../mpv-deno/dist"
+    "copy:boa": "rimraf ../mpv-boa/dist && cp -R ./dist ../mpv-boa/dist",
+    "copy:qjs": "rimraf ../mpv-qjs/dist && cp -R ./dist ../mpv-qjs/dist",
+    "copy:deno": "rimraf ../mpv-deno/dist && cp -R ./dist ../mpv-deno/dist"
   },
   "devDependencies": {},
   "dependencies": {
