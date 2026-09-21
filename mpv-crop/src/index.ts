@@ -15,7 +15,10 @@ export const defaultConfig: CropConfig = {
   cropImageFormat: "webp",
   cropZIndex: 2048,
   labelFontSize: 24,
-  // extra ffmpeg args appended to the end of the ffmpeg command
+  // extra ffmpeg args appended to the end of the ffmpeg command.
+  // crop video defaults to lossless high quality (libx264 -crf 0 -preset veryslow),
+  // extraArgs can override those codec settings; the last option wins.
+  // only applies to video/image output, not to gif output through cut
   extraArgs: [],
 }
 

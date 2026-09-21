@@ -22,7 +22,9 @@ export const defaultConfig: CutConfig = {
   flags: "spline",
   // maxWidth <= 0 keeps the original resolution, no scaling is applied
   maxWidth: 1024,
-  // extra ffmpeg args appended to the end of the ffmpeg command
+  // extra ffmpeg args appended to the end of the ffmpeg command.
+  // cut output defaults to lossless stream copy (-c copy, no quality loss),
+  // extraArgs can force a re-encode, e.g. for more accurate cut points.
   extraArgs: [],
 }
 

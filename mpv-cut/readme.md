@@ -57,9 +57,10 @@ max-width=1024
 # max-width=0 keeps the original resolution (no scaling)
 fps=24
 flags="spline"
-# extra ffmpeg args appended to the end of the ffmpeg command,
-# can override the default codec settings, disabled by default
-# example: lossless high quality
+# extra ffmpeg args appended to the end of the ffmpeg command.
+# cut output defaults to lossless stream copy (-c copy, no quality loss),
+# extra-args can force a re-encode, e.g. for more accurate cut points.
+# example: lossless re-encode
 # extra-args="-c:v libx264 -crf 0 -preset veryslow"
 ```
 

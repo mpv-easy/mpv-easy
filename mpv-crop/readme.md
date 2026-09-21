@@ -56,12 +56,13 @@ label-font-size=24
 output-directory=""
 crop-image-format="webp"
 # extra ffmpeg args appended to the end of the ffmpeg command,
-# can override the default codec settings, disabled by default
-# example: lossless high quality
-# extra-args="-c:v libx264 -crf 0 -preset veryslow"
+# can override the default codec settings.
+# crop video defaults to lossless high quality (libx264 -crf 0 -preset veryslow)
+# example: faster, near-lossless
+# extra-args="-crf 18 -preset slow"
 ```
 
-> Note: `extra-args` are appended to the end of the ffmpeg command, so the last codec/encoder option wins.
+> Note: `extra-args` are appended to the end of the ffmpeg command, so the last codec/encoder option wins. Only the video/image output is affected.
 
 ### mpv-easy json config
 

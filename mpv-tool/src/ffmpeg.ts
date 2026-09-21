@@ -314,7 +314,17 @@ export async function cropVideo(
     cmd.push(replaceExt(outputPath, "gif"))
   } else {
     cmd.push(`crop=${width}:${height}:${x}:${y}`)
-    cmd.push("-c:a", "copy", "-c:v", "libx264")
+    // default to lossless high quality; extraArgs below can override it
+    cmd.push(
+      "-c:a",
+      "copy",
+      "-c:v",
+      "libx264",
+      "-crf",
+      "0",
+      "-preset",
+      "veryslow",
+    )
     if (extraArgs.length) {
       cmd.push(...extraArgs)
     }
