@@ -58,6 +58,14 @@ export function hasScriptFile(files: ArchiveFile[]): boolean {
   })
 }
 
+export function hasExternals(files: ArchiveFile[]): boolean {
+  return files.some((i) => {
+    if (i.isDir) return false
+    const p = i.path.toLowerCase()
+    return p.startsWith("externals/")
+  })
+}
+
 /**
  * Decode a dropped archive into archive entries.
  * Returns undefined when the format is unsupported or decoding fails.

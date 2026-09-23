@@ -30,6 +30,7 @@ import {
   decodeArchive,
   getLocalPackage,
   getLocalPackages,
+  hasExternals,
   hasScriptFile,
   isArchive,
   readScriptJson,
@@ -340,8 +341,8 @@ export function useAppActions(
         }
 
         // 4. Package contains no script (.js/.lua) entry.
-        if (!hasScriptFile(files)) {
-          errors.push(`no script (.js/.lua) found in ${file.name}`)
+        if (!hasScriptFile(files) && !hasExternals(files)) {
+          errors.push(`no script (.js/.lua) or externals found in ${file.name}`)
           continue
         }
 
