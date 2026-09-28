@@ -11,6 +11,7 @@ export type Script = {
   license?: string
   keywords?: string[]
   size?: number
+  lang?: "js" | "lua"
 }
 
 export function getScriptByLang(

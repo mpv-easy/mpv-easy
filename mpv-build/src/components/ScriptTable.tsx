@@ -1,5 +1,6 @@
-import { Download, OpenInNew } from "@mui/icons-material"
+import { Download, OpenInNew, QuestionMark } from "@mui/icons-material"
 import {
+  Box,
   Checkbox,
   Chip,
   IconButton,
@@ -19,6 +20,48 @@ import { MAX_ZIP_SIZE, NAME_WIDTH } from "../constants"
 import type { DataType } from "../types"
 
 const SIZE_WIDTH = 90
+
+const DEVICON_BASE = "https://cdn.jsdelivr.net/gh/devicons/devicon/icons"
+
+/** Devicon icon path and display name for each known language. */
+const LANG_ICON: Record<string, { path: string; label: string }> = {
+  js: { path: "javascript/javascript-original", label: "JavaScript" },
+  lua: { path: "lua/lua-original", label: "Lua" },
+}
+
+/**
+ * Language badge shown before a script name.
+ * Unknown languages fall back to a question mark.
+ * Fixed width keeps names aligned across rows.
+ */
+function LangIcon({ lang }: { lang?: string }) {
+  const meta = lang ? LANG_ICON[lang.toLowerCase()] : undefined
+  return (
+    <Tooltip title={meta?.label ?? "unknown language"}>
+      <Box
+        sx={{
+          width: 18,
+          display: "inline-flex",
+          alignItems: "center",
+          justifyContent: "center",
+          flexShrink: 0,
+        }}
+      >
+        {meta ? (
+          <Box
+            component="img"
+            src={`${DEVICON_BASE}/${meta.path}.svg`}
+            alt={meta.label}
+            loading="lazy"
+            sx={{ width: 16, height: 16, display: "block" }}
+          />
+        ) : (
+          <QuestionMark sx={{ fontSize: 16, color: "text.disabled" }} />
+        )}
+      </Box>
+    </Tooltip>
+  )
+}
 
 /**
  * Format a byte count into a human-readable string, e.g. 1536 -> "1.5 KB".
@@ -138,27 +181,31 @@ export function ScriptTable({
                   )}
                 </TableCell>
                 <TableCell sx={{ width: NAME_WIDTH }}>
-                  {row.homepage ? (
-                    <Link
-                      href={row.homepage}
-                      target="_blank"
-                      rel="noreferrer"
-                      underline="hover"
-                    >
-                      {row.name}
-                    </Link>
-                  ) : (
-                    row.name
-                  )}
-                  {row.local && (
-                    <Chip
-                      label="local"
-                      size="small"
-                      color="info"
-                      variant="outlined"
-                      sx={{ ml: 1 }}
-                    />
-                  )}
+                  <Box
+                    sx={{ display: "flex", alignItems: "center", gap: 0.5 }}
+                  >
+                    <LangIcon lang={row.lang} />
+                    {row.homepage ? (
+                      <Link
+                        href={row.homepage}
+                        target="_blank"
+                        rel="noreferrer"
+                        underline="hover"
+                      >
+                        {row.name}
+                      </Link>
+                    ) : (
+                      row.name
+                    )}
+                    {row.local && (
+                      <Chip
+                        label="local"
+                        size="small"
+                        color="info"
+                        variant="outlined"
+                      />
+                    )}
+                  </Box>
                 </TableCell>
                 <TableCell>{row.description}</TableCell>
                 <TableCell>{row.author}</TableCell>
