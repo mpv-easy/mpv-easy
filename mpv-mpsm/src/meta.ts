@@ -44,7 +44,7 @@ export function getScriptByLang(
       } else if (name === "size") {
         meta[name] = Number(parts[2])
       } else {
-        meta[name] = parts[2]
+        meta[name] = parts[2] as any
       }
     }
   }

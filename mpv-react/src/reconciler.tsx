@@ -59,6 +59,14 @@ export function createCustomReconciler(customRender: () => void) {
     supportsPersistence: false,
     supportsMicrotasks: false,
 
+    // Renderer metadata (reported to React DevTools)
+    rendererVersion: "0.1.0",
+    rendererPackageName: "@mpv-easy/react",
+    extraDevToolsConfig: null,
+    bindToConsole() {
+      return () => undefined
+    },
+
     // Priority methods - use constants for better performance
     resolveUpdatePriority: () => DiscreteEventPriority,
     getCurrentUpdatePriority: () => DiscreteEventPriority,
@@ -193,6 +201,10 @@ export function createCustomReconciler(customRender: () => void) {
     suspendInstance() {
       throw new Error("Suspending instances not supported")
     },
+    maySuspendCommitOnUpdate: () => false,
+    maySuspendCommitInSyncRender: () => false,
+    suspendOnActiveViewTransition() {},
+    getSuspendedCommitReason: () => null,
     waitForCommitToBeReady() {
       throw new Error("Commit waiting not supported")
     },
@@ -308,6 +320,7 @@ export function createRender({
       throwError,
       throwError,
       () => {},
+      null,
     )
 
     // Mouse event handling

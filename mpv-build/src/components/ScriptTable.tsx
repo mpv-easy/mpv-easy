@@ -181,9 +181,7 @@ export function ScriptTable({
                   )}
                 </TableCell>
                 <TableCell sx={{ width: NAME_WIDTH }}>
-                  <Box
-                    sx={{ display: "flex", alignItems: "center", gap: 0.5 }}
-                  >
+                  <Box sx={{ display: "flex", alignItems: "center", gap: 0.5 }}>
                     <LangIcon lang={row.lang} />
                     {row.homepage ? (
                       <Link
